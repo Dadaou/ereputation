@@ -1,0 +1,107 @@
+/*Media queries for mobile device*/
+
+@media screen and (max-width:600px) {
+
+    /*========== Home Page =========*/
+    /*Home Page*/
+    .main__container{
+        margin-top: 0;
+        width: 100%;
+    }
+
+    .container{
+        width: var(--container-width-sm) !important;
+    }
+
+    /*Header*/
+    header{
+        height: 100vh !important;
+    }
+
+    .header__container{
+        grid-template-columns: 1fr !important;
+        text-align: center;
+    }
+
+    .header__left p{
+       margin-bottom: 1.2rem !important;
+    }
+
+    /*Categories*/
+    .categories__right{
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1rem !important;
+    }
+
+    .category{
+        padding: 1rem !important;
+        border-radius: 1rem !important;
+    }
+
+    .category__icon{
+        margin: 4px;
+        padding: 0.7rem 1rem !important;
+        display: inline-block;
+    }
+
+    .category h5{
+        margin: 1.5rem 0 1rem !important;
+    }
+
+    .category p{
+        
+    }
+
+    /*Popular Courses*/
+    .courses__container{
+        grid-template-columns: 1fr !important;
+    }
+
+    /*FAQs*/
+    .faq h4{
+        font-size: 0.9rem !important;
+        line-height: 1.2 !important;
+    }
+
+    .faq p{
+        font-size: 0.8rem !important;
+    }
+
+    /*Testimonials*/
+    .testimonial__body{
+        padding: 2rem !important;
+    }
+
+    /*========== About Page =========*/
+    
+    /*Achievements*/
+    .about__achievements-container{
+        gap: 0rem !important;
+        grid-template-columns: 1fr !important;
+    }
+
+    .about__achievements-left img{
+        width: 80%;
+        margin: 0 auto;
+        margin-bottom: 2rem;
+    }
+
+    /*Team members*/
+    .team__container{
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.5rem;
+    }
+
+    /*========== Contact Page =========*/
+    /*Contact*/
+    .contact__container{
+        grid-template-columns: 1fr !important;
+        padding: 0 !important;
+        gap: 2rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .contact__form{
+        padding: 2rem 1rem  !important;
+    }
+}

@@ -1,0 +1,158 @@
+/*Media queries for tablets device*/
+
+@media screen and (max-width:1024px) {
+    
+    /*========== Home Page =========*/
+    /*Home Page*/
+    .main__container{
+        margin-top: 0;
+    }
+
+    .container{
+        width: var(--container-width-md) !important;
+    }
+
+    h1{
+        font-size: 2rem !important;
+    }
+
+    h2{
+        font-size: 1.8rem;
+    }
+
+    h3{
+        font-size: 1.4rem;
+    }
+
+    h4{
+        font-size: 1.2rem;
+    }
+
+    /*Header*/
+    header{
+        /* margin-bottom:0 !important; */
+        height: 60vh !important;
+        top: 5rem;
+    }
+
+    .header__container{
+        gap:1rem !important;
+    }
+
+    /*Categories*/
+    .categories{
+        height: fit-content !important;
+        padding: 3rem 0;
+    }
+
+    .categories__container{
+        grid-template-columns: 1fr !important;
+        gap: 3rem;
+    }
+
+    .categories__left{
+        margin-right: 0 !important;
+    }
+
+    /*Popular courses*/
+    .courses{
+        margin-top: 0 !important;
+    }
+
+    .courses__container{
+        grid-template-columns: 1fr 1fr !important;
+        gap: 2rem;
+    }
+
+    /*FAQs*/
+    .faqs__container{
+        grid-template-columns: 1fr !important;
+    }
+
+    .faq{
+        padding: 1.2rem !important;
+    }
+
+    /*========== About Page =========*/
+    
+    /*Achievements*/
+    .about__achievements{
+        margin-top: 2rem !important;
+    }
+    .about__achievements-container{
+        gap: 2rem !important;
+        grid-template-columns: 35% 65% !important;
+    }
+
+    .about__achievements-left{
+       padding-top: 2rem !important;
+    }
+
+    .about__achievements-right p{
+        font-size: 0.9rem;
+    }
+
+    .achievement__card{
+        padding: 1rem 0 !important;
+    }
+
+    .achievement__card h3{
+        font-size: 1.2rem;
+    }
+
+    .achievement__icon{
+        padding: 0.6rem 0.9rem !important;
+        margin-bottom: 1rem;
+    }
+
+    /*Team members*/
+    .team__container{
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 1rem;
+    }
+
+    /*========== Contact Page =========*/
+    /*Contact*/
+    .contact__container{
+        height: fit-content !important;
+        gap: 1.5rem !important;
+        padding: 2rem !important;
+    }
+
+    .contact__aside{
+        top:0 !important;
+        width: auto !important;
+        padding: 1rem !important;
+    }
+
+    .contact__aside p{
+        font-size: 0.8rem !important;
+    }
+
+    .contact__details h5{
+        font-size: 0.7rem !important;
+    }
+
+    .contact__details li{
+        gap: 0.5rem !important;
+    }
+
+    .contact__socials{
+        gap:0.6rem !important;
+    }
+
+    .contact__socials li{
+        padding: 0.3rem 0.6rem !important;
+        font-size: 0.7rem !important;
+    }
+
+    /*Contact Form*/
+    .contact__form{
+        place-self: center;
+    }
+
+    
+
+
+    
+}
