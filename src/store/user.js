@@ -5,6 +5,7 @@ export const useUserStore = defineStore("user", {
   state: () => ({
     user: null,
     users: [],
+    roleSummary: null,
     authenticated: false,
     entity: 'users',
     nb: 0,
@@ -44,11 +45,14 @@ export const useUserStore = defineStore("user", {
     },
     async signIn(email, password, next) {
       await services.login(email, password, async (response)=>{
-        console.log(response)
+        console.log(response.data['token'])
         if(response.status == 200) {
+          services.setToken(response.data['token'])  
           await services.getRecord(this.entity,response.data.user.id, (res)=>{
+            console.log(res)
             if(res.status==200){
               this.user = res.data
+              console.log(res.data)
               this.authenticated = true
               next({authenticated:this.authenticated, status: 200})
             } 

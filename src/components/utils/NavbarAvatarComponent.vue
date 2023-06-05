@@ -6,8 +6,8 @@
             <span class="font-medium text-gray-600 dark:text-gray-300">JL</span>
         </div> -->
         <div class="font-medium dark:text-white">
-            <div>Jule Rese</div>
-            <div class="text-sm text-gray-500 dark:text-gray-400">Admin</div>
+            <div>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">{{ userStore.user.roleSummary }}</div>
         </div>
     </div>
     <!-- Dropdown menu
@@ -36,7 +36,8 @@
 </template>
 
 <script setup>
-
+import { useUserStore } from "../../store/user";
+const userStore = useUserStore();
 </script>
 
 <style scoped>

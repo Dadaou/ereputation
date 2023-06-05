@@ -49,12 +49,16 @@ const notification = ref({
 const submit = async ()=>{
     await userStore.signIn(form.value.email, form.value.password, (response)=>{
         if(response.authenticated){
-            if(userStore.user.roles[0] == "ROLE_ADMIN"){
-                router.push({name:"Admin_dashboard"})
-            }
-
-            if(userStore.user.roles[0] == "ROLE_USER"){
-                router.push({name:"Companies"})
+            if(userStore.user.roles.includes("ROLE_USER")){
+                if (userStore.user.roles.includes("ROLE_ADMIN")) {
+                    userStore.user.roleSummary = "Admin"
+                    router.push({name:"Admin_dashboard"})
+                }else{
+                    if (userStore.user.roles.includes("ROLE_API")){
+                        userStore.user.roleSummary = "Client"
+                        router.push({name:"Companies"})
+                    }
+                }
             }
             console.log(userStore.user)
         }else{

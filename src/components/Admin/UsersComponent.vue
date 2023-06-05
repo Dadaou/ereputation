@@ -141,7 +141,7 @@ let create = async()=>{
         "lastname": form.value.lastname,
         "password": form.value.password
     }
-    await userStore.create()
+    await userStore.create(user)
 }
 
 onBeforeMount(() => {

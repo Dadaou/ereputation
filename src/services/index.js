@@ -1,8 +1,12 @@
 import axios from 'axios'
 var axiosInstance = null
 
+const headers = {
+    'Content-Type': 'application/json',
+};
+
 const setToken = (token) => {
-    axiosInstance.defaults.headers["token"] = token;
+    axiosInstance.defaults.headers["Authorization"] = `Bearer ${token}`;
 }
 
 const setURL = (baseURL) => {
@@ -43,6 +47,7 @@ const getRecord= async (entity, recordId, next)=>{
     try {
         let url = `/api/${entity}/${recordId}`;
         if(checkConnexionInfo()){
+            console.log(axiosInstance.defaults)
             await axiosInstance.get(`${url}`).then((response)=>{
                 return next(response);
             })   
