@@ -5,13 +5,13 @@
 
 <script setup>
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
-import {ref} from 'vue'
+import {ref} from 'vue';
 
 const page=ref({
     title1: "l'",
     title2: "Acceuil",
-    icon: "uil-estate"
-})
+    icon: "uil-estate",
+});
 </script>
 
 <style scoped>

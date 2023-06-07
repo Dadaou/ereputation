@@ -3,10 +3,10 @@
         <div class="container footer__container">
             <div class="footer__info">
                 <ul>
-                    <li><i class="uil uil-copyright"></i> eReputation, tous droits réservés</li>
-                    <li>Mentions légales</li>
+                    <li><i class="uil uil-copyright"></i> eReputation, allright reserved</li>
+                    <li>Legal Notice</li>
                     <li>Contact</li>
-                    <li>Une création de twenit</li>
+                    <li>a creation by Twenit</li>
                 </ul>
             </div>
             <div class="footer__links">

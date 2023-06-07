@@ -30,15 +30,15 @@
 </template>
 
  <script setup>
- import {ref} from 'vue'
- import TableComponent from "@Components/utils/TableComponent.vue"
+ import {ref} from 'vue';
+ import TableComponent from "@Components/utils/TableComponent.vue";
 
  const props = defineProps({
     isAdmin:{
         type: Boolean,
-        default: false
+        default: false,
     }
- })
+ });
  const users = ref([
     {
         avatar:'/src/assets/images/Portrait_Placeholder.png',
@@ -91,7 +91,7 @@
         login: "12/05/2023",
         partner: "John Doe",
     },
-])
+]);
  </script>
  
  <style scoped>

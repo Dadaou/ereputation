@@ -42,16 +42,12 @@
 import {ref} from 'vue'
 import { RouterView } from 'vue-router';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
-import { useUserStore } from "../store/user";
 
 const page=ref({
     title1: "Espace",
     title2: "Administrateur",
-    icon: "uil-clipboard-notes"
-})
-const userStore = useUserStore();
-
-const currentContent = ref('dashboard')
+    icon: "uil-clipboard-notes",
+});
 </script>
 
 <style>

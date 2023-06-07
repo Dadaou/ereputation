@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
+import {ref} from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import CompaniesComponent from '@Components/Admin/CompaniesComponent.vue';
 import SecurityComponent from '@Components/User/SecurityComponent.vue';
@@ -34,10 +34,10 @@ import UserDetailsComponent from '@Components/User/UserDetailsComponent.vue';
 const page=ref({
     title1: "My",
     title2: "Profile",
-    icon: "uil-user-square"
-})
+    icon: "uil-user-square",
+});
 
-const currentContent = ref('personal_details')
+const currentContent = ref('personal_details');
 </script>
 
 <style scoped>

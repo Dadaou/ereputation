@@ -22,7 +22,7 @@
 import {ref} from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import AlertComponent from '@Components/utils/AlertComponent.vue';
-import { useUserStore } from "../store/user";
+import { useUserStore } from "@Stores/user.js";
 import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter()
@@ -32,13 +32,13 @@ const userStore = useUserStore();
 const page=ref({
     title1: "Sign in to",
     title2: "your Account",
-    icon: "uil-signin"
+    icon: "uil-signin",
 })
 
 const form = ref({
     email: '',
     password: '',
-    error: false
+    error: false,
 })
 
 const notification = ref({
@@ -51,25 +51,22 @@ const submit = async ()=>{
         if(response.authenticated){
             if(userStore.user.roles.includes("ROLE_USER")){
                 if (userStore.user.roles.includes("ROLE_ADMIN")) {
-                    userStore.user.roleSummary = "Admin"
                     router.push({name:"Admin_dashboard"})
-                }else{
-                    if (userStore.user.roles.includes("ROLE_API")){
-                        userStore.user.roleSummary = "Client"
+                } else{
+                    if (userStore.user.roles.includes("ROLE_API")){  
                         router.push({name:"Companies"})
                     }
                 }
             }
-            console.log(userStore.user)
-        }else{
+        } else{
             form.value.error = true
             console.log(response)
-            if(response.status==401){
+            if(response.status == 401){
                 notification.value.message = "Please verify your password or email!"
                 notification.value.type = "warning"
             }
 
-            if(response.status==500){
+            if(response.status == 500){
                 notification.value.message = "No network!"
                 notification.value.type = "error"
             }

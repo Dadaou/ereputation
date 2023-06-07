@@ -90,11 +90,11 @@
                         <div class="search__inputs">
                             <div class="search__input">
                                 <i class="uil uil-briefcase-alt"></i>
-                                <input type="text" class="first" placeholder="Je cherche"/>
+                                <input type="text" class="first" placeholder="I search ..."/>
                             </div>
                             <div class="search__input">
                                 <i class="uil uil-location-point"></i>
-                                <input type="text" placeholder="Ville, Pays"/>
+                                <input type="text" placeholder="City, Country"/>
                             </div>
                         </div>
                     </form>
@@ -149,7 +149,7 @@
                         {{ company.description }}
                        </div>
                        <div class="society__actions">
-                        <button class="btn compare" v-if="company.isConcurrent">Compare <i class="uil uil-chart-line"></i></button>
+                        <button class="btn compare" v-if="company.isConcurrent" @click="$router.push('/companies/1/2/comparison')">Compare <i class="uil uil-chart-line"></i></button>
                         <button class="btn see__reviews">View<i class="uil uil-angle-right-b"></i></button>
                        </div>
                     </div>
@@ -172,8 +172,8 @@ const particlesLoaded = async container => {
     console.log("Particles container loaded", container);
 };
 
-const isActive = ref('all')
-let visibleData = ref([])
+const isActive = ref('all');
+let visibleData = ref([]);
 const companies = ref([
     {
         logo: "/src/assets/images/Portrait_Placeholder.png",
@@ -215,34 +215,34 @@ const companies = ref([
         website: "https://booking.com",
         isConcurrent: true,
     }
-])
+]);
 
-visibleData.value = companies.value
+visibleData.value = companies.value;
 
 watch(isActive, (value)=>{
     if(value == 'concurrent'){
         visibleData.value = []
         companies.value.forEach(elem=>{
-        if(elem.isConcurrent==true){
-            visibleData.value.push(elem)
-        }
-       })
+            if(elem.isConcurrent==true){
+                visibleData.value.push(elem);
+            }
+        });
     } 
 
     if(value == 'my_societies'){
         visibleData.value = []
         companies.value.forEach(elem=>{
-        if(elem.isConcurrent==false){
-            visibleData.value.push(elem)
-        }
-       })
+            if(elem.isConcurrent==false){
+                visibleData.value.push(elem)
+            }
+        });
     }
 
     if(value == 'all'){
         visibleData.value = []
         visibleData.value = companies.value
     }
-})
+});
 </script>
 
 <style scoped>
@@ -285,7 +285,7 @@ watch(isActive, (value)=>{
 
 .client__container{
     position: relative;
-    top:11rem;
+    top:4rem;
     height: inherit;
     display: flex;
     gap:2rem;
@@ -312,7 +312,6 @@ watch(isActive, (value)=>{
     font-size: 20px;
     color: var(--color-bg2)
 }
-
 
 .client__container__head div{
     font-size: 15px;
@@ -475,6 +474,4 @@ watch(isActive, (value)=>{
 .society__actions i{
     color: var(--color-white);
 }
-
-
 </style>

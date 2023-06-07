@@ -3,32 +3,15 @@
         <div class="container nav__container">
             <h4>eReputation</h4>
             <div class="nav__menu" v-if="userStore.authenticated">
-                <!-- <NotificationComponent class="nav__notification"/> -->
                 <NavbarAvatarComponent/>
             </div>
-            <!-- <ul class="nav__menu" v-if="userStore.user">
-                <li>
-                    <a class="link" href="">Menu 1</a>
-                </li>
-                <li>
-                    <a class="link" href="">Menu 2</a>
-                </li>
-                <li>
-                    <span>{{ userStore.user.email }}</span>
-                    <a class="btn btn__light2" href="http://">
-                        <i class="uil uil-user-circle"></i>
-                        <span>se connecter</span>
-                    </a>
-                </li>
-            </ul> -->
         </div>
     </nav>
 </template>
 <script setup>
 import {ref, watch} from 'vue';
 import { useWindowScroll, useWindowSize } from '@vueuse/core';
-import { useUserStore } from "../../store/user";
-import NotificationComponent from '@Components/utils/NotificationComponent.vue';
+import { useUserStore } from "@Stores/user.js";
 import NavbarAvatarComponent from '@Components/utils/NavbarAvatarComponent.vue';
 
 

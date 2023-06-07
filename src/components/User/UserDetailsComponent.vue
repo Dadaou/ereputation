@@ -176,7 +176,7 @@
 </template>
 
 <script setup>
-import VueCountryCode from "@Components/utils/VueCountryCode.vue"
+import VueCountryCode from "@Components/utils/VueCountryCode.vue";
 import { ref } from 'vue';
 
 const date = ref();
@@ -188,7 +188,7 @@ let enableEdit = ref({
     phone: false,
     birth: false,
     address: false,
-})
+});
 </script>
 
 <style scoped>

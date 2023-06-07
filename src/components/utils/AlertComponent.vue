@@ -16,20 +16,18 @@
         </div>
 </template>
 <script setup>
-import {ref} from 'vue';
-
 const props = defineProps({
     message:{
         type: String,
-        default: "this is an alert"
+        default: "this is an alert",
     },
     alertType:{
         type: String,
-        default: "error"
+        default: "error",
     }
-})
+});
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close']);
 </script>
 
 <style scoped>

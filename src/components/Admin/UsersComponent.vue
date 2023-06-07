@@ -79,14 +79,14 @@
 </template>
 
 <script setup>
-import {ref, watch, onBeforeMount} from 'vue'
-import PaginationComponent from '@Components/utils/PaginationComponent.vue'
-import { useUserStore } from "../../store/user.js";
+import {ref, watch, onBeforeMount} from 'vue';
+import PaginationComponent from '@Components/utils/PaginationComponent.vue';
+import { useUserStore } from "@Stores/user.js";
 
 /*About the table*/
-const searchValue = ref('')
-const color = ref('#6c63ff')
-const isAligned = ref(true)
+const searchValue = ref('');
+const color = ref('#6c63ff');
+const isAligned = ref(true);
 const userStore = useUserStore();
 const form = ref({
     firstname: '',
@@ -94,23 +94,24 @@ const form = ref({
     email: '',
     role: '',
     password: ''
-})
+});
 
 watch(searchValue, () => {
-    console.log(searchValue.value)
-})
+    console.log(searchValue.value);
+});
 
 const initSearch = ()=>{
-    searchValue.value = ''
+    searchValue.value = '';
 }
 
 let paginationConfig = ref({
     current:0,
     size:5,
     data: [],
-    _data: []
-})
-let visibleUsers = ref([])
+    _data: [],
+});
+
+let visibleUsers = ref([]);
 
 let updateVisibleUsers = function(_users){
     let data = paginationConfig.value;
@@ -121,8 +122,7 @@ let updateVisibleUsers = function(_users){
     if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
         updatePage( paginationConfig.value.current -1);
     }
-
-    visibleUsers.value = paginationConfig.value.data
+    visibleUsers.value = paginationConfig.value.data;
 }
 
 let updatePage = function(pageNumber){
@@ -134,27 +134,26 @@ let create = async()=>{
     console.log(form.value)
     let user = {
         "email": form.value.email,
-        "roles": [
-            form.value.role
-        ],
+        "roles": [],
         "firstname": form.value.firstname,
         "lastname": form.value.lastname,
-        "password": form.value.password
+        "password": form.value.password,
     }
-    await userStore.create(user)
+    user.roles.push(form.value.role)
+    await userStore.create(user);
 }
 
 onBeforeMount(() => {
     onBeforeMount(async ()=>{
-        await userStore.fetchAll((response)=>{
+        await userStore.fetchAll((response) => {
             updateVisibleUsers(userStore.users);
-            console.log(userStore.users)
+            console.log(userStore.users);
         })
     })  
-})
+});
 
 /* About the form */
-const showForm = ref(false)
+const showForm = ref(false);
 
 </script>
 

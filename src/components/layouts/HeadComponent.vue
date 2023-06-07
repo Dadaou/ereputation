@@ -16,15 +16,15 @@ const props = defineProps({
         default: {
             title1: '',
             title2: '',
-            icon: ''
+            icon: '',
         }
     },
     isSearch:{
         type: Boolean,
         required: false,
-        default: false
+        default: false,
     }
-})
+});
 </script>
 
 <style scoped>

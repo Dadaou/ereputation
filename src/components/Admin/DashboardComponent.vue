@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import {ref, onBeforeMount} from 'vue'
+import {ref, onBeforeMount} from 'vue';
 import CounterComponent from '@Components/utils/CounterComponent.vue';
 import { useUserStore } from "../../store/user.js";
 
@@ -19,16 +19,16 @@ const all_items = ref([
 const userStore = useUserStore();
 
 onBeforeMount(async ()=>{
-    await userStore.fetchAll((response)=>{
+    await userStore.fetchAll((response) => {
         all_items.value.push(
             {
                 title: "Utilisateurs", 
                 value: userStore.nb, 
-                icon: "uil-users-alt"
+                icon: "uil-users-alt",
             },
-        )
-    })
-})
+        );
+    });
+});
 </script>
 
 <style>

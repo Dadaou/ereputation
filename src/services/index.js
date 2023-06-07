@@ -3,10 +3,17 @@ var axiosInstance = null
 
 const headers = {
     'Content-Type': 'application/json',
+    // 'Authorization': 'Bearer ' + localStorage.getItem("access")
 };
 
 const setToken = (token) => {
-    axiosInstance.defaults.headers["Authorization"] = `Bearer ${token}`;
+    localStorage.setItem("access", token)
+    axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + token;
+}
+
+const setUser = (user) => {
+    localStorage.setItem("user",  JSON.stringify(user))
+    localStorage.setItem("user_authenticated",  true)
 }
 
 const setURL = (baseURL) => {
@@ -19,7 +26,11 @@ const setURL = (baseURL) => {
 };
 
 const logout = () => {
-    delete axiosInstance.defaults.headers["token"];
+    localStorage.removeItem("access");
+    localStorage.removeItem("user_authenticated");
+    localStorage.removeItem("user");
+    localStorage.removeItem("user_role");
+    delete axiosInstance.defaults.headers["Authorization"];
 };
 
 const checkConnexionInfo = () => {
@@ -33,8 +44,8 @@ const checkConnexionInfo = () => {
 const getRecords= async (entity, next)=>{
     try {
         let url = `/api/${entity}`;
-        if(checkConnexionInfo()){
-            await axiosInstance.get(`${url}`).then((response)=>{
+        if (checkConnexionInfo()) {
+            await axiosInstance.get(`${url}`, {headers}).then((response)=>{
                 return next(response);
             })   
         }
@@ -46,10 +57,10 @@ const getRecords= async (entity, next)=>{
 const getRecord= async (entity, recordId, next)=>{
     try {
         let url = `/api/${entity}/${recordId}`;
-        if(checkConnexionInfo()){
+        if (checkConnexionInfo()) {
             console.log(axiosInstance.defaults)
-            await axiosInstance.get(`${url}`).then((response)=>{
-                return next(response);
+            await axiosInstance.get(`${url}`, {headers}).then((response)=>{
+                next(response);
             })   
         }
     } catch (error) {
@@ -61,7 +72,7 @@ const createRecord = async (entity, value, next) => {
     if (checkConnexionInfo()) {
         try {
             let url = `/api/${entity}`;
-            await axiosInstance.post(`${url}`, value)
+            await axiosInstance.post(`${url}`, value, {headers})
                        .then((response)=> {return next(response)})
         } catch (error) {
             return next(error.response)
@@ -73,7 +84,7 @@ const deleteRecord = async (entity, recordId, next) => {
     if (checkConnexionInfo()) {
         try {
             let url = `/api/${entity}/${recordId}`;
-            await axiosInstance.delete(`${url}`)
+            await axiosInstance.delete(`${url}`, {headers})
                        .then((response)=> {return next(response)})
         } catch (error) {
             console.log(error)
@@ -86,7 +97,7 @@ const patchRecord = async (entity, recordId, value, next) => {
     if (checkConnexionInfo()) {
         try {
             let url = `/api/${entity}/${recordId}`;
-            await axiosInstance.patch(url, { value }).then((response)=> {return next(response)})
+            await axiosInstance.patch(url, value, {headers}).then((response)=> {return next(response)})
         } catch (error) {
             console.log(error)
             return next(error.response)
@@ -98,7 +109,7 @@ const putRecord = async (entity, recordId, value, next) => {
     if (checkConnexionInfo()) {
         try {
             let url = `/api/${entity}/${recordId}`;
-            await axios.put(`${url}`, value)
+            await axios.put(`${url}`, value, {headers})
                        .then((response)=> {return next(response)})
         } catch (error) {
             return next(error.response)
@@ -106,12 +117,12 @@ const putRecord = async (entity, recordId, value, next) => {
     }
 };
 
-const login = async (email, password, next) => {
+const login = async (email, password) => {
     try {
         const response = await axiosInstance.post("/api/login", { email: email, password: password})
-        next(response)   
+       return response   
     } catch (error) {
-        next(error.response)
+       return error.response
     }
 };
 
@@ -125,5 +136,6 @@ export default {
     putRecord,
     patchRecord,
     logout,
-    login
+    login,
+    setUser,
 }

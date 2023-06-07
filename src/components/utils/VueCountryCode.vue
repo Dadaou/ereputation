@@ -66,49 +66,49 @@ export default {
   props: {
     searchPlaceholderText: {
       type: String,
-      default: 'Search country'
+      default: 'Search country',
     },
     enableSearchField: {
       type: Boolean,
-      default: false
+      default: false,
     },
     disabledFetchingCountry: {
       type: Boolean,
-      default: false
+      default: false,
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     disabledFormatting: {
       type: Boolean,
-      default: false
+      default: false,
     },
     defaultCountry: {
       // Default country code, ie: 'AU'
       // Will override the current country of user
       type: String,
-      default: ""
+      default: "",
     },
     enabledCountryCode: {
       type: Boolean,
-      default: false
+      default: false,
     },
     enabledFlags: {
       type: Boolean,
-      default: true
+      default: true,
     },
     preferredCountries: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     onlyCountries: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     ignoredCountries: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     dropdownOptions: {
       type: Object,
@@ -116,11 +116,11 @@ export default {
     },
     selectedCountryCode: {
       type: Boolean,
-      default: false
+      default: false,
     },
     enabledPhoneNumbers: {
       type: Boolean,
-      default: false
+      default: false,
     }
   },
   mounted() {
@@ -134,13 +134,12 @@ export default {
       selectedIndex: null,
       typeToFindInput: "",
       typeToFindTimer: null,
-      searchText: ''
+      searchText: '',
     };
   },
   computed: {
     filteredCountries() {
       // List countries after filtered
-
       if(this.searchText.length){
         return allCountries.filter(country => {
           return country.name.toLowerCase().includes(this.searchText.toLowerCase())

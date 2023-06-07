@@ -142,7 +142,7 @@
         <div class="container chart__container">
             <div class="chart__title">Comparatative chart between company1 & company2</div>
             <div>
-                <GoogleChart />
+                <LineChart />
             </div>
         </div>
     </div>
@@ -150,14 +150,15 @@
 
 <script setup>
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
-import {ref} from 'vue'
-import GoogleChart from '@Components/chart/GoogleChart.ts'
+import {ref} from 'vue';
+// import GoogleChart from '@Components/chart/GoogleChart.ts';
+import LineChart from '@Components/chart/LineChart.vue'
 
 const page=ref({
     title1: "Company",
     title2: "Name",
     icon: "uil-building"
-})
+});
 
 const companies = ref([
     {
@@ -171,7 +172,7 @@ const companies = ref([
         website: "https://booking.com",
         isConcurrent: true,
     }
-])
+]);
 </script>
 
 <style scoped>
@@ -182,7 +183,7 @@ const companies = ref([
 
 .comparison__container{
     position: relative;
-    top:10rem;
+    top:3rem;
     height: inherit;
     display: flex;
     justify-content: space-between;
@@ -251,7 +252,7 @@ const companies = ref([
 
 .chart__container{
     position: relative;
-    top:150px;
+    top:5rem;
     display: flex;
     flex-direction: column;
     justify-content: center;

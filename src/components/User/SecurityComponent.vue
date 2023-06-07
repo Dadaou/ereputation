@@ -60,7 +60,7 @@ import { ref } from 'vue';
 
 let enableEdit = ref({
     password: false,
-})
+});
 </script>
 
 <style scoped>

@@ -30,47 +30,44 @@ const emit = defineEmits(['addEvent'])
 const props = defineProps({
     data:{
         type: Array,
-        required: true
+        required: true,
     },
     isAdmin:{
         type: Boolean,
-        default: false
+        default: false,
     }
 })
-const searchValue = ref('')
-const all_data = ref([])
-const color = ref('#6c63ff')
-const isAligned = ref(true)
+const searchValue = ref('');
+const all_data = ref([]);
+const color = ref('#6c63ff');
+const isAligned = ref(true);
 
 watch(searchValue, () => {
-    console.log(searchValue.value)
+    console.log(searchValue.value);
 })
 
-const initSearch = ()=>{
-    searchValue.value = ''
+const initSearch = () => {
+    searchValue.value = '';
 }
 
 let paginationConfig = ref({
     current:0,
     size:5,
     data: [],
-    _data: []
-})
+    _data: [],
+});
 
-let visibleData = ref([])
+let visibleData = ref([]);
+
 let updateVisibleData = function(_data){
-    console.log("je suis dans la fonction update visible data")
-    console.log(_data)
     let data = paginationConfig.value;
 
-    paginationConfig.value.data = _data.slice(data.current*data.size, (data.current * data.size) + data.size)
+    paginationConfig.value.data = _data.slice(data.current*data.size, (data.current * data.size) + data.size);
                 
-
     if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
         updatePage( paginationConfig.value.current -1);
     }
-
-    visibleData.value = paginationConfig.value.data
+    visibleData.value = paginationConfig.value.data;
 }
 
 let updatePage = function(pageNumber){
@@ -81,7 +78,7 @@ let updatePage = function(pageNumber){
 onMounted(() => {
     all_data.value = Array.from(props.data, obj => Object.assign({}, obj));
 
-    console.log(all_data.value)
+    console.log(all_data.value);
     updateVisibleData(all_data.value);  
 })
 

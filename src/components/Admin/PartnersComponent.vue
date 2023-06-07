@@ -62,13 +62,13 @@
 </template>
 
 <script setup>
-import  {ref} from 'vue'
-import TableComponent from "@Components/utils/TableComponent.vue"
-import VueCountryCode from "@Components/utils/VueCountryCode.vue"
+import  {ref} from 'vue';
+import TableComponent from "@Components/utils/TableComponent.vue";
+import VueCountryCode from "@Components/utils/VueCountryCode.vue";
 
 /* About the form */
 const showForm = ref(false)
-const onSelect = ({name, iso2, dialCode})=> {
+const onSelect = ({name, iso2, dialCode}) => {
        console.log(name, iso2, dialCode);
 }
 /* Tables */
@@ -78,21 +78,21 @@ const partners = ref([
         address: '1234 Main St', 
         zip: '12345', 
         city: 'New York', 
-        country: 'United States'
+        country: 'United States',
     },
     {
         model: 'Vincent', 
         address: '1234 Main St', 
         zip: '12345', 
         city: 'New York', 
-        country: 'United States'
+        country: 'United States',
     },
     {
         model: 'Vincent', 
         address: '1234 Main St', 
         zip: '12345', 
         city: 'New York', 
-        country: 'United States'
+        country: 'United States',
     },
 ])
 </script>

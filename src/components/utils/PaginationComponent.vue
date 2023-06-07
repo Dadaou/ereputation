@@ -25,13 +25,12 @@ import { useCheckColor } from '@Composables/useful'
         },
         emits:['updatePage'],
         setup(props, ctx){
-
             let updatePage = function(pageNumber){
                 ctx.emit('updatePage', pageNumber)
             }
 
             let totalPages = function(){
-                console.log(Math.ceil(props.config._data.length / props.config.size))
+                console.log(Math.ceil(props.config._data.length / props.config.size));
                  return Math.ceil(props.config._data.length / props.config.size);
             }
 
@@ -45,7 +44,7 @@ import { useCheckColor } from '@Composables/useful'
 
             /** this function is not really necessary but it just to make the pagination working */
             let textColor = computed(()=>{
-                let color = "black"
+                let color = "black";
             
                 if(useCheckColor(props.color) == "light") color = "black";
                 else color= "rgb(238, 246, 254)";
@@ -54,10 +53,9 @@ import { useCheckColor } from '@Composables/useful'
 
             return{
                 updatePage, totalPages, showPreviousLink,
-                showNextLink, textColor
+                showNextLink, textColor,
             }
         }
-
     }
 </script>
 
