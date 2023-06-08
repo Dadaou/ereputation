@@ -67,6 +67,14 @@
                                 </div>   
                             </div>
                         </div>
+                        <div>
+                                    <label>Chart</label>
+                                    <LineChart :plot-data="plotData" x-key="date"
+                                                :width="450" :height="250" :margin="margin"
+                                                x-axis-label="Year"
+                                                :y-tick-format="d => `$${d}`">
+                                    </LineChart>
+                                </div>
                        </div>
                     </div>
                </div>
@@ -89,7 +97,6 @@
                                     <svg aria-hidden="true" class="w-5 h-5 text-gray-300 dark:text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Fifth star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                                     <p class="ml-2 text-sm font-medium text-gray-900 dark:text-white">{{ company.rate }} out of 5</p>
                                 </div>
-
                         </div>
                         <div class="company__description">
                         {{ company.description }}
@@ -135,6 +142,14 @@
                                 </div>   
                             </div>
                         </div>
+                        <div>
+                            <label>Chart</label>
+                            <LineChart :plot-data="plotData" x-key="date"
+                                        :width="450" :height="250" :margin="margin"
+                                        x-axis-label="Year"
+                                        :y-tick-format="d => `$${d}`">
+                            </LineChart>
+                        </div>
                        </div>
                     </div>
                </div>
@@ -142,7 +157,11 @@
         <div class="container chart__container">
             <div class="chart__title">Comparatative chart between company1 & company2</div>
             <div>
-                <LineChart />
+                <GroupedBarChart :plot-data="plotData" x-key="date"
+                                :width="450" :height="300" :margin="margin"
+                                x-axis-label="Year" y-axis-label="Expenses"
+                                :y-tick-format="d => `$${d}`">
+                </GroupedBarChart>
             </div>
         </div>
     </div>
@@ -151,13 +170,11 @@
 <script setup>
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import {ref} from 'vue';
-// import GoogleChart from '@Components/chart/GoogleChart.ts';
-import LineChart from '@Components/chart/LineChart.vue'
 
 const page=ref({
     title1: "Company",
-    title2: "Name",
-    icon: "uil-building"
+    title2: "Comparison",
+    icon: "uil-building",
 });
 
 const companies = ref([
@@ -173,6 +190,27 @@ const companies = ref([
         isConcurrent: true,
     }
 ]);
+
+const plotData =[
+  {
+    "date": "2019",
+    "Utilities": 5921,
+    "Rent": 1026,
+    "Insurance": 2324
+  },
+  {
+    "date": "2020",
+    "Utilities": 1539,
+    "Rent": 1560,
+    "Insurance": 1257
+  },
+  {
+    "date": "2021",
+    "Utilities": 109,
+    "Rent": 160,
+    "Insurance": 125
+  },
+]
 </script>
 
 <style scoped>

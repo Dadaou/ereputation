@@ -48,8 +48,6 @@ const hideMenu = ref(false);
 
 const signOut = () => {
     userStore.signOut();
-    localStorage.removeItem("user_authenticated");
-    localStorage.removeItem("user");
     userStore.authenticated = false;
     if(userStore.authenticated == false) router.push({name:"Login"});
 }

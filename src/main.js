@@ -4,10 +4,9 @@ import router from './router'
 import services from '@Services/index.js';
 import axios from 'axios';
 import moment from 'moment';
-import Particles from "vue3-particles";
-import VueGoogleCharts from 'vue-google-charts';
+import Particles from "vue3-particles";;
 import VueDatePicker from '@vuepic/vue-datepicker';
-
+import Vuesalize from 'vuesalize';
 import 'moment/dist/locale/fr';
 
 /**
@@ -16,6 +15,7 @@ import 'moment/dist/locale/fr';
 import '@Assets/css/main.css';
 import '@iconscout/unicons/css/line.css';
 import '@vuepic/vue-datepicker/dist/main.css';
+import 'vuesalize/dist/vuesalize.css';
 
 import App from './App.vue';
 
@@ -26,7 +26,7 @@ createApp(App)
     .use(createPinia())
     .use(router, axios)
     .use(Particles)
-    .use(VueGoogleCharts)
+    .use(Vuesalize)
     .component('VueDatePicker', VueDatePicker)
     .mount('#app');
     
