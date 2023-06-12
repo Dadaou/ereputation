@@ -19,15 +19,17 @@
                 <div v-for="(user, index) in visibleUsers" :key="index">
                     <div class="user__main">
                         <div class="user__main__info">
-                            <div class="info user__main__avatar">
+                            <div class="user__main__avatar">
                                 <div class="circle" :class="user.is_active?'active':''"></div>
                                 <img :src="'/src/assets/images/Portrait_Placeholder.png'">
                             </div>
-                            <div class="info user__main__info__name">{{user.firstname}} {{user.lastname}}</div>
-                            <div class="info user__main__info__email">{{user.email}}</div>
-                            <div class="info user__main__info__partner" v-if="user.partner">{{user.partner}}</div> <div class="user__main__info__partner">-</div>
-                            <div class="info user__main__info__login" v-if="user.last_login">{{user.last_login}}</div>
-                            <div class="user__main__info__partner">-</div>
+                            <div class="info">
+                                <div class="user__main__info__name">{{user.firstname}} {{user.lastname}}</div>
+                                <div class="info user__main__info__email">{{user.email}}</div>
+                                <div class="user__main__info__partner" v-if="user.partner">{{user.partner}}</div> <div class="user__main__info__partner">-</div>
+                                <div class="user__main__info__login" v-if="user.last_login">{{user.last_login}}</div>
+                                <div class="user__main__info__login">-</div>
+                            </div>
                         </div>
                         <div class="main__actions">
                             <span class="action__edit"><i class="uil uil-edit"></i></span>
@@ -261,15 +263,22 @@ const showForm = ref(false);
     background-color: var(--color-success);
 }
 
+.info{
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
 .user__main__info{
     flex-grow:1;
     flex-basis: 75%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     text-align:center;
-    /* gap: 2rem; */
+    gap: 2rem;
 }
 
 .user__main__info__name{
@@ -287,6 +296,7 @@ const showForm = ref(false);
     /* background-color: rgb(212, 0, 255); */
     flex-grow: 1;
     max-width: 15rem;
+    overflow-x: hidden;
 }
 
 .user__main__info__login{
@@ -357,5 +367,30 @@ const showForm = ref(false);
 .form__label{
    font-weight: 650;
    color: var(--color-bg2)
+}
+
+/* For tablets */
+@media screen and (max-width:1457px) {
+    .user__main__info__partner, .user__main__info__login{
+        display: none;
+    }
+
+   .info{
+       gap: 0.5rem;
+       justify-content: unset !important;
+   }
+
+   .user__main__info{
+        gap: 0.5rem;
+    }
+
+    .user__main{
+        padding: 20px 10px !important;
+    }
+
+}
+
+@media screen and (max-width:1024px) {
+   
 }
 </style>

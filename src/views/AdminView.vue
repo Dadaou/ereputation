@@ -96,4 +96,28 @@ const page=ref({
 .all__content{
     flex: auto;
 }
+
+/* For tablets */
+@media screen and (max-width:1225px) {
+   .admin__menu li a{
+    padding: 10px 50px;
+   }
+}
+
+@media screen and (max-width:1024px) {
+    .admin__container{
+        position: relative;
+        top:8rem;
+    }
+
+    .admin__menu li a span{
+        display: none;
+        /* padding: 10px 25px; */
+    }
+
+    .admin__menu li a{
+       font-size: 15px;
+       padding: 10px 25px;
+    }
+}
 </style>

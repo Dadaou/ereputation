@@ -19,11 +19,11 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {ref, onBeforeMount} from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import AlertComponent from '@Components/utils/AlertComponent.vue';
 import { useUserStore } from "@Stores/user.js";
-import { useRouter, useRoute } from "vue-router";
+import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
 
 const router = useRouter()
 const route = useRoute()
@@ -49,15 +49,16 @@ const notification = ref({
 const submit = async ()=>{
     await userStore.signIn(form.value.email, form.value.password, (response)=>{
         if(response.authenticated){
-            if(userStore.user.roles.includes("ROLE_USER")){
-                if (userStore.user.roles.includes("ROLE_ADMIN")) {
-                    router.push({name:"Admin_dashboard"})
-                } else{
-                    if (userStore.user.roles.includes("ROLE_API")){  
-                        router.push({name:"Companies"})
-                    }
-                }
-            }
+            // if(userStore.user.roles.includes("ROLE_USER")){
+            //     if (userStore.user.roles.includes("ROLE_ADMIN")) {
+            //         router.push({name:"Admin_dashboard"})
+            //     } else{
+            //         if (userStore.user.roles.includes("ROLE_API")){  
+            //             router.push({name:"Companies"})
+            //         }
+            //     }
+            // }
+            router.push({name:"Home"})
         } else{
             form.value.error = true
             console.log(response)

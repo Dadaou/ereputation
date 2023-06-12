@@ -3,8 +3,9 @@ var axiosInstance = null
 
 const headers = {
     'Content-Type': 'application/json',
-    // 'Authorization': 'Bearer ' + localStorage.getItem("access")
+    'Authorization': 'Bearer ' + localStorage.getItem("access")
 };
+
 
 const setToken = (token) => {
     localStorage.setItem("access", token)
@@ -45,6 +46,7 @@ const getRecords= async (entity, next)=>{
     try {
         let url = `/api/${entity}`;
         if (checkConnexionInfo()) {
+            console.log(headers)
             await axiosInstance.get(`${url}`, {headers}).then((response)=>{
                 return next(response);
             })   

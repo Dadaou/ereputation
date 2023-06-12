@@ -1,6 +1,6 @@
 <template>
      <div class="main__container">
-        <head-component :isSearch="true">
+        <head-component :isSearch="true" :page="page">
             <template #content>
                 <Particles
                     id="tsparticles"
@@ -98,7 +98,7 @@
                             </div>
                         </div>
                     </form>
-                </div>
+                </div> 
             </template>
         </head-component>
         <div class="container client__container">
@@ -107,17 +107,17 @@
                 <div class="line"></div>
             </div>
             <div class="client__container__head">
-                All <b>companies</b>, including yours and your competitors.
+                Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, your companies are listed bellow.
                 <div>({{ companies.length }} companies found)</div>
-                <ul>
+                <!-- <ul>
                     <li :class="isActive=='all'?'active':''" @click="isActive='all'">All companies</li>
                     <li :class="isActive=='my_societies'?'active':''" @click="isActive='my_societies'">My companies</li>
                     <li :class="isActive=='concurrent'?'active':''" @click="isActive='concurrent'">Competitors</li>
-                </ul>
+                </ul> -->
             </div>
             <div class="society__list">
-               <div class="society__item" v-for="company in visibleData">
-                    <div class="society__status" v-if="!company.isConcurrent">owned</div>
+               <div class="society__item" v-for="company,index in visibleData">
+                    <!-- <div class="society__status" v-if="!company.isConcurrent">owned</div> -->
                     <img class="society__logo" :src="company.logo" alt="">  
                     <div class="society__main__info">
                        <div class="item__head">
@@ -150,7 +150,7 @@
                        </div>
                        <div class="society__actions">
                         <button class="btn compare" v-if="company.isConcurrent" @click="$router.push('/companies/1/2/comparison')">Compare <i class="uil uil-chart-line"></i></button>
-                        <button class="btn see__reviews">View<i class="uil uil-angle-right-b"></i></button>
+                        <button class="btn see__reviews" @click="$router.push(`/companies/${index}`)">View<i class="uil uil-angle-right-b"></i></button>
                        </div>
                     </div>
                </div>
@@ -163,6 +163,8 @@
 import {ref, watch} from 'vue'
 import { loadFull } from "tsparticles";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
+import { useUserStore } from "@Stores/user.js";
+const userStore = useUserStore();
 
 const particlesInit = async engine => {
     await loadFull(engine);
@@ -171,6 +173,12 @@ const particlesInit = async engine => {
 const particlesLoaded = async container => {
     console.log("Particles container loaded", container);
 };
+
+const page=ref({
+    title1: "The",
+    title2: "home page",
+    icon: "uil-estate",
+});
 
 const isActive = ref('all');
 let visibleData = ref([]);
@@ -193,7 +201,7 @@ const companies = ref([
         address: "New York, USA",
         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum nihil quasi odit eaque doloremque, quos consequatur harum ipsam inventore",
         website: "https://booking.com",
-        isConcurrent: true,
+        isConcurrent: false,
     },
     {
         logo: "/src/assets/images/Portrait_Placeholder.png",
@@ -203,18 +211,8 @@ const companies = ref([
         address: "New York, USA",
         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum nihil quasi odit eaque doloremque, quos consequatur harum ipsam inventore",
         website: "https://booking.com",
-        isConcurrent: true,
+        isConcurrent: false,
     },
-    {
-        logo: "/src/assets/images/Portrait_Placeholder.png",
-        name: "Booking.com",
-        rate: 5.2,
-        nb_reviews: 60,
-        address: "New York, USA",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum nihil quasi odit eaque doloremque, quos consequatur harum ipsam inventore",
-        website: "https://booking.com",
-        isConcurrent: true,
-    }
 ]);
 
 visibleData.value = companies.value;
@@ -246,6 +244,24 @@ watch(isActive, (value)=>{
 </script>
 
 <style scoped>
+.breadcrumb {
+    position: relative;
+    top:-110px;
+}
+
+.breadcrumb i{
+    font-size: 40px;
+    color: var(--color-white);
+    position: relative;
+}
+
+.breadcrumb div{
+    color: var(--color-bg1);
+    font-size: 25px;
+    position: relative;
+    top: -10px;
+}
+
 .main__search{
     position: relative;
     top:-110px;
@@ -474,4 +490,28 @@ watch(isActive, (value)=>{
 .society__actions i{
     color: var(--color-white);
 }
+
+/* @media screen and (max-width:1024px) {
+    .breadcrumb{
+        position: absolute;
+        top:5rem;
+    }
+
+    .breadcrumb div{
+        font-size: 20px;
+    }
+}
+
+@media screen and (max-width:900px) {
+    .breadcrumb div{
+        font-size: 18px;
+    }
+}
+
+/* Media Queries (Phone) */
+/* @media screen and (max-width:650px) {
+    .breadcrumb div{
+        font-size: 15px;
+    }
+} */ 
 </style>

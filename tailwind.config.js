@@ -4,6 +4,7 @@ export default {
     // "./index.html",
     // "./src/**/*.{vue,js,ts,jsx,tsx}",
     "./src/views/ComparisonView.{vue,js,ts,jsx,tsx}",
+    "./src/views/CompanyView.{vue,js,ts,jsx,tsx}",
     "./src/components/utils/AlertComponent.{vue,js,ts,jsx,tsx}",
     "./src/components/utils/NavbarAvatarComponent.{vue,js,ts,jsx,tsx}",
     "./src/components/utils/NotificationComponent.{vue,js,ts,jsx,tsx}",

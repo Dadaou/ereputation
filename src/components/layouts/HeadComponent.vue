@@ -35,7 +35,7 @@ const props = defineProps({
     top:5rem; */
     background-color: rgb(245, 245, 245);
     width: 100% !important;
-    height: 8rem;
+    height: 7em;
     text-align: center;
 }
 

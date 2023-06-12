@@ -3,7 +3,7 @@
         <div class="container nav__container">
             <h4>eReputation</h4>
             <div class="nav__menu" v-if="userStore.authenticated">
-                <NavbarAvatarComponent/>
+                <NavbarAvatarComponent class="nav__avatar"/>
             </div>
         </div>
     </nav>
@@ -92,7 +92,7 @@ a{
     box-shadow: 0 1rem 2rem rgba(0,0,0,0.2);
 }
 
-.nav__onScroll a{
+.nav__onScroll h4, .nav__onScroll .nav__avatar{
     color: var(--color-white);
 }
 

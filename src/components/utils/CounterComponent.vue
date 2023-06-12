@@ -23,10 +23,16 @@ const props = defineProps({
 .item{
     display: flex;
     gap: 3rem;
+    justify-content: space-between;
     box-shadow: 0 1rem 2rem rgba(0,0,0,0.10);
-    width: 25%;
+    /* width: 25%; */
+    flex-basis: 150px;
     padding: 25px;
     border-radius: 10px;
+}
+
+.item__left{
+    width: 100px;
 }
 
 .item__title{
@@ -45,4 +51,5 @@ const props = defineProps({
     color: var(--light-color-bg2);
     font-size: 25px;
 }
+
 </style>

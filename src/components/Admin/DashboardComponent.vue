@@ -2,7 +2,7 @@
    <div class="dashboard__main__container">
     <div class="dashboard__title"><b>Dashboard</b></div>
     <div class="dashboard__content">
-        <CounterComponent v-for="item in all_items" :item="item"/>
+        <CounterComponent class="counter" v-for="item in all_items" :item="item"/>
     </div>
    </div>
 </template>
@@ -10,7 +10,7 @@
 <script setup>
 import {ref, onBeforeMount} from 'vue';
 import CounterComponent from '@Components/utils/CounterComponent.vue';
-import { useUserStore } from "../../store/user.js";
+import { useUserStore } from "@Stores/user.js";
 
 const all_items = ref([
     {title: "Partenaires", value: "0", icon: "uil-user-md"},
@@ -48,7 +48,24 @@ onBeforeMount(async ()=>{
 .dashboard__content{
     margin-top: 15px;
     display: flex;
+    flex-wrap: wrap;
     gap: 30px;
     margin-bottom: 30px;
+    transition: var(--transition);
+}
+
+@media screen and (max-width:1024px) {
+    /* .dashboard__content{
+        flex-direction: column;
+    } */
+}
+
+
+/* For mobiles */
+@media screen and (max-width:500px) {
+    .dashboard__content{
+       justify-content: center;
+       align-items: center;
+    }
 }
 </style>
