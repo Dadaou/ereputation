@@ -9,31 +9,27 @@
                     </div>
                     <div class="competitors">
                         <div class="select__title w-full">Compare to</div>
-                        <!-- <select id="competitors" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block  p-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                            <option selected>Global</option>
-                            <option value="Company 1">Company 1</option>
-                            <option value="Company 2">Company 2</option>
-                            <option value="Company 3">Company 3</option>
-                            <option value="Company 4">Company 4</option>
-                        </select> -->
                         <div @click="showCompetitors = !showCompetitors">
                             <div id="competitors__dropdown" data-dropdown-toggle="dropdownDivider" class="font-medium rounded-xl text-sm px-3 py-2 border border-1 w-60" type="button">
-                            <span>Global</span>
+                            <span>{{ selectedCompetitors }}</span>
                             <svg class="w-10 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></div>
 
                             <!-- Dropdown menu -->
                             <div id="dropdownDivider" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 w-60" v-show="showCompetitors">
                                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
-                                    <li>
+                                    <li @click="selectedCompetitors='Global'">
+                                        Global
+                                    </li>
+                                    <li @click="selectedCompetitors='Company 1'">
                                         Company 1
                                     </li>
-                                    <li>
+                                    <li @click="selectedCompetitors='Company 2'">
                                         Company 2
                                     </li>
-                                    <li>
+                                    <li @click="selectedCompetitors='Company 3'">
                                         Company 3
                                     </li>
-                                    <li>
+                                    <li @click="selectedCompetitors='Company 4'">
                                         Company 4
                                     </li>
                                 </ul>
@@ -56,9 +52,11 @@
                                     :y-tick-format="d => `$${d}`">
                     </GroupedBarChart>
                 </div>
+                <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
+                </BaseLegend>
                 <div class="head">
                     <div class="app__title">
-                       <h2>3 Top reviews</h2>
+                       <h2>Top Three reviews</h2>
                     </div>
                 </div>
                 <div class="reviews__content">  
@@ -96,26 +94,60 @@
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
             <div class="right__side">
+              <div class="filter__content">
+                <div class="title">
+                    Filter by website
+                </div>
+                <div @click="showWebsites = !showWebsites">
+                            <div id="website__dropdown" data-dropdown-toggle="dropdownDivider" class="font-medium rounded-xl text-sm px-3 py-2 border border-1 w-60" type="button">
+                            <span>Global</span>
+                            <svg class="w-10 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></div>
+
+                            <!-- Dropdown menu -->
+                            <div id="dropdownDivider" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 w-60" v-show="showWebsites">
+                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
+                                    <li>
+                                        Google
+                                    </li>
+                                    <li>
+                                        Trivago
+                                    </li>
+                                    <li>
+                                        Booking
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+              </div>
+              <div class="rating__customers">
+                <div class="title">Rating by Customers</div>
+                <div class="chart__rating">
+                    <LineChart :plot-data="plotdata1" x-key="year"
+                                :width="300" :height="200" :margin="margin"
+                                :y-min="1" :x-ticks="3" :x-min="2021" :x-max="2023"
+                                :colors="colors"
+                                :y-tick-format="d => `${d}`">
+                    </LineChart>
+                </div>
+              </div>
               <div class="community__feedback">
-                    <div class="feed__title">Community Feedback</div>
+                    <div class="title">Community Feedback</div>
                     <h2>Mostly Positive</h2>
                     <div class="reviews__content1">
                         <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700">
                             <div class="h-2 bg-red-300 rounded" style="width: 100%"></div>
-                            Negative
+                            <span>Negative</span>
                         </div>
                         <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700">
                             <div class="h-2 bg-grey-300 rounded" style="width: 100%"></div>
-                            Neutral
+                            <span>Neutral</span>
                         </div>
-                        
                         <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700">
                             <div class="h-2 bg-green-300 rounded" style="width: 100%"></div>
-                            Positive
+                            <span>Positive</span>
                         </div>
                     </div>
               </div>
@@ -131,11 +163,14 @@ import {ref, watch} from 'vue';
 
 const page=ref({
     title1: "Your",
-    title2: "Company",
+    title2: "etablishment",
     icon: "uil-estate",
 });
 
 let showCompetitors = ref(false);
+let showWebsites = ref(false);
+let selectedCompetitors = ref('Global');
+let selectedWebsites = ref('Global');
 
 const all_items = ref([
     {title: "Rating", value: "4.5", icon: "uil-star"},
@@ -166,10 +201,56 @@ let plotdata = [
         "Company 4": 2324
     },
 ]
-let margin = { top: 20, bottom: 35, left: 55, right: 20 }
-let colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890']
+
+let plotdata1 = [
+    {
+        "year": "2021",
+        "Company 1": 4.9,
+        "Company 2": 4.2,
+        "Company 3": 4.3,
+        "Company 4": 3.5
+    },
+    {
+        "year": "2022",
+        "Company 1": 3.2,
+        "Company 2": 4.6,
+        "Company 3": 3.5,
+        "Company 4": 2.8
+    },
+    {
+        "year": "2023",
+        "Company 1": 4.3,
+        "Company 2": 4.8,
+        "Company 3": 4.6,
+        "Company 4": 4.5
+    },
+]
+
+let legendData = [
+  {
+    "name": "Company 1",
+    "color": "#6c63ff"
+  },
+  {
+    "name": "Company 2",
+    "color": "#f75842"
+  },
+  {
+    "name": "Company 3",
+    "color": "#aca8fd"
+  },
+  {
+    "name": "Company 4",
+    "color": "#424890"
+  },
+];
+
+let margin = { top: 20, bottom: 35, left: 55, right: 20 };
+
+let colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890'];
+
 watch(showCompetitors, ()=>{
- console.log(showCompetitors.value)   
+ console.log(showCompetitors.value);   
 });
 </script>
 
@@ -200,14 +281,57 @@ watch(showCompetitors, ()=>{
     flex-grow: 1;
 }
 
+.rating__customers{
+    /* box-shadow: 0 1rem 2rem rgba(0,0,0,0.09); */
+    border:1px solid var(--color-primary);
+    border-radius: 10px;
+    margin: 15px auto;
+    /* padding: 15px; */
+}
+
+.filter__content .title{
+    font-size: 15px;
+    font-weight:600;
+    /* margin-left: 15px; */
+    /* margin-top:15px; */
+}
+
+.filter__content{
+    border:1px solid var(--color-primary);
+    border-radius: 10px;
+    /* margin: 15px auto; */
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.rating__customers .title{
+   font-size: 15px;
+   font-weight:600;
+   margin-left: 15px;
+   margin-top:15px;
+}
+
+.reviews__content1 .review span{
+   font-size: 12px;
+   margin: auto;
+}
+
 .community__feedback{
-    box-shadow: 0 1rem 2rem rgba(0,0,0,0.1);
+    /* box-shadow: 0 1rem 2rem rgba(0,0,0,0.1); */
+    border:1px solid var(--color-primary);
     border-radius: 10px;
     height: 125px;
     padding: 15px;
 }
 
-.community__feedback .feed__title{
+.chart__rating{
+    display: flex;
+    justify-content: center;
+}
+
+.community__feedback .title{
     font-size: 15px;
     font-weight: 600;
 }
@@ -215,6 +339,12 @@ watch(showCompetitors, ()=>{
 .community__feedback h2{
     font-size: 14px;
     font-weight: 500;
+}
+
+.legend{
+   display: flex;
+   justify-content: center;
+   margin-bottom: 30px;
 }
 
 .app__title{
@@ -244,6 +374,13 @@ watch(showCompetitors, ()=>{
 }
 
 #competitors__dropdown{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+#website__dropdown{
     display: flex;
     align-items: center;
     justify-content: space-between;
