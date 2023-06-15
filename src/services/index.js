@@ -1,15 +1,9 @@
 import axios from 'axios'
 var axiosInstance = null
 
-const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + localStorage.getItem("access")
-};
-
-
 const setToken = (token) => {
-    localStorage.setItem("access", token)
-    axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + token;
+    localStorage.setItem("access", token);
+    axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + localStorage.getItem("access");
 }
 
 const setUser = (user) => {
@@ -44,10 +38,9 @@ const checkConnexionInfo = () => {
 
 const getRecords= async (entity, next)=>{
     try {
-        let url = `/api/${entity}`;
+        let url = `/${entity}`;
         if (checkConnexionInfo()) {
-            console.log(headers)
-            await axiosInstance.get(`${url}`, {headers}).then((response)=>{
+            await axiosInstance.get(`${url}`).then((response)=>{
                 return next(response);
             })   
         }
@@ -58,10 +51,23 @@ const getRecords= async (entity, next)=>{
 
 const getRecord= async (entity, recordId, next)=>{
     try {
-        let url = `/api/${entity}/${recordId}`;
+        let url = `/${entity}/${recordId}`;
         if (checkConnexionInfo()) {
             console.log(axiosInstance.defaults)
-            await axiosInstance.get(`${url}`, {headers}).then((response)=>{
+            await axiosInstance.get(`${url}`).then((response)=>{
+                next(response);
+            })   
+        }
+    } catch (error) {
+        return next(error.response)
+    }
+}
+
+const get_Record= async (url, next)=>{
+    try {
+        if (checkConnexionInfo()) {
+            console.log(axiosInstance.defaults)
+            await axiosInstance.get(`${url}`).then((response)=>{
                 next(response);
             })   
         }
@@ -73,8 +79,8 @@ const getRecord= async (entity, recordId, next)=>{
 const createRecord = async (entity, value, next) => {
     if (checkConnexionInfo()) {
         try {
-            let url = `/api/${entity}`;
-            await axiosInstance.post(`${url}`, value, {headers})
+            let url = `/${entity}`;
+            await axiosInstance.post(`${url}`, value)
                        .then((response)=> {return next(response)})
         } catch (error) {
             return next(error.response)
@@ -85,8 +91,8 @@ const createRecord = async (entity, value, next) => {
 const deleteRecord = async (entity, recordId, next) => {
     if (checkConnexionInfo()) {
         try {
-            let url = `/api/${entity}/${recordId}`;
-            await axiosInstance.delete(`${url}`, {headers})
+            let url = `/${entity}/${recordId}`;
+            await axiosInstance.delete(`${url}`)
                        .then((response)=> {return next(response)})
         } catch (error) {
             console.log(error)
@@ -98,8 +104,8 @@ const deleteRecord = async (entity, recordId, next) => {
 const patchRecord = async (entity, recordId, value, next) => {
     if (checkConnexionInfo()) {
         try {
-            let url = `/api/${entity}/${recordId}`;
-            await axiosInstance.patch(url, value, {headers}).then((response)=> {return next(response)})
+            let url = `/${entity}/${recordId}`;
+            await axiosInstance.patch(url, value).then((response)=> {return next(response)})
         } catch (error) {
             console.log(error)
             return next(error.response)
@@ -110,8 +116,8 @@ const patchRecord = async (entity, recordId, value, next) => {
 const putRecord = async (entity, recordId, value, next) => {
     if (checkConnexionInfo()) {
         try {
-            let url = `/api/${entity}/${recordId}`;
-            await axios.put(`${url}`, value, {headers})
+            let url = `/${entity}/${recordId}`;
+            await axios.put(`${url}`, value)
                        .then((response)=> {return next(response)})
         } catch (error) {
             return next(error.response)
@@ -121,7 +127,10 @@ const putRecord = async (entity, recordId, value, next) => {
 
 const login = async (email, password) => {
     try {
-        const response = await axiosInstance.post("/api/login", { email: email, password: password})
+        const response = await axiosInstance.post("/login", { email: email, password: password})
+        if(response.status == 200){
+            setToken(response.data["token"])
+        }
        return response   
     } catch (error) {
        return error.response
@@ -133,6 +142,7 @@ export default {
     setURL,
     getRecords,
     getRecord,
+    get_Record,
     createRecord,
     deleteRecord,
     putRecord,

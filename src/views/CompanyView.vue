@@ -17,10 +17,10 @@
                             <!-- Dropdown menu -->
                             <div id="dropdownDivider" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 w-60" v-show="showCompetitors">
                                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
-                                    <li @click="selectedCompetitors='Global'">
-                                        Global
+                                    <li v-for="company, index in competitorStore.establishments" @click="selectedCompetitors= company.name">
+                                       {{ company.name }}
                                     </li>
-                                    <li @click="selectedCompetitors='Company 1'">
+                                    <!-- <li @click="selectedCompetitors='Company 1'">
                                         Company 1
                                     </li>
                                     <li @click="selectedCompetitors='Company 2'">
@@ -31,7 +31,7 @@
                                     </li>
                                     <li @click="selectedCompetitors='Company 4'">
                                         Company 4
-                                    </li>
+                                    </li> -->
                                 </ul>
                             </div>
                         </div>
@@ -160,6 +160,7 @@
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import CounterComponent from '@Components/utils/CounterComponent.vue';
 import {ref, watch} from 'vue';
+import { useCompetitorStore } from "@Stores/competitors.js";
 
 const page=ref({
     title1: "Your",
@@ -167,6 +168,7 @@ const page=ref({
     icon: "uil-estate",
 });
 
+const competitorStore = useCompetitorStore();
 let showCompetitors = ref(false);
 let showWebsites = ref(false);
 let selectedCompetitors = ref('Global');

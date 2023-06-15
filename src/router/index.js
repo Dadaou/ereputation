@@ -13,12 +13,22 @@ import NotFoundView from '@Views/NotFoundView.vue';
 import ProfileView from '@Views/ProfileView.vue';
 import SecurityComponent from '@Components/User/SecurityComponent.vue';
 import UserDetailsComponent from '@Components/User/UserDetailsComponent.vue';
+import { useCompanyStore } from "@Stores/company.js"; 
+import { useCompetitorStore } from "@Stores/competitors.js";
 
 const routes = [
   {
     path: '/home',
     name: 'Home',
     component: CompaniesView,
+    async beforeEnter(to, from, next){
+      const companiesStore = useCompanyStore();
+      await companiesStore.fetchAll((response)=>{
+        console.log(response.data['hydra:member'])
+        // competitorStore.fetchByEstablishment(response.data['hydra:member'].competitors)
+        next();
+      });
+    }
   },
   {
     path: '/admin',
@@ -67,6 +77,16 @@ const routes = [
     path:'/companies/:id',
     name: 'Company',
     component: CompanyView,
+    async beforeEnter(to, from, next){
+      const companyId = to.params.id
+      const companiesStore = useCompanyStore();
+      const competitorStore = useCompetitorStore();
+      await companiesStore.fetchOne(companyId, (data)=> {
+        competitorStore.fetchByEstablishment(data.competitors, ()=>{
+          next();
+        });
+      })
+    }
   },
   {
     path:'/companies/:competitorId/:companyId/comparison',

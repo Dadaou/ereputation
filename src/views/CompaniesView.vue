@@ -1,6 +1,6 @@
 <template>
      <div class="main__container">
-        <head-component :isSearch="true" :page="page">
+        <head-component :isSearch="false" :page="page">
             <template #content>
                 <Particles
                     id="tsparticles"
@@ -107,52 +107,24 @@
                 <div class="line"></div>
             </div>
             <div class="client__container__head">
-                Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, your companies are listed bellow.
-                <div>({{ companies.length }} companies found)</div>
-                <!-- <ul>
-                    <li :class="isActive=='all'?'active':''" @click="isActive='all'">All companies</li>
-                    <li :class="isActive=='my_societies'?'active':''" @click="isActive='my_societies'">My companies</li>
-                    <li :class="isActive=='concurrent'?'active':''" @click="isActive='concurrent'">Competitors</li>
-                </ul> -->
+                Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, your companies are listed bellow.  <span>({{ companiesStore.nb }} companies found)</span>
             </div>
             <div class="society__list">
-               <div class="society__item" v-for="company,index in visibleData">
-                    <!-- <div class="society__status" v-if="!company.isConcurrent">owned</div> -->
-                    <img class="society__logo" :src="company.logo" alt="">  
+                <div class="society__item" v-for="company,index in companiesStore.establishments" @click="$router.push(`/companies/${company.id}`)">
+                    <img class="society__logo" :src="'https://images.pexels.com/photos/7070/space-desk-workspace-coworking.jpg'" alt="">  
                     <div class="society__main__info">
                        <div class="item__head">
                         <div class="society__info">
                             <label class="society__name">{{ company.name }}</label>
                             <div class="society__location">
                                 <i class="uil uil-location-point"></i>
-                                <span>{{ company.address }}</span>
+                                <span>{{ company.address1 }}, {{ company.city }}</span>
                             </div>
                         </div>
-                        <div class="society__rating">
-                            <div class="review">
-                                <div v-if="company.rate>8">
-                                    Very Good
-                                </div>
-                                <div v-else-if="company.rate>5">
-                                    Good
-                                </div>
-                                <div v-else>
-                                    Not Good
-                                </div>
-                                <span>{{ company.nb_reviews }} reviews</span>
-                            </div>
-                            <div class="rating">{{ company.rate }}</div>
-                        </div>
-                       </div>
-                        
-                       <div class="society__description">
-                        {{ company.description }}
-                       </div>
                        <div class="society__actions">
-                        <button class="btn compare" v-if="company.isConcurrent" @click="$router.push('/companies/1/2/comparison')">Compare <i class="uil uil-chart-line"></i></button>
-                        <button class="btn see__reviews" @click="$router.push(`/companies/${index}`)">View<i class="uil uil-angle-right-b"></i></button>
                        </div>
                     </div>
+                </div>
                </div>
             </div>
         </div>
@@ -164,7 +136,9 @@ import {ref, watch} from 'vue'
 import { loadFull } from "tsparticles";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import { useUserStore } from "@Stores/user.js";
+import { useCompanyStore } from "@Stores/company.js"; 
 const userStore = useUserStore();
+const companiesStore = useCompanyStore();
 
 const particlesInit = async engine => {
     await loadFull(engine);
@@ -325,11 +299,11 @@ watch(isActive, (value)=>{
 }
 
 .client__container__head{
-    font-size: 20px;
+    font-size: 19px;
     color: var(--color-bg2)
 }
 
-.client__container__head div{
+.client__container__head div, .client__container__head span{
     font-size: 15px;
     font-weight: bold;
 }
@@ -354,76 +328,45 @@ watch(isActive, (value)=>{
 
 .society__list{
     display: flex;
-    /* flex-wrap: wrap; */
-    gap: 1rem;
     flex-direction: column;
-}
-.society__status{
-    position: absolute;
-    left: -11px;
-    background-color: var(--color-success);
-    color: var(--color-white);
-    font-weight: bold;
-    font-size: 14px;
-    padding: 2px 6px;
-    border-radius: 3px;
-    z-index: 1;
+    justify-content: center;
+    width: 60%;
+    align-self: center;
 }
 
-.society__status::before{
-    content: "";
-    /* background-color: var(--color-success); */
-    display: block;
-    position: absolute;
-    top:25px;
-    left:-1px;
-    /* height: 15px;
-    width: 15px; */
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 9.5px solid var(--color-success);
-    border-radius: 10px;
-    transform: rotate(50deg);
+.society__item img{
+   width: 20%;
+   height: 75%;
 }
 
 .society__item {
     display: flex;
-    /* align-items: center; */
     gap: 2rem;
     font-size: 15px;
     padding: 10px;
     border-radius: 5px;
-    /* box-shadow: 0rem 1rem 2rem rgba(0, 0, 0, 0.10); */
-    width: 100%;
+    flex-basis: 50%;
     margin-bottom: 10px;
     color: var(--color-bg2);
     cursor: pointer;
     border: 2px solid var(--light-color-bg1);
-   
+    transition: var(--transition);
+    height: 75px;
 }
 
-.society__item img{
-   width: 23%;
-   height: 100%;
+.society__item:hover {
+    box-shadow: 0 1rem 2rem rgba(0,0,0,0.09);
 }
 
 .society__main__info{
    display: flex;
    flex-direction: column;
    gap: 1rem;
-   /* align-items: center; */
-}
-
-.society__item label{
-    font-size: 18px;
-    font-weight: bold;
-    color: var(--color-primary)
 }
 
 .society__item div{
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: 500;
 }
 
 .society__item i{
@@ -435,83 +378,9 @@ watch(isActive, (value)=>{
     justify-content: space-between;
 }
 
-.society__rating{
-    display:flex;
-    align-items: flex-end;
-    gap: 15px;
-}
-
-.rating{
-    background-color: var(--color-danger);
-    color: var(--color-white);
-    padding: 10px 10px;
+.society__item label{
+    font-size: 14px;
     font-weight: bold;
-    border-radius: 6px 6px 6px 0px;
+    color: var(--color-primary)
 }
-
-.review div{
-    font-weight: bold;
-    color: var(--color-bg2);
-    font-size: 16px;
-}
-
-.review span{
-    font-size: 13px;
-}
-
-.society__actions{
-    display: flex;
-    justify-content: flex-end;
-    gap: 15px;
-}
-.society__actions .see__reviews{
-    color: var(--color-white);
-    background-color: var(--light-color-bg2);
-    border-radius: 5px;
-    padding: 10px;
-    transition: var(--transition);
-    cursor: pointer;
-}
-
-.society__actions .compare{
-    color: var(--color-white);
-    background-color: var(--light-color-bg2);
-    border-radius: 5px;
-    padding: 10px;
-    transition: var(--transition);
-    cursor: pointer;
-}
-
-.society__actions .see__reviews:hover, .compare:hover{
-    color: var(--color-white);
-    background-color: var(--color-primary);
-}
-
-.society__actions i{
-    color: var(--color-white);
-}
-
-/* @media screen and (max-width:1024px) {
-    .breadcrumb{
-        position: absolute;
-        top:5rem;
-    }
-
-    .breadcrumb div{
-        font-size: 20px;
-    }
-}
-
-@media screen and (max-width:900px) {
-    .breadcrumb div{
-        font-size: 18px;
-    }
-}
-
-/* Media Queries (Phone) */
-/* @media screen and (max-width:650px) {
-    .breadcrumb div{
-        font-size: 15px;
-    }
-} */ 
 </style>

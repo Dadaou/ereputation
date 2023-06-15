@@ -45,7 +45,7 @@ export const useUserStore = defineStore("user", {
       const response = await services.login(email, password); 
         if (response.status == 200) {
           console.log(response.data['token']);
-          services.setToken(response.data["token"])
+
           await services.getRecord(this.entity,response.data.user.id, (res)=>{
             if (res.status == 200) {
               services.setUser(res.data);
@@ -53,8 +53,7 @@ export const useUserStore = defineStore("user", {
               this.authenticated = true;
               if(this.user.roles.includes("ROLE_USER")){
                 if (this.user.roles.includes("ROLE_ADMIN")) {
-                    localStorage.setItem("user_role",  "Admin")
-                   
+                    localStorage.setItem("user_role",  "Admin") 
                 } else{
                     if (this.user.roles.includes("ROLE_API")){
                         localStorage.setItem("user_role",  "Client")
