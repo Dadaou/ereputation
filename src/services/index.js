@@ -3,7 +3,7 @@ var axiosInstance = null
 
 const setToken = (token) => {
     localStorage.setItem("access", token);
-    axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + localStorage.getItem("access");
+    // axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + localStorage.getItem("access");
 }
 
 const setUser = (user) => {
@@ -37,10 +37,15 @@ const checkConnexionInfo = () => {
 }
 
 const getRecords= async (entity, next)=>{
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access')}`
+    };
     try {
         let url = `/${entity}`;
         if (checkConnexionInfo()) {
-            await axiosInstance.get(`${url}`).then((response)=>{
+            console.log(headers)
+            await axiosInstance.get(`${url}`, {headers}).then((response)=>{
                 return next(response);
             })   
         }
@@ -50,11 +55,15 @@ const getRecords= async (entity, next)=>{
 }
 
 const getRecord= async (entity, recordId, next)=>{
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access')}`
+    };
     try {
         let url = `/${entity}/${recordId}`;
         if (checkConnexionInfo()) {
             console.log(axiosInstance.defaults)
-            await axiosInstance.get(`${url}`).then((response)=>{
+            await axiosInstance.get(`${url}`, {headers}).then((response)=>{
                 next(response);
             })   
         }
@@ -64,10 +73,14 @@ const getRecord= async (entity, recordId, next)=>{
 }
 
 const get_Record= async (url, next)=>{
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access')}`
+    };
     try {
         if (checkConnexionInfo()) {
             console.log(axiosInstance.defaults)
-            await axiosInstance.get(`${url}`).then((response)=>{
+            await axiosInstance.get(`${url}`, {headers}).then((response)=>{
                 next(response);
             })   
         }
@@ -77,10 +90,14 @@ const get_Record= async (url, next)=>{
 }
 
 const createRecord = async (entity, value, next) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access')}`
+    };
     if (checkConnexionInfo()) {
         try {
             let url = `/${entity}`;
-            await axiosInstance.post(`${url}`, value)
+            await axiosInstance.post(`${url}`, value, {headers})
                        .then((response)=> {return next(response)})
         } catch (error) {
             return next(error.response)
@@ -89,10 +106,14 @@ const createRecord = async (entity, value, next) => {
 };
 
 const deleteRecord = async (entity, recordId, next) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access')}`
+    };
     if (checkConnexionInfo()) {
         try {
             let url = `/${entity}/${recordId}`;
-            await axiosInstance.delete(`${url}`)
+            await axiosInstance.delete(`${url}`, {headers})
                        .then((response)=> {return next(response)})
         } catch (error) {
             console.log(error)
@@ -102,10 +123,14 @@ const deleteRecord = async (entity, recordId, next) => {
 };
 
 const patchRecord = async (entity, recordId, value, next) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access')}`
+    };
     if (checkConnexionInfo()) {
         try {
             let url = `/${entity}/${recordId}`;
-            await axiosInstance.patch(url, value).then((response)=> {return next(response)})
+            await axiosInstance.patch(url, value, {headers}).then((response)=> {return next(response)})
         } catch (error) {
             console.log(error)
             return next(error.response)
@@ -114,10 +139,14 @@ const patchRecord = async (entity, recordId, value, next) => {
 };
 
 const putRecord = async (entity, recordId, value, next) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access')}`
+    };
     if (checkConnexionInfo()) {
         try {
             let url = `/${entity}/${recordId}`;
-            await axios.put(`${url}`, value)
+            await axios.put(`${url}`, value, {headers})
                        .then((response)=> {return next(response)})
         } catch (error) {
             return next(error.response)
