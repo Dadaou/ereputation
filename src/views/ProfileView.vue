@@ -1,12 +1,15 @@
 <template>
     <div class="main__container">
         <HeadComponent :page="page"></HeadComponent>
+        <div class="breadcrumb__container">
+            <BreadcrumbComponent :data="breadcrumbData"/>
+        </div>
         <div class="container admin__container">
             <div class="admin__menu">
                 <ul>
                     <li>
                         <router-link :to="{ name: 'Personal_details'}">
-                            <i class="uil uil-building"></i><span>Partners</span>
+                            <i class="uil uil-building"></i><span>Personal details</span>
                         </router-link>
                     </li>
                     <li>
@@ -17,9 +20,6 @@
                 </ul>
             </div>
             <div class="all__content">
-                <!-- <CompaniesComponent v-show="currentContent=='myCompanies'"/>
-                <SecurityComponent v-show="currentContent=='security'"/>
-                <UserDetailsComponent v-show="currentContent=='personal_details'"/> -->
                 <RouterView/>
             </div>
         </div>
@@ -30,6 +30,8 @@
 import {ref} from 'vue';
 import { RouterView } from 'vue-router';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
+import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
+import { useRoute } from "vue-router";
 
 
 const page=ref({
@@ -37,6 +39,14 @@ const page=ref({
     title2: "Profile",
     icon: "uil-user-square",
 });
+const route = useRoute();
+const breadcrumbData = [
+    {
+        title: "Profile",
+        path: `${route.path}`,
+        isCurrent: true,
+    },
+]
 </script>
 
 <style scoped>

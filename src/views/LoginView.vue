@@ -131,10 +131,6 @@ const submit = async ()=>{
     transform: scale(0.95);
 }
 
-footer{
-    margin-top:0px !important;
-}
-
 /* For tablets */
 @media screen and (max-width:1225px) {
     .login__container{
@@ -154,14 +150,7 @@ footer{
 @media screen and (max-width:1024px) {
     .login__container{
         position: relative;
-        top:13rem;
-    }
-}
-
-@media screen and (max-width:1024px) {
-    .login__container{
-        position: relative;
-        top:13rem;
+        top:8rem;
     }
 }
 

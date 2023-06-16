@@ -19,11 +19,13 @@ export const useCompanyStore = defineStore("company", {
         })
     },
     async fetchOne(id, next){
-      await services.getRecord(this.entity, id, (response)=>{
-          if (response.status == 200) {
-            next(response.data);
-          }
-      })
-  }
+      try {
+        await services.getRecord(this.entity, id, (response)=>{
+          next(response.data);
+        });
+      } catch (error) {
+        console.error(error)
+      }
+    }
   }
 });

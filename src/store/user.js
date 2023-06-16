@@ -5,7 +5,7 @@ export const useUserStore = defineStore("user", {
   state: () => ({
     user: JSON.parse(localStorage.getItem('user')),
     users: [],
-    roleSummary: localStorage.getItem("user_role"),
+    roleSummary: '',
     authenticated: localStorage.getItem('user_authenticated'),
     entity: 'users',
     nb: 0,
@@ -53,10 +53,12 @@ export const useUserStore = defineStore("user", {
               this.authenticated = true;
               if(this.user.roles.includes("ROLE_USER")){
                 if (this.user.roles.includes("ROLE_ADMIN")) {
-                    localStorage.setItem("user_role",  "Admin") 
+                    localStorage.setItem("user_role",  "Admin")
+                    this.roleSummary="Admin"; 
                 } else{
                     if (this.user.roles.includes("ROLE_API")){
                         localStorage.setItem("user_role",  "Client")
+                        this.roleSummary="Client";
                     }
                 }
             }

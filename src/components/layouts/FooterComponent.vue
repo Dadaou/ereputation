@@ -34,7 +34,7 @@ footer{
     padding: 3rem;
     background-color: var(--color-bg2);
     color: var(--color-white);
-    margin-top: 150px;
+    margin-top: 100px;
 }
 
 .footer__container{
@@ -99,7 +99,7 @@ footer{
     }
 
     footer{
-        margin-top: 100px;
+        margin-top: 50px;
     }
 }
 

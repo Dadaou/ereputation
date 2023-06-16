@@ -1,11 +1,5 @@
 import { createRouter, createWebHistory} from 'vue-router';
 import LoginView from '@Views/LoginView.vue';
-import AdminView from '@Views/AdminView.vue';
-import DashboardComponent from '@Components/Admin/DashboardComponent.vue';
-import CompaniesComponent from '@Components/Admin/CompaniesComponent.vue';
-import PartnersComponent from '@Components/Admin/PartnersComponent.vue';
-import UsersComponent from '@Components/Admin/UsersComponent.vue';
-import SettingsComponent from '@Components/Admin/SettingsComponent.vue';
 import CompaniesView from '@Views/CompaniesView.vue';
 import CompanyView from '@Views/CompanyView.vue';
 import ComparisonView from '@Views/ComparisonView.vue';
@@ -16,77 +10,68 @@ import UserDetailsComponent from '@Components/User/UserDetailsComponent.vue';
 import { useCompanyStore } from "@Stores/company.js"; 
 import { useCompetitorStore } from "@Stores/competitors.js";
 
+const removeAccess = (to, from, next) => {
+  localStorage.removeItem("user_authenticated");
+  localStorage.removeItem("access");
+  localStorage.removeItem("user");
+  localStorage.removeItem("user_role");
+  next();
+}
+
+const CheckAccess = (to, from, next) => {
+  console.log(localStorage.getItem("access"))
+  if(localStorage.getItem("access") == null) next('/');
+  else next()
+}
+
+const CheckAuthentication = (to, from, next) => {
+    if(to.name == 'Login' && localStorage.getItem("access") == null){
+      next()
+    } else next('/home')
+}
+
+const fetchCompetitors = async (to, from, next) => {
+ const companyId = to.params.id;
+ const companiesStore = useCompanyStore();
+ const competitorsStore = useCompetitorStore();
+ await companiesStore.fetchOne(companyId, async (company) => {
+
+    const competitors = company.competitors;
+    await competitorsStore.getAllCompetitors(competitors, (response) => {
+      console.log(response);
+    })
+
+ });
+
+ next()
+}
+
+const fetchEstablishments = async (to, from, next) => {
+  const companiesStore = useCompanyStore();
+  await companiesStore.fetchAll((response)=>{
+    console.log(response.data['hydra:member'])
+    next();
+  });
+}
+
 const routes = [
-  {
-    path: '/home',
-    name: 'Home',
-    component: CompaniesView,
-    async beforeEnter(to, from, next){
-      const companiesStore = useCompanyStore();
-      await companiesStore.fetchAll((response)=>{
-        console.log(response.data['hydra:member'])
-        // competitorStore.fetchByEstablishment(response.data['hydra:member'].competitors)
-        next();
-      });
-    }
-  },
-  {
-    path: '/admin',
-    name: 'Admin',
-    component: AdminView,
-    children: [
-      {
-        path: '',
-        name: 'Admin_dashboard',
-        component: DashboardComponent,
-      },
-      {
-        path: 'companies',
-        name: 'Admin_companies',
-        component: CompaniesComponent,
-      },
-      {
-        path: 'users',
-        name: 'Admin_users',
-        component: UsersComponent,
-      },
-      {
-        path: 'partners',
-        name: 'Admin_partners',
-        component: PartnersComponent,
-      },
-      {
-        path: 'settings',
-        name: 'Admin_settings',
-        component: SettingsComponent,
-      },
-    ]
-  },
   {
     path: '/',
     name: 'Login',
     component: LoginView, 
-    beforeEnter: (to, from, next) => {
-      localStorage.removeItem("user_authenticated");
-      localStorage.removeItem("user");
-      localStorage.removeItem("user_role");
-      next();
-    }
+    beforeEnter:[CheckAuthentication, removeAccess],
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    component: CompaniesView,
+    beforeEnter: [CheckAccess, fetchEstablishments],
   },
   {
     path:'/companies/:id',
     name: 'Company',
     component: CompanyView,
-    async beforeEnter(to, from, next){
-      const companyId = to.params.id
-      const companiesStore = useCompanyStore();
-      const competitorStore = useCompetitorStore();
-      await companiesStore.fetchOne(companyId, (data)=> {
-        competitorStore.fetchByEstablishment(data.competitors, ()=>{
-          next();
-        });
-      })
-    }
+    beforeEnter: [CheckAccess, fetchCompetitors],
   },
   {
     path:'/companies/:competitorId/:companyId/comparison',
@@ -102,6 +87,7 @@ const routes = [
     path: '/users/:id/profile',
     name: 'UserProfile',
     component: ProfileView,
+    beforeEnter: [CheckAccess],
     children: [
       {
         path: '',
@@ -122,5 +108,18 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 })
+
+// router.beforeEnter(async (to, from, next) => {
+//   if(localStorage.getItem('access') == null && to.name !== 'Login'){
+//     console.log(localStorage.getItem('access'))
+//     next('/login')
+//   }else next()
+
+//   if(to.name == 'Login' && localStorage.getItem ('access') !== null){
+//     console.log(to.name, from,  localStorage.getItem ('access') !== null)
+//     console.log(localStorage.getItem('access'))
+//     next('/home'); 
+//   } 
+// })
 
 export default router

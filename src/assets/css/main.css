@@ -510,3 +510,12 @@ header{
     cursor: pointer;
     margin-top: 1rem;
 }
+
+.breadcrumb__container{
+    width: var(--container-width-lg);
+}
+
+.all__content{
+    flex: auto;
+    margin-top: 50px;
+}

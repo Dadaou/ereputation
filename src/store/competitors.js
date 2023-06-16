@@ -8,15 +8,28 @@ export const useCompetitorStore = defineStore("competitor", {
    nb: 0,
   }),
   actions: {
+    async fetchOne(id, next){
+      await services.getRecord(this.entity, id, (response)=>{
+         console.log(response)
+         next(response)
+      })
+    },
+    async getAllCompetitors(data, next){
+      console.log(data)
+      // for (let i = 0; i < data.length; i++) {
+      //   const id = data[i].replace(`/api/${this.entity}/`, "");
+      //   console.log(id)
+      //   // await this.fetchOne(id, (response) => {
+      //   //   console.log(response.data)
+      //   // })
+      //   // await services.getRecord(this.entity, id, (response)=>{
+      //   //     console.log(response)
+      //   // })
+      // }
+      next('hello')
+    },
     fetchByEstablishment(data, next){
-        data.forEach(async url => {
-            await services.get_Record(url.replace("/api", ""), (response)=>{
-                if (response.status == 200) {
-                  this.competitors.push(response.data['hydra:member']);
-                }
-            })       
-        });
-        next()
+        next();
     }
   }
 });

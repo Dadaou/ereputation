@@ -35,7 +35,7 @@ const props = defineProps({
     top:5rem; */
     background-color: rgb(245, 245, 245);
     width: 100% !important;
-    height: 7em;
+    height: 7.5em;
     text-align: center;
 }
 
@@ -43,13 +43,14 @@ const props = defineProps({
     font-size: 40px;
     color: var(--color-danger);
     position: relative;
+    top: 8px;
 }
 
 .head__container div{
     color: var(--color-bg2);
     font-size: 25px;
     position: relative;
-    top: -10px;
+    top: -7px;
 }
 
 @media screen and (max-width:1024px) {

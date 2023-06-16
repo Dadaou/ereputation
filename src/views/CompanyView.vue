@@ -1,6 +1,9 @@
 <template>
     <div class="main__container">
         <HeadComponent :page="page"></HeadComponent>
+        <div class="breadcrumb__container">
+            <BreadcrumbComponent :data="breadcrumbData"/>
+        </div>
         <div class="app__container">
             <div class="left__side">
                 <div class="head">
@@ -159,14 +162,26 @@
 <script setup>
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import CounterComponent from '@Components/utils/CounterComponent.vue';
+import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import {ref, watch} from 'vue';
 import { useCompetitorStore } from "@Stores/competitors.js";
+import { useRoute } from "vue-router";
 
 const page=ref({
     title1: "Your",
-    title2: "etablishment",
+    title2: "establishment",
     icon: "uil-estate",
 });
+
+const route = useRoute();
+
+const breadcrumbData = [
+    {
+        title: "Establishment",
+        path: `${route.path}`,
+        isCurrent: true,
+    },
+]
 
 const competitorStore = useCompetitorStore();
 let showCompetitors = ref(false);
@@ -405,6 +420,12 @@ watch(showCompetitors, ()=>{
    color: var(--color-white);
 }
 
+.dashboard__content{
+    display: flex;
+    flex-wrap: wrap;
+    gap:1rem;
+    margin: 50px auto;
+}
 .counter{
     flex-grow: 1;
 }
