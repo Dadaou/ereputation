@@ -4,26 +4,31 @@
         <AlertComponent 
             :alertType="notification.type"
             :message="notification.message"
-            v-if="form.error" 
-            v-on:close="form.error=false"/>
-        <div class="login__container">
-            <form @submit.prevent="submit" class="login__form">
+            v-if="isError" 
+            v-on:close="isError=false"/>
+        <div class="login__container" ref="form__ref">
+            <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="login__form">
                 <span>Connect to your account</span>
                 <input type="email" name="Email Address" placeholder="Email address" v-model="form.email" required>
                 <input type="password" name="Password" placeholder="Password" v-model="form.password" required>
                 <a class="forgot__password" href="http://"><b>Forgot Password?</b></a>
-                <button type="submit" class="btn btn__light2">Login</button>
+                <button type="submit" :class="['btn btn__light2', showSpinner==true?'isLoaded':'']">
+                    <SpinnerComponent :show-spinner="showSpinner" :color="'red'"/>
+                    <span v-show="!showSpinner">Login</span>
+                </button>
             </form>
         </div>
     </div>
 </template>
 
 <script setup>
-import {ref, onBeforeMount} from 'vue';
+import {ref, watch, onMounted} from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import AlertComponent from '@Components/utils/AlertComponent.vue';
+import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import { useUserStore } from "@Stores/user.js";
-import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
+import { useRouter, useRoute} from "vue-router";
+import { useWindowSize } from '@vueuse/core';
 
 const router = useRouter()
 const route = useRoute()
@@ -38,15 +43,20 @@ const page=ref({
 const form = ref({
     email: '',
     password: '',
-    error: false,
+    // error: true,
 })
+
+const isError = ref(false);
 
 const notification = ref({
     message: "",
     type: "",
 })
 
+const showSpinner = ref(false)
+
 const submit = async ()=>{
+    showSpinner.value = true;
     await userStore.signIn(form.value.email, form.value.password, (response)=>{
         if(response.authenticated){
             // if(userStore.user.roles.includes("ROLE_USER")){
@@ -60,7 +70,8 @@ const submit = async ()=>{
             // }
             router.push({name:"Home"})
         } else{
-            form.value.error = true
+            showSpinner.value = false;
+            isError.value = true;
             console.log(response)
             if(response.status == 401){
                 notification.value.message = "Please verify your password or email!"
@@ -74,9 +85,38 @@ const submit = async ()=>{
         }
     })
 }
+
+/**
+ * Navbar Handler
+ * useWindowScroll allows us to detect the scroll event on 
+ * the browser
+ */
+const{ width, height} = useWindowSize();
+const form__ref = ref(null)
+
+onMounted(() => {
+    if(width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');
+})
+
+watch([width, isError], () => {
+    if(width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');
+    else if(isError.value == false) form__ref.value.classList.remove('custom__container');
+})
 </script>
 
 <style scoped>
+
+button.isLoaded{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom__container{
+    position: relative;
+    top: 0rem !important;
+}
+
 .login__container{
     /* position: relative;
     top:8rem; */
@@ -141,6 +181,7 @@ const submit = async ()=>{
         width: 30%;
     }
 }
+
 @media screen and (max-width:1200px) {
     .login__form{
         width: 35%;
@@ -150,7 +191,7 @@ const submit = async ()=>{
 @media screen and (max-width:1024px) {
     .login__container{
         position: relative;
-        top:8rem;
+        top: 8rem;
     }
 }
 

@@ -1,6 +1,6 @@
 <template>
     <nav ref="nav__ref">
-        <div class="container nav__container">
+        <div class="container nav__container" ref="nav__container__ref">
             <h4>eReputation</h4>
             <div class="nav__menu" v-if="userStore.authenticated">
                 <NavbarAvatarComponent class="nav__avatar"/>
@@ -12,27 +12,39 @@
 import {ref, watch} from 'vue';
 import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import { useUserStore } from "@Stores/user.js";
+import { useRouter, useRoute} from "vue-router";
 import NavbarAvatarComponent from '@Components/utils/NavbarAvatarComponent.vue';
 
 
 const userStore = useUserStore();
+const route = useRoute();
 /**
  * Navbar Handler
  * useWindowScroll allows us to detect the scroll event on 
  * the browser
  */
-const{x,y} = useWindowScroll()
-const nav__ref = ref(null)
-const isScrolling = ref(false)
+const{x,y} = useWindowScroll();
+const{ width, height} = useWindowSize();
+const nav__ref = ref(null);
+const nav__container__ref = ref(null);
+const isScrolling = ref(false);
 
 watch(y, ()=>{
-    if(y.value > 0){
+    if (y.value > 0){
         nav__ref.value.classList.add('nav__onScroll')
         isScrolling.value = true
-    }else if(y.value <= 1){
+    }else if (y.value <= 1){
         nav__ref.value.classList.remove('nav__onScroll')
         isScrolling.value = false
     }  
+})
+
+watch(width, () => {
+   if (width.value <= 650 && route.name == 'Login'){
+    nav__container__ref.value.classList.add('nav__login')
+   }else {
+    nav__container__ref.value.classList.remove('nav__login')
+   }
 })
 </script>
 
@@ -60,6 +72,11 @@ a{
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.nav__login{
+    flex-direction: column !important;
+    justify-content: center !important;
 }
 
 /*nav__menu */
@@ -106,21 +123,16 @@ a{
     border-color: var(--color-danger);
 }
 
-/* Media Query for tablets*/
-@media screen and (max-width=1024px){
-    
-}
-
 /* Media Queries (Phone) */
 @media screen and (max-width:650px) {
-    .nav__container{
+    /* .nav__container{
         flex-direction: column;
         justify-content: center;
     }
 
     .nav__container ul{
         display: none;
-    }
+    } */
 }
 
 </style>

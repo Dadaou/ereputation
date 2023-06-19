@@ -99,7 +99,7 @@ footer{
     }
 
     footer{
-        margin-top: 50px;
+        margin-top: 150px !important;
     }
 }
 

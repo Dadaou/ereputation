@@ -155,66 +155,6 @@ const page=ref({
 });
 
 const isActive = ref('all');
-let visibleData = ref([]);
-const companies = ref([
-    {
-        logo: "/src/assets/images/Portrait_Placeholder.png",
-        name: "Booking.com",
-        rate: 8.5,
-        nb_reviews: 60,
-        address: "New York, USA",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum nihil quasi odit eaque doloremque, quos consequatur harum ipsam inventore",
-        website: "https://booking.com",
-        isConcurrent: false,
-    },
-    {
-        logo: "/src/assets/images/Portrait_Placeholder.png",
-        name: "Trip Advisor",
-        rate: 4.3,
-        nb_reviews: 60,
-        address: "New York, USA",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum nihil quasi odit eaque doloremque, quos consequatur harum ipsam inventore",
-        website: "https://booking.com",
-        isConcurrent: false,
-    },
-    {
-        logo: "/src/assets/images/Portrait_Placeholder.png",
-        name: "Booking.com",
-        rate: 5.2,
-        nb_reviews: 60,
-        address: "New York, USA",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum nihil quasi odit eaque doloremque, quos consequatur harum ipsam inventore",
-        website: "https://booking.com",
-        isConcurrent: false,
-    },
-]);
-
-visibleData.value = companies.value;
-
-watch(isActive, (value)=>{
-    if(value == 'concurrent'){
-        visibleData.value = []
-        companies.value.forEach(elem=>{
-            if(elem.isConcurrent==true){
-                visibleData.value.push(elem);
-            }
-        });
-    } 
-
-    if(value == 'my_societies'){
-        visibleData.value = []
-        companies.value.forEach(elem=>{
-            if(elem.isConcurrent==false){
-                visibleData.value.push(elem)
-            }
-        });
-    }
-
-    if(value == 'all'){
-        visibleData.value = []
-        visibleData.value = companies.value
-    }
-});
 </script>
 
 <style scoped>
@@ -279,7 +219,6 @@ watch(isActive, (value)=>{
     height: inherit;
     display: flex;
     gap:2rem;
-    /* background-color: aqua; */
     width: 50%;
     display: flex;
     flex-direction: column;
@@ -300,7 +239,8 @@ watch(isActive, (value)=>{
 
 .client__container__head{
     font-size: 19px;
-    color: var(--color-bg2)
+    color: var(--color-bg2);
+    transform: var(--transition);
 }
 
 .client__container__head div, .client__container__head span{
@@ -330,13 +270,14 @@ watch(isActive, (value)=>{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 60%;
+    width: 80%;
     align-self: center;
+    transform: var(--transition)
 }
 
 .society__item img{
-   width: 20%;
-   height: 75%;
+   width: 100px;
+   height: inherit;
 }
 
 .society__item {
@@ -383,4 +324,41 @@ watch(isActive, (value)=>{
     font-weight: bold;
     color: var(--color-primary)
 }
+
+/* For tablets */
+@media screen and (max-width:1140px) {
+    .society__list{
+        width: 90% !important;
+    }
+
+    .client__container__head{
+        font-size: 18px;
+    }
+}
+
+@media screen and (max-width:1024px) {
+    .client__container{
+        position: relative;
+        top: 11rem !important;
+    }
+}
+
+@media screen and (max-width:950px) {
+    .society__list{
+        width: 100% !important;
+    }
+}
+
+@media screen and (max-width:800px) {
+    .client__container{
+      width: var(--container-width-lg) !important;
+    }
+}
+
+@media screen and (max-width:700px) {
+    .client__container{
+      width: var(--container-width-md) !important;
+    }
+}
+
 </style>

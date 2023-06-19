@@ -40,4 +40,71 @@ const emit = defineEmits(['close']);
     margin: 0 auto;
     margin-top: 10px;
 }
+
+@media screen and (max-width:1225px) {
+   #alert-1{
+        width: 30% !important;
+   }
+}
+
+@media screen and (max-width:1200px) {
+    #alert-1{
+        width: 35% !important;
+    }
+}
+
+@media screen and (max-width:1024px) {
+    #alert-1{
+        margin-top: 13em !important;
+    }
+}
+
+@media screen and (max-width:900px) {
+    #alert-1{
+        width: 40% !important;
+    }
+}
+
+@media screen and (max-width:800px) {
+    #alert-1{
+        width: 45% !important;
+    }
+}
+
+@media screen and (max-width:700px) {
+    #alert-1{
+        width: 50% !important;
+    }
+}
+
+/* Media Queries (Phone) */
+@media screen and (max-width:650px) {
+    #alert-1{
+        width: 60% !important;
+    }
+}
+
+@media screen and (max-width:500px) {
+    #alert-1{
+        width: 70% !important;
+    }
+}
+
+@media screen and (max-width:450px) {
+    #alert-1{
+        width: 75% !important;
+    }
+}
+
+@media screen and (max-width:400px) {
+    #alert-1{
+        width: 80% !important;
+    }
+}
+
+@media screen and (max-width:350px) {
+    #alert-1{
+        width: 90% !important;
+    }
+}
 </style>
