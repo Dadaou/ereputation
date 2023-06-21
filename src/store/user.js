@@ -73,6 +73,11 @@ export const useUserStore = defineStore("user", {
     },
     signOut(){
       services.logout();
+    },
+    getInitials(firstName, lastName) {
+      const firstInitial = firstName.charAt(0).toUpperCase();
+      const secondInitial = lastName.charAt(0).toUpperCase();
+      return `${firstInitial}${secondInitial}`;
     }
   }
 });

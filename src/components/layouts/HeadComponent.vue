@@ -1,5 +1,5 @@
 <template>
-   <div class="container head__container" v-if="isSearch==false">
+   <div class="head__container" v-if="isSearch==false">
     <i class="uil" :class="page.icon"></i>
     <div class="head__title">{{ page.title1 }} <b>{{ page.title2}}</b></div>
    </div>
@@ -31,8 +31,6 @@ const props = defineProps({
 @import "@Assets/css/base.css";
 
 .head__container{
-    /* position: absolute;
-    top:5rem; */
     background-color: rgb(245, 245, 245);
     width: 100% !important;
     height: 7.5em;

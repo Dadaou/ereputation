@@ -9,7 +9,7 @@
     </nav>
 </template>
 <script setup>
-import {ref, watch} from 'vue';
+import {ref, watch, onMounted} from 'vue';
 import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import { useUserStore } from "@Stores/user.js";
 import { useRouter, useRoute} from "vue-router";
@@ -31,21 +31,31 @@ const isScrolling = ref(false);
 
 watch(y, ()=>{
     if (y.value > 0){
-        nav__ref.value.classList.add('nav__onScroll')
-        isScrolling.value = true
+        nav__ref.value.classList.add('nav__onScroll');
+        isScrolling.value = true;
     }else if (y.value <= 1){
-        nav__ref.value.classList.remove('nav__onScroll')
-        isScrolling.value = false
+        nav__ref.value.classList.remove('nav__onScroll');
+        isScrolling.value = false;
     }  
-})
+});
 
 watch(width, () => {
-   if (width.value <= 650 && route.name == 'Login'){
-    nav__container__ref.value.classList.add('nav__login')
+   if (width.value <= 700 && route.name == 'Login'){
+    nav__container__ref.value.classList.add('nav__login');
    }else {
-    nav__container__ref.value.classList.remove('nav__login')
+    nav__container__ref.value.classList.remove('nav__login');
    }
-})
+});
+
+onMounted(() => {
+    console.log(width.value)
+    if (width.value <= 700 && route.name == 'Login'){
+    nav__container__ref.value.classList.add('nav__login');
+   }else {
+    nav__container__ref.value.classList.remove('nav__login');
+   }
+});
+
 </script>
 
 <style scoped>

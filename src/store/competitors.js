@@ -3,33 +3,23 @@ import services from '@Services/index.js';
 
 export const useCompetitorStore = defineStore("competitor", {
   state: () => ({
-   competitors: [], 
    entity: 'competitors',
-   nb: 0,
   }),
   actions: {
     async fetchOne(id, next){
-      await services.getRecord(this.entity, id, (response)=>{
-         console.log(response)
-         next(response)
+      await services.getRecord(this.entity, id, (response) => {
+         console.log(response);
+         next(response);
       })
     },
-    async getAllCompetitors(data, next){
-      console.log(data)
-      // for (let i = 0; i < data.length; i++) {
-      //   const id = data[i].replace(`/api/${this.entity}/`, "");
-      //   console.log(id)
-      //   // await this.fetchOne(id, (response) => {
-      //   //   console.log(response.data)
-      //   // })
-      //   // await services.getRecord(this.entity, id, (response)=>{
-      //   //     console.log(response)
-      //   // })
-      // }
-      next('hello')
-    },
-    fetchByEstablishment(data, next){
-        next();
+    async getAllCompetitors(params, next){
+        await services.getRecordsByParams(this.entity, params, (response) => {
+          if (response.status == 200) {
+            // this.competitors = response.data['hydra:member'];
+            // this.nb = this.competitors.length;
+            next(response.data['hydra:member']);
+          }
+        })
     }
   }
 });

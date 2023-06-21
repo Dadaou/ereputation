@@ -54,6 +54,24 @@ const getRecords= async (entity, next)=>{
     }
 }
 
+const getRecordsByParams = async (entity, params, next) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access')}`
+    };
+    try {
+        let url = `/${entity}?${params}`;
+        if (checkConnexionInfo()) {
+            console.log(headers)
+            await axiosInstance.get(`${url}`,{headers}).then((response)=>{
+                return next(response);
+            })   
+        }
+    } catch (error) {
+        return next(error.response)
+    }
+}
+
 const getRecord= async (entity, recordId, next)=>{
     const headers = {
         'Content-Type': 'application/json',
@@ -179,4 +197,5 @@ export default {
     logout,
     login,
     setUser,
+    getRecordsByParams
 }

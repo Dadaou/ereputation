@@ -1,6 +1,6 @@
 <template>
     <div class="main__container">
-        <HeadComponent :page="page"></HeadComponent>
+        <HeadComponent class="head" :page="page"></HeadComponent>
         <div class="breadcrumb__container">
             <BreadcrumbComponent :data="breadcrumbData"/>
         </div>
@@ -20,21 +20,12 @@
                             <!-- Dropdown menu -->
                             <div id="dropdownDivider" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 w-60" v-show="showCompetitors">
                                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
-                                    <li v-for="company, index in competitorStore.establishments" @click="selectedCompetitors= company.name">
-                                       {{ company.name }}
+                                    <li @click="globalComparison()">
+                                        Global
                                     </li>
-                                    <!-- <li @click="selectedCompetitors='Company 1'">
-                                        Company 1
+                                    <li v-for="competitor in competitors" @click="reloadComparison(competitor)">
+                                       {{ competitor.name }}
                                     </li>
-                                    <li @click="selectedCompetitors='Company 2'">
-                                        Company 2
-                                    </li>
-                                    <li @click="selectedCompetitors='Company 3'">
-                                        Company 3
-                                    </li>
-                                    <li @click="selectedCompetitors='Company 4'">
-                                        Company 4
-                                    </li> -->
                                 </ul>
                             </div>
                         </div>
@@ -49,10 +40,10 @@
                     </div>
                 </div>
                 <div class="chart__content">
-                    <GroupedBarChart :plot-data="plotdata" x-key="date"
+                    <GroupedBarChart :plot-data="plotdata" x-key="name"
                                     :width="700" :height="300" :margin="margin" :colors="colors"
-                                    x-axis-label="Trimester" y-axis-label="Reviews"
-                                    :y-tick-format="d => `$${d}`">
+                                    x-axis-label="" y-axis-label="Reviews"
+                                    :y-tick-format="d => `${d}`">
                     </GroupedBarChart>
                 </div>
                 <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
@@ -79,19 +70,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" v-for="i in 3">
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" v-for="review in bestReviews">
                                     <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                                        <img class="w-10 h-10 rounded-full" src="/src/assets/images/Portrait_Placeholder.png" alt="Jese image">
                                         <div class="pl-3">
-                                            <div class="text-base font-semibold">Neil Sims</div>
-                                            <div class="font-normal text-gray-500">neil.sims@flowbite.com</div>
+                                            <div class="text-base font-semibold">{{ review.author }}</div>
+                                            <div class="font-normal text-gray-500">{{ review.source }}</div>
                                         </div>  
                                     </th>
                                     <td class="px-6 py-4 comments">
-                                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quibusdam dignissimos rerum, molestias sapiente aspernatur.
+                                       {{ review.comment }}
                                     </td>
                                     <td class="px-6 py-4 rating">
-                                       4.8
+                                       {{ review.rating }}
                                     </td>
                                 </tr>
                             </tbody>
@@ -106,20 +96,17 @@
                 </div>
                 <div @click="showWebsites = !showWebsites">
                             <div id="website__dropdown" data-dropdown-toggle="dropdownDivider" class="font-medium rounded-xl text-sm px-3 py-2 border border-1 w-60" type="button">
-                            <span>Global</span>
+                            <span>{{ selectedWebsites }}</span>
                             <svg class="w-10 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></div>
 
                             <!-- Dropdown menu -->
                             <div id="dropdownDivider" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 w-60" v-show="showWebsites">
                                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
-                                    <li>
-                                        Google
+                                    <li @click="selectedWebsites = 'Global'">
+                                        Global
                                     </li>
-                                    <li>
-                                        Trivago
-                                    </li>
-                                    <li>
-                                        Booking
+                                    <li v-for="website in websites" @click="selectedWebsites = website.name">
+                                        {{ website.name }}
                                     </li>
                                 </ul>
                             </div>
@@ -163,8 +150,10 @@
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import CounterComponent from '@Components/utils/CounterComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
-import {ref, watch} from 'vue';
+import {ref, watch, onBeforeMount} from 'vue';
 import { useCompetitorStore } from "@Stores/competitors.js";
+import { useCompanyStore } from "@Stores/company.js";
+import { useAppStore } from "@Stores/index.js";
 import { useRoute } from "vue-router";
 
 const page=ref({
@@ -184,40 +173,31 @@ const breadcrumbData = [
 ]
 
 const competitorStore = useCompetitorStore();
+const companiesStore = useCompanyStore();
+const appStore = useAppStore();
 let showCompetitors = ref(false);
 let showWebsites = ref(false);
 let selectedCompetitors = ref('Global');
 let selectedWebsites = ref('Global');
+let websites = ref([
+    { name : 'Booking'},
+    { name : 'Camping'},
+    { name : 'Expedia'},
+    { name : 'Tripadvisor'},
+    { name : 'Trustpilot'},
+    { name : 'Google'},
+    { name : 'OpenTable'},
+])
 
+const establishment = ref(null);
+const competitors = ref([]); 
 const all_items = ref([
-    {title: "Rating", value: "4.5", icon: "uil-star"},
-    {title: "Reviews", value: "1,200", icon: "uil-comment"},
-    {title: "Competitors", value: "4", icon: "uil-building"},
+    {title: "Rating", value: 0, icon: "uil-star"},
+    {title: "Reviews", value: 0, icon: "uil-comment"},
+    {title: "Competitors", value: 0, icon: "uil-building"},
 ]);
 
-let plotdata = [
-    {
-        "date": "1st Trimester",
-        "Company 1": 5921,
-        "Company 2": 1026,
-        "Company 3": 2324,
-        "Company 4": 2324
-    },
-    {
-        "date": "2nd Trimester",
-        "Company 1": 2365,
-        "Company 2": 5000,
-        "Company 3": 2000,
-        "Company 4": 3900
-    },
-    {
-        "date": "3rd Trimester",
-        "Company 1": 5600,
-        "Company 2": 4026,
-        "Company 3": 3324,
-        "Company 4": 2324
-    },
-]
+let plotdata = ref([])
 
 let plotdata1 = [
     {
@@ -243,24 +223,10 @@ let plotdata1 = [
     },
 ]
 
-let legendData = [
-  {
-    "name": "Company 1",
-    "color": "#6c63ff"
-  },
-  {
-    "name": "Company 2",
-    "color": "#f75842"
-  },
-  {
-    "name": "Company 3",
-    "color": "#aca8fd"
-  },
-  {
-    "name": "Company 4",
-    "color": "#424890"
-  },
-];
+let legendData = ref([]);
+let _legendData = ref([]);
+
+let bestReviews = ref([]);
 
 let margin = { top: 20, bottom: 35, left: 55, right: 20 };
 
@@ -269,6 +235,54 @@ let colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890'];
 watch(showCompetitors, ()=>{
  console.log(showCompetitors.value);   
 });
+
+const globalComparison = async () => {
+    selectedCompetitors.value = 'Global'
+    plotdata.value = [];
+    await companiesStore.calculateReviews([establishment.value, ...competitors.value], (reviews) => {
+        plotdata.value.push(reviews);
+    })
+    await companiesStore.generateLegend([establishment.value, ...competitors.value], (data) => {
+        legendData.value = data;
+        _legendData.value = data;
+    })
+}
+
+onBeforeMount(async () => {
+ const companyId = route.params.id;
+ await companiesStore.fetchOne(companyId, async (company) => {
+    establishment.value = company;
+    console.log(establishment.value.reviews)
+    companiesStore.calculateRating(establishment.value.reviews, (rating) =>{
+        all_items.value[0].value = rating;
+    });
+
+    const competitorTag = `competitor_tag=${company.competitor_tag}`;
+    await competitorStore.getAllCompetitors(competitorTag, (data) => {  
+      data.forEach(element => {
+        competitors.value.push(element.establishment);
+      });
+      all_items.value[2].value = competitors.value.length;
+      all_items.value[1].value = establishment.value.reviews.length;
+    })
+
+    globalComparison();
+    bestReviews.value = companiesStore.getTopThreeReviews(establishment.value.reviews, 10, []);
+ });
+})
+
+const reloadComparison = async (competitor) => {
+    console.log(competitor)
+    selectedCompetitors.value = competitor.name
+
+    plotdata.value = [];
+    await companiesStore.calculateReviews([establishment.value, competitor], async (reviews) => {
+        console.log(reviews)
+        plotdata.value.push(reviews);
+        legendData.value = _legendData.value.filter(e => e.name == establishment.value.name || e.name == competitor.name)
+    })
+}
+
 </script>
 
 <style scoped>

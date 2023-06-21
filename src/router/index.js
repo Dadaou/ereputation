@@ -9,6 +9,7 @@ import SecurityComponent from '@Components/User/SecurityComponent.vue';
 import UserDetailsComponent from '@Components/User/UserDetailsComponent.vue';
 import { useCompanyStore } from "@Stores/company.js"; 
 import { useCompetitorStore } from "@Stores/competitors.js";
+import { useAppStore } from "@Stores/index.js";
 
 const removeAccess = (to, from, next) => {
   localStorage.removeItem("user_authenticated");
@@ -34,22 +35,25 @@ const fetchCompetitors = async (to, from, next) => {
  const companyId = to.params.id;
  const companiesStore = useCompanyStore();
  const competitorsStore = useCompetitorStore();
+ const appStore = useAppStore();
+ appStore.isLoading = true;
+ console.log(to)
  await companiesStore.fetchOne(companyId, async (company) => {
-
-    const competitors = company.competitors;
-    await competitorsStore.getAllCompetitors(competitors, (response) => {
-      console.log(response);
+    const competitorTag = `competitor_tag=${company.competitor_tag}`;
+    await competitorsStore.getAllCompetitors(competitorTag, (competitors) => {
+      appStore.isLoading = false;
     })
-
  });
-
- next()
+ next();
 }
 
 const fetchEstablishments = async (to, from, next) => {
   const companiesStore = useCompanyStore();
+  const appStore = useAppStore();
+  appStore.isLoading = true;
   await companiesStore.fetchAll((response)=>{
     console.log(response.data['hydra:member'])
+    appStore.isLoading = false;
     next();
   });
 }
@@ -108,18 +112,5 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 })
-
-// router.beforeEnter(async (to, from, next) => {
-//   if(localStorage.getItem('access') == null && to.name !== 'Login'){
-//     console.log(localStorage.getItem('access'))
-//     next('/login')
-//   }else next()
-
-//   if(to.name == 'Login' && localStorage.getItem ('access') !== null){
-//     console.log(to.name, from,  localStorage.getItem ('access') !== null)
-//     console.log(localStorage.getItem('access'))
-//     next('/home'); 
-//   } 
-// })
 
 export default router
