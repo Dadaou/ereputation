@@ -15,9 +15,22 @@ export const useCompetitorStore = defineStore("competitor", {
     async getAllCompetitors(params, next){
         await services.getRecordsByParams(this.entity, params, (response) => {
           if (response.status == 200) {
-            // this.competitors = response.data['hydra:member'];
-            // this.nb = this.competitors.length;
-            next(response.data['hydra:member']);
+            let data = [];
+            let promises = [];
+
+            response.data['hydra:member'].forEach(competitor => {
+              let promise = services.getRecord('establishments', competitor.establishment.id, (response) => {
+                data.push(response.data);
+                console.log(response.data);
+              });
+
+              promises.push(promise);
+            });
+
+            Promise.all(promises).then(() => {
+              console.log(data)
+              next(data);
+            });
           }
         })
     }

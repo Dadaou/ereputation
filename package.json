@@ -23,6 +23,7 @@
     "tailwindcss-animatecss": "^3.0.4",
     "tsparticles": "^2.9.3",
     "vue": "^3.3.4",
+    "vue-css-donut-chart": "^2.0.0",
     "vue-router": "^4.0.13",
     "vue3-particles": "^2.9.3",
     "vuesalize": "^2.1.5"

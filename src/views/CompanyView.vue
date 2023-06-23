@@ -102,10 +102,10 @@
                             <!-- Dropdown menu -->
                             <div id="dropdownDivider" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 w-60" v-show="showWebsites">
                                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
-                                    <li @click="selectedWebsites = 'Global'">
+                                    <li @click="globalComparison()">
                                         Global
                                     </li>
-                                    <li v-for="website in websites" @click="selectedWebsites = website.name">
+                                    <li v-for="website in websites" @click="reloadComparisonByWebsite(website.name)">
                                         {{ website.name }}
                                     </li>
                                 </ul>
@@ -155,6 +155,7 @@ import { useCompetitorStore } from "@Stores/competitors.js";
 import { useCompanyStore } from "@Stores/company.js";
 import { useAppStore } from "@Stores/index.js";
 import { useRoute } from "vue-router";
+import { createPinia } from 'pinia';
 
 const page=ref({
     title1: "Your",
@@ -181,7 +182,7 @@ let selectedCompetitors = ref('Global');
 let selectedWebsites = ref('Global');
 let websites = ref([
     { name : 'Booking'},
-    { name : 'Camping'},
+    { name : 'Campings'},
     { name : 'Expedia'},
     { name : 'Tripadvisor'},
     { name : 'Trustpilot'},
@@ -191,6 +192,8 @@ let websites = ref([
 
 const establishment = ref(null);
 const competitors = ref([]); 
+let comparisonData = ref([establishment.value, ...competitors.value]);
+let _comparisonData = [establishment.value, ...competitors.value];
 const all_items = ref([
     {title: "Rating", value: 0, icon: "uil-star"},
     {title: "Reviews", value: 0, icon: "uil-comment"},
@@ -224,7 +227,7 @@ let plotdata1 = [
 ]
 
 let legendData = ref([]);
-let _legendData = ref([]);
+let _legendData = [];
 
 let bestReviews = ref([]);
 
@@ -237,20 +240,25 @@ watch(showCompetitors, ()=>{
 });
 
 const globalComparison = async () => {
-    selectedCompetitors.value = 'Global'
+    selectedCompetitors.value = 'Global';
+    selectedWebsites.value = 'Global';
     plotdata.value = [];
-    await companiesStore.calculateReviews([establishment.value, ...competitors.value], (reviews) => {
+    
+    comparisonData.value = [establishment.value, ...competitors.value];
+    _comparisonData = [establishment.value, ...competitors.value];
+    
+    await companiesStore.calculateReviews(comparisonData.value, (reviews) => {
         plotdata.value.push(reviews);
     })
-    await companiesStore.generateLegend([establishment.value, ...competitors.value], (data) => {
+    await companiesStore.generateLegend(comparisonData.value, (data) => {
         legendData.value = data;
-        _legendData.value = data;
+        _legendData  = data;
     })
 }
 
 onBeforeMount(async () => {
  const companyId = route.params.id;
- await companiesStore.fetchOne(companyId, async (company) => {
+await companiesStore.fetchOne(companyId, async (company) => {
     establishment.value = company;
     console.log(establishment.value.reviews)
     companiesStore.calculateRating(establishment.value.reviews, (rating) =>{
@@ -260,14 +268,13 @@ onBeforeMount(async () => {
     const competitorTag = `competitor_tag=${company.competitor_tag}`;
     await competitorStore.getAllCompetitors(competitorTag, (data) => {  
       data.forEach(element => {
-        competitors.value.push(element.establishment);
+        competitors.value.push(element);
       });
       all_items.value[2].value = competitors.value.length;
       all_items.value[1].value = establishment.value.reviews.length;
+      globalComparison();
+      bestReviews.value = companiesStore.getTopThreeReviews(establishment.value.reviews, 5, []);
     })
-
-    globalComparison();
-    bestReviews.value = companiesStore.getTopThreeReviews(establishment.value.reviews, 10, []);
  });
 })
 
@@ -276,11 +283,29 @@ const reloadComparison = async (competitor) => {
     selectedCompetitors.value = competitor.name
 
     plotdata.value = [];
-    await companiesStore.calculateReviews([establishment.value, competitor], async (reviews) => {
+    
+    comparisonData.value = [establishment.value, competitor];
+    _comparisonData  = [establishment.value, competitor];
+    
+    await companiesStore.calculateReviews(comparisonData.value, async (reviews) => {
         console.log(reviews)
         plotdata.value.push(reviews);
-        legendData.value = _legendData.value.filter(e => e.name == establishment.value.name || e.name == competitor.name)
+        legendData.value = _legendData.filter(e => e.name == establishment.value.name || e.name == competitor.name)
     })
+}
+
+const reloadComparisonByWebsite = async (website) => {
+    selectedWebsites.value = website;
+
+    comparisonData.value = _comparisonData
+    console.log(_comparisonData)
+    await companiesStore.getReviewsByWebsite(comparisonData.value, selectedWebsites.value, async (data) =>{
+        plotdata.value = [];
+        await companiesStore.calculateReviews(data, async (reviews) => {
+            plotdata.value.push(reviews);
+
+        })
+    });
 }
 
 </script>
@@ -478,5 +503,10 @@ const reloadComparison = async (competitor) => {
     /* box-shadow: 0 1rem 2rem rgba(0,0,0,0.1);
     border-radius: 20px; */
     padding: 50px 0px;
+}
+
+/* For tablets */
+@media screen and (max-width:1287px) {
+  
 }
 </style>

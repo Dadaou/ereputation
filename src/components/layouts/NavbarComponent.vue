@@ -12,7 +12,7 @@
 import {ref, watch, onMounted} from 'vue';
 import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import { useUserStore } from "@Stores/user.js";
-import { useRouter, useRoute} from "vue-router";
+import { useRouter, useRoute, onBeforeRouteLeave} from "vue-router";
 import NavbarAvatarComponent from '@Components/utils/NavbarAvatarComponent.vue';
 
 
@@ -40,7 +40,7 @@ watch(y, ()=>{
 });
 
 watch(width, () => {
-   if (width.value <= 700 && route.name == 'Login'){
+   if (width.value <= 700 && route.path == '/'){
     nav__container__ref.value.classList.add('nav__login');
    }else {
     nav__container__ref.value.classList.remove('nav__login');
@@ -48,14 +48,13 @@ watch(width, () => {
 });
 
 onMounted(() => {
-    console.log(width.value)
-    if (width.value <= 700 && route.name == 'Login'){
+    console.log('hehe')
+    if (width.value <= 600 && route.path == '/'){
     nav__container__ref.value.classList.add('nav__login');
    }else {
     nav__container__ref.value.classList.remove('nav__login');
    }
 });
-
 </script>
 
 <style scoped>

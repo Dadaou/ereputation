@@ -1,7 +1,7 @@
 <template>
   <NavbarComponent></NavbarComponent>
     <div class="app__loader" :style="loaderStyle" v-show="appStore.isLoading">
-      <SpinnerComponent/>
+      <SpinnerComponent :size="'large'"/>
     </div>
     <RouterView/>
   <FooterComponent></FooterComponent>
