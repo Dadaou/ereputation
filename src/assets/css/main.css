@@ -513,9 +513,32 @@ header{
 
 .breadcrumb__container{
     width: var(--container-width-lg);
+    margin: auto;
+    position: relative;
+    top: 2rem;
 }
 
 .all__content{
     flex: auto;
     margin-top: 50px;
+}
+
+@media screen and (max-width:1024px) {
+
+    .breadcrumb__container{
+        position: relative;
+        top: 9.5rem !important;
+    }
+}
+
+@media screen and (max-width: 675px) {
+    .breadcrumb__container{
+        width: var(--container-width-md) !important;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .breadcrumb__container{
+        width: var(--container-width-sm) !important;
+    }
 }

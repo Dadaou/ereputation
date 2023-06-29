@@ -27,31 +27,30 @@ import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import AlertComponent from '@Components/utils/AlertComponent.vue';
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import { useUserStore } from "@Stores/user.js";
-import { useRouter, useRoute} from "vue-router";
+import { useRouter } from "vue-router";
 import { useWindowSize } from '@vueuse/core';
 
-const router = useRouter()
-const route = useRoute()
+const router = useRouter();
 const userStore = useUserStore();
 
 const page=ref({
     title1: "Sign in to",
     title2: "your Account",
     icon: "uil-signin",
-})
+});
 
 const form = ref({
     email: '',
     password: '',
     // error: true,
-})
+});
 
 const isError = ref(false);
 
 const notification = ref({
     message: "",
     type: "",
-})
+});
 
 const showSpinner = ref(false)
 
@@ -96,12 +95,12 @@ const form__ref = ref(null)
 
 onMounted(() => {
     if(width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');
-})
+});
 
 watch([width, isError], () => {
     if(width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');
     else if(isError.value == false) form__ref.value.classList.remove('custom__container');
-})
+});
 </script>
 
 <style scoped>

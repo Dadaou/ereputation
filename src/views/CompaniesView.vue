@@ -137,6 +137,7 @@ import { loadFull } from "tsparticles";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import { useUserStore } from "@Stores/user.js";
 import { useCompanyStore } from "@Stores/company.js"; 
+
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 

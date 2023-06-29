@@ -51,7 +51,7 @@ watch(width, () => {
   align-items: center;
   position: fixed;
   z-index: 1;
-  height: 700px;
+  height: 100%;
 }
 
 </style>

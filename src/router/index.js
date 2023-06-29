@@ -36,9 +36,9 @@ const fetchCompetitors = async (to, from, next) => {
  const companiesStore = useCompanyStore();
  const competitorsStore = useCompetitorStore();
  const appStore = useAppStore();
- appStore.isLoading = true;
- console.log(to)
+
  await companiesStore.fetchOne(companyId, async (company) => {
+    appStore.isLoading = true;
     const competitorTag = `competitor_tag=${company.competitor_tag}`;
     await competitorsStore.getAllCompetitors(competitorTag, (competitors) => {
       appStore.isLoading = false;

@@ -45,11 +45,59 @@ const props = defineProps({
     color: var(--color-danger);
     font-size: 25px;
     font-weight: bolder;
+    transition: var(--transition);
 }
 
 .item__icon{
     color: var(--light-color-bg2);
     font-size: 25px;
+    transition: var(--transition);
 }
 
+@media screen and (max-width:1287px) {
+    .item__value{
+    font-size: 20px !important;
+    }
+    .item__icon{
+    font-size: 22px;
+    }
+}
+
+@media screen and (max-width:1225px) {
+
+  .item__value{
+    font-size: 18px !important;
+  }
+
+  .item__icon{
+    font-size: 20px !important;
+  }
+}
+
+@media screen and (max-width:1075px) {
+
+    .item{
+        padding: 15px !important;
+    }
+
+    .item__icon{
+        font-size: 18px !important;
+    }
+    .item__title{
+        font-size: 13px !important;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .item{
+        flex-basis: 100px !important;
+    }
+    .item__value{
+        font-size: 15px !important;
+    }
+
+    .item__icon{
+        font-size: 18px !important;
+    }
+}
 </style>

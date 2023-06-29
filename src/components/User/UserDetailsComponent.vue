@@ -18,15 +18,15 @@
             </div>
             <div class="info__content">
                 <div class="info__container">
-                    <span v-if="!enableEdit.name">Joel Rakoto</span>
+                    <span v-if="!enableEdit.name">{{ userStore.user.firstname }} {{ userStore.user.lastname }}</span>
                     <div v-else class="info__edit">
                             <div class="form__input">
                                 <div class="label">Firstname (s)</div>
-                                <input type="text" name="firstname" required>
+                                <input type="text" name="firstname" v-model="user.firstname">
                             </div>
                             <div class="form__input">
                                 <div class="label">Lastname (s)</div>
-                                <input type="text" name="lastname">
+                                <input type="text" name="lastname" v-model="user.lastname">
                             </div>
                     </div>
                 </div>
@@ -50,11 +50,11 @@
             <div class="info__content">
                 <div class="info__container">
                     <div class="info__edit">
-                        <span v-if="!enableEdit.email">JoelRakoto@gmail.com</span>
+                        <span v-if="!enableEdit.email">{{ userStore.user.email }}</span>
                         <p v-if="!enableEdit.email">This is the email address you use to sign in. It’s also where we send you all confirmations.</p>
                             <div v-else class="form__input">
                                 <div class="label">Email Address</div>
-                                <input type="email" name="email" required>
+                                <input type="email" name="email" v-model="user.email" required>
                             </div>
                     </div>
                 </div>
@@ -177,10 +177,12 @@
 
 <script setup>
 import VueCountryCode from "@Components/utils/VueCountryCode.vue";
-import { ref } from 'vue';
+import { ref, onBeforeMount } from 'vue';
+import { useUserStore } from "@Stores/user.js";
 
 const date = ref();
 const flow = ref(['month', 'year', 'calendar']);
+const userStore = useUserStore();
 
 let enableEdit = ref({
     name: false,
@@ -188,6 +190,22 @@ let enableEdit = ref({
     phone: false,
     birth: false,
     address: false,
+});
+
+let user = ref({
+    firstname: '',
+    lastname: '',
+    email: '',
+    birth: '',
+    address: '',
+});
+
+onBeforeMount(() => {
+    user.value.firstname = userStore.user.firstname;
+    user.value.lastname = userStore.user.lastname;
+    user.value.email = userStore.user.email;
+    user.value.address = userStore.user.address;
+    console.log(userStore.user)
 });
 </script>
 
@@ -237,11 +255,6 @@ let enableEdit = ref({
     font-size: 15px;
     /* justify-content: space-between; */
 }
-
-/* .info__edit{
-   flex-grow: 3;
-} */
-
 .info__content{
     display: flex;
     justify-content: space-between;

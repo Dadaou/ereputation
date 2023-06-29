@@ -1,6 +1,6 @@
 <template>
     <nav ref="nav__ref">
-        <div class="container nav__container" ref="nav__container__ref">
+        <div :class="['container nav__container', $route.path == '/' && width <= 700?'nav__login':'']" ref="nav__container__ref">
             <h4>eReputation</h4>
             <div class="nav__menu" v-if="userStore.authenticated">
                 <NavbarAvatarComponent class="nav__avatar"/>
@@ -9,10 +9,10 @@
     </nav>
 </template>
 <script setup>
-import {ref, watch, onMounted} from 'vue';
+import {ref, watch} from 'vue';
 import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import { useUserStore } from "@Stores/user.js";
-import { useRouter, useRoute, onBeforeRouteLeave} from "vue-router";
+import { useRoute} from "vue-router";
 import NavbarAvatarComponent from '@Components/utils/NavbarAvatarComponent.vue';
 
 
@@ -24,7 +24,7 @@ const route = useRoute();
  * the browser
  */
 const{x,y} = useWindowScroll();
-const{ width, height} = useWindowSize();
+const{ width} = useWindowSize();
 const nav__ref = ref(null);
 const nav__container__ref = ref(null);
 const isScrolling = ref(false);
@@ -41,15 +41,6 @@ watch(y, ()=>{
 
 watch(width, () => {
    if (width.value <= 700 && route.path == '/'){
-    nav__container__ref.value.classList.add('nav__login');
-   }else {
-    nav__container__ref.value.classList.remove('nav__login');
-   }
-});
-
-onMounted(() => {
-    console.log('hehe')
-    if (width.value <= 600 && route.path == '/'){
     nav__container__ref.value.classList.add('nav__login');
    }else {
     nav__container__ref.value.classList.remove('nav__login');
