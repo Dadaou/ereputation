@@ -113,21 +113,30 @@
                 Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, no companies found yet.
             </div>
             <div class="society__list">
-                <div class="society__item" v-for="company,index in companiesStore.establishments" @click="$router.push(`/companies/${company.id}`)">
-                    <img class="society__logo" :src="'https://images.pexels.com/photos/7070/space-desk-workspace-coworking.jpg'" alt="">  
-                    <div class="society__main__info">
-                       <div class="item__head">
-                        <div class="society__info">
-                            <label class="society__name">{{ company.name }}</label>
-                            <div class="society__location">
-                                <i class="uil uil-location-point"></i>
-                                <span>{{ company.address1 }}, {{ company.city }}</span>
+                <div class="society__info__container" v-for="company,index in companiesStore.establishments" @click="$router.push(`/companies/${company.id}`)">
+                    <div class="society__item">
+                        <img class="society__logo" :src="'https://images.pexels.com/photos/7070/space-desk-workspace-coworking.jpg'" alt="">  
+                        <div class="society__main__info">
+                        <div class="item__head">
+                                <div class="society__info">
+                                    <label class="society__name">{{ company.name }}</label>
+                                    <div class="society__category">
+                                        <i class="uil uil-briefcase-alt"></i>
+                                        <span>{{ company.category }}</span>
+                                    </div>
+                                    <div class="society__location">
+                                        <i class="uil uil-location-point"></i>
+                                        <span>{{ company.address1 }}, {{ company.city }}</span>
+                                    </div>
+
+                                </div>
+                                <div class="society__actions">
+                                
+                                </div>
                             </div>
                         </div>
-                       <div class="society__actions">
-                       </div>
                     </div>
-                </div>
+                    <RatingComponent class="rating__content" :reviews="company.reviews.length" :rating="companiesStore.calculateRatingV2(company.reviews)"/>
                </div>
             </div>
         </div>
@@ -137,9 +146,10 @@
 <script setup>
 import {ref, watch} from 'vue'
 import { loadFull } from "tsparticles";
-import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import { useUserStore } from "@Stores/user.js";
-import { useCompanyStore } from "@Stores/company.js"; 
+import { useCompanyStore } from "@Stores/company.js";
+import HeadComponent from '@Components/layouts/HeadComponent.vue';
+import RatingComponent from '@Components/utils/RatingComponent.vue'; 
 
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
@@ -284,7 +294,7 @@ const isActive = ref('all');
    height: inherit;
 }
 
-.society__item {
+.society__info__container {
     display: flex;
     gap: 2rem;
     font-size: 15px;
@@ -297,9 +307,15 @@ const isActive = ref('all');
     border: 2px solid var(--light-color-bg1);
     transition: var(--transition);
     height: 75px;
+    justify-content: space-between;
 }
 
-.society__item:hover {
+.society__item {
+    display: flex;
+    gap: 2rem;
+}
+
+.society__info__container:hover {
     box-shadow: 0 1rem 2rem rgba(0,0,0,0.09);
 }
 
@@ -327,6 +343,10 @@ const isActive = ref('all');
     font-size: 14px;
     font-weight: bold;
     color: var(--color-primary)
+}
+
+.rating__content{
+    align-self: center;
 }
 
 /* For tablets */

@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import services from '@Services/index.js';
+import moment from 'moment';
 
 export const useCompanyStore = defineStore("company", {
   state: () => ({ 
@@ -14,14 +15,6 @@ export const useCompanyStore = defineStore("company", {
               this.establishments = response.data['hydra:member'];
               let data = response.data['hydra:member'];
               this.nb = this.establishments.length;
-
-              // if(this.establishments != []){
-               
-              //   await services.reviewAnalysis(`${this.$nlp_api}/analysis`, {'establishments': 'list'}, (response)=>{
-              //     console.log('I am calling flask right now')
-              //     console.log(response)
-              //   })
-              // }
               next(response);
             }
         })
@@ -72,6 +65,20 @@ export const useCompanyStore = defineStore("company", {
       if (isNaN(rating)) rating = 0;
       next(rating);
     },
+    calculateRatingV2(reviews){
+      console.log(reviews);
+      let total = 0;
+      let nb = 0;
+      
+      reviews.forEach(element => {
+        total += Number(element.rating);
+        if(Number(element.rating)>5) nb+=2;
+        else nb++;
+      });
+      let rating = (total / nb).toFixed(2);
+      if (isNaN(rating)) rating = 0;
+      return rating;
+    },
     async calculateReviews(data, next){
       let reviews = {
         name: "Establishments"
@@ -110,6 +117,21 @@ export const useCompanyStore = defineStore("company", {
       rating --;
       if(result.length < 3 && rating >= 0) this.getTopThreeReviews(reviews, rating, result);
       return result;
+    },
+    getThreeLastReviews(reviews){
+      let data = []
+      if(reviews.length>0){
+        reviews.sort(function(a, b) {
+          return moment(b.created_at).diff(moment(a.created_at));
+        });
+        
+        let lastReviews = reviews.slice(0, 3);
+        
+        lastReviews.forEach(function(review) {
+         data.push(review);
+        });
+      }
+      return data;
     },
     getReviewsBySource(reviews, website){
        let data = [];

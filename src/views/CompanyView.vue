@@ -129,11 +129,11 @@
                 </div>
                 <div class="head">
                     <div class="app__title">
-                       <h2>Top Three reviews</h2>
+                       <h2>Last reviews</h2>
                     </div>
                 </div>
                 <div class="reviews__content">
-                        <article v-for="review in bestReviews">
+                        <article v-for="review in lastReviews" v-if="lastReviews.length>0">
                             <div class="flex items-center review__item">
                                 <div class="flex items-center mb-6 space-x-4">
                                     <div class="space-y-1 font-medium dark:text-white">
@@ -149,6 +149,7 @@
                                 <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 comment">{{ review.comment }}</p>
                             </div>
                         </article>
+                        <article v-else>No reviews ...</article>
                 </div>
             </div>
             <div class="right__side">
@@ -273,7 +274,7 @@ const all_items = ref([
     {title: "Competitors", value: 0, icon: "uil-building"},
 ]);
 
-let plotdata = ref([])
+let plotdata = ref([]);
 
 let plotdata1 = [
     {
@@ -297,12 +298,12 @@ let plotdata1 = [
         "Company 3": 4.6,
         "Company 4": 4.5
     },
-]
+];
 
 let legendData = ref([]);
 let _legendData = [];
 
-let bestReviews = ref([]);
+let lastReviews = ref([]);
 
 let margin = { top: 20, bottom: 35, left: 55, right: 20 };
 
@@ -328,7 +329,11 @@ const globalComparison = async () => {
     await companiesStore.generateLegend(comparisonData.value, (data) => {
         legendData.value = data;
         _legendData  = data;
-    })
+    });
+    all_items.value[2].value = competitors.value.length;
+    all_items.value[1].value = establishment.value.reviews.length;
+    all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
+    lastReviews.value = companiesStore.getThreeLastReviews(establishment.value.reviews);
 }
 
 onBeforeMount(async () => {
@@ -346,10 +351,10 @@ await companiesStore.fetchOne(companyId, async (company) => {
       data.forEach(element => {
         competitors.value.push(element);
       });
-      all_items.value[2].value = competitors.value.length;
-      all_items.value[1].value = establishment.value.reviews.length;
+    //   all_items.value[2].value = competitors.value.length;
+    //   all_items.value[1].value = establishment.value.reviews.length;
       globalComparison();
-      bestReviews.value = companiesStore.getTopThreeReviews(establishment.value.reviews, 5, []);
+    //   lastReviews.value = companiesStore.getTopThreeReviews(establishment.value.reviews, 5, []);
     })
  });
 })
@@ -379,10 +384,19 @@ const reloadComparisonByWebsite = async (website) => {
     console.log(_comparisonData)
     await companiesStore.getReviewsByWebsite(comparisonData.value, selectedWebsites.value, async (data) =>{
         plotdata.value = [];
+        console.log(data)
+
+        data.forEach(company => {
+            if(company.id == establishment.value.id){
+                all_items.value[1].value = company.reviews.length;
+                all_items.value[0].value = companiesStore.calculateRatingV2(company.reviews);
+                lastReviews.value = companiesStore.getThreeLastReviews(company.reviews);
+            }
+        });
+
         await companiesStore.calculateReviews(data, async (reviews) => {
             plotdata.value.push(reviews);
-
-        })
+        });
     });
 }
 
