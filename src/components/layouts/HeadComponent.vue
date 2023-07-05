@@ -46,7 +46,7 @@ const props = defineProps({
 
 .head__container div{
     color: var(--color-bg2);
-    font-size: 25px;
+    font-size: 18px;
     position: relative;
     top: -7px;
 }

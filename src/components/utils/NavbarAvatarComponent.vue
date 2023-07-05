@@ -7,7 +7,7 @@
         </div>
         <div class="font-medium dark:text-white user__connected">
             <div>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</div>
-            <div class="text-sm dark:text-white">{{ userStore.roleSummary }}</div>
+            <!-- <div class="text-sm dark:text-white">{{ userStore.roleSummary }}</div> -->
         </div>
     </div>
    

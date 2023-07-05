@@ -9,6 +9,7 @@ import SecurityComponent from '@Components/User/SecurityComponent.vue';
 import UserDetailsComponent from '@Components/User/UserDetailsComponent.vue';
 import { useCompanyStore } from "@Stores/company.js"; 
 import { useCompetitorStore } from "@Stores/competitors.js";
+import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from "@Stores/index.js";
 
 const removeAccess = (to, from, next) => {
@@ -17,6 +18,15 @@ const removeAccess = (to, from, next) => {
   localStorage.removeItem("user");
   localStorage.removeItem("user_role");
   next();
+}
+
+const getIds = (establishmentIds) => {
+  let ids = [];
+  for (const value of establishmentIds) {
+    const id = parseInt(value.substring(20));
+    ids.push(id);
+  }
+  return ids;
 }
 
 const CheckAccess = (to, from, next) => {
@@ -36,7 +46,7 @@ const fetchCompetitors = async (to, from, next) => {
  const companiesStore = useCompanyStore();
  const competitorsStore = useCompetitorStore();
  const appStore = useAppStore();
-
+ 
  await companiesStore.fetchOne(companyId, async (company) => {
     appStore.isLoading = true;
     const competitorTag = `competitor_tag=${company.competitor_tag}`;
@@ -49,13 +59,34 @@ const fetchCompetitors = async (to, from, next) => {
 
 const fetchEstablishments = async (to, from, next) => {
   const companiesStore = useCompanyStore();
+  const userStore = useUserStore();
   const appStore = useAppStore();
-  appStore.isLoading = true;
-  await companiesStore.fetchAll((response)=>{
-    console.log(response.data['hydra:member'])
-    appStore.isLoading = false;
+  if(userStore.user.customer !== null){
+    const establishmentIds = getIds(userStore.user.customer.establishments);  
+    appStore.isLoading = true;
+   
+    await companiesStore.fetchByUser(establishmentIds, (response)=>{
+      console.log(response)
+      appStore.isLoading = false;
+    })
+  }
+  next();
+  // await companiesStore.fetchAll((response)=>{
+  //   console.log(response.data['hydra:member']);
+  //   appStore.isLoading = false;
+  //   next();
+  // });
+}
+
+const CheckCompany = async (to, from, next) => {
+  const companyId = parseInt(to.params.id);
+  const userStore = useUserStore();
+  const establishmentIds = getIds(userStore.user.customer.establishments); 
+  let isClient = establishmentIds.some(item => item === companyId);
+  console.log(isClient)
+  if(isClient){
     next();
-  });
+  }else next('/home');
 }
 
 const routes = [
@@ -75,7 +106,7 @@ const routes = [
     path:'/companies/:id',
     name: 'Company',
     component: CompanyView,
-    beforeEnter: [CheckAccess, fetchCompetitors],
+    beforeEnter: [CheckAccess, CheckCompany, fetchCompetitors],
   },
   {
     path:'/companies/:competitorId/:companyId/comparison',

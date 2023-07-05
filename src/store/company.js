@@ -9,11 +9,19 @@ export const useCompanyStore = defineStore("company", {
   }),
   actions: {
     async fetchAll(next){
-        await services.getRecords(this.entity, (response)=>{
+        await services.getRecords(this.entity, async (response)=>{
             if (response.status == 200) {
               this.establishments = response.data['hydra:member'];
-              console.log(this.establishments)
+              let data = response.data['hydra:member'];
               this.nb = this.establishments.length;
+
+              // if(this.establishments != []){
+               
+              //   await services.reviewAnalysis(`${this.$nlp_api}/analysis`, {'establishments': 'list'}, (response)=>{
+              //     console.log('I am calling flask right now')
+              //     console.log(response)
+              //   })
+              // }
               next(response);
             }
         })
@@ -25,6 +33,29 @@ export const useCompanyStore = defineStore("company", {
         });
       } catch (error) {
         console.error(error)
+      }
+    },
+    async fetchByUser(establishmentIds, next){
+      try{
+        let data = [];
+        let promises = [];
+
+        for(const id of establishmentIds){
+        
+          let promise = services.getRecord(this.entity, id, (response)=>{
+            data.push(response.data);
+          });
+          promises.push(promise);
+        }
+
+        Promise.all(promises).then(()=>{
+          this.establishments = data;
+          this.nb = data.length;
+          next(data);
+        });
+
+      }catch(error){
+        console.error(error);
       }
     },
     async calculateRating(reviews, next){
@@ -66,7 +97,7 @@ export const useCompanyStore = defineStore("company", {
         if(index>=data.length) index = 0;
         index ++;
       });
-      next(legend)
+      next(legend);
     },
     getTopThreeReviews(reviews, rating, result){
       reviews.forEach(review => {

@@ -164,7 +164,7 @@ const putRecord = async (entity, recordId, value, next) => {
     if (checkConnexionInfo()) {
         try {
             let url = `/${entity}/${recordId}`;
-            await axios.put(`${url}`, value, {headers})
+            await axiosInstance.put(`${url}`, value, {headers})
                        .then((response)=> {return next(response)})
         } catch (error) {
             return next(error.response)
@@ -184,6 +184,18 @@ const login = async (email, password) => {
     }
 };
 
+const reviewAnalysis = async (path, value, next) =>{
+    
+    try {
+        await axios.post(path, value)
+        .then(response => {
+           next(response)
+        })   
+    } catch (error) {
+        
+    }
+}
+
 export default {
     setToken,
     setURL,
@@ -197,5 +209,6 @@ export default {
     logout,
     login,
     setUser,
-    getRecordsByParams
+    getRecordsByParams,
+    reviewAnalysis
 }

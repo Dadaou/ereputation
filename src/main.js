@@ -22,11 +22,18 @@ import App from './App.vue';
 services.setURL(import.meta.env.VITE_APP_API_URL);
 moment.locale('fr');
 
-createApp(App)
-    .use(createPinia())
-    .use(router, axios)
-    .use(Particles)
-    .use(Vuesalize)
-    .component('VueDatePicker', VueDatePicker)
-    .mount('#app');
+const app = createApp(App);
+app.config.globalProperties.$nlp_api = import.meta.env.VITE_NLP_API_URL;
+
+const pinia = createPinia();
+pinia.use(({ store })=>{
+    store.$nlp_api = app.config.globalProperties.$nlp_api;
+})
+
+app.use(pinia)
+   .use(router, axios)
+   .use(Particles)
+   .use(Vuesalize)
+   .component('VueDatePicker', VueDatePicker)
+   .mount('#app');
     

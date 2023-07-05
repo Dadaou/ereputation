@@ -220,8 +220,8 @@ import { useWindowSize } from '@vueuse/core';
 import { onClickOutside } from '@vueuse/core';
 
 const page=ref({
-    title1: "Your",
-    title2: "establishment",
+    title1: "",
+    title2: "",
     icon: "uil-estate",
 });
 
@@ -335,6 +335,7 @@ onBeforeMount(async () => {
 const companyId = route.params.id;
 await companiesStore.fetchOne(companyId, async (company) => {
     establishment.value = company;
+    page.value.title2 = company.name;
     console.log(establishment.value.reviews)
     companiesStore.calculateRating(establishment.value.reviews, (rating) =>{
         all_items.value[0].value = rating;

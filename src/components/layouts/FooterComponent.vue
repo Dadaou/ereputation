@@ -6,7 +6,7 @@
                     <li><i class="uil uil-copyright"></i> eReputation, allright reserved</li>
                     <li>Legal Notice</li>
                     <li>Contact</li>
-                    <li>a creation by Twenit</li>
+                    <li>Powered by Twenit</li>
                 </ul>
             </div>
             <div class="footer__links">

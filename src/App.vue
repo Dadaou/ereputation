@@ -28,6 +28,7 @@ if(userStore.roleSummary == ''){
 onBeforeMount(() => {
     initFlowbite();
 })
+console.log(userStore.user)
 
 const{ width, height} = useWindowSize();
 const loaderStyle = ref({

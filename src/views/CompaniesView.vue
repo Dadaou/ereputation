@@ -106,8 +106,11 @@
                 <i class="uil uil-building"></i>
                 <div class="line"></div>
             </div>
-            <div class="client__container__head">
+            <div class="client__container__head" v-if="companiesStore.establishments.length>0">
                 Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, your companies are listed bellow.  <span>({{ companiesStore.nb }} companies found)</span>
+            </div>
+            <div class="client__container__head" v-else>
+                Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, no companies found yet.
             </div>
             <div class="society__list">
                 <div class="society__item" v-for="company,index in companiesStore.establishments" @click="$router.push(`/companies/${company.id}`)">
@@ -150,8 +153,8 @@ const particlesLoaded = async container => {
 };
 
 const page=ref({
-    title1: "The",
-    title2: "home page",
+    title1: "",
+    title2: "Home",
     icon: "uil-estate",
 });
 
