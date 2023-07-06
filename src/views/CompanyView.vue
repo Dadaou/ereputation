@@ -100,12 +100,13 @@
                     <div class="rating__customers">
                         <div class="title">Rating by Customers</div>
                         <div class="chart__rating">
-                            <LineChart :plot-data="plotdata1" x-key="year"
+                            <!-- <LineChart :plot-data="plotdata1" x-key="year"
                                         :width="chart__width2" :height="chart__height2" :margin="margin"
                                         :y-min="1" :x-ticks="3" :x-min="2021" :x-max="2023"
                                         :colors="colors"
                                         :y-tick-format="d => `${d}`">
-                            </LineChart>
+                            </LineChart> -->
+                            <Line :data="chartData" :options="chartConfig.options" />
                         </div>
                     </div>
                     <div class="community__feedback">
@@ -133,24 +134,34 @@
                     </div>
                 </div>
                 <div class="reviews__content">
-                        <article v-for="review in lastReviews" v-if="lastReviews.length>0">
+                        <article v-for="review in lastReviews" v-if="lastReviews.length > 0">
                             <div class="flex items-center review__item">
                                 <div class="flex items-center mb-6 space-x-4">
                                     <div class="space-y-1 font-medium dark:text-white">
                                         <p>{{ review.author }}</p>
-                                        <ul class="space-y-4 text-sm text-gray-500 dark:text-gray-400">
-                                            <li class="flex items-center"><svg aria-hidden="true" class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"></path></svg>{{ review.source }}</li>
+
+                                        <ul class="space-y-1 text-sm text-gray-500 dark:text-gray-400">
+                                            <li class="flex items-center"><svg class="w-2.5 h-2.5 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                                            </svg>{{ moment(review.created_at).format('D MMMM YYYY')}}</li>
+                                            <li class="flex items-center"><svg aria-hidden="true" class="w-3 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"></path></svg>{{ review.source }}</li>
                                         </ul>
                                     </div>
                                 </div>
-                                <p class="bg-yellow-400 text-white text-sm font-semibold inline-flex items-center p-1.5 rounded">{{ review.rating }}</p>
+                                <p class="bg-yellow-100 text-yellow-800 text-sm font-semibold inline-flex items-center p-1.5 rounded dark:bg-yellow-200 dark:text-yellow-800">{{ formatRating(review.rating) }}</p>
                             </div>
                             <div class="col-span-2 mt-6 md:mt-0">
                                 <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 comment">{{ review.comment }}</p>
                             </div>
                         </article>
                         <article v-else>No reviews ...</article>
-                </div>
+                        <aside v-if="lastReviews.length > 0">
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{  all_items[1].value - 3 }} reviews remains</p>
+                            <div class="flex items-center mt-3 space-x-3 divide-x divide-gray-200 dark:divide-gray-600">
+                                <a href="#" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-xs px-2 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">see more</a>
+                            </div>
+                        </aside>
+                </div> 
             </div>
             <div class="right__side">
               <div class="filter__content">
@@ -178,12 +189,13 @@
               <div class="rating__customers">
                 <div class="title">Rating by Customers</div>
                 <div class="chart__rating">
-                    <LineChart :plot-data="plotdata1" x-key="year"
+                    <!-- <LineChart :plot-data="plotdata1" x-key="year"
                                 :width="chart__width2" :height="chart__height2" :margin="margin"
-                                :y-min="1" :x-ticks="3" :x-min="2021" :x-max="2023"
+                                :y-min="1" :x-min="2021" :x-max="2022"
                                 :colors="colors"
                                 :y-tick-format="d => `${d}`">
-                    </LineChart>
+                    </LineChart> -->
+                    <Line :data="chartData" :options="chartConfig.options" />
                 </div>
               </div>
               <div class="community__feedback">
@@ -213,12 +225,33 @@
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import CounterComponent from '@Components/utils/CounterComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
-import {ref, watch, onBeforeMount, onMounted} from 'vue';
+import {ref, reactive, watch, onBeforeMount} from 'vue';
 import { useCompetitorStore } from "@Stores/competitors.js";
 import { useCompanyStore } from "@Stores/company.js";
 import { useRoute } from "vue-router";
 import { useWindowSize } from '@vueuse/core';
+import moment from 'moment';
 import { onClickOutside } from '@vueuse/core';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js'
+import { Line } from 'vue-chartjs';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+)
 
 const page=ref({
     title1: "",
@@ -292,14 +325,13 @@ let plotdata1 = [
         "Company 4": 2.8
     },
     {
-        "year": "2023",
+        "year": "2021",
         "Company 1": 4.3,
         "Company 2": 4.8,
         "Company 3": 4.6,
         "Company 4": 4.5
     },
 ];
-
 let legendData = ref([]);
 let _legendData = [];
 
@@ -308,6 +340,54 @@ let lastReviews = ref([]);
 let margin = { top: 20, bottom: 35, left: 55, right: 20 };
 
 let colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890'];
+
+let chartConfig = reactive({
+    data: {
+        labels: companiesStore.getSixLastMonth(),
+        datasets: [
+            {
+                label: 'Data One',
+                backgroundColor: '#f87979',
+                data: [40, 20, 12, 39, 10, 40,]
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+let chartData = ref({
+        labels: companiesStore.getSixLastMonth(),
+        datasets: []
+})
+
+const loadDatasets = (establishments, colors) => {
+    let data = [];
+    var index = 0;
+    let chartdata = {
+        labels: companiesStore.getSixLastMonth(),
+        datasets: []
+    }
+    chartConfig.data.datasets = [];
+    establishments.forEach(establishment => {
+        console.log(establishment.name, establishment.reviews)
+        let dataset = {
+            label: establishment.name,
+            backgroundColor: colors[index],
+            data: companiesStore.getRatingSixLastMonth(establishment.reviews)
+            
+        };
+        if(index>=establishments.length) index = 0;
+        index ++;
+        data.push(dataset);
+        chartdata.datasets.push(dataset);
+    });
+    chartConfig.data.datasets = data;
+    chartData.value = chartdata;
+    return data;
+}
 
 watch(showCompetitors, ()=>{
  console.log(showCompetitors.value);   
@@ -325,7 +405,7 @@ const globalComparison = async () => {
     
     await companiesStore.calculateReviews(comparisonData.value, (reviews) => {
         plotdata.value.push(reviews);
-    })
+    });
     await companiesStore.generateLegend(comparisonData.value, (data) => {
         legendData.value = data;
         _legendData  = data;
@@ -334,6 +414,7 @@ const globalComparison = async () => {
     all_items.value[1].value = establishment.value.reviews.length;
     all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
     lastReviews.value = companiesStore.getThreeLastReviews(establishment.value.reviews);
+    loadDatasets(_comparisonData, ['#6c63ff', '#f75842', '#aca8fd', '#424890']);
 }
 
 onBeforeMount(async () => {
@@ -351,11 +432,8 @@ await companiesStore.fetchOne(companyId, async (company) => {
       data.forEach(element => {
         competitors.value.push(element);
       });
-    //   all_items.value[2].value = competitors.value.length;
-    //   all_items.value[1].value = establishment.value.reviews.length;
       globalComparison();
-    //   lastReviews.value = companiesStore.getTopThreeReviews(establishment.value.reviews, 5, []);
-    })
+    });
  });
 })
 
@@ -485,6 +563,14 @@ watch([width], () => {
     chart__height.value = 180;
    }
 });
+
+const formatRating = (rating) => {
+    rating = parseFloat(rating);
+    if(rating > 5){
+        rating = rating / 2;
+    }
+    return rating.toFixed(1);
+}
 
 </script>
 

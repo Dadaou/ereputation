@@ -115,13 +115,21 @@
             <div class="society__list">
                 <div class="society__info__container" v-for="company,index in companiesStore.establishments" @click="$router.push(`/companies/${company.id}`)">
                     <div class="society__item">
-                        <img class="society__logo" :src="'https://images.pexels.com/photos/7070/space-desk-workspace-coworking.jpg'" alt="">  
+                        <swiper class="society__logo" :modules="[Virtual]" v-if="company.media.length > 0" :slides-per-view="1" :space-between="10" :virtual="true">
+                                <swiper-slide v-show="mediaStore.isImageFile(image.url_source)" v-for="image in company.media">
+                                    <img :src="image.url_source">
+                                </swiper-slide>
+                        </swiper>
+                        <!-- <div class="society__logo slider" v-if="company.media.length > 0">
+                            <img v-show="mediaStore.isImageFile(image.url_source)" v-for="image in company.media" :src="image.url_source">
+                        </div>   -->
+                        <img v-else class="society__logo" :src="'https://images.pexels.com/photos/7070/space-desk-workspace-coworking.jpg'" alt="">
                         <div class="society__main__info">
                         <div class="item__head">
                                 <div class="society__info">
                                     <label class="society__name">{{ company.name }}</label>
                                     <div class="society__category">
-                                        <i class="uil uil-briefcase-alt"></i>
+                                        <i :class="['uil', company.category=='Restaurant'?'uil-restaurant':'', company.category=='Hotel'?'uil-bed-double':'', company.category=='Residence'?'uil-home':'']"></i>
                                         <span>{{ company.category }}</span>
                                     </div>
                                     <div class="society__location">
@@ -148,11 +156,18 @@ import {ref, watch} from 'vue'
 import { loadFull } from "tsparticles";
 import { useUserStore } from "@Stores/user.js";
 import { useCompanyStore } from "@Stores/company.js";
+import { useMediaStore } from "@Stores/media.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingComponent from '@Components/utils/RatingComponent.vue'; 
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Virtual } from 'swiper/modules';
+
+// Import Swiper styles
+import 'swiper/css';
 
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
+const mediaStore = useMediaStore();
 
 const particlesInit = async engine => {
     await loadFull(engine);
@@ -172,6 +187,38 @@ const isActive = ref('all');
 </script>
 
 <style scoped>
+
+/* Slider */
+.slider {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  position: relative;
+}
+
+.slider img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  animation: slide 10s infinite;
+}
+
+@keyframes slide {
+  0% {
+    opacity: 1;
+  }
+  33.33% {
+    opacity: 0;
+  }
+  66.66% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+
 .breadcrumb {
     position: relative;
     top:-110px;
@@ -289,9 +336,10 @@ const isActive = ref('all');
     transform: var(--transition)
 }
 
-.society__item img{
+.society__item .society__logo{
    width: 100px;
    height: inherit;
+   z-index: 0;
 }
 
 .society__info__container {
@@ -332,6 +380,7 @@ const isActive = ref('all');
 
 .society__item i{
     color: var(--color-danger);
+    margin-right: 5px;
 }
 
 .item__head{

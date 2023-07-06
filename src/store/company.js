@@ -34,16 +34,15 @@ export const useCompanyStore = defineStore("company", {
         let promises = [];
 
         for(const id of establishmentIds){
-        
           let promise = services.getRecord(this.entity, id, (response)=>{
             data.push(response.data);
           });
           promises.push(promise);
         }
-
         Promise.all(promises).then(()=>{
           this.establishments = data;
           this.nb = data.length;
+          console.log(data)
           next(data);
         });
 
@@ -77,7 +76,7 @@ export const useCompanyStore = defineStore("company", {
       });
       let rating = (total / nb).toFixed(2);
       if (isNaN(rating)) rating = 0;
-      return rating;
+      return parseInt(rating);
     },
     async calculateReviews(data, next){
       let reviews = {
@@ -122,7 +121,7 @@ export const useCompanyStore = defineStore("company", {
       let data = []
       if(reviews.length>0){
         reviews.sort(function(a, b) {
-          return moment(b.created_at).diff(moment(a.created_at));
+          return moment(b.date_review).diff(moment(a.date_review));
         });
         
         let lastReviews = reviews.slice(0, 3);
@@ -131,7 +130,7 @@ export const useCompanyStore = defineStore("company", {
          data.push(review);
         });
       }
-      return data;
+      return data.reverse();
     },
     getReviewsBySource(reviews, website){
        let data = [];
@@ -169,6 +168,59 @@ export const useCompanyStore = defineStore("company", {
          data.push(company);
       });
       next(data);
+    },
+    getSixLastMonth(){
+      const actualMonth = moment();
+      let lastMonth = [];
+      for (let i = 0; i < 6; i++) {
+        const month = actualMonth.clone().subtract(i, 'months').format('MMMM');
+        lastMonth.push(month);
+      }
+      return lastMonth.reverse();
+    },
+    initReviewsByMonth(months){
+      const reviewsByMonth = {};
+      months.forEach(month => {
+        reviewsByMonth[month] = [];
+      });
+      return reviewsByMonth;
+    },
+    getSixLastMonthReview(reviews){
+      const currentDate = moment();
+      const lastMonth = this.getSixLastMonth();
+      const reviewsByMonth = this.initReviewsByMonth(lastMonth);
+
+      if(reviews.length > 0){
+        const filteredReviews = reviews.filter(review => {
+          const reviewDate = moment(review.review_date);
+          return reviewDate.isSameOrAfter(currentDate.subtract(6, 'months'), 'month');
+        });
+        filteredReviews.forEach(review => {
+          let reviewDate = moment(review.review_date);
+
+          // if(review.review_date == null){
+          //   const startDate = moment().subtract(6, 'months');
+          //   reviewDate = moment(startDate + Math.random() * (currentDate - startDate));
+          // }
+
+          const monthKey = reviewDate.format('MMMM');
+          if (!reviewsByMonth[monthKey]) {
+            reviewsByMonth[monthKey] = [];
+          }
+          reviewsByMonth[monthKey].push(review);
+        });
+      }
+      return reviewsByMonth;
+    },
+    getRatingSixLastMonth(reviews){
+      let data = [];
+      const months = this.getSixLastMonth();
+      const sixLastMonthReviews = this.getSixLastMonthReview(reviews);
+      months.forEach(month => {
+        let rating = this.calculateRatingV2(sixLastMonthReviews[month]);
+        data.push(parseInt(rating));
+      });
+      return data;
     }
   }
 });

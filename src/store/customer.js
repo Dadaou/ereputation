@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
 
-export const useAppStore = defineStore("app", {
+export const useCustomerStore = defineStore("customer", {
     state: () => ({
-        isLoading: false,
+    
     }),
     actions: {
 
