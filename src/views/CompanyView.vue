@@ -100,12 +100,6 @@
                     <div class="rating__customers">
                         <div class="title">Rating by Customers</div>
                         <div class="chart__rating">
-                            <!-- <LineChart :plot-data="plotdata1" x-key="year"
-                                        :width="chart__width2" :height="chart__height2" :margin="margin"
-                                        :y-min="1" :x-ticks="3" :x-min="2021" :x-max="2023"
-                                        :colors="colors"
-                                        :y-tick-format="d => `${d}`">
-                            </LineChart> -->
                             <Line :data="chartData" :options="chartConfig.options" />
                         </div>
                     </div>
@@ -186,15 +180,16 @@
                             </div>
                         </div>
               </div>
+              <div class="date__filter">
+                <div class="title">Pick a date</div>
+                <div class="date__filter__content">
+                    <VueDatePicker v-model="date" :month-change-on-scroll="false"  model-type="dd-MM-yyyy"/>
+                </div>
+                <span>Stats: Select the ending date, 6 months</span>
+              </div>
               <div class="rating__customers">
                 <div class="title">Rating by Customers</div>
                 <div class="chart__rating">
-                    <!-- <LineChart :plot-data="plotdata1" x-key="year"
-                                :width="chart__width2" :height="chart__height2" :margin="margin"
-                                :y-min="1" :x-min="2021" :x-max="2022"
-                                :colors="colors"
-                                :y-tick-format="d => `${d}`">
-                    </LineChart> -->
                     <Line :data="chartData" :options="chartConfig.options" />
                 </div>
               </div>
@@ -280,6 +275,8 @@ const breadcrumbData = [
         isCurrent: true,
     },
 ]
+const date = ref(new Date());
+let selected_date = reactive(moment());
 
 const competitorStore = useCompetitorStore();
 const companiesStore = useCompanyStore();
@@ -308,30 +305,6 @@ const all_items = ref([
 ]);
 
 let plotdata = ref([]);
-
-let plotdata1 = [
-    {
-        "year": "2021",
-        "Company 1": 4.9,
-        "Company 2": 4.2,
-        "Company 3": 4.3,
-        "Company 4": 3.5
-    },
-    {
-        "year": "2022",
-        "Company 1": 3.2,
-        "Company 2": 4.6,
-        "Company 3": 3.5,
-        "Company 4": 2.8
-    },
-    {
-        "year": "2021",
-        "Company 1": 4.3,
-        "Company 2": 4.8,
-        "Company 3": 4.6,
-        "Company 4": 4.5
-    },
-];
 let legendData = ref([]);
 let _legendData = [];
 
@@ -343,7 +316,7 @@ let colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890'];
 
 let chartConfig = reactive({
     data: {
-        labels: companiesStore.getSixLastMonth(),
+        labels: companiesStore.getLastMonths(6, selected_date, false),
         datasets: [
             {
                 label: 'Data One',
@@ -359,15 +332,15 @@ let chartConfig = reactive({
 });
 
 let chartData = ref({
-        labels: companiesStore.getSixLastMonth(),
+        labels: companiesStore.getLastMonths(6, selected_date, false),
         datasets: []
 })
 
-const loadDatasets = (establishments, colors) => {
+const loadDatasets = (establishments, colors, date) => {
     let data = [];
     var index = 0;
     let chartdata = {
-        labels: companiesStore.getSixLastMonth(),
+        labels: companiesStore.getLastMonths(6, date, false),
         datasets: []
     }
     chartConfig.data.datasets = [];
@@ -376,7 +349,7 @@ const loadDatasets = (establishments, colors) => {
         let dataset = {
             label: establishment.name,
             backgroundColor: colors[index],
-            data: companiesStore.getRatingSixLastMonth(establishment.reviews)
+            data: companiesStore.getRatingLastMonths(establishment.reviews, 6, date, false)
             
         };
         if(index>=establishments.length) index = 0;
@@ -393,6 +366,17 @@ watch(showCompetitors, ()=>{
  console.log(showCompetitors.value);   
 });
 
+watch(date, ()=>{
+ if(date.value== null){
+    plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date);   
+ loadDatasets(_comparisonData, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], selected_date);
+ }else{
+    plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, moment(date.value));   
+ loadDatasets(_comparisonData, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], moment(date.value));
+ }
+ console.log(date.value, companiesStore.getLastMonthsV2(6, moment('10/05/2023'), true))
+});
+
 const globalComparison = async () => {
     selectedCompetitors.value = 'Global';
     selectedWebsites.value = 'Global';
@@ -403,9 +387,11 @@ const globalComparison = async () => {
     comparisonData.value = [establishment.value, ...competitors.value];
     _comparisonData = [establishment.value, ...competitors.value];
     
-    await companiesStore.calculateReviews(comparisonData.value, (reviews) => {
-        plotdata.value.push(reviews);
-    });
+    // await companiesStore.calculateReviews(comparisonData.value, (reviews) => {
+    //     plotdata.value.push(reviews);
+    // });
+    plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date);
+
     await companiesStore.generateLegend(comparisonData.value, (data) => {
         legendData.value = data;
         _legendData  = data;
@@ -414,7 +400,7 @@ const globalComparison = async () => {
     all_items.value[1].value = establishment.value.reviews.length;
     all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
     lastReviews.value = companiesStore.getThreeLastReviews(establishment.value.reviews);
-    loadDatasets(_comparisonData, ['#6c63ff', '#f75842', '#aca8fd', '#424890']);
+    loadDatasets(_comparisonData, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], selected_date);
 }
 
 onBeforeMount(async () => {
@@ -472,9 +458,12 @@ const reloadComparisonByWebsite = async (website) => {
             }
         });
 
-        await companiesStore.calculateReviews(data, async (reviews) => {
-            plotdata.value.push(reviews);
-        });
+        // await companiesStore.calculateReviews(data, async (reviews) => {
+        //     plotdata.value.push(reviews);
+        // });
+        plotdata.value = companiesStore.calculateReviewsV2(data, 6, selected_date);
+        console.log(data);
+        loadDatasets(data, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], selected_date);
     });
 }
 
@@ -618,11 +607,31 @@ const formatRating = (rating) => {
     /* padding: 15px; */
 }
 
+.date__filter{
+    border: 1px solid var(--light-color-bg2);
+    border-radius: 10px;
+    margin: 15px auto;
+    padding: 15px;
+}
+
+.date__filter__content{
+    width: 90%;
+    margin: auto;
+}
+
+.date__filter .title{
+    font-size: 15px;
+    font-weight:600;
+}
+
+.date__filter span{
+    font-size: 10px;
+    font-weight:600;
+}
+
 .filter__content .title{
     font-size: 15px;
     font-weight:600;
-    /* margin-left: 15px; */
-    /* margin-top:15px; */
 }
 
 .filter__content{
