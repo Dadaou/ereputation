@@ -120,9 +120,6 @@
                                     <img :src="image.url_source">
                                 </swiper-slide>
                         </swiper>
-                        <!-- <div class="society__logo slider" v-if="company.media.length > 0">
-                            <img v-show="mediaStore.isImageFile(image.url_source)" v-for="image in company.media" :src="image.url_source">
-                        </div>   -->
                         <img v-else class="society__logo" :src="'https://images.pexels.com/photos/7070/space-desk-workspace-coworking.jpg'" alt="">
                         <div class="society__main__info">
                         <div class="item__head">
@@ -187,38 +184,6 @@ const isActive = ref('all');
 </script>
 
 <style scoped>
-
-/* Slider */
-.slider {
-  width: 100%;
-  height: 300px;
-  overflow: hidden;
-  position: relative;
-}
-
-.slider img {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  animation: slide 10s infinite;
-}
-
-@keyframes slide {
-  0% {
-    opacity: 1;
-  }
-  33.33% {
-    opacity: 0;
-  }
-  66.66% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-
 .breadcrumb {
     position: relative;
     top:-110px;

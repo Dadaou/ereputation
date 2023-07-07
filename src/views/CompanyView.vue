@@ -158,7 +158,7 @@
                 </div> 
             </div>
             <div class="right__side">
-              <div class="filter__content">
+                <div class="filter__content">
                 <div class="title">
                     Filter by website
                 </div>
@@ -187,6 +187,23 @@
                 </div>
                 <span>Stats: Select the ending date, 6 months</span>
               </div>
+                <div class="establishment max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                    <a href="#">
+                        <img v-if="media.length > 0" class="rounded-t-lg" :src="media[0]" alt="" />
+                        <img v-else :src="'https://images.pexels.com/photos/7070/space-desk-workspace-coworking.jpg'" alt="">
+                    </a>
+                    <div class="establishment__info">
+                            <label class="society__name">{{ establishment.name }}</label>
+                            <div class="society__category">
+                                <i :class="['uil', establishment.category=='Restaurant'?'uil-restaurant':'', establishment.category=='Hotel'?'uil-bed-double':'', establishment.category=='Residence'?'uil-home':'']"></i>
+                                <span>{{ establishment.category }}</span>
+                            </div>
+                            <div class="society__location">
+                                    <i class="uil uil-location-point"></i>
+                                    <span>{{ establishment.address1 }}, {{ establishment.city }}</span>
+                            </div> 
+                    </div>
+                </div>
               <div class="rating__customers">
                 <div class="title">Rating by Customers</div>
                 <div class="chart__rating">
@@ -195,20 +212,33 @@
               </div>
               <div class="community__feedback">
                     <div class="title">Community Feedback</div>
-                    <h2>Mostly Positive</h2>
+                    <h2 v-if="reviewFeedbackData.feeling > 0">Mostly Positive</h2>
+                    <h2 v-else>Mostly Negative</h2>
                     <div class="reviews__content1">
-                        <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700">
-                            <div class="h-2 bg-red-300 rounded" style="width: 100%"></div>
+                        <!-- <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700">
+                            <div class="h-2 rounded" style="width: 100%"></div>
                             <span>Negative</span>
                         </div>
                         <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700">
                             <div class="h-2 bg-grey-300 rounded" style="width: 50%"></div>
                             <span>Neutral</span>
+                        </div> -->
+                        <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700" style="position: relative">
+                            <div v-if="reviewFeedbackData.feeling > 0" class="h-2 rounded review-feedback__positive" :style="{'width': reviewFeedbackData.width+'%', 'background': 'linear-gradient(90deg, rgba(255,255,0,1) 0%, rgba('+reviewFeedbackData.red+',255,0,1) 100%)'}"></div>
+                            <div v-else class="h-2 rounded review-feedback__negative" :style="{'width': reviewFeedbackData.width+'%', 'background': 'linear-gradient(90deg, rgba(255,255,0,1) 0%, rgba(255,'+reviewFeedbackData.green+',0,1) 100%)'}"></div>
+                            <div class="review-feedback__labels">
+                                <span>Negative</span>
+                                <span>Neutre</span>
+                                <span>Positive</span>
+                            </div>
+                            
                         </div>
-                        <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700">
-                            <div class="h-2 bg-green-300 rounded" style="width: 50%"></div>
-                            <span>Positive</span>
-                        </div>
+
+                        <!-- <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700">
+                            <div class="h-2 rounded" style="width: 100%"></div>
+                        </div> -->
+
+                        <!-- background: linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(249,255,0,1) 51%, rgba(0,255,0,1) 100%); -->
                     </div>
               </div>
             </div>
@@ -223,6 +253,7 @@ import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import {ref, reactive, watch, onBeforeMount} from 'vue';
 import { useCompetitorStore } from "@Stores/competitors.js";
 import { useCompanyStore } from "@Stores/company.js";
+import { useMediaStore } from "@Stores/media.js";
 import { useRoute } from "vue-router";
 import { useWindowSize } from '@vueuse/core';
 import moment from 'moment';
@@ -238,6 +269,10 @@ import {
   Legend
 } from 'chart.js'
 import { Line } from 'vue-chartjs';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+
+// Import Swiper styles
+import 'swiper/css';
 
 ChartJS.register(
   CategoryScale,
@@ -280,6 +315,7 @@ let selected_date = reactive(moment());
 
 const competitorStore = useCompetitorStore();
 const companiesStore = useCompanyStore();
+const mediaStore = useMediaStore();
 let showCompetitors = ref(false);
 let showWebsites = ref(false);
 let selectedCompetitors = ref('Global');
@@ -294,7 +330,7 @@ let websites = ref([
     { name : 'OpenTable'},
 ])
 
-const establishment = ref(null);
+let establishment = ref({});
 const competitors = ref([]); 
 let comparisonData = ref([establishment.value, ...competitors.value]);
 let _comparisonData = [establishment.value, ...competitors.value];
@@ -309,6 +345,16 @@ let legendData = ref([]);
 let _legendData = [];
 
 let lastReviews = ref([]);
+let media = [];
+let name = ""
+
+let reviewsConfidence = ref(0);
+let reviewFeedbackData = ref({
+    width: 20,
+    red: 250,
+    green: 0,
+    feeling: -1
+});
 
 let margin = { top: 20, bottom: 35, left: 55, right: 20 };
 
@@ -345,12 +391,10 @@ const loadDatasets = (establishments, colors, date) => {
     }
     chartConfig.data.datasets = [];
     establishments.forEach(establishment => {
-        console.log(establishment.name, establishment.reviews)
         let dataset = {
             label: establishment.name,
             backgroundColor: colors[index],
             data: companiesStore.getRatingLastMonths(establishment.reviews, 6, date, false)
-            
         };
         if(index>=establishments.length) index = 0;
         index ++;
@@ -386,10 +430,7 @@ const globalComparison = async () => {
     
     comparisonData.value = [establishment.value, ...competitors.value];
     _comparisonData = [establishment.value, ...competitors.value];
-    
-    // await companiesStore.calculateReviews(comparisonData.value, (reviews) => {
-    //     plotdata.value.push(reviews);
-    // });
+   
     plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date);
 
     await companiesStore.generateLegend(comparisonData.value, (data) => {
@@ -400,6 +441,7 @@ const globalComparison = async () => {
     all_items.value[1].value = establishment.value.reviews.length;
     all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
     lastReviews.value = companiesStore.getThreeLastReviews(establishment.value.reviews);
+    reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
     loadDatasets(_comparisonData, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], selected_date);
 }
 
@@ -408,11 +450,13 @@ const companyId = route.params.id;
 await companiesStore.fetchOne(companyId, async (company) => {
     establishment.value = company;
     page.value.title2 = company.name;
-    console.log(establishment.value.reviews)
+    console.log(establishment.value)
+    establishment.value.media.forEach(item => {
+        media.push(item.url_source);
+    });
     companiesStore.calculateRating(establishment.value.reviews, (rating) =>{
         all_items.value[0].value = rating;
     });
-
     const competitorTag = `competitor_tag=${company.competitor_tag}`;
     await competitorStore.getAllCompetitors(competitorTag, (data) => {  
       data.forEach(element => {
@@ -424,7 +468,6 @@ await companiesStore.fetchOne(companyId, async (company) => {
 })
 
 const reloadComparison = async (competitor) => {
-    console.log(competitor)
     selectedCompetitors.value = competitor.name;
     showCompetitors.value = !showCompetitors.value;
 
@@ -434,18 +477,15 @@ const reloadComparison = async (competitor) => {
     _comparisonData  = [establishment.value, competitor];
     
     await companiesStore.calculateReviews(comparisonData.value, async (reviews) => {
-        console.log(reviews)
         plotdata.value.push(reviews);
         legendData.value = _legendData.filter(e => e.name == establishment.value.name || e.name == competitor.name)
-    })
+    });
 }
 
 const reloadComparisonByWebsite = async (website) => {
     selectedWebsites.value = website;
     showWebsites.value = !showWebsites.value;
-
-    comparisonData.value = _comparisonData
-    console.log(_comparisonData)
+    comparisonData.value = _comparisonData;
     await companiesStore.getReviewsByWebsite(comparisonData.value, selectedWebsites.value, async (data) =>{
         plotdata.value = [];
         console.log(data)
@@ -455,14 +495,10 @@ const reloadComparisonByWebsite = async (website) => {
                 all_items.value[1].value = company.reviews.length;
                 all_items.value[0].value = companiesStore.calculateRatingV2(company.reviews);
                 lastReviews.value = companiesStore.getThreeLastReviews(company.reviews);
+                reviewFeedbackData.value = companiesStore.getfeedbackData(company.reviews);
             }
         });
-
-        // await companiesStore.calculateReviews(data, async (reviews) => {
-        //     plotdata.value.push(reviews);
-        // });
         plotdata.value = companiesStore.calculateReviewsV2(data, 6, selected_date);
-        console.log(data);
         loadDatasets(data, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], selected_date);
     });
 }
@@ -607,6 +643,28 @@ const formatRating = (rating) => {
     /* padding: 15px; */
 }
 
+.establishment{
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid var(--light-color-bg2);
+}
+
+.establishment__info i{
+    color: var(--color-danger);
+    margin-right: 5px;
+}
+
+.establishment__info label{
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--color-primary)
+}
+
+.establishment div{
+    font-size: 13px;
+    font-weight: 500;
+}
+
 .date__filter{
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
@@ -662,6 +720,28 @@ const formatRating = (rating) => {
     border-radius: 10px;
     height: 125px;
     padding: 15px;
+}
+
+.review-feedback__labels{
+    flex-direction: row;
+    display: flex;
+    justify-content: space-between;
+}
+
+.review-feedback__labels span{
+    margin: 0 !important;
+}
+
+.review-feedback__negative{
+    transform: rotate(180deg);
+    transform-origin: center left;
+    position: absolute;
+    left: 50%;
+}
+
+.review-feedback__positive{
+    position: absolute;
+    left: 50%; 
 }
 
 .chart__rating{

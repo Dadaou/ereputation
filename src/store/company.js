@@ -290,6 +290,32 @@ export const useCompanyStore = defineStore("company", {
       console.log('reviews',reviews);
       console.log('result',data);
       return data;
+    },
+    getfeedbackData(reviews){
+      let sumConfidence = 0
+
+      reviews.forEach((review)=>{
+        sumConfidence += review.confidence
+      })
+
+      let confidencePercentage = sumConfidence * 100 / reviews.length
+      let rawWidth = confidencePercentage * 2
+      let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
+      let feeling = rawWidth > 0 ? 1 : -1
+      let red = 255
+      let green = 255
+      if (feeling == 1){
+        red = 200
+      } else {
+        green = 200
+      }
+
+      return {
+        width: width,
+        red: red,
+        green: green,
+        feeling: feeling
+      }
     }
   }
 });
