@@ -71,6 +71,7 @@ export const useCompanyStore = defineStore("company", {
       let total = 0;
       let nb = 0;
       let rating = 0;
+      
       if(reviews.length > 0){
         reviews.forEach(element => {
           total += Number(element.rating);
@@ -95,24 +96,20 @@ export const useCompanyStore = defineStore("company", {
       });
       next(reviews);
     },
-    calculateReviewsV2(data, nbMonth, selected_date){
-      let months = this.getLastMonths(nbMonth, selected_date, true);
-      console.log(months)
+    calculateReviewsV2(data, nbMonth, selected_date, year){
+      let months = this.getLastMonths(nbMonth, selected_date, year);
       let result = [];
       months.forEach(month => {
         let review = {};
         review['name'] = month;
         data.forEach(company => {
-          let monthlyReviews = this.getLastMonthReviews(company.reviews, nbMonth, selected_date, true);
-         
-          console.log(monthlyReviews);
+          let monthlyReviews = this.getLastMonthReviews(company.reviews, nbMonth, selected_date, year);
           let key = company.name;
           let value = monthlyReviews[month].length;
           review[key] = value;
         });
         result.push(review);
       });
-
       return result;
     },
     async generateLegend(data, next){
@@ -195,11 +192,10 @@ export const useCompanyStore = defineStore("company", {
       next(data);
     },
     getLastMonths(nbMonth, actualMonth, year){
-      // const actualMonth = moment();
       let lastMonth = [];
       for (let i = 0; i < nbMonth; i++) {
-        let month = actualMonth.clone().subtract(i, 'months').format('MMMM');
-        if(year) month = actualMonth.clone().subtract(i, 'months').format('MMMM-YY');
+        let month = actualMonth.clone().subtract(i, 'months').format('MMM');
+        if(year) month = actualMonth.clone().subtract(i, 'months').format('MMM-YY');
         lastMonth.push(month);
       }
       return lastMonth.reverse();
@@ -211,19 +207,6 @@ export const useCompanyStore = defineStore("company", {
       });
       return reviewsByMonth;
     },
-    getLastMonthsV2(n, selectedDate, year){
-      const previousMonths = [];
-      console.log(selectedDate)
-
-      for (let i = 0; i < n; i++) {
-        const month = selectedDate.subtract(1, 'months').endOf('month').format('MMMM-YY');
-        previousMonths.unshift(month);
-      }
-
-      console.log(previousMonths);
-
-      return previousMonths
-    },
     initReviewsByMonth(months){
       const reviewsByMonth = {};
       months.forEach(month => {
@@ -232,63 +215,36 @@ export const useCompanyStore = defineStore("company", {
       return reviewsByMonth;
     },
     getLastMonthReviews(reviews, nbMonth, currentDate, year){
-      // const currentDate = moment();
       const lastMonths = this.getLastMonths(nbMonth, currentDate, year);
       const monthlyReviews = this.initReviewsByMonth(lastMonths);
     
       if(reviews.length > 0){
         reviews.forEach(review => {
-          let reviewDate = moment(review.date_review).format('MMMM');
-          if(year) reviewDate = moment(review.date_review).format('MMMM-YY');
+          let reviewDate = moment(review.date_review).format('MMM');
+          if(year) reviewDate = moment(review.date_review).format('MMM-YY');
 
           if(review.date_review == null) {
-            reviewDate = moment(review.created_at).format('MMMM');
-            if(year) reviewDate = moment(review.created_at).format('MMMM-YY');
+            reviewDate = moment(review.created_at).format('MMM');
+            if(year) reviewDate = moment(review.created_at).format('MMM-YY');
           }
+
           lastMonths.forEach(month => {
            if(month === reviewDate) monthlyReviews[month].push(review);
           });
         });
       }
 
-      
-      // if(reviews.length > 0){
-      //   const filteredReviews = reviews.filter(review => {
-      //     const reviewDate = moment(review.date_review);
-      //     return reviewDate.isSameOrAfter(currentDate.subtract(nbMonth, 'months'), 'month');
-      //   });
-
-      //   filteredReviews.forEach(review => {
-      //     let _reviewDate = moment(review.date_review);
-          
-          
-      //     if(review.date_review == null){
-      //       const startDate = moment().subtract(nbMonth, 'months');
-      //       _reviewDate = moment(startDate + Math.random() * (currentDate - startDate));
-      //     }
-
-          
-      //     let monthKey = _reviewDate.format('MMMM');
-      //     if(year)  monthKey = _reviewDate.format('MMMM-YY');
-      //     if (!monthlyReviews[monthKey]) {
-      //       monthlyReviews[monthKey] = [];
-      //     }
-      //     monthlyReviews[monthKey].push(review);
-      //   });
-      // }
       return monthlyReviews;
     },
     getRatingLastMonths(reviews, nbMonth, date, year){
       let data = [];
       const months = this.getLastMonths(nbMonth, date, year);
       const lastMonthReviews = this.getLastMonthReviews(reviews, nbMonth, date, year);
-      console.log('months', months);
       months.forEach(month => {
+        console.log(month, lastMonthReviews[month])
         let rating = this.calculateRatingV2(lastMonthReviews[month]);
         data.push(Number(rating));
       });
-      console.log('reviews',reviews);
-      console.log('result',data);
       return data;
     },
     getfeedbackData(reviews){

@@ -7,6 +7,7 @@ import NotFoundView from '@Views/NotFoundView.vue';
 import ProfileView from '@Views/ProfileView.vue';
 import SecurityComponent from '@Components/User/SecurityComponent.vue';
 import UserDetailsComponent from '@Components/User/UserDetailsComponent.vue';
+import ReviewPageView from '@Views/ReviewPageView.vue';
 import { useCompanyStore } from "@Stores/company.js"; 
 import { useCompetitorStore } from "@Stores/competitors.js";
 import { useUserStore } from "@Stores/user.js";
@@ -71,11 +72,6 @@ const fetchEstablishments = async (to, from, next) => {
     })
   }
   next();
-  // await companiesStore.fetchAll((response)=>{
-  //   console.log(response.data['hydra:member']);
-  //   appStore.isLoading = false;
-  //   next();
-  // });
 }
 
 const CheckCompany = async (to, from, next) => {
@@ -112,6 +108,11 @@ const routes = [
     path:'/companies/:competitorId/:companyId/comparison',
     name: 'company',
     component: ComparisonView,
+  },
+  {
+    path:'/companies/:companyId/reviews',
+    name: 'reviews',
+    component: ReviewPageView,
   },
   {
     path:'/:catchAll(.*)',

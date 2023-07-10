@@ -152,7 +152,7 @@
                         <aside v-if="lastReviews.length > 0">
                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{  all_items[1].value - 3 }} reviews remains</p>
                             <div class="flex items-center mt-3 space-x-3 divide-x divide-gray-200 dark:divide-gray-600">
-                                <a href="#" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-xs px-2 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">see more</a>
+                                <a @click="seeMoreReviews()" class="see__more text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-xs px-2 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">see more</a>
                             </div>
                         </aside>
                 </div> 
@@ -183,9 +183,9 @@
               <div class="date__filter">
                 <div class="title">Pick a date</div>
                 <div class="date__filter__content">
-                    <VueDatePicker v-model="date" :month-change-on-scroll="false"  model-type="dd-MM-yyyy"/>
+                    <VueDatePicker v-model="date" :month-change-on-scroll="false" :format="format"  model-type="dd/MM/yyyy"/>
                 </div>
-                <span>Stats: Select the ending date, 6 months</span>
+                <span>Six months of statistics from the selected date</span>
               </div>
                 <div class="establishment max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                     <a href="#">
@@ -254,7 +254,7 @@ import {ref, reactive, watch, onBeforeMount} from 'vue';
 import { useCompetitorStore } from "@Stores/competitors.js";
 import { useCompanyStore } from "@Stores/company.js";
 import { useMediaStore } from "@Stores/media.js";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useWindowSize } from '@vueuse/core';
 import moment from 'moment';
 import { onClickOutside } from '@vueuse/core';
@@ -269,10 +269,6 @@ import {
   Legend
 } from 'chart.js'
 import { Line } from 'vue-chartjs';
-import { Swiper, SwiperSlide } from 'swiper/vue';
-
-// Import Swiper styles
-import 'swiper/css';
 
 ChartJS.register(
   CategoryScale,
@@ -302,7 +298,7 @@ onClickOutside(target__websites, (event) => showWebsites.value = false);
 onClickOutside(target__websites_2, (event) => showWebsites.value = false);
 
 const route = useRoute();
-
+const router = useRouter();
 const breadcrumbData = [
     {
         title: "Establishment",
@@ -311,6 +307,14 @@ const breadcrumbData = [
     },
 ]
 const date = ref(new Date());
+const format = (date) => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+}
+
 let selected_date = reactive(moment());
 
 const competitorStore = useCompetitorStore();
@@ -386,7 +390,7 @@ const loadDatasets = (establishments, colors, date) => {
     let data = [];
     var index = 0;
     let chartdata = {
-        labels: companiesStore.getLastMonths(6, date, false),
+        labels: companiesStore.getLastMonths(6, date, true),
         datasets: []
     }
     chartConfig.data.datasets = [];
@@ -394,7 +398,7 @@ const loadDatasets = (establishments, colors, date) => {
         let dataset = {
             label: establishment.name,
             backgroundColor: colors[index],
-            data: companiesStore.getRatingLastMonths(establishment.reviews, 6, date, false)
+            data: companiesStore.getRatingLastMonths(establishment.reviews, 6, date, true)
         };
         if(index>=establishments.length) index = 0;
         index ++;
@@ -412,13 +416,12 @@ watch(showCompetitors, ()=>{
 
 watch(date, ()=>{
  if(date.value== null){
-    plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date);   
+    plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);   
  loadDatasets(_comparisonData, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], selected_date);
  }else{
-    plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, moment(date.value));   
- loadDatasets(_comparisonData, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], moment(date.value));
+    plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, moment(date.value, 'DD/MM/YYYY'), true);   
+ loadDatasets(_comparisonData, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], moment(date.value, 'DD/MM/YYYY'));
  }
- console.log(date.value, companiesStore.getLastMonthsV2(6, moment('10/05/2023'), true))
 });
 
 const globalComparison = async () => {
@@ -431,7 +434,7 @@ const globalComparison = async () => {
     comparisonData.value = [establishment.value, ...competitors.value];
     _comparisonData = [establishment.value, ...competitors.value];
    
-    plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date);
+    plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);
 
     await companiesStore.generateLegend(comparisonData.value, (data) => {
         legendData.value = data;
@@ -498,7 +501,7 @@ const reloadComparisonByWebsite = async (website) => {
                 reviewFeedbackData.value = companiesStore.getfeedbackData(company.reviews);
             }
         });
-        plotdata.value = companiesStore.calculateReviewsV2(data, 6, selected_date);
+        plotdata.value = companiesStore.calculateReviewsV2(data, 6, selected_date, true);
         loadDatasets(data, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], selected_date);
     });
 }
@@ -595,6 +598,10 @@ const formatRating = (rating) => {
         rating = rating / 2;
     }
     return rating.toFixed(1);
+}
+
+const seeMoreReviews = ()=>{
+    router.push(`/companies/${route.params.id}/reviews`)
 }
 
 </script>
@@ -882,6 +889,10 @@ const formatRating = (rating) => {
 .filter__container{
     display: none;
     transition: var(--transition);
+}
+
+.see__more{
+    cursor: pointer;
 }
 
 /* For tablets */
