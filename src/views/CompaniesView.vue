@@ -149,7 +149,7 @@
 </template>
 
 <script setup>
-import {ref, watch} from 'vue'
+import {ref} from 'vue'
 import { loadFull } from "tsparticles";
 import { useUserStore } from "@Stores/user.js";
 import { useCompanyStore } from "@Stores/company.js";

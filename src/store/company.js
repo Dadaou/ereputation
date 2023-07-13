@@ -272,6 +272,81 @@ export const useCompanyStore = defineStore("company", {
         green: green,
         feeling: feeling
       }
+    },
+    getMonthsAndWeeks(startDate, endDate) {
+      const months = [];
+      const flag = startDate;
+      while (flag.diff(endDate) <= 0) {
+        months.push(flag.format('MMM YY'));
+        flag.add(1, 'M');
+      }
+      return months;
+    },
+    getReviewsBetween2Dates(establishment, startDate, endDate){ 
+      startDate = moment(startDate, 'YYYY-MM-DD');
+      endDate = moment(endDate, 'YYYY-MM-DD');
+  
+      const reviews = establishment.reviews;
+      const reviewsBetweenDates = [];
+      const _reviews = this.initReviewsByMonth(this.getMonthsAndWeeks(startDate, endDate));
+      reviews.forEach(function(review) {
+        var reviewDate = moment(review.date_review, "YYYY-MM-DD");
+        if(review.date_review == null) reviewDate = moment(review.created_at, "YYYY-MM-DD");
+        var month = reviewDate.format("MMM YY");
+      
+        if (reviewDate.isBetween(startDate, endDate, null, '[]')) {
+          reviewsBetweenDates.push(review);
+          _reviews[month].push(review);
+        }
+      });
+      console.log(reviewsBetweenDates);
+      console.log(_reviews)
+    },
+    getNumberOfRating(reviews){
+      let value = {
+        rate1: 0, rate2: 0, rate3: 0, rate4: 0, rate5: 0
+      }
+
+      reviews.forEach(review =>{
+        let rating = parseInt(review.rating);
+        if(rating > 5){
+          rating = parseInt(rating/2)
+        }
+        if(rating == 5) value.rate5 ++;
+        if(rating == 4) value.rate4 ++;
+        if(rating == 3) value.rate3 ++;
+        if(rating == 2) value.rate2 ++;
+        if(rating == 1) value.rate1 ++;
+      })
+
+      return value;
+    },
+    capitalizeString(str) {
+      if (typeof str !== 'string') {
+        throw new Error('Input must be a string');
+      }
+      
+      if (str.length === 0) {
+        return str;
+      }
+      
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    },
+    isURL(string) {
+      const urlPattern = /^(?:https?:\/\/)?(?:www\.)?[^\s.]+\.[^\s]{2,}$/i;
+      return urlPattern.test(string);
+    },
+    getWebsites(websites){
+      let _websites =  Object.entries(websites[0]);
+      let data = [];
+      _websites.forEach(([key, value]) => {
+        if(typeof(value) == 'string'){
+          if(this.isURL(value)){
+            data.push(this.capitalizeString(key));
+          }
+        }
+      });
+      return data;
     }
   }
 });

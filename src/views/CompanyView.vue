@@ -10,74 +10,6 @@
                     <div class="app__title">
                      <h1>Dashboard</h1>
                     </div>
-                    <div class="competitors">
-                        <div class="select__title w-full">Compare to</div>
-                        <div @click="showCompetitors = !showCompetitors">
-                            <div id="competitors__dropdown" data-dropdown-toggle="dropdownDivider" :class="['font-medium rounded-xl text-sm px-3 py-2 border border-1', width < 1100?'w-40':'w-60']" type="button">
-                            <span>{{ selectedCompetitors }}</span>
-                            <svg class="w-10 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></div>
-
-                            <!-- Dropdown menu -->
-                            <div id="dropdownDivider" class="" :class="['z-10 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600', width < 1100?'w-40':'w-60']" v-show="showCompetitors">
-                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" ref="target__competitors">
-                                    <li @click="globalComparison(), showCompetitors = !showCompetitors">
-                                                Global
-                                    </li>
-                                    <li v-for="competitor in competitors" @click="reloadComparison(competitor)">
-                                       {{ competitor.name }}
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="filter__container">
-                    <div class="filter__content">
-                        <div class="title">
-                            Compare to
-                        </div>
-                        <div @click="showCompetitors = !showCompetitors">
-                                    <div id="website__dropdown" data-dropdown-toggle="dropdownDivider"
-                                    :class="['font-medium rounded-xl text-sm px-3 py-2 border border-1', width < 600?'w-40':'w-60', width < 550?'w-60':'', width < 450?'w-30':'']"
-                                    type="button">
-                                    <span>{{ selectedCompetitors }}</span>
-                                    <svg class="w-10 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></div>
-
-                                    <!-- Dropdown menu -->
-                                    <div id="dropdownDivider" :class="['z-10 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600', width < 600?'w-40':'w-60', width < 550?'w-60':'', width < 450?'w-30':'']" v-show="showCompetitors">
-                                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" ref="target__competitors_2">
-                                            <li @click="globalComparison(), showCompetitors = !showCompetitors">
-                                                Global
-                                            </li>
-                                            <li v-for="competitor in competitors" @click="reloadComparison(competitor)">
-                                            {{ competitor.name }}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                    </div>
-                    <div class="filter__content">
-                        <div class="title">
-                            Filter by website
-                        </div>
-                        <div @click="showWebsites = !showWebsites">
-                                    <div id="website__dropdown" data-dropdown-toggle="dropdownDivider" :class="['font-medium rounded-xl text-sm px-3 py-2 border border-1', width < 600?'w-40':'w-60', width < 550?'w-60':'', width < 450?'w-30':'']" type="button">
-                                    <span>{{ selectedWebsites }}</span>
-                                    <svg class="w-10 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></div>
-
-                                    <!-- Dropdown menu -->
-                                    <div id="dropdownDivider" :class="['z-10 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600', width < 600?'w-40':'w-60', width < 550?'w-60':'', width < 450?'w-30':'']" v-show="showWebsites">
-                                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" ref="target__websites_2">
-                                            <li @click="globalComparison(), showWebsites = !showWebsites">
-                                                Global
-                                            </li>
-                                            <li v-for="website in websites" @click="reloadComparisonByWebsite(website.name)">
-                                                {{ website.name }}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                    </div>
                 </div>
                 <div class="dashboard__content">
                     <CounterComponent class="counter" v-for="item in all_items" :item="item"/>
@@ -89,7 +21,7 @@
                 </div>
                 <div class="chart__content">
                     <GroupedBarChart :plot-data="plotdata" x-key="name"
-                                    :width="chart__width" :height="chart__height" :margin="margin" :colors="colors"
+                                    :width="chart__width" :height="chart__height" :margin="margin" :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890']"
                                     x-axis-label="" y-axis-label="Reviews"
                                     :y-tick-format="d => `${d}`">
                     </GroupedBarChart>
@@ -102,24 +34,6 @@
                         <div class="chart__rating">
                             <Line :data="chartData" :options="chartConfig.options" />
                         </div>
-                    </div>
-                    <div class="community__feedback">
-                            <div class="title">Community Feedback</div>
-                            <h2>Mostly Positive</h2>
-                            <div class="reviews__content1">
-                                <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700">
-                                    <div class="h-2 bg-red-300 rounded" style="width: 100%"></div>
-                                    <span>Negative</span>
-                                </div>
-                                <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700">
-                                    <div class="h-2 bg-grey-300 rounded" style="width: 100%"></div>
-                                    <span>Neutral</span>
-                                </div>
-                                <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700">
-                                    <div class="h-2 bg-green-300 rounded" style="width: 100%"></div>
-                                    <span>Positive</span>
-                                </div>
-                            </div>
                     </div>
                 </div>
                 <div class="head">
@@ -152,41 +66,12 @@
                         <aside v-if="lastReviews.length > 0">
                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{  all_items[1].value - 3 }} reviews remains</p>
                             <div class="flex items-center mt-3 space-x-3 divide-x divide-gray-200 dark:divide-gray-600">
-                                <a @click="seeMoreReviews()" class="see__more text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-xs px-2 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">see more</a>
+                                <a @click="seeMoreReviews()" class="see__more text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-xs px-2 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">See more</a>
                             </div>
                         </aside>
                 </div> 
             </div>
             <div class="right__side">
-                <div class="filter__content">
-                <div class="title">
-                    Filter by website
-                </div>
-                <div @click="showWebsites = !showWebsites">
-                            <div id="website__dropdown" data-dropdown-toggle="dropdownDivider" class="font-medium rounded-xl text-sm px-3 py-2 border border-1 w-60" type="button">
-                            <span>{{ selectedWebsites }}</span>
-                            <svg class="w-10 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></div>
-
-                            <!-- Dropdown menu -->
-                            <div id="dropdownDivider" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 w-60" v-show="showWebsites">
-                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" ref="target__websites">
-                                    <li @click="globalComparison(), showWebsites = !showWebsites">
-                                        Global
-                                    </li>
-                                    <li v-for="website in websites" @click="reloadComparisonByWebsite(website.name)">
-                                        {{ website.name }}
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-              </div>
-              <div class="date__filter">
-                <div class="title">Pick a date</div>
-                <div class="date__filter__content">
-                    <VueDatePicker v-model="date" :month-change-on-scroll="false" :format="format"  model-type="dd/MM/yyyy"/>
-                </div>
-                <span>Six months of statistics from the selected date</span>
-              </div>
                 <div class="establishment max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                     <a href="#">
                         <img v-if="media.length > 0" class="rounded-t-lg" :src="media[0]" alt="" />
@@ -203,6 +88,27 @@
                                     <span>{{ establishment.address1 }}, {{ establishment.city }}</span>
                             </div> 
                     </div>
+                    <DropdownComponent title="Compare to" placeholder="Select a competitor" :data="computedCompetitors" @submit="(competitor)=>{
+                        selectedCompetitors = competitor.name
+                        if(competitor.name == computedCompetitors[0].name){
+                            globalComparison();
+                        }else{
+                            reloadComparison(competitor);
+                        }
+                    }" :defaultObj="computedCompetitors[0]" :isDataObject="true"/>
+                    <DropdownComponent title="Filter by website" placeholder="Select a website" :data="websites" @submit="(website)=>{
+                        selectedWebsites = website
+                        if(website == websites[0]){
+                            globalComparison();
+                        }else{
+                            reloadComparisonByWebsite(website);
+                        }
+                    }" :default="websites[0]"/>
+                    <div class="date__filter">
+                        <div class="text-sm title">Select a range of date</div>
+                        <VueDatePicker v-model="date" :month-change-on-scroll="false" :format="format"  model-type="dd/MM/yyyy"/>
+                        <!-- <VueDatePicker v-model="date2" range auto-range="180" :month-change-on-scroll="false" :format="format2"/> -->
+                    </div>
                 </div>
               <div class="rating__customers">
                 <div class="title">Rating by Customers</div>
@@ -215,14 +121,6 @@
                     <h2 v-if="reviewFeedbackData.feeling > 0">Mostly Positive</h2>
                     <h2 v-else>Mostly Negative</h2>
                     <div class="reviews__content1">
-                        <!-- <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700">
-                            <div class="h-2 rounded" style="width: 100%"></div>
-                            <span>Negative</span>
-                        </div>
-                        <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700">
-                            <div class="h-2 bg-grey-300 rounded" style="width: 50%"></div>
-                            <span>Neutral</span>
-                        </div> -->
                         <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700" style="position: relative">
                             <div v-if="reviewFeedbackData.feeling > 0" class="h-2 rounded review-feedback__positive" :style="{'width': reviewFeedbackData.width+'%', 'background': 'linear-gradient(90deg, rgba(255,255,0,1) 0%, rgba('+reviewFeedbackData.red+',255,0,1) 100%)'}"></div>
                             <div v-else class="h-2 rounded review-feedback__negative" :style="{'width': reviewFeedbackData.width+'%', 'background': 'linear-gradient(90deg, rgba(255,255,0,1) 0%, rgba(255,'+reviewFeedbackData.green+',0,1) 100%)'}"></div>
@@ -231,14 +129,34 @@
                                 <span>Neutre</span>
                                 <span>Positive</span>
                             </div>
-                            
                         </div>
-
-                        <!-- <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700">
-                            <div class="h-2 rounded" style="width: 100%"></div>
-                        </div> -->
-
-                        <!-- background: linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(249,255,0,1) 51%, rgba(0,255,0,1) 100%); -->
+                    </div>
+              </div>
+              <div class="community__feedback">
+                <div class="flex items-center">
+                        <a href="#" class="text-xs font-medium text-blue-600 dark:text-blue-500 hover:underline">5</a>
+                        <div class="h-2 bg-green-300 rounded mx-4" style="width: 45%"></div>
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(establishment.reviews).rate5 }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <a href="#" class="text-xs font-medium text-blue-600 dark:text-blue-500 hover:underline">4</a>
+                        <div class="h-2 bg-blue-300 rounded mx-4" style="width: 17%"></div>
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(establishment.reviews).rate4 }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <a href="#" class="text-xs font-medium text-blue-600 dark:text-blue-500 hover:underline">3</a>
+                        <div class="h-2 bg-yellow-300 rounded mx-4" style="width: 8%"></div>
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(establishment.reviews).rate3 }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <a href="#" class="text-xs font-medium text-blue-600 dark:text-blue-500 hover:underline">2</a>
+                        <div class="h-2 bg-pink-300 rounded mx-4" style="width: 4%"></div>
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(establishment.reviews).rate2 }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <a href="#" class="text-xs font-medium text-blue-600 dark:text-blue-500 hover:underline">2</a>
+                        <div class="h-2 bg-red-300 rounded mx-4" style="width: 1%"></div>
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(establishment.reviews).rate1 }}</span>
                     </div>
               </div>
             </div>
@@ -249,15 +167,14 @@
 <script setup>
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import CounterComponent from '@Components/utils/CounterComponent.vue';
+import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
-import {ref, reactive, watch, onBeforeMount} from 'vue';
+import {ref, reactive, watch, onBeforeMount, computed} from 'vue';
 import { useCompetitorStore } from "@Stores/competitors.js";
 import { useCompanyStore } from "@Stores/company.js";
-import { useMediaStore } from "@Stores/media.js";
 import { useRoute, useRouter } from "vue-router";
 import { useWindowSize } from '@vueuse/core';
 import moment from 'moment';
-import { onClickOutside } from '@vueuse/core';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -285,18 +202,6 @@ const page=ref({
     icon: "uil-estate",
 });
 
-// Competitors list 1
-const target__competitors = ref(null);
-const target__competitors_2 = ref(null);
-onClickOutside(target__competitors, (event) => showCompetitors.value = false);
-onClickOutside(target__competitors_2, (event) => showCompetitors.value = false);
-
-// Website list 1
-const target__websites = ref(null);
-const target__websites_2 = ref(null);
-onClickOutside(target__websites, (event) => showWebsites.value = false);
-onClickOutside(target__websites_2, (event) => showWebsites.value = false);
-
 const route = useRoute();
 const router = useRouter();
 const breadcrumbData = [
@@ -314,28 +219,38 @@ const format = (date) => {
 
   return `${day}/${month}/${year}`;
 }
+const date2 = ref({
+  day: new Date().getDay(),  
+  month: new Date().getMonth(),
+  year: new Date().getFullYear()
+});
+
+const format2 = (date) => {
+  const startDate = new Date(date[0]).toLocaleString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+  const endDate = new Date(date[1]).toLocaleString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+  return `${startDate} - ${endDate}`;
+}
 
 let selected_date = reactive(moment());
 
 const competitorStore = useCompetitorStore();
 const companiesStore = useCompanyStore();
-const mediaStore = useMediaStore();
 let showCompetitors = ref(false);
 let showWebsites = ref(false);
 let selectedCompetitors = ref('Global');
 let selectedWebsites = ref('Global');
-let websites = ref([
-    { name : 'Booking'},
-    { name : 'Campings'},
-    { name : 'Expedia'},
-    { name : 'Tripadvisor'},
-    { name : 'Trustpilot'},
-    { name : 'Google'},
-    { name : 'OpenTable'},
-])
+let websites = ref(['Global'])
 
-let establishment = ref({});
-const competitors = ref([]); 
+let establishment =ref({reviews:[]});
+let competitors = ref([]); 
+let computedCompetitors = computed(()=>{
+    let data = [{name:'Global'}];
+    competitors.value.forEach(competitor => {
+        data.push(competitor);
+    });
+    return data;
+});
+
 let comparisonData = ref([establishment.value, ...competitors.value]);
 let _comparisonData = [establishment.value, ...competitors.value];
 const all_items = ref([
@@ -364,9 +279,10 @@ let margin = { top: 20, bottom: 35, left: 55, right: 20 };
 
 let colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890'];
 
+
 let chartConfig = reactive({
     data: {
-        labels: companiesStore.getLastMonths(6, selected_date, false),
+        labels: [],
         datasets: [
             {
                 label: 'Data One',
@@ -382,7 +298,7 @@ let chartConfig = reactive({
 });
 
 let chartData = ref({
-        labels: companiesStore.getLastMonths(6, selected_date, false),
+        labels: [],
         datasets: []
 })
 
@@ -410,29 +326,35 @@ const loadDatasets = (establishments, colors, date) => {
     return data;
 }
 
-watch(showCompetitors, ()=>{
- console.log(showCompetitors.value);   
-});
-
 watch(date, ()=>{
  if(date.value== null){
     plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);   
- loadDatasets(_comparisonData, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], selected_date);
+    loadDatasets(_comparisonData, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], selected_date);
  }else{
     plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, moment(date.value, 'DD/MM/YYYY'), true);   
- loadDatasets(_comparisonData, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], moment(date.value, 'DD/MM/YYYY'));
+    loadDatasets(_comparisonData, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], moment(date.value, 'DD/MM/YYYY'));
  }
+});
+
+watch(date2, ()=>{
+    if(date2.value){
+        const startDate = moment(date2.value[0]).format('YYYY-M-DD');
+        const endDate = moment(date2.value[1]).format('YYYY-M-DD');
+        console.log(startDate, endDate);
+        companiesStore.getReviewsBetween2Dates(establishment.value, startDate, endDate);
+    }  
+
 });
 
 const globalComparison = async () => {
     selectedCompetitors.value = 'Global';
     selectedWebsites.value = 'Global';
-    // showWebsites.value = !showWebsites.value;
-    // showCompetitors.value = !showCompetitors.value;
-    plotdata.value = [];
     
+    plotdata.value = [];
+
     comparisonData.value = [establishment.value, ...competitors.value];
     _comparisonData = [establishment.value, ...competitors.value];
+    console.log(comparisonData.value)
    
     plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);
 
@@ -453,7 +375,6 @@ const companyId = route.params.id;
 await companiesStore.fetchOne(companyId, async (company) => {
     establishment.value = company;
     page.value.title2 = company.name;
-    console.log(establishment.value)
     establishment.value.media.forEach(item => {
         media.push(item.url_source);
     });
@@ -467,22 +388,22 @@ await companiesStore.fetchOne(companyId, async (company) => {
       });
       globalComparison();
     });
+    console.log(establishment.value.websites)
+    websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)]
  });
+ 
 })
 
 const reloadComparison = async (competitor) => {
     selectedCompetitors.value = competitor.name;
-    showCompetitors.value = !showCompetitors.value;
 
     plotdata.value = [];
     
     comparisonData.value = [establishment.value, competitor];
     _comparisonData  = [establishment.value, competitor];
     
-    await companiesStore.calculateReviews(comparisonData.value, async (reviews) => {
-        plotdata.value.push(reviews);
-        legendData.value = _legendData.filter(e => e.name == establishment.value.name || e.name == competitor.name)
-    });
+    plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);
+    legendData.value = _legendData.filter(e => e.name == establishment.value.name || e.name == competitor.name)
 }
 
 const reloadComparisonByWebsite = async (website) => {
@@ -491,10 +412,9 @@ const reloadComparisonByWebsite = async (website) => {
     comparisonData.value = _comparisonData;
     await companiesStore.getReviewsByWebsite(comparisonData.value, selectedWebsites.value, async (data) =>{
         plotdata.value = [];
-        console.log(data)
-
         data.forEach(company => {
             if(company.id == establishment.value.id){
+                console.log(company)
                 all_items.value[1].value = company.reviews.length;
                 all_items.value[0].value = companiesStore.calculateRatingV2(company.reviews);
                 lastReviews.value = companiesStore.getThreeLastReviews(company.reviews);
@@ -672,31 +592,12 @@ const seeMoreReviews = ()=>{
     font-weight: 500;
 }
 
-.date__filter{
-    border: 1px solid var(--light-color-bg2);
-    border-radius: 10px;
-    margin: 15px auto;
-    padding: 15px;
-}
-
-.date__filter__content{
-    width: 90%;
-    margin: auto;
-}
-
 .date__filter .title{
-    font-size: 15px;
-    font-weight:600;
-}
-
-.date__filter span{
-    font-size: 10px;
     font-weight:600;
 }
 
 .filter__content .title{
-    font-size: 15px;
-    font-weight:600;
+    font-weight: 500;
 }
 
 .filter__content{
@@ -727,6 +628,7 @@ const seeMoreReviews = ()=>{
     border-radius: 10px;
     height: 125px;
     padding: 15px;
+    margin: 15px auto;
 }
 
 .review-feedback__labels{
