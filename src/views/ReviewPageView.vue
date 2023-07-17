@@ -82,33 +82,8 @@
                 </div> 
            </div>
            <div class="all__reviews">
-            <article v-for="review in visibleData" v-if="reviews.length > 0">
-                            <div class="flex items-center review__item">
-                                <div class="flex items-center mb-6 space-x-4">
-                                    <div class="space-y-1 font-medium dark:text-white">
-                                        <p>{{ review.author }}</p>
-
-                                        <ul class="space-y-1 text-sm text-gray-500 dark:text-gray-400">
-                                            <li class="flex items-center"><svg class="w-2.5 h-2.5 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-                                            </svg>{{ moment(review.created_at).format('D MMMM YYYY')}}</li>
-                                            <li class="flex items-center"><svg aria-hidden="true" class="w-3 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"></path></svg>{{ review.source }}</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div>
-                                    <span v-if="review.score >= 0.5">😀</span>
-                                    <span v-if="review.score >= 0.2 && review.score < 0.5 ">😊</span>
-                                    <span v-if="review.score < 0.2">😞</span>
-                                    <p class="bg-yellow-100 text-yellow-800 text-sm font-semibold inline-flex items-center p-1.5 rounded dark:bg-yellow-200 dark:text-yellow-800">{{ formatRating(review.rating) }}</p>
-                                </div> 
-                            </div>
-                            <div class="col-span-2 mt-6 md:mt-0">
-                                <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 comment">{{ review.comment }}</p>
-                            </div>
-                        </article>
-                        <article v-else>No reviews ...</article>
-                        <PaginationV2Component  v-if="reviews.length > 0" :config="paginationConfig" @updatePage="updatePage" :color="'#6c63ff'" :nb="reviews.length"></PaginationV2Component>
+            <CommentComponent :reviews="visibleData" :showEmoji="true"/>
+            <PaginationV2Component  v-if="reviews.length > 0" :config="paginationConfig" @updatePage="updatePage" :color="'#6c63ff'" :nb="reviews.length"></PaginationV2Component>
            </div>
         </div>
     </div>
@@ -118,6 +93,7 @@
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import PaginationV2Component from '@Components/utils/PaginationV2Component.vue';
+import CommentComponent from '@Components/utils/CommentComponent.vue';
 import {ref, onBeforeMount, onMounted} from 'vue';
 import { useCompetitorStore } from "@Stores/competitors.js";
 import { useCompanyStore } from "@Stores/company.js";
@@ -128,7 +104,7 @@ import moment from 'moment';
 
 const page=ref({
     title1: "",
-    title2: "Reviews",
+    title2: "",
     icon: "uil-estate",
 });
 
@@ -213,7 +189,7 @@ onBeforeMount(async()=>{
     await companiesStore.fetchOne(companyId, async (company) => {
         establishment.value = company;
         reviews.value = company.reviews;
-        console.log(reviews.value);
+        page.value.title2 = company.name;
         updateVisibleData(reviews.value);
     });
 })

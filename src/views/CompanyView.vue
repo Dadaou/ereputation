@@ -20,11 +20,7 @@
                     </div>
                 </div>
                 <div class="chart__content">
-                    <GroupedBarChart :plot-data="plotdata" x-key="name"
-                                    :width="chart__width" :height="chart__height" :margin="margin" :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890']"
-                                    x-axis-label="" y-axis-label="Reviews"
-                                    :y-tick-format="d => `${d}`">
-                    </GroupedBarChart>
+                    <ComparisonChartComponent :data="plotdata" :width="chart__width" :height="chart__height"/>
                 </div>
                 <BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
                 </BaseLegend>
@@ -42,33 +38,13 @@
                     </div>
                 </div>
                 <div class="reviews__content">
-                        <article v-for="review in lastReviews" v-if="lastReviews.length > 0">
-                            <div class="flex items-center review__item">
-                                <div class="flex items-center mb-6 space-x-4">
-                                    <div class="space-y-1 font-medium dark:text-white">
-                                        <p>{{ review.author }}</p>
-
-                                        <ul class="space-y-1 text-sm text-gray-500 dark:text-gray-400">
-                                            <li class="flex items-center"><svg class="w-2.5 h-2.5 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-                                            </svg>{{ moment(review.created_at).format('D MMMM YYYY')}}</li>
-                                            <li class="flex items-center"><svg aria-hidden="true" class="w-3 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"></path></svg>{{ review.source }}</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <p class="bg-yellow-100 text-yellow-800 text-sm font-semibold inline-flex items-center p-1.5 rounded dark:bg-yellow-200 dark:text-yellow-800">{{ formatRating(review.rating) }}</p>
-                            </div>
-                            <div class="col-span-2 mt-6 md:mt-0">
-                                <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 comment">{{ review.comment }}</p>
-                            </div>
-                        </article>
-                        <article v-else>No reviews ...</article>
-                        <aside v-if="lastReviews.length > 0">
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{  all_items[1].value - 3 }} reviews remains</p>
-                            <div class="flex items-center mt-3 space-x-3 divide-x divide-gray-200 dark:divide-gray-600">
-                                <a @click="seeMoreReviews()" class="see__more text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-xs px-2 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">See more</a>
-                            </div>
-                        </aside>
+                    <CommentComponent :reviews="lastReviews" :showEmoji="false"/>
+                    <aside v-if="lastReviews.length > 0">
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{  all_items[1].value - 3 }} reviews remains</p>
+                        <div class="flex items-center mt-3 space-x-3 divide-x divide-gray-200 dark:divide-gray-600">
+                            <a @click="seeMoreReviews()" class="see__more text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-xs px-2 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">See more</a>
+                        </div>
+                    </aside>
                 </div> 
             </div>
             <div class="right__side">
@@ -104,10 +80,13 @@
                             reloadComparisonByWebsite(website);
                         }
                     }" :default="websites[0]"/>
-                    <div class="date__filter">
+                    <!-- <div class="date__filter">
                         <div class="text-sm title">Select a range of date</div>
                         <VueDatePicker v-model="date" :month-change-on-scroll="false" :format="format"  model-type="dd/MM/yyyy"/>
-                        <!-- <VueDatePicker v-model="date2" range auto-range="180" :month-change-on-scroll="false" :format="format2"/> -->
+                        <VueDatePicker v-model="date2" range auto-range="180" :month-change-on-scroll="false" :format="format2"/>
+                    </div> -->
+                    <div class="type__filter">
+                        
                     </div>
                 </div>
               <div class="rating__customers">
@@ -169,6 +148,8 @@ import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import CounterComponent from '@Components/utils/CounterComponent.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
+import ComparisonChartComponent from '@Components/utils/ComparisonChartComponent.vue';
+import CommentComponent from '@Components/utils/CommentComponent.vue';
 import {ref, reactive, watch, onBeforeMount, computed} from 'vue';
 import { useCompetitorStore } from "@Stores/competitors.js";
 import { useCompanyStore } from "@Stores/company.js";
@@ -274,8 +255,6 @@ let reviewFeedbackData = ref({
     green: 0,
     feeling: -1
 });
-
-let margin = { top: 20, bottom: 35, left: 55, right: 20 };
 
 let colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890'];
 
@@ -512,14 +491,6 @@ watch([width], () => {
    }
 });
 
-const formatRating = (rating) => {
-    rating = parseFloat(rating);
-    if(rating > 5){
-        rating = rating / 2;
-    }
-    return rating.toFixed(1);
-}
-
 const seeMoreReviews = ()=>{
     router.push(`/companies/${route.params.id}/reviews`)
 }
@@ -531,16 +502,6 @@ const seeMoreReviews = ()=>{
 @tailwind components;
 @tailwind utilities;
 
-.review__item{
-    justify-content: space-between !important;
-}
-
-.reviews__content article{
-   border: 1px solid var(--light-color-bg2);
-   margin: 10px auto;
-   border-radius: 10px;
-   padding: 10px;
-}
 .app__container{
     margin-top: 5rem;
     min-height: 30rem;
@@ -563,11 +524,9 @@ const seeMoreReviews = ()=>{
 }
 
 .rating__customers{
-    /* box-shadow: 0 1rem 2rem rgba(0,0,0,0.09); */
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
     margin: 15px auto;
-    /* padding: 15px; */
 }
 
 .establishment{
@@ -923,5 +882,8 @@ const seeMoreReviews = ()=>{
         width: 100% !important;
     }
 }
-
+.dp__theme_light {
+    --dp-primary-color: var(--color-danger) !important;
+    --dp-primary-text-color: #f8f5f5 !important;
+ }
 </style>

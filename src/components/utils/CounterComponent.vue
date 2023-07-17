@@ -24,7 +24,7 @@ const props = defineProps({
     display: flex;
     gap: 3rem;
     justify-content: space-between;
-    box-shadow: 0 1rem 2rem rgba(0,0,0,0.10);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     /* width: 25%; */
     flex-basis: 150px;
     padding: 25px;
