@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="chart__content">
-                    <ComparisonChartComponent :data="plotdata" :width="chart__width" :height="chart__height"/>
+                    <ComparisonChartComponent :data="plotdata" :width="chart__width" :height="chart__height" :establishment="establishment" :companies="comparisonData"/>
                 </div>
                 <BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
                 </BaseLegend>
@@ -38,7 +38,10 @@
                     </div>
                 </div>
                 <div class="reviews__content">
-                    <CommentComponent :reviews="lastReviews" :showEmoji="false"/>
+                    <div class="reviews__pagination">
+                        <CommentPagination  v-if="lastReviews.length > 0" :config="paginationConfig" @updatePage="updatePage" :color="'#6c63ff'" :nb="lastReviews.length" :data="visibleData"></CommentPagination>
+                    </div>
+                    <CommentComponent :reviews="visibleData" :showEmoji="false"/>
                     <aside v-if="lastReviews.length > 0">
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{  all_items[1].value - 3 }} reviews remains</p>
                         <div class="flex items-center mt-3 space-x-3 divide-x divide-gray-200 dark:divide-gray-600">
@@ -80,11 +83,13 @@
                             reloadComparisonByWebsite(website);
                         }
                     }" :default="websites[0]"/>
-                    <!-- <div class="date__filter">
+                    <div class="date__filter">
                         <div class="text-sm title">Select a range of date</div>
-                        <VueDatePicker v-model="date" :month-change-on-scroll="false" :format="format"  model-type="dd/MM/yyyy"/>
-                        <VueDatePicker v-model="date2" range auto-range="180" :month-change-on-scroll="false" :format="format2"/>
-                    </div> -->
+                        <VueDatePicker v-model="date2" range :month-change-on-scroll="false" :format="format2"/>
+                        <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
+                                selectedTimePeriod = timePeriod
+                        }" :default="timePeriods[0]"/>
+                    </div>
                     <div class="type__filter">
                         
                     </div>
@@ -95,22 +100,7 @@
                     <Line :data="chartData" :options="chartConfig.options" />
                 </div>
               </div>
-              <div class="community__feedback">
-                    <div class="title">Community Feedback</div>
-                    <h2 v-if="reviewFeedbackData.feeling > 0">Mostly Positive</h2>
-                    <h2 v-else>Mostly Negative</h2>
-                    <div class="reviews__content1">
-                        <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700" style="position: relative">
-                            <div v-if="reviewFeedbackData.feeling > 0" class="h-2 rounded review-feedback__positive" :style="{'width': reviewFeedbackData.width+'%', 'background': 'linear-gradient(90deg, rgba(255,255,0,1) 0%, rgba('+reviewFeedbackData.red+',255,0,1) 100%)'}"></div>
-                            <div v-else class="h-2 rounded review-feedback__negative" :style="{'width': reviewFeedbackData.width+'%', 'background': 'linear-gradient(90deg, rgba(255,255,0,1) 0%, rgba(255,'+reviewFeedbackData.green+',0,1) 100%)'}"></div>
-                            <div class="review-feedback__labels">
-                                <span>Negative</span>
-                                <span>Neutre</span>
-                                <span>Positive</span>
-                            </div>
-                        </div>
-                    </div>
-              </div>
+              <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData"/>
               <div class="community__feedback">
                 <div class="flex items-center">
                         <a href="#" class="text-xs font-medium text-blue-600 dark:text-blue-500 hover:underline">5</a>
@@ -149,6 +139,8 @@ import CounterComponent from '@Components/utils/CounterComponent.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import ComparisonChartComponent from '@Components/utils/ComparisonChartComponent.vue';
+import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
+import CommentPagination from '@Components/utils/CommentPagination.vue';
 import CommentComponent from '@Components/utils/CommentComponent.vue';
 import {ref, reactive, watch, onBeforeMount, computed} from 'vue';
 import { useCompetitorStore } from "@Stores/competitors.js";
@@ -200,17 +192,6 @@ const format = (date) => {
 
   return `${day}/${month}/${year}`;
 }
-const date2 = ref({
-  day: new Date().getDay(),  
-  month: new Date().getMonth(),
-  year: new Date().getFullYear()
-});
-
-const format2 = (date) => {
-  const startDate = new Date(date[0]).toLocaleString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-  const endDate = new Date(date[1]).toLocaleString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-  return `${startDate} - ${endDate}`;
-}
 
 let selected_date = reactive(moment());
 
@@ -220,7 +201,7 @@ let showCompetitors = ref(false);
 let showWebsites = ref(false);
 let selectedCompetitors = ref('Global');
 let selectedWebsites = ref('Global');
-let websites = ref(['Global'])
+let websites = ref(['Global']);
 
 let establishment =ref({reviews:[]});
 let competitors = ref([]); 
@@ -231,6 +212,14 @@ let computedCompetitors = computed(()=>{
     });
     return data;
 });
+
+let visibleData = ref([])
+let paginationConfig = ref({
+    current:0,
+    size: 3,
+    data: [],
+    _data: []
+})
 
 let comparisonData = ref([establishment.value, ...competitors.value]);
 let _comparisonData = [establishment.value, ...competitors.value];
@@ -244,16 +233,31 @@ let plotdata = ref([]);
 let legendData = ref([]);
 let _legendData = [];
 
+const date2 = ref({
+  day: new Date().getDay(),  
+  month: new Date().getMonth(),
+  year: new Date().getFullYear()
+});
+
+const format2 = (date) => {
+  const startDate = new Date(date[0]).toLocaleString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+  const endDate = new Date(date[1]).toLocaleString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+  return `${startDate} - ${endDate}`;
+}
+
+let selectedTimePeriod = ref('');
+let timePeriods = ref(['Months', 'Quarters', 'Semesters']);
+
 let lastReviews = ref([]);
 let media = [];
 let name = ""
 
 let reviewsConfidence = ref(0);
 let reviewFeedbackData = ref({
-    width: 20,
-    red: 250,
+    width: 0,
+    red: 0,
     green: 0,
-    feeling: -1
+    feeling: 0
 });
 
 let colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890'];
@@ -295,7 +299,7 @@ const loadDatasets = (establishments, colors, date) => {
             backgroundColor: colors[index],
             data: companiesStore.getRatingLastMonths(establishment.reviews, 6, date, true)
         };
-        if(index>=establishments.length) index = 0;
+        if(index >= establishments.length) index = 0;
         index ++;
         data.push(dataset);
         chartdata.datasets.push(dataset);
@@ -315,16 +319,6 @@ watch(date, ()=>{
  }
 });
 
-watch(date2, ()=>{
-    if(date2.value){
-        const startDate = moment(date2.value[0]).format('YYYY-M-DD');
-        const endDate = moment(date2.value[1]).format('YYYY-M-DD');
-        console.log(startDate, endDate);
-        companiesStore.getReviewsBetween2Dates(establishment.value, startDate, endDate);
-    }  
-
-});
-
 const globalComparison = async () => {
     selectedCompetitors.value = 'Global';
     selectedWebsites.value = 'Global';
@@ -335,7 +329,14 @@ const globalComparison = async () => {
     _comparisonData = [establishment.value, ...competitors.value];
     console.log(comparisonData.value)
    
-    plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);
+    // plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);
+    let startDate = moment().startOf('year').format('YYYY-M-DD');
+    let endDate = moment().endOf('year').format('YYYY-M-DD');
+    if(date2.value.length > 0){
+        startDate = moment(date2.value[0]).format('YYYY-M-DD');
+        endDate = moment(date2.value[1]).format('YYYY-M-DD');
+    }
+    viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
 
     await companiesStore.generateLegend(comparisonData.value, (data) => {
         legendData.value = data;
@@ -344,7 +345,8 @@ const globalComparison = async () => {
     all_items.value[2].value = competitors.value.length;
     all_items.value[1].value = establishment.value.reviews.length;
     all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
-    lastReviews.value = companiesStore.getThreeLastReviews(establishment.value.reviews);
+    lastReviews.value = companiesStore.getLastReviews(establishment.value.reviews, 10);
+    updateVisibleData(lastReviews.value);
     reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
     loadDatasets(_comparisonData, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], selected_date);
 }
@@ -367,10 +369,8 @@ await companiesStore.fetchOne(companyId, async (company) => {
       });
       globalComparison();
     });
-    console.log(establishment.value.websites)
     websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)]
  });
- 
 })
 
 const reloadComparison = async (competitor) => {
@@ -381,7 +381,14 @@ const reloadComparison = async (competitor) => {
     comparisonData.value = [establishment.value, competitor];
     _comparisonData  = [establishment.value, competitor];
     
-    plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);
+    // plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);
+    let startDate = moment().startOf('year').format('YYYY-M-DD');
+    let endDate = moment().endOf('year').format('YYYY-M-DD');
+    if(date2.value.length > 0){
+        startDate = moment(date2.value[0]).format('YYYY-M-DD');
+        endDate = moment(date2.value[1]).format('YYYY-M-DD');
+    }
+    viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
     legendData.value = _legendData.filter(e => e.name == establishment.value.name || e.name == competitor.name)
 }
 
@@ -396,11 +403,19 @@ const reloadComparisonByWebsite = async (website) => {
                 console.log(company)
                 all_items.value[1].value = company.reviews.length;
                 all_items.value[0].value = companiesStore.calculateRatingV2(company.reviews);
-                lastReviews.value = companiesStore.getThreeLastReviews(company.reviews);
+                lastReviews.value = companiesStore.getLastReviews(company.reviews, 10);
+                updateVisibleData(lastReviews.value);
                 reviewFeedbackData.value = companiesStore.getfeedbackData(company.reviews);
             }
         });
-        plotdata.value = companiesStore.calculateReviewsV2(data, 6, selected_date, true);
+        let startDate = moment().startOf('year').format('YYYY-M-DD');
+        let endDate = moment().endOf('year').format('YYYY-M-DD');
+        if(date2.value.length > 0){
+            startDate = moment(date2.value[0]).format('YYYY-M-DD');
+            endDate = moment(date2.value[1]).format('YYYY-M-DD');
+        }
+        viewData(selectedTimePeriod.value, startDate, endDate, data);
+        // plotdata.value = companiesStore.calculateReviewsV2(data, 6, selected_date, true);
         loadDatasets(data, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], selected_date);
     });
 }
@@ -495,6 +510,53 @@ const seeMoreReviews = ()=>{
     router.push(`/companies/${route.params.id}/reviews`)
 }
 
+let updatePage = function(pageNumber){
+    paginationConfig.value.current = pageNumber;
+    updateVisibleData(lastReviews.value);
+}
+
+
+let updateVisibleData = function(_data){
+    let data = paginationConfig.value;
+
+    paginationConfig.value.data = _data.slice(data.current*data.size, (data.current * data.size) + data.size)
+                
+
+    if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
+        updatePage( paginationConfig.value.current -1);
+    }
+
+    visibleData.value = paginationConfig.value.data
+}
+
+
+watch(date2, ()=>{
+    let startDate = moment().startOf('year').format('YYYY-M-DD');
+    let endDate = moment().endOf('year').format('YYYY-M-DD');
+    if(date2.value){
+        startDate = moment(date2.value[0]).format('YYYY-M-DD');
+        endDate = moment(date2.value[1]).format('YYYY-M-DD');
+    }
+    console.log(startDate, endDate)
+    comparisonData.value = _comparisonData;
+    viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+});
+
+watch(selectedTimePeriod, ()=>{
+    let startDate = moment().startOf('year').format('YYYY-M-DD');
+    let endDate = moment().endOf('year').format('YYYY-M-DD');
+    if(date2.value){
+        startDate = moment(date2.value[0]).format('YYYY-M-DD');
+        endDate = moment(date2.value[1]).format('YYYY-M-DD');
+    }
+    comparisonData.value = _comparisonData;
+    viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+});
+
+const viewData = (timePeriod, startDate, endDate, data) => {
+    plotdata.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, data);
+}
+
 </script>
 
 <style scoped>
@@ -521,6 +583,11 @@ const seeMoreReviews = ()=>{
 
 .reviews__content1 .review{
     flex-grow: 1;
+}
+
+.reviews__pagination{
+    display: flex;
+    justify-content: flex-end;
 }
 
 .rating__customers{
@@ -581,8 +648,7 @@ const seeMoreReviews = ()=>{
    margin: auto;
 }
 
-.community__feedback{
-    /* box-shadow: 0 1rem 2rem rgba(0,0,0,0.1); */
+/* .community__feedback{
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
     height: 125px;
@@ -598,9 +664,9 @@ const seeMoreReviews = ()=>{
 
 .review-feedback__labels span{
     margin: 0 !important;
-}
+} */
 
-.review-feedback__negative{
+/* .review-feedback__negative{
     transform: rotate(180deg);
     transform-origin: center left;
     position: absolute;
@@ -610,7 +676,7 @@ const seeMoreReviews = ()=>{
 .review-feedback__positive{
     position: absolute;
     left: 50%; 
-}
+} */
 
 .chart__rating{
     display: flex;

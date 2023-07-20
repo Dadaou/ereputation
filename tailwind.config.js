@@ -8,6 +8,7 @@ export default {
     "./src/components/utils/DropdownComponent.vue.{vue,js,ts,jsx,tsx}",
     "./src/components/utils/BreadcrumbComponent.vue.{vue,js,ts,jsx,tsx}",
     "./src/components/utils/CommentComponent.vue.{vue,js,ts,jsx,tsx}",
+    "./src/components/utils/CommunityFeedbackComponent.vue.{vue,js,ts,jsx,tsx}",
     "./src/components/utils/SpinnerComponent.vue.{vue,js,ts,jsx,tsx}",
     "./src/components/utils/PaginationV2Component.vue.{vue,js,ts,jsx,tsx}",
     "./src/components/utils/RatingComponent.vue.{vue,js,ts,jsx,tsx}",

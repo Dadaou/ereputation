@@ -1,10 +1,10 @@
 <template>
-<div class="min-h-screen p-10 mt-2 mb-2" ref=target>
+<div :class="['min-h-screen mt-2 mb-2', props.showTitle==true?'p-10':'']" ref=target>
   <div class="max-w-md mx-auto">
-    <label for="select" class="font-semibold block">{{ title }}</label>
+    <label for="select" class="font-semibold block" v-if="props.showTitle==true">{{ title }}</label>
     <div class="relative" v-if="isDataObject">
       <div class="h-10 bg-white flex border border-gray-200 rounded items-center">
-        <input v-model="selectedValueObject.name" name="select" id="select" class="px-4 appearance-none outline-none text-gray-800 w-full text-sm" checked @keyup.enter="setShowData(true, selectedValue, $event)" @click="setShowData(true, selectedValueObject, $event)" :placeholder="placeholder"/>
+        <input v-model="selectedValueObject.name" name="select" id="select" class="px-5 appearance-none outline-none text-gray-800 w-full text-sm" checked @keyup.enter="setShowData(true, selectedValue, $event)" @click="setShowData(true, selectedValueObject, $event)" :placeholder="placeholder"/>
 
         <button v-if="selectedValueObject && props.default == ''" class="cursor-pointer outline-none focus:outline-none transition-all text-gray-300 hover:text-gray-600"  @click="setShowData(true, props.default, $event)">
           <svg class="w-4 h-4 mx-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -21,7 +21,7 @@
     </div>
     <div class="relative" v-else>
       <div class="h-10 bg-white flex border border-gray-200 rounded items-center">
-        <input v-model="selectedValue" name="select" id="select" class="px-4 appearance-none outline-none text-gray-800 w-full text-sm" checked @keyup.enter="setShowData(true, selectedValue, $event)" @click="setShowData(true, selectedValue, $event)" :placeholder="placeholder"/>
+        <input v-model="selectedValue" name="select" id="select" class="px-5 appearance-none outline-none text-gray-800 w-full text-sm" checked @keyup.enter="setShowData(true, selectedValue, $event)" @click="setShowData(true, selectedValue, $event)" :placeholder="placeholder"/>
 
         <button v-if="selectedValue && props.default == ''" class="cursor-pointer outline-none focus:outline-none transition-all text-gray-300 hover:text-gray-600"  @click="setShowData(true, props.default, $event)">
           <svg class="w-4 h-4 mx-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -53,6 +53,10 @@ const props = defineProps({
         type: String,
         default: 'Custom dropdown'
     }, 
+    showTitle: {
+      type: Boolean,
+      default: true
+    },
     placeholder: {
         type: String, 
         default: 'Select a value'

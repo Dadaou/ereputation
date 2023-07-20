@@ -40,8 +40,8 @@ const toggleModal = () => {
 .modal-content {
   background-color: #fff;
   width: 90%;
-  margin: 8rem auto;
-  padding: 20px;
+  margin: 6rem auto;
+  padding: 25px;
   border-radius: 5px;
 }
 </style>  

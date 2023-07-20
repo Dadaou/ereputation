@@ -112,6 +112,55 @@ export const useCompanyStore = defineStore("company", {
       });
       return result;
     },
+    calculateReviewsV3(timePeriod, startDate, endDate, companies){
+      let result = [];
+      let quarters = this.splitRangeIntoQuarters(startDate, endDate);
+      let semesters = this.splitRangeIntoSemesters(startDate, endDate);
+      let months = this.getAllMonthsInRange(startDate, endDate);
+      
+      if(timePeriod == 'Quarters'){
+        quarters.forEach((quarter, index) => {
+          let review = {};
+          review['name'] = `Q${index} ${moment(quarter.start).format('DD/M/YY')} -${moment(quarter.end).format('DD/M/YY')}`;
+          companies.forEach(company => {
+            let reviews = this.getReviewsBetweenDates(company.reviews, moment(quarter.start).format('YYYY-M-DD'), moment(quarter.end).format('YYYY-M-DD'));
+            let key = company.name;
+            let value = reviews.length;
+            review[key] = value;
+          });
+          result.push(review);
+        });
+      }
+
+      if(timePeriod == 'Semesters'){
+        semesters.forEach((semester, index) => {
+          let review = {};
+          review['name'] = `S${index} ${moment(semester.start).format('DD/M/YY')} -${moment(semester.end).format('DD/M/YY')}`;
+          companies.forEach(company => {
+            let reviews = this.getReviewsBetweenDates(company.reviews, moment(semester.start).format('YYYY-M-DD'), moment(semester.end).format('YYYY-M-DD'));
+            let key = company.name;
+            let value = reviews.length;
+            review[key] = value;
+          });
+          result.push(review);
+        });
+      }
+
+      if(timePeriod == 'Months'){
+          months.forEach(month => {
+            let review = {};
+            review['name'] = `${moment(month).format('MMM-YY')}`;
+            companies.forEach(company => {
+              let reviews = this.getReviewsByMonth(company.reviews, moment(month).format('MMM-YY'));
+              let key = company.name;
+              let value = reviews.length;
+              review[key] = value;
+            });
+            result.push(review);
+          });
+      }
+      return result;
+    },
     async generateLegend(data, next){
       let legend = [];
       let colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890'];
@@ -139,14 +188,14 @@ export const useCompanyStore = defineStore("company", {
       if(result.length < 3 && rating >= 0) this.getTopThreeReviews(reviews, rating, result);
       return result;
     },
-    getThreeLastReviews(reviews){
+    getLastReviews(reviews, n){
       let data = []
       if(reviews.length>0){
         reviews.sort(function(a, b) {
           return moment(b.date_review).diff(moment(a.date_review));
         });
         
-        let lastReviews = reviews.slice(0, 3);
+        let lastReviews = reviews.slice(0, n);
         
         lastReviews.forEach(function(review) {
          data.push(review);
@@ -248,20 +297,23 @@ export const useCompanyStore = defineStore("company", {
       return data;
     },
     getfeedbackData(reviews){
-      let sumConfidence = 0
-
+      let sumConfidence = 0;
+      let percentage = (this.calculateRatingV2(reviews) / 5) * 100;
+      
       reviews.forEach((review)=>{
-        sumConfidence += review.confidence
+        console.log(review.confidence);
+        sumConfidence += review.confidence;
       })
 
-      let confidencePercentage = sumConfidence * 100 / reviews.length
-      let rawWidth = confidencePercentage * 2
-      let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
-      let feeling = rawWidth > 0 ? 1 : -1
-      let red = 255
-      let green = 255
+      // let confidencePercentage = sumConfidence * 100 / reviews.length;
+      // let rawWidth = confidencePercentage / 1.5;
+      let rawWidth = percentage / 3;
+      let width = rawWidth < 0 ? -1 * rawWidth : rawWidth;
+      let feeling = rawWidth > 0 ? 1 : -1;
+      let red = 255;
+      let green = 255;
       if (feeling == 1){
-        red = 200
+        red = 200;
       } else {
         green = 200
       }
@@ -272,35 +324,6 @@ export const useCompanyStore = defineStore("company", {
         green: green,
         feeling: feeling
       }
-    },
-    getMonthsAndWeeks(startDate, endDate) {
-      const months = [];
-      const flag = startDate;
-      while (flag.diff(endDate) <= 0) {
-        months.push(flag.format('MMM YY'));
-        flag.add(1, 'M');
-      }
-      return months;
-    },
-    getReviewsBetween2Dates(establishment, startDate, endDate){ 
-      startDate = moment(startDate, 'YYYY-MM-DD');
-      endDate = moment(endDate, 'YYYY-MM-DD');
-  
-      const reviews = establishment.reviews;
-      const reviewsBetweenDates = [];
-      const _reviews = this.initReviewsByMonth(this.getMonthsAndWeeks(startDate, endDate));
-      reviews.forEach(function(review) {
-        var reviewDate = moment(review.date_review, "YYYY-MM-DD");
-        if(review.date_review == null) reviewDate = moment(review.created_at, "YYYY-MM-DD");
-        var month = reviewDate.format("MMM YY");
-      
-        if (reviewDate.isBetween(startDate, endDate, null, '[]')) {
-          reviewsBetweenDates.push(review);
-          _reviews[month].push(review);
-        }
-      });
-      console.log(reviewsBetweenDates);
-      console.log(_reviews)
     },
     getNumberOfRating(reviews){
       let value = {
@@ -318,7 +341,6 @@ export const useCompanyStore = defineStore("company", {
         if(rating == 2) value.rate2 ++;
         if(rating == 1) value.rate1 ++;
       })
-
       return value;
     },
     capitalizeString(str) {
@@ -329,7 +351,6 @@ export const useCompanyStore = defineStore("company", {
       if (str.length === 0) {
         return str;
       }
-      
       return str.charAt(0).toUpperCase() + str.slice(1);
     },
     isURL(string) {
@@ -347,6 +368,84 @@ export const useCompanyStore = defineStore("company", {
         }
       });
       return data;
-    }
+    },
+    getReviewsBetweenDates(reviews, start_date, end_date){
+      let result = [];
+      const startDate = moment(start_date);
+      const endDate = moment(end_date);
+      result = reviews.filter(review => {
+        const reviewDate = moment(review.date_review);
+        return reviewDate.isBetween(startDate, endDate, null, '[]');
+      });
+      return result;
+    },
+    splitRangeIntoQuarters(start_date, end_date){
+      const start = new Date(start_date);
+      const end = new Date(end_date);
+      
+      const quarters = [];
+      
+      while (start <= end) {
+        const quarterStart = new Date(start);
+        const quarterEnd = new Date(start);
+        quarterEnd.setDate(quarterEnd.getDate() + 89); // 89 days for each quarter
+        
+        if (quarterEnd > end) {
+          quarters.push({ start: quarterStart, end: end }); // Last quarter may have fewer than 90 days
+        } else {
+          quarters.push({start: quarterStart, end: quarterEnd});
+        }
+        
+        start.setDate(start.getDate() + 90); // Move to the next quarter
+      }
+
+      return quarters;
+    },
+    splitRangeIntoSemesters(start_date, end_date) {
+      const startDate = new Date(start_date);
+      const endDate = new Date(end_date);
+      const totalDuration = endDate.getTime() - startDate.getTime();
+      
+      // Calculate the number of semesters based on the total duration
+      const numberOfSemesters = Math.ceil(totalDuration / (365 * 24 * 60 * 60 * 1000 / 2));
+    
+      const semesterDuration = totalDuration / numberOfSemesters;
+      const semesters = [];
+    
+      for (let i = 0; i < numberOfSemesters; i++) {
+        const semesterStart = new Date(startDate.getTime() + i * semesterDuration);
+        const semesterEnd = new Date(semesterStart.getTime() + semesterDuration);
+    
+        semesters.push({ start: semesterStart, end: semesterEnd });
+      }
+      return semesters;
+    },
+    getAllMonthsInRange(startDate, endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const months = [];
+
+      start.setDate(1);
+    
+      while (start <= end) {
+        const year = start.getFullYear();
+        const month = start.getMonth();
+        months.push(new Date(year, month));
+        start.setMonth(start.getMonth() + 1);
+      }
+      return months;
+    },
+    getReviewsByMonth(reviews, month){
+      const result = [];
+
+      reviews.forEach((review) => {
+        const reviewDate = moment(review.date_review);
+        const monthYear = reviewDate.format('MMM-YY');
+        if(monthYear == month) result.push(review);
+        
+      });
+
+      return result;
+    }  
   }
 });

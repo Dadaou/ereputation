@@ -81,9 +81,11 @@
                     </div>
                 </div> 
            </div>
+           <div class="reviews__pagination">
+            <CommentPagination  v-if="reviews.length > 0" :config="paginationConfig" @updatePage="updatePage" :color="'#6c63ff'" :nb="reviews.length" :data="visibleData"></CommentPagination>
+           </div>
            <div class="all__reviews">
             <CommentComponent :reviews="visibleData" :showEmoji="true"/>
-            <PaginationV2Component  v-if="reviews.length > 0" :config="paginationConfig" @updatePage="updatePage" :color="'#6c63ff'" :nb="reviews.length"></PaginationV2Component>
            </div>
         </div>
     </div>
@@ -92,7 +94,7 @@
 <script setup>
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
-import PaginationV2Component from '@Components/utils/PaginationV2Component.vue';
+import CommentPagination from '@Components/utils/CommentPagination.vue';
 import CommentComponent from '@Components/utils/CommentComponent.vue';
 import {ref, onBeforeMount, onMounted} from 'vue';
 import { useCompetitorStore } from "@Stores/competitors.js";
@@ -268,4 +270,8 @@ onBeforeMount(async()=>{
     justify-content: space-between !important;
 }
 
+.reviews__pagination{
+    display: flex;
+    justify-content: flex-end;
+}
 </style>
