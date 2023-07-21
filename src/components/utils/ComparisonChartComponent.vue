@@ -1,10 +1,10 @@
 <template>
 <div class="establishments__comparison">
     <ul class="filter__menu">
-      <li @click="viewFullscreen()"> <i class="uil uil-expand-arrows-alt"></i> View fullscreen</li>
+      <li @click="viewFullscreen()" > <i class="uil uil-expand-arrows-alt"></i></li>
     </ul>
     <GroupedBarChart :plot-data="props.data" x-key="name"
-    :width="width" :height="height" :margin="margin" :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890']" :x-axis-label="props.labels.x" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+    :width="width" :height="height" :margin="margin" :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890']" :x-axis-label="selectedTimePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
     </GroupedBarChart>
     <ModalComponent :showModal="showModal" @close="showModal=false">
         <template #content>
@@ -22,7 +22,7 @@
             </div>
             <div class="modal__container">
                 <GroupedBarChart :plot-data="plotData" x-key="name"
-                        :width="width + 600" :height="height + 100" :margin="margin" :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890']" :x-axis-label="props.labels.x" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+                        :width="width + 400" :height="height + 100" :margin="margin" :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890']" :x-axis-label="props.labels.x" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
                 </GroupedBarChart>
             </div>
         </template>
@@ -57,6 +57,7 @@ const props = defineProps({
     },
     colors: {
         type: Array,
+       // default: ['#9F9AA4', '#CFD8D7', '#B5C9C3', '#788585']
         default: ['#6c63ff', '#f75842', '#aca8fd', '#424890'] 
     },
     labels: {

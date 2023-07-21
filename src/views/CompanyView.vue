@@ -19,9 +19,10 @@
                        <h2>Comparison</h2>
                     </div>
                 </div>
-                <div class="chart__content">
+                <!-- <div class="chart__content">
                     <ComparisonChartComponent :data="plotdata" :width="chart__width" :height="chart__height" :establishment="establishment" :companies="comparisonData"/>
-                </div>
+                </div> -->
+                <ComparisonChartComponent :data="plotdata" :width="chart__width" :height="chart__height" :establishment="establishment" :companies="comparisonData"/>
                 <BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
                 </BaseLegend>
                 <div class="rating__statistics">
@@ -105,27 +106,27 @@
                 <div class="flex items-center">
                         <a href="#" class="text-xs font-medium text-blue-600 dark:text-blue-500 hover:underline">5</a>
                         <div class="h-2 bg-green-300 rounded mx-4" style="width: 45%"></div>
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(establishment.reviews).rate5 }}</span>
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate5 }}</span>
                     </div>
                     <div class="flex items-center">
                         <a href="#" class="text-xs font-medium text-blue-600 dark:text-blue-500 hover:underline">4</a>
                         <div class="h-2 bg-blue-300 rounded mx-4" style="width: 17%"></div>
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(establishment.reviews).rate4 }}</span>
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate4 }}</span>
                     </div>
                     <div class="flex items-center">
                         <a href="#" class="text-xs font-medium text-blue-600 dark:text-blue-500 hover:underline">3</a>
                         <div class="h-2 bg-yellow-300 rounded mx-4" style="width: 8%"></div>
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(establishment.reviews).rate3 }}</span>
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate3 }}</span>
                     </div>
                     <div class="flex items-center">
                         <a href="#" class="text-xs font-medium text-blue-600 dark:text-blue-500 hover:underline">2</a>
                         <div class="h-2 bg-pink-300 rounded mx-4" style="width: 4%"></div>
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(establishment.reviews).rate2 }}</span>
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate2 }}</span>
                     </div>
                     <div class="flex items-center">
                         <a href="#" class="text-xs font-medium text-blue-600 dark:text-blue-500 hover:underline">2</a>
                         <div class="h-2 bg-red-300 rounded mx-4" style="width: 1%"></div>
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(establishment.reviews).rate1 }}</span>
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate1 }}</span>
                     </div>
               </div>
             </div>
@@ -204,6 +205,7 @@ let selectedWebsites = ref('Global');
 let websites = ref(['Global']);
 
 let establishment =ref({reviews:[]});
+let reviews = ref([]);
 let competitors = ref([]); 
 let computedCompetitors = computed(()=>{
     let data = [{name:'Global'}];
@@ -261,7 +263,7 @@ let reviewFeedbackData = ref({
 });
 
 let colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890'];
-
+//let colors =  ['#9F9AA4', '#CFD8D7', '#B5C9C3', '#788585'];
 
 let chartConfig = reactive({
     data: {
@@ -355,6 +357,7 @@ onBeforeMount(async () => {
 const companyId = route.params.id;
 await companiesStore.fetchOne(companyId, async (company) => {
     establishment.value = company;
+    reviews.value = company.reviews;
     page.value.title2 = company.name;
     establishment.value.media.forEach(item => {
         media.push(item.url_source);
@@ -404,6 +407,7 @@ const reloadComparisonByWebsite = async (website) => {
                 all_items.value[1].value = company.reviews.length;
                 all_items.value[0].value = companiesStore.calculateRatingV2(company.reviews);
                 lastReviews.value = companiesStore.getLastReviews(company.reviews, 10);
+                reviews.value = company.reviews;
                 updateVisibleData(lastReviews.value);
                 reviewFeedbackData.value = companiesStore.getfeedbackData(company.reviews);
             }
@@ -427,84 +431,84 @@ const reloadComparisonByWebsite = async (website) => {
  */
 const{ width, height} = useWindowSize();
 //For Group bar chart
-const chart__width = ref(700);
+const chart__width = ref(800);
 const chart__height = ref(300);
 
 //For Line chart
 const chart__width2 = ref(300);
 const chart__height2 = ref(200);
 
-onBeforeMount(() => {
-    if(width.value <= 600){
-        chart__width.value = 300;
-        chart__height.value = 200;
+// onBeforeMount(() => {
+//     if(width.value <= 600){
+//         chart__width.value = 300;
+//         chart__height.value = 200;
 
-        chart__width2.value = 300;
-        chart__height2.value = 150;
-    }
+//         chart__width2.value = 300;
+//         chart__height2.value = 150;
+//     }
 
-    if(width.value <  1287){
-        chart__width.value = 600;
-        chart__width2.value = 250;
-        chart__height2.value = 150;
-    }
+//     if(width.value <  1287){
+//         chart__width.value = 600;
+//         chart__width2.value = 250;
+//         chart__height2.value = 150;
+//     }
 
-   if(width.value <  1075){
-    chart__width.value = 550;
-   }
+//    if(width.value <  1075){
+//     chart__width.value = 550;
+//    }
 
-   if(width.value <  1025){
-    chart__width.value = 500;
-   }
+//    if(width.value <  1025){
+//     chart__width.value = 500;
+//    }
 
-   if(width.value <  450){
-    chart__width.value = 350;
-    chart__height.value = 200;
-    chart__width2.value = 200;
-   }
+//    if(width.value <  450){
+//     chart__width.value = 350;
+//     chart__height.value = 200;
+//     chart__width2.value = 200;
+//    }
 
-   if(width.value <  400){
-    chart__width.value = 300;
-    chart__height.value = 200;
-   }
-});
+//    if(width.value <  400){
+//     chart__width.value = 300;
+//     chart__height.value = 200;
+//    }
+// });
 
-watch([width], () => {
-   if(width.value <  1287){
-    chart__width.value = 600;
-    chart__width2.value = 250;
-    chart__height2.value = 150;
-   }
+// watch([width], () => {
+//    if(width.value <  1287){
+//     chart__width.value = 600;
+//     chart__width2.value = 250;
+//     chart__height2.value = 150;
+//    }
 
-   if(width.value <  1075){
-    chart__width.value = 550;
-   }
+//    if(width.value <  1075){
+//     chart__width.value = 550;
+//    }
 
-   if(width.value <  1025){
-    chart__width.value = 500;
-   }
+//    if(width.value <  1025){
+//     chart__width.value = 500;
+//    }
 
-   if(width.value <  550){
-    chart__width.value = 400;
-    chart__height.value = 200;
-   }
+//    if(width.value <  550){
+//     chart__width.value = 400;
+//     chart__height.value = 200;
+//    }
 
-   if(width.value <  450){
-    chart__width.value = 350;
-    chart__height.value = 200;
-    chart__width2.value = 200;
-   }
+//    if(width.value <  450){
+//     chart__width.value = 350;
+//     chart__height.value = 200;
+//     chart__width2.value = 200;
+//    }
 
-   if(width.value <  400){
-    chart__width.value = 300;
-    chart__height.value = 200;
-   }
+//    if(width.value <  400){
+//     chart__width.value = 300;
+//     chart__height.value = 200;
+//    }
 
-   if(width.value <  350){
-    chart__width.value = 250;
-    chart__height.value = 180;
-   }
-});
+//    if(width.value <  350){
+//     chart__width.value = 250;
+//     chart__height.value = 180;
+//    }
+// });
 
 const seeMoreReviews = ()=>{
     router.push(`/companies/${route.params.id}/reviews`)
@@ -515,13 +519,11 @@ let updatePage = function(pageNumber){
     updateVisibleData(lastReviews.value);
 }
 
-
 let updateVisibleData = function(_data){
     let data = paginationConfig.value;
 
     paginationConfig.value.data = _data.slice(data.current*data.size, (data.current * data.size) + data.size)
                 
-
     if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
         updatePage( paginationConfig.value.current -1);
     }
@@ -545,7 +547,7 @@ watch(date2, ()=>{
 watch(selectedTimePeriod, ()=>{
     let startDate = moment().startOf('year').format('YYYY-M-DD');
     let endDate = moment().endOf('year').format('YYYY-M-DD');
-    if(date2.value){
+    if(date2.value.length > 0){
         startDate = moment(date2.value[0]).format('YYYY-M-DD');
         endDate = moment(date2.value[1]).format('YYYY-M-DD');
     }
@@ -648,36 +650,6 @@ const viewData = (timePeriod, startDate, endDate, data) => {
    margin: auto;
 }
 
-/* .community__feedback{
-    border: 1px solid var(--light-color-bg2);
-    border-radius: 10px;
-    height: 125px;
-    padding: 15px;
-    margin: 15px auto;
-}
-
-.review-feedback__labels{
-    flex-direction: row;
-    display: flex;
-    justify-content: space-between;
-}
-
-.review-feedback__labels span{
-    margin: 0 !important;
-} */
-
-/* .review-feedback__negative{
-    transform: rotate(180deg);
-    transform-origin: center left;
-    position: absolute;
-    left: 50%;
-}
-
-.review-feedback__positive{
-    position: absolute;
-    left: 50%; 
-} */
-
 .chart__rating{
     display: flex;
     /* justify-content: center; */
@@ -698,7 +670,6 @@ const viewData = (timePeriod, startDate, endDate, data) => {
 }
 
 .comment{
-    /* width: 50rem !important; */
     overflow: hidden;
     text-align: justify;
 }
@@ -802,8 +773,6 @@ const viewData = (timePeriod, startDate, endDate, data) => {
 
 .right__side{
     flex-basis: 500px;
-    /* box-shadow: 0 1rem 2rem rgba(0,0,0,0.1);
-    border-radius: 20px; */
     padding: 50px 0px;
 }
 
@@ -820,6 +789,10 @@ const viewData = (timePeriod, startDate, endDate, data) => {
 
 .see__more{
     cursor: pointer;
+}
+
+.society__name{
+    margin: 5px 0;
 }
 
 /* For tablets */

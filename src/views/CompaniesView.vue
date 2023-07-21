@@ -329,7 +329,7 @@ const isActive = ref('all');
 }
 
 .society__info__container:hover {
-    box-shadow: 0 1rem 2rem rgba(0,0,0,0.09);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 .society__main__info{

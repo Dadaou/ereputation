@@ -57,8 +57,8 @@ export const useCompanyStore = defineStore("company", {
       let rating = 0;
       if(reviews.length > 0){
         reviews.forEach(element => {
-          total += Number(element.rating);
-          if(Number(element.rating)>5) nb+=2;
+          total += this.formatRating(element.rating);
+          if(this.formatRating(element.rating) > 5) nb+=2;
           else nb++;
         });
         rating = (total / nb).toFixed(2);
@@ -67,15 +67,20 @@ export const useCompanyStore = defineStore("company", {
       }
       next(rating);
     },
+    formatRating(rating){
+      rating = rating.includes("/") ? rating.slice(0, -2): rating;
+      rating = rating.includes("/") ? rating.slice(0, -1): rating;
+      rating = rating.includes(",") ? rating.replace(',', '.') : rating
+      return Number(rating);
+    },
     calculateRatingV2(reviews){
       let total = 0;
       let nb = 0;
       let rating = 0;
-      
       if(reviews.length > 0){
         reviews.forEach(element => {
-          total += Number(element.rating);
-          if(Number(element.rating)>5) nb+=2;
+          total += this.formatRating(element.rating);
+          if(this.formatRating(element.rating) > 5) nb+=2;
           else nb++;
         });
         rating = (total / nb).toFixed(2);
@@ -164,6 +169,7 @@ export const useCompanyStore = defineStore("company", {
     async generateLegend(data, next){
       let legend = [];
       let colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890'];
+      //let colors = ['#9F9AA4', '#CFD8D7', '#B5C9C3', '#788585'];
       var index = 0;
       
       data.forEach(element => {
