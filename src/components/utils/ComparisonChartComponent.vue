@@ -8,18 +8,45 @@
     </GroupedBarChart>
     <ModalComponent :showModal="showModal" @close="showModal=false">
         <template #content>
+            <div class="modal__close">
+                 <i class="uil uil-times-circle mb-8"  @click="showModal = false"></i>
+            </div>
             <div class="modal__header">
-                 <h4>Comparison</h4>
-                 <i class="uil uil-times-circle"  @click="showModal = false"></i>
+                 <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">Comparison</h3>
             </div>
-            <div class="modal__filter">
-                <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
-                        selectedTimePeriod = timePeriod
-                }" :default="timePeriods[0]"/>
-                <div class="date__filter">
-                 <VueDatePicker v-model="date2" range :month-change-on-scroll="false" :format="format2"/>
-                </div>
-            </div>
+            <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <li class="w-full">
+                    <div class="flex items-center pl-3">
+                        <input type="radio" :value="false" v-model="comparisonByEstablishments" name="list-radio" class="w-4 h-4 text-blue-500 bg-gray-100 border-gray-300">
+                        <label for="horizontal-list-radio-id" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Sources</label>
+                    </div>
+                </li>
+                <li class="w-full">
+                    <div class="flex items-center pl-3">
+                        <input type="radio" name="list-radio" :value="true" v-model="comparisonByEstablishments" class="w-4 h-4 text-blue-500 bg-gray-100 border-gray-300">
+                        <label for="horizontal-list-radio-license" class="w-full py-3 ml-2 text-sm font-medium text-gray-900">Establishments</label>
+                    </div>
+                </li>
+                <li class="w-full mr-3">
+                    <DropdownComponent :showTitle="false" placeholder="Select an establishments" :data="data2" @submit="(company)=>{
+                        selectedCompany = company
+                    }" :defaultObj="data2[0]" :isDataObject="true"/>
+                </li>
+                <li class="w-full mr-3">
+                    <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
+                            selectedTimePeriod = timePeriod
+                    }" :default="timePeriods[0]"/>
+                </li>
+                <li class="w-full mr-3">
+                    <VueDatePicker v-model="date2" range :month-change-on-scroll="false" :format="format2"/>
+                </li>
+                <!-- <li class="w-full mr-3">
+                    <VueDatePicker v-model="date2" range :month-change-on-scroll="false" :format="format2"/>
+                </li> -->
+            </ul>
+            <!-- <div class="modal__filter">
+                
+            </div> -->
             <div class="modal__container">
                 <GroupedBarChart :plot-data="plotData" x-key="name"
                         :width="width + 400" :height="height + 100" :margin="margin" :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890']" :x-axis-label="props.labels.x" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
@@ -33,7 +60,7 @@
 import ModalComponent from '@Components/utils/ModalComponent.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import moment from 'moment';
-import {ref, watch, onBeforeMount} from 'vue';
+import {ref, watch, onUpdated, computed} from 'vue';
 import { useWindowSize } from '@vueuse/core';
 import { useCompanyStore } from "@Stores/company.js";
 
@@ -57,7 +84,6 @@ const props = defineProps({
     },
     colors: {
         type: Array,
-       // default: ['#9F9AA4', '#CFD8D7', '#B5C9C3', '#788585']
         default: ['#6c63ff', '#f75842', '#aca8fd', '#424890'] 
     },
     labels: {
@@ -65,13 +91,19 @@ const props = defineProps({
         default: {x: "Months", y: "Reviews"}
     },
     establishment: Object,
-    companies: Array
+    companies: Array,
+    competitors: Array
 });
 
 const showModal = ref(false);
+const comparisonByEstablishments = ref(false);
 const companiesStore = useCompanyStore();
 let selectedTimePeriod = ref('');
 let timePeriods = ref(['Months', 'Quarters', 'Semesters']);
+let data2 = computed(() => comparisonByEstablishments.value?props.competitors:props.companies);
+let selectedCompany = ref(data2[0]);
+let startDate = moment().startOf('year').format('YYYY-M-DD');
+let endDate = moment().endOf('year').format('YYYY-M-DD');
 
 const viewFullscreen = () => {
     showModal.value = !showModal.value;
@@ -83,17 +115,15 @@ const date2 = ref({
 });
 
 const format2 = (date) => {
-  const startDate = new Date(date[0]).toLocaleString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-  const endDate = new Date(date[1]).toLocaleString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-  return `${startDate} - ${endDate}`;
+  const startDate2 = new Date(date[0]).toLocaleString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+  const endDate2 = new Date(date[1]).toLocaleString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+  return `${startDate2} - ${endDate2}`;
 }
 
-const plotData = ref(props.data);
+const plotData = ref([]);
 
 watch(date2, ()=>{
-    let startDate = moment().startOf('year').format('YYYY-M-DD');
-    let endDate = moment().endOf('year').format('YYYY-M-DD');
-    if(date2.value){
+    if(date2.value.length > 0){
         startDate = moment(date2.value[0]).format('YYYY-M-DD');
         endDate = moment(date2.value[1]).format('YYYY-M-DD');
         viewData(selectedTimePeriod.value, startDate, endDate);
@@ -102,9 +132,7 @@ watch(date2, ()=>{
     }  
 });
 
-watch(selectedTimePeriod, ()=>{
-    let startDate = moment().startOf('year').format('YYYY-M-DD');
-    let endDate = moment().endOf('year').format('YYYY-M-DD');
+watch(selectedTimePeriod, () => {
     if(date2.value.length > 0){
         startDate = moment(date2.value[0]).format('YYYY-M-DD');
         endDate = moment(date2.value[1]).format('YYYY-M-DD');
@@ -112,12 +140,57 @@ watch(selectedTimePeriod, ()=>{
     viewData(selectedTimePeriod.value, startDate, endDate);
 });
 
+watch(comparisonByEstablishments, () => {
+    console.log(selectedCompany.value);
+   if(comparisonByEstablishments.value == true){
+    viewData(selectedTimePeriod.value, startDate, endDate);
+   }else{
+        if(data2.value.length > 0){
+                if(Object.keys(data2.value[0]).length > 1){
+                    plotData.value = companiesStore.calculateReviewsBySources(data2.value[0], selectedTimePeriod.value, startDate, endDate);
+                    selectedCompany.value = data2.value[0];
+                }
+        }
+   }
+});
+
+watch(selectedCompany, () => {
+    if(date2.value.length > 0){
+        startDate = moment(date2.value[0]).format('YYYY-M-DD');
+        endDate = moment(date2.value[1]).format('YYYY-M-DD');
+    }
+    if(comparisonByEstablishments.value == true){
+        viewData(selectedTimePeriod.value, startDate, endDate);
+    }else{
+        plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value, selectedTimePeriod.value, startDate, endDate);
+    }
+})
+
 const viewData = (timePeriod, startDate, endDate) => {
     plotData.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, props.companies);
 }
+
+onUpdated(() => {
+    if(comparisonByEstablishments.value == true){
+        plotData.value = props.data;
+    }
+    else{
+        if(data2.value.length > 0){
+            if(Object.keys(data2.value[0]).length > 1){
+                console.log(companiesStore.calculateReviewsBySources(data2.value[0], selectedTimePeriod.value, startDate, endDate))
+                plotData.value = companiesStore.calculateReviewsBySources(data2.value[0], selectedTimePeriod.value, startDate, endDate);
+                selectedCompany.value = data2.value[0];
+            }
+        }
+    } 
+})
+
 </script>
 
 <style scoped>
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 .filter__menu{
     display: flex;
     align-items: center;
@@ -145,14 +218,18 @@ const viewData = (timePeriod, startDate, endDate) => {
     align-items: center;
 }
 
-.modal__header i{
+.modal__close i{
+   position: relative;
+   top: -20px; 
+   right: -5px;
+   float: right;
    font-size: 25px;
    color: red;
    cursor: pointer;
-   transition: var(--transition)
+   transition: var(--transition);
 }
 
-.modal__header i:hover{
+.modal__close i:hover{
     transform: rotate(360deg);
 }
 

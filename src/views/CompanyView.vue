@@ -22,7 +22,7 @@
                 <!-- <div class="chart__content">
                     <ComparisonChartComponent :data="plotdata" :width="chart__width" :height="chart__height" :establishment="establishment" :companies="comparisonData"/>
                 </div> -->
-                <ComparisonChartComponent :data="plotdata" :width="chart__width" :height="chart__height" :establishment="establishment" :companies="comparisonData"/>
+                <ComparisonChartComponent :data="plotdata" :width="chart__width" :height="chart__height" :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors"/>
                 <BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
                 </BaseLegend>
                 <div class="rating__statistics">
