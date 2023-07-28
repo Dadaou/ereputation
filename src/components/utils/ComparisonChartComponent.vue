@@ -1,10 +1,10 @@
 <template>
 <div class="establishments__comparison">
     <ul class="filter__menu">
-      <li @click="viewFullscreen()" > <i class="uil uil-expand-arrows-alt"></i></li>
+      <li @click="viewFullscreen()" > <i class="uil uil-expand-arrows-alt"></i> View fullscreen</li>
     </ul>
     <GroupedBarChart :plot-data="props.data" x-key="name"
-    :width="width" :height="height" :margin="margin" :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890']" :x-axis-label="selectedTimePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+    :width="width" :height="height" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="selectedTimePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
     </GroupedBarChart>
     <ModalComponent :showModal="showModal" @close="showModal=false">
         <template #content>
@@ -49,8 +49,10 @@
             </div> -->
             <div class="modal__container">
                 <GroupedBarChart :plot-data="plotData" x-key="name"
-                        :width="width + 400" :height="height + 100" :margin="margin" :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890']" :x-axis-label="props.labels.x" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+                        :width="width + 400" :height="height + 100" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="props.labels.x" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
                 </GroupedBarChart>
+                <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
+                </BaseLegend>
             </div>
         </template>
     </ModalComponent>
@@ -84,7 +86,7 @@ const props = defineProps({
     },
     colors: {
         type: Array,
-        default: ['#6c63ff', '#f75842', '#aca8fd', '#424890'] 
+        default:['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff'] 
     },
     labels: {
         type: Object,
@@ -104,6 +106,7 @@ let data2 = computed(() => comparisonByEstablishments.value?props.competitors:pr
 let selectedCompany = ref(data2[0]);
 let startDate = moment().startOf('year').format('YYYY-M-DD');
 let endDate = moment().endOf('year').format('YYYY-M-DD');
+let legendData = ref([]);
 
 const viewFullscreen = () => {
     showModal.value = !showModal.value;
@@ -121,6 +124,10 @@ const format2 = (date) => {
 }
 
 const plotData = ref([]);
+const viewData = (timePeriod, startDate, endDate) => {
+    plotData.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, props.companies);
+    legendData.value =  companiesStore.generateLegend(props.companies, props.colors);
+}
 
 watch(date2, ()=>{
     if(date2.value.length > 0){
@@ -137,7 +144,17 @@ watch(selectedTimePeriod, () => {
         startDate = moment(date2.value[0]).format('YYYY-M-DD');
         endDate = moment(date2.value[1]).format('YYYY-M-DD');
     }
+    if(comparisonByEstablishments.value == true){
+        console.log(selectedTimePeriod.value)
     viewData(selectedTimePeriod.value, startDate, endDate);
+   }else{
+        if(data2.value.length > 0){
+                if(Object.keys(data2.value[0]).length > 1){
+                    plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value, companiesStore.getWebsites(data2.value[0].websites),selectedTimePeriod.value, startDate, endDate);
+                    legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites), props.colors);
+                }
+        }
+   }
 });
 
 watch(comparisonByEstablishments, () => {
@@ -147,8 +164,9 @@ watch(comparisonByEstablishments, () => {
    }else{
         if(data2.value.length > 0){
                 if(Object.keys(data2.value[0]).length > 1){
-                    plotData.value = companiesStore.calculateReviewsBySources(data2.value[0], selectedTimePeriod.value, startDate, endDate);
+                    plotData.value = companiesStore.calculateReviewsBySources(data2.value[0], companiesStore.getWebsites(data2.value[0].websites),selectedTimePeriod.value, startDate, endDate);
                     selectedCompany.value = data2.value[0];
+                    legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites), props.colors);
                 }
         }
    }
@@ -162,24 +180,21 @@ watch(selectedCompany, () => {
     if(comparisonByEstablishments.value == true){
         viewData(selectedTimePeriod.value, startDate, endDate);
     }else{
-        plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value, selectedTimePeriod.value, startDate, endDate);
+        plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value,companiesStore.getWebsites(data2.value[0].websites), selectedTimePeriod.value, startDate, endDate);
+        legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites),props.colors);
     }
 })
 
-const viewData = (timePeriod, startDate, endDate) => {
-    plotData.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, props.companies);
-}
-
 onUpdated(() => {
     if(comparisonByEstablishments.value == true){
-        plotData.value = props.data;
+        // plotData.value = props.data;
     }
     else{
         if(data2.value.length > 0){
             if(Object.keys(data2.value[0]).length > 1){
-                console.log(companiesStore.calculateReviewsBySources(data2.value[0], selectedTimePeriod.value, startDate, endDate))
-                plotData.value = companiesStore.calculateReviewsBySources(data2.value[0], selectedTimePeriod.value, startDate, endDate);
+                plotData.value = companiesStore.calculateReviewsBySources(data2.value[0], companiesStore.getWebsites(data2.value[0].websites), selectedTimePeriod.value, startDate, endDate);
                 selectedCompany.value = data2.value[0];
+                legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites), props.colors);
             }
         }
     } 

@@ -166,12 +166,12 @@ export const useCompanyStore = defineStore("company", {
       }
       return result;
     },
-    calculateReviewsBySources(company, timePeriod, startDate, endDate){
+    calculateReviewsBySources(company, websites, timePeriod, startDate, endDate){
       let result = [];
       let quarters = this.splitRangeIntoQuarters(startDate, endDate);
       let semesters = this.splitRangeIntoSemesters(startDate, endDate);
       let months = this.getAllMonthsInRange(startDate, endDate);
-      let websites = this.getWebsites(company.websites);
+      // let websites = this.getWebsites(company.websites);
      
       if(timePeriod == 'Quarters'){
         quarters.forEach((quarter, index) => {
@@ -219,9 +219,8 @@ export const useCompanyStore = defineStore("company", {
       }
       return result;
     },
-    async generateLegend(data, next){
+    generateLegend(data, colors){
       let legend = [];
-      let colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890'];
       var index = 0;
       
       data.forEach(element => {
@@ -232,7 +231,22 @@ export const useCompanyStore = defineStore("company", {
         if(index>=data.length) index = 0;
         index ++;
       });
-      next(legend);
+      return legend;
+    },
+    generateLegendV2(data, colors){
+      let legend = [];
+      
+      var index = 0;
+      
+      data.forEach(element => {
+        legend.push({
+          "name": element,
+          "color": colors[index]
+        })
+        if(index>=(data.length - 1)) index = 0;
+        index ++;
+      });
+      return legend;
     },
     getTopThreeReviews(reviews, rating, result){
       reviews.forEach(review => {

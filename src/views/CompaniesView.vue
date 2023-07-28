@@ -124,7 +124,8 @@
                         <div class="society__main__info">
                         <div class="item__head">
                                 <div class="society__info">
-                                    <label class="society__name">{{ company.name }}</label>
+                                    <a :href="company.websites[0].url" v-if="company.websites.length > 0"><label class="society__name">{{ company.name }} {{ company.websites[0].url }}</label></a>
+                                    <label class="society__name" v-else>{{ company.name }}</label>
                                     <div class="society__category">
                                         <i :class="['uil', company.category=='Restaurant'?'uil-restaurant':'', company.category=='Hotel'?'uil-bed-double':'', company.category=='Residence'?'uil-home':'']"></i>
                                         <span>{{ company.category }}</span>

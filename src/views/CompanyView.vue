@@ -91,9 +91,9 @@
                                 selectedTimePeriod = timePeriod
                         }" :default="timePeriods[0]"/>
                     </div>
-                    <div class="type__filter">
+                    <!-- <div class="type__filter">
                         
-                    </div>
+                    </div> -->
                 </div>
               <div class="rating__customers">
                 <div class="title">Rating by Customers</div>
@@ -262,8 +262,7 @@ let reviewFeedbackData = ref({
     feeling: 0
 });
 
-let colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890'];
-//let colors =  ['#9F9AA4', '#CFD8D7', '#B5C9C3', '#788585'];
+let colors = ['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff'];
 
 let chartConfig = reactive({
     data: {
@@ -314,10 +313,10 @@ const loadDatasets = (establishments, colors, date) => {
 watch(date, ()=>{
  if(date.value== null){
     plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);   
-    loadDatasets(_comparisonData, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], selected_date);
+    loadDatasets(_comparisonData, colors, selected_date);
  }else{
     plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, moment(date.value, 'DD/MM/YYYY'), true);   
-    loadDatasets(_comparisonData, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], moment(date.value, 'DD/MM/YYYY'));
+    loadDatasets(_comparisonData, colors, moment(date.value, 'DD/MM/YYYY'));
  }
 });
 
@@ -340,17 +339,15 @@ const globalComparison = async () => {
     }
     viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
 
-    await companiesStore.generateLegend(comparisonData.value, (data) => {
-        legendData.value = data;
-        _legendData  = data;
-    });
+    legendData.value =  companiesStore.generateLegend(comparisonData.value, colors);
+    _legendData =  companiesStore.generateLegend(comparisonData.value, colors);
     all_items.value[2].value = competitors.value.length;
     all_items.value[1].value = establishment.value.reviews.length;
     all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
     lastReviews.value = companiesStore.getLastReviews(establishment.value.reviews, 10);
     updateVisibleData(lastReviews.value);
     reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
-    loadDatasets(_comparisonData, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], selected_date);
+    loadDatasets(_comparisonData, colors, selected_date);
 }
 
 onBeforeMount(async () => {
@@ -420,7 +417,7 @@ const reloadComparisonByWebsite = async (website) => {
         }
         viewData(selectedTimePeriod.value, startDate, endDate, data);
         // plotdata.value = companiesStore.calculateReviewsV2(data, 6, selected_date, true);
-        loadDatasets(data, ['#6c63ff', '#f75842', '#aca8fd', '#424890'], selected_date);
+        loadDatasets(data, colors, selected_date);
     });
 }
 

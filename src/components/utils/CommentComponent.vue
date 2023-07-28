@@ -17,9 +17,10 @@
             </div>
             <div>
                 <span v-if="showEmoji">
-                    <span v-if="review.score >= 0.5">😀</span>
-                    <span v-if="review.score >= 0.2 && review.score < 0.5 ">😊</span>
-                    <span v-if="review.score < 0.2">😞</span>
+                    <span v-if="review.score >= 0.5 && review.comment !== ''">😀</span>
+                    <span v-if="(review.score >= 0.2 && review.score < 0.5) && review.comment !== ''">😊</span>
+                    <span v-if="review.score > 0 && review.score < 0.2 && review.comment !== ''">😕</span>
+                    <span v-if="review.score == 0 || review.comment == ''">😐</span>
                 </span>
                 <p class="bg-yellow-100 text-yellow-800 text-sm font-semibold inline-flex items-center p-1.5 rounded dark:bg-yellow-200 dark:text-yellow-800">{{ formatRating(review.rating) }}</p>
             </div> 
