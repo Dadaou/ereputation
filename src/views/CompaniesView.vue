@@ -106,14 +106,14 @@
                 <i class="uil uil-building"></i>
                 <div class="line"></div>
             </div>
-            <div class="client__container__head" v-if="companiesStore.establishments.length>0">
-                Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, your companies are listed bellow.  <span>({{ companiesStore.nb }} companies found)</span>
+            <div class="client__container__head" v-if="userStore.user.customer.establishments.length > 0">
+                Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, your establishments are listed bellow.  <span>({{userStore.user.customer.establishments.length }} found)</span>
             </div>
             <div class="client__container__head" v-else>
                 Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, no companies found yet.
             </div>
-            <div class="society__list">
-                <div class="society__info__container" v-for="company,index in companiesStore.establishments" @click="$router.push(`/companies/${company.id}`)">
+            <div class="society__list" v-if="companiesStore.establishments.length>0">
+                <div class="society__info__container" v-for="company in companiesStore.establishments" @click="$router.push(`/companies/${company.id}`)">
                     <div class="society__item">
                         <swiper class="society__logo" :modules="[Virtual]" v-if="company.media.length > 0" :slides-per-view="1" :space-between="10" :virtual="true">
                                 <swiper-slide v-show="mediaStore.isImageFile(image.url_source)" v-for="image in company.media">
@@ -124,7 +124,7 @@
                         <div class="society__main__info">
                         <div class="item__head">
                                 <div class="society__info">
-                                    <a :href="company.websites[0].url" v-if="company.websites.length > 0"><label class="society__name">{{ company.name }} {{ company.websites[0].url }}</label></a>
+                                    <a :href="company.websites[0].url" v-if="company.websites.length > 0"><label class="society__name">{{ company.name }}</label></a>
                                     <label class="society__name" v-else>{{ company.name }}</label>
                                     <div class="society__category">
                                         <i :class="['uil', company.category=='Restaurant'?'uil-restaurant':'', company.category=='Hotel'?'uil-bed-double':'', company.category=='Residence'?'uil-home':'']"></i>
@@ -136,15 +136,44 @@
                                     </div>
 
                                 </div>
-                                <div class="society__actions">
-                                
-                                </div>
+                                <!-- <div class="society__actions">
+                                </div> -->
                             </div>
                         </div>
                     </div>
                     <RatingComponent class="rating__content" :reviews="company.reviews.length" :rating="companiesStore.calculateRatingV2(company.reviews)"/>
                </div>
-            </div>
+               </div>
+                <div v-else class="society__list">
+                    <div class="society__info__container  animate-pulse" v-for="index in userStore.user.customer.establishments.length">
+                    <div class="society__item">
+                        <div role="status" class="society__logo flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
+                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
+                        </svg>
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <div class="society__main__info">
+                        <div class="item__head">
+                                <div class="society__info">
+                                    <label class="society__name">
+                                        <div class="h-2 bg-gray-300 rounded-full dark:bg-gray-600 w-64 mb-2.5"></div>
+                                    </label>
+                                    <div class="society__category">
+                                        <div class="w-48 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                                    </div>
+                                    <div class="society__location">
+                                        <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                                        <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
+               </div>
+                </div>
         </div>
      </div>   
 </template>
@@ -185,6 +214,9 @@ const isActive = ref('all');
 </script>
 
 <style scoped>
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 .breadcrumb {
     position: relative;
     top:-110px;

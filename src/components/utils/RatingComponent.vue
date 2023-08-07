@@ -11,16 +11,7 @@
 </template>
 
 <script setup>
-const props = defineProps({
-    rating:{
-        type: Number,
-        default: 4.95
-    },
-    reviews: {
-        type: Number,
-        default: 80
-    }
-});
+const props = defineProps(['reviews', 'rating']);
 
 </script>
 

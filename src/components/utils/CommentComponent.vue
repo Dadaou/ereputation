@@ -40,6 +40,10 @@ const props = defineProps({
         required: true,
         default: []
     },
+    allReviews: {
+        type: Array,
+        required: false
+    },
     showEmoji: {
         type: Boolean,
         default: false

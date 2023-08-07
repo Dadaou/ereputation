@@ -101,7 +101,7 @@ const showModal = ref(false);
 const comparisonByEstablishments = ref(false);
 const companiesStore = useCompanyStore();
 let selectedTimePeriod = ref('');
-let timePeriods = ref(['Months', 'Quarters', 'Semesters']);
+let timePeriods = ref(['Weeks','Months', 'Quarters', 'Semesters']);
 let data2 = computed(() => comparisonByEstablishments.value?props.competitors:props.companies);
 let selectedCompany = ref(data2[0]);
 let startDate = moment().startOf('year').format('YYYY-M-DD');
@@ -130,31 +130,54 @@ const viewData = (timePeriod, startDate, endDate) => {
 }
 
 watch(date2, ()=>{
-    if(date2.value.length > 0){
-        startDate = moment(date2.value[0]).format('YYYY-M-DD');
-        endDate = moment(date2.value[1]).format('YYYY-M-DD');
-        viewData(selectedTimePeriod.value, startDate, endDate);
+    console.log(date2.value)
+    startDate = moment().startOf('year').format('YYYY-M-DD');
+    endDate = moment().endOf('year').format('YYYY-M-DD');
+
+    if(date2.value != null){
+        if(date2.value.length > 0){
+            startDate = moment(date2.value[0]).format('YYYY-M-DD');
+            endDate = moment(date2.value[1]).format('YYYY-M-DD');
+        }
+        if(comparisonByEstablishments.value == true){
+            viewData(selectedTimePeriod.value, startDate, endDate);
+        }else{
+            plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value,companiesStore.getWebsites(data2.value[0].websites), selectedTimePeriod.value, startDate, endDate);
+            legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites),props.colors);
+        }
     }else{
-        viewData(selectedTimePeriod.value, startDate, endDate);
-    }  
+        if(comparisonByEstablishments.value == true){
+            viewData(selectedTimePeriod.value, startDate, endDate);
+        }else{
+            plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value,companiesStore.getWebsites(data2.value[0].websites), selectedTimePeriod.value, startDate, endDate);
+            legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites),props.colors);
+        }
+    }
 });
 
 watch(selectedTimePeriod, () => {
-    if(date2.value.length > 0){
-        startDate = moment(date2.value[0]).format('YYYY-M-DD');
-        endDate = moment(date2.value[1]).format('YYYY-M-DD');
-    }
-    if(comparisonByEstablishments.value == true){
-        console.log(selectedTimePeriod.value)
-    viewData(selectedTimePeriod.value, startDate, endDate);
-   }else{
-        if(data2.value.length > 0){
-                if(Object.keys(data2.value[0]).length > 1){
-                    plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value, companiesStore.getWebsites(data2.value[0].websites),selectedTimePeriod.value, startDate, endDate);
-                    legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites), props.colors);
-                }
+    startDate = moment().startOf('year').format('YYYY-M-DD');
+    endDate = moment().endOf('year').format('YYYY-M-DD');
+
+    if(date2.value != null){
+        if(date2.value.length > 0){
+            startDate = moment(date2.value[0]).format('YYYY-M-DD');
+            endDate = moment(date2.value[1]).format('YYYY-M-DD');
         }
-   }
+        if(comparisonByEstablishments.value == true){
+            viewData(selectedTimePeriod.value, startDate, endDate);
+        }else{
+            plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value,companiesStore.getWebsites(data2.value[0].websites), selectedTimePeriod.value, startDate, endDate);
+            legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites),props.colors);
+        }
+    }else{
+        if(comparisonByEstablishments.value == true){
+            viewData(selectedTimePeriod.value, startDate, endDate);
+        }else{
+            plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value,companiesStore.getWebsites(data2.value[0].websites), selectedTimePeriod.value, startDate, endDate);
+            legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites),props.colors);
+        }
+    }
 });
 
 watch(comparisonByEstablishments, () => {
@@ -173,15 +196,26 @@ watch(comparisonByEstablishments, () => {
 });
 
 watch(selectedCompany, () => {
-    if(date2.value.length > 0){
-        startDate = moment(date2.value[0]).format('YYYY-M-DD');
-        endDate = moment(date2.value[1]).format('YYYY-M-DD');
-    }
-    if(comparisonByEstablishments.value == true){
-        viewData(selectedTimePeriod.value, startDate, endDate);
+    startDate = moment().startOf('year').format('YYYY-M-DD');
+    endDate = moment().endOf('year').format('YYYY-M-DD');
+    if(date2.value != null){
+        if(date2.value.length > 0){
+            startDate = moment(date2.value[0]).format('YYYY-M-DD');
+            endDate = moment(date2.value[1]).format('YYYY-M-DD');
+        }
+        if(comparisonByEstablishments.value == true){
+            viewData(selectedTimePeriod.value, startDate, endDate);
+        }else{
+            plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value,companiesStore.getWebsites(data2.value[0].websites), selectedTimePeriod.value, startDate, endDate);
+            legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites),props.colors);
+        }
     }else{
-        plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value,companiesStore.getWebsites(data2.value[0].websites), selectedTimePeriod.value, startDate, endDate);
-        legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites),props.colors);
+        if(comparisonByEstablishments.value == true){
+            viewData(selectedTimePeriod.value, startDate, endDate);
+        }else{
+            plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value,companiesStore.getWebsites(data2.value[0].websites), selectedTimePeriod.value, startDate, endDate);
+            legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites),props.colors);
+        }
     }
 })
 

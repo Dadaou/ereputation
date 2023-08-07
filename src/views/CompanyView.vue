@@ -19,12 +19,38 @@
                        <h2>Comparison</h2>
                     </div>
                 </div>
-                <!-- <div class="chart__content">
-                    <ComparisonChartComponent :data="plotdata" :width="chart__width" :height="chart__height" :establishment="establishment" :companies="comparisonData"/>
-                </div> -->
-                <ComparisonChartComponent :data="plotdata" :width="chart__width" :height="chart__height" :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors"/>
-                <BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
+                <ComparisonChartComponent  v-if="reviews_loader == false" :data="plotdata" :width="chart__width" :height="chart__height" :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors"/>
+                <div v-else role="status" class="rounded shadow animate-pulse md:p-6 mt-5 mb-5">
+                    <div class="flex items-baseline mt-2 space-x-3">
+                        <div class="w-full h-40 bg-gray-200 rounded-t-lg dark:bg-gray-700"></div>
+                        <div class="w-full bg-gray-200 rounded-t-lg h-60 dark:bg-gray-700"></div>
+                        <div class="w-full h-64 bg-gray-200 rounded-t-lg dark:bg-gray-700"></div>
+                        <div class="w-full bg-gray-200 rounded-t-lg h-60 dark:bg-gray-700"></div>
+                        <div class="w-full bg-gray-200 rounded-t-lg h-40 dark:bg-gray-700"></div>
+                        <div class="w-full bg-gray-200 rounded-t-lg h-60 dark:bg-gray-700"></div>
+                        <div class="w-full bg-gray-200 rounded-t-lg h-60 dark:bg-gray-700"></div>
+                        <div class="w-full h-64 bg-gray-200 rounded-t-lg dark:bg-gray-700"></div>
+                        <div class="w-full bg-gray-200 rounded-t-lg h-60 dark:bg-gray-700"></div>
+                        <div class="w-full bg-gray-200 rounded-t-lg h-40 dark:bg-gray-700"></div>
+                        <div class="w-full bg-gray-200 rounded-t-lg h-60 dark:bg-gray-700"></div>
+                        <div class="w-full h-40 bg-gray-200 rounded-t-lg dark:bg-gray-700"></div>
+                        <div class="w-full bg-gray-200 rounded-t-lg h-60 dark:bg-gray-700"></div>
+                        <div class="w-full h-64 bg-gray-200 rounded-t-lg dark:bg-gray-700"></div>
+                        <div class="w-full bg-gray-200 rounded-t-lg h-60 dark:bg-gray-700"></div>
+                        <div class="w-full bg-gray-200 rounded-t-lg h-40 dark:bg-gray-700"></div>
+                        <div class="w-full bg-gray-200 rounded-t-lg h-60 dark:bg-gray-700"></div>
+                        <div class="w-full bg-gray-200 rounded-t-lg h-60 dark:bg-gray-700"></div>
+                        <div class="w-full bg-gray-200 rounded-t-lg h-40 dark:bg-gray-700"></div>
+                        <div class="w-full bg-gray-200 rounded-t-lg h-60 dark:bg-gray-700"></div>
+                        <div class="w-full bg-gray-200 rounded-t-lg h-60 dark:bg-gray-700"></div>
+                        <div class="w-full h-64 bg-gray-200 rounded-t-lg dark:bg-gray-700"></div>
+                        <div class="w-full bg-gray-200 rounded-t-lg h-60 dark:bg-gray-700"></div>
+                    </div>
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <BaseLegend v-if="reviews_loader == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
                 </BaseLegend>
+                
                 <div class="rating__statistics">
                     <div class="rating__customers">
                         <div class="title">Rating by Customers</div>
@@ -42,20 +68,44 @@
                     <div class="reviews__pagination">
                         <CommentPagination  v-if="lastReviews.length > 0" :config="paginationConfig" @updatePage="updatePage" :color="'#6c63ff'" :nb="lastReviews.length" :data="visibleData"></CommentPagination>
                     </div>
-                    <CommentComponent :reviews="visibleData" :showEmoji="false"/>
+                    <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :allReviews="establishment.reviews"  :showEmoji="false"/>
+                    <div v-else role="status" class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" v-for="index in 3">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                </div>
+                                <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
+                            </div>
+                            <div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
+                            </div>
+                        </div>
+                        <span class="sr-only">Loading...</span>
+                    </div>
                     <aside v-if="lastReviews.length > 0">
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{  all_items[1].value - 3 }} reviews remains</p>
                         <div class="flex items-center mt-3 space-x-3 divide-x divide-gray-200 dark:divide-gray-600">
                             <a @click="seeMoreReviews()" class="see__more text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-xs px-2 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">See more</a>
                         </div>
-                    </aside>
+                    </aside> 
                 </div> 
             </div>
             <div class="right__side">
                 <div class="establishment max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                     <a href="#">
                         <img v-if="media.length > 0" class="rounded-t-lg" :src="media[0]" alt="" />
-                        <img v-else :src="'https://images.pexels.com/photos/7070/space-desk-workspace-coworking.jpg'" alt="">
+                        <div v-else role="status" class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
+                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
+                        </svg>
+                            <span class="sr-only">Loading...</span>
+                        </div>
                     </a>
                     <div class="establishment__info">
                             <label class="society__name">{{ establishment.name }}</label>
@@ -91,9 +141,6 @@
                                 selectedTimePeriod = timePeriod
                         }" :default="timePeriods[0]"/>
                     </div>
-                    <!-- <div class="type__filter">
-                        
-                    </div> -->
                 </div>
               <div class="rating__customers">
                 <div class="title">Rating by Customers</div>
@@ -206,6 +253,7 @@ let websites = ref(['Global']);
 
 let establishment =ref({reviews:[]});
 let reviews = ref([]);
+let reviews_loader = ref(true);
 let competitors = ref([]); 
 let computedCompetitors = computed(()=>{
     let data = [{name:'Global'}];
@@ -252,7 +300,7 @@ let timePeriods = ref(['Months', 'Quarters', 'Semesters']);
 
 let lastReviews = ref([]);
 let media = [];
-let name = ""
+let name = "";
 
 let reviewsConfidence = ref(0);
 let reviewFeedbackData = ref({
@@ -381,7 +429,6 @@ const reloadComparison = async (competitor) => {
     comparisonData.value = [establishment.value, competitor];
     _comparisonData  = [establishment.value, competitor];
     
-    // plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);
     let startDate = moment().startOf('year').format('YYYY-M-DD');
     let endDate = moment().endOf('year').format('YYYY-M-DD');
     if(date2.value.length > 0){
@@ -524,8 +571,9 @@ let updateVisibleData = function(_data){
     if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
         updatePage( paginationConfig.value.current -1);
     }
-
-    visibleData.value = paginationConfig.value.data
+    visibleData.value = paginationConfig.value.data;
+    reviews_loader.value = visibleData.value.length>0?false:true;
+    setTimeout(() => reviews_loader.value = false, 20000);
 }
 
 

@@ -58,13 +58,13 @@ nav{
     position: fixed;
     top:0;
     z-index: 11;
-    background-color: var(--color-white);
-    color: var(--color-bg2);
+    background-color: var(--color-bg2);
+    color: var(--color-white);
 }
 
 /*Router-link*/
 a{
-    color: var(--color-bg2);
+    color: var(--color-white);
 }
 
 .nav__container{
@@ -105,16 +105,16 @@ a{
 
 /*Change the navbar style on scroll using useWindowSroll */
 .nav__onScroll{
-    background-color: var(--color-bg2) !important;
+    background-color: var(--color-white) !important;
     box-shadow: 0 1rem 2rem rgba(0,0,0,0.2);
 }
 
 .nav__onScroll h4, .nav__onScroll .nav__avatar{
-    color: var(--color-white);
+    color: var(--color-bg2);
 }
 
 .nav__onScroll a.btn{
-    color: var(--color-white);
+    color: var(--color-bg2);
     /* border-color: var(--color-white); */
 }
 

@@ -7,9 +7,9 @@
         <div class="app__container">
            <div class="head">
                 <div class="title">Reviews</div>
-                <div class="date__range">
+                <!-- <div class="date__range">
                     <VueDatePicker v-model="date" :format="format" range month-picker />
-                </div>
+                </div> -->
            </div>
            <div class="reviews__statistics">
                 <div class="reviews__statistics_item">
@@ -85,7 +85,25 @@
             <CommentPagination  v-if="reviews.length > 0" :config="paginationConfig" @updatePage="updatePage" :color="'#6c63ff'" :nb="reviews.length" :data="visibleData"></CommentPagination>
            </div>
            <div class="all__reviews">
-            <CommentComponent :reviews="visibleData" :showEmoji="true"/>
+            <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"/>
+            <div v-else role="status" class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" v-for="index in 5">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                </div>
+                                <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
+                            </div>
+                            <div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
+                            </div>
+                        </div>
+                        <span class="sr-only">Loading...</span>
+                    </div>
            </div>
         </div>
     </div>
@@ -136,6 +154,7 @@ const date = ref({
 
 let establishment = ref({});
 let reviews = ref([]);
+let reviews_loader = ref(true);
 let visibleData = ref([])
 let paginationConfig = ref({
     current:0,
@@ -152,15 +171,12 @@ let updatePage = function(pageNumber){
 
 let updateVisibleData = function(_data){
     let data = paginationConfig.value;
-
     paginationConfig.value.data = _data.slice(data.current*data.size, (data.current * data.size) + data.size)
-                
-
     if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
         updatePage( paginationConfig.value.current -1);
     }
-
     visibleData.value = paginationConfig.value.data
+    reviews_loader.value = visibleData.value.length>0?false:true;
 }
 
 

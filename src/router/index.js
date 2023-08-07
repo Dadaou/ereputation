@@ -64,11 +64,11 @@ const fetchEstablishments = async (to, from, next) => {
   const appStore = useAppStore();
   if(userStore.user.customer !== null){
     const establishmentIds = getIds(userStore.user.customer.establishments);  
-    appStore.isLoading = true;
+    // appStore.isLoading = true;
    
     await companiesStore.fetchByUser(establishmentIds, (response)=>{
       console.log(response)
-      appStore.isLoading = false;
+      // appStore.isLoading = false;
     })
   }
   next();
@@ -79,7 +79,6 @@ const CheckCompany = async (to, from, next) => {
   const userStore = useUserStore();
   const establishmentIds = getIds(userStore.user.customer.establishments); 
   let isClient = establishmentIds.some(item => item === companyId);
-  console.log(isClient)
   if(isClient){
     next();
   }else next('/home');
@@ -102,7 +101,7 @@ const routes = [
     path:'/companies/:id',
     name: 'Company',
     component: CompanyView,
-    beforeEnter: [CheckAccess, CheckCompany, fetchCompetitors],
+    beforeEnter: [CheckAccess, CheckCompany],
   },
   {
     path:'/companies/:competitorId/:companyId/comparison',

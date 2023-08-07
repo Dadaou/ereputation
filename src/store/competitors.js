@@ -8,7 +8,6 @@ export const useCompetitorStore = defineStore("competitor", {
   actions: {
     async fetchOne(id, next){
       await services.getRecord(this.entity, id, (response) => {
-         console.log(response);
          next(response);
       })
     },
@@ -21,9 +20,7 @@ export const useCompetitorStore = defineStore("competitor", {
             response.data['hydra:member'].forEach(competitor => {
               let promise = services.getRecord('establishments', competitor.establishment.id, (response) => {
                 data.push(response.data);
-                console.log(response.data);
               });
-
               promises.push(promise);
             });
 

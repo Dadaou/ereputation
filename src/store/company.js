@@ -4,7 +4,8 @@ import moment from 'moment';
 
 export const useCompanyStore = defineStore("company", {
   state: () => ({ 
-   establishments: [], 
+   establishments: [],
+   _establishments: [], 
    entity: 'establishments',
    nb: 0,
   }),
@@ -42,7 +43,6 @@ export const useCompanyStore = defineStore("company", {
         Promise.all(promises).then(()=>{
           this.establishments = data;
           this.nb = data.length;
-          //console.log(data)
           next(data);
         });
 
@@ -50,8 +50,14 @@ export const useCompanyStore = defineStore("company", {
         console.error(error);
       }
     },
+    // async getCompetitorsForEachEstablishments(data){
+    //   try {
+        
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // },
     async calculateRating(reviews, next){
-      //console.log(reviews);
       let total = 0;
       let nb = 0;
       let rating = 0;
@@ -62,7 +68,6 @@ export const useCompanyStore = defineStore("company", {
           else nb++;
         });
         rating = (total / nb).toFixed(2);
-        // if (isNaN(rating)) rating = 0;
         if(isNaN(rating)) rating = 3.9;
       }
       next(rating);
@@ -84,7 +89,6 @@ export const useCompanyStore = defineStore("company", {
           else nb++;
         });
         rating = (total / nb).toFixed(2);
-        // if (isNaN(rating)) rating = 0;
         if(isNaN(rating)) rating = 3.9;
       }
       return rating;
@@ -122,6 +126,8 @@ export const useCompanyStore = defineStore("company", {
       let quarters = this.splitRangeIntoQuarters(startDate, endDate);
       let semesters = this.splitRangeIntoSemesters(startDate, endDate);
       let months = this.getAllMonthsInRange(startDate, endDate);
+      let weeks = this.getAllWeeksInRange(startDate, endDate);
+      console.log('weeks', weeks)
       
       if(timePeriod == 'Quarters'){
         quarters.forEach((quarter, index) => {
@@ -164,6 +170,21 @@ export const useCompanyStore = defineStore("company", {
             result.push(review);
           });
       }
+
+      if(timePeriod == 'Weeks'){
+        weeks.forEach((week, index) => {
+          let review = {};
+          // review['name'] = `W${index} ${moment(week.begin).format('MM-YY')}/${moment(week.end).format('MM-YY')}`;
+          review['name'] = `${index}`;
+          companies.forEach(company => {
+            let reviews =  this.getReviewsBetweenDates(company.reviews, week.begin, week.end);
+            let key = company.name;
+            let value = reviews.length;
+            review[key] = value;
+          });
+          result.push(review);
+        });
+    }
       return result;
     },
     calculateReviewsBySources(company, websites, timePeriod, startDate, endDate){
@@ -171,7 +192,8 @@ export const useCompanyStore = defineStore("company", {
       let quarters = this.splitRangeIntoQuarters(startDate, endDate);
       let semesters = this.splitRangeIntoSemesters(startDate, endDate);
       let months = this.getAllMonthsInRange(startDate, endDate);
-      // let websites = this.getWebsites(company.websites);
+      let weeks = this.getAllWeeksInRange(startDate, endDate);
+      console.log('weeks', weeks)
      
       if(timePeriod == 'Quarters'){
         quarters.forEach((quarter, index) => {
@@ -217,6 +239,21 @@ export const useCompanyStore = defineStore("company", {
             result.push(review);
           });
       }
+
+      if(timePeriod == 'Weeks'){
+        weeks.forEach((week, index) => {
+          let review = {};
+          review['name'] = `${index}`;
+          websites.forEach(website => {
+            let data = this.getReviewsBySource(company.reviews, website.toLowerCase());
+            let reviews =  this.getReviewsBetweenDates(data, week.begin, week.end);
+            let key = website;
+            let value = reviews.length;
+            review[key] = value;
+          });
+          result.push(review);
+        });
+    }
       return result;
     },
     generateLegend(data, colors){
@@ -502,6 +539,30 @@ export const useCompanyStore = defineStore("company", {
         start.setMonth(start.getMonth() + 1);
       }
       return months;
+    },
+    getAllWeeksInRange(startDate, endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
+      let dates = [];
+      const addDays = function (days) {
+        var date = new Date(this.valueOf());
+        date.setDate(date.getDate() + days);
+        return date;
+      };
+    
+      let currentDate = start;
+      if (currentDate.getDay() > 0) {
+        currentDate.setDate(currentDate.getDate() - currentDate.getDay());
+      }
+    
+      while (currentDate <= end) {
+        let endWeekDate = addDays.call(currentDate, 6);
+        dates.push({ begin: currentDate, end: endWeekDate });
+        currentDate = addDays.call(currentDate, 7);
+      }
+    
+      return dates;
     },
     getReviewsByMonth(reviews, month){
       const result = [];
