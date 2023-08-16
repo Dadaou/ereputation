@@ -50,13 +50,6 @@ export const useCompanyStore = defineStore("company", {
         console.error(error);
       }
     },
-    // async getCompetitorsForEachEstablishments(data){
-    //   try {
-        
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // },
     async calculateRating(reviews, next){
       let total = 0;
       let nb = 0;

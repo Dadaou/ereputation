@@ -178,14 +178,31 @@ const login = async (email, password) => {
         if(response.status == 200){
             setToken(response.data["token"])
         }
-       return response   
+        console.log(response)
+       return response;   
     } catch (error) {
        return error.response
     }
 };
 
+const login_2nd = async (email, password, next) => {
+    try {
+        const headers = {
+            'Content-Type': 'application/json',
+        };
+        await axiosInstance.post("/login", { email: email, password: password}, {headers})
+        .then(response => {
+            if(response.status == 200){
+                setToken(response.data["token"])
+            }
+            next(response);
+        })   
+    } catch (error) {
+       next(error.response)
+    }
+};
+
 const reviewAnalysis = async (path, value, next) =>{
-    
     try {
         await axios.post(path, value)
         .then(response => {
@@ -208,6 +225,7 @@ export default {
     patchRecord,
     logout,
     login,
+    login_2nd,
     setUser,
     getRecordsByParams,
     reviewAnalysis

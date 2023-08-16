@@ -42,9 +42,6 @@
                         <div class="w-full bg-gray-200 rounded-t-lg h-60 dark:bg-gray-700"></div>
                         <div class="w-full bg-gray-200 rounded-t-lg h-40 dark:bg-gray-700"></div>
                         <div class="w-full bg-gray-200 rounded-t-lg h-60 dark:bg-gray-700"></div>
-                        <div class="w-full bg-gray-200 rounded-t-lg h-60 dark:bg-gray-700"></div>
-                        <div class="w-full h-64 bg-gray-200 rounded-t-lg dark:bg-gray-700"></div>
-                        <div class="w-full bg-gray-200 rounded-t-lg h-60 dark:bg-gray-700"></div>
                     </div>
                     <span class="sr-only">Loading...</span>
                 </div>
@@ -190,8 +187,9 @@ import ComparisonChartComponent from '@Components/utils/ComparisonChartComponent
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
 import CommentPagination from '@Components/utils/CommentPagination.vue';
 import CommentComponent from '@Components/utils/CommentComponent.vue';
-import {ref, reactive, watch, onBeforeMount, computed} from 'vue';
+import {ref, reactive, watch, onBeforeMount, onUpdated, computed} from 'vue';
 import { useCompetitorStore } from "@Stores/competitors.js";
+import { useUserStore } from "@Stores/user.js";
 import { useCompanyStore } from "@Stores/company.js";
 import { useRoute, useRouter } from "vue-router";
 import { useWindowSize } from '@vueuse/core';
@@ -244,6 +242,7 @@ const format = (date) => {
 let selected_date = reactive(moment());
 
 const competitorStore = useCompetitorStore();
+const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 let showCompetitors = ref(false);
 let showWebsites = ref(false);
@@ -266,7 +265,7 @@ let computedCompetitors = computed(()=>{
 let visibleData = ref([])
 let paginationConfig = ref({
     current:0,
-    size: 3,
+    size: 20,
     data: [],
     _data: []
 })
@@ -392,40 +391,43 @@ const globalComparison = async () => {
     all_items.value[2].value = competitors.value.length;
     all_items.value[1].value = establishment.value.reviews.length;
     all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
-    lastReviews.value = companiesStore.getLastReviews(establishment.value.reviews, 10);
+    lastReviews.value = companiesStore.getLastReviews(establishment.value.reviews, 100);
     updateVisibleData(lastReviews.value);
     reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
     loadDatasets(_comparisonData, colors, selected_date);
+    setTimeout(() => reviews_loader.value = false, 2000);
 }
-
 onBeforeMount(async () => {
 const companyId = route.params.id;
-await companiesStore.fetchOne(companyId, async (company) => {
-    establishment.value = company;
-    reviews.value = company.reviews;
-    page.value.title2 = company.name;
-    establishment.value.media.forEach(item => {
-        media.push(item.url_source);
+if(userStore.user.customer !==null){
+    userStore.user.customer.establishments.forEach(async company => {
+        if(company.id == companyId){
+            establishment.value = company;
+            reviews.value = company.reviews;
+            page.value.title2 = company.name;
+            establishment.value.media.forEach(item => {
+                media.push(item.url_source);
+            });
+            companiesStore.calculateRating(establishment.value.reviews, (rating) =>{
+                all_items.value[0].value = rating;
+            });
+            const competitorTag = `competitor_tag=${company.competitor_tag}`;
+            await competitorStore.getAllCompetitors(competitorTag, (data) => {  
+                data.forEach(element => {
+                    competitors.value.push(element);
+                });
+                globalComparison();
+            });
+            websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)]
+        }
     });
-    companiesStore.calculateRating(establishment.value.reviews, (rating) =>{
-        all_items.value[0].value = rating;
-    });
-    const competitorTag = `competitor_tag=${company.competitor_tag}`;
-    await competitorStore.getAllCompetitors(competitorTag, (data) => {  
-      data.forEach(element => {
-        competitors.value.push(element);
-      });
-      globalComparison();
-    });
-    websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)]
- });
+}
 })
+
 
 const reloadComparison = async (competitor) => {
     selectedCompetitors.value = competitor.name;
-
     plotdata.value = [];
-    
     comparisonData.value = [establishment.value, competitor];
     _comparisonData  = [establishment.value, competitor];
     
@@ -555,7 +557,7 @@ const chart__height2 = ref(200);
 // });
 
 const seeMoreReviews = ()=>{
-    router.push(`/companies/${route.params.id}/reviews`)
+    router.push(`/companies/${route.params.id}/reviews`);
 }
 
 let updatePage = function(pageNumber){
@@ -566,14 +568,14 @@ let updatePage = function(pageNumber){
 let updateVisibleData = function(_data){
     let data = paginationConfig.value;
 
-    paginationConfig.value.data = _data.slice(data.current*data.size, (data.current * data.size) + data.size)
+    paginationConfig.value.data = _data.slice(data.current*data.size, (data.current * data.size) + data.size);
                 
     if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
         updatePage( paginationConfig.value.current -1);
     }
     visibleData.value = paginationConfig.value.data;
-    reviews_loader.value = visibleData.value.length>0?false:true;
-    setTimeout(() => reviews_loader.value = false, 20000);
+    // reviews_loader.value = visibleData.value.length>0?false:true;
+    // setTimeout(() => reviews_loader.value = false, 2000);
 }
 
 

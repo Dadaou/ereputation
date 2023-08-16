@@ -67,19 +67,19 @@ const submit = async ()=>{
             //         }
             //     }
             // }
-            router.push({name:"Home"})
+            router.push({name:"Home"});
         } else{
             showSpinner.value = false;
             isError.value = true;
-            console.log(response)
+            console.log(response);
             if(response.status == 401){
-                notification.value.message = "Please verify your password or email!"
-                notification.value.type = "warning"
+                notification.value.message = "Please verify your password or email!";
+                notification.value.type = "warning";
             }
 
             if(response.status == 500){
-                notification.value.message = "No network!"
-                notification.value.type = "error"
+                notification.value.message = "Oops! Something unexpected happened. A server connection issue";
+                notification.value.type = "error";
             }
         }
     })

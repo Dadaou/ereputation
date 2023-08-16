@@ -101,7 +101,7 @@
                 </div> 
             </template>
         </head-component>
-        <div class="container client__container">
+        <div class="container client__container" v-if="userStore.user.customer !== null">
             <div class="search__icon">
                 <i class="uil uil-building"></i>
                 <div class="line"></div>
@@ -113,67 +113,105 @@
                 Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, no companies found yet.
             </div>
             <div class="society__list" v-if="companiesStore.establishments.length>0">
-                <div class="society__info__container" v-for="company in companiesStore.establishments" @click="$router.push(`/companies/${company.id}`)">
-                    <div class="society__item">
+                <div class="list__item" v-for="company in companiesStore.establishments">
+                    <div class="society__info__container">
                         <swiper class="society__logo" :modules="[Virtual]" v-if="company.media.length > 0" :slides-per-view="1" :space-between="10" :virtual="true">
-                                <swiper-slide v-show="mediaStore.isImageFile(image.url_source)" v-for="image in company.media">
-                                    <img :src="image.url_source">
-                                </swiper-slide>
+                                    <swiper-slide v-show="mediaStore.isImageFile(image.url_source)" v-for="image in company.media">
+                                        <img :src="image.url_source">
+                                    </swiper-slide>
                         </swiper>
-                        <img v-else class="society__logo" :src="'https://images.pexels.com/photos/7070/space-desk-workspace-coworking.jpg'" alt="">
-                        <div class="society__main__info">
-                        <div class="item__head">
-                                <div class="society__info">
-                                    <a :href="company.websites[0].url" v-if="company.websites.length > 0"><label class="society__name">{{ company.name }}</label></a>
-                                    <label class="society__name" v-else>{{ company.name }}</label>
-                                    <div class="society__category">
-                                        <i :class="['uil', company.category=='Restaurant'?'uil-restaurant':'', company.category=='Hotel'?'uil-bed-double':'', company.category=='Residence'?'uil-home':'']"></i>
-                                        <span>{{ company.category }}</span>
-                                    </div>
-                                    <div class="society__location">
-                                        <i class="uil uil-location-point"></i>
-                                        <span>{{ company.address1 }}, {{ company.city }}</span>
-                                    </div>
-
-                                </div>
-                                <!-- <div class="society__actions">
-                                </div> -->
-                            </div>
-                        </div>
-                    </div>
-                    <RatingComponent class="rating__content" :reviews="company.reviews.length" :rating="companiesStore.calculateRatingV2(company.reviews)"/>
-               </div>
-               </div>
-                <div v-else class="society__list">
-                    <div class="society__info__container  animate-pulse" v-for="index in userStore.user.customer.establishments.length">
-                    <div class="society__item">
-                        <div role="status" class="society__logo flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                        <div v-else role="status" class="society__logo flex items-center justify-center max-w-sm bg-gray-300 rounded-sm">
                             <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                             <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
                             <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
                         </svg>
-                            <span class="sr-only">Loading...</span>
                         </div>
-                        <div class="society__main__info">
-                        <div class="item__head">
-                                <div class="society__info">
-                                    <label class="society__name">
-                                        <div class="h-2 bg-gray-300 rounded-full dark:bg-gray-600 w-64 mb-2.5"></div>
-                                    </label>
-                                    <div class="society__category">
-                                        <div class="w-48 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
-                                    </div>
-                                    <div class="society__location">
-                                        <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
-                                        <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                        <div class="list__main__content">
+                            <div class="list__main__info">
+                                <div class="society__item">
+                                    <div class="society__main__info">
+                                            <div class="item__head">
+                                                <div class="society__info">
+                                                    <a :href="company.websites[0].url" v-if="company.websites.length > 0"><label class="society__name">{{ company.name }}</label></a>
+                                                    <label class="society__name" v-else>{{ company.name }}</label>
+                                                    <div class="society__category">
+                                                        <i :class="['uil', company.category=='Restaurant'?'uil-restaurant':'', company.category=='Hotel'?'uil-bed-double':'', company.category=='Residence'?'uil-home':'']"></i>
+                                                        <span>{{ company.category }}</span>
+                                                    </div>
+                                                    <div class="society__location" v-if="company.address1 != null && company.city !=null">
+                                                        <i class="uil uil-location-point"></i>
+                                                        <span>{{ company.address1 }}, {{ company.city }}</span>
+                                                    </div>
+                                                    <!-- <div class="society__country" v-if="company.country != null">
+                                                        <i class="uil uil-map"></i>
+                                                        <span>{{ company.country }}</span>
+                                                    </div> -->
+                                                </div>
+                                            </div>
                                     </div>
                                 </div>
+                                <RatingComponent class="rating__content" :reviews="company.reviews.length" :rating="companiesStore.calculateRatingV2(company.reviews)"/>
+                            </div>
+                            <div class="list__actions">
+                                    <!-- <button class="btn" @click="$router.push(`/companies/${company.id}`)">More details</button> -->
+                                    <button class="btn" @click="goToCompany(company)">More details</button>
                             </div>
                         </div>
                     </div>
-                    <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
-               </div>
                 </div>
+               </div>
+
+                <div v-else class="society__list">
+                <div class="list__item" v-for="index in userStore.user.customer.establishments.length">
+                    <div class="society__info__container  animate-pulse">
+                        <div role="status" class="society__logo flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
+                                <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
+                            </svg>
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <div class="list__main__content">
+                            <div class="list__main__info">
+                                <div class="society__item">
+                                    <div class="society__item">
+                                        <div class="society__main__info">
+                                        <div class="item__head">
+                                                <div class="society__info">
+                                                    <label class="society__name">
+                                                        <div class="h-2 bg-gray-300 rounded-full dark:bg-gray-600 w-64 mb-2.5"></div>
+                                                    </label>
+                                                    <div class="society__category">
+                                                        <div class="w-48 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                                                    </div>
+                                                    <div class="society__location">
+                                                        <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                                                        <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
+                            </div>
+                            <div class="list__actions">
+                                <div class="h-7 bg-gray-300 dark:bg-gray-700 w-20"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               </div>
+        </div>
+        <div class="container client__container" v-else>
+            <div class="search__icon">
+                <i class="uil uil-envelope-alt"></i>
+                <div class="line"></div>
+            </div>
+            <div class="app__message">
+                <p>Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, It seems you are not yet an active customer. To proceed further and access our services, kindly get in touch with our admin team. They will assist you in finalizing your registration and become a valued customer.</p>
+                <button class="btn" @click="signOut">Disconnect</button>        
+            </div>
         </div>
      </div>   
 </template>
@@ -181,9 +219,11 @@
 <script setup>
 import {ref} from 'vue'
 import { loadFull } from "tsparticles";
+import { useRouter } from "vue-router";
 import { useUserStore } from "@Stores/user.js";
 import { useCompanyStore } from "@Stores/company.js";
 import { useMediaStore } from "@Stores/media.js";
+import { useAppStore } from "@Stores/index.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingComponent from '@Components/utils/RatingComponent.vue'; 
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -192,8 +232,10 @@ import { Virtual } from 'swiper/modules';
 // Import Swiper styles
 import 'swiper/css';
 
+const router = useRouter();
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
+const appStore = useAppStore();
 const mediaStore = useMediaStore();
 
 const particlesInit = async engine => {
@@ -210,7 +252,21 @@ const page=ref({
     icon: "uil-estate",
 });
 
-const isActive = ref('all');
+const signOut = () => {
+    userStore.signOut();
+    userStore.authenticated = false;
+    if(userStore.authenticated == false) router.push({name:"Login"});
+}
+
+const goToCompany = (establishment) => {
+    appStore.isLoading = true;
+    router.push({
+        name:'Company', 
+        params: {
+            id: establishment.id
+        },
+    })
+}
 </script>
 
 <style scoped>
@@ -274,14 +330,14 @@ const isActive = ref('all');
 
 .client__container{
     position: relative;
-    top:4rem;
+    top:1rem;
     height: inherit;
     display: flex;
-    gap:2rem;
+    gap:1rem;
     width: 50%;
     display: flex;
     flex-direction: column;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .search__icon i{
@@ -307,62 +363,51 @@ const isActive = ref('all');
     font-weight: bold;
 }
 
-.client__container__head ul{
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    gap:2rem;
-    margin-top:20px;
-    border-bottom: 2px solid var(--light-color-bg1);
-    width: 100%;
-}
-
-.client__container__head li{
-    cursor: pointer;
-}
-
-.client__container__head li.active{
-    border-bottom: 3px solid var(--color-danger);
-}
-
 .society__list{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 80%;
+    width: 85%;
     align-self: center;
     transform: var(--transition)
 }
 
-.society__item .society__logo{
-   width: 100px;
-   height: inherit;
-   z-index: 0;
-}
-
-.society__info__container {
-    display: flex;
-    gap: 2rem;
-    font-size: 15px;
+.list__item{
     padding: 10px;
     border-radius: 5px;
     flex-basis: 50%;
     margin-bottom: 10px;
-    color: var(--color-bg2);
-    cursor: pointer;
     border: 2px solid var(--light-color-bg1);
     transition: var(--transition);
-    height: 75px;
+}
+
+.society__info__container{
+    display: flex;
+    gap: 1rem;
+    font-size: 15px;
+    color: var(--color-bg2);
+    justify-content: space-between;
+}
+
+.society__logo{
+   width: 200px;
+   height: 95px;
+   z-index: 0;
+   object-fit: cover;
+}
+
+.list__main__content{
+    width: 600px;
+}
+
+.list__main__info{
+    display: flex;
     justify-content: space-between;
 }
 
 .society__item {
     display: flex;
     gap: 2rem;
-}
-
-.society__info__container:hover {
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 .society__main__info{
@@ -396,7 +441,42 @@ const isActive = ref('all');
     align-self: center;
 }
 
-/* For tablets */
+.list__actions{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.list__actions button{
+    border: 1px solid var(--light-color-bg1);
+    transition: var(--transition);
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 2px 6px;
+}
+
+.app__message p{
+    margin: 15px auto;
+}
+.app__message button{
+    border: 1px solid var(--color-danger);
+    transition: var(--transition);
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 2px 6px;
+    color: var(--color-danger);
+}
+
+.app__message button:hover{
+    background-color: var(--color-danger);
+    color: white;
+}
+
+.list__actions button:hover{
+    background-color: var(--color-primary);
+}
+
 @media screen and (max-width:1140px) {
     .society__list{
         width: 90% !important;
@@ -431,5 +511,4 @@ const isActive = ref('all');
       width: var(--container-width-md) !important;
     }
 }
-
 </style>
