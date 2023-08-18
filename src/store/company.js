@@ -129,7 +129,8 @@ export const useCompanyStore = defineStore("company", {
           companies.forEach(company => {
             let reviews = this.getReviewsBetweenDates(company.reviews, moment(quarter.start).format('YYYY-M-DD'), moment(quarter.end).format('YYYY-M-DD'));
             let key = company.name;
-            let value = reviews.length;
+            // let value = reviews.length;
+            let value = Number(this.calculateRatingV2(reviews));
             review[key] = value;
           });
           result.push(review);
@@ -143,7 +144,8 @@ export const useCompanyStore = defineStore("company", {
           companies.forEach(company => {
             let reviews = this.getReviewsBetweenDates(company.reviews, moment(semester.start).format('YYYY-M-DD'), moment(semester.end).format('YYYY-M-DD'));
             let key = company.name;
-            let value = reviews.length;
+            // let value = reviews.length;
+            let value = Number(this.calculateRatingV2(reviews));
             review[key] = value;
           });
           result.push(review);
@@ -157,7 +159,8 @@ export const useCompanyStore = defineStore("company", {
             companies.forEach(company => {
               let reviews = this.getReviewsByMonth(company.reviews, moment(month).format('MMM-YY'));
               let key = company.name;
-              let value = reviews.length;
+              // let value = reviews.length;
+              let value = Number(this.calculateRatingV2(reviews));
               review[key] = value;
             });
             result.push(review);
@@ -172,7 +175,8 @@ export const useCompanyStore = defineStore("company", {
           companies.forEach(company => {
             let reviews =  this.getReviewsBetweenDates(company.reviews, week.begin, week.end);
             let key = company.name;
-            let value = reviews.length;
+            // let value = reviews.length;
+            let value = Number(this.calculateRatingV2(reviews));
             review[key] = value;
           });
           result.push(review);
@@ -196,7 +200,8 @@ export const useCompanyStore = defineStore("company", {
             let data = this.getReviewsBySource(company.reviews, website.toLowerCase());
             let reviews = this.getReviewsBetweenDates(data, moment(quarter.start).format('YYYY-M-DD'), moment(quarter.end).format('YYYY-M-DD'));
             let key = website;
-            let value = reviews.length;
+            // let value = reviews.length; //this.calculateRatingV2(lastMonthReviews[month]);
+            let value = Number(this.calculateRatingV2(reviews));
             review[key] = value;
           });
           result.push(review);
@@ -211,7 +216,8 @@ export const useCompanyStore = defineStore("company", {
             let data = this.getReviewsBySource(company.reviews, website.toLowerCase());
             let reviews = this.getReviewsBetweenDates(data, moment(semester.start).format('YYYY-M-DD'), moment(semester.end).format('YYYY-M-DD'));
             let key = website;
-            let value = reviews.length;
+            // let value = reviews.length;
+            let value = Number(this.calculateRatingV2(reviews));
             review[key] = value;
           });
           result.push(review);
@@ -226,7 +232,8 @@ export const useCompanyStore = defineStore("company", {
               let data = this.getReviewsBySource(company.reviews, website.toLowerCase());
               let reviews = this.getReviewsByMonth(data, moment(month).format('MMM-YY'));
               let key = website;
-              let value = reviews.length;
+              // let value = reviews.length;
+              let value = Number(this.calculateRatingV2(reviews));
               review[key] = value;
             });
             result.push(review);
@@ -241,7 +248,8 @@ export const useCompanyStore = defineStore("company", {
             let data = this.getReviewsBySource(company.reviews, website.toLowerCase());
             let reviews =  this.getReviewsBetweenDates(data, week.begin, week.end);
             let key = website;
-            let value = reviews.length;
+            // let value = reviews.length;
+            let value = Number(this.calculateRatingV2(reviews));
             review[key] = value;
           });
           result.push(review);

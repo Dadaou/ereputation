@@ -35,7 +35,7 @@
                 <li class="w-full mr-3">
                     <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                             selectedTimePeriod = timePeriod
-                    }" :default="timePeriods[0]"/>
+                    }" :default="timePeriods[2]"/>
                 </li>
                 <li class="w-full mr-3">
                     <VueDatePicker v-model="date2" range :month-change-on-scroll="false" :format="format2"/>
@@ -90,7 +90,7 @@ const props = defineProps({
     },
     labels: {
         type: Object,
-        default: {x: "Months", y: "Reviews"}
+        default: {x: "Months", y: "Rating"}
     },
     establishment: Object,
     companies: Array,
@@ -98,7 +98,7 @@ const props = defineProps({
 });
 
 const showModal = ref(false);
-const comparisonByEstablishments = ref(false);
+const comparisonByEstablishments = ref(true);
 const companiesStore = useCompanyStore();
 let selectedTimePeriod = ref('');
 let timePeriods = ref(['Weeks','Months', 'Quarters', 'Semesters']);
@@ -181,7 +181,7 @@ watch(selectedTimePeriod, () => {
 });
 
 watch(comparisonByEstablishments, () => {
-    console.log(selectedCompany.value);
+    console.log(comparisonByEstablishments.value);
    if(comparisonByEstablishments.value == true){
     viewData(selectedTimePeriod.value, startDate, endDate);
    }else{
