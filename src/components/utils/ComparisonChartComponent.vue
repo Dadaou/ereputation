@@ -1,10 +1,10 @@
 <template>
-<div class="establishments__comparison">
+<div class="establishments__comparison" ref="el">
     <ul class="filter__menu">
-      <li @click="viewFullscreen()" > <i class="uil uil-expand-arrows-alt"></i> View fullscreen</li>
+      <li @click="viewFullscreen()" > <i class="uil uil-expand-arrows-alt"></i> Expand</li>
     </ul>
-    <GroupedBarChart :plot-data="props.data" x-key="name"
-    :width="width" :height="height" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="selectedTimePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+    <GroupedBarChart class="chart" :plot-data="props.data" x-key="name"
+    :width="chartWidth - 25" :height="height - 100" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="selectedTimePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
     </GroupedBarChart>
     <ModalComponent :showModal="showModal" @close="showModal=false">
         <template #content>
@@ -47,9 +47,9 @@
             <!-- <div class="modal__filter">
                 
             </div> -->
-            <div class="modal__container">
+            <div class="modal__container" ref="el2">
                 <GroupedBarChart :plot-data="plotData" x-key="name"
-                        :width="width + 400" :height="height + 100" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="props.labels.x" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+                        :width="chartModalWidth" :height="height" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="props.labels.x" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
                 </GroupedBarChart>
                 <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
                 </BaseLegend>
@@ -62,9 +62,9 @@
 import ModalComponent from '@Components/utils/ModalComponent.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import moment from 'moment';
-import {ref, watch, onUpdated, computed} from 'vue';
-import { useWindowSize } from '@vueuse/core';
+import {ref, watch, computed, onUpdated} from 'vue';
 import { useCompanyStore } from "@Stores/company.js";
+import { useResizeObserver } from '@vueuse/core';
 
 const props = defineProps({
     data:{
@@ -232,6 +232,29 @@ onUpdated(() => {
             }
         }
     } 
+})
+
+const el = ref(null);
+const el2 = ref(null);
+const chartWidth = ref(0);
+const chartModalWidth = ref(0);
+
+onUpdated(()=>{
+    chartWidth.value = (el.value != null && el.value != undefined)?el.value.offsetWidth:chartWidth.value;
+    chartModalWidth.value = (el2.value != null && el2.value != undefined)?el2.value.offsetWidth:chartModalWidth.value;
+})
+
+useResizeObserver(el, (entries) => {
+      const entry = entries[0]
+      const { width } = entry.contentRect;
+      console.log(width);
+      chartWidth.value = width;
+})
+
+useResizeObserver(el2, (entries) => {
+      const entry = entries[0]
+      const { width } = entry.contentRect;
+      chartModalWidth.value = width;
 })
 
 </script>

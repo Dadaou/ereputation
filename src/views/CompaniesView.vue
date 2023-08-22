@@ -116,11 +116,11 @@
                 <div class="list__item" v-for="company in companiesStore.establishments">
                     <div class="society__info__container">
                         <swiper class="society__logo" :modules="[Virtual]" v-if="company.media.length > 0" :slides-per-view="1" :space-between="10" :virtual="true">
-                                    <swiper-slide v-show="mediaStore.isImageFile(image.url_source)" v-for="image in company.media">
-                                        <img :src="image.url_source">
-                                    </swiper-slide>
+                            <swiper-slide v-show="mediaStore.isImageFile(image.url_source)" v-for="image in company.media">
+                                <img :src="image.url_source">
+                            </swiper-slide>
                         </swiper>
-                        <div v-else role="status" class="society__logo flex items-center justify-center max-w-sm bg-gray-300 rounded-sm">
+                        <div v-else role="status" class="society__logo bg-gray-300 rounded-sm">
                             <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                             <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
                             <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
@@ -259,7 +259,7 @@ const signOut = () => {
 }
 
 const goToCompany = (establishment) => {
-    appStore.isLoading = true;
+    // appStore.isLoading = true;
     router.push({
         name:'Company', 
         params: {
@@ -367,7 +367,7 @@ const goToCompany = (establishment) => {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 85%;
+    width: 100%;
     align-self: center;
     transform: var(--transition)
 }
@@ -375,7 +375,7 @@ const goToCompany = (establishment) => {
 .list__item{
     padding: 10px;
     border-radius: 5px;
-    flex-basis: 50%;
+    width: 100%;
     margin-bottom: 10px;
     border: 2px solid var(--light-color-bg1);
     transition: var(--transition);
@@ -387,6 +387,8 @@ const goToCompany = (establishment) => {
     font-size: 15px;
     color: var(--color-bg2);
     justify-content: space-between;
+    flex-direction: row;
+    transition: var(--transition);
 }
 
 .society__logo{
@@ -394,10 +396,17 @@ const goToCompany = (establishment) => {
    height: 95px;
    z-index: 0;
    object-fit: cover;
+   transform: var(--transition);
+}
+
+.society__logo img{
+  height: 100%;
+  width: 100%;
 }
 
 .list__main__content{
     width: 600px;
+    transition: var(--transition);
 }
 
 .list__main__info{
@@ -453,6 +462,7 @@ const goToCompany = (establishment) => {
     font-size: 13px;
     font-weight: 500;
     padding: 2px 6px;
+    transition: var(--transition);
 }
 
 .app__message p{
@@ -477,38 +487,101 @@ const goToCompany = (establishment) => {
     background-color: var(--color-primary);
 }
 
-@media screen and (max-width:1140px) {
-    .society__list{
-        width: 90% !important;
+@media screen and (max-width:1163px) {
+    .client__container{
+      width: 55% !important;
     }
+}
 
-    .client__container__head{
-        font-size: 18px;
+@media screen and (max-width:1163px) {
+    .client__container{
+      width: 60% !important;
     }
 }
 
 @media screen and (max-width:1024px) {
     .client__container{
         position: relative;
-        top: 11rem !important;
+        top: 9rem !important;
     }
 }
 
-@media screen and (max-width:950px) {
-    .society__list{
-        width: 100% !important;
-    }
-}
-
-@media screen and (max-width:800px) {
+@media screen and (max-width:964px) {
     .client__container{
-      width: var(--container-width-lg) !important;
+      width: 65% !important;
     }
 }
 
-@media screen and (max-width:700px) {
+@media screen and (max-width:884px) {
+    .client__container{
+      width: 70% !important;
+    }
+    .client__container__head{
+        font-size: 18px;
+    }
+}
+
+@media screen and (max-width:779px) {
+    .client__container{
+      width: 80% !important;
+    }
+
+    .client__container__head{
+        font-size: 16px;
+    }
+
+    .society__item label{
+        font-size: 13px;
+    }
+
+    .society__item div{
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width:670px) {
     .client__container{
       width: var(--container-width-md) !important;
+    }
+}
+
+@media screen and (max-width:600px) {
+    .client__container__head{
+        font-size: 15px;
+    }
+
+    .society__info__container{
+        flex-direction: column;
+    }
+
+    .list__main__content{
+        width: inherit;
+    }
+
+    .society__logo{
+        width: 100%;
+        height: 150px;
+    }
+
+    .list__actions button{
+        flex-grow: 1;
+        margin: 10px 0px 0px 0px;
+        padding: 5px 0px;
+        background-color: var(--color-primary);
+        color: white;
+    }
+
+    .society__location{
+        display: flex;
+    }
+    .society__location span{
+        display: block;
+        flex-basis: 225px;
+        line-height: 1.2;
+    }
+
+    .society__item label{
+        font-size: 14px;
     }
 }
 </style>

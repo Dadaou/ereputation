@@ -1,6 +1,6 @@
 <template>
 <div :class="['min-h-screen mt-2 mb-2', props.showTitle==true?'p-10':'']" ref=target>
-  <div class="max-w-md mx-auto">
+  <div class="mx-auto">
     <label for="select" class="font-semibold block" v-if="props.showTitle==true">{{ title }}</label>
     <div class="relative" v-if="isDataObject">
       <div class="h-10 bg-white flex border border-gray-200 rounded items-center">
@@ -148,5 +148,11 @@ onBeforeMount(()=>{
 
 .list{
     z-index:3;
+}
+
+@media screen and (max-width:1075px) {
+  a, input{
+    font-size: 14px !important;
+  }
 }
 </style>

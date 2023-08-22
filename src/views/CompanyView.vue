@@ -5,8 +5,9 @@
             <BreadcrumbComponent :data="breadcrumbData"/>
         </div>
         <div class="app__container">
+            
             <div class="left__side">
-                <div class="head">
+                <div class="head dashboard">
                     <div class="app__title">
                      <h1>Dashboard</h1>
                     </div>
@@ -47,15 +48,6 @@
                 </div>
                 <BaseLegend v-if="reviews_loader == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
                 </BaseLegend>
-                
-                <div class="rating__statistics">
-                    <div class="rating__customers">
-                        <div class="title">Rating by Customers</div>
-                        <div class="chart__rating">
-                            <Line :data="chartData" :options="chartConfig.options" />
-                        </div>
-                    </div>
-                </div>
                 <div class="head">
                     <div class="app__title">
                        <h2>Last reviews</h2>
@@ -92,10 +84,71 @@
                     </aside> 
                 </div> 
             </div>
+            <div class="tablet_mobile__filter">
+                <DropdownComponent class="dropdown" :showTitle="false" title="Compare to" placeholder="Select a competitor" :data="computedCompetitors" @submit="(competitor)=>{
+                        selectedCompetitors = competitor.name
+                        if(competitor.name == computedCompetitors[0].name){
+                            globalComparison();
+                        }else{
+                            reloadComparison(competitor);
+                        }
+                    }" :defaultObj="computedCompetitors[0]" :isDataObject="true"/>
+                    <DropdownComponent :showTitle="false" class="dropdown" title="Filter by website" placeholder="Select a website" :data="websites" @submit="(website)=>{
+                        selectedWebsites = website
+                        if(website == websites[0]){
+                            globalComparison();
+                        }else{
+                            reloadComparisonByWebsite(website);
+                        }
+                    }" :default="websites[0]"/>
+                    <VueDatePicker v-model="date2" range :month-change-on-scroll="false" :format="format2"/>
+                    <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
+                                selectedTimePeriod = timePeriod
+                        }" :default="timePeriods[0]"/>
+            </div>
+            <div class="tablet_mobile__head">
+                <div class="establishment__info">
+                        <label class="society__name">{{ establishment.name }}</label>
+                        <div class="society__category">
+                            <i :class="['uil', establishment.category=='Restaurant'?'uil-restaurant':'', establishment.category=='Hotel'?'uil-bed-double':'', establishment.category=='Residence'?'uil-home':'']"></i>
+                                <span>{{ establishment.category }}</span>
+                        </div>
+                        <div class="society__country" v-if="establishment.country != null">
+                                <i class="uil uil-map"></i>
+                                <span>{{ establishment.country }}</span>
+                        </div> 
+                        <div class="society__location">
+                                <i class="uil uil-location-point"></i>
+                                <span>{{ establishment.address1 }}, {{ establishment.city }}</span>
+                         </div>
+                         <div class="society__rating">
+                                <i class="uil uil-favorite"></i>
+                                <span>{{ all_items[0].value  }}</span>
+                         </div>
+                         <div class="society__reviews">
+                            <i class="uil uil-comment-alt"></i>
+                                <span>{{ all_items[1].value  }}</span>
+                         </div>
+                         <div class="society__reviews">
+                            <i class="uil uil-building"></i>
+                            <span>{{ all_items[2].value  }} competitors</span>
+                         </div>
+                    </div>
+                <div class="photo">
+                    <img v-if="media.length > 0" :src="media[0]" alt="" />
+                    <div v-else role="status" class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
+                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
+                        </svg>
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                </div>
+            </div>
             <div class="right__side">
-                <div class="establishment max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                     <a href="#">
-                        <img v-if="media.length > 0" class="rounded-t-lg" :src="media[0]" alt="" />
+                        <img v-if="media.length > 0" :src="media[0]" alt="" />
                         <div v-else role="status" class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                             <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                             <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
@@ -115,7 +168,7 @@
                                     <span>{{ establishment.address1 }}, {{ establishment.city }}</span>
                             </div> 
                     </div>
-                    <DropdownComponent title="Compare to" placeholder="Select a competitor" :data="computedCompetitors" @submit="(competitor)=>{
+                    <DropdownComponent class="dropdown" title="Compare to" placeholder="Select a competitor" :data="computedCompetitors" @submit="(competitor)=>{
                         selectedCompetitors = competitor.name
                         if(competitor.name == computedCompetitors[0].name){
                             globalComparison();
@@ -123,7 +176,7 @@
                             reloadComparison(competitor);
                         }
                     }" :defaultObj="computedCompetitors[0]" :isDataObject="true"/>
-                    <DropdownComponent title="Filter by website" placeholder="Select a website" :data="websites" @submit="(website)=>{
+                    <DropdownComponent class="dropdown" title="Filter by website" placeholder="Select a website" :data="websites" @submit="(website)=>{
                         selectedWebsites = website
                         if(website == websites[0]){
                             globalComparison();
@@ -191,6 +244,7 @@ import {ref, reactive, watch, onBeforeMount, onUpdated, computed} from 'vue';
 import { useCompetitorStore } from "@Stores/competitors.js";
 import { useUserStore } from "@Stores/user.js";
 import { useCompanyStore } from "@Stores/company.js";
+import { useAppStore } from "@Stores/index.js";
 import { useRoute, useRouter } from "vue-router";
 import { useWindowSize } from '@vueuse/core';
 import moment from 'moment';
@@ -244,6 +298,7 @@ let selected_date = reactive(moment());
 const competitorStore = useCompetitorStore();
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
+const appStore = useAppStore();
 let showCompetitors = ref(false);
 let showWebsites = ref(false);
 let selectedCompetitors = ref('Global');
@@ -399,6 +454,7 @@ const globalComparison = async () => {
 }
 onBeforeMount(async () => {
 const companyId = route.params.id;
+// appStore.isLoading = true;
 if(userStore.user.customer !==null){
     userStore.user.customer.establishments.forEach(async company => {
         if(company.id == companyId){
@@ -484,78 +540,6 @@ const chart__height = ref(300);
 const chart__width2 = ref(300);
 const chart__height2 = ref(200);
 
-// onBeforeMount(() => {
-//     if(width.value <= 600){
-//         chart__width.value = 300;
-//         chart__height.value = 200;
-
-//         chart__width2.value = 300;
-//         chart__height2.value = 150;
-//     }
-
-//     if(width.value <  1287){
-//         chart__width.value = 600;
-//         chart__width2.value = 250;
-//         chart__height2.value = 150;
-//     }
-
-//    if(width.value <  1075){
-//     chart__width.value = 550;
-//    }
-
-//    if(width.value <  1025){
-//     chart__width.value = 500;
-//    }
-
-//    if(width.value <  450){
-//     chart__width.value = 350;
-//     chart__height.value = 200;
-//     chart__width2.value = 200;
-//    }
-
-//    if(width.value <  400){
-//     chart__width.value = 300;
-//     chart__height.value = 200;
-//    }
-// });
-
-// watch([width], () => {
-//    if(width.value <  1287){
-//     chart__width.value = 600;
-//     chart__width2.value = 250;
-//     chart__height2.value = 150;
-//    }
-
-//    if(width.value <  1075){
-//     chart__width.value = 550;
-//    }
-
-//    if(width.value <  1025){
-//     chart__width.value = 500;
-//    }
-
-//    if(width.value <  550){
-//     chart__width.value = 400;
-//     chart__height.value = 200;
-//    }
-
-//    if(width.value <  450){
-//     chart__width.value = 350;
-//     chart__height.value = 200;
-//     chart__width2.value = 200;
-//    }
-
-//    if(width.value <  400){
-//     chart__width.value = 300;
-//     chart__height.value = 200;
-//    }
-
-//    if(width.value <  350){
-//     chart__width.value = 250;
-//     chart__height.value = 180;
-//    }
-// });
-
 const seeMoreReviews = ()=>{
     router.push(`/companies/${route.params.id}/reviews`);
 }
@@ -613,6 +597,9 @@ const viewData = (timePeriod, startDate, endDate, data) => {
 @tailwind components;
 @tailwind utilities;
 
+*{
+    transition: var(--transition);
+}
 .app__container{
     margin-top: 5rem;
     min-height: 30rem;
@@ -737,7 +724,7 @@ const viewData = (timePeriod, startDate, endDate, data) => {
 }
 
 .left__side{
-    flex-basis: 1300px;
+    width: 1300px;
     padding: 50px 5px;
 }
 
@@ -819,7 +806,7 @@ const viewData = (timePeriod, startDate, endDate, data) => {
 }
 
 .right__side{
-    flex-basis: 500px;
+    width: 500px;
     padding: 50px 0px;
 }
 
@@ -842,17 +829,39 @@ const viewData = (timePeriod, startDate, endDate, data) => {
     margin: 5px 0;
 }
 
-/* For tablets */
+.tablet_mobile__head, .tablet_mobile__filter{
+    display: none;
+}
+
+.society__location{
+    display: flex;
+}
+.society__location span{
+    display: block;
+    flex-basis: 225px;
+    line-height: 1.2;
+}
+
+@media screen and (max-width:1400px) {
+  .app__container{
+    width: var(--container-width-md);
+  }
+
+  .breadcrumb__container{
+        width: var(--container-width-md);
+    }
+}
+
 @media screen and (max-width:1287px) {
   .counter{
     gap: 2rem !important;
   }
   .left__side{
-    flex-basis: 1000px !important;
+    width: 1000px !important;
   }
   
   .right__side{
-    flex-basis: 400px !important;
+    width: 400px !important;
   }
 }
 
@@ -862,17 +871,7 @@ const viewData = (timePeriod, startDate, endDate, data) => {
   }
 
   .right__side{
-    flex-basis: 300px !important;
-  } 
-}
-
-@media screen and (max-width:1075px) {
-  .counter{
-    gap: 0.5rem !important;
-  }
-  
-  .right__side{
-    flex-basis: 250px !important;
+    width: 300px !important;
   } 
 }
 
@@ -883,93 +882,135 @@ const viewData = (timePeriod, startDate, endDate, data) => {
     }
 
     .right__side{
-     flex-basis: 250px !important;
+     width: 250px !important;
     } 
 }
 
 @media screen and (max-width: 975px) {
-    .right__side{
-        display: none;
-    }
+   .app__container{
+    flex-direction: column-reverse;
+    width: 95% !important;
+    justify-content: center;
+    align-items: center;
+   }
+   .left__side{
+    width: inherit !important;
+   }
 
-    .filter__content{
-        border: none;
-    }
+   .photo{
+    flex-basis: 250px;
+   }
 
-    .filter__container{
+   .photo div{
+    height: 100%;
+   }
+
+   .photo img{
+    height: 100%;
+    width: 100%;
+   }
+   .dashboard__content, .dashboard, .right__side{
+    display: none !important;
+   }
+
+   .tablet_mobile__head{
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
+        margin: auto;
+        margin-top: 50px;
+        width: inherit;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        border: 1px solid var(--light-color-bg2);
+        border-radius: 5px;
+        padding: 15px;
+        font-size: 14px;
+    }
+
+    .tablet_mobile__head label{
+        font-size: 17px !important;
+    }
+
+    .tablet_mobile__head span{
+        font-weight: 500;
+        color: var(--color-bg2);
+    }
+
+    .tablet_mobile__filter{
+        display: flex;
+        width: inherit;
         align-items: center;
-        width: 100% !important;
+        gap: 1rem;
+        padding: 5px 15px;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        border-radius: 5px;
     }
 
-    .rating__statistics{
-       display: block;
-    }
-
-    .competitors{
-        display: none !important;
+    .tablet_mobile__filter *{
+        flex-basis: 200px;
     }
 }
 
-@media screen and (max-width: 675px) {
-   .left__side{
-    flex-basis: 600px !important;
-   }
-
-   .app__container{
-    width: var(--container-width-md) !important;
-   }
-}
-
-@media screen and (max-width: 550px) {
-   .left__side{
-    flex-basis: 500px !important;
-   }
-    .dashboard__content{
-        gap: 0.5rem !important;
-        width: 100%!important;
+@media screen and (max-width:800px) {
+    .tablet_mobile__head{
+        font-size: 13px !important;
     }
 
-   .counter{
-    /* flex-grow: 0 !important; */
-    margin-top: 15px;
-   }
+    .tablet_mobile__head label{
+        font-size: 15px !important;
+    }
 
-   .app__container{
-    width: var(--container-width-sm) !important;
-   }
+    .tablet_mobile__filter{
+       gap: 0.25rem;
+    }
+}
 
-   .filter__container{
+@media screen and (max-width:800px) {
+    .photo{
+       flex-basis: 225px !important;
+    }
+}
+
+@media screen and (max-width:675px) {
+    .tablet_mobile__head{
+        font-size: 12px !important;
+        padding: 10px;
+    }
+
+    .photo{
+       flex-basis: 210px !important;
+    }
+
+    .tablet_mobile__head label{
+        font-size: 14px !important;
+    }
+}
+
+@media screen and (max-width:625px) {
+    .tablet_mobile__filter{
        flex-direction: column;
+       padding: 5px 0px !important;
     }
 
-    .rating__statistics{
-        width: var(--container-width-sm) !important;
-        margin: auto !important;
-    }
-
-    .reviews__content{
-        width: var(--container-width-sm) !important;
-        margin: auto !important;
-    }
-
-    .rating__statistics{
-        margin-bottom: 20px !important;
+    .tablet_mobile__filter *{
+        flex-basis: inherit !important;
+        width: inherit !important;
+        justify-content: center !important;
     }
 }
 
 @media screen and (max-width:500px) {
-    .left__side{
-        flex-basis: 400px !important;
+    .tablet_mobile__head{
+        flex-direction: column-reverse;
+        gap: 1rem;
     }
 
-    .rating__statistics{
-        width: 100% !important;
+    /* .photo img{
+       height: 150px !important;
+    } */
+
+    .photo{
+       flex-basis: 150px !important;
+       height: 100px !important;
     }
 }
-.dp__theme_light {
-    --dp-primary-color: var(--color-danger) !important;
-    --dp-primary-text-color: #f8f5f5 !important;
- }
 </style>

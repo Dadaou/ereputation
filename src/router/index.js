@@ -54,7 +54,7 @@ const fetchCompetitors = async (to, from, next) => {
 //       appStore.isLoading = false;
 //     })
 //  });
- appStore.isLoading = true;
+//  appStore.isLoading = true;
  setTimeout(() => {
   appStore.isLoading = false
  }

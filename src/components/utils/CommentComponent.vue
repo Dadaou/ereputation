@@ -2,10 +2,10 @@
 <div class="reviews__content">
     <article v-for="review in reviews" v-if="reviews.length > 0">
         <div class="flex items-center review__item">
-            <div class="flex items-center mb-6 space-x-4">
-                <div class="space-y-1 font-medium dark:text-white info__reviews">
-                    <p>{{ review.author }}</p>
-                    <ul class="space-y-1 text-sm text-gray-500 dark:text-gray-400">
+            <div class="flex items-center mb-1 space-x-4">
+                <div class="review__info space-y-1 dark:text-white info__reviews">
+                    <p id="author__name">{{ review.author }}</p>
+                    <ul class="space-y-1 text-gray-500 dark:text-gray-400">
                         <li class="flex items-center"><i class="uil uil-calender"></i><span>
                             {{ moment(review.created_at).format('D MMMM YYYY')}}
                         </span></li>
@@ -22,10 +22,10 @@
                     <span v-if="review.score > 0 && review.score < 0.2 && review.comment !== ''">😕</span>
                     <span v-if="review.score == 0 || review.comment == ''">😐</span>
                 </span>
-                <p class="bg-yellow-100 text-yellow-800 text-sm font-semibold inline-flex items-center p-1.5 rounded dark:bg-yellow-200 dark:text-yellow-800">{{ formatRating(review.rating) }}</p>
+                <p class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center p-1.5 rounded dark:bg-yellow-200 dark:text-yellow-800">{{ formatRating(review.rating) }}</p>
             </div> 
         </div>
-        <div class="col-span-2 mt-6 md:mt-0">
+        <div class="col-span-2">
             <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 comment">{{ review.comment }}</p>
         </div>
         <!-- <div class="flex items-center space-x-1 mb-5">
@@ -80,6 +80,19 @@ const formatRating = (rating) => {
 @tailwind components;
 @tailwind utilities;
 
+.review__info{
+    font-weight: 600;
+}
+
+#author__name{
+    font-size: 16px;
+    color: var(--color-primary);
+}
+
+.review__info ul{
+    font-size: 13px !important;
+    color: var(--color-bg1);
+}
 .review__item{
     justify-content: space-between !important;
 }
@@ -93,5 +106,16 @@ const formatRating = (rating) => {
 
 .info__reviews i{
     margin-right: 5px;
+    color: var(--color-danger);
+}
+
+@media screen and (max-width:1225px) {
+  /* .counter{
+    gap: 1rem !important;
+  }
+
+  .right__side{
+    width: 300px !important;
+  }  */
 }
 </style>

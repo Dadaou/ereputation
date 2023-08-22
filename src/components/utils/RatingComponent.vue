@@ -29,7 +29,6 @@ const props = defineProps(['reviews', 'rating']);
     .society__rating{
         display: flex;
         align-items: center;
-        gap: 1px;
         width: 110px;
     }
 
