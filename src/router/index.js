@@ -1,12 +1,15 @@
 import { createRouter, createWebHistory} from 'vue-router';
 import LoginView from '@Views/LoginView.vue';
-import CompaniesView from '@Views/CompaniesView.vue';
-import CompanyView from '@Views/CompanyView.vue';
+import HomePageView from '@Views/HomePageView.vue';
+import EstablishmentView from '@Views/EstablishmentView.vue';
+import EstablishmentView2 from '@Views/EstablishmentView2.vue';
 import NotFoundView from '@Views/NotFoundView.vue';
 import ProfileView from '@Views/ProfileView.vue';
 import SecurityComponent from '@Components/User/SecurityComponent.vue';
 import UserDetailsComponent from '@Components/User/UserDetailsComponent.vue';
 import ReviewPageView from '@Views/ReviewPageView.vue';
+import EstablishmentDashboard from '@Views/EstablishmentDashboard.vue';
+import EstablishmentReviewPage from '@Views/EstablishmentReviewPage.vue';
 import { useCompanyStore } from "@Stores/company.js"; 
 import { useCompetitorStore } from "@Stores/competitors.js";
 import { useUserStore } from "@Stores/user.js";
@@ -41,24 +44,9 @@ const CheckAuthentication = (to, from, next) => {
     } else next('/home')
 }
 
-const fetchCompetitors = async (to, from, next) => {
-//  const companyId = to.params.id;
-//  const companiesStore = useCompanyStore();
-//  const competitorsStore = useCompetitorStore();
- const appStore = useAppStore();
- 
-//  await companiesStore.fetchOne(companyId, async (company) => {
-//     appStore.isLoading = true;
-//     const competitorTag = `competitor_tag=${company.competitor_tag}`;
-//     await competitorsStore.getAllCompetitors(competitorTag, (competitors) => {
-//       appStore.isLoading = false;
-//     })
-//  });
+const fetchCompetitors = async (to, from, next) => { 
+//  const appStore = useAppStore();
 //  appStore.isLoading = true;
- setTimeout(() => {
-  appStore.isLoading = false
- }
- , 2000);
  next();
 }
 
@@ -66,17 +54,10 @@ const fetchEstablishments = async (to, from, next) => {
   const companiesStore = useCompanyStore();
   const userStore = useUserStore();
   const appStore = useAppStore();
-  // appStore.isLoading = true;
+  appStore.isLoading = true;
   if(userStore.user.customer !== null){
     companiesStore.establishments = userStore.user.customer.establishments;
     companiesStore.nb = companiesStore.establishments.length;
-    // const establishmentIds = getIds(userStore.user.customer.establishments);  
-    // appStore.isLoading = true;
-   
-    // await companiesStore.fetchByUser(establishmentIds, (response)=>{
-    //   console.log(response)
-    //   appStore.isLoading = false;
-    // })
     setTimeout(() =>  appStore.isLoading = false, 500);
   }
   next();
@@ -102,20 +83,43 @@ const routes = [
   {
     path: '/home',
     name: 'Home',
-    component: CompaniesView,
+    component: HomePageView,
     beforeEnter: [CheckAccess, fetchEstablishments],
   },
   {
     path:'/companies/:id',
     name: 'Company',
-    component: CompanyView,
-    beforeEnter: [CheckAccess, CheckCompany, fetchCompetitors],
+    component: EstablishmentView,
+    beforeEnter: [CheckAccess, CheckCompany],
     props: true,
   },
   {
-    path:'/companies/:companyId/reviews',
+    path:'/companies-2/:id',
+    name: 'Establishment',
+    component: EstablishmentView2,
+    beforeEnter: [CheckAccess, CheckCompany, fetchCompetitors],
+    children:[
+      {
+        path: '',
+        name: 'EstablishmentDashboard',
+        component: EstablishmentDashboard,
+      },
+      {
+        path: 'reviews',
+        name: 'EstablishmentReviews',
+        component: ReviewPageView,
+      }
+    ]
+  },
+  {
+    path:'/companies/:id/reviews',
     name: 'reviews',
-    component: ReviewPageView,
+    component: EstablishmentReviewPage,
+  },
+  {
+    path:'/companies/:id/reviews-2',
+    name: 'reviews-2',
+    component: EstablishmentReviewPage,
   },
   {
     path:'/:catchAll(.*)',

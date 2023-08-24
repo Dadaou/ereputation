@@ -198,34 +198,34 @@
                     <Line :data="chartData" :options="chartConfig.options" />
                 </div>
               </div>
-              <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData"/>
-              <div class="community__feedback">
-                <div class="flex items-center">
-                        <a href="#" class="text-xs font-medium text-blue-600 dark:text-blue-500 hover:underline">5</a>
-                        <div class="h-2 bg-green-300 rounded mx-4" style="width: 45%"></div>
+              <div class="reviews__star">
+                    <div class="flex items-center mt-1">
+                        <a href="#" class="text-xs font-medium text-yellow-600 dark:text-blue-500 hover:underline">5 star</a>
+                        <div class="h-3 bg-yellow-300 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate5*100/reviews.length}%`}"></div>
                         <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate5 }}</span>
                     </div>
-                    <div class="flex items-center">
-                        <a href="#" class="text-xs font-medium text-blue-600 dark:text-blue-500 hover:underline">4</a>
-                        <div class="h-2 bg-blue-300 rounded mx-4" style="width: 17%"></div>
+                    <div class="flex items-center mt-1">
+                        <a href="#" class="text-xs font-medium text-yellow-600 dark:text-blue-500 hover:underline">4 star</a>
+                        <div class="h-3 bg-yellow-300 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate4*100/reviews.length}%`}"></div>
                         <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate4 }}</span>
                     </div>
-                    <div class="flex items-center">
-                        <a href="#" class="text-xs font-medium text-blue-600 dark:text-blue-500 hover:underline">3</a>
-                        <div class="h-2 bg-yellow-300 rounded mx-4" style="width: 8%"></div>
+                    <div class="flex items-center mt-1">
+                        <a href="#" class="text-xs font-medium text-yellow-600 dark:text-blue-500 hover:underline">3 star</a>
+                        <div class="h-3 bg-yellow-300 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate3*100/reviews.length}%`}"></div>
                         <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate3 }}</span>
                     </div>
-                    <div class="flex items-center">
-                        <a href="#" class="text-xs font-medium text-blue-600 dark:text-blue-500 hover:underline">2</a>
-                        <div class="h-2 bg-pink-300 rounded mx-4" style="width: 4%"></div>
+                    <div class="flex items-center mt-1">
+                        <a href="#" class="text-xs font-medium text-yellow-600 dark:text-blue-500 hover:underline">2 star</a>
+                        <div class="h-3 bg-yellow-300 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate2*100/reviews.length}%`}"></div>
                         <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate2 }}</span>
                     </div>
-                    <div class="flex items-center">
-                        <a href="#" class="text-xs font-medium text-blue-600 dark:text-blue-500 hover:underline">2</a>
-                        <div class="h-2 bg-red-300 rounded mx-4" style="width: 1%"></div>
+                    <div class="flex items-center mt-1">
+                        <a href="#" class="text-xs font-medium text-yellow-600 dark:text-blue-500 hover:underline">1 star</a>
+                        <div class="h-3 bg-yellow-300 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate1*100/reviews.length}%`}"></div>
                         <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate1 }}</span>
                     </div>
               </div>
+              <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData"/>
             </div>
         </div>
     </div>
@@ -422,6 +422,28 @@ watch(date, ()=>{
  }
 });
 
+const viewData = (timePeriod, startDate, endDate, data) => {
+    plotdata.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, data);
+}
+
+let updatePage = function(pageNumber){
+    paginationConfig.value.current = pageNumber;
+    updateVisibleData(lastReviews.value);
+}
+
+let updateVisibleData = function(_data){
+    let data = paginationConfig.value;
+
+    paginationConfig.value.data = _data.slice(data.current*data.size, (data.current * data.size) + data.size);
+                
+    if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
+        updatePage( paginationConfig.value.current -1);
+    }
+    visibleData.value = paginationConfig.value.data;
+    // reviews_loader.value = visibleData.value.length>0?false:true;
+    // setTimeout(() => reviews_loader.value = false, 2000);
+}
+
 const globalComparison = async () => {
     selectedCompetitors.value = 'Global';
     selectedWebsites.value = 'Global';
@@ -430,7 +452,7 @@ const globalComparison = async () => {
 
     comparisonData.value = [establishment.value, ...competitors.value];
     _comparisonData = [establishment.value, ...competitors.value];
-    console.log(comparisonData.value)
+    reviews.value = establishment.value.reviews;
    
     // plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);
     let startDate = moment().startOf('year').format('YYYY-M-DD');
@@ -451,10 +473,13 @@ const globalComparison = async () => {
     reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
     loadDatasets(_comparisonData, colors, selected_date);
     setTimeout(() => reviews_loader.value = false, 2000);
+    appStore.isLoading = false;
 }
+
+globalComparison();
+
 onBeforeMount(async () => {
 const companyId = route.params.id;
-// appStore.isLoading = true;
 if(userStore.user.customer !==null){
     userStore.user.customer.establishments.forEach(async company => {
         if(company.id == companyId){
@@ -472,9 +497,9 @@ if(userStore.user.customer !==null){
                 data.forEach(element => {
                     competitors.value.push(element);
                 });
-                globalComparison();
+                // globalComparison();
             });
-            websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)]
+            websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
         }
     });
 }
@@ -544,24 +569,6 @@ const seeMoreReviews = ()=>{
     router.push(`/companies/${route.params.id}/reviews`);
 }
 
-let updatePage = function(pageNumber){
-    paginationConfig.value.current = pageNumber;
-    updateVisibleData(lastReviews.value);
-}
-
-let updateVisibleData = function(_data){
-    let data = paginationConfig.value;
-
-    paginationConfig.value.data = _data.slice(data.current*data.size, (data.current * data.size) + data.size);
-                
-    if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
-        updatePage( paginationConfig.value.current -1);
-    }
-    visibleData.value = paginationConfig.value.data;
-    // reviews_loader.value = visibleData.value.length>0?false:true;
-    // setTimeout(() => reviews_loader.value = false, 2000);
-}
-
 
 watch(date2, ()=>{
     let startDate = moment().startOf('year').format('YYYY-M-DD');
@@ -586,10 +593,6 @@ watch(selectedTimePeriod, ()=>{
     viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
 });
 
-const viewData = (timePeriod, startDate, endDate, data) => {
-    plotdata.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, data);
-}
-
 </script>
 
 <style scoped>
@@ -607,6 +610,7 @@ const viewData = (timePeriod, startDate, endDate, data) => {
     margin: 0 auto;
     padding: 0;
     display: flex;
+    flex-direction: row-reverse;
     gap:1rem;
 }
 
@@ -630,6 +634,13 @@ const viewData = (timePeriod, startDate, endDate, data) => {
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
     margin: 15px auto;
+}
+
+.reviews__star{
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid var(--light-color-bg2);
+    border-radius: 10px;
 }
 
 .establishment{

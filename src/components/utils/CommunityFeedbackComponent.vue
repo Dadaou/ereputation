@@ -9,7 +9,7 @@
             <div v-else class="h-2 rounded review-feedback__negative" :style="{'width': reviewFeedbackData.width+'%', 'background': 'linear-gradient(90deg, rgba(255,255,0,1) 0%, rgba(255,'+reviewFeedbackData.green+',0,1) 100%)'}"></div>
             <div class="review-feedback__labels">
                 <span>Negative</span>
-                <span>Neutre</span>
+                <span>Neutral</span>
                 <span>Positive</span>
             </div>
         </div>

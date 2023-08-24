@@ -1,16 +1,16 @@
 <template>
 <div class="comment__pagination">
-    <i class="uil uil-angle-left" @click=" showPreviousLink() ? updatePage(config.current - 1) : null" :style="{}"></i> 
+    <i class="uil uil-angle-left" :class="[disabledPrev==false?'':'disabled']" @click="showPreviousLink() ? updatePage(config.current - 1) : null" :style="{}"></i> 
     <span>{{  (config.size * (config.current + 1)) - config.size + 1}}</span> to 
     <span v-if="(config.size * (config.current + 1)) < nb">{{ config.size * (config.current + 1) }}</span>
     <span v-else>{{ nb }}</span>
      of 
     <span>{{ nb }}</span>
-    <i class="uil uil-angle-right" @click="updatePage(config.current+ 1)"></i>
+    <i class="uil uil-angle-right" :class="[disabledNext==true?'disabled':'']" @click="updatePage(config.current+ 1)"></i>
 </div>
 </template>
 <script>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useCheckColor } from '@Composables/useful';
     export default{
         name:"Pagination",
@@ -22,12 +22,17 @@ import { useCheckColor } from '@Composables/useful';
         },
         emits:['updatePage'],
         setup(props, ctx){
+            let disabledNext = computed(()=>(props.config.size * (props.config.current + 1) + props.config.size >= props.nb));
+
+            let disabledPrev = computed(()=>props.config.current == 0);
+            
             let updatePage = function(pageNumber){
+                console.log(props.config.size * (props.config.current + 1) + props.config.size >= props.nb, disabledNext.value)
                 ctx.emit('updatePage', pageNumber)
             }
 
             let totalPages = function(){
-                console.log(Math.ceil(props.config._data.length / props.config.size));
+                // console.log(Math.ceil(props.config._data.length / props.config.size));
                  return Math.ceil(props.config._data.length / props.config.size);
             }
 
@@ -50,7 +55,7 @@ import { useCheckColor } from '@Composables/useful';
 
             return{
                 updatePage, totalPages, showPreviousLink,
-                showNextLink, textColor,
+                showNextLink, textColor, disabledNext, disabledPrev
             }
         }
 }
@@ -72,5 +77,9 @@ import { useCheckColor } from '@Composables/useful';
     font-weight: 800;
     cursor: pointer;
     transition: var(--transition)
+}
+
+.disabled{
+    color: var(--light-color-bg2) !important;
 }
 </style>

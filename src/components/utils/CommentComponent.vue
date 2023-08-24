@@ -6,8 +6,8 @@
                 <div class="review__info space-y-1 dark:text-white info__reviews">
                     <p id="author__name">{{ review.author }}</p>
                     <ul class="space-y-1 text-gray-500 dark:text-gray-400">
-                        <li class="flex items-center"><i class="uil uil-calender"></i><span>
-                            {{ moment(review.created_at).format('D MMMM YYYY')}}
+                        <li v-if="review.date_review != null" class="flex items-center"><i class="uil uil-calender"></i><span>
+                            {{ moment(review.date_review).format('D MMMM YYYY')}}
                         </span></li>
                         <li class="flex items-center"><i class="uil uil-map-pin-alt"></i><span>
                             {{ review.source }}
@@ -17,10 +17,13 @@
             </div>
             <div>
                 <span v-if="showEmoji">
-                    <span v-if="review.score >= 0.5 && review.comment !== ''">😀</span>
+                    <!-- <span v-if="review.score >= 0.5 && review.comment !== ''">😀</span>
                     <span v-if="(review.score >= 0.2 && review.score < 0.5) && review.comment !== ''">😊</span>
                     <span v-if="review.score > 0 && review.score < 0.2 && review.comment !== ''">😕</span>
-                    <span v-if="review.score == 0 || review.comment == ''">😐</span>
+                    <span v-if="review.score == 0 || review.comment == ''">😐</span> -->
+                    <span v-if="review.feeling=='positive'">😀</span>
+                    <span v-if="review.feeling=='neutre'">😐</span>
+                    <span v-if="review.feeling=='negative'">😕</span>
                 </span>
                 <p class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center p-1.5 rounded dark:bg-yellow-200 dark:text-yellow-800">{{ formatRating(review.rating) }}</p>
             </div> 

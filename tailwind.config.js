@@ -1,12 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    // "./index.html",
-    // "./src/**/*.{vue,js,ts,jsx,tsx}",
-    "./src/views/ComparisonView.{vue,js,ts,jsx,tsx}",
     "./src/views/ReviewPageView.{vue,js,ts,jsx,tsx}",
-    "./src/views/CompaniesView.{vue,js,ts,jsx,tsx}",
-    "./src/views/CompanyView.{vue,js,ts,jsx,tsx}",
+    "./src/views/EstablishmentReviewPage.{vue,js,ts,jsx,tsx}",
+    "./src/views/HomePageView.{vue,js,ts,jsx,tsx}",
+    "./src/views/EstablishmentView.{vue,js,ts,jsx,tsx}",
+    "./src/views/EstablishmentView2.{vue,js,ts,jsx,tsx}",
+    "./src/views/EstablishmentDashboard.{vue,js,ts,jsx,tsx}",
     "./src/views/NotFoundView.vue",
     "./src/components/utils/DropdownComponent.vue.{vue,js,ts,jsx,tsx}",
     "./src/components/utils/BreadcrumbComponent.vue.{vue,js,ts,jsx,tsx}",

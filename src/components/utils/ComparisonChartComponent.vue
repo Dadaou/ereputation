@@ -240,21 +240,21 @@ const chartWidth = ref(0);
 const chartModalWidth = ref(0);
 
 onUpdated(()=>{
-    chartWidth.value = (el.value != null && el.value != undefined)?el.value.offsetWidth:chartWidth.value;
-    chartModalWidth.value = (el2.value != null && el2.value != undefined)?el2.value.offsetWidth:chartModalWidth.value;
+    chartWidth.value = (el.value != null && el.value != undefined)?Math.abs(el.value.offsetWidth):chartWidth.value;
+    chartModalWidth.value = (el2.value != null && el2.value != undefined)?Math.abs(el2.value.offsetWidth):chartModalWidth.value;
 })
 
 useResizeObserver(el, (entries) => {
       const entry = entries[0]
       const { width } = entry.contentRect;
       console.log(width);
-      chartWidth.value = width;
+      chartWidth.value = Math.abs(width);
 })
 
 useResizeObserver(el2, (entries) => {
       const entry = entries[0]
       const { width } = entry.contentRect;
-      chartModalWidth.value = width;
+      chartModalWidth.value = Math.abs(width);
 })
 
 </script>
