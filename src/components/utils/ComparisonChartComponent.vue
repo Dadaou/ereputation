@@ -4,7 +4,7 @@
       <li @click="viewFullscreen()" > <i class="uil uil-expand-arrows-alt"></i> Expand</li>
     </ul>
     <GroupedBarChart class="chart" :plot-data="props.data" x-key="name"
-    :width="chartWidth - 25" :height="height - 100" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="selectedTimePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+    :width="chartWidth - 25" :height="height - 100" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="_timePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
     </GroupedBarChart>
     <ModalComponent :showModal="showModal" @close="showModal=false">
         <template #content>
@@ -28,9 +28,9 @@
                     </div>
                 </li>
                 <li class="w-full mr-3">
-                    <DropdownComponent :showTitle="false" placeholder="Select an establishments" :data="data2" @submit="(company)=>{
+                    <DropdownComponent :showTitle="false" placeholder="Select an establishments" :data="establishmentDropdown" @submit="(company)=>{
                         selectedCompany = company
-                    }" :defaultObj="data2[0]" :isDataObject="true"/>
+                    }" :defaultObj="establishmentDropdown[0]" :isDataObject="true"/>
                 </li>
                 <li class="w-full mr-3">
                     <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
@@ -49,7 +49,7 @@
             </div> -->
             <div class="modal__container" ref="el2">
                 <GroupedBarChart :plot-data="plotData" x-key="name"
-                        :width="chartModalWidth" :height="height" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="props.labels.x" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+                        :width="chartModalWidth" :height="height" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="selectedTimePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
                 </GroupedBarChart>
                 <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
                 </BaseLegend>
@@ -93,8 +93,9 @@ const props = defineProps({
         default: {x: "Months", y: "Rating"}
     },
     establishment: Object,
-    companies: Array,
-    competitors: Array
+    companies: Array, // (customer's establishment + its competitors)
+    competitors: Array,
+    timePeriod: String
 });
 
 const showModal = ref(false);
@@ -102,20 +103,17 @@ const comparisonByEstablishments = ref(true);
 const companiesStore = useCompanyStore();
 let selectedTimePeriod = ref('');
 let timePeriods = ref(['Weeks','Months', 'Quarters', 'Semesters']);
-let data2 = computed(() => comparisonByEstablishments.value?props.competitors:props.companies);
-let selectedCompany = ref(data2[0]);
+let establishmentDropdown = computed(() => comparisonByEstablishments.value?props.competitors:props.companies);
+let selectedCompany = ref(establishmentDropdown.value[0]);
 let startDate = moment().startOf('year').format('YYYY-M-DD');
 let endDate = moment().endOf('year').format('YYYY-M-DD');
 let legendData = ref([]);
+let _timePeriod = computed(()=>props.timePeriod)
 
 const viewFullscreen = () => {
     showModal.value = !showModal.value;
 }
-const date2 = ref({
-  day: new Date().getDay(),  
-  month: new Date().getMonth(),
-  year: new Date().getFullYear()
-});
+const date2 = ref(null);
 
 const format2 = (date) => {
   const startDate2 = new Date(date[0]).toLocaleString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -124,114 +122,46 @@ const format2 = (date) => {
 }
 
 const plotData = ref([]);
-const viewData = (timePeriod, startDate, endDate) => {
-    plotData.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, props.companies);
-    legendData.value =  companiesStore.generateLegend(props.companies, props.colors);
+
+const viewDataByEstablishment = (establishments, timePeriod, startDate, endDate, colors) => {
+    plotData.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, establishments);
+    legendData.value =  companiesStore.generateLegend(establishments, colors);
 }
 
-watch(date2, ()=>{
-    console.log(date2.value)
+const viewDataBySource = (websites, establishment, timePeriod, startDate, endDate, colors) => {
+    websites = companiesStore.getWebsites(websites);
+    plotData.value = companiesStore.calculateReviewsBySources(establishment, websites, timePeriod, startDate, endDate);
+    legendData.value = companiesStore.generateLegendV2(websites, colors);
+}
+
+watch([date2, comparisonByEstablishments, selectedCompany, selectedTimePeriod], ()=>{
     startDate = moment().startOf('year').format('YYYY-M-DD');
     endDate = moment().endOf('year').format('YYYY-M-DD');
 
-    if(date2.value != null){
+    if(date2.value !== null){
         if(date2.value.length > 0){
             startDate = moment(date2.value[0]).format('YYYY-M-DD');
             endDate = moment(date2.value[1]).format('YYYY-M-DD');
         }
-        if(comparisonByEstablishments.value == true){
-            viewData(selectedTimePeriod.value, startDate, endDate);
-        }else{
-            plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value,companiesStore.getWebsites(data2.value[0].websites), selectedTimePeriod.value, startDate, endDate);
-            legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites),props.colors);
-        }
-    }else{
-        if(comparisonByEstablishments.value == true){
-            viewData(selectedTimePeriod.value, startDate, endDate);
-        }else{
-            plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value,companiesStore.getWebsites(data2.value[0].websites), selectedTimePeriod.value, startDate, endDate);
-            legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites),props.colors);
-        }
     }
-});
 
-watch(selectedTimePeriod, () => {
-    startDate = moment().startOf('year').format('YYYY-M-DD');
-    endDate = moment().endOf('year').format('YYYY-M-DD');
-
-    if(date2.value != null){
-        if(date2.value.length > 0){
-            startDate = moment(date2.value[0]).format('YYYY-M-DD');
-            endDate = moment(date2.value[1]).format('YYYY-M-DD');
-        }
-        if(comparisonByEstablishments.value == true){
-            viewData(selectedTimePeriod.value, startDate, endDate);
-        }else{
-            plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value,companiesStore.getWebsites(data2.value[0].websites), selectedTimePeriod.value, startDate, endDate);
-            legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites),props.colors);
-        }
-    }else{
-        if(comparisonByEstablishments.value == true){
-            viewData(selectedTimePeriod.value, startDate, endDate);
-        }else{
-            plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value,companiesStore.getWebsites(data2.value[0].websites), selectedTimePeriod.value, startDate, endDate);
-            legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites),props.colors);
-        }
-    }
-});
-
-watch(comparisonByEstablishments, () => {
-    console.log(comparisonByEstablishments.value);
-   if(comparisonByEstablishments.value == true){
-    viewData(selectedTimePeriod.value, startDate, endDate);
-   }else{
-        if(data2.value.length > 0){
-                if(Object.keys(data2.value[0]).length > 1){
-                    plotData.value = companiesStore.calculateReviewsBySources(data2.value[0], companiesStore.getWebsites(data2.value[0].websites),selectedTimePeriod.value, startDate, endDate);
-                    selectedCompany.value = data2.value[0];
-                    legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites), props.colors);
-                }
-        }
-   }
-});
-
-watch(selectedCompany, () => {
-    startDate = moment().startOf('year').format('YYYY-M-DD');
-    endDate = moment().endOf('year').format('YYYY-M-DD');
-    if(date2.value != null){
-        if(date2.value.length > 0){
-            startDate = moment(date2.value[0]).format('YYYY-M-DD');
-            endDate = moment(date2.value[1]).format('YYYY-M-DD');
-        }
-        if(comparisonByEstablishments.value == true){
-            viewData(selectedTimePeriod.value, startDate, endDate);
-        }else{
-            plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value,companiesStore.getWebsites(data2.value[0].websites), selectedTimePeriod.value, startDate, endDate);
-            legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites),props.colors);
-        }
-    }else{
-        if(comparisonByEstablishments.value == true){
-            viewData(selectedTimePeriod.value, startDate, endDate);
-        }else{
-            plotData.value = companiesStore.calculateReviewsBySources(selectedCompany.value,companiesStore.getWebsites(data2.value[0].websites), selectedTimePeriod.value, startDate, endDate);
-            legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites),props.colors);
-        }
-    }
-})
-
-onUpdated(() => {
     if(comparisonByEstablishments.value == true){
-        // plotData.value = props.data;
-    }
-    else{
-        if(data2.value.length > 0){
-            if(Object.keys(data2.value[0]).length > 1){
-                plotData.value = companiesStore.calculateReviewsBySources(data2.value[0], companiesStore.getWebsites(data2.value[0].websites), selectedTimePeriod.value, startDate, endDate);
-                selectedCompany.value = data2.value[0];
-                legendData.value = companiesStore.generateLegendV2(companiesStore.getWebsites(data2.value[0].websites), props.colors);
-            }
+        let data = props.companies;
+        if(selectedCompany.value.name !== 'Global'){
+            data = data.filter(item=>item.id==selectedCompany.value.id || item.id == props.establishment.id);
+            console.log(data) 
         }
-    } 
+        
+        setTimeout(() => {
+                viewDataByEstablishment(data, selectedTimePeriod.value, startDate, endDate, props.colors);
+        }, 100); 
+    }else{
+        let websites = establishmentDropdown.value[0].websites; // get all websites of the current establishment
+        
+        setTimeout(() => {
+            viewDataBySource(websites, selectedCompany.value, selectedTimePeriod.value, startDate, endDate, props.colors);
+        }, 100);
+    }
 })
 
 const el = ref(null);

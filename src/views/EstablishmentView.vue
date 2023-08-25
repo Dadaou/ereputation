@@ -20,7 +20,7 @@
                        <h2>Comparison</h2>
                     </div>
                 </div>
-                <ComparisonChartComponent  v-if="reviews_loader == false" :data="plotdata" :width="chart__width" :height="chart__height" :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors"/>
+                <ComparisonChartComponent  v-if="reviews_loader == false" :data="plotdata" :width="chart__width" :height="chart__height" :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors" :timePeriod="selectedTimePeriod"/>
                 <div v-else role="status" class="rounded shadow animate-pulse md:p-6 mt-5 mb-5">
                     <div class="flex items-baseline mt-2 space-x-3">
                         <div class="w-full h-40 bg-gray-200 rounded-t-lg dark:bg-gray-700"></div>
@@ -54,6 +54,9 @@
                     </div>
                 </div>
                 <div class="reviews__content">
+                    <p>Discover the latest feedback about your establishment. Click <a @click="$router.push({
+                        name: 'reviews', params:{id: establishment.id}
+                    })">here</a> to access all reviews.</p>
                     <div class="reviews__pagination">
                         <CommentPagination  v-if="lastReviews.length > 0" :config="paginationConfig" @updatePage="updatePage" :color="'#6c63ff'" :nb="lastReviews.length" :data="visibleData"></CommentPagination>
                     </div>
@@ -472,7 +475,7 @@ const globalComparison = async () => {
     updateVisibleData(lastReviews.value);
     reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
     loadDatasets(_comparisonData, colors, selected_date);
-    setTimeout(() => reviews_loader.value = false, 2000);
+    reviews_loader.value = false
     appStore.isLoading = false;
 }
 
@@ -504,7 +507,6 @@ if(userStore.user.customer !==null){
     });
 }
 })
-
 
 const reloadComparison = async (competitor) => {
     selectedCompetitors.value = competitor.name;
@@ -614,7 +616,24 @@ watch(selectedTimePeriod, ()=>{
     gap:1rem;
 }
 
-.reviews__content1{
+.reviews__content p{
+   font-size: 14px;
+   font-weight: 500;
+   color: var(--color-bg1);
+}
+
+.reviews__content a{
+    color: var(--color-danger);
+    border-bottom: 1px solid var(--color-danger);
+    cursor: pointer;
+    font-size: inherit;
+}
+.reviews__content a:hover{
+   background-color: var(--color-danger);
+   color: white;
+}
+
+/* .reviews__content1{
     display: flex;
     flex-wrap: wrap;
     justify-items: center;
@@ -623,7 +642,7 @@ watch(selectedTimePeriod, ()=>{
 
 .reviews__content1 .review{
     flex-grow: 1;
-}
+} */
 
 .reviews__pagination{
     display: flex;
