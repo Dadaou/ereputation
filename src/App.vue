@@ -35,7 +35,6 @@ const loaderStyle = ref({
 });
 
 watch(width, () => {
-  console.log(width.value)
   loaderStyle.value = {
     'width': `${width.value}px`, 
   }

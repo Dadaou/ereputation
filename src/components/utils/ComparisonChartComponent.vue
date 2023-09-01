@@ -40,13 +40,7 @@
                 <li class="w-full mr-3">
                     <VueDatePicker v-model="date2" range :month-change-on-scroll="false" :format="format2"/>
                 </li>
-                <!-- <li class="w-full mr-3">
-                    <VueDatePicker v-model="date2" range :month-change-on-scroll="false" :format="format2"/>
-                </li> -->
             </ul>
-            <!-- <div class="modal__filter">
-                
-            </div> -->
             <div class="modal__container" ref="el2">
                 <GroupedBarChart :plot-data="plotData" x-key="name"
                         :width="chartModalWidth" :height="height" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="selectedTimePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
@@ -151,13 +145,11 @@ watch([date2, comparisonByEstablishments, selectedCompany, selectedTimePeriod], 
             data = data.filter(item=>item.id==selectedCompany.value.id || item.id == props.establishment.id);
             console.log(data) 
         }
-        
         setTimeout(() => {
                 viewDataByEstablishment(data, selectedTimePeriod.value, startDate, endDate, props.colors);
         }, 100); 
     }else{
         let websites = establishmentDropdown.value[0].websites; // get all websites of the current establishment
-        
         setTimeout(() => {
             viewDataBySource(websites, selectedCompany.value, selectedTimePeriod.value, startDate, endDate, props.colors);
         }, 100);
@@ -177,7 +169,6 @@ onUpdated(()=>{
 useResizeObserver(el, (entries) => {
       const entry = entries[0]
       const { width } = entry.contentRect;
-      console.log(width);
       chartWidth.value = Math.abs(width);
 })
 

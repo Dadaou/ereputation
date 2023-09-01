@@ -51,8 +51,6 @@ const breadcrumbData = [
 
 <style scoped>
 .admin__container{
-    /* position: relative;
-    top:8rem; */
     height: inherit;
     display: flex;
     gap:2rem;
@@ -62,16 +60,13 @@ const breadcrumbData = [
  margin-top: 50px;
  box-shadow: 0 1rem 2rem rgba(0,0,0,0.1);
 }
-/* .admin__menu li.active{
-    background-color: var(--color-danger);
-    color: var(--color-white);
-} */
 
 .admin__menu li a:hover{
  background-color: var(--light-color-bg1);
  color: var(--color-white);
  cursor: pointer;
 }
+
 .admin__menu li a{
     padding: 10px 75px;
     transition: var(--transition);
@@ -111,7 +106,6 @@ const breadcrumbData = [
 
     .admin__menu li a span{
         display: none;
-        /* padding: 10px 25px; */
     }
 
     .admin__menu li a{

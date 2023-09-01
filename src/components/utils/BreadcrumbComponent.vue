@@ -41,13 +41,6 @@ const props= defineProps({
 @tailwind components;
 @tailwind utilities;
 
-/* nav{
-    position: relative;
-    left: 155px;
-    top: 1.5rem;
-    padding: 0;
-} */
-
 .current__url a{
     color: grey;
 }

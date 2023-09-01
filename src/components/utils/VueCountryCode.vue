@@ -48,8 +48,6 @@
             :class="pb.iso2.toLowerCase()"
           ></div>
           <span>{{ pb.name }}</span>
-          <!-- <span v-if="dropdownOptions && !dropdownOptions.disabledDialCode"
-            >+{{ pb.dialCode }}</span> -->
         </li>
       </ul>
     </div>
@@ -157,7 +155,6 @@ export default {
             !this.ignoredCountries.includes(iso2.toLowerCase())
         );
       }
-
       return allCountries;
     },
     sortedCountries() {
@@ -357,14 +354,10 @@ export default {
 @import '@Assets/css/base.css';
 
 .vue-country-select {
-    /* width: 35%; */
     height: 40px;
     border: 1px solid var(--light-color-bg2);
     border-radius: 5px;
     padding: 7px 10px;
-    /* display: flex;
-    align-items: center;
-    gap: 2rem; */
     position: relative;
 }
 
@@ -372,57 +365,12 @@ export default {
   position: absolute;
   left: 7rem;
   top: 0rem; 
-  /* width: 500px; */
   width: 200px !important;
   margin: 0;
   padding: 0;
   font-size: 15px;
 }
 
-/* .vue-country-select .search-field{
-  padding: 10px;
-}
-
-.vue-country-select .search-field input{
-  width: 100%;
-  border: 1px solid black;
-  border-radius: 4px;
-  padding-left: 8px;
-}
-
-.vue-country-select:focus-within {
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
-    0 0 8px rgba(102, 175, 233, 0.6);
-  border-color: #66afe9;
-}
-s
-.vue-country-select .dropdown.open {
-  background-color: #f3f3f3;
-}
-.vue-country-select .dropdown:hover {
-  background-color: #f3f3f3;
-}
-
-.vue-country-select .dropdown-item {
-  cursor: pointer;
-  padding: 4px 15px;
-}
-.vue-country-select .dropdown-item .iti-flag {
-  display: inline-block;
-  margin-right: 5px;
-  margin-left: 5px;
-}
-.vue-country-select .dropdown-item.highlighted {
-  background-color: #f3f3f3;
-}
-.vue-country-select .dropdown-item.last-preferred {
-  border-bottom: 1px solid #cacaca;
-}
-.vue-country-select .dropdown-arrow {
-  transform: scaleY(0.5);
-  display: inline-block;
-  color: #666;
-} */
 .vue-country-select .current {
   font-size: 15px;
   display: flex;
@@ -469,13 +417,4 @@ s
   align-items: center;
   gap: 1rem;
 }
-
-/* .vue-country-select .country-code {
-  color: #666;
-}
-
-.vue-country-select.disabled .current,
-.vue-country-select.disabled .dropdown {
-  cursor: no-drop;
-} */
 </style>

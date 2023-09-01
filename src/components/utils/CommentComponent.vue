@@ -111,14 +111,4 @@ const formatRating = (rating) => {
     margin-right: 5px;
     color: var(--color-danger);
 }
-
-@media screen and (max-width:1225px) {
-  /* .counter{
-    gap: 1rem !important;
-  }
-
-  .right__side{
-    width: 300px !important;
-  }  */
-}
 </style>

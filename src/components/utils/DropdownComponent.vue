@@ -78,11 +78,6 @@ let selectedValueObject = ref({});
 let showData = ref(false);
 let target = ref(null);
 
-// const setShowData = (value, selected_value, event) =>{
-//     showData.value = value;
-//     selectedValue.value = selected_value;
-// }
-
 const setShowData = (value, selected_value, event) =>{
     showData.value = value;
     if(props.isDataObject == true){

@@ -320,7 +320,6 @@ watch([dateStart, dateEnd, selectedWebsites, checkedFeeling], ()=>{
         const selectedFeelings = checkedFeeling.value;
         filteredReviews = filteredReviews.filter(review => selectedFeelings.includes(review.feeling));
     }
-
     updateVisibleData(filteredReviews);
 })
 

@@ -103,7 +103,7 @@ a{
    margin: 6px;
 }
 
-/*Change the navbar style on scroll using useWindowSroll */
+/* Change the navbar style on scroll using useWindowSroll */
 .nav__onScroll{
     background-color: var(--color-white) !important;
     box-shadow: 0 1rem 2rem rgba(0,0,0,0.2);

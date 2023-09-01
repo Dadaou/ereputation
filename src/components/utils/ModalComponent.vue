@@ -4,9 +4,6 @@ s<template>
           <!-- Modal content here -->
         <div class="modal-content" :style="{'width':`${props.width}%`}">
             <slot name="content"></slot>
-            <!-- <h2>Modal Title</h2>
-            <p>Modal content goes here.</p>
-            <button @click="toggleModal()">Close</button> -->
         </div>
     </div>
 </transition>

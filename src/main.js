@@ -23,13 +23,8 @@ services.setURL(import.meta.env.VITE_APP_API_URL);
 moment.locale('en-ca');
 
 const app = createApp(App);
-// app.config.globalProperties.$nlp_api = import.meta.env.VITE_NLP_API_URL;
-// app.config.globalProperties.$moment=moment;
 
 const pinia = createPinia();
-// pinia.use(({ store })=>{
-//     store.$nlp_api = app.config.globalProperties.$nlp_api;
-// });
 
 app.use(pinia)
    .use(router, axios)

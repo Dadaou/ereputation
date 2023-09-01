@@ -37,21 +37,6 @@
                 </div>
             </div>
         </div>
-        <!-- <form>
-            <div class="multiples__input">
-                <div class="form__input">
-                    <div class="label">Old Password</div>
-                    <input type="password" name="oldPassword" required>
-                </div>
-                <div class="form__input">
-                    <div class="label">New Password</div>
-                    <input type="password" name="newPassword" required>
-                </div>
-            </div>
-           <div class="form__actions">
-                <button class="btn" type="submit">Save</button>
-           </div>
-        </form> -->
     </div>
 </template>
 
@@ -87,14 +72,12 @@ let enableEdit = ref({
     align-items: center;
     padding: 15px;
     font-size: 15px;
-    /* justify-content: space-between; */
 }
 
 .info__content{
     display: flex;
     justify-content: space-between;
     width: 100%;
-    /* flex-wrap: wrap; */
 }
 
 .info__title{

@@ -1,12 +1,9 @@
 <template>
-
 <div class="flex flex-col items-center">
-  <!-- Help text -->
   <span class="text-sm text-gray-700 dark:text-gray-400">
       Showing <span class="font-semibold text-gray-900 dark:text-white">{{  (config.size * (config.current + 1)) - config.size + 1}}</span> to <span class="font-semibold text-gray-900 dark:text-white">{{ config.size * (config.current + 1) }}</span> of <span class="font-semibold text-gray-900 dark:text-white"> {{ nb }}</span> Entries
   </span>
   <div class="inline-flex mt-2 xs:mt-0">
-    <!-- Buttons -->
     <button class="flex items-center justify-center px-3 h-8 text-sm font-medium text-white rounded-l"  @click=" showPreviousLink() ? updatePage(config.current - 1) : null" :style="{}">
         <svg class="w-3.5 h-3.5 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>

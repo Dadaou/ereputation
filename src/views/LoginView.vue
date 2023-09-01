@@ -42,7 +42,6 @@ const page=ref({
 const form = ref({
     email: '',
     password: '',
-    // error: true,
 });
 
 const isError = ref(false);
@@ -58,15 +57,6 @@ const submit = async ()=>{
     showSpinner.value = true;
     await userStore.signIn(form.value.email, form.value.password, (response)=>{
         if(response.authenticated){
-            // if(userStore.user.roles.includes("ROLE_USER")){
-            //     if (userStore.user.roles.includes("ROLE_ADMIN")) {
-            //         router.push({name:"Admin_dashboard"})
-            //     } else{
-            //         if (userStore.user.roles.includes("ROLE_API")){  
-            //             router.push({name:"Companies"})
-            //         }
-            //     }
-            // }
             router.push({name:"Home"});
         } else{
             showSpinner.value = false;
@@ -117,15 +107,12 @@ button.isLoaded{
 }
 
 .login__container{
-    /* position: relative;
-    top:8rem; */
     height: inherit;
     display: flex;
     justify-content: center;
 }
 
 .login__form{
-    /* background-color: var(--color-bg2); */
     height: 50%;
     width: 25%;
     margin-top: 60px;

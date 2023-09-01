@@ -1,16 +1,13 @@
 <template>
 <div class="avatar__container" ref=target>
     <div class="avatar__info flex items-center space-x-4" @click="hideMenu = !hideMenu">
-        <!-- <img id="avatarButton" type="button"  data-dropdown-placement="bottom-start" class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" src="/src/assets/images/Portrait_Placeholder.png" alt="User dropdown"> -->
         <div class="relative inline-flex items-center justify-center w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500">
             <span class="font-medium dark:text-white">{{ userStore.getInitials(userStore.user.firstname, userStore.user.lastname) }} </span>
         </div>
         <div class="font-medium dark:text-white user__connected">
             <div>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</div>
-            <!-- <div class="text-sm dark:text-white">{{ userStore.roleSummary }}</div> -->
         </div>
     </div>
-   
     <div v-if="hideMenu" id="userDropdown" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-50 dark:bg-gray-700 dark:divide-gray-600">
         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
         <li>
@@ -54,7 +51,6 @@ const signOut = () => {
 }
 
 onClickOutside(target, (event) => hideMenu.value = false);
-
 </script>
 
 <style scoped>

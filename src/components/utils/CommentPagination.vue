@@ -23,16 +23,13 @@ import { useCheckColor } from '@Composables/useful';
         emits:['updatePage'],
         setup(props, ctx){
             let disabledNext = computed(()=>(props.config.size * (props.config.current + 1) + props.config.size >= props.nb));
-
             let disabledPrev = computed(()=>props.config.current == 0);
             
             let updatePage = function(pageNumber){
-                console.log(props.config.size * (props.config.current + 1) + props.config.size >= props.nb, disabledNext.value)
                 ctx.emit('updatePage', pageNumber)
             }
 
             let totalPages = function(){
-                // console.log(Math.ceil(props.config._data.length / props.config.size));
                  return Math.ceil(props.config._data.length / props.config.size);
             }
 

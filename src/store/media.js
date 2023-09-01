@@ -16,9 +16,7 @@ export const useMediaStore = defineStore("media", {
         },
         isImageFile(text) {
             const imageFileExtensions = /\.(jpeg|jpg|gif|png|bmp|svg)$/i;
-          
             const imageMimeTypes = /^image\/(jpeg|jpg|gif|png|bmp|svg\+xml)$/i;
-          
             return imageFileExtensions.test(text) || imageMimeTypes.test(text);
           }
     }

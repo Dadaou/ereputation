@@ -88,6 +88,4 @@ form{
         width: 80%;
     }
 }
-
-
 </style>

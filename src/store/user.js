@@ -10,7 +10,6 @@ export const useUserStore = defineStore("user", {
     entity: 'users',
     nb: 0,
   }),
-
   actions: {
     async fetchAll(next){
       await services.getRecords(this.entity, (response)=>{
@@ -42,35 +41,6 @@ export const useUserStore = defineStore("user", {
       })
     },
     async signIn(email, password, next) {
-      // const response = await services.login(email, password); 
-      //   if (response.status == 200) {
-      //     console.log(response.data['token']);
-
-      //     await services.getRecord(this.entity,response.data.user.id, (res)=>{
-      //       if (res.status == 200) {
-      //         services.setUser(res.data);
-      //         this.user = res.data;
-      //         console.log(res.data)
-      //         this.authenticated = true;
-      //         if(this.user.roles.includes("ROLE_USER")){
-      //           if (this.user.roles.includes("ROLE_ADMIN")) {
-      //               localStorage.setItem("user_role",  "Admin")
-      //               this.roleSummary="Admin"; 
-      //           } else{
-      //               if (this.user.roles.includes("ROLE_API")){
-      //                   localStorage.setItem("user_role",  "Client")
-      //                   this.roleSummary="Client";
-      //               }
-      //           }
-      //       }
-      //         next({authenticated:this.authenticated, status: 200});
-      //       } 
-      //     })
-      //   } else if (response.status == 401) {
-      //     next({authenticated:this.authenticated, status: 401});
-      //   } else if (response.status == 500) {
-      //     next({authenticated:this.authenticated, status: 500});
-      //   }
       await services.login_2nd(email, password, (response)=>{
         console.log(response);
         if (response.status == 200) {
@@ -80,26 +50,6 @@ export const useUserStore = defineStore("user", {
               this.authenticated = true;
               console.log(this.user);
               next({authenticated:this.authenticated, status: 200});
-              // await services.getRecord(this.entity,response.data.user.id, (res)=>{
-              //   if (res.status == 200) {
-              //     services.setUser(res.data);
-              //     this.user = res.data;
-              //     console.log(res.data)
-              //     this.authenticated = true;
-              //     if(this.user.roles.includes("ROLE_USER")){
-              //       if (this.user.roles.includes("ROLE_ADMIN")) {
-              //           localStorage.setItem("user_role",  "Admin")
-              //           this.roleSummary="Admin"; 
-              //       } else{
-              //           if (this.user.roles.includes("ROLE_API")){
-              //               localStorage.setItem("user_role",  "Client")
-              //               this.roleSummary="Client";
-              //           }
-              //       }
-              //   }
-              //     next({authenticated:this.authenticated, status: 200});
-              //   } 
-              // })
             } else if (response.status == 401) {
               next({authenticated:this.authenticated, status: 401});
             } else if (response.status == 500) {

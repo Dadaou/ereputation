@@ -443,8 +443,6 @@ let updateVisibleData = function(_data){
         updatePage( paginationConfig.value.current -1);
     }
     visibleData.value = paginationConfig.value.data;
-    // reviews_loader.value = visibleData.value.length>0?false:true;
-    // setTimeout(() => reviews_loader.value = false, 2000);
 }
 
 const globalComparison = async () => {
@@ -457,7 +455,6 @@ const globalComparison = async () => {
     _comparisonData = [establishment.value, ...competitors.value];
     reviews.value = establishment.value.reviews;
    
-    // plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);
     let startDate = moment().startOf('year').format('YYYY-M-DD');
     let endDate = moment().endOf('year').format('YYYY-M-DD');
     if(date2.value.length > 0){
@@ -500,7 +497,6 @@ if(userStore.user.customer !==null){
                 data.forEach(element => {
                     competitors.value.push(element);
                 });
-                // globalComparison();
             });
             websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
         }
@@ -548,7 +544,6 @@ const reloadComparisonByWebsite = async (website) => {
             endDate = moment(date2.value[1]).format('YYYY-M-DD');
         }
         viewData(selectedTimePeriod.value, startDate, endDate, data);
-        // plotdata.value = companiesStore.calculateReviewsV2(data, 6, selected_date, true);
         loadDatasets(data, colors, selected_date);
     });
 }
@@ -579,7 +574,6 @@ watch(date2, ()=>{
         startDate = moment(date2.value[0]).format('YYYY-M-DD');
         endDate = moment(date2.value[1]).format('YYYY-M-DD');
     }
-    console.log(startDate, endDate)
     comparisonData.value = _comparisonData;
     viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
 });
@@ -633,17 +627,6 @@ watch(selectedTimePeriod, ()=>{
    color: white;
 }
 
-/* .reviews__content1{
-    display: flex;
-    flex-wrap: wrap;
-    justify-items: center;
-    margin-top: 15px;
-}
-
-.reviews__content1 .review{
-    flex-grow: 1;
-} */
-
 .reviews__pagination{
     display: flex;
     justify-content: flex-end;
@@ -695,7 +678,6 @@ watch(selectedTimePeriod, ()=>{
 .filter__content{
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
-    /* margin: 15px auto; */
     padding: 15px;
     display: flex;
     flex-direction: column;
@@ -716,7 +698,6 @@ watch(selectedTimePeriod, ()=>{
 
 .chart__rating{
     display: flex;
-    /* justify-content: center; */
 }
 
 .community__feedback .title{
@@ -827,7 +808,6 @@ watch(selectedTimePeriod, ()=>{
 .competitors .select__title{
     font-weight: 500;
 }
-
 
 .rating{
     font-size: 18px;
@@ -1033,10 +1013,6 @@ watch(selectedTimePeriod, ()=>{
         flex-direction: column-reverse;
         gap: 1rem;
     }
-
-    /* .photo img{
-       height: 150px !important;
-    } */
 
     .photo{
        flex-basis: 150px !important;

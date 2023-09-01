@@ -64,5 +64,4 @@
     background-color: var(--color-danger);
     color: white;
 }
-
 </style>

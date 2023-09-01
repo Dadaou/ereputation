@@ -27,7 +27,6 @@
 @import "@Assets/css/base.css";
 
 /*Footer*/
-
 footer{
     position: relative;
     top: 100px;

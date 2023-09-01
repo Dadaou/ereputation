@@ -146,10 +146,6 @@
                                                         <i class="uil uil-location-point"></i>
                                                         <span>{{ company.address1 }}, {{ company.city }}</span>
                                                     </div>
-                                                    <!-- <div class="society__country" v-if="company.country != null">
-                                                        <i class="uil uil-map"></i>
-                                                        <span>{{ company.country }}</span>
-                                                    </div> -->
                                                 </div>
                                             </div>
                                     </div>
@@ -157,14 +153,12 @@
                                 <RatingComponent class="rating__content" :reviews="company.reviews.length" :rating="companiesStore.calculateRatingV2(company.reviews)"/>
                             </div>
                             <div class="list__actions">
-                                    <!-- <button class="btn" @click="$router.push(`/companies/${company.id}`)">More details</button> -->
                                     <button class="btn" @click="goToCompany(company)">More details</button>
                             </div>
                         </div>
                     </div>
                 </div>
                </div>
-
                 <div v-else class="society__list">
                 <div class="list__item" v-for="index in userStore.user.customer.establishments.length">
                     <div class="society__info__container  animate-pulse">
@@ -305,7 +299,6 @@ const goToCompany = (establishment) => {
 .main__search input{
     padding:20px 35px;
     width:100%;
-    /* border: 1px solid black; */
     font-size:15px;
     font-weight:bold;
 }

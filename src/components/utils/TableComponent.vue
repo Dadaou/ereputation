@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import {ref, watch, onBeforeMount, onMounted} from 'vue'
+import {ref, watch, onMounted} from 'vue'
 import PaginationComponent from '@Components/utils/PaginationComponent.vue'
 
 const emit = defineEmits(['addEvent'])
@@ -86,8 +86,6 @@ onMounted(() => {
 
 <style>
 .main__table{
-    /* border-top: 2px solid var(--light-color-bg2);
-    border-bottom: 2px solid var(--light-color-bg2); */
     width: inherit;
     padding: 15px;
     color: var(--color-bg2);

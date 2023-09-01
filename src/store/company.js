@@ -120,7 +120,6 @@ export const useCompanyStore = defineStore("company", {
       let semesters = this.splitRangeIntoSemesters(startDate, endDate);
       let months = this.getAllMonthsInRange(startDate, endDate);
       let weeks = this.getAllWeeksInRange(startDate, endDate);
-      console.log('weeks', weeks)
       
       if(timePeriod == 'Quarters'){
         quarters.forEach((quarter, index) => {
@@ -315,7 +314,6 @@ export const useCompanyStore = defineStore("company", {
        let data = [];
        reviews.forEach(review => {
           if(review.source == website){
-            //console.log(review.source , website,review.source == website)
             data.push(review);
           } 
         });
@@ -397,7 +395,6 @@ export const useCompanyStore = defineStore("company", {
       const months = this.getLastMonths(nbMonth, date, year);
       const lastMonthReviews = this.getLastMonthReviews(reviews, nbMonth, date, year);
       months.forEach(month => {
-        //console.log(month, lastMonthReviews[month])
         let rating = this.calculateRatingV2(lastMonthReviews[month]);
         data.push(Number(rating));
       });
@@ -408,7 +405,6 @@ export const useCompanyStore = defineStore("company", {
       let percentage = (this.calculateRatingV2(reviews) / 5) * 100;
       
       reviews.forEach((review)=>{
-        //console.log(review.confidence);
         sumConfidence += review.confidence;
       })
 

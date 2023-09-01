@@ -253,13 +253,11 @@ onBeforeMount(() => {
     align-items: center;
     padding: 15px;
     font-size: 15px;
-    /* justify-content: space-between; */
 }
 .info__content{
     display: flex;
     justify-content: space-between;
     width: 100%;
-    /* flex-wrap: wrap; */
 }
 
 .info__title{
