@@ -8,6 +8,7 @@ export default {
     "./src/views/EstablishmentView2.{vue,js,ts,jsx,tsx}",
     "./src/views/EstablishmentDashboard.{vue,js,ts,jsx,tsx}",
     "./src/views/NotFoundView.vue",
+    "./src/views/FeedbackPageView.vue",
     "./src/components/utils/DropdownComponent.vue.{vue,js,ts,jsx,tsx}",
     "./src/components/utils/BreadcrumbComponent.vue.{vue,js,ts,jsx,tsx}",
     "./src/components/utils/CommentComponent.vue.{vue,js,ts,jsx,tsx}",

@@ -8,6 +8,7 @@ import ProfileView from '@Views/ProfileView.vue';
 import SecurityComponent from '@Components/User/SecurityComponent.vue';
 import UserDetailsComponent from '@Components/User/UserDetailsComponent.vue';
 import ReviewPageView from '@Views/ReviewPageView.vue';
+import feedbackPageView from '@Views/FeedbackPageView.vue';
 import EstablishmentDashboard from '@Views/EstablishmentDashboard.vue';
 import EstablishmentReviewPage from '@Views/EstablishmentReviewPage.vue';
 import { useCompanyStore } from "@Stores/company.js"; 
@@ -115,11 +116,18 @@ const routes = [
     path:'/companies/:id/reviews',
     name: 'reviews',
     component: EstablishmentReviewPage,
+    beforeEnter: [CheckAccess],
   },
   {
     path:'/companies/:id/reviews-2',
     name: 'reviews-2',
     component: EstablishmentReviewPage,
+    beforeEnter: [CheckAccess],
+  },
+  {
+    path:'/companies/:id/:tag/feedback',
+    name: 'feedback',
+    component: feedbackPageView,
   },
   {
     path:'/:catchAll(.*)',

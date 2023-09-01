@@ -254,6 +254,24 @@ img{
     border-color:  var(--color-danger2);
 }
 
+.btn__light_secondary{
+    display: block;
+    width: inherit !important;
+    background: var(--color-primary) !important;
+    color: var(--color-white) !important;
+    border-radius: 5px;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    padding: 4px 6px !important;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn__light_secondary:hover{
+   transform: scaleX(0.91);
+}
+
 .swiper-pagination{
     position: relative !important;
     margin-top: 2rem;

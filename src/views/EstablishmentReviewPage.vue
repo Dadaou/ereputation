@@ -122,7 +122,7 @@
                         <VueDatePicker class="mb-2" v-model="dateStart"  placeholder="from date" @update:model-value="handleDate" :format="format2"/>
                         <VueDatePicker v-model="dateEnd"  placeholder="to date" :disabled="!enableDateEnd" :min-date="new Date(dateStart)" :format="format2"/>
                     </div>
-                    <div class="date__filter mt-2">
+                    <div class="date__filter m-2">
                         <div class="text-lg title mb-2">Feeling filter</div>
                         <div class="flex items-center mb-2">
                             <input v-model="checkedFeeling" value="positive" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
@@ -136,6 +136,9 @@
                             <input v-model="checkedFeeling" value="negative" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label class="ml-2 text-sm font-medium text-gray-400 dark:text-gray-500">Negative</label>
                         </div>
+                    </div>
+                    <div class="btn__light_secondary" @click="showModal=true">
+                        <i class="uil uil-qrcode-scan"></i> QR code
                     </div>
                 </div>
               <div class="reviews__star">
@@ -167,6 +170,40 @@
               </div>
             </div>
         </div>
+        <ModalComponent :showModal="showModal" @close="showModal=false" :width="35">
+        <template #content>
+            <div class="modal__header">
+                <div class="modal__title">
+                    <h3 class="font-semibold text-gray-900 dark:text-white">
+                        <i class="uil uil-qrcode-scan"></i> QR Code
+                    </h3>
+                </div>
+                <div class="modal__close">
+                    <i class="uil uil-times-circle"  @click="showModal = false"></i>
+                </div>
+            </div>
+
+            <div class="establishment__review__qrcode">
+                <p class="mb-5">
+                    Download this QR code to link your client to the feedback page
+                </p>
+                <div id="qrcode__container mt-5" ref="qrcode">
+                    <vue-qrious
+                        class="qr__code"
+                        :value="`${baseurl}/companies/${establishment.id}/${establishment.competitor_tag}/feedback`"
+                        @change="onDataUrlChange"
+                    />
+                </div>
+            </div>
+            <img :src="base64Image" v-if="base64Image" />
+            <div class="mt-5 download__qr_btn">
+                <button class="btn__light_secondary" @click="downloadQrcode">
+                    <i class="uil uil-download-alt"></i> Download
+                </button>
+            </div>
+
+        </template>
+    </ModalComponent>
     </div>
 </template>
 
@@ -176,12 +213,12 @@ import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import CommentPagination from '@Components/utils/CommentPagination.vue';
 import CommentComponent from '@Components/utils/CommentComponent.vue';
-import {ref, reactive, watch, onBeforeMount, onUpdated, computed} from 'vue';
+import ModalComponent from '@Components/utils/ModalComponent.vue';
+import VueQrious from 'vue-qrious';
+import {ref, watch, onBeforeMount} from 'vue';
 import { useUserStore } from "@Stores/user.js";
 import { useCompanyStore } from "@Stores/company.js";
-import { useAppStore } from "@Stores/index.js";
 import { useRoute, useRouter } from "vue-router";
-import { useWindowSize } from '@vueuse/core';
 import moment from 'moment';
 
 const page=ref({
@@ -206,6 +243,7 @@ const breadcrumbData = [
 ]
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
+const baseurl = window.location.origin;
 
 let establishment = ref({});
 let reviews = ref([]);
@@ -220,7 +258,7 @@ let paginationConfig = ref({
 });
 
 let checkedFeeling = ref([]);
-
+const showModal = ref(false);
 let selectedWebsites = ref('Global');
 let websites = ref(['Global']);
 let media = [];
@@ -247,11 +285,8 @@ let updateVisibleData = function(_data){
     reviews_loader.value = false;
 }
 
-
 const dateStart = ref();
-
 const dateEnd = ref();
-
 const enableDateEnd = ref(false);
 
 const format2 = (date) => {
@@ -313,6 +348,15 @@ if(userStore.user.customer !==null){
     });
 }
 })
+
+const base64Image = ref(null);
+const qrcode = ref(null);
+const downloadQrcode = ()=>{
+    console.log(qrcode.value)
+}
+const onDataUrlChange = (dataUrl) =>{
+      //
+}
 </script>
 
 <style scoped>
@@ -529,7 +573,6 @@ if(userStore.user.customer !==null){
     font-weight: 500;
 }
 
-
 .rating{
     font-size: 18px;
     font-weight: 600;
@@ -571,6 +614,46 @@ if(userStore.user.customer !==null){
     display: block;
     flex-basis: 225px;
     line-height: 1.2;
+}
+
+.modal__header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal__header div{
+    align-self: center;
+}
+
+.modal__close i{
+   float: right;
+   font-size: 25px;
+   color: red;
+   cursor: pointer;
+   transition: var(--transition);
+}
+
+.establishment__review__qrcode p{
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-bg2);
+}
+
+.download__qr_btn{
+    display: flex;
+    justify-content: center;
+}
+
+.download__qr_btn button{
+    flex-basis: 50%;
+}
+
+.qr__code{
+    width: 35% !important;
+    margin: auto;
+}
+.modal__close i:hover{
+    transform: rotate(360deg);
 }
 
 @media screen and (max-width:1400px) {
@@ -734,10 +817,6 @@ if(userStore.user.customer !==null){
         flex-direction: column-reverse;
         gap: 1rem;
     }
-
-    /* .photo img{
-       height: 150px !important;
-    } */
 
     .photo{
        flex-basis: 150px !important;

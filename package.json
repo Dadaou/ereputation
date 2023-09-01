@@ -27,6 +27,7 @@
     "vue": "^3.3.4",
     "vue-chartjs": "^5.2.0",
     "vue-css-donut-chart": "^2.0.0",
+    "vue-qrious": "^3.1.0",
     "vue-router": "^4.0.13",
     "vue3-particles": "^2.9.3",
     "vuesalize": "^2.1.5"

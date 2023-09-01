@@ -2,7 +2,7 @@ s<template>
 <transition name="modal-flip">
     <div v-if="props.showModal" class="modal">
           <!-- Modal content here -->
-        <div class="modal-content">
+        <div class="modal-content" :style="{'width':`${props.width}%`}">
             <slot name="content"></slot>
             <!-- <h2>Modal Title</h2>
             <p>Modal content goes here.</p>
@@ -16,6 +16,10 @@ const props = defineProps({
     showModal: {
         type: Boolean,
         default: false,
+    }, 
+    width: {
+      type: Number,
+      default: 90
     }
 });
 const emit = defineEmits(['close'])
@@ -39,7 +43,7 @@ const toggleModal = () => {
 
 .modal-content {
   background-color: #fff;
-  width: 90%;
+  /* width: 90%; */
   margin: 6rem auto;
   padding: 25px;
   border-radius: 5px;
