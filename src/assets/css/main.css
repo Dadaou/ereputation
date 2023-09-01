@@ -1,6 +1,4 @@
 @import "./base.css";
-/* @import "./tablets.css";
-@import "./mobiles.css"; */
 
 /*=========== Home Page ============*/
 /*Header*/
@@ -10,7 +8,6 @@ header{
     height: 60vh;
     overflow: hidden;
     margin-bottom: 5rem;
-    /* background: red; */
 }
 
 .header__container{
@@ -27,7 +24,6 @@ header{
 
 /*Categories*/
 .categories{
-    /* background: var(--color-bg1); */
     height: 30rem;
 }
 

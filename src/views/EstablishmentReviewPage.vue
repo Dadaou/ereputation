@@ -303,7 +303,6 @@ const handleDate = (modelData) => {
 }
 
 watch([dateStart, dateEnd, selectedWebsites, checkedFeeling], ()=>{
-    console.log(checkedFeeling.value)
     const data = reviews.value;
     let filteredReviews = data;
 
@@ -334,7 +333,6 @@ if(userStore.user.customer !==null){
             reviews.value.sort(function(a, b) {
             return moment(b.date_review).diff(moment(a.date_review));
             });
-            console.log(reviews.value)
             page.value.title2 = company.name;
             establishment.value.media.forEach(item => {
                 media.push(item.url_source);

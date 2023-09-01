@@ -45,13 +45,6 @@
     --transition2: all 1s ease;
 }
 
-/* body{
-    font-family: 'Montserrat', sans-serif;
-    line-height: 1.7;
-    color: var(--color-white);
-    background-color: var(--color-bg);
-} */
-
 body{
     font-family: 'Montserrat', sans-serif;
     line-height: 1.7;
@@ -60,7 +53,6 @@ body{
 .app{
     color: var(--color-white);
     background-color: var(--color-color-bg);
-    /* background-color: var(--color-bg); */
 }
 
 .main__container{
@@ -84,7 +76,6 @@ body{
 
 section{
     padding: 6rem 0;
-    /* overflow-x:hidden; */
 }
 
 section h2{
@@ -164,10 +155,6 @@ a{
 .light-bg, .light-bg1, .light-bg2{
     color: var(--color-bg);
 }
-
-/* .light-bg a, .light-bg1 a, .light-bg2 a{
-    color: var(--color-bg);
-} */
 
 /*Color*/
 .text__bg{
@@ -311,7 +298,6 @@ img{
 
 .form__actions .btn{
     padding: 0.5rem 1rem;
-    /* background-color: var(--color-bg2); */
     border-radius: 5px;
     cursor: pointer;
     margin: 5px;

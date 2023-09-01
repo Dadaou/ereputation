@@ -27,14 +27,12 @@ const removeAccess = (to, from, next) => {
 const getIds = (establishments) => {
   let ids = [];
   for (const value of establishments) {
-    // const id = parseInt(value.substring(20));
     ids.push(value.id);
   }
   return ids;
 }
 
 const CheckAccess = (to, from, next) => {
-  console.log(localStorage.getItem("access"))
   if(localStorage.getItem("access") == null) next('/');
   else next()
 }
@@ -46,8 +44,6 @@ const CheckAuthentication = (to, from, next) => {
 }
 
 const fetchCompetitors = async (to, from, next) => { 
-//  const appStore = useAppStore();
-//  appStore.isLoading = true;
  next();
 }
 
