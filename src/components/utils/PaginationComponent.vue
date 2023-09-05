@@ -1,15 +1,15 @@
 <template>
   <div class="pagination__container">
     <div class="pagination__content">
-        <span class="previous-btn" @click=" showPreviousLink() ? updatePage(config.current - 1) : null" :style="{}">
+        <div class="previous-btn" @click=" showPreviousLink() ? updatePage(config.current - 1) : null" :style="{}">
             <i class="uil uil-angle-left-b"></i>
-        </span>
+        </div>
         <div class="current__page" :style="{backgroundColor:color, color:textColor}">
            {{ config.current + 1 }}
         </div>
-        <span class="next-btn" @click="updatePage(config.current+ 1)">
+        <div class="next-btn" @click="updatePage(config.current+ 1)">
             <i class="uil uil-angle-right-b"></i>
-        </span>
+        </div>
     </div>
   </div>
 </template>
@@ -62,6 +62,7 @@ import { useCheckColor } from '@Composables/useful'
 <style scoped>
     span{
         cursor: pointer;
+        caret-color: transparent !important;
     }
 
     .pagination__container{

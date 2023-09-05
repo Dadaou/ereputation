@@ -44,7 +44,6 @@ const getRecords= async (entity, next)=>{
     try {
         let url = `/${entity}`;
         if (checkConnexionInfo()) {
-            console.log(headers)
             await axiosInstance.get(`${url}`, {headers}).then((response)=>{
                 return next(response);
             })   
@@ -62,7 +61,6 @@ const getRecordsByParams = async (entity, params, next) => {
     try {
         let url = `/${entity}?${params}`;
         if (checkConnexionInfo()) {
-            console.log(headers)
             await axiosInstance.get(`${url}`,{headers}).then((response)=>{
                 return next(response);
             })   
@@ -80,7 +78,6 @@ const getRecord= async (entity, recordId, next)=>{
     try {
         let url = `/${entity}/${recordId}`;
         if (checkConnexionInfo()) {
-            console.log(axiosInstance.defaults)
             await axiosInstance.get(`${url}`, {headers}).then((response)=>{
                 next(response);
             })   

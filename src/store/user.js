@@ -22,7 +22,6 @@ export const useUserStore = defineStore("user", {
     },
     async signIn(email, password, next) {
       await services.login_2nd(email, password, (response)=>{
-        console.log(response);
         if (response.status == 200) {
               services.setUser(response.data['user']);
               this.user = response.data['user'];
@@ -41,6 +40,15 @@ export const useUserStore = defineStore("user", {
     getInitials(firstName, lastName) {
       const firstInitial = firstName.charAt(0).toUpperCase();
       const secondInitial = lastName.charAt(0).toUpperCase();
+      return `${firstInitial}${secondInitial}`;
+    },
+    getInitialsV2(name){
+      let full_name = name.split(' ');
+      let firstInitial = full_name[0].charAt(0).toUpperCase();
+      let secondInitial = '';
+      if(full_name.length>=2){
+        secondInitial = full_name[1].charAt(0).toUpperCase();
+      }
       return `${firstInitial}${secondInitial}`;
     }
   }

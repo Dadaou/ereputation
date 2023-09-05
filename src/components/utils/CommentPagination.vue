@@ -6,7 +6,7 @@
     <span v-else>{{ nb }}</span>
      of 
     <span>{{ nb }}</span>
-    <i class="uil uil-angle-right" :class="[disabledNext==true?'disabled':'']" @click="updatePage(config.current+ 1)"></i>
+    <i class="uil uil-angle-right" :class="[disabled==false?'disabled':'']" @click="updatePage(config.current+ 1)"></i>
 </div>
 </template>
 <script>
@@ -22,11 +22,13 @@ import { useCheckColor } from '@Composables/useful';
         },
         emits:['updatePage'],
         setup(props, ctx){
-            let disabledNext = computed(()=>(props.config.size * (props.config.current + 1) + props.config.size >= props.nb));
-            let disabledPrev = computed(()=>props.config.current == 0);
-            
+            let disabledNext = computed(() => (props.config.size * (props.config.current + 1) < props.nb));
+            let disabled = ref(disabledNext.value); 
+            let disabledPrev = computed(() => props.config.current == 0);
+
             let updatePage = function(pageNumber){
                 ctx.emit('updatePage', pageNumber)
+                disabled.value = props.config.size * (props.config.current + 1) < props.nb; 
             }
 
             let totalPages = function(){
@@ -52,7 +54,7 @@ import { useCheckColor } from '@Composables/useful';
 
             return{
                 updatePage, totalPages, showPreviousLink,
-                showNextLink, textColor, disabledNext, disabledPrev
+                showNextLink, textColor, disabledNext, disabledPrev, disabled
             }
         }
 }

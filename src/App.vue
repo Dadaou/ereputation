@@ -17,7 +17,10 @@ import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import { useWindowSize } from '@vueuse/core';
 import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from "@Stores/index.js";
+import { useRoute, useRouter } from 'vue-router';
 
+const route = useRoute();
+const router = useRouter();
 const userStore = useUserStore();
 const appStore = useAppStore();
 if(userStore.roleSummary == ''){
@@ -39,6 +42,11 @@ watch(width, () => {
     'width': `${width.value}px`, 
   }
 })
+
+if(router.currentRoute.value.name != 'feedback' && localStorage.getItem('access') == import.meta.env.VITE_APP_TOKEN){
+  if(userStore.authenticated == null) localStorage.removeItem('access');
+}
+
 </script>
 
 <style scoped>
@@ -51,6 +59,10 @@ watch(width, () => {
   position: fixed;
   z-index: 1;
   height: 100%;
+}
+
+*{
+  caret-color: transparent !important;
 }
 
 </style>

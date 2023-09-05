@@ -183,7 +183,7 @@
                 </div>
             </div>
 
-            <div class="establishment__review__qrcode">
+            <div  v-if="downloaded==false" class="establishment__review__qrcode">
                 <p class="mb-5">
                     Download this QR code to link your client to the feedback page
                 </p>
@@ -195,10 +195,18 @@
                     />
                 </div>
             </div>
-            <img :src="base64Image" v-if="base64Image" />
+            <div v-else class="establishment__review__qrcode">
+                <p class="mb-5">
+                    Your download is successfully complete!
+                </p>
+            </div>
             <div class="mt-5 download__qr_btn">
-                <button class="btn__light_secondary" @click="downloadQrcode">
+                <button v-if="
+                downloaded==false" class="btn__light_secondary" @click="downloadQrcode">
                     <i class="uil uil-download-alt"></i> Download
+                </button>
+                <button v-else class="btn__light_secondary" @click="showModal=false, downloaded=false">
+                    close
                 </button>
             </div>
 
@@ -215,8 +223,10 @@ import CommentPagination from '@Components/utils/CommentPagination.vue';
 import CommentComponent from '@Components/utils/CommentComponent.vue';
 import ModalComponent from '@Components/utils/ModalComponent.vue';
 import VueQrious from 'vue-qrious';
+import * as htmlToImage from 'html-to-image';
 import {ref, watch, onBeforeMount} from 'vue';
 import { useUserStore } from "@Stores/user.js";
+import { useAppStore } from "@Stores/index.js";
 import { useCompanyStore } from "@Stores/company.js";
 import { useRoute, useRouter } from "vue-router";
 import moment from 'moment';
@@ -243,6 +253,7 @@ const breadcrumbData = [
 ]
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
+const appStore = useAppStore();
 const baseurl = window.location.origin;
 
 let establishment = ref({});
@@ -257,7 +268,7 @@ let paginationConfig = ref({
     _data: []
 });
 
-let checkedFeeling = ref([]);
+let checkedFeeling = ref(['positive','neutre','negative']);
 const showModal = ref(false);
 let selectedWebsites = ref('Global');
 let websites = ref(['Global']);
@@ -288,6 +299,7 @@ let updateVisibleData = function(_data){
 const dateStart = ref();
 const dateEnd = ref();
 const enableDateEnd = ref(false);
+const downloaded = ref(false);
 
 const format2 = (date) => {
   const day = date.getDate();
@@ -324,6 +336,7 @@ watch([dateStart, dateEnd, selectedWebsites, checkedFeeling], ()=>{
 
 onBeforeMount(async()=>{
 const companyId = route.params.id;
+// appStore.isLoading = true;
 
 if(userStore.user.customer !==null){
     userStore.user.customer.establishments.forEach(async company => {
@@ -341,6 +354,7 @@ if(userStore.user.customer !==null){
             all_items.value[1].value = establishment.value.reviews.length;
             all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
             updateVisibleData(reviews.value);
+            appStore.isLoading = false;
         }
     });
 }
@@ -349,10 +363,22 @@ if(userStore.user.customer !==null){
 const base64Image = ref(null);
 const qrcode = ref(null);
 const downloadQrcode = ()=>{
-    console.log(qrcode.value)
+    // htmlToImage.toJpeg(qrcode.value, { quality: 0.95 })
+    // .then(function (dataUrl) {
+    //     var link = document.createElement('a');
+    //     link.download = `${establishment.value.name}-feedback-link.jpeg`;
+    //     link.href = dataUrl;
+    //     link.click();
+    //     downloaded.value = true;
+    // });
+    let link = document.createElement('a');
+    link.download = `${establishment.value.name}-feedback-link.jpeg`;
+    link.href = base64Image.value;
+    link.click();
+    downloaded.value = true;
 }
 const onDataUrlChange = (dataUrl) =>{
-      //
+      base64Image.value = dataUrl;
 }
 </script>
 
@@ -458,7 +484,6 @@ const onDataUrlChange = (dataUrl) =>{
 
 .chart__rating{
     display: flex;
-    /* justify-content: center; */
 }
 
 .community__feedback .title{
@@ -647,6 +672,7 @@ const onDataUrlChange = (dataUrl) =>{
 
 .qr__code{
     width: 35% !important;
+    padding: 50px auto !important;
     margin: auto;
 }
 .modal__close i:hover{

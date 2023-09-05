@@ -54,9 +54,7 @@
                     </div>
                 </div>
                 <div class="reviews__content">
-                    <p>Discover the latest feedback about your establishment. Click <a @click="$router.push({
-                        name: 'reviews', params:{id: establishment.id}
-                    })">here</a> to access all reviews.</p>
+                    <p>Discover the latest feedback about your establishment. Click <a @click="gotoReviewPage(establishment.id)">here</a> to access all reviews.</p>
                     <div class="reviews__pagination">
                         <CommentPagination  v-if="lastReviews.length > 0" :config="paginationConfig" @updatePage="updatePage" :color="'#6c63ff'" :nb="lastReviews.length" :data="visibleData"></CommentPagination>
                     </div>
@@ -82,7 +80,7 @@
                     <aside v-if="lastReviews.length > 0">
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{  all_items[1].value - 3 }} reviews remains</p>
                         <div class="flex items-center mt-3 space-x-3 divide-x divide-gray-200 dark:divide-gray-600">
-                            <a @click="seeMoreReviews()" class="see__more text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-xs px-2 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">See more</a>
+                            <a @click="gotoReviewPage(establishment.id)" class="see__more text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-xs px-2 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">See more</a>
                         </div>
                     </aside> 
                 </div> 
@@ -243,7 +241,7 @@ import ComparisonChartComponent from '@Components/utils/ComparisonChartComponent
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
 import CommentPagination from '@Components/utils/CommentPagination.vue';
 import CommentComponent from '@Components/utils/CommentComponent.vue';
-import {ref, reactive, watch, onBeforeMount, onUpdated, computed} from 'vue';
+import {ref, reactive, watch, onBeforeMount, computed} from 'vue';
 import { useCompetitorStore } from "@Stores/competitors.js";
 import { useUserStore } from "@Stores/user.js";
 import { useCompanyStore } from "@Stores/company.js";
@@ -357,7 +355,6 @@ let timePeriods = ref(['Months', 'Quarters', 'Semesters']);
 
 let lastReviews = ref([]);
 let media = [];
-let name = "";
 
 let reviewsConfidence = ref(0);
 let reviewFeedbackData = ref({
@@ -440,7 +437,7 @@ let updateVisibleData = function(_data){
     paginationConfig.value.data = _data.slice(data.current*data.size, (data.current * data.size) + data.size);
                 
     if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
-        updatePage( paginationConfig.value.current -1);
+        updatePage(paginationConfig.value.current -1);
     }
     visibleData.value = paginationConfig.value.data;
 }
@@ -548,6 +545,18 @@ const reloadComparisonByWebsite = async (website) => {
     });
 }
 
+const gotoReviewPage = (id)=>{
+    appStore.isLoading = true;
+    setTimeout(()=>{
+        router.push({
+            name: 'reviews',
+            params:{
+                id: id,
+            }
+        })
+    }, 100);
+}
+
 /**
  * Navbar Handler
  * useWindowScroll allows us to detect the scroll event on 
@@ -561,10 +570,6 @@ const chart__height = ref(300);
 //For Line chart
 const chart__width2 = ref(300);
 const chart__height2 = ref(200);
-
-const seeMoreReviews = ()=>{
-    router.push(`/companies/${route.params.id}/reviews`);
-}
 
 
 watch(date2, ()=>{

@@ -308,7 +308,7 @@ export const useCompanyStore = defineStore("company", {
          data.push(review);
         });
       }
-      return data.reverse();
+      return data;
     },
     getReviewsBySource(reviews, website){
        let data = [];

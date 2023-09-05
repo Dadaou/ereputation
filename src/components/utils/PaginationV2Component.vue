@@ -1,7 +1,7 @@
 <template>
 <div class="flex flex-col items-center">
   <span class="text-sm text-gray-700 dark:text-gray-400">
-      Showing <span class="font-semibold text-gray-900 dark:text-white">{{  (config.size * (config.current + 1)) - config.size + 1}}</span> to <span class="font-semibold text-gray-900 dark:text-white">{{ config.size * (config.current + 1) }}</span> of <span class="font-semibold text-gray-900 dark:text-white"> {{ nb }}</span> Entries
+      Showing <span class="font-semibold">{{  (config.size * (config.current + 1)) - config.size + 1}}</span> to <span class="font-semibold text-gray-900">{{ config.size * (config.current + 1) }}</span> of <span class="font-semibold text-gray-900"> {{ nb }} entries</span>
   </span>
   <div class="inline-flex mt-2 xs:mt-0">
     <button class="flex items-center justify-center px-3 h-8 text-sm font-medium text-white rounded-l"  @click=" showPreviousLink() ? updatePage(config.current - 1) : null" :style="{}">

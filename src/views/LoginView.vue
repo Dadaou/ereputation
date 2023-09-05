@@ -95,6 +95,9 @@ watch([width, isError], () => {
 
 <style scoped>
 
+input{
+    caret-color: var(--color-primary) !important;
+}
 button.isLoaded{
     display: flex;
     justify-content: center;

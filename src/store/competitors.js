@@ -25,7 +25,6 @@ export const useCompetitorStore = defineStore("competitor", {
             });
 
             Promise.all(promises).then(() => {
-              console.log(data)
               next(data);
             });
           }
