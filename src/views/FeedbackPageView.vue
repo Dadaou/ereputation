@@ -35,12 +35,16 @@
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                         <div>
                             <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First name <span>*</span></label>
-                            <input type="text" id="first_name" v-model="firstname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full" required>
+                            <input type="text" id="first_name" v-model="firstname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                         </div>
                         <div>
                             <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last name</label>
-                            <input type="text" id="last_name" v-model="lastname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full">
+                            <input type="text" id="last_name" v-model="lastname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
+                    </div>
+                    <div class="mb-6">
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address</label>
+                            <input type="email" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
                     </div>
                     <div class="mb-6 feedback__rating">
                        <label>Rating <span>*</span></label>
@@ -50,7 +54,7 @@
                     </div> 
                     <div class="feedback__text w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
                         <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
-                            <label for="comment" class="text-sm comment__label">What are the main reason for your rating?</label>
+                            <label for="comment" class="text-sm comment__label">Please leave a comment</label>
                             <textarea id="comment" v-model="comment" rows="4" class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" required></textarea>
                         </div>
                         <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
@@ -109,9 +113,10 @@ const firstname = ref('');
 const lastname = ref('');
 const ratingCustomer = ref(null);
 const comment = ref('');
+const email = ref('');
 
 const submit = async ()=>{
-    console.log(firstname.value, lastname.value, ratingCustomer.value, comment.value);
+    console.log(firstname.value, lastname.value, ratingCustomer.value, comment.value, email.value);
     let date_review = new Date();
     let review = {
         "author": `${firstname.value} ${lastname.value}`,
@@ -127,11 +132,16 @@ const submit = async ()=>{
         "confidence": 0,
         "authorUrl": null,
         "profilePhoto": null,
+        "email": email.value,
+        "optin": true,
         "dateReview": moment(date_review, 'DD/MM/YYYY')
     }
 
     await feedbackStore.createReview(review, (response)=>{
-        console.log(response);
+        firstname.value = '';
+        lastname.value = '';
+        comment.value = '';
+        email.value = '';
     })
     
 }
@@ -151,6 +161,11 @@ const submit = async ()=>{
     border-radius: 5px;
     padding: 15px;
     padding-top: 2rem;
+}
+
+input{
+    border-radius: 4px !important;
+    background-color: white;
 }
 
 label {
@@ -208,7 +223,7 @@ i{
 }
 
 input:hover {
-  border: 1px solid var(--light-color-bg2) !important; /* Add a green border when focused */
+  border: 1px solid rgb(185, 185, 185) !important; /* Add a green border when focused */
 }
 
 input:focus {
@@ -229,17 +244,29 @@ input:focus {
     width: 100%;
 }
 
+@media screen and (max-width:1075px) {
+    .feedback__form{
+        width: 60%;
+    }
+}
+
 @media screen and (max-width:1024px) {
     .feedback__form{
         position: relative;
         top: 10.5rem !important;
-        width: 75%;
+        width: 70%;
     }
 }
 
-@media screen and (max-width:975px) {
+@media screen and (max-width:850px) {
     .feedback__form{
         width: 80%;
+    }
+}
+
+@media screen and (max-width:750px) {
+    .feedback__form{
+        width: 90%;
     }
 }
 </style>

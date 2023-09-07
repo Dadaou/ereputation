@@ -94,4 +94,46 @@ selectRating('okay');
 .clicked i, .clicked span{
     color: var(--color-danger) !important;
 }
+
+@media screen and (max-width:1400px) {
+    .rating__feedback{
+        width: 90% !important;
+
+    }
+}
+
+@media screen and (max-width:670px) {
+    .rating__feedback{
+        width: 100% !important;
+
+    }
+}
+
+@media screen and (max-width:600px) {
+    .rating__feedback div{
+        width: 5rem !important;
+    }
+
+    .rating__feedback i{
+        font-size: 20px !important;
+    }
+
+    .rating__feedback span{
+        font-size: 13px !important;
+    }
+}
+
+@media screen and (max-width:550px) {
+    .rating__feedback div{
+        width: 5rem !important;
+    }
+
+    .rating__feedback i{
+        font-size: 25px !important;
+    }
+
+    .rating__feedback span{
+        font-size: 12px !important;
+    }
+}
 </style>
