@@ -28,13 +28,13 @@
     </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 
-const emit = defineEmits(['updateValue'])
+const emit = defineEmits(['updateValue']);
 const ratingCustomer = ref({
     terrible: { note: 1, clicked: false, feeling: 'negative'},
     bad: { note: 2, clicked: false, feeling: 'negative'},
-    okay: { note: 3, clicked: false, feeling: 'neutre'},
+    okay: { note: 3, clicked: false, feeling: 'positive'},
     good: { note: 4, clicked: false, feeling: 'positive'},
     amazing: { note: 5, clicked: false, feeling: 'positive'},
 });
@@ -49,7 +49,9 @@ const selectRating = (selectedRating)=>{
     }
 }
 
-selectRating('okay');
+let feeling = inject('feeling');
+
+selectRating(feeling.value);
 
 
 </script>
@@ -120,20 +122,6 @@ selectRating('okay');
 
     .rating__feedback span{
         font-size: 13px !important;
-    }
-}
-
-@media screen and (max-width:550px) {
-    .rating__feedback div{
-        width: 5rem !important;
-    }
-
-    .rating__feedback i{
-        font-size: 25px !important;
-    }
-
-    .rating__feedback span{
-        font-size: 12px !important;
     }
 }
 </style>

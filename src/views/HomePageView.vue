@@ -117,7 +117,9 @@
                     <div class="society__info__container">
                         <swiper class="society__logo" :modules="[Virtual]" v-if="company.media.length > 0" :slides-per-view="1" :space-between="10" :virtual="true">
                             <swiper-slide v-show="mediaStore.isImageFile(image.url_source)" v-for="image in company.media">
-                                <img :src="image.url_source">
+                                <a class="establishment__link" :href="[company.websites[0].url!=null?company.websites[0].url:'#']">
+                                    <img :src="image.url_source">
+                                </a>
                             </swiper-slide>
                         </swiper>
                         <swiper class="society__logo" :modules="[Virtual]"  v-else :slides-per-view="1" :space-between="10" :virtual="true">
@@ -136,8 +138,10 @@
                                     <div class="society__main__info">
                                             <div class="item__head">
                                                 <div class="society__info">
-                                                    <a :href="company.websites[0].url" v-if="company.websites.length > 0"><label class="society__name">{{ company.name }}</label></a>
-                                                    <label class="society__name" v-else>{{ company.name }}</label>
+                                                    <a class="establishment__link" :href="[company.websites[0].url!=null?company.websites[0].url:'#']" v-if="company.websites.length > 0"><label class="society__name">{{ company.name }}</label></a>
+
+                                                    <a v-else class="establishment__link" href="#"><label class="society__name">{{ company.name }}</label></a>
+
                                                     <div class="society__category">
                                                         <i :class="['uil', company.category=='Restaurant'?'uil-restaurant':'', company.category=='Hotel'?'uil-bed-double':'', company.category=='Residence'?'uil-home':'']"></i>
                                                         <span>{{ company.category }}</span>
@@ -235,6 +239,7 @@ const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 const mediaStore = useMediaStore();
+console.log(companiesStore.establishments)
 
 const particlesInit = async engine => {
     await loadFull(engine);
@@ -273,6 +278,10 @@ const goToCompany = (establishment) => {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.establishment__link label, .establishment__link{
+    cursor: pointer !important;
+}
 .breadcrumb {
     position: relative;
     top:-110px;

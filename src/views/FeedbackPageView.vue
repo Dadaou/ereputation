@@ -42,9 +42,15 @@
                             <input type="text" id="last_name" v-model="lastname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
                     </div>
-                    <div class="mb-6">
+                    <div class="grid gap-6 mb-6 md:grid-cols-2">
+                        <div>
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address</label>
                             <input type="email" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                        </div>
+                        <div>
+                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Visited at</label>
+                            <VueDatePicker v-model="dateVisit" :enable-time-picker="false" />
+                        </div>
                     </div>
                     <div class="mb-6 feedback__rating">
                        <label>Rating <span>*</span></label>
@@ -70,7 +76,7 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from 'vue';
+import { ref, onBeforeMount, provide } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useUserStore } from "@Stores/user.js";
@@ -95,6 +101,8 @@ const page=ref({
     icon: "uil-signin",
 });
 
+provide('feeling', 'okay');
+
 onBeforeMount(()=>{
 
     if(userStore.authenticated==null) services.setToken(import.meta.env.VITE_APP_TOKEN);
@@ -114,6 +122,7 @@ const lastname = ref('');
 const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
+const dateVisit = ref('');
 
 const submit = async ()=>{
     console.log(firstname.value, lastname.value, ratingCustomer.value, comment.value, email.value);

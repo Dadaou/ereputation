@@ -17,6 +17,11 @@
                             <i class="uil uil-lock"></i> <span>Security</span>
                         </router-link>
                     </li>
+                    <li>
+                        <router-link :to="{ name: 'Parameters'}">
+                            <i class="uil uil-setting"></i> <span>Parameters</span>
+                        </router-link>
+                    </li>
                 </ul>
             </div>
             <div class="all__content">
@@ -62,14 +67,15 @@ const breadcrumbData = [
 }
 
 .admin__menu li a:hover{
- background-color: var(--light-color-bg1);
- color: var(--color-white);
+ background-color: var(--color-light);
+ color: var(--color-bg1);
  cursor: pointer;
 }
 
 .admin__menu li a{
     padding: 10px 75px;
     transition: var(--transition);
+    cursor: pointer;
     display: flex;
     gap: 1rem;
     font-weight: 600;

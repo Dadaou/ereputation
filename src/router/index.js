@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory} from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import LoginView from '@Views/LoginView.vue';
 import HomePageView from '@Views/HomePageView.vue';
 import EstablishmentView from '@Views/EstablishmentView.vue';
@@ -6,6 +6,7 @@ import EstablishmentView2 from '@Views/EstablishmentView2.vue';
 import NotFoundView from '@Views/NotFoundView.vue';
 import ProfileView from '@Views/ProfileView.vue';
 import SecurityComponent from '@Components/User/SecurityComponent.vue';
+import ParametersView from '@Views/ParametersView.vue';
 import UserDetailsComponent from '@Components/User/UserDetailsComponent.vue';
 import ReviewPageView from '@Views/ReviewPageView.vue';
 import feedbackPageView from '@Views/FeedbackPageView.vue';
@@ -145,6 +146,11 @@ const routes = [
         path: 'security',
         name: 'Account_security',
         component: SecurityComponent,
+      },
+      {
+        path: 'parameters',
+        name: 'Parameters',
+        component: ParametersView,
       },
     ]
   }

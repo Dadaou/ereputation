@@ -458,10 +458,10 @@ const globalComparison = async () => {
         startDate = moment(date2.value[0]).format('YYYY-M-DD');
         endDate = moment(date2.value[1]).format('YYYY-M-DD');
     }
-    viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+    viewData(selectedTimePeriod.value, startDate, endDate, [establishment.value]);
 
-    legendData.value =  companiesStore.generateLegend(comparisonData.value, colors);
-    _legendData =  companiesStore.generateLegend(comparisonData.value, colors);
+    legendData.value =  companiesStore.generateLegend([establishment.value], colors);
+    _legendData =  companiesStore.generateLegend(_comparisonData, colors);
     all_items.value[2].value = competitors.value.length;
     all_items.value[1].value = establishment.value.reviews.length;
     all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
@@ -483,17 +483,17 @@ if(userStore.user.customer !==null){
             establishment.value = company;
             reviews.value = company.reviews;
             page.value.title2 = company.name;
-            establishment.value.media.forEach(item => {
-                media.push(item.url_source);
-            });
-            companiesStore.calculateRating(establishment.value.reviews, (rating) =>{
-                all_items.value[0].value = rating;
-            });
             const competitorTag = `competitor_tag=${company.competitor_tag}`;
             await competitorStore.getAllCompetitors(competitorTag, (data) => {  
                 data.forEach(element => {
                     competitors.value.push(element);
                 });
+            });
+            establishment.value.media.forEach(item => {
+                media.push(item.url_source);
+            });
+            companiesStore.calculateRating(establishment.value.reviews, (rating) =>{
+                all_items.value[0].value = rating;
             });
             websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
         }
@@ -514,7 +514,8 @@ const reloadComparison = async (competitor) => {
         endDate = moment(date2.value[1]).format('YYYY-M-DD');
     }
     viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
-    legendData.value = _legendData.filter(e => e.name == establishment.value.name || e.name == competitor.name)
+    // legendData.value = _legendData.filter(e => e.name == establishment.value.name || e.name == competitor.name)
+    legendData.value =  companiesStore.generateLegend(_comparisonData, colors);
 }
 
 const reloadComparisonByWebsite = async (website) => {

@@ -142,30 +142,30 @@
                     </div>
                 </div>
               <div class="reviews__star">
-                    <div class="flex items-center mt-1">
-                        <a href="#" class="text-xs font-medium text-yellow-600 dark:text-blue-500 hover:underline">5 star</a>
-                        <div class="h-3 bg-yellow-300 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate5*100/reviews.length}%`}"></div>
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate5 }}</span>
+                    <div :class="['flex items-center mt-1', selectedStars.includes(5)?'include':'not__include']" @click="starFilter(5)">
+                        <a href="#" class="text-xs font-medium hover:underline">5 star</a>
+                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(dataReviews).rate5*100/dataReviews.length}%`}"></div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(dataReviews).rate5 }}</span>
                     </div>
-                    <div class="flex items-center mt-1">
-                        <a href="#" class="text-xs font-medium text-yellow-600 dark:text-blue-500 hover:underline">4 star</a>
-                        <div class="h-3 bg-yellow-300 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate4*100/reviews.length}%`}"></div>
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate4 }}</span>
+                    <div :class="['flex items-center mt-1', selectedStars.includes(4)?'include':'not__include']" @click="starFilter(4)">
+                        <a href="#" class="text-xs font-medium dark:text-blue-500 hover:underline">4 star</a>
+                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(dataReviews).rate4*100/dataReviews.length}%`}"></div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(dataReviews).rate4 }}</span>
                     </div>
-                    <div class="flex items-center mt-1">
-                        <a href="#" class="text-xs font-medium text-yellow-600 dark:text-blue-500 hover:underline">3 star</a>
-                        <div class="h-3 bg-yellow-300 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate3*100/reviews.length}%`}"></div>
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate3 }}</span>
+                    <div :class="['flex items-center mt-1', selectedStars.includes(3)?'include':'not__include']" @click="starFilter(3)">
+                        <a href="#" class="text-xs font-medium hover:underline">3 star</a>
+                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(dataReviews).rate3*100/dataReviews.length}%`}"></div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(dataReviews).rate3 }}</span>
                     </div>
-                    <div class="flex items-center mt-1">
-                        <a href="#" class="text-xs font-medium text-yellow-600 dark:text-blue-500 hover:underline">2 star</a>
-                        <div class="h-3 bg-yellow-300 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate2*100/reviews.length}%`}"></div>
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate2 }}</span>
+                    <div :class="['flex items-center mt-1', selectedStars.includes(2)?'include':'not__include']" @click="starFilter(2)">
+                        <a href="#" class="text-xs font-medium hover:underline">2 star</a>
+                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(dataReviews).rate2*100/dataReviews.length}%`}"></div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(dataReviews).rate2 }}</span>
                     </div>
-                    <div class="flex items-center mt-1">
-                        <a href="#" class="text-xs font-medium text-yellow-600 dark:text-blue-500 hover:underline">1 star</a>
-                        <div class="h-3 bg-yellow-300 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate1*100/reviews.length}%`}"></div>
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate1 }}</span>
+                    <div :class="['flex items-center mt-1', selectedStars.includes(1)?'include':'not__include']" @click="starFilter(1)">
+                        <a href="#" class="text-xs font-medium hover:underline">1 star</a>
+                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(dataReviews).rate1*100/dataReviews.length}%`}"></div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(dataReviews).rate1 }}</span>
                     </div>
               </div>
             </div>
@@ -259,6 +259,8 @@ const baseurl = window.location.origin;
 let establishment = ref({});
 let reviews = ref([]);
 let _reviews = ref([]);
+let dataReviews = ref([]);
+let selectedStars = ref([1,2,3,4,5]);
 let reviews_loader = ref(true);
 let visibleData = ref([])
 let paginationConfig = ref({
@@ -284,9 +286,10 @@ let updatePage = function(pageNumber){
     updateVisibleData(_reviews.value);
 }
 
-let updateVisibleData = function(_data){
+let updateVisibleData = function(_data, isStarFilter=false){
     let data = paginationConfig.value;
-    _reviews.value = _data;
+    _reviews.value = _data
+    if (isStarFilter==false) dataReviews= _reviews.value ;
     paginationConfig.value.data = _data.slice(data.current*data.size, (data.current * data.size) + data.size)
     if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
         updatePage( paginationConfig.value.current -1);
@@ -314,6 +317,17 @@ const handleDate = (modelData) => {
  dateEnd.value = null;
 }
 
+const filterReviewsByStar = (star, data)=>{
+    let result = [];
+    data.forEach(review =>{
+        let rating = companiesStore.formatRating(review.rating);
+        rating = rating>5?rating/2:rating;
+        console.log(rating, star, review.rating)
+        if(rating>=star && rating<=(star+0.99)) result.push(review);
+    })
+    return result;
+}
+
 watch([dateStart, dateEnd, selectedWebsites, checkedFeeling], ()=>{
     const data = reviews.value;
     let filteredReviews = data;
@@ -332,6 +346,18 @@ watch([dateStart, dateEnd, selectedWebsites, checkedFeeling], ()=>{
         filteredReviews = filteredReviews.filter(review => selectedFeelings.includes(review.feeling));
     }
     updateVisibleData(filteredReviews);
+})
+
+watch(selectedStars, ()=>{
+    let filteredReviews = _reviews.value;
+    if (selectedStars.value.length > 0) {
+        let result = [];
+        selectedStars.value.forEach(rating=>{
+            result = [...result, ...filterReviewsByStar(rating, filteredReviews)]
+        });
+        filteredReviews = result;
+    }
+    updateVisibleData(filteredReviews, true);
 })
 
 onBeforeMount(async()=>{
@@ -377,8 +403,15 @@ const downloadQrcode = ()=>{
     link.click();
     downloaded.value = true;
 }
+
 const onDataUrlChange = (dataUrl) =>{
       base64Image.value = dataUrl;
+}
+
+const starFilter = (star)=>{
+    if(selectedStars.value.includes(star) == true) {
+        selectedStars.value = selectedStars.value.filter(rating=> rating != star);
+    }else selectedStars.value.push(star);
 }
 </script>
 
@@ -679,6 +712,34 @@ const onDataUrlChange = (dataUrl) =>{
     transform: rotate(360deg);
 }
 
+.include a{
+    color: var(--color-primary);
+}
+
+.not__include a{
+    color: var(--light-color-bg2);
+}
+
+.include .star__barre{
+    background: var(--color-warning);
+}
+
+.not__include .star__barre{
+    background: var(--color-warning2);
+}
+
+.include span {
+    color: var(--color-bg2);
+}
+
+.not__include span{
+    color: rgb(165, 165, 165);
+}
+
+.star__barre{
+    cursor: pointer;
+}
+
 @media screen and (max-width:1400px) {
   .app__container{
     width: var(--container-width-md);
@@ -696,20 +757,6 @@ const onDataUrlChange = (dataUrl) =>{
   .left__side{
     width: 1000px !important;
   }
-  
-  .right__side{
-    width: 400px !important;
-  }
-}
-
-@media screen and (max-width:1225px) {
-  .counter{
-    gap: 1rem !important;
-  }
-
-  .right__side{
-    width: 300px !important;
-  } 
 }
 
 @media screen and (max-width:1024px) {
@@ -717,10 +764,6 @@ const onDataUrlChange = (dataUrl) =>{
         position: relative;
         top: 7.5rem !important;
     }
-
-    .right__side{
-     width: 250px !important;
-    } 
 }
 
 @media screen and (max-width: 975px) {

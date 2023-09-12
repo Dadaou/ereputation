@@ -144,6 +144,8 @@ watch([date2, comparisonByEstablishments, selectedCompany, selectedTimePeriod], 
         if(selectedCompany.value.name !== 'Global'){
             data = data.filter(item=>item.id==selectedCompany.value.id || item.id == props.establishment.id);
             console.log(data) 
+        }else{
+            data = [props.establishment];
         }
         setTimeout(() => {
                 viewDataByEstablishment(data, selectedTimePeriod.value, startDate, endDate, props.colors);
