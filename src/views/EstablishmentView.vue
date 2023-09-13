@@ -458,17 +458,25 @@ const globalComparison = async () => {
         startDate = moment(date2.value[0]).format('YYYY-M-DD');
         endDate = moment(date2.value[1]).format('YYYY-M-DD');
     }
-    viewData(selectedTimePeriod.value, startDate, endDate, [establishment.value]);
 
-    legendData.value =  companiesStore.generateLegend([establishment.value], colors);
-    _legendData =  companiesStore.generateLegend(_comparisonData, colors);
     all_items.value[2].value = competitors.value.length;
     all_items.value[1].value = establishment.value.reviews.length;
     all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
+
+    legendData.value =  companiesStore.generateLegend(comparisonData.value, colors);
+    _legendData =  companiesStore.generateLegend(_comparisonData, colors);
+
+    
     lastReviews.value = companiesStore.getLastReviews(establishment.value.reviews, 100);
     updateVisibleData(lastReviews.value);
     reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
-    loadDatasets(_comparisonData, colors, selected_date);
+    
+    setTimeout(() => {
+        loadDatasets(_comparisonData, colors, selected_date);
+        viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+    }, 100);
+   
+    
     reviews_loader.value = false
     appStore.isLoading = false;
 }
