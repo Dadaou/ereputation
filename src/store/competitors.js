@@ -13,6 +13,7 @@ export const useCompetitorStore = defineStore("competitor", {
     },
     async getAllCompetitors(params, next){
         await services.getRecordsByParams(this.entity, params, (response) => {
+          console.error('competitor', params);
           if (response.status == 200) {
             let data = [];
             let promises = [];

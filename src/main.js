@@ -6,6 +6,7 @@ import axios from 'axios';
 import moment from 'moment';
 import Particles from "vue3-particles";
 import VueDatePicker from '@vuepic/vue-datepicker';
+import ElementPlus from 'element-plus';
 import Vuesalize from 'vuesalize';
 import 'moment/dist/locale/en-ca';
 
@@ -31,5 +32,6 @@ app.use(pinia)
    .use(Particles)
    .use(Vuesalize)
    .component('VueDatePicker', VueDatePicker)
+   .use(ElementPlus)
    .mount('#app');
     

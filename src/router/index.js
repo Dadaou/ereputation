@@ -54,8 +54,10 @@ const fetchEstablishments = async (to, from, next) => {
   const appStore = useAppStore();
   appStore.isLoading = true;
   if(userStore.user.customer !== null){
-    companiesStore.establishments = userStore.user.customer.establishments;
-    companiesStore.nb = companiesStore.establishments.length;
+    if(companiesStore.establishments.length==0){
+      companiesStore.establishments = userStore.user.customer.establishments;
+      companiesStore.nb = companiesStore.establishments.length;
+    }
     setTimeout(() =>  appStore.isLoading = false, 500);
   }
   next();
@@ -135,7 +137,7 @@ const routes = [
     path: '/users/:id/profile',
     name: 'UserProfile',
     component: ProfileView,
-    beforeEnter: [CheckAccess],
+    beforeEnter: [CheckAccess, fetchEstablishments],
     children: [
       {
         path: '',

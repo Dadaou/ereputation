@@ -472,8 +472,8 @@ const globalComparison = async () => {
     reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
     
     setTimeout(() => {
-        loadDatasets(_comparisonData, colors, selected_date);
-        viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+        // loadDatasets(_comparisonData, colors, selected_date);
+        // viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
     }, 100);
    
     
@@ -491,12 +491,16 @@ if(userStore.user.customer !==null){
             establishment.value = company;
             reviews.value = company.reviews;
             page.value.title2 = company.name;
+            console.log('reviews', reviews.value);
+            console.log('company',company)
             const competitorTag = `competitor_tag=${company.competitor_tag}`;
             await competitorStore.getAllCompetitors(competitorTag, (data) => {  
                 data.forEach(element => {
                     competitors.value.push(element);
                 });
             });
+
+            console.log('competitors', competitors.value)
             establishment.value.media.forEach(item => {
                 media.push(item.url_source);
             });

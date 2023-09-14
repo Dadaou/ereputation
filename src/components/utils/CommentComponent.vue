@@ -50,8 +50,8 @@
                     </div>
                 </div>
                 <div class="mb-6 feedback__rating">
-                       <FeelingFeedbackComponent @updateValue="(rating)=>{
-                        ratingCustomer = rating
+                       <FeelingFeedbackComponent @updateValue="(feeling)=>{
+                        feel = feeling
                        }"/>
                 </div>
                 <div class="mt-5 download__qr_btn">
@@ -59,6 +59,11 @@
                     <i class="uil uil-save"></i> Save
                 </button>
             </div> 
+            </template>
+        </ModalComponent>
+        <ModalComponent :showModal="showModal" @close="showModal=false" :width="35">
+            <template #content>
+                
             </template>
         </ModalComponent>
 </div>
@@ -69,6 +74,7 @@ import moment from 'moment';
 import { useUserStore } from "@Stores/user.js";
 import ModalComponent from '@Components/utils/ModalComponent.vue';
 import FeelingFeedbackComponent from '@Components/utils/FeelingFeedbackComponent.vue';
+import { useFeedbackStore } from '@Stores/feedback.js';
 
 const props = defineProps({
     reviews: {
@@ -87,6 +93,7 @@ const props = defineProps({
 });
 
 const userStore = useUserStore();
+const feedbackStore = useFeedbackStore();
 const formatRating = (rating) => {
     rating = parseFloat(rating);
     if(rating > 5){
@@ -97,17 +104,31 @@ const formatRating = (rating) => {
 
 const showModal = ref(false);
 const feel = ref('okay');
+const id = ref('');
 provide('feeling', feel);
+
 const editReview = (review) => {
    feel.value = review.feeling;
-   if(feel.value=='neutre') feel.value = 'neutral';
+   review.feeling = feel.value;
+   id.value =review.id;
 
-   console.log(feel.value, review);
+   if(feel.value=='neutre') feel.value = 'neutral';
    showModal.value = true;
 }
 
-const updateReview = () => {
-    console.log('update review')
+const updateReview = async () => {
+    let payload = {
+        feeling: feel.value
+    }
+
+    try {
+        await feedbackStore.updateReview(id.value, payload, response=>{
+            console.log(response);
+            if(response.status==200) showModal.value = false;
+        })   
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 </script>

@@ -372,7 +372,6 @@ export const useCompanyStore = defineStore("company", {
     getLastMonthReviews(reviews, nbMonth, currentDate, year){
       const lastMonths = this.getLastMonths(nbMonth, currentDate, year);
       const monthlyReviews = this.initReviewsByMonth(lastMonths);
-    
       if(reviews.length > 0){
         reviews.forEach(review => {
           let reviewDate = moment(review.date_review).format('MMM');

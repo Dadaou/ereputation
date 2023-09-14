@@ -115,14 +115,12 @@
             <div class="society__list" v-if="companiesStore.establishments.length>0">
                 <div class="list__item" v-for="company in companiesStore.establishments">
                     <div class="society__info__container">
-                        <swiper class="society__logo" :modules="[Virtual]" v-if="company.media.length > 0" :slides-per-view="1" :space-between="10" :virtual="true">
+                        <swiper @click="goToCompany(company)" class="society__logo" :modules="[Virtual]" v-if="company.media.length > 0" :slides-per-view="1" :space-between="10" :virtual="true">
                             <swiper-slide v-show="mediaStore.isImageFile(image.url_source)" v-for="image in company.media">
-                                <a class="establishment__link" :href="[company.websites[0].url!=null?company.websites[0].url:'#']">
-                                    <img :src="image.url_source">
-                                </a>
+                                <img :src="image.url_source">
                             </swiper-slide>
                         </swiper>
-                        <swiper class="society__logo" :modules="[Virtual]"  v-else :slides-per-view="1" :space-between="10" :virtual="true">
+                        <swiper @click="goToCompany(company)" class="society__logo" :modules="[Virtual]"  v-else :slides-per-view="1" :space-between="10" :virtual="true">
                             <swiper-slide>
                                 <div role="status" class="society__logo bg-gray-300 rounded-sm">
                                     <svg class="text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
@@ -138,9 +136,9 @@
                                     <div class="society__main__info">
                                             <div class="item__head">
                                                 <div class="society__info">
-                                                    <a class="establishment__link" :href="[company.websites[0].url!=null?company.websites[0].url:'#']" v-if="company.websites.length > 0"><label class="society__name">{{ company.name }}</label></a>
+                                                    <!-- <a class="establishment__link" :href="[company.websites[0].url!=null?company.websites[0].url:'#']" v-if="company.websites.length > 0"><label class="society__name">{{ company.name }}</label></a> -->
 
-                                                    <a v-else class="establishment__link" href="#"><label class="society__name">{{ company.name }}</label></a>
+                                                    <a class="establishment__link" @click="goToCompany(company)"><label class="society__name">{{ company.name }}</label></a>
 
                                                     <div class="society__category">
                                                         <i :class="['uil', company.category=='Restaurant'?'uil-restaurant':'', company.category=='Hotel'?'uil-bed-double':'', company.category=='Residence'?'uil-home':'']"></i>

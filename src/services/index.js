@@ -139,7 +139,7 @@ const deleteRecord = async (entity, recordId, next) => {
 
 const patchRecord = async (entity, recordId, value, next) => {
     const headers = {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/merge-patch+json',
         'Authorization': `Bearer ${localStorage.getItem('access')}`
     };
     if (checkConnexionInfo()) {
