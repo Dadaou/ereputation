@@ -192,6 +192,9 @@
                                 selectedTimePeriod = timePeriod
                         }" :default="timePeriods[0]"/>
                     </div>
+                    <div class="btn__light_secondary" @click="weatherModal=true">
+                        <i class="uil uil-cloud-sun"></i> weather
+                    </div>
                 </div>
               <div class="rating__customers">
                 <div class="title">Rating by Customers</div>
@@ -230,6 +233,7 @@
             </div>
         </div>
     </div>
+    <WeatherComponent @updateModal="(value)=>weatherModal=value"/>
 </template>
 
 <script setup>
@@ -241,7 +245,8 @@ import ComparisonChartComponent from '@Components/utils/ComparisonChartComponent
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
 import CommentPagination from '@Components/utils/CommentPagination.vue';
 import CommentComponent from '@Components/utils/CommentComponent.vue';
-import {ref, reactive, watch, onBeforeMount, computed} from 'vue';
+import WeatherComponent from '@Components/utils/WeatherComponent.vue';
+import {ref, reactive, watch, onBeforeMount, computed, provide} from 'vue';
 import { useCompetitorStore } from "@Stores/competitors.js";
 import { useUserStore } from "@Stores/user.js";
 import { useCompanyStore } from "@Stores/company.js";
@@ -276,6 +281,8 @@ const page=ref({
     icon: "uil-estate",
 });
 
+const weatherModal = ref(false);
+provide('showModal', weatherModal);
 const route = useRoute();
 const router = useRouter();
 const breadcrumbData = [
@@ -472,8 +479,8 @@ const globalComparison = async () => {
     reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
     
     setTimeout(() => {
-        // loadDatasets(_comparisonData, colors, selected_date);
-        // viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+        loadDatasets(_comparisonData, colors, selected_date);
+        viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
     }, 100);
    
     
@@ -494,6 +501,7 @@ if(userStore.user.customer !==null){
             console.log('reviews', reviews.value);
             console.log('company',company)
             const competitorTag = `competitor_tag=${company.competitor_tag}`;
+            
             await competitorStore.getAllCompetitors(competitorTag, (data) => {  
                 data.forEach(element => {
                     competitors.value.push(element);

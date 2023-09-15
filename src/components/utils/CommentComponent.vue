@@ -61,11 +61,6 @@
             </div> 
             </template>
         </ModalComponent>
-        <ModalComponent :showModal="showModal" @close="showModal=false" :width="35">
-            <template #content>
-                
-            </template>
-        </ModalComponent>
 </div>
 </template>
 <script setup>
