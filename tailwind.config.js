@@ -10,6 +10,8 @@ export default {
     "./src/views/NotFoundView.vue",
     "./src/views/FeedbackPageView.vue",
     "./src/views/ParametersView.vue",
+    "./src/views/StaffView.vue",
+    "./src/views/EventView.vue",
     "./src/components/Staff/*.{vue,js,ts,jsx,tsx}",
     "./src/components/Event/*.{vue,js,ts,jsx,tsx}",
     "./src/components/utils/RatingFeedbackComponent.{vue,js,ts,jsx,tsx}",

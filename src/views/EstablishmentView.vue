@@ -50,6 +50,22 @@
                 </BaseLegend>
                 <div class="head">
                     <div class="app__title">
+                       <h2>Staff Excellence Awards</h2>
+                    </div>
+                </div>
+                <div class="reviews__content">
+                    <p>To see the staffs list, please click <a @click="goto('Staff')">here</a></p>
+                </div>
+                <div class="head">
+                    <div class="app__title">
+                       <h2>Last Events</h2>
+                    </div>
+                </div>
+                <div class="reviews__content">
+                    <p>Explore the latest events, please click <a @click="goto('Event')">here</a> to access all </p>
+                </div>
+                <div class="head">
+                    <div class="app__title">
                        <h2>Last reviews</h2>
                     </div>
                 </div>
@@ -192,7 +208,7 @@
                                 selectedTimePeriod = timePeriod
                         }" :default="timePeriods[0]"/>
                     </div>
-                    <div class="btn__light_secondary" @click="weatherModal=true">
+                    <div class="btn__light_secondary mb-1" @click="goto('Weather')">
                         <i class="uil uil-cloud-sun"></i> weather
                     </div>
                 </div>
@@ -233,7 +249,7 @@
             </div>
         </div>
     </div>
-    <WeatherComponent @updateModal="(value)=>weatherModal=value"/>
+    <!-- <WeatherComponent @updateModal="(value)=>weatherModal=value"/> -->
 </template>
 
 <script setup>
@@ -614,6 +630,10 @@ watch(selectedTimePeriod, ()=>{
     comparisonData.value = _comparisonData;
     viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
 });
+
+const goto = (value) =>{
+    router.push({name: value});
+}
 
 </script>
 

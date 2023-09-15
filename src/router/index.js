@@ -12,8 +12,10 @@ import ReviewPageView from '@Views/ReviewPageView.vue';
 import feedbackPageView from '@Views/FeedbackPageView.vue';
 import EstablishmentDashboard from '@Views/EstablishmentDashboard.vue';
 import EstablishmentReviewPage from '@Views/EstablishmentReviewPage.vue';
+import WeatherView from '@Views/WeatherView.vue';
+import StaffView from '@Views/StaffView.vue';
+import EventView from '@Views/EventView.vue';
 import { useCompanyStore } from "@Stores/company.js"; 
-import { useCompetitorStore } from "@Stores/competitors.js";
 import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from "@Stores/index.js";
 
@@ -90,8 +92,25 @@ const routes = [
     path:'/companies/:id',
     name: 'Company',
     component: EstablishmentView,
+    beforeEnter: [CheckAccess, CheckCompany]
+  },
+  {
+    path:'/companies/:id/staffs',
+    name: 'Staff',
+    component: StaffView,
     beforeEnter: [CheckAccess, CheckCompany],
-    props: true,
+  },
+  {
+    path:'/companies/:id/events',
+    name: 'Event',
+    component: EventView,
+    beforeEnter: [CheckAccess, CheckCompany],
+  },
+  {
+    path:'/companies/:id/weathers',
+    name: 'Weather',
+    component: WeatherView,
+    beforeEnter: [CheckAccess, CheckCompany],
   },
   {
     path:'/companies-2/:id',

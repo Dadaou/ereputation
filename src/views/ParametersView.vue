@@ -8,21 +8,21 @@
     >
         <el-tab-pane label="Staff" name="staff">
             <el-tabs :tab-position="'right'" class="demo-tabs mt-10">
-                    <el-tab-pane label="Add">
-                        <StaffFormComponent/>
-                    </el-tab-pane>
                     <el-tab-pane label="Staff list">
                         <StaffListComponent/>
+                    </el-tab-pane>
+                    <el-tab-pane label="Add">
+                        <StaffFormComponent/>
                     </el-tab-pane>
             </el-tabs>
         </el-tab-pane>
         <el-tab-pane label="Event" name="event">
             <el-tabs :tab-position="'right'" class="demo-tabs mt-10">
-                    <el-tab-pane label="Add">
-                        <EventFormComponent/>
-                    </el-tab-pane>
                     <el-tab-pane label="Event list">
                         <EventListComponent/>
+                    </el-tab-pane>
+                    <el-tab-pane label="Add">
+                        <EventFormComponent/>
                     </el-tab-pane>
             </el-tabs>
         </el-tab-pane>
