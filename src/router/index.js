@@ -15,6 +15,7 @@ import EstablishmentReviewPage from '@Views/EstablishmentReviewPage.vue';
 import WeatherView from '@Views/WeatherView.vue';
 import StaffView from '@Views/StaffView.vue';
 import EventView from '@Views/EventView.vue';
+import SocialPageView from '@Views/SocialPage.vue';
 import { useCompanyStore } from "@Stores/company.js"; 
 import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from "@Stores/index.js";
@@ -110,6 +111,12 @@ const routes = [
     path:'/companies/:id/weathers',
     name: 'Weather',
     component: WeatherView,
+    beforeEnter: [CheckAccess, CheckCompany],
+  },
+  {
+    path:'/companies/:id/social',
+    name: 'Social',
+    component: SocialPageView,
     beforeEnter: [CheckAccess, CheckCompany],
   },
   {

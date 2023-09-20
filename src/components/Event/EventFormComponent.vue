@@ -20,7 +20,7 @@
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                         <div>
                             <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span>*</span></label>
-                            <el-select v-model="establishment" placeholder="Choose establishment" size="large">
+                            <el-select v-model="establishments" placeholder="Choose establishment" size="large" multiple collapse-tags collapse-tags-tooltip>
                                 <el-option
                                 v-for="item in companiesStore.establishments"
                                 :key="item.id"
@@ -43,7 +43,7 @@
                     <div class="flex items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
                         <button type="submit"  :class="['btn__light_secondary py-2 px-10',showSpinner==true?'isLoaded':'' ]">
                             <SpinnerComponent :show-spinner="showSpinner" :color="'gray'"/> <span v-if="showSpinner">Loading ...</span>
-                            <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} staff</span>
+                            <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} event</span>
                         </button>
                         </div>
                 </form>
@@ -75,18 +75,18 @@ const showSpinner = ref(false);
  const dateTo = ref(null);
  const category = ref('');
  const eventName = ref('');
- const establishment = ref('');
+ const establishments = ref([]);
  const type = ref('add');
 
- const loadData = (data)=>{
-    if(userStore.user.customer != null){
-        userStore.user.customer.establishments.forEach((element, index) => {
-            if(`/api/${companiesStore.entity}/${element.id}` == data.establishment){
-                userStore.user.customer.establishments[index].events.push(data);
-            }
-        });
-    }
-}
+//  const loadData = (data)=>{
+//     if(userStore.user.customer != null){
+//         userStore.user.customer.establishments.forEach((element, index) => {
+//             if(`/api/${companiesStore.entity}/${element.id}` == data.establishment){
+//                 userStore.user.customer.establishments[index].events.push(data);
+//             }
+//         });
+//     }
+// }
 
  const submit = async ()=>{
     let event = {
@@ -94,17 +94,18 @@ const showSpinner = ref(false);
         "category": category.value,
         "datefrom": moment(dateFrom.value).format('YYYY-MM-DD'),
         "dateto":  moment(dateTo.value).format('YYYY-MM-DD'),
-        "establishment": establishment.value
+        "establishment": establishments.value
     }
 
     try {
 
-        if(dateFrom.value != null && dateTo.value != null && category.value != '' && establishment.value != '' && eventName.value != ''){
+        if(dateFrom.value != null && dateTo.value != null && category.value != '' && establishments.value.length >0 && eventName.value != ''){
             if(type.value == 'add'){
                 await eventStore.addEvent(event, (response)=>{
+                    console.log(response)
                     if(response.status == 201){
                         event['id']= response.data['id'];
-                        loadData(event);
+                        // loadData(event);
                         ElMessage({
                             message: `Event added successfully.`,
                             type: 'success',
@@ -112,7 +113,7 @@ const showSpinner = ref(false);
                         dateFrom.value = '';
                         dateTo.value = ''; 
                         category.value = '';
-                        establishment.value = '';
+                        establishments.value = [];
                         eventName.value = '';
                         showSpinner.value = false;
                     }

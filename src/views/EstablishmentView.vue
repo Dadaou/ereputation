@@ -66,6 +66,14 @@
                 </div>
                 <div class="head">
                     <div class="app__title">
+                       <h2>Socials</h2>
+                    </div>
+                </div>
+                <div class="reviews__content">
+                    <p>Explore your social account statistic, please click <a @click="goto('Social')">here</a></p>
+                </div>
+                <div class="head">
+                    <div class="app__title">
                        <h2>Last reviews</h2>
                     </div>
                 </div>

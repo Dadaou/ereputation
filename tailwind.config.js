@@ -11,6 +11,7 @@ export default {
     "./src/views/FeedbackPageView.vue",
     "./src/views/ParametersView.vue",
     "./src/views/StaffView.vue",
+    "./src/views/SocialPage.vue",
     "./src/views/EventView.vue",
     "./src/components/Staff/*.{vue,js,ts,jsx,tsx}",
     "./src/components/Event/*.{vue,js,ts,jsx,tsx}",
