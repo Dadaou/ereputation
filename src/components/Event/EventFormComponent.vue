@@ -41,18 +41,22 @@
                         </div>
                     </div>
                     <div class="flex items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
-                            <button type="submit" class="inline-flex items-center py-2 px-10 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
-                                Save
-                            </button>
+                        <button type="submit"  :class="['btn__light_secondary py-2 px-10',showSpinner==true?'isLoaded':'' ]">
+                            <SpinnerComponent :show-spinner="showSpinner" :color="'gray'"/> <span v-if="showSpinner">Loading ...</span>
+                            <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} staff</span>
+                        </button>
                         </div>
                 </form>
         </div>
 </template>
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, inject, watch } from 'vue';
+import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import { useCompanyStore } from "@Stores/company.js";
 import { useEventStore } from "@Stores/event.js";
+import { useUserStore } from "@Stores/user.js";
 import moment from 'moment';
+import { ElMessage } from 'element-plus';
 
 const companiesStore = useCompanyStore();
 const eventStore = useEventStore();
@@ -63,7 +67,7 @@ const format = (date) => {
 
   return `${year}/${month}/${day}`;
 }
-
+const showSpinner = ref(false);
 /**
  * Event
  */
@@ -72,32 +76,55 @@ const format = (date) => {
  const category = ref('');
  const eventName = ref('');
  const establishment = ref('');
+ const type = ref('add');
+
+ const loadData = (data)=>{
+    if(userStore.user.customer != null){
+        userStore.user.customer.establishments.forEach((element, index) => {
+            if(`/api/${companiesStore.entity}/${element.id}` == data.establishment){
+                userStore.user.customer.establishments[index].events.push(data);
+            }
+        });
+    }
+}
 
  const submit = async ()=>{
     let event = {
         "name": eventName.value,
         "category": category.value,
         "datefrom": moment(dateFrom.value).format('YYYY-MM-DD'),
-        "dateto":  moment(dateTo.value).format('YYYY-MM-DD')
+        "dateto":  moment(dateTo.value).format('YYYY-MM-DD'),
+        "establishment": establishment.value
     }
 
-    if(dateFrom.value != null && dateTo.value != null && category.value != '' && establishment.value != '' && eventName.value != ''){
-        try {
-            await eventStore.addEvent(event, (response)=>{
-                console.log(response);
-                if(response.status == 200){
-                    dateFrom.value = '';
-                    dateTo.value = ''; 
-                    category.value = '';
-                    establishment.value = '';
-                    eventName.value = '';
-                }
-            })   
-        } catch (error) {
-            console.log(error);
-        }
-    }else{
-        console.log("fill all input")
+    try {
+
+        if(dateFrom.value != null && dateTo.value != null && category.value != '' && establishment.value != '' && eventName.value != ''){
+            if(type.value == 'add'){
+                await eventStore.addEvent(event, (response)=>{
+                    if(response.status == 201){
+                        event['id']= response.data['id'];
+                        loadData(event);
+                        ElMessage({
+                            message: `Event added successfully.`,
+                            type: 'success',
+                        })
+                        dateFrom.value = '';
+                        dateTo.value = ''; 
+                        category.value = '';
+                        establishment.value = '';
+                        eventName.value = '';
+                        showSpinner.value = false;
+                    }
+                }) 
+            }else{
+
+            }
+        }else{
+            ElMessage.error(`Please, provide all needed information to ${type} an event`);
+        }  
+    } catch (error) {
+        console.log(error);
     }
 }
 </script>
@@ -107,7 +134,11 @@ const format = (date) => {
 @tailwind utilities;
 
 form{
-    height: 600px !important;
+    height: 800px !important;
+}
+
+form button{
+    width: 8rem !important;
 }
 .security__header {
     display: flex;

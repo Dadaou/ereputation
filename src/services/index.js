@@ -23,7 +23,7 @@ const setURL = (baseURL) => {
 const logout = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("user_authenticated");
-    localStorage.removeItem("user");
+    // localStorage.removeItem("user");
     localStorage.removeItem("user_role");
     delete axiosInstance.defaults.headers["Authorization"];
 };

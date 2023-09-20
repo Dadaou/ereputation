@@ -12,7 +12,7 @@
 import {ref, watch} from 'vue';
 import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import { useUserStore } from "@Stores/user.js";
-import { useRoute} from "vue-router";
+import { useRoute } from "vue-router";
 import NavbarAvatarComponent from '@Components/utils/NavbarAvatarComponent.vue';
 
 

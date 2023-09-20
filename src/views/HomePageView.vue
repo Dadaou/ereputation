@@ -246,6 +246,7 @@ const particlesInit = async engine => {
 const particlesLoaded = async container => {
     console.log("Particles container loaded", container);
 };
+console.log(userStore.user)
 
 const page=ref({
     title1: "",

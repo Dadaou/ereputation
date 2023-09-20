@@ -261,7 +261,6 @@ import ComparisonChartComponent from '@Components/utils/ComparisonChartComponent
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
 import CommentPagination from '@Components/utils/CommentPagination.vue';
 import CommentComponent from '@Components/utils/CommentComponent.vue';
-import WeatherComponent from '@Components/utils/WeatherComponent.vue';
 import {ref, reactive, watch, onBeforeMount, computed, provide} from 'vue';
 import { useCompetitorStore } from "@Stores/competitors.js";
 import { useUserStore } from "@Stores/user.js";
@@ -323,7 +322,6 @@ const competitorStore = useCompetitorStore();
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
-let showCompetitors = ref(false);
 let showWebsites = ref(false);
 let selectedCompetitors = ref('Global');
 let selectedWebsites = ref('Global');

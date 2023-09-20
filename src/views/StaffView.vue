@@ -117,7 +117,6 @@ import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from "@Stores/index.js";
 import { useCompanyStore } from "@Stores/company.js";
 import { useRoute, useRouter } from "vue-router";
-import moment from 'moment';
 
 const page=ref({
     title1: "",
@@ -126,7 +125,6 @@ const page=ref({
 });
 
 const route = useRoute();
-const router = useRouter();
 const breadcrumbData = [
     {
         title: "Back",
@@ -142,7 +140,6 @@ const breadcrumbData = [
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
-const baseurl = window.location.origin;
 
 let establishment = ref({});
 let staffs = ref([]);

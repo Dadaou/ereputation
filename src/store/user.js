@@ -3,7 +3,7 @@ import services from '@Services/index.js';
 
 export const useUserStore = defineStore("user", {
   state: () => ({
-    user: JSON.parse(localStorage.getItem('user')),
+    user: null,
     users: [],
     roleSummary: '',
     authenticated: localStorage.getItem('user_authenticated'),
@@ -23,6 +23,7 @@ export const useUserStore = defineStore("user", {
     async signIn(email, password, next) {
       await services.login_2nd(email, password, (response)=>{
         if (response.status == 200) {
+              console.log(response.data['token'])
               services.setUser(response.data['user']);
               this.user = response.data['user'];
               this.authenticated = true;
@@ -51,5 +52,6 @@ export const useUserStore = defineStore("user", {
       }
       return `${firstInitial}${secondInitial}`;
     }
-  }
+  },
+  persist: true,
 });

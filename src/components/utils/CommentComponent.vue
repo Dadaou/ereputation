@@ -26,7 +26,7 @@
             <div>
                 <span class="emoji" v-if="showEmoji" @click="editReview(review)">
                     <span v-if="review.feeling=='positive'">😀</span>
-                    <span v-if="review.feeling=='neutre'">😐</span>
+                    <span v-if="review.feeling=='neutre' || review.feeling=='neutral'">😐</span>
                     <span v-if="review.feeling=='negative'">😕</span>
                 </span>
                 <p class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center p-1.5 rounded dark:bg-yellow-200 dark:text-yellow-800">{{ formatRating(review.rating) }}</p>
@@ -37,7 +37,7 @@
         </div>
     </article>
     <article v-else>No reviews ...</article>
-    <ModalComponent :showModal="showModal" @close="showModal=false" :width="35">
+    <ModalComponent :showModal="showModal" @close="showModal=false" :width="modalWidth">
             <template #content>
                 <div class="modal__header">
                     <div class="modal__title">
@@ -64,12 +64,13 @@
 </div>
 </template>
 <script setup>
-import { ref, provide } from 'vue';
+import { ref, provide, computed } from 'vue';
 import moment from 'moment';
 import { useUserStore } from "@Stores/user.js";
 import ModalComponent from '@Components/utils/ModalComponent.vue';
 import FeelingFeedbackComponent from '@Components/utils/FeelingFeedbackComponent.vue';
 import { useFeedbackStore } from '@Stores/feedback.js';
+import { useWindowSize } from '@vueuse/core';
 
 const props = defineProps({
     reviews: {
@@ -87,8 +88,15 @@ const props = defineProps({
     }
 });
 
+const { width, height } = useWindowSize()
 const userStore = useUserStore();
 const feedbackStore = useFeedbackStore();
+const modalWidth= computed(()=>{
+    let windowSize = 1500;
+    let gap = (windowSize - width.value)/19;
+    console.log(gap)
+    return gap + 35;
+})
 const formatRating = (rating) => {
     rating = parseFloat(rating);
     if(rating > 5){
@@ -111,15 +119,33 @@ const editReview = (review) => {
    showModal.value = true;
 }
 
+const reloadData = (reviewUpdated)=>{
+    if(userStore.user.customer != null){
+        userStore.user.customer.establishments.forEach((element, index) => {
+            if(element.id == reviewUpdated.establishment['id']){
+              userStore.user.customer.establishments[index].reviews.forEach((review, index2)=>{
+                if(review.id == reviewUpdated.id){
+                    userStore.user.customer.establishments[index].reviews[index2].feeling = reviewUpdated.feeling;
+                }
+              })
+            }
+        });
+    }
+  }
+
 const updateReview = async () => {
-    let payload = {
+    let updatedValue = {
         feeling: feel.value
     }
 
     try {
-        await feedbackStore.updateReview(id.value, payload, response=>{
-            console.log(response);
-            if(response.status==200) showModal.value = false;
+        await feedbackStore.updateReview(id.value, updatedValue, response=>{
+            if(response.status==200){
+                reloadData(response.data)
+                setTimeout(()=>{
+                    showModal.value = false;
+                }, 100)
+            } 
         })   
     } catch (error) {
         console.log(error);

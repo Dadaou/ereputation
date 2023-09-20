@@ -20,11 +20,6 @@ const props = defineProps({
     }
 });
 const emit = defineEmits(['close'])
-
-
-const toggleModal = () => {
-   emit('close');
-}
 </script>
 <style scoped>
 .modal {

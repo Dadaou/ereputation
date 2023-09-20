@@ -16,5 +16,6 @@ export const useFeedbackStore = defineStore("feedback", {
                 next(response);
             });
         }
-    }
+    },
+    persist: true,
 })

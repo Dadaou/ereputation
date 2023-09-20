@@ -31,11 +31,43 @@
 </template>
   
 <script setup>
-  import { computed, ref } from 'vue'
+  import { computed, ref } from 'vue';
+  import { useUserStore } from "@Stores/user.js";
+  import moment from 'moment';
+  import { useEventStore } from "@Stores/event.js"; 
+  import { useCompanyStore } from "@Stores/company.js";
   
+
+  const emit = defineEmits(['edit']);
+  const userStore = useUserStore();
+  const eventStore = useEventStore();
+  const companiesStore = useCompanyStore();
+
+
+  let tableData = computed(()=>{
+    let establishments = userStore.user.customer !=null ? userStore.user.customer.establishments: [];
+    let data = []; 
+    establishments.forEach(establishment => {
+      let events = establishment.events;
+      events.forEach(event_item => {
+        console.log(event_item);
+        let event = {
+          id: staff_item.id,
+          name: event_item.name,
+          category: event_item.category,
+          datefrom: event_item.datefrom,
+          dateto: event_item.dateto,
+          establishment: event_item.establishment,
+          date: `${moment(event_item.datefrom).format('YYYY-MM-DD')} to ${moment(event_item.dateto).format('YYYY-MM-DD')}` 
+        }
+        data.push(event);
+      });
+    });
+    return data;
+  });
   const search = ref('')
   const filterTableData = computed(() =>
-    tableData.filter(
+    tableData.value.filter(
       (data) =>
         !search.value ||
         data.name.toLowerCase().includes(search.value.toLowerCase())
@@ -47,35 +79,25 @@
   const handleDelete = (index, row) => {
     console.log(index, row)
   }
-  
-  const tableData= [
-    {
-      date: '2016-05-03',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-02',
-      name: 'John',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-04',
-      name: 'Morgan',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-01',
-      name: 'Jessy',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-  ]
 </script>
 <style scoped>
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+button{
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+button i.uil-trash-alt{
+  color: var(--color-danger) !important;
+}
+
+button i.uil-edit{
+  color: var(--color-primary) !important;
+}
 .security__header {
     display: flex;
     justify-content: space-between;

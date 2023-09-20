@@ -7,6 +7,7 @@ import moment from 'moment';
 import Particles from "vue3-particles";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import ElementPlus from 'element-plus';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import Vuesalize from 'vuesalize';
 import 'moment/dist/locale/en-ca';
 
@@ -26,6 +27,7 @@ moment.locale('en-ca');
 const app = createApp(App);
 
 const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
 
 app.use(pinia)
    .use(router, axios)
