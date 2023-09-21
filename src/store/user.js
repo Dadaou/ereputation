@@ -28,9 +28,7 @@ export const useUserStore = defineStore("user",()=> {
           console.log(response)
           if (response.status == 200) {
             services.setUser(response.data['user']);
-             user.value = response.data['user'];
-             // localforage.setDriver(localforage.INDEXEDDB);
-             // localforage.setItem('user_connected', JSON.stringify(response.data['user']))
+            user.value = response.data['user'];
             authenticated.value = true;
             next({authenticated:authenticated.value, status: 200});
           } else if (response.status == 401) {

@@ -8,7 +8,6 @@ import Particles from "vue3-particles";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import ElementPlus from 'element-plus';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
-import { createPersistedStatePlugin } from 'pinia-plugin-persistedstate-2'
 import localforage from 'localforage'
 import Vuesalize from 'vuesalize';
 import 'moment/dist/locale/en-ca';
@@ -31,21 +30,7 @@ const app = createApp(App);
 localforage.setDriver(localforage.INDEXEDDB);
 
 const pinia = createPinia();
-// pinia.use(piniaPluginPersistedstate)
-const installPersistedStatePlugin = createPersistedStatePlugin({
-      storage: {
-        getItem: async (key) => {
-          return localforage.getItem(key)
-        },
-        setItem: async (key, value) => {
-          return localforage.setItem(key, JSON.stringify(value))
-        },
-        removeItem: async (key) => {
-          return localforage.removeItem(key)
-        },
-      },
-})
-pinia.use((context) => installPersistedStatePlugin(context))
+pinia.use(piniaPluginPersistedstate);
 
 app.use(pinia)
    .use(router, axios)

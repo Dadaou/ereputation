@@ -6,7 +6,8 @@ const setToken = (token) => {
 }
 
 const setUser = (user) => {
-    localStorage.setItem("user_authenticated",  true)
+    localStorage.setItem("user_authenticated",  true);
+     // localStorage.setItem("user",  JSON.stringify(user));
 }
 
 const setURL = (baseURL) => {
@@ -20,6 +21,7 @@ const setURL = (baseURL) => {
 
 const logout = () => {
     localStorage.removeItem("access");
+    localStorage.removeItem("user");
     localStorage.removeItem("user_authenticated");
     delete axiosInstance.defaults.headers["Authorization"];
 };

@@ -52,7 +52,7 @@
       events.forEach(event_item => {
         console.log(event_item);
         let event = {
-          id: staff_item.id,
+          id: event_item.id,
           name: event_item.name,
           category: event_item.category,
           datefrom: event_item.datefrom,
