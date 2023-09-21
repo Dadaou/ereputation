@@ -13,5 +13,4 @@ export const useEventStore = defineStore("event", {
             });
         }
     },
-    persist: true,
 })

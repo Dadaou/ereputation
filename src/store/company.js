@@ -572,5 +572,5 @@ export const useCompanyStore = defineStore("company", {
       return result;
     },
   },
-  persist: true,
+  persist: true
 });

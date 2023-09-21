@@ -31,5 +31,5 @@ export const useCompetitorStore = defineStore("competitor", {
           }
         })
     }
-  }
+  },
 });

@@ -259,7 +259,7 @@ const signOut = () => {
     userStore.authenticated = false;
     if(userStore.authenticated == false) router.push({name:"Login"});
 }
-
+appStore.isLoading = false;
 const goToCompany = (establishment) => {
     appStore.isLoading = true;
     setTimeout(() => {

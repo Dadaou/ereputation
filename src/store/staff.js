@@ -23,5 +23,4 @@ export const useStaffStore = defineStore("staff", {
             })
         }
     },
-    persist: true,
 })

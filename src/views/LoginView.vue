@@ -59,7 +59,6 @@ const submit = async ()=>{
         if(response.authenticated){
             router.push({name:"Home"});
         } else{
-            showSpinner.value = false;
             isError.value = true;
             console.log(response);
             if(response.status == 401){
@@ -72,6 +71,7 @@ const submit = async ()=>{
                 notification.value.type = "error";
             }
         }
+        showSpinner.value = false;
     })
 }
 

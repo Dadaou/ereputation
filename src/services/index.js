@@ -3,11 +3,9 @@ var axiosInstance = null
 
 const setToken = (token) => {
     localStorage.setItem("access", token);
-    // axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + localStorage.getItem("access");
 }
 
 const setUser = (user) => {
-    localStorage.setItem("user",  JSON.stringify(user))
     localStorage.setItem("user_authenticated",  true)
 }
 
@@ -23,8 +21,6 @@ const setURL = (baseURL) => {
 const logout = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("user_authenticated");
-    // localStorage.removeItem("user");
-    localStorage.removeItem("user_role");
     delete axiosInstance.defaults.headers["Authorization"];
 };
 
@@ -175,8 +171,7 @@ const login = async (email, password) => {
         if(response.status == 200){
             setToken(response.data["token"])
         }
-        console.log(response)
-       return response;   
+       return response   
     } catch (error) {
        return error.response
     }
@@ -189,13 +184,14 @@ const login_2nd = async (email, password, next) => {
         };
         await axiosInstance.post("/login", { email: email, password: password}, {headers})
         .then(response => {
+            console.log(response)
             if(response.status == 200){
                 setToken(response.data["token"])
             }
             next(response);
         })   
     } catch (error) {
-       next(error.response)
+       return next(error.response)
     }
 };
 
