@@ -12,25 +12,14 @@
                     </div>
                 </div>
                 <div class="reviews__content">
-                   <div>
-                    <ul v-if="currentWeather">
-                        <li>Description: {{ currentWeather.description }}</li>
-                        <li>Average temperature: {{ currentWeather.temp }}°C</li>
-                        <li>max: {{ currentWeather.tempmax }}°C</li>
-                        <li>min: {{ currentWeather.tempmin }}°C</li>
-                        <li>Sunrise: {{ moment(currentWeather.sunrise).format('DD MMMM YYYY HH:mm') }}</li>
-                        <li>Sunset: {{ moment(currentWeather.sunset).format('DD MMMM YYYY HH:mm') }}</li>
-                        <li>Cloudcover: {{ currentWeather.cloudcover }}</li>
-                        <li>Conditions: {{ currentWeather.conditions }}</li>
-                        <li>Dew: {{ currentWeather.dew }}</li>
-                        <li>Establishment: {{ currentWeather.establishment }}</li>
-                        <li>Humidity: {{ currentWeather.humidity }}</li>
-                        <li>Snow: {{ currentWeather.snow }}</li>
-                        <li>Solarradiation: {{ currentWeather.solarradiation }}</li>
-                        <li>Windspeed: {{ currentWeather.windspeed }}</li>
-                    </ul>
-                    <div v-else>No weather at the selected date</div>
-                   </div>
+                  <GroupedBarChart :plot-data="data" 
+                     x-key="date"
+                     :width="750" 
+                     :height="300" 
+                     :margin="margin"
+                     x-axis-label="note" 
+                     y-axis-label="date"
+                     :x-tick-format="d => `${d}`" />
                 </div> 
             </div>
             <div class="tablet_mobile__filter">
@@ -105,6 +94,7 @@
                     <div class="date__filter">
                         <div class="text-sm title">Select a date</div>
                         <VueDatePicker class="mb-2 mt-2" v-model="dateStart" @update:model-value="handleDate" :format="format2"/>
+                        <VueDatePicker class="mb-2 mt-2" v-model="dateEnd" :format="format2" :disabled="!enableDateEnd"/>
                     </div>
                 </div>
             </div>
@@ -142,12 +132,15 @@ const breadcrumbData = [
         isCurrent: true
     }
 ]
+
+let data = ref([]);
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 
 let establishment = ref({});
 let weather = ref([]);
+let reviews = ref([]);
 let currentWeather = ref(null);
 
 let media = [];
@@ -157,8 +150,10 @@ const all_items = ref([
     {title: "Competitors", value: 0, icon: "uil-building"},
 ]);
 
-const dateStart = ref(new Date());
-const dateEnd = ref();
+const dateEnd = ref(new Date());
+const dateto = moment(dateEnd.value).format('YYYY-MM-DD');
+const datefrom = moment().subtract(30, 'days').format('YYYY-MM-DD')
+const dateStart = ref();
 const enableDateEnd = ref(false);
 
 const format2 = (date) => {
@@ -174,32 +169,79 @@ const handleDate = (modelData) => {
  dateEnd.value = null;
 }
 
-watch([ dateStart ], ()=>{
-   weatherOfTheDay(dateStart.value);
+watch([ dateStart, dateEnd ], ()=>{
+   console.log(dateStart.value, dateEnd.value)
+   if(dateEnd.value !== null && dateStart.value !== null){
+    data.value = weaherImpact(moment(dateStart.value).format('YYYY-MM-DD'),moment(dateEnd.value).format('YYYY-MM-DD'));
+   }
 })
 
-const weatherOfTheDay = (date)=>{
-    console.log(weather.value);
-    date = moment(date).format('YYYY-MM-DD');
-    currentWeather.value = weather.value[0];
-    weather.value.forEach( item => {
-        let date_weather = moment(item.date_weather).format('YYYY-MM-DD');
-         console.log(date_weather, date)
-        if (date_weather == date) {
-            console.log(item)
+const weaherImpact = (startDate, endDate)=>{
+    let reviewData = reviews.value;
+    let weatherData = weather.value;
+
+    const impactByDay = {};
+
+    weatherData.forEach((weather) => {
+      const date = moment(weather.date_weather);
+      
+      if (date.isSameOrAfter(startDate) && date.isSameOrBefore(endDate)) {
+        if (!impactByDay[date.format('YYYY-MM-DD')]) {
+          impactByDay[date.format('YYYY-MM-DD')] = {};
+          impactByDay[date.format('YYYY-MM-DD')]['reviews']= []
+          impactByDay[date.format('YYYY-MM-DD')]['note']= 0;
         }
+        impactByDay[date.format('YYYY-MM-DD')]['temp'] = ((weather.tempmax+weather.tempmin - 64) / 3.6).toFixed(1);
+
+      }
     });
+
+    reviewData.forEach((review) => {
+      const date = moment(review.date_review);
+
+      if (date.isSameOrAfter(startDate) && date.isSameOrBefore(endDate)) {
+        let rating = parseInt(review.rating, 10);
+
+        if (rating > 5) {
+          rating /= 2;
+        }
+         if (!impactByDay[date.format('YYYY-MM-DD')]) {
+          impactByDay[date.format('YYYY-MM-DD')] = {};
+          impactByDay[date.format('YYYY-MM-DD')]['reviews']= [];
+          impactByDay[date.format('YYYY-MM-DD')]['temp'] = 20;
+          impactByDay[date.format('YYYY-MM-DD')]['note']= 0;
+        }
+        impactByDay[date.format('YYYY-MM-DD')]['reviews'].push(review);
+        let nb = impactByDay[date.format('YYYY-MM-DD')]['reviews'].length;
+        let sum = (impactByDay[date.format('YYYY-MM-DD')]['note'] + Number(rating))
+        impactByDay[date.format('YYYY-MM-DD')]['note']= nb>=2?sum/2:sum;
+      }
+    });
+
+    console.log(impactByDay);
+    let data =[];
+    for(const key in impactByDay){
+        let item = {
+            "date": moment(key).format('DD'),
+            "rating": impactByDay[key]['note'],
+            "temperature": impactByDay[key]['temp'],
+        }
+
+        data.push(item);
+    }
+
+    console.log(data)
+    return data;
 }
 
 onBeforeMount(async()=>{
-const companyId = route.params.id;
+const companyId = route.params.id;     
 if(userStore.user.customer !==null){
     userStore.user.customer.establishments.forEach(async company => {
         if(company.id == companyId){
             establishment.value = company;
             weather.value = company.weather;
-            weatherOfTheDay(dateStart.value)
-            // page.value.title2 = company.name;
+            reviews.value = company.reviews;
             establishment.value.media.forEach(item => {
                 media.push(item.url_source);
             });
@@ -207,6 +249,10 @@ if(userStore.user.customer !==null){
             all_items.value[1].value = establishment.value.reviews.length;
             all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
             appStore.isLoading = false;
+
+            
+            console.log(dateto, datefrom)
+            data.value = weaherImpact(dateto, datefrom);
         }
     });
 }
