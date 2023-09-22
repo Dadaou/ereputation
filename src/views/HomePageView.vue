@@ -155,6 +155,7 @@
                                 <RatingComponent class="rating__content" :reviews="company.reviews.length" :rating="companiesStore.calculateRatingV2(company.reviews)"/>
                             </div>
                             <div class="list__actions">
+                                    <button class="btn mr-2" @click="showModal=true, establishment=company">Show <i class="uil uil-qrcode-scan"></i></button>
                                     <button class="btn" @click="goToCompany(company)">More details</button>
                             </div>
                         </div>
@@ -213,7 +214,49 @@
                 <button class="btn" @click="signOut">Disconnect</button>        
             </div>
         </div>
-     </div>   
+     </div>  
+     <ModalComponent :showModal="showModal" @close="showModal=false" :width="35">
+        <template #content>
+            <div class="modal__header">
+                <div class="modal__title">
+                    <h3 class="font-semibold text-gray-900 dark:text-white">
+                        <i class="uil uil-qrcode-scan"></i> QR Code
+                    </h3>
+                </div>
+                <div class="modal__close">
+                    <i class="uil uil-times-circle"  @click="showModal = false"></i>
+                </div>
+            </div>
+
+            <div  v-if="downloaded==false" class="establishment__review__qrcode">
+                <p class="mb-5">
+                    Download this QR code to link your client to the feedback page
+                </p>
+                <div id="qrcode__container mt-5" ref="qrcode">
+                    <vue-qrious
+                        class="qr__code"
+                        :value="`${baseurl}/companies/${establishment.id}/${establishment.competitor_tag}/feedback`"
+                        @change="onDataUrlChange"
+                    />
+                </div>
+            </div>
+            <div v-else class="establishment__review__qrcode">
+                <p class="mb-5">
+                    Your download is successfully complete!
+                </p>
+            </div>
+            <div class="mt-5 download__qr_btn">
+                <button v-if="
+                downloaded==false" class="btn__light_secondary" @click="downloadQrcode">
+                    <i class="uil uil-download-alt"></i> Download
+                </button>
+                <button v-else class="btn__light_secondary" @click="showModal=false, downloaded=false">
+                    close
+                </button>
+            </div>
+
+        </template>
+    </ModalComponent> 
 </template>
 
 <script setup>
@@ -228,6 +271,9 @@ import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingComponent from '@Components/utils/RatingComponent.vue'; 
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Virtual } from 'swiper/modules';
+import VueQrious from 'vue-qrious';
+import * as htmlToImage from 'html-to-image';
+import ModalComponent from '@Components/utils/ModalComponent.vue';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -237,7 +283,10 @@ const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 const mediaStore = useMediaStore();
-console.log(companiesStore.establishments)
+const baseurl = window.location.origin;
+const showModal = ref(false);
+const downloaded = ref(false);
+const establishment = ref(null);
 
 const particlesInit = async engine => {
     await loadFull(engine);
@@ -270,6 +319,28 @@ const goToCompany = (establishment) => {
             },
         });
     }, 100); 
+}
+
+const base64Image = ref(null);
+const qrcode = ref(null);
+const downloadQrcode = ()=>{
+    // htmlToImage.toJpeg(qrcode.value, { quality: 0.95 })
+    // .then(function (dataUrl) {
+    //     var link = document.createElement('a');
+    //     link.download = `${establishment.value.name}-feedback-link.jpeg`;
+    //     link.href = dataUrl;
+    //     link.click();
+    //     downloaded.value = true;
+    // });
+    let link = document.createElement('a');
+    link.download = `${establishment.value.name}-feedback-link.jpeg`;
+    link.href = base64Image.value;
+    link.click();
+    downloaded.value = true;
+}
+
+const onDataUrlChange = (dataUrl) =>{
+      base64Image.value = dataUrl;
 }
 </script>
 
@@ -498,6 +569,47 @@ const goToCompany = (establishment) => {
 
 .list__actions button:hover{
     background-color: var(--color-primary);
+}
+
+.modal__header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal__header div{
+    align-self: center;
+}
+
+.modal__close i{
+   float: right;
+   font-size: 25px;
+   color: red;
+   cursor: pointer;
+   transition: var(--transition);
+}
+
+.establishment__review__qrcode p{
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-bg2);
+}
+
+.download__qr_btn{
+    display: flex;
+    justify-content: center;
+}
+
+.download__qr_btn button{
+    flex-basis: 50%;
+}
+
+.qr__code{
+    width: 35% !important;
+    padding: 50px auto !important;
+    margin: auto;
+}
+.modal__close i:hover{
+    transform: rotate(360deg);
 }
 
 @media screen and (max-width:1163px) {

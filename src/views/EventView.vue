@@ -12,9 +12,6 @@
                     </div>
                 </div>
                 <div class="reviews__content">
-                    <div class="reviews__pagination">
-                        <!-- <CommentPagination  v-if="_reviews.length > 0" :config="paginationConfig" @updatePage="updatePage" :color="'#6c63ff'" :nb="_reviews.length" :data="visibleData"></CommentPagination> -->
-                    </div>
                     <EventItemComponent/>
                 </div> 
             </div>

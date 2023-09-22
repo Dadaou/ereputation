@@ -28,6 +28,8 @@
                        <h2>Weather's global impact</h2>
                     </div>
                 </div>
+                <BaseLegend class="legend" :LegendData="legendGlobalData" :alignment="'horizontal'">
+                  </BaseLegend>
                 <div class="reviews__content">
                   <PolarArea :data="globalData" :options="options" />
                 </div> 
@@ -131,7 +133,7 @@ import { PolarArea } from 'vue-chartjs';
 import { useResizeObserver } from '@vueuse/core';
 import moment from 'moment';
 
-ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend)
+ChartJS.register(RadialLinearScale, ArcElement, Tooltip)
 
 const page=ref({
     title1: "",
@@ -163,6 +165,7 @@ let establishment = ref({});
 let weather = ref([]);
 let reviews = ref([]);
 const legendData = ref([])
+const legendGlobalData = ref([])
 
 let media = [];
 const all_items = ref([
@@ -174,7 +177,7 @@ const all_items = ref([
 const dateEnd = ref(new Date());
 const dateto = moment(dateEnd.value).format('YYYY-MM-DD');
 const datefrom = moment().subtract(7, 'days').format('YYYY-MM-DD')
-const dateStart = ref();
+const dateStart = ref(new Date(datefrom));
 const enableDateEnd = ref(false);
 const colors = ref(['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']);
 const chartWidth =  ref(0);
@@ -252,20 +255,17 @@ const weaherImpact = (startDate, endDate)=>{
             "date": `${moment(key).format('DD-MM-YYYY')}`,
             "rating": impactByDay[key]['note'],
             "temperature": impactByDay[key]['temp'],
-            "max": impactByDay[key]['max'],
-            "min": impactByDay[key]['min']
         }
 
         data.push(item);
     }
 
-    console.log(data);
-    legendData.value = generatedLegend(data, colors.value)
+    let dataType = ['rating', 'temperature']
+    legendData.value = generatedLegend(colors.value, dataType)
     return data;
 }
 
-const generatedLegend = (data, colors)=>{
-    let dataType = ['rating', 'temperature', 'max', 'min']
+const generatedLegend = (colors, dataType)=>{
     let legends = [];
 
     dataType.forEach((type, index)=>{
@@ -301,13 +301,11 @@ const generatedLabel = (weatherData)=>{
         data[label]= {};
         data[label]['notes'] = [];
     })
-    console.log(labels)
     return [labels, data];
 }
 
 const groupedReview = (weatherData, reviews)=>{
     let data = generatedLabel(weatherData)[1];
-    console.log(data);
     let labels = generatedLabel(weatherData)[0];
 
     reviews.forEach(review=>{
@@ -352,6 +350,8 @@ function hexToRgb(hex) {
 const getGlobalData = (data, colors)=>{
     let globalData = [];
     let index = 0;
+    let allColors = [];
+    // let labels = generatedLabel(weatherData)[0];
     for(const key in data){
         let value =  {
           label: `${key} global rating`,
@@ -363,9 +363,11 @@ const getGlobalData = (data, colors)=>{
           data: data[key]['notes']
         }
         globalData.push(value)
+        allColors.push(hexToRgb(colors[index]));
         index ++;
     }
-   return globalData;
+   // legendGlobalData.value = generatedLegend(allColors, labels);
+   return [globalData, allColors];
 }
 
 const groupReviewByCondition = ()=>{
@@ -374,7 +376,8 @@ const groupReviewByCondition = ()=>{
     let _colors = colors.value;
     let labels = generatedLabel(weatherData)[0];
     let data = groupedReview(weatherData, reviewData);
-    let datasets = getGlobalData(data, _colors);
+    let datasets = getGlobalData(data, _colors)[0];
+    legendGlobalData.value = generatedLegend(getGlobalData(data, _colors)[1], labels);
     globalData.value['labels'] = labels;
     globalData.value['datasets'] = datasets;
 }
@@ -395,8 +398,6 @@ if(userStore.user.customer !==null){
             all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
             appStore.isLoading = false;
 
-            
-            console.log(dateto, datefrom)
             data.value = weaherImpact(datefrom, dateto);
             groupReviewByCondition();
         }

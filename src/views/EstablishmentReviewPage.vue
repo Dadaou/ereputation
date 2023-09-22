@@ -361,7 +361,6 @@ watch(selectedStars, ()=>{
 
 onBeforeMount(async()=>{
 const companyId = route.params.id;
-// appStore.isLoading = true;
 
 if(userStore.user.customer !==null){
     userStore.user.customer.establishments.forEach(async company => {
@@ -495,7 +494,6 @@ const starFilter = (star)=>{
 .filter__content{
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
-    /* margin: 15px auto; */
     padding: 15px;
     display: flex;
     flex-direction: column;

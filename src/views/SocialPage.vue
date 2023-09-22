@@ -12,11 +12,34 @@
                     </div>
                 </div>
                 <div class="reviews__content">
-                   
+                  <div class="social-list">
+            <ul>
+                <li v-for="socialItem in socialPages">
+                    <div class="social-details">
+                        <h3><i :class="`uil uil-${socialItem.source}`"></i> <span>{{ socialItem.source }}</span></h3>
+                        <p><span>Followers:</span> {{ socialItem.followers }}</p>
+                        <p><span>Likes:</span> {{ socialItem.likes }}</p>
+                        <p><span>Posts:</span> {{ socialItem.posts }}</p>
+                    </div>
+                    <div class="social-posts" v-if="socialItem.socialPosts.length > 0">
+                        <h4>Social Posts</h4>
+                        <ul>
+                            <li v-for="post in socialItem.socialPosts">
+                                <p><i class="uil uil-comment"></i>: <span>{{ post.comments }}</span> </p>
+                                <p><i class="uil uil-thumbs-up"></i>: <span>{{ post.likes }}</span> </p>
+                                <p><i class="uil uil-share"></i>: <span>{{ post.share }}</span></p>
+                                <p class="date"><i class="uil uil-calender"></i>: <span v-if="post.published_at!==null">{{ moment(post.published_at).format('DD MMM YYYY') }}</span></p>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
                 </div> 
             </div>
             <div class="tablet_mobile__filter">
                     <VueDatePicker class="mb-2" v-model="dateStart"  placeholder="Select a date" :format="format2"/>
+                    <VueDatePicker class="mb-2 mt-2" v-model="dateStart" @update:model-value="handleDate" :format="format2"/>
             </div>
             <div class="tablet_mobile__head">
                 <div class="establishment__info">
@@ -84,9 +107,13 @@
                                     <span>{{ all_items[1].value  }}</span>
                             </div>
                     </div>
+                     <DropdownComponent class="dropdown" title="Filter by social" placeholder="Select a social network" :data="socials" @submit="(social)=>{
+                        selectedSocials = social
+                    }" :default="socials[0]"/>
                     <div class="date__filter">
                         <div class="text-sm title">Select a date</div>
                         <VueDatePicker class="mb-2 mt-2" v-model="dateStart" @update:model-value="handleDate" :format="format2"/>
+                        <VueDatePicker class="mb-2 mt-2" v-model="dateEnd" @update:model-value="handleDate" :format="format2"/>
                     </div>
                 </div>
             </div>
@@ -98,6 +125,7 @@
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import {ref, watch, onBeforeMount} from 'vue';
+import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from "@Stores/index.js";
 import { useCompanyStore } from "@Stores/company.js";
@@ -127,9 +155,11 @@ const breadcrumbData = [
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
-
+let selectedSocials = ref('');
 let establishment = ref({});
-let socials = ref([]);
+let socialPages = ref([]);
+let socials = ref(['']);
+const maxPostsToShow = ref(2)
 
 let media = [];
 const all_items = ref([
@@ -155,25 +185,64 @@ const handleDate = (modelData) => {
  dateEnd.value = null;
 }
 
-onBeforeMount(async()=>{
-const companyId = route.params.id;
-if(userStore.user.customer !==null){
-    userStore.user.customer.establishments.forEach(async company => {
-        if(company.id == companyId){
-            establishment.value = company;
-            establishment.value.media.forEach(item => {
-                media.push(item.url_source);
-            });
-            console.log(company);
-            // socials.value = company.socials
-            all_items.value[1].value = establishment.value.reviews.length;
-            all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
-            appStore.isLoading = false;
+const capitalizeString = (str)=>{
+      if (typeof str !== 'string') {
+        throw new Error('Input must be a string');
+      }
+      
+      if (str.length === 0) {
+        return str;
+      }
+      return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+const isURL = (string) => {
+      const urlPattern = /^(?:https?:\/\/)?(?:www\.)?[^\s.]+\.[^\s]{2,}$/i;
+      return urlPattern.test(string);
+}
+
+const getSocials = (socials) => {
+    socials =  Object.entries(socials[0]);
+    let data = [];
+    socials.forEach(([key, value]) => {
+        if(typeof(value) == 'string'){
+          if(isURL(value) && key !== 'url'){
+            data.push(capitalizeString(key));
+          }
         }
     });
+    return data;
 }
+
+const showMorePosts = ()=> {
+    maxPostsToShow.value += 2;
+}
+
+onBeforeMount(async()=>{
+    const companyId = route.params.id;
+    if(userStore.user.customer !==null){
+        userStore.user.customer.establishments.forEach(async company => {
+            if(company.id == companyId){
+                establishment.value = company;
+                establishment.value.media.forEach(item => {
+                    media.push(item.url_source);
+                });
+                socialPages.value = company.socialPages;
+                console.log(socialPages.value, company.socialPages )
+                socials.value = ['', ...getSocials(company.socials)];
+                all_items.value[1].value = establishment.value.reviews.length;
+                all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
+                appStore.isLoading = false;
+            }
+        });
+    }
 })
 
+watch(selectedSocials, ()=>{
+    if(selectedSocials.value != ''){
+
+    }
+})
 </script>
 
 <style scoped>
@@ -181,19 +250,16 @@ if(userStore.user.customer !==null){
 @tailwind components;
 @tailwind utilities;
 
-
 li {
   padding: 10px;
+  font-size:14px;
   border-bottom: 1px solid #ccc;
 }
 
-/* Style pour les en-têtes de colonne */
 li:first-child {
-  font-weight: bold;
   background-color: #f2f2f2;
 }
 
-/* Style pour les lignes impaires */
 li:nth-child(odd) {
   background-color: #f9f9f9;
 }
@@ -273,7 +339,6 @@ li:nth-child(odd) {
 .filter__content{
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
-    /* margin: 15px auto; */
     padding: 15px;
     display: flex;
     flex-direction: column;
@@ -515,6 +580,117 @@ li:nth-child(odd) {
 
 .star__barre{
     cursor: pointer;
+}
+
+.social-list {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.social-details {
+    flex: 1;
+    padding-right: 20px;
+    border-right: 1px solid #ccc;
+}
+
+.social-details h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.social-details h3 span{
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.social-details p{
+   font-weight: 500;
+}
+
+.social-details p span{
+   color: var(--color-primary)
+}
+
+.social-posts {
+    flex: 2;
+    padding-left: 20px;
+}
+
+.social-posts h4 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.social-posts ul {
+    list-style: none;
+    padding: 0;
+}
+
+.social-posts li {
+    margin-bottom: 10px;
+}
+
+.social-posts li span{
+    font-weight: 500;
+}
+
+.date{
+    width: 150px !important;
+}
+
+.uil-youtube{
+    color: red;
+}
+
+.uil-linkedin{
+    color: #0A66C2;
+}
+
+.uil-facebook{
+    color: #1877F2;
+}
+
+.uil-twitter{
+    color: #1DA1F2;
+}
+
+.uil-instagram{
+    color:#BC2A8D;
+}
+
+.uil-comment{
+    color: var(--color-danger);
+} 
+
+.uil-thumbs-up{
+    color: #1DA1F2;
+} 
+
+.uil-share{
+    color: #1DA1F2;
+}
+
+.uil-calender{
+    console: var(--color-primary)
 }
 
 @media screen and (max-width:1400px) {

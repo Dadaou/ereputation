@@ -53,24 +53,27 @@
                        <h2>Staff Excellence Awards</h2>
                     </div>
                 </div>
+                 <p class="temp__p">To see the staffs list, please click <a @click="goto('Staff')">here</a></p>
                 <div class="reviews__content">
-                    <p>To see the staffs list, please click <a @click="goto('Staff')">here</a></p>
+                    <!-- <p>To see the staffs list, please click <a @click="goto('Staff')">here</a></p> -->
                 </div>
                 <div class="head">
                     <div class="app__title">
                        <h2>Last Events</h2>
                     </div>
                 </div>
+                <p class="temp__p">Explore the latest events, please click <a @click="goto('Event')">here</a> to access all </p>
                 <div class="reviews__content">
-                    <p>Explore the latest events, please click <a @click="goto('Event')">here</a> to access all </p>
+                    <!-- <p>Explore the latest events, please click <a @click="goto('Event')">here</a> to access all </p> -->
                 </div>
                 <div class="head">
                     <div class="app__title">
                        <h2>Socials</h2>
                     </div>
                 </div>
+                 <p class="temp__p">Explore your social account statistic, please click <a @click="goto('Social')">here</a></p>
                 <div class="reviews__content">
-                    <p>Explore your social account statistic, please click <a @click="goto('Social')">here</a></p>
+                    <!-- <p>Explore your social account statistic, please click <a @click="goto('Social')">here</a></p> -->
                 </div>
                 <div class="head">
                     <div class="app__title">
@@ -285,7 +288,6 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend
 } from 'chart.js'
 import { Line } from 'vue-chartjs';
 
@@ -651,6 +653,24 @@ const goto = (value) =>{
 *{
     transition: var(--transition);
 }
+
+.temp__p{
+    font-size: 14px;
+    color: var(--color-bg1);
+    font-weight: 500;
+}
+
+.temp__p a:hover{
+    background-color: var(--color-danger);
+    color: white;
+}
+
+.temp__p a{
+    color: var(--color-danger);
+    border-bottom: 1px solid var(--color-danger);
+    cursor: pointer;
+}
+
 .app__container{
     margin-top: 5rem;
     min-height: 30rem;
