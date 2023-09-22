@@ -20,6 +20,7 @@ import { useCompanyStore } from "@Stores/company.js";
 import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from "@Stores/index.js";
 
+
 const removeAccess = (to, from, next) => {
   localStorage.removeItem("user_authenticated");
   localStorage.removeItem("access");
@@ -37,7 +38,11 @@ const getIds = (establishments) => {
 }
 
 const CheckAccess = (to, from, next) => {
-  if(localStorage.getItem("access") == null) next('/');
+  const userStore = useUserStore();
+  if(userStore.user == {} || localStorage.getItem("access") == null){
+    if(userStore.user == {}) userStore.signout();
+    next('/')
+  }
   else next()
 }
 
@@ -65,6 +70,7 @@ const fetchEstablishments = async (to, from, next) => {
   }
   next();
 }
+
 
 const CheckCompany = async (to, from, next) => {
   const companyId = parseInt(to.params.id);

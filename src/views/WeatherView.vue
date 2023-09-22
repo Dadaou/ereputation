@@ -11,15 +11,25 @@
                        <h2>Weather</h2>
                     </div>
                 </div>
-                <div class="reviews__content">
+                <div class="reviews__content" ref="el">
                   <GroupedBarChart :plot-data="data" 
                      x-key="date"
-                     :width="750" 
-                     :height="300" 
-                     :margin="margin"
-                     x-axis-label="note" 
-                     y-axis-label="date"
+                     :width="chartWidth" 
+                     :height="300"
+                     x-axis-label="Date" 
+                     :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']"
                      :x-tick-format="d => `${d}`" />
+                     <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
+                    </BaseLegend>
+                </div>
+
+                <div class="head">
+                    <div class="app__title">
+                       <h2>Weather's global impact</h2>
+                    </div>
+                </div>
+                <div class="reviews__content">
+                  <PolarArea :data="globalData" :options="options" />
                 </div> 
             </div>
             <div class="tablet_mobile__filter">
@@ -94,7 +104,7 @@
                     <div class="date__filter">
                         <div class="text-sm title">Select a date</div>
                         <VueDatePicker class="mb-2 mt-2" v-model="dateStart" @update:model-value="handleDate" :format="format2"/>
-                        <VueDatePicker class="mb-2 mt-2" v-model="dateEnd" :format="format2" :disabled="!enableDateEnd"/>
+                        <VueDatePicker class="mb-2 mt-2" v-model="dateEnd" :format="format2" :disabled="!enableDateEnd" :min-date="new Date(dateStart)"/>
                     </div>
                 </div>
             </div>
@@ -110,7 +120,18 @@ import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from "@Stores/index.js";
 import { useCompanyStore } from "@Stores/company.js";
 import { useRoute, useRouter } from "vue-router";
+import {
+  Chart as ChartJS,
+  RadialLinearScale,
+  ArcElement,
+  Tooltip,
+  Legend
+} from 'chart.js'
+import { PolarArea } from 'vue-chartjs';
+import { useResizeObserver } from '@vueuse/core';
 import moment from 'moment';
+
+ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend)
 
 const page=ref({
     title1: "",
@@ -141,7 +162,7 @@ const appStore = useAppStore();
 let establishment = ref({});
 let weather = ref([]);
 let reviews = ref([]);
-let currentWeather = ref(null);
+const legendData = ref([])
 
 let media = [];
 const all_items = ref([
@@ -152,9 +173,11 @@ const all_items = ref([
 
 const dateEnd = ref(new Date());
 const dateto = moment(dateEnd.value).format('YYYY-MM-DD');
-const datefrom = moment().subtract(30, 'days').format('YYYY-MM-DD')
+const datefrom = moment().subtract(7, 'days').format('YYYY-MM-DD')
 const dateStart = ref();
 const enableDateEnd = ref(false);
+const colors = ref(['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']);
+const chartWidth =  ref(0);
 
 const format2 = (date) => {
   const day = date.getDate();
@@ -192,7 +215,9 @@ const weaherImpact = (startDate, endDate)=>{
           impactByDay[date.format('YYYY-MM-DD')]['note']= 0;
         }
         impactByDay[date.format('YYYY-MM-DD')]['temp'] = ((weather.tempmax+weather.tempmin - 64) / 3.6).toFixed(1);
-
+        impactByDay[date.format('YYYY-MM-DD')]['max'] = ((weather.tempmax- 32) / 1.8).toFixed(1);
+        impactByDay[date.format('YYYY-MM-DD')]['min'] = ((weather.tempmin- 32) / 1.8).toFixed(1);
+        impactByDay[date.format('YYYY-MM-DD')]['condition'] = weather.conditions;
       }
     });
 
@@ -208,7 +233,9 @@ const weaherImpact = (startDate, endDate)=>{
          if (!impactByDay[date.format('YYYY-MM-DD')]) {
           impactByDay[date.format('YYYY-MM-DD')] = {};
           impactByDay[date.format('YYYY-MM-DD')]['reviews']= [];
-          impactByDay[date.format('YYYY-MM-DD')]['temp'] = 20;
+          impactByDay[date.format('YYYY-MM-DD')]['temp'] = 25;
+          impactByDay[date.format('YYYY-MM-DD')]['max'] = 30;
+          impactByDay[date.format('YYYY-MM-DD')]['min'] = 20;
           impactByDay[date.format('YYYY-MM-DD')]['note']= 0;
         }
         impactByDay[date.format('YYYY-MM-DD')]['reviews'].push(review);
@@ -222,16 +249,134 @@ const weaherImpact = (startDate, endDate)=>{
     let data =[];
     for(const key in impactByDay){
         let item = {
-            "date": moment(key).format('DD'),
+            "date": `${moment(key).format('DD-MM-YYYY')}`,
             "rating": impactByDay[key]['note'],
             "temperature": impactByDay[key]['temp'],
+            "max": impactByDay[key]['max'],
+            "min": impactByDay[key]['min']
         }
 
         data.push(item);
     }
 
-    console.log(data)
+    console.log(data);
+    legendData.value = generatedLegend(data, colors.value)
     return data;
+}
+
+const generatedLegend = (data, colors)=>{
+    let dataType = ['rating', 'temperature', 'max', 'min']
+    let legends = [];
+
+    dataType.forEach((type, index)=>{
+        let legend = {};
+        legend['name'] = type;
+        legend['color'] = colors[index];
+        legends.push(legend);
+    })
+    return legends;
+}
+
+//Weather's global impact
+const globalData = ref({
+  labels: [],
+  datasets: []
+})
+
+const options = {
+  responsive: true,
+  maintainAspectRatio: false
+}
+const generatedLabel = (weatherData)=>{
+    let labels = [];
+    let data = {};
+     weatherData.forEach(weather=>{
+        let conditions = weather.conditions.split(',');
+        conditions.forEach(condition=>{
+            if(!labels.includes(condition.trim())) labels.push(condition.trim());
+        })
+    })
+
+    labels.forEach(label=>{
+        data[label]= {};
+        data[label]['notes'] = [];
+    })
+    console.log(labels)
+    return [labels, data];
+}
+
+const groupedReview = (weatherData, reviews)=>{
+    let data = generatedLabel(weatherData)[1];
+    console.log(data);
+    let labels = generatedLabel(weatherData)[0];
+
+    reviews.forEach(review=>{
+        const date_review = moment(review.date_review).format('YYYY-MM-DD');
+        let exist = false;
+        let rating = parseInt(review.rating, 10);
+
+        if (rating > 5) {
+          rating /= 2;
+        }
+
+        weatherData.forEach(weather=>{
+            const date_weather = moment(weather.date_weather).format('YYYY-MM-DD');
+            if(date_review === date_weather){
+                exist = true;
+                console.log(review)
+                let conditions = weather.conditions.split(',');
+                conditions.forEach(condition=>{
+                   if(!data[condition.trim()]['notes'].includes(rating)) data[condition.trim()]['notes'].push(rating)
+                })
+            }
+        })
+
+        if(exist == false){
+            let randomIndex = Math.floor(Math.random() * labels.length);
+            if(!data[labels[randomIndex]]['notes'].includes(rating)) data[labels[randomIndex]]['notes'].push(rating);
+        }
+    })
+
+    return  data;
+}
+
+function hexToRgb(hex) {
+  hex = hex.replace(/^#/, '');
+  const bigint = parseInt(hex, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `rgba(${r},${g},${b},0.2)`;
+}
+
+const getGlobalData = (data, colors)=>{
+    let globalData = [];
+    let index = 0;
+    for(const key in data){
+        let value =  {
+          label: `${key} global rating`,
+          backgroundColor: hexToRgb(colors[index]),
+          pointBackgroundColor: 'rgba(255,99,132,1)',
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: 'rgba(255,99,132,1)',
+          data: data[key]['notes']
+        }
+        globalData.push(value)
+        index ++;
+    }
+   return globalData;
+}
+
+const groupReviewByCondition = ()=>{
+    let reviewData = reviews.value;
+    let weatherData = weather.value;
+    let _colors = colors.value;
+    let labels = generatedLabel(weatherData)[0];
+    let data = groupedReview(weatherData, reviewData);
+    let datasets = getGlobalData(data, _colors);
+    globalData.value['labels'] = labels;
+    globalData.value['datasets'] = datasets;
 }
 
 onBeforeMount(async()=>{
@@ -252,10 +397,18 @@ if(userStore.user.customer !==null){
 
             
             console.log(dateto, datefrom)
-            data.value = weaherImpact(dateto, datefrom);
+            data.value = weaherImpact(datefrom, dateto);
+            groupReviewByCondition();
         }
     });
 }
+})
+
+const el = ref(null);
+useResizeObserver(el, (entries) => {
+      const entry = entries[0]
+      const { width } = entry.contentRect;
+      chartWidth.value = Math.abs(width);
 })
 
 </script>
