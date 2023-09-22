@@ -13,7 +13,7 @@
                 </div>
                 <div class="reviews__content">
                   <div class="social-list">
-            <ul>
+            <ul v-if="socialPages.length>0">
                 <li v-for="socialItem in socialPages">
                     <div class="social-details">
                         <h3><i :class="`uil uil-${socialItem.source}`"></i> <span>{{ socialItem.source }}</span></h3>
@@ -34,6 +34,7 @@
                     </div>
                 </li>
             </ul>
+            <p v-else>no social data</p>
         </div>
                 </div> 
             </div>
