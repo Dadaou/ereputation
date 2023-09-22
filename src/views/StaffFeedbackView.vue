@@ -3,32 +3,19 @@
     <HeadComponent :page="page"></HeadComponent> 
     <div class="feedback__form">
         <div class="tablet_mobile__head">
-                <div class="establishment__info">
-                        <h1 class="society__name">{{ establishment.establishment_name }}</h1>
-                        <div class="society__category">
-                            <i :class="['uil', establishment.establishment_category=='Restaurant'?'uil-restaurant':'', establishment.category=='Hotel'?'uil-bed-double':'', establishment.category=='Residence'?'uil-home':'']"></i>
-                                <span class="ml-2">{{ establishment.establishment_category }}</span>
-                        </div>
-                        <div class="society__country" v-if="establishment.country != null">
-                                <i class="uil uil-map"></i>
-                                <span class="ml-2">{{ establishment.establishment_country }}</span>
-                        </div> 
-                        <div class="society__location">
-                                <i class="uil uil-location-point"></i>
-                                <span class="ml-2">{{ establishment.establishment_address1 }}, {{ establishment.establishment_city }}</span>
-                         </div>
-                    </div>
-                <div class="photo">
-                    <img v-if="media.length > 0" :src="media[0]" alt="" />
-                    <div v-else role="status" class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
-                        </svg>
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                </div>
-            </div>
+            <div class="staff__card" v-if="staff !== null">
+		            <div>
+		                <h5>{{ staff.firstname }} <span v-if="staff.lastname != null">{{ staff.lastname }}</span></h5>
+		                <ul>
+		                    <li class="Gender">
+		                    <span class="label">Gender: </span> <i :class="['uil', (staff.gender=='M'&& staff.gender!='F' && staff.gender!='O')?'uil-mars':'', (staff.gender=='F'&& staff.gender!='M' && staff.gender!='O')?'uil-venus':'']"> </i>
+		                    </li>
+
+		                    <li><span class="label">Department: </span> <span>{{ staff.department }}</span></li>
+		                </ul>
+		            </div>
+		        </div>
+		     </div>
             <div class="feedback">
                 <h3>Customer experiences feedback</h3>
                 <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4">
@@ -83,8 +70,9 @@ import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.v
 import { useUserStore } from "@Stores/user.js";
 import { useRoute } from "vue-router";
 import services from '@Services/index.js';
-import { useCompanyStore } from '@Stores/company.js';
 import { useFeedbackStore } from '@Stores/feedback.js';
+import { useCompanyStore } from '@Stores/company.js';
+import { useStaffStore } from '@Stores/staff.js';
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import { ElMessage } from 'element-plus';
 import moment from 'moment';
@@ -93,8 +81,9 @@ import moment from 'moment';
 const route = useRoute();
 const userStore = useUserStore();
 const companyStore = useCompanyStore();
+const staffStore = useStaffStore();
 const feedbackStore = useFeedbackStore();
-const establishment = ref({});
+const staff = ref(null);
 let media = [];
 
 const page=ref({
@@ -108,13 +97,13 @@ const showSpinner = ref(false);
 
 onBeforeMount(async ()=>{
     if(userStore.authenticated==null) services.setToken(import.meta.env.VITE_APP_TOKEN);
-     await services.get_Record(`establishment/${route.params.id}/media`, (response)=>{
-        console.log(response)
-            if(response.status == 200){ 
-                establishment.value = response['data'][0];
-                media.value = response['data'][0].url_source==null?[]:response['data'][0].url_source;
-            }
-      });
+    await staffStore.fetchOne(route.params.id, (response)=>{
+    	console.log(response);
+    	if(response.status == 200){
+    		staff.value = response.data;
+    	}
+    })
+    
 })
 
 const format = (date) => {
@@ -142,14 +131,14 @@ const submit = async ()=>{
         "translated": null,
         "source": "App (Private)",
         "catering": null,
-        "establishment": `/api/${companyStore.entity}/${route.params.id}`,
+        "establishment": `/api/${companyStore.entity}/${route.params.etab}`,
         "feeling": ratingCustomer.value.feeling,
         "score": 0,
         "confidence": 0,
         "authorUrl": null,
         "profilePhoto": null,
         "email": email.value,
-        "staff": null,
+        "staff": `/api/staff/${route.params.id}`,
         "optin": true,
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
         "dateReview": moment(date_review, 'DD/MM/YYYY')
@@ -257,7 +246,7 @@ i{
 }
 
 input:hover {
-  border: 1px solid rgb(185, 185, 185) !important; /* Add a green border when focused */
+  border: 1px solid rgb(185, 185, 185) !important;
 }
 
 input:focus {
@@ -276,6 +265,38 @@ input:focus {
 .photo img{
     height: 100%;
     width: 100%;
+}
+
+.staff__card{
+    border: 1px solid var(--light-color-bg2);
+    padding: 5px;
+    flex-basis: 500px;
+    flex-grow: 1;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.staff__card h5{
+    color: var(--color-primary);
+}
+
+.uil-mars{
+    color: blue;
+}
+
+.uil-venus{
+    color: pink;
+}
+
+.staff__card span{
+    font-size: 14px;
+    color: var(--color-bg2);
+}
+span.label{
+    color: var(--color-bg1);
+    font-size: 14px;
 }
 
 @media screen and (max-width:1075px) {

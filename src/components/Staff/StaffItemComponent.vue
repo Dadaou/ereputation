@@ -1,15 +1,26 @@
 <template>
     <div class="staff__list">
         <div class="staff__card" v-if="staffs.length>0" v-for="staff in staffs">
-            <h5>{{ staff.firstname }} <span v-if="staff.lastname != null">{{ staff.lastname }}</span></h5>
-            <ul>
-                <li class="Gender">
-                <span class="label">Gender: </span> <i :class="['uil', (staff.gender=='M'&& staff.gender!='F' && staff.gender!='O')?'uil-mars':'', (staff.gender=='F'&& staff.gender!='M' && staff.gender!='O')?'uil-venus':'']"> </i>
-                </li>
+            <div>
+                <h5>{{ staff.firstname }} <span v-if="staff.lastname != null">{{ staff.lastname }}</span></h5>
+                <ul>
+                    <li class="Gender">
+                    <span class="label">Gender: </span> <i :class="['uil', (staff.gender=='M'&& staff.gender!='F' && staff.gender!='O')?'uil-mars':'', (staff.gender=='F'&& staff.gender!='M' && staff.gender!='O')?'uil-venus':'']"> </i>
+                    </li>
 
-                <li><span class="label">Department: </span> <span>{{ staff.department }}</span></li>
-                <li class="period"><span class="label">Period: </span> <span>{{ moment(staff.datefrom).format('DD MMMM YYYY') }}</span> <span v-if="staff.dateto != null">{{ `to ${moment(staff.dateto).format('DD MMMM YYYY')}` }}</span></li>
-            </ul>
+                    <li><span class="label">Department: </span> <span>{{ staff.department }}</span></li>
+                    <li class="period"><span class="label">Period: </span> <span>{{ moment(staff.datefrom).format('DD MMMM YYYY') }}</span> <span v-if="staff.dateto != null">{{ `to ${moment(staff.dateto).format('DD MMMM YYYY')}` }}</span></li>
+                </ul>
+            </div>
+             <div>
+                <div id="qrcode__container mt-5" ref="qrcode">
+                        <vue-qrious
+                                class="qr__code"
+                        :value="`${baseurl}/companies/${route.params.id}/staffs/${staff.id}/feedback`"
+                        @change="onDataUrlChange"
+                        />
+                </div>
+            </div>
         </div>
     </div>
     <div v-if="staffs.length==0">No staff</div>
@@ -18,6 +29,16 @@
 import {ref, inject} from 'vue';
 import moment from 'moment';
 const staffs = inject('staffs');
+import VueQrious from 'vue-qrious';
+import * as htmlToImage from 'html-to-image';
+
+const baseurl = window.location.origin;
+const base64Image = ref(null);
+const qrcode = ref(null);
+const onDataUrlChange = (dataUrl) =>{
+      base64Image.value = dataUrl;
+}
+
 </script>
 <style scoped>
 @tailwind base;
@@ -28,15 +49,19 @@ const staffs = inject('staffs');
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    width: 70%;
+    margin: auto;
 }
 
 .staff__card{
     border: 1px solid var(--light-color-bg2);
     padding: 5px;
-    flex-basis: 400px;
+    flex-basis: 500px;
     flex-grow: 1;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .staff__card h5{
@@ -60,5 +85,8 @@ span.label{
     font-size: 14px;
 }
 
-
+.qr__code{
+    width: 100% !important;
+    padding: 10px auto !important;
+}
 </style>

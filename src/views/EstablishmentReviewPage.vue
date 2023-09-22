@@ -295,7 +295,6 @@ let updateVisibleData = function(_data, isStarFilter=false){
         updatePage( paginationConfig.value.current -1);
     }
     visibleData.value = paginationConfig.value.data
-    // reviews_loader.value = visibleData.value.length>0?false:true;
     reviews_loader.value = false;
 }
 

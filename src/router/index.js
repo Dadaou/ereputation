@@ -10,6 +10,7 @@ import ParametersView from '@Views/ParametersView.vue';
 import UserDetailsComponent from '@Components/User/UserDetailsComponent.vue';
 import ReviewPageView from '@Views/ReviewPageView.vue';
 import feedbackPageView from '@Views/FeedbackPageView.vue';
+import StaffFeedbackPageView from '@Views/StaffFeedbackView.vue';
 import EstablishmentDashboard from '@Views/EstablishmentDashboard.vue';
 import EstablishmentReviewPage from '@Views/EstablishmentReviewPage.vue';
 import WeatherView from '@Views/WeatherView.vue';
@@ -170,6 +171,11 @@ const routes = [
     path:'/companies/:id/:tag/feedback',
     name: 'feedback',
     component: feedbackPageView,
+  },
+   {
+    path:'/companies/:etab/staffs/:id/feedback',
+    name: 'StaffFeedback',
+    component: StaffFeedbackPageView,
   },
   {
     path:'/:catchAll(.*)',

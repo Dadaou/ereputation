@@ -50,10 +50,10 @@
                 </div>
             </div>
             <div class="flex items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
-                <button type="submit"  :class="['btn__light_secondary py-2 px-10',showSpinner==true?'isLoaded':'' ]">
-                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'"/> <span v-if="showSpinner">Loading ...</span>
-                    <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} staff</span>
-                </button>
+                 <button type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                                <SpinnerComponent :show-spinner="showSpinner" :color="'gray'"/> <span v-if="showSpinner">Loading ...</span>
+                               <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} staff</span>
+                 </button>
             </div>
         </form>
     </div>                               
@@ -112,7 +112,6 @@ const staff_to_update = inject('staff_to_update');
 const type = ref('add');
 
 watch(staff_to_update, ()=>{
-    console.log(staff_to_update.value)
     if(staff_to_update.value != null){
         gender.value = staff_to_update.value["gender"];
         department.value = staff_to_update.value["department"]; 
@@ -136,7 +135,6 @@ const loadData = (data)=>{
 }
 
 const updateData = (staff)=>{
-    console.log(staff)
     if(userStore.user.customer != null){
         userStore.user.customer.establishments.forEach((element, index) => {
             console.log(`/api/${companiesStore.entity}/${element.id}`)

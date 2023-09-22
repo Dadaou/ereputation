@@ -9,6 +9,7 @@ export default {
     "./src/views/EstablishmentDashboard.{vue,js,ts,jsx,tsx}",
     "./src/views/NotFoundView.vue",
     "./src/views/FeedbackPageView.vue",
+    "./src/views/StaffFeedbackPageView.vue",
     "./src/views/ParametersView.vue",
     "./src/views/StaffView.vue",
     "./src/views/SocialPage.vue",

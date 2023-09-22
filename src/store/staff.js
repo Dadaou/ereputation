@@ -21,6 +21,15 @@ export const useStaffStore = defineStore("staff", {
             await services.patchRecord(this.entity, id, staff, (response)=>{
                 next(response);
             })
-        }
+        },
+       async fetchOne(id, next){
+          try {
+            await services.getRecord(this.entity, id, (response)=>{
+              next(response);
+            });
+          } catch (error) {
+            console.error(error)
+          }
+        }, 
     },
 })
