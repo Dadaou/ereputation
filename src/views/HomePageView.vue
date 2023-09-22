@@ -155,7 +155,7 @@
                                 <RatingComponent class="rating__content" :reviews="company.reviews.length" :rating="companiesStore.calculateRatingV2(company.reviews)"/>
                             </div>
                             <div class="list__actions">
-                                    <button class="btn mr-2" @click="showModal=true, establishment=company">Show <i class="uil uil-qrcode-scan"></i></button>
+                                    <button class="btn mr-2" @click="showModal=true, establishment=company">QR Code <i class="uil uil-qrcode-scan"></i></button>
                                     <button class="btn" @click="goToCompany(company)">More details</button>
                             </div>
                         </div>
@@ -215,7 +215,7 @@
             </div>
         </div>
      </div>  
-     <ModalComponent :showModal="showModal" @close="showModal=false" :width="35">
+     <ModalComponent :showModal="showModal" @close="showModal=false" :width="modalWidth">
         <template #content>
             <div class="modal__header">
                 <div class="modal__title">
@@ -260,7 +260,7 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
+import { ref, computed } from 'vue'
 import { loadFull } from "tsparticles";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@Stores/user.js";
@@ -274,6 +274,7 @@ import { Virtual } from 'swiper/modules';
 import VueQrious from 'vue-qrious';
 import * as htmlToImage from 'html-to-image';
 import ModalComponent from '@Components/utils/ModalComponent.vue';
+import { useWindowSize } from '@vueuse/core';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -287,6 +288,7 @@ const baseurl = window.location.origin;
 const showModal = ref(false);
 const downloaded = ref(false);
 const establishment = ref(null);
+const { width, height } = useWindowSize()
 
 const particlesInit = async engine => {
     await loadFull(engine);
@@ -302,6 +304,13 @@ const page=ref({
     title2: "Home",
     icon: "uil-estate",
 });
+
+const modalWidth= computed(()=>{
+    let windowSize = 1500;
+    let gap = (windowSize - width.value)/19;
+    console.log(gap)
+    return gap + 35;
+})
 
 const signOut = () => {
     userStore.signOut();

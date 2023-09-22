@@ -13,7 +13,7 @@
                             <input type="text" id="first_name" v-model="eventName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
                         <div>
-                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
+                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category <span>*</span></label>
                             <input type="text" id="last_name" v-model="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
                     </div>
@@ -36,15 +36,15 @@
                             <VueDatePicker v-model="dateFrom" :enable-time-picker="false" :format="format"/>
                         </div>
                         <div>
-                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End to</label>
+                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End to <span>*</span></label>
                             <VueDatePicker v-model="dateTo" :enable-time-picker="false" :format="format"/>
                         </div>
                     </div>
                     <div class="flex items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
-                        <button type="submit"  :class="['btn__light_secondary py-2 px-10',showSpinner==true?'isLoaded':'' ]">
-                            <SpinnerComponent :show-spinner="showSpinner" :color="'gray'"/> <span v-if="showSpinner">Loading ...</span>
-                            <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} event</span>
-                        </button>
+                       <button type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                                <SpinnerComponent :show-spinner="showSpinner" :color="'gray'"/> <span v-if="showSpinner">Loading ...</span>
+                               <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} event</span>
+                 </button>
                         </div>
                 </form>
         </div>
@@ -57,9 +57,11 @@ import { useEventStore } from "@Stores/event.js";
 import { useUserStore } from "@Stores/user.js";
 import moment from 'moment';
 import { ElMessage } from 'element-plus';
+import services from '@Services/index.js';
 
 const companiesStore = useCompanyStore();
 const eventStore = useEventStore();
+const userStore = useUserStore();
 const format = (date) => {
   const day = date.getDate();
   const month = date.getMonth() + 1;
@@ -77,18 +79,53 @@ const showSpinner = ref(false);
  const eventName = ref('');
  const establishments = ref([]);
  const type = ref('add');
+ const event_to_update = inject('event_to_update');
 
-//  const loadData = (data)=>{
-//     if(userStore.user.customer != null){
-//         userStore.user.customer.establishments.forEach((element, index) => {
-//             if(`/api/${companiesStore.entity}/${element.id}` == data.establishment){
-//                 userStore.user.customer.establishments[index].events.push(data);
-//             }
-//         });
-//     }
-// }
+watch(event_to_update, ()=>{
+    if(event_to_update.value != null){  
+        console.log(event_to_update.value)  
+        dateFrom.value = new Date(event_to_update.value["datefrom"]);
+        dateTo.value = new Date(event_to_update.value["dateto"]);
+        category.value = event_to_update.value["category"];
+        eventName.value = event_to_update.value["name"];
+
+        event_to_update.value["establishment"].forEach(element=>{
+            if(typeof element == 'string') establishments.value.push(element)
+            else{
+            establishments.value.push(`/api/${companiesStore.entity}/${element.id}`)
+            }
+        })
+        type.value = 'edit';
+    }
+})
+     const loadData = (data)=>{
+        if(userStore.user.customer != null){
+            userStore.user.customer.establishments.forEach((element, index) => {
+                data.establishment.forEach(item=>{
+                    if(element.id == item.id){
+                        userStore.user.customer.establishments[index].events.push(data);
+                    }
+                })
+            });
+        }
+    }
+
+const updateData = (event)=>{
+    if(userStore.user.customer != null){
+      event.establishment.forEach(item =>{
+         userStore.user.customer.establishments.forEach((element, index) => {
+            if(element.id == item.id){
+              userStore.user.customer.establishments[index].events.forEach((item, index2)=>{
+                userStore.user.customer.establishments[index].events[index2] = event;
+              })
+            }
+        });
+      })
+    }
+  }
 
  const submit = async ()=>{
+    showSpinner.value = true;
     let event = {
         "name": eventName.value,
         "category": category.value,
@@ -101,28 +138,49 @@ const showSpinner = ref(false);
 
         if(dateFrom.value != null && dateTo.value != null && category.value != '' && establishments.value.length >0 && eventName.value != ''){
             if(type.value == 'add'){
-                await eventStore.addEvent(event, (response)=>{
-                    console.log(response)
-                    if(response.status == 201){
-                        event['id']= response.data['id'];
-                        // loadData(event);
-                        ElMessage({
-                            message: `Event added successfully.`,
-                            type: 'success',
-                        })
-                        dateFrom.value = '';
-                        dateTo.value = ''; 
-                        category.value = '';
-                        establishments.value = [];
-                        eventName.value = '';
-                        showSpinner.value = false;
-                    }
-                }) 
-            }else{
+                const response = await new Promise((resolve, reject) => {
+                  services.createRecord('events', event, (response) => {
+                    resolve(response);
+                  });
+                });
 
+                if (response.status === 201) {
+                  loadData(response.data);
+                  ElMessage({
+                    message: `Event added successfully.`,
+                    type: 'success',
+                  });
+                  dateFrom.value = '';
+                  dateTo.value = '';
+                  category.value = '';
+                  establishments.value = [];
+                  eventName.value = '';
+                  showSpinner.value = false;
+                }
+            }else{
+                const response = await new Promise((resolve, reject) => {
+                  services.putRecord('events', event_to_update.value['id'], event, (response) => {
+                    resolve(response);
+                  });
+                });
+
+                if (response.status == 200) {
+                  updateData(response.data);
+                  ElMessage({
+                    message: `Event updated successfully.`,
+                    type: 'success',
+                  });
+                  dateFrom.value = '';
+                  dateTo.value = '';
+                  category.value = '';
+                  establishments.value = [];
+                  eventName.value = '';
+                  showSpinner.value = false;
+                }
             }
         }else{
             ElMessage.error(`Please, provide all needed information to ${type} an event`);
+            showSpinner.value = false;
         }  
     } catch (error) {
         console.log(error);

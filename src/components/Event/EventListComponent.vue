@@ -8,22 +8,25 @@
         <el-table :data="filterTableData" style="width: 100%">
             <el-table-column label="Name" prop="name" />
             <el-table-column label="Category" prop="category"/>
-            <el-table-column label="Establishment" prop="establishment"/>
-            <el-table-column label="Date" prop="date" />
+            <el-table-column label="Establishment" prop="establishmentName"/>
+           <!--  <el-table-column label="Date" prop="date" /> -->
             <el-table-column align="right">
                 <template #header>
                 <el-input v-model="search" size="small" placeholder="Type to search" />
                 </template>
                 <template #default="scope">
+               <el-popconfirm 
+                  title="Are you sure to delete this?"  
+                  @confirm="handleDelete(scope.$index, scope.row)">
+                    <template #reference>
+                      <el-button
+                        size="small"
+                        ><i class="uil uil-trash-alt"></i></el-button>
+                    </template>
+                  </el-popconfirm>
+                 
                 <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
-                    >Edit</el-button
-                >
-                <el-button
-                    size="small"
-                    type="danger"
-                    @click="handleDelete(scope.$index, scope.row)"
-                    >Delete</el-button
-                >
+                    ><i class="uil uil-edit"></i></el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -44,6 +47,25 @@
   const companiesStore = useCompanyStore();
 
 
+  const getEstablishmentsName = (data)=>{
+    let establishments = userStore.user.customer !=null ? userStore.user.customer.establishments: [];
+    let names = ''; 
+    data.forEach(item=>{
+        establishments.forEach(establishment=>{
+          if(item.id==establishment.id){
+
+            if(names != ''){
+              names = `${names}, ${establishment.name}`;
+            }else{
+              names = `${names} ${establishment.name}`;
+            }
+          }
+        })
+    })
+
+    return names;
+  }
+
   let tableData = computed(()=>{
     let establishments = userStore.user.customer !=null ? userStore.user.customer.establishments: [];
     let data = []; 
@@ -57,10 +79,12 @@
           category: event_item.category,
           datefrom: event_item.datefrom,
           dateto: event_item.dateto,
+          establishmentName : getEstablishmentsName(event_item.establishment),
           establishment: event_item.establishment,
           date: `${moment(event_item.datefrom).format('YYYY-MM-DD')} to ${moment(event_item.dateto).format('YYYY-MM-DD')}` 
         }
-        data.push(event);
+        const exists = data.some(item => item.id === event.id);
+        if(exists == false) data.push(event);
       });
     });
     return data;
@@ -73,11 +97,29 @@
         data.name.toLowerCase().includes(search.value.toLowerCase())
     )
   )
-  const handleEdit = (index, row) => {
-    console.log(index, row)
+
+  const reloadData = (event)=>{
+    if(userStore.user.customer != null){
+      event.establishment.forEach(item =>{
+         userStore.user.customer.establishments.forEach((element, index) => {
+            console.log(element, item)
+            if(`/api/${companiesStore.entity}/${element.id}` == item){
+              userStore.user.customer.establishments[index].events= userStore.user.customer.establishments[index].events.filter(value=>value.id !== event.id);
+            }
+        });
+      })
+    }
   }
-  const handleDelete = (index, row) => {
-    console.log(index, row)
+  const handleEdit = (index, event) => {
+    emit('edit', event);
+  }
+  const handleDelete = async(index, event) => {
+     await eventStore.removeEvent(event.id, (response)=>{
+  
+      if(response.status == 204){
+        reloadData(event);
+      }
+     })
   }
 </script>
 <style scoped>
