@@ -6,7 +6,7 @@ import { useCompanyStore } from "@Stores/company.js";
 import localforage from 'localforage';
 
 export const useUserStore = defineStore("user",()=> {
-  const user = ref(useLocalStorage('user', {}));
+  const user = ref(null);
   const users = ref([]);
   const authenticated = ref(localStorage.getItem('user_authenticated'));
   const entity = ref('users');
@@ -63,5 +63,5 @@ export const useUserStore = defineStore("user",()=> {
     getInitialsV2
   }
 },{
-  persist: true
+  persist: false
 });

@@ -159,13 +159,13 @@ const submit = async ()=>{
         "datefrom": moment(startDate.value).format('YYYY-MM-DD'),
         "dateto": endDate.value==null?null:moment(endDate.value).format('YYYY-MM-DD'),
         "establishment": establishment.value,
-        "tag": null
     }
 
     try {
         if(gender.value != '' && department.value != '' && startDate.value != null && establishment.value != '' && firstname.value != ''){
             if(type.value == 'add'){
                 await staffStore.addStaff(staff, (response)=>{
+                    console.log(response)
                     if(response.status == 201){
                         staff['id']= response.data['id'],
                         loadData(staff);

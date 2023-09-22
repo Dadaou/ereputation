@@ -1,5 +1,5 @@
 <template>
-<div class="avatar__container" ref=target>
+<div class="avatar__container" ref=target v-if="userStore.user !== null">
     <div class="avatar__info flex items-center space-x-4" @click="hideMenu = !hideMenu">
         <div class="relative inline-flex items-center justify-center w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500">
             <span class="font-medium dark:text-white">{{ userStore.getInitials(userStore.user.firstname, userStore.user.lastname) }} </span>

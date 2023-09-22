@@ -36,14 +36,25 @@ const getIds = (establishments) => {
   }
   return ids;
 }
-
+function isEmptyObject(obj) {
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      return false; 
+    }
+  }
+  return true;
+}
 const CheckAccess = (to, from, next) => {
   const userStore = useUserStore();
-  if(userStore.user == {} || localStorage.getItem("access") == null){
-    if(userStore.user == {}) userStore.signout();
+  if(localStorage.getItem("access") == null){
     next('/')
   }
-  else next()
+  else {
+    if(userStore.user == null){
+       next('/');
+       userStore.signOut();
+    }else next();
+  }
 }
 
 const CheckAuthentication = (to, from, next) => {
