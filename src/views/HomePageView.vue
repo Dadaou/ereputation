@@ -113,7 +113,7 @@
                 Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, no companies found yet.
             </div>
             <div class="society__list" v-if="companiesStore.establishments.length>0">
-                <div class="list__item" v-for="company in companiesStore.establishments">
+                <div class="list__item" v-for="company in companiesStore.companies">
                     <div class="society__info__container">
                         <swiper @click="goToCompany(company)" class="society__logo" :modules="[Virtual]" v-if="company.media.length > 0" :slides-per-view="1" :space-between="10" :virtual="true">
                             <swiper-slide v-show="mediaStore.isImageFile(image.url_source)" v-for="image in company.media">

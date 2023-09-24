@@ -5,6 +5,7 @@ import moment from 'moment';
 export const useCompanyStore = defineStore("company", {
   state: () => ({ 
    establishments: [],
+   companies: [],
    _establishments: [], 
    entity: 'establishments',
    nb: 0,
@@ -14,6 +15,7 @@ export const useCompanyStore = defineStore("company", {
         await services.getRecords(this.entity, async (response)=>{
             if (response.status == 200) {
               this.establishments = response.data['hydra:member'];
+              this.companies = response.data['hydra:member'];
               let data = response.data['hydra:member'];
               this.nb = this.establishments.length;
               next(response);
@@ -572,5 +574,4 @@ export const useCompanyStore = defineStore("company", {
       return result;
     },
   },
-  persist: true
 });

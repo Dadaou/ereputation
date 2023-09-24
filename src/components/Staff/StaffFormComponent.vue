@@ -139,9 +139,12 @@ const updateData = (staff)=>{
     if(userStore.user.customer != null){
        companiesStore.establishments.forEach((element, index) => {
             if(`/api/${companiesStore.entity}/${element.id}` == staff.establishment){
-                companiesStore.establishments[index].staffs.forEach((item, index2)=>{
-                    companiesStore.establishments[index].staffs[index2] = staff;
-                })
+                      companiesStore.establishments[index].staffs.forEach((item, index2)=>{
+                             if(item.id == staff.id){
+                                    companiesStore.establishments[index].staffs[index2] = staff;   
+                             }
+                    
+                        })
             }
         });
     }
@@ -186,7 +189,7 @@ const submit = async ()=>{
                     }
             }else{
                  const response = await new Promise((resolve, reject) => {
-                  services.putRecord('staff', staff_to_update.value['id'], event, (response) => {
+                  services.putRecord('staff', staff_to_update.value['id'], staff, (response) => {
                     resolve(response);
                   });
                 });

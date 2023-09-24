@@ -29,8 +29,9 @@ export const useUserStore = defineStore("user",()=> {
           if (response.status == 200) {
             services.setUser(response.data['user']);
             user.value = response.data['user'];
+            companyStore.companies = user.value.customer.establishments
             authenticated.value = true;
-
+            next({authenticated:authenticated.value, status: 200});
             if(user.value.customer !== null){
               let data = [];
               let promises = [];
@@ -45,7 +46,6 @@ export const useUserStore = defineStore("user",()=> {
               });
               console.log('hehe')
             }
-            next({authenticated:authenticated.value, status: 200});
           } else if (response.status == 401) {
             next({authenticated:authenticated.value, status: 401});
           } else if (response.status == 500) {

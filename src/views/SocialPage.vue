@@ -16,7 +16,7 @@
             <ul v-if="socialPages.length>0">
                 <li v-for="socialItem in socialPages">
                     <div class="social-details">
-                        <h3><i :class="`uil uil-${socialItem.source}`"></i><a href=""><span>{{ socialItem.source }}</span></a></h3>
+                        <h3><i :class="`uil uil-${socialItem.source}`"></i><a :href="establishment.socials[0][socialItem.source]"><span>{{ socialItem.source }}</span></a></h3>
                         <p><span>Followers:</span> {{ socialItem.followers }}</p>
                         <p><span>Likes:</span> {{ socialItem.likes }}</p>
                         <p><span>Posts:</span> {{ socialItem.posts }}</p>
@@ -214,7 +214,7 @@ const getSocials = (socials) => {
         }
     });
     return data;
-}
+} 
 
 const showMorePosts = ()=> {
     maxPostsToShow.value += 2;
@@ -228,13 +228,10 @@ onBeforeMount(async()=>{
             establishment.value.media.forEach(item => {
                 media.push(item.url_source);
             });
-            // socialPages.value = company.socialPages;
-            //     console.log(socialPages.value, company.socialPages )
-            //     socials.value = ['', ...getSocials(company.socials)];
+            socials.value = [" ",...getSocials(company.socials)];
             let data = [];
             let promises = [];
              company.socialPages.forEach((social, index)=> {
-                console.log(social)
                    let promise = services.get_Record(`/social_pages/${social.id}`, (response) => {
                        data.push(response.data);
                     });
@@ -262,6 +259,10 @@ watch(selectedSocials, ()=>{
 @tailwind components;
 @tailwind utilities;
 
+a{
+    cursor: pointer;
+}
+
 li {
   padding: 10px;
   font-size:14px;
@@ -275,9 +276,11 @@ li:first-child {
 li:nth-child(odd) {
   background-color: #f9f9f9;
 }
+
 *{
     transition: var(--transition);
 }
+
 .app__container{
     margin-top: 5rem;
     min-height: 30rem;

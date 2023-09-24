@@ -89,6 +89,7 @@
 import * as htmlToImage from 'html-to-image';
 import ModalComponent from '@Components/utils/ModalComponent.vue';
 import { useWindowSize } from '@vueuse/core';
+import { ElMessage } from 'element-plus';
   
   const emit = defineEmits(['edit']);
   const userStore = useUserStore();
@@ -156,6 +157,10 @@ import { useWindowSize } from '@vueuse/core';
     console.log(response)
     if(response.status == 204){
       reloadData(staff);
+        ElMessage({
+                    message: `Staff removed successfully.`,
+                    type: 'success',
+                  });
     }
    })
   }
