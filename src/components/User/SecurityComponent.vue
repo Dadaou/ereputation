@@ -1,5 +1,5 @@
 <template>
-   <div class="user__main__container">
+    <div class="user__main__container">
         <div class="security__header border__bottom">
             <div class="security__edit">
                 <h4>Security</h4>
@@ -17,23 +17,23 @@
                     </span>
                     <div v-else class="info__edit">
                         <div class="form__input">
-                                    <div class="label">Old Password</div>
-                                    <input type="password" name="oldPassword" required>
-                                </div>
-                                <div class="form__input">
-                                    <div class="label">New Password</div>
-                                    <input type="password" name="newPassword" required>
-                                </div>
+                            <div class="label">Old Password</div>
+                            <input type="password" name="oldPassword" required>
+                        </div>
+                        <div class="form__input">
+                            <div class="label">New Password</div>
+                            <input type="password" name="newPassword" required>
+                        </div>
                     </div>
                 </div>
                 <div class="edit__actions">
-                    <span class="cancel" v-if="enableEdit.password" @click="enableEdit.password=false">
-                            Cancel
-                        </span>
-                        <span class="edit" @click="enableEdit.password=true">
-                            <i class="uil uil-edit"></i>
-                            Edit
-                        </span>
+                    <span class="cancel" v-if="enableEdit.password" @click="enableEdit.password = false">
+                        Cancel
+                    </span>
+                    <span class="edit" @click="enableEdit.password = true">
+                        <i class="uil uil-edit"></i>
+                        Edit
+                    </span>
                 </div>
             </div>
         </div>
@@ -52,6 +52,7 @@ let enableEdit = ref({
 .border__bottom {
     border-bottom: 1px solid rgb(223, 223, 223);
 }
+
 .security__header {
     display: flex;
     justify-content: space-between;
@@ -66,29 +67,35 @@ let enableEdit = ref({
     margin: 8px 0;
 }
 
-.personal__info{
+.personal__info {
     display: flex;
     gap: 2rem;
     align-items: center;
-    padding: 15px;
+    padding-block: 15px;
     font-size: 15px;
+    width: 100%;
+    overflow: auto;
 }
 
-.info__content{
+.info__content {
     display: flex;
     justify-content: space-between;
     width: 100%;
+    min-width: 200px;
 }
 
-.info__title{
+.info__title {
     width: 20%;
+    min-width: 60px;
 }
-.edit__actions{
+
+.edit__actions {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
-.edit__actions .edit{
+
+.edit__actions .edit {
     color: var(--color-primary);
     cursor: pointer;
     transition: var(--transition);
@@ -96,41 +103,44 @@ let enableEdit = ref({
     border-radius: 5px;
 }
 
-.edit__actions .cancel{
+.edit__actions .cancel {
     color: var(--color-primary);
     font-weight: 500;
     cursor: pointer;
 }
 
-.edit__actions .edit:hover{
+.edit__actions .edit:hover {
     background-color: var(--color-primary);
     color: var(--color-white);
 }
-.info__edit{
+
+.info__edit {
     width: 500px;
 }
-.info__edit input{
+
+.info__edit input {
     width: 100%;
 }
 
-.info__edit .label{
+.info__edit .label {
     color: var(--color-black);
     font-weight: 600;
 }
 
-.form___input{
+.form___input {
     margin: 5px;
 }
 
-.form__input{
+.form__input {
     margin: 5px;
 }
 
-.info__content span, p{
+.info__content span,
+p {
     font-size: 14px;
 }
 
-.info__content span{
+.info__content span {
     font-weight: 500;
 }
 </style>
