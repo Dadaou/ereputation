@@ -128,7 +128,7 @@ import {
   ArcElement,
   Tooltip,
   Legend
-} from 'chart.js'
+} from 'chart.js';
 import { PolarArea } from 'vue-chartjs';
 import { useResizeObserver } from '@vueuse/core';
 import moment from 'moment';
@@ -261,7 +261,8 @@ const weaherImpact = (startDate, endDate)=>{
     }
 
     let dataType = ['rating', 'temperature']
-    legendData.value = generatedLegend(colors.value, dataType)
+    legendData.value = generatedLegend(colors.value, dataType);
+    console.log(data)
     return data;
 }
 
@@ -277,7 +278,6 @@ const generatedLegend = (colors, dataType)=>{
     return legends;
 }
 
-//Weather's global impact
 const globalData = ref({
   labels: [],
   datasets: []
@@ -351,7 +351,7 @@ const getGlobalData = (data, colors)=>{
     let globalData = [];
     let index = 0;
     let allColors = [];
-    // let labels = generatedLabel(weatherData)[0];
+   
     for(const key in data){
         let value =  {
           label: `${key} global rating`,
@@ -366,7 +366,6 @@ const getGlobalData = (data, colors)=>{
         allColors.push(hexToRgb(colors[index]));
         index ++;
     }
-   // legendGlobalData.value = generatedLegend(allColors, labels);
    return [globalData, allColors];
 }
 
@@ -384,30 +383,10 @@ const groupReviewByCondition = ()=>{
 
 onBeforeMount(async()=>{
 const companyId = route.params.id;     
-// if(userStore.user.customer !==null){
-//     userStore.user.customer.establishments.forEach(async company => {
-//         if(company.id == companyId){
-//             establishment.value = company;
-//             weather.value = company.weather;
-//             reviews.value = company.reviews;
-//             establishment.value.media.forEach(item => {
-//                 media.push(item.url_source);
-//             });
-        
-//             all_items.value[1].value = establishment.value.reviews.length;
-//             all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
-//             appStore.isLoading = false;
-
-//             data.value = weaherImpact(datefrom, dateto);
-//             groupReviewByCondition();
-//         }
-//     });
-// }
 
  companiesStore.establishments.forEach(async company => {
         if(company.id == companyId){
             establishment.value = company;
-            events.value = company.events;
             establishment.value.media.forEach(item => {
                 media.push(item.url_source);
             });

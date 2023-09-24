@@ -46,9 +46,8 @@
   const eventStore = useEventStore();
   const companiesStore = useCompanyStore();
 
-
   const getEstablishmentsName = (data)=>{
-    let establishments = userStore.user.customer !=null ? userStore.user.customer.establishments: [];
+    let establishments = userStore.user.customer !=null ? companiesStore.establishments: [];
     let names = ''; 
     data.forEach(item=>{
         establishments.forEach(establishment=>{
@@ -62,30 +61,29 @@
           }
         })
     })
-
     return names;
   }
 
   let tableData = computed(()=>{
-    let establishments = userStore.user.customer !=null ? userStore.user.customer.establishments: [];
+    let establishments = userStore.user.customer !=null ? companiesStore.establishments: [];
     let data = []; 
     establishments.forEach(establishment => {
       let events = establishment.events;
-      events.forEach(event_item => {
-        console.log(event_item);
-        let event = {
-          id: event_item.id,
-          name: event_item.name,
-          category: event_item.category,
-          datefrom: event_item.datefrom,
-          dateto: event_item.dateto,
-          establishmentName : getEstablishmentsName(event_item.establishment),
-          establishment: event_item.establishment,
-          date: `${moment(event_item.datefrom).format('YYYY-MM-DD')} to ${moment(event_item.dateto).format('YYYY-MM-DD')}` 
-        }
-        const exists = data.some(item => item.id === event.id);
-        if(exists == false) data.push(event);
-      });
+      console.log(events)
+      // events.forEach(event_item => {
+      //   let event = {
+      //     id: event_item.id,
+      //     name: event_item.name,
+      //     category: event_item.category,
+      //     datefrom: event_item.datefrom,
+      //     dateto: event_item.dateto,
+      //     establishmentName : getEstablishmentsName(event_item.establishment),
+      //     establishment: event_item.establishment,
+      //     date: `${moment(event_item.datefrom).format('YYYY-MM-DD')} to ${moment(event_item.dateto).format('YYYY-MM-DD')}` 
+      //   }
+      //   const exists = data.some(item => item.id === event.id);
+      //   if(exists == false) data.push(event);
+      // });
     });
     return data;
   });
@@ -101,10 +99,9 @@
   const reloadData = (event)=>{
     if(userStore.user.customer != null){
       event.establishment.forEach(item =>{
-         userStore.user.customer.establishments.forEach((element, index) => {
-            console.log(element, item)
+         companiesStore.establishments.forEach((element, index) => {
             if(`/api/${companiesStore.entity}/${element.id}` == item){
-              userStore.user.customer.establishments[index].events= userStore.user.customer.establishments[index].events.filter(value=>value.id !== event.id);
+              companiesStore.establishments[index].events= companiesStore.establishments[index].events.filter(value=>value.id !== event.id);
             }
         });
       })

@@ -362,8 +362,28 @@ watch(selectedStars, ()=>{
 onBeforeMount(async()=>{
 const companyId = route.params.id;
 
-if(userStore.user.customer !==null){
-    userStore.user.customer.establishments.forEach(async company => {
+// if(userStore.user.customer !==null){
+//     userStore.user.customer.establishments.forEach(async company => {
+//         if(company.id == companyId){
+//             establishment.value = company;
+//             reviews.value = company.reviews;
+//             reviews.value.sort(function(a, b) {
+//             return moment(b.date_review).diff(moment(a.date_review));
+//             });
+//             page.value.title2 = company.name;
+//             establishment.value.media.forEach(item => {
+//                 media.push(item.url_source);
+//             });
+//             websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
+//             all_items.value[1].value = establishment.value.reviews.length;
+//             all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
+//             updateVisibleData(reviews.value);
+//             appStore.isLoading = false;
+//         }
+//     });
+// }
+//})
+    companiesStore.establishments.forEach(async company => {
         if(company.id == companyId){
             establishment.value = company;
             reviews.value = company.reviews;
@@ -381,7 +401,6 @@ if(userStore.user.customer !==null){
             appStore.isLoading = false;
         }
     });
-}
 })
 
 const base64Image = ref(null);

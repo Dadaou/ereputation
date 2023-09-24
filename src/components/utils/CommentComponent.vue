@@ -73,6 +73,7 @@ import { useUserStore } from "@Stores/user.js";
 import ModalComponent from '@Components/utils/ModalComponent.vue';
 import FeelingFeedbackComponent from '@Components/utils/FeelingFeedbackComponent.vue';
 import { useFeedbackStore } from '@Stores/feedback.js';
+import { useCompanyStore } from "@Stores/company.js";
 import { useWindowSize } from '@vueuse/core';
 
 const props = defineProps({
@@ -94,6 +95,7 @@ const props = defineProps({
 const { width, height } = useWindowSize();
 const userStore = useUserStore();
 const feedbackStore = useFeedbackStore();
+const companiesStore = useCompanyStore();
 const modalWidth= computed(()=>{
     let windowSize = 1500;
     let gap = (windowSize - width.value)/19;
@@ -122,18 +124,14 @@ const editReview = (review) => {
    showModal.value = true;
 }
 
-const reloadData = (reviewUpdated)=>{
-    if(userStore.user.customer != null){
-        userStore.user.customer.establishments.forEach((element, index) => {
-            if(element.id == reviewUpdated.establishment['id']){
-              userStore.user.customer.establishments[index].reviews.forEach((review, index2)=>{
-                if(review.id == reviewUpdated.id){
-                    userStore.user.customer.establishments[index].reviews[index2].feeling = reviewUpdated.feeling;
+const reloadData = (reviewUpdated, feeling)=>{
+   companiesStore.establishments.forEach((element, index) => {
+        companiesStore.establishments[index].reviews.forEach((review, index2)=>{
+                if(`/api/reviews/${review.id}` == reviewUpdated['@id']){
+                   companiesStore.establishments[index].reviews[index2].feeling = feeling;
                 }
-              })
-            }
+            })
         });
-    }
   }
 
 const updateReview = async () => {
@@ -144,7 +142,7 @@ const updateReview = async () => {
     try {
         await feedbackStore.updateReview(id.value, updatedValue, response=>{
             if(response.status==200){
-                reloadData(response.data)
+                reloadData(response.data, feel.value)
                 setTimeout(()=>{
                     showModal.value = false;
                 }, 100)

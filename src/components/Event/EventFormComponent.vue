@@ -99,29 +99,38 @@ watch(event_to_update, ()=>{
     }
 })
      const loadData = (data)=>{
-        if(userStore.user.customer != null){
-            userStore.user.customer.establishments.forEach((element, index) => {
+
+        companiesStore.establishments.forEach((element, index) => {
                 data.establishment.forEach(item=>{
-                    if(element.id == item.id){
-                        userStore.user.customer.establishments[index].events.push(data);
-                    }
+                  console.log(element, item)
+                    // if(element.id == item.id){
+                    //     companiesStore.establishments[index].events.push(data);
+                    // }
                 })
-            });
-        }
+        });
     }
 
 const updateData = (event)=>{
-    if(userStore.user.customer != null){
-      event.establishment.forEach(item =>{
-         userStore.user.customer.establishments.forEach((element, index) => {
+    // if(userStore.user.customer != null){
+    //   event.establishment.forEach(item =>{
+    //      userStore.user.customer.establishments.forEach((element, index) => {
+    //         if(element.id == item.id){
+    //           userStore.user.customer.establishments[index].events.forEach((item, index2)=>{
+    //             userStore.user.customer.establishments[index].events[index2] = event;
+    //           })
+    //         }
+    //     });
+    //   })
+    // }
+    event.establishment.forEach(item =>{
+         companiesStore.establishments.forEach((element, index) => {
             if(element.id == item.id){
-              userStore.user.customer.establishments[index].events.forEach((item, index2)=>{
-                userStore.user.customer.establishments[index].events[index2] = event;
+              companiesStore.establishments[index].events.forEach((item, index2)=>{
+                companiesStore.establishments[index].events[index2] = event;
               })
             }
         });
       })
-    }
   }
 
  const submit = async ()=>{
@@ -144,6 +153,7 @@ const updateData = (event)=>{
                   });
                 });
 
+                console.log(response)
                 if (response.status === 201) {
                   loadData(response.data);
                   ElMessage({

@@ -107,25 +107,26 @@ import { useWindowSize } from '@vueuse/core';
 })
 
   let tableData = computed(()=>{
-    let establishments = userStore.user.customer !=null ? userStore.user.customer.establishments: [];
+    let establishments = userStore.user.customer !=null ? companiesStore.establishments: [];
     let data = []; 
     establishments.forEach(establishment => {
-      let staffs = establishment.staff;
+      let staffs = establishment.staffs;
       staffs.forEach(staff_item => {
-
         let staff = {
           period: staff_item.dateto!=null?`${moment(staff_item.datefrom).format('YYYY MMM DD')} to ${moment(staff_item.dateto).format('YYYY MMM DD')}`:`${moment(staff_item.datefrom).format('YYYY MMM DD')} to -`,
           datefrom : staff_item.datefrom,
           dateto: staff_item.dateto,
           department: staff_item.department,
           establishment_name: establishment.name,
-          establishment: staff_item.establishment,
+          establishment: `/api/establishments/${establishment.id}`,
           name: `${staff_item.firstname} ${staff_item.lastname}`,
           gender: staff_item.gender,
           firstname: staff_item.firstname,
           lastname: staff_item.lastname,
           id: staff_item.id,
         }
+
+         console.log(staff)
         data.push(staff);
       });
     });
@@ -142,9 +143,9 @@ import { useWindowSize } from '@vueuse/core';
 
   const reloadData = (staff)=>{
     if(userStore.user.customer != null){
-        userStore.user.customer.establishments.forEach((element, index) => {
+        companiesStore.establishments.forEach((element, index) => {
             if(`/api/${companiesStore.entity}/${element.id}` == staff.establishment){
-              userStore.user.customer.establishments[index].staff= userStore.user.customer.establishments[index].staff.filter(item=>item.id !== staff.id);
+              companiesStore.establishments[index].staff= companiesStore.establishments[index].staff.filter(item=>item.id !== staff.id);
             }
         });
     }

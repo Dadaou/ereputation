@@ -132,6 +132,7 @@ import { useAppStore } from "@Stores/index.js";
 import { useCompanyStore } from "@Stores/company.js";
 import { useRoute, useRouter } from "vue-router";
 import moment from 'moment';
+import services from '@Services/index.js';
 
 const page=ref({
     title1: "",
@@ -221,33 +222,27 @@ const showMorePosts = ()=> {
 
 onBeforeMount(async()=>{
     const companyId = route.params.id;
-    // if(userStore.user.customer !==null){
-    //     userStore.user.customer.establishments.forEach(async company => {
-    //         if(company.id == companyId){
-    //             establishment.value = company;
-    //             establishment.value.media.forEach(item => {
-    //                 media.push(item.url_source);
-    //             });
-    //             socialPages.value = company.socialPages;
-    //             console.log(socialPages.value, company.socialPages )
-    //             socials.value = ['', ...getSocials(company.socials)];
-    //             all_items.value[1].value = establishment.value.reviews.length;
-    //             all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
-    //             appStore.isLoading = false;
-    //         }
-    //     });
-    // }
-
     companiesStore.establishments.forEach(async company => {
         if(company.id == companyId){
             establishment.value = company;
-            events.value = company.events;
             establishment.value.media.forEach(item => {
                 media.push(item.url_source);
             });
-            socialPages.value = company.socialPages;
-                console.log(socialPages.value, company.socialPages )
-                socials.value = ['', ...getSocials(company.socials)];
+            // socialPages.value = company.socialPages;
+            //     console.log(socialPages.value, company.socialPages )
+            //     socials.value = ['', ...getSocials(company.socials)];
+            let data = [];
+            let promises = [];
+             company.socialPages.forEach((social, index)=> {
+                console.log(social)
+                   let promise = services.get_Record(`/social_pages/${social.id}`, (response) => {
+                       data.push(response.data);
+                    });
+                    promises.push(promise); 
+                })
+              Promise.all(promises).then(() => {
+                  socialPages.value = data;
+              });
             all_items.value[1].value = establishment.value.reviews.length;
             all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
             appStore.isLoading = false;
@@ -650,6 +645,8 @@ li {
 .social-posts {
     flex: 2;
     padding-left: 20px;
+    max-height: 250px;
+    overflow: auto;
 }
 
 .social-posts h4 {

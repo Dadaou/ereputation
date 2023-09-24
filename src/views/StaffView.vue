@@ -187,8 +187,8 @@ watch([ dateStart, dateEnd ], ()=>{
 
 onBeforeMount(async()=>{
 const companyId = route.params.id;
-if(userStore.user.customer !==null){
-    companiesStore.establishments.forEach(async company => {
+companiesStore.establishments.forEach(async company => {
+    console.log(company)
         if(company.id == companyId){
             establishment.value = company;
             staffs.value = company.staffs;
@@ -201,7 +201,6 @@ if(userStore.user.customer !==null){
             appStore.isLoading = false;
         }
     });
-}
 })
 </script>
 
