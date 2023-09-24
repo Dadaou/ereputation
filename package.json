@@ -26,6 +26,7 @@
     "pinia": "^2.0.36",
     "pinia-plugin-persistedstate": "^3.2.0",
     "pinia-plugin-persistedstate-2": "^2.0.14",
+    "qrious": "^4.0.2",
     "swiper": "^10.0.3",
     "tailwindcss-animatecss": "^3.0.4",
     "tsparticles": "^2.9.3",
