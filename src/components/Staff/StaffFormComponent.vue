@@ -66,6 +66,7 @@ import { useStaffStore } from "@Stores/staff.js";
 import { useUserStore } from "@Stores/user.js";
 import moment from 'moment';
 import { ElMessage } from 'element-plus';
+import services from '@Services/index.js';
 
 const companiesStore = useCompanyStore();
 const userStore = useUserStore();
@@ -126,9 +127,9 @@ watch(staff_to_update, ()=>{
 
 const loadData = (data)=>{
     if(userStore.user.customer != null){
-        userStore.user.customer.establishments.forEach((element, index) => {
+        companiesStore.establishments.forEach((element, index) => {
             if(`/api/${companiesStore.entity}/${element.id}` == data.establishment){
-                userStore.user.customer.establishments[index].staff.push(data);
+               companiesStore.establishments[index].staffs.push(data);
             }
         });
     }
@@ -136,11 +137,10 @@ const loadData = (data)=>{
 
 const updateData = (staff)=>{
     if(userStore.user.customer != null){
-        userStore.user.customer.establishments.forEach((element, index) => {
-            console.log(`/api/${companiesStore.entity}/${element.id}`)
+       companiesStore.establishments.forEach((element, index) => {
             if(`/api/${companiesStore.entity}/${element.id}` == staff.establishment){
-                userStore.user.customer.establishments[index].staff.forEach((item, index2)=>{
-                    userStore.user.customer.establishments[index].staff[index2] = staff;
+                companiesStore.establishments[index].staffs.forEach((item, index2)=>{
+                    companiesStore.establishments[index].staffs[index2] = staff;
                 })
             }
         });
@@ -162,11 +162,15 @@ const submit = async ()=>{
     try {
         if(gender.value != '' && department.value != '' && startDate.value != null && establishment.value != '' && firstname.value != ''){
             if(type.value == 'add'){
-                await staffStore.addStaff(staff, (response)=>{
-                    console.log(response)
-                    if(response.status == 201){
-                        staff['id']= response.data['id'],
-                        loadData(staff);
+                const response = await new Promise((resolve, reject) => {
+                  services.createRecord('staff', staff, (response) => {
+                    resolve(response);
+                  });
+                });
+
+                console.log(response);
+                 if(response.status == 201){
+                        loadData(response.data);
                         ElMessage({
                             message: `${firstname.value} added successfully to staff member.`,
                             type: 'success',
@@ -180,13 +184,17 @@ const submit = async ()=>{
                         firstname.value = '';
                         showSpinner.value = false;
                     }
-                }) 
             }else{
-                await staffStore.updateStaff(staff, staff_to_update.value['id'], (response)=>{
+                 const response = await new Promise((resolve, reject) => {
+                  services.putRecord('staff', staff_to_update.value['id'], event, (response) => {
+                    resolve(response);
+                  });
+                });
 
-                    if(response.status == 200){
+                 console.log(response)
+                if(response.status == 200){
                         let data = response.data;
-                        data.establishment = response.data.establishment['@id'];
+                        // data.establishment = response.data.establishment['@id'];
                         updateData(data);
                         ElMessage({
                             message: `Staff updated successfully`,
@@ -202,8 +210,7 @@ const submit = async ()=>{
                         showSpinner.value = false;
                         type.value = 'add';
                         staff_to_update.value = null;
-                    }
-                }) 
+                    } 
             }
         }else{
             ElMessage.error(`Please, provide all needed information to ${type} a staff`);

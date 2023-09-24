@@ -82,55 +82,49 @@ const showSpinner = ref(false);
  const event_to_update = inject('event_to_update');
 
 watch(event_to_update, ()=>{
-    if(event_to_update.value != null){  
-        console.log(event_to_update.value)  
+    if(event_to_update.value != null){   
         dateFrom.value = new Date(event_to_update.value["datefrom"]);
         dateTo.value = new Date(event_to_update.value["dateto"]);
         category.value = event_to_update.value["category"];
         eventName.value = event_to_update.value["name"];
-
-        event_to_update.value["establishment"].forEach(element=>{
-            if(typeof element == 'string') establishments.value.push(element)
-            else{
-            establishments.value.push(`/api/${companiesStore.entity}/${element.id}`)
-            }
-        })
+        establishments.value = event_to_update.value['event_establishment']
         type.value = 'edit';
     }
 })
+const getEstablishment = (data)=>{
+  let result = [];
+  console.log(data);
+   data.forEach(item=>{
+     companiesStore.establishments.forEach((element, index) => {
+         if(`/api/establishments/${element.id}` == item){
+                     result.push(element);
+         }         
+    })
+   })
+ return result;
+}
      const loadData = (data)=>{
-
         companiesStore.establishments.forEach((element, index) => {
                 data.establishment.forEach(item=>{
-                  console.log(element, item)
-                    // if(element.id == item.id){
-                    //     companiesStore.establishments[index].events.push(data);
-                    // }
+                    if(`/api/establishments/${element.id}` == item){
+                      data['establishment'] = getEstablishment(data.establishment)
+                      companiesStore.establishments[index].events.push(data);
+                    }
                 })
         });
     }
 
 const updateData = (event)=>{
-    // if(userStore.user.customer != null){
-    //   event.establishment.forEach(item =>{
-    //      userStore.user.customer.establishments.forEach((element, index) => {
-    //         if(element.id == item.id){
-    //           userStore.user.customer.establishments[index].events.forEach((item, index2)=>{
-    //             userStore.user.customer.establishments[index].events[index2] = event;
-    //           })
-    //         }
-    //     });
-    //   })
-    // }
-    event.establishment.forEach(item =>{
-         companiesStore.establishments.forEach((element, index) => {
-            if(element.id == item.id){
-              companiesStore.establishments[index].events.forEach((item, index2)=>{
-                companiesStore.establishments[index].events[index2] = event;
-              })
-            }
-        });
-      })
+   event['establishment'] = getEstablishment(event.establishment);
+   companiesStore.establishments.forEach((element, index) => {
+           event.establishment.forEach(item =>{
+               if(element.id == item.id){
+                companiesStore.establishments[index].events = companiesStore.establishments[index].events.filter(item=>item.id !== event.id);
+                 companiesStore.establishments[index].events.push(event);
+                }
+          })
+
+    });
   }
 
  const submit = async ()=>{
@@ -153,7 +147,7 @@ const updateData = (event)=>{
                   });
                 });
 
-                console.log(response)
+                console.log(response);
                 if (response.status === 201) {
                   loadData(response.data);
                   ElMessage({
@@ -176,6 +170,7 @@ const updateData = (event)=>{
 
                 if (response.status == 200) {
                   updateData(response.data);
+                  console.log(response.data)
                   ElMessage({
                     message: `Event updated successfully.`,
                     type: 'success',
@@ -186,6 +181,7 @@ const updateData = (event)=>{
                   establishments.value = [];
                   eventName.value = '';
                   showSpinner.value = false;
+                  type.value= 'add'
                 }
             }
         }else{

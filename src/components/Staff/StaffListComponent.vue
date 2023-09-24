@@ -125,8 +125,6 @@ import { useWindowSize } from '@vueuse/core';
           lastname: staff_item.lastname,
           id: staff_item.id,
         }
-
-         console.log(staff)
         data.push(staff);
       });
     });
@@ -142,13 +140,11 @@ import { useWindowSize } from '@vueuse/core';
   )
 
   const reloadData = (staff)=>{
-    if(userStore.user.customer != null){
-        companiesStore.establishments.forEach((element, index) => {
+     companiesStore.establishments.forEach((element, index) => {
             if(`/api/${companiesStore.entity}/${element.id}` == staff.establishment){
-              companiesStore.establishments[index].staff= companiesStore.establishments[index].staff.filter(item=>item.id !== staff.id);
+              companiesStore.establishments[index].staffs= companiesStore.establishments[index].staffs.filter(item=>item.id !== staff.id);
             }
         });
-    }
   }
 
   const handleEdit = (index, staff) => {
@@ -157,6 +153,7 @@ import { useWindowSize } from '@vueuse/core';
 
   const handleDelete = async(index, staff) => {
    await staffStore.removeStaff(staff.id, (response)=>{
+    console.log(response)
     if(response.status == 204){
       reloadData(staff);
     }

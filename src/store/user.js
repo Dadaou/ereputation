@@ -78,6 +78,4 @@ export const useUserStore = defineStore("user",()=> {
     user, users, authenticated, entity, nb, fetchAll, signIn, signOut, getInitials,
     getInitialsV2
   }
-},{
-  persist: false
 });
