@@ -384,25 +384,42 @@ const groupReviewByCondition = ()=>{
 
 onBeforeMount(async()=>{
 const companyId = route.params.id;     
-if(userStore.user.customer !==null){
-    userStore.user.customer.establishments.forEach(async company => {
+// if(userStore.user.customer !==null){
+//     userStore.user.customer.establishments.forEach(async company => {
+//         if(company.id == companyId){
+//             establishment.value = company;
+//             weather.value = company.weather;
+//             reviews.value = company.reviews;
+//             establishment.value.media.forEach(item => {
+//                 media.push(item.url_source);
+//             });
+        
+//             all_items.value[1].value = establishment.value.reviews.length;
+//             all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
+//             appStore.isLoading = false;
+
+//             data.value = weaherImpact(datefrom, dateto);
+//             groupReviewByCondition();
+//         }
+//     });
+// }
+
+ companiesStore.establishments.forEach(async company => {
         if(company.id == companyId){
             establishment.value = company;
-            weather.value = company.weather;
-            reviews.value = company.reviews;
+            events.value = company.events;
             establishment.value.media.forEach(item => {
                 media.push(item.url_source);
             });
-        
+             weather.value = company.weather;
+             reviews.value = company.reviews;
             all_items.value[1].value = establishment.value.reviews.length;
             all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
             appStore.isLoading = false;
-
             data.value = weaherImpact(datefrom, dateto);
             groupReviewByCondition();
         }
     });
-}
 })
 
 const el = ref(null);

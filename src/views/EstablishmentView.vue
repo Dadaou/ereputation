@@ -280,6 +280,7 @@ import { useAppStore } from "@Stores/index.js";
 import { useRoute, useRouter } from "vue-router";
 import { useWindowSize } from '@vueuse/core';
 import moment from 'moment';
+import services from '@Services/index.js';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -516,33 +517,77 @@ globalComparison();
 
 onBeforeMount(async () => {
 const companyId = route.params.id;
-if(userStore.user.customer !==null){
-    userStore.user.customer.establishments.forEach(async company => {
-        if(company.id == companyId){
-            establishment.value = company;
-            reviews.value = company.reviews;
-            page.value.title2 = company.name;
-            console.log('reviews', reviews.value);
-            console.log('company',company)
-            const competitorTag = `competitor_tag=${company.competitor_tag}`;
-            
-            await competitorStore.getAllCompetitors(competitorTag, (data) => {  
-                data.forEach(element => {
-                    competitors.value.push(element);
+    companiesStore.establishments.forEach(_establishment=>{
+        if(_establishment.id==companyId){
+            establishment.value = _establishment;
+            reviews.value = establishment.value.reviews;
+            page.value.title2 = establishment.value.name;
+            let data = [];
+            let promises = [];
+            establishment.value.competitors.forEach(competitor=>{
+               let promise = services.getRecord('establishments', competitor.id, (response) => {
+                        data.push(response.data);
                 });
-            });
+                promises.push(promise);  
+             })
 
-            console.log('competitors', competitors.value)
-            establishment.value.media.forEach(item => {
-                media.push(item.url_source);
+            Promise.all(promises).then(() => {
+                     competitors.value = data;
             });
-            companiesStore.calculateRating(establishment.value.reviews, (rating) =>{
-                all_items.value[0].value = rating;
-            });
-            websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
         }
+    })
+
+    if(userStore.user.customer !==null){
+        userStore.user.customer.establishments.forEach(async (company, index) => {
+            if(company.id == companyId){
+                userStore.user.customer.establishments[index].media.forEach(item => {
+                    media.push(item.url_source);
+                });
+            }
+        });
+    }
+
+    companiesStore.calculateRating(establishment.value.reviews, (rating) =>{
+        all_items.value[0].value = rating;
     });
-}
+    websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
+ // const response = await new Promise((resolve, reject) => {
+ //        services.get_Record(`/establishment/${companyId}/detail`, (response) => {
+ //            resolve(response);
+ //        });
+ //    });
+ // console.log(response)
+ // if(response.status == 200){
+ //    establishment.value = response.data;
+ //    reviews.value = establishment.value.reviews;
+ //    page.value.title2 = establishment.value.name;
+ //    let data = [];
+ //    let promises = [];
+ //    establishment.value.competitors.forEach(competitor=>{
+ //       let promise = services.getRecord('establishments', competitor.id, (response) => {
+ //                data.push(response.data);
+ //        });
+ //        promises.push(promise);  
+ //     })
+
+ //    Promise.all(promises).then(() => {
+ //             competitors.value = data;
+ //    });
+ //    if(userStore.user.customer !==null){
+ //        userStore.user.customer.establishments.forEach(async (company, index) => {
+ //            if(company.id == companyId){
+ //                userStore.user.customer.establishments[index].media.forEach(item => {
+ //                    media.push(item.url_source);
+ //                });
+ //            }
+ //        });
+ //    }
+    
+ //    companiesStore.calculateRating(establishment.value.reviews, (rating) =>{
+ //        all_items.value[0].value = rating;
+ //    });
+ //    websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
+ // }
 })
 
 const reloadComparison = async (competitor) => {

@@ -14,6 +14,7 @@ export const useUserStore = defineStore("user",()=> {
     return users.value.length;
   })
   
+  const companyStore = useCompanyStore();
   const fetchAll =  async(next)=>{
         await services.getRecords(this.entity, (response)=>{
           if (response.status == 200) {
@@ -25,11 +26,25 @@ export const useUserStore = defineStore("user",()=> {
 
   const signIn = async (email, password, next)=>{
           const response = await services.login(email, password); 
-          console.log(response)
           if (response.status == 200) {
             services.setUser(response.data['user']);
             user.value = response.data['user'];
             authenticated.value = true;
+
+            if(user.value.customer !== null){
+              let data = [];
+              let promises = [];
+              user.value.customer.establishments.forEach((establishment, index)=> {
+                   let promise = services.get_Record(`/establishment/${establishment.id}/detail`, (response) => {
+                       data.push(response.data);
+                    });
+                    promises.push(promise); 
+                })
+              Promise.all(promises).then(() => {
+                  companyStore.establishments = data;
+              });
+              console.log('hehe')
+            }
             next({authenticated:authenticated.value, status: 200});
           } else if (response.status == 401) {
             next({authenticated:authenticated.value, status: 401});
@@ -40,6 +55,7 @@ export const useUserStore = defineStore("user",()=> {
 
     const signOut = ()=>{
           services.logout();
+          localStorage.removeItem('company')
     }
 
     const getInitials = (firstName, lastName) =>{

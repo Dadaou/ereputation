@@ -104,6 +104,8 @@ let endDate = moment().endOf('year').format('YYYY-M-DD');
 let legendData = ref([]);
 let _timePeriod = computed(()=>props.timePeriod)
 
+console.log(props.data)
+
 const viewFullscreen = () => {
     showModal.value = !showModal.value;
 }

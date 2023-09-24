@@ -16,7 +16,7 @@
             <ul v-if="socialPages.length>0">
                 <li v-for="socialItem in socialPages">
                     <div class="social-details">
-                        <h3><i :class="`uil uil-${socialItem.source}`"></i> <span>{{ socialItem.source }}</span></h3>
+                        <h3><i :class="`uil uil-${socialItem.source}`"></i><a href=""><span>{{ socialItem.source }}</span></a></h3>
                         <p><span>Followers:</span> {{ socialItem.followers }}</p>
                         <p><span>Likes:</span> {{ socialItem.likes }}</p>
                         <p><span>Posts:</span> {{ socialItem.posts }}</p>
@@ -221,22 +221,38 @@ const showMorePosts = ()=> {
 
 onBeforeMount(async()=>{
     const companyId = route.params.id;
-    if(userStore.user.customer !==null){
-        userStore.user.customer.establishments.forEach(async company => {
-            if(company.id == companyId){
-                establishment.value = company;
-                establishment.value.media.forEach(item => {
-                    media.push(item.url_source);
-                });
-                socialPages.value = company.socialPages;
+    // if(userStore.user.customer !==null){
+    //     userStore.user.customer.establishments.forEach(async company => {
+    //         if(company.id == companyId){
+    //             establishment.value = company;
+    //             establishment.value.media.forEach(item => {
+    //                 media.push(item.url_source);
+    //             });
+    //             socialPages.value = company.socialPages;
+    //             console.log(socialPages.value, company.socialPages )
+    //             socials.value = ['', ...getSocials(company.socials)];
+    //             all_items.value[1].value = establishment.value.reviews.length;
+    //             all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
+    //             appStore.isLoading = false;
+    //         }
+    //     });
+    // }
+
+    companiesStore.establishments.forEach(async company => {
+        if(company.id == companyId){
+            establishment.value = company;
+            events.value = company.events;
+            establishment.value.media.forEach(item => {
+                media.push(item.url_source);
+            });
+            socialPages.value = company.socialPages;
                 console.log(socialPages.value, company.socialPages )
                 socials.value = ['', ...getSocials(company.socials)];
-                all_items.value[1].value = establishment.value.reviews.length;
-                all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
-                appStore.isLoading = false;
-            }
-        });
-    }
+            all_items.value[1].value = establishment.value.reviews.length;
+            all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
+            appStore.isLoading = false;
+        }
+    });
 })
 
 watch(selectedSocials, ()=>{

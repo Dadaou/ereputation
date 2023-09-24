@@ -187,12 +187,10 @@ watch([ dateStart, dateEnd ], ()=>{
 
 onBeforeMount(async()=>{
 const companyId = route.params.id;
-if(userStore.user.customer !==null){
-    userStore.user.customer.establishments.forEach(async company => {
+companiesStore.establishments.forEach(async company => {
         if(company.id == companyId){
             establishment.value = company;
-            events.value = establishment.value.events;
-            // page.value.title2 = company.name;
+            events.value = company.events;
             establishment.value.media.forEach(item => {
                 media.push(item.url_source);
             });
@@ -202,7 +200,6 @@ if(userStore.user.customer !==null){
             appStore.isLoading = false;
         }
     });
-}
 })
 </script>
 

@@ -20,9 +20,9 @@
                         <li class="flex items-center"><i class="uil uil-map-pin-alt"></i><span>
                             {{ review.source }}
                         </span></li>
-                         <li class="flex items-center"  v-if="review.staff !== null"> <span>Staff review: </span>
+                         <!-- <li class="flex items-center"  v-if="review.staff !== null"> <span>Staff review: </span>
                             <span class="ml-2">{{ review.staff.firstname }} {{ review.staff.lastname }}</span>
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
             </div>
@@ -91,7 +91,7 @@ const props = defineProps({
     }
 });
 
-const { width, height } = useWindowSize()
+const { width, height } = useWindowSize();
 const userStore = useUserStore();
 const feedbackStore = useFeedbackStore();
 const modalWidth= computed(()=>{

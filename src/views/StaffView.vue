@@ -188,11 +188,10 @@ watch([ dateStart, dateEnd ], ()=>{
 onBeforeMount(async()=>{
 const companyId = route.params.id;
 if(userStore.user.customer !==null){
-    userStore.user.customer.establishments.forEach(async company => {
+    companiesStore.establishments.forEach(async company => {
         if(company.id == companyId){
             establishment.value = company;
-            staffs.value = company.staff;
-            // page.value.title2 = company.name;
+            staffs.value = company.staffs;
             establishment.value.media.forEach(item => {
                 media.push(item.url_source);
             });
