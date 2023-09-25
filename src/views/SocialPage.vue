@@ -10,8 +10,19 @@
                     <div class="app__title">
                         <h2>Social</h2>
                     </div>
+                    <el-dropdown split-button type="primary">
+                         {{calculType}}
+                      <template #dropdown>
+                        <el-dropdown-menu>
+                          <el-dropdown-item @click="calculType='Followers'">Followers</el-dropdown-item>
+                          <el-dropdown-item @click="calculType='Likes'">Likes</el-dropdown-item>
+                        </el-dropdown-menu>
+                      </template>
+                    </el-dropdown>
                 </div>
-                <div class="reviews__content"></div>
+                <div class="reviews__content">
+                    <Pie :data="data" :options="options" />
+                </div>
                 <div class="head">
                     <div class="app__title">
                         <h2>Social List</h2>
@@ -148,6 +159,10 @@ import { useAppStore } from "@Stores/index.js";
 import { useCompanyStore } from "@Stores/company.js";
 import { useRoute, useRouter } from "vue-router";
 import moment from 'moment';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
+import { Pie } from 'vue-chartjs'
+
+ChartJS.register(ArcElement, Tooltip, Legend)
 import services from '@Services/index.js';
 
 const page = ref({
@@ -173,12 +188,26 @@ const breadcrumbData = [
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
+const calculType = ref('Followers')
 let selectedSocials = ref('');
 let establishment = ref({});
 let socialPages = ref([]);
 let socials = ref(['']);
 const maxPostsToShow = ref(2)
+const data = ref({
+  labels: [],
+  datasets: [
+    {
+      backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
+      data: []
+    }
+  ]
+})
 
+const options = {
+  responsive: true,
+  maintainAspectRatio: false
+}
 let media = [];
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
@@ -236,6 +265,31 @@ const showMorePosts = () => {
     maxPostsToShow.value += 2;
 }
 
+const getFollowers = (datasets, type)=>{
+    let dataChart = {
+      labels: [],
+      datasets: [
+        {
+          backgroundColor: ['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff'],
+          data: []
+        }
+      ]
+    }
+
+    datasets.forEach(social=>{
+        const exists = dataChart['labels'].some(item => item === social.source);
+        if(exists == false){
+             dataChart['labels'].push(social.source)
+             if(type == 'Likes'){
+                 dataChart['datasets'][0]['data'].push(social.likes);
+             }else{
+                 dataChart['datasets'][0]['data'].push(social.followers);
+             }
+        }
+    })
+    return dataChart;
+}
+
 onBeforeMount(async () => {
     const companyId = route.params.id;
     companiesStore.establishments.forEach(async company => {
@@ -252,6 +306,7 @@ onBeforeMount(async () => {
             })
             Promise.all(promises).then(() => {
                 socialPages.value = data;
+                data.value = getFollowers(socialPages.value, calculType.value);
             });
             all_items.value[1].value = establishment.value.reviews.length;
             all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
@@ -265,6 +320,10 @@ watch(selectedSocials, () => {
 
     }
 });
+
+watch([socialPages, calculType], ()=>{
+    data.value = getFollowers(socialPages.value, calculType.value);
+})
 </script>
 
 <style scoped>

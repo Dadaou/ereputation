@@ -70,8 +70,8 @@
     data.forEach(item=>{
         dataset.forEach(item_data=>{
           if(item.id==item_data.id){
-             const uri = `/api/${entity}/${item.id}`;
-             const exists = uris.some(item => item === uri);
+            const uri = `/api/${entity}/${item.id}`;
+            const exists = uris.some(item => item === uri);
             if(exists == false)  uris.push(uri);
           }
         })
