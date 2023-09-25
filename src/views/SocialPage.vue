@@ -6,9 +6,15 @@
         </div>
         <div class="app__container">
             <div class="left__side">
-                <div class="head">
+                 <div class="head">
                     <div class="app__title">
                         <h2>Social</h2>
+                    </div>
+                </div>
+                <div class="reviews__content"></div>
+                <div class="head">
+                    <div class="app__title">
+                        <h2>Social List</h2>
                     </div>
                 </div>
                 <div class="reviews__content">

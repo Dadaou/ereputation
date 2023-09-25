@@ -6,13 +6,13 @@
     </div>
     <div class="mt-5">
         <el-table :data="filterTableData" style="width: 100%">
-            <el-table-column label="Period" prop="period" />
-            <el-table-column label="Name" prop="name" />
-            <el-table-column label="Gender" prop="gender"/>
-            <el-table-column label="Establishment" prop="establishment_name"/>
-            <el-table-column label="Department" prop="department"/>
+            <el-table-column fixed label="Period" prop="period" width="150"/>
+            <el-table-column label="Name" prop="name" width="150"/>
+            <el-table-column label="Gender" prop="gender" width="100"/>
+            <el-table-column label="Establishment" prop="establishment_name" width="150"/>
+            <el-table-column label="Department" prop="department" width="150"/>
             
-            <el-table-column align="right">
+            <el-table-column fixed="right" width="150">
                 <template #header>
                 <el-input v-model="search" size="small" placeholder="Type to search" />
                 </template>
@@ -103,7 +103,6 @@ import { ElMessage } from 'element-plus';
   const modalWidth= computed(()=>{
     let windowSize = 1500;
     let gap = (windowSize - width.value)/19;
-    console.log(gap)
     return gap + 35;
 })
 
@@ -188,7 +187,7 @@ import { ElMessage } from 'element-plus';
 
 const onDataUrlChange = (dataUrl) =>{
       base64Image.value = dataUrl;
-}
+};
   
 </script>
 <style scoped>

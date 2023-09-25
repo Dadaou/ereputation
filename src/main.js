@@ -27,8 +27,6 @@ moment.locale('en-ca');
 
 const app = createApp(App);
 
-localforage.setDriver(localforage.INDEXEDDB);
-
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 

@@ -49,7 +49,7 @@ const event_to_update = ref(null);
 provide('event_to_update', event_to_update);
 
 const handleClick = (tab, event) => {
-  console.log(tab, event)
+  // console.log(tab, event)
 };
 
 const handleEdit = (value, type)=>{

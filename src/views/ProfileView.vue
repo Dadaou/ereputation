@@ -4,7 +4,7 @@
         <div class="breadcrumb__container">
             <BreadcrumbComponent :data="breadcrumbData" />
         </div>
-        <div class="container admin__container">
+        <div class="admin__container">
             <div class="admin__menu">
                 <ul>
                     <li>
@@ -59,6 +59,12 @@ const breadcrumbData = [
     height: inherit;
     display: flex;
     gap: 2rem;
+    width: 95% !important;
+    margin: auto;
+}
+
+ .breadcrumb__container{
+        width: 95%;
 }
 
 .admin__menu ul {
@@ -106,10 +112,9 @@ const breadcrumbData = [
     }
 }
 
-@media screen and (max-width:1024px) {
-    .admin__container {
-        position: relative;
-        top: 7.5rem;
+@media screen and (max-width:1124px) {
+    .breadcrumb__container{
+        width: 95%;
     }
 
     .admin__menu li a span {
@@ -119,6 +124,24 @@ const breadcrumbData = [
     .admin__menu li a {
         font-size: 15px;
         padding: 10px 25px;
+    }
+}
+
+@media screen and (max-width:800px) {
+    .admin__container {
+        flex-direction: column;
+    }
+
+    .admin__menu li a span {
+        display: block;
+    }
+
+    ul{
+        display: flex;
+    }
+
+    .admin__menu li a {
+       flex-direction: row;
     }
 }
 </style>

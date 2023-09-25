@@ -4,13 +4,13 @@
             <h4><i class="uil uil-calender"></i> Event List</h4>
         </div>
     </div>
-    <div class="mt-5">
+    <div class="mt-5 erep_table">
         <el-table :data="filterTableData" style="width: 100%">
-            <el-table-column label="Name" prop="name" />
-            <el-table-column label="Category" prop="category"/>
-            <el-table-column label="Establishment" prop="establishmentName"/>
-           <!--  <el-table-column label="Date" prop="date" /> -->
-            <el-table-column align="right">
+            <el-table-column fixed label="Name" prop="name" width="150"/>
+            <el-table-column label="Category" prop="category" width="150"/>
+            <el-table-column label="Establishment" prop="establishmentName" width="250"/>
+            <el-table-column label="Date" prop="date" width="250"/>
+            <el-table-column fixed="right" label="Operations" width="150">
                 <template #header>
                 <el-input v-model="search" size="small" placeholder="Type to search" />
                 </template>
@@ -137,7 +137,7 @@
                   });
       }
      })
-  }
+  };
 </script>
 <style scoped>
 @tailwind base;

@@ -620,8 +620,8 @@ export const useCompanyStore = defineStore("company", {
     },
     getReviewsBetweenDates(reviews, start_date, end_date) {
       let result = [];
-      const startDate = moment(start_date);
-      const endDate = moment(end_date);
+      const startDate = moment(start_date, 'YYYY-M-DD');
+      const endDate = moment(end_date, 'YYYY-M-DD');
 
       result = reviews.filter((review) => {
         const reviewDate = moment(review.date_review);

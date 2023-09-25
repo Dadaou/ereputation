@@ -99,7 +99,6 @@ const companiesStore = useCompanyStore();
 const modalWidth= computed(()=>{
     let windowSize = 1500;
     let gap = (windowSize - width.value)/19;
-    console.log(gap)
     return gap + 35;
 })
 const formatRating = (rating) => {

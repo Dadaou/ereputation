@@ -951,19 +951,10 @@ const goto = (value) =>{
   }
   
   .right__side{
-    width: 400px !important;
-  }
-}
-
-@media screen and (max-width:1225px) {
-  .counter{
-    gap: 1rem !important;
-  }
-
-  .right__side{
     width: 300px !important;
-  } 
+  }
 }
+
 
 @media screen and (max-width:1024px) {
    
