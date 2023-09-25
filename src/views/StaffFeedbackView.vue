@@ -167,8 +167,7 @@ const submit = async ()=>{
         console.log(error)
     }
     
-}
-
+};
 </script>
 
 <style scoped>

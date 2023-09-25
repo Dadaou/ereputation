@@ -52,10 +52,10 @@ const props = defineProps({
 }
 
 @media screen and (max-width:1024px) {
-    .head__container{
+    /*.head__container{
         position: absolute;
         top:5rem;
-    }
+    }*/
 
     .head__container div{
         font-size: 20px;

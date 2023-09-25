@@ -73,7 +73,7 @@
                          </div>
                     </div>
                 <div class="photo">
-                    <img v-if="media.length > 0" :src="media[0]" alt="" />
+                    <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
                     <div v-else role="status" class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                             <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                             <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
@@ -86,7 +86,7 @@
             <div class="right__side">
                 <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                     <a href="#">
-                        <img v-if="media.length > 0" :src="media[0]" alt="" />
+                        <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
                         <div v-else role="status" class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                             <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                             <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
@@ -362,27 +362,6 @@ watch(selectedStars, ()=>{
 onBeforeMount(async()=>{
 const companyId = route.params.id;
 
-// if(userStore.user.customer !==null){
-//     userStore.user.customer.establishments.forEach(async company => {
-//         if(company.id == companyId){
-//             establishment.value = company;
-//             reviews.value = company.reviews;
-//             reviews.value.sort(function(a, b) {
-//             return moment(b.date_review).diff(moment(a.date_review));
-//             });
-//             page.value.title2 = company.name;
-//             establishment.value.media.forEach(item => {
-//                 media.push(item.url_source);
-//             });
-//             websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
-//             all_items.value[1].value = establishment.value.reviews.length;
-//             all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
-//             updateVisibleData(reviews.value);
-//             appStore.isLoading = false;
-//         }
-//     });
-// }
-//})
     companiesStore.establishments.forEach(async company => {
         if(company.id == companyId){
             establishment.value = company;
@@ -391,9 +370,7 @@ const companyId = route.params.id;
             return moment(b.date_review).diff(moment(a.date_review));
             });
             page.value.title2 = company.name;
-            establishment.value.media.forEach(item => {
-                media.push(item.url_source);
-            });
+            
             websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
             all_items.value[1].value = establishment.value.reviews.length;
             all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
@@ -429,7 +406,7 @@ const starFilter = (star)=>{
     if(selectedStars.value.includes(star) == true) {
         selectedStars.value = selectedStars.value.filter(rating=> rating != star);
     }else selectedStars.value.push(star);
-}
+};
 </script>
 
 <style scoped>
@@ -773,13 +750,6 @@ const starFilter = (star)=>{
   .left__side{
     width: 1000px !important;
   }
-}
-
-@media screen and (max-width:1024px) {
-    .app__container{
-        position: relative;
-        top: 7.5rem !important;
-    }
 }
 
 @media screen and (max-width: 975px) {

@@ -51,7 +51,7 @@ const breadcrumbData = [
         path: `${route.path}`,
         isCurrent: true,
     },
-]
+];
 </script>
 
 <style scoped>
@@ -109,7 +109,7 @@ const breadcrumbData = [
 @media screen and (max-width:1024px) {
     .admin__container {
         position: relative;
-        top: 8rem;
+        top: 7.5rem;
     }
 
     .admin__menu li a span {

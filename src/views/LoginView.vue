@@ -177,13 +177,6 @@ button.isLoaded{
     }
 }
 
-@media screen and (max-width:1024px) {
-    .login__container{
-        position: relative;
-        top: 8rem;
-    }
-}
-
 @media screen and (max-width:900px) {
     .login__form{
         width: 40%;

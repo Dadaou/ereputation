@@ -105,7 +105,7 @@ onBeforeMount(async()=>{
         page.value.title2 = company.name;
         updateVisibleData(reviews.value);
     });
-})
+});
 </script>
 
 <style scoped>

@@ -67,7 +67,7 @@
                          </div>
                     </div>
                 <div class="photo">
-                    <img v-if="media.length > 0" :src="media[0]" alt="" />
+                    <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
                     <div v-else role="status" class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                             <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                             <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
@@ -80,7 +80,7 @@
             <div class="right__side">
                 <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                     <a href="#">
-                        <img v-if="media.length > 0" :src="media[0]" alt="" />
+                        <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
                         <div v-else role="status" class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                             <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                             <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
@@ -225,9 +225,6 @@ onBeforeMount(async()=>{
     companiesStore.establishments.forEach(async company => {
         if(company.id == companyId){
             establishment.value = company;
-            establishment.value.media.forEach(item => {
-                media.push(item.url_source);
-            });
             socials.value = [" ",...getSocials(company.socials)];
             let data = [];
             let promises = [];
@@ -251,7 +248,7 @@ watch(selectedSocials, ()=>{
     if(selectedSocials.value != ''){
 
     }
-})
+});
 </script>
 
 <style scoped>
@@ -727,13 +724,6 @@ li {
   .left__side{
     width: 1000px !important;
   }
-}
-
-@media screen and (max-width:1024px) {
-    .app__container{
-        position: relative;
-        top: 7.5rem !important;
-    }
 }
 
 @media screen and (max-width: 975px) {

@@ -349,7 +349,7 @@ const downloadQrcode = ()=>{
 
 const onDataUrlChange = (dataUrl) =>{
       base64Image.value = dataUrl;
-}
+};
 </script>
 
 <style scoped>
@@ -629,13 +629,6 @@ const onDataUrlChange = (dataUrl) =>{
 @media screen and (max-width:1163px) {
     .client__container{
       width: 60% !important;
-    }
-}
-
-@media screen and (max-width:1024px) {
-    .client__container{
-        position: relative;
-        top: 9rem !important;
     }
 }
 

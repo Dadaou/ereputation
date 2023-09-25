@@ -43,8 +43,8 @@ export const useUserStore = defineStore("user",()=> {
                 })
               Promise.all(promises).then(() => {
                   companyStore.establishments = data;
+                  console.log(data);
               });
-              console.log('hehe')
             }
           } else if (response.status == 401) {
             next({authenticated:authenticated.value, status: 401});

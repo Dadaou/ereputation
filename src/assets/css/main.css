@@ -522,10 +522,11 @@ header{
 
 @media screen and (max-width:1024px) {
 
-    .breadcrumb__container{
-        position: relative;
-        top: 9.5rem !important;
-    }
+    /*.breadcrumb__container{
+        position: absolute;
+        top: 13.5rem;
+        margin-left: 10px
+    }*/
 }
 
 @media screen and (max-width: 675px) {

@@ -163,7 +163,7 @@
                          </div>
                     </div>
                 <div class="photo">
-                    <img v-if="media.length > 0" :src="media[0]" alt="" />
+                    <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
                     <div v-else role="status" class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                             <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                             <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
@@ -176,7 +176,7 @@
             <div class="right__side">
                 <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                     <a href="#">
-                        <img v-if="media.length > 0" :src="media[0]" alt="" />
+                        <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
                         <div v-else role="status" class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                             <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                             <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
@@ -551,43 +551,6 @@ const companyId = route.params.id;
         all_items.value[0].value = rating;
     });
     websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
- // const response = await new Promise((resolve, reject) => {
- //        services.get_Record(`/establishment/${companyId}/detail`, (response) => {
- //            resolve(response);
- //        });
- //    });
- // console.log(response)
- // if(response.status == 200){
- //    establishment.value = response.data;
- //    reviews.value = establishment.value.reviews;
- //    page.value.title2 = establishment.value.name;
- //    let data = [];
- //    let promises = [];
- //    establishment.value.competitors.forEach(competitor=>{
- //       let promise = services.getRecord('establishments', competitor.id, (response) => {
- //                data.push(response.data);
- //        });
- //        promises.push(promise);  
- //     })
-
- //    Promise.all(promises).then(() => {
- //             competitors.value = data;
- //    });
- //    if(userStore.user.customer !==null){
- //        userStore.user.customer.establishments.forEach(async (company, index) => {
- //            if(company.id == companyId){
- //                userStore.user.customer.establishments[index].media.forEach(item => {
- //                    media.push(item.url_source);
- //                });
- //            }
- //        });
- //    }
-    
- //    companiesStore.calculateRating(establishment.value.reviews, (rating) =>{
- //        all_items.value[0].value = rating;
- //    });
- //    websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
- // }
 })
 
 const reloadComparison = async (competitor) => {
@@ -686,7 +649,7 @@ watch(selectedTimePeriod, ()=>{
 
 const goto = (value) =>{
     router.push({name: value});
-}
+};
 
 </script>
 
@@ -1003,11 +966,7 @@ const goto = (value) =>{
 }
 
 @media screen and (max-width:1024px) {
-    .app__container{
-        position: relative;
-        top: 7.5rem !important;
-    }
-
+   
     .right__side{
      width: 250px !important;
     } 

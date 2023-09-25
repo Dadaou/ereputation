@@ -92,7 +92,6 @@ const get_Record= async (url, next)=>{
     };
     try {
         if (checkConnexionInfo()) {
-            console.log(axiosInstance.defaults)
             await axiosInstance.get(`${url}`, {headers}).then((response)=>{
                 next(response);
             })   
