@@ -239,8 +239,8 @@ export const useCompanyStore = defineStore("company", {
     calculateEventRating(company, event) {
       let reviews = this.getReviewsBetweenDates(
         company.reviews,
-        moment(event.datefrom).format("YYYY-M-DD"),
-        moment(dateto.end).format("YYYY-M-DD")
+        event.datefrom,
+        event.dateto
       );
       const rate = Number(this.calculateRatingV2(reviews));
       const total = reviews.length;
@@ -713,4 +713,5 @@ export const useCompanyStore = defineStore("company", {
       return result;
     },
   },
+  persist: true
 });

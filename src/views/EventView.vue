@@ -142,8 +142,9 @@ const appStore = useAppStore();
 const baseurl = window.location.origin;
 
 let establishment = ref({});
+provide('establishment', establishment)
 let events = ref([]);
-provide('events', events)
+provide('events', events);
 let dataReviews = ref([]);
 let selectedStars = ref([1,2,3,4,5]);
 let visibleData = ref([])
