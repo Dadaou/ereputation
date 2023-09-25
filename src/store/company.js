@@ -212,7 +212,14 @@ export const useCompanyStore = defineStore("company", {
     eventRatingDataset(company, event) {
       const eventRating = this.calculateEventRating(company, event);
       return {
-        labels: ["0", "1", "2", "3", "4", "5"],
+        labels: [
+          "0 star",
+          "1 star",
+          "2 stars",
+          "3 stars",
+          "4 stars",
+          "5 stars",
+        ],
         datasets: [
           {
             backgroundColor: [
@@ -242,7 +249,7 @@ export const useCompanyStore = defineStore("company", {
         event.datefrom,
         event.dateto
       );
-      
+
       const rate = Number(this.calculateRatingV2(reviews));
       const total = reviews.length;
       const classifiedByRating = {
@@ -255,7 +262,7 @@ export const useCompanyStore = defineStore("company", {
       };
       reviews.forEach((review) => {
         let rating = this.formatRating(review.rating);
-        rating= rating>5?rating/2: rating;
+        rating = rating > 5 ? rating / 2 : rating;
         rating = String(Math.round(rating));
         classifiedByRating[rating].push(review);
       });
@@ -627,7 +634,7 @@ export const useCompanyStore = defineStore("company", {
       const startDate = moment(start_date);
       const endDate = moment(end_date);
       result = reviews.filter((review) => {
-        const reviewDate = moment(review.date_review); 
+        const reviewDate = moment(review.date_review);
         return reviewDate.isBetween(startDate, endDate, null, "[]");
       });
       return result;
@@ -728,5 +735,5 @@ export const useCompanyStore = defineStore("company", {
       return result;
     },
   },
-  persist: true
+  persist: true,
 });
