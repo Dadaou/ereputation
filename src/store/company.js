@@ -237,11 +237,12 @@ export const useCompanyStore = defineStore("company", {
     },
 
     calculateEventRating(company, event) {
-      let reviews = this.getReviewsBetweenDates(
+      let reviews = this.getReviewsBetweenDatesTemp(
         company.reviews,
         event.datefrom,
         event.dateto
       );
+      
       const rate = Number(this.calculateRatingV2(reviews));
       const total = reviews.length;
       const classifiedByRating = {
@@ -253,7 +254,10 @@ export const useCompanyStore = defineStore("company", {
         5: [],
       };
       reviews.forEach((review) => {
-        classifiedByRating[str(Math.round(review.rating))] = review;
+        let rating = this.formatRating(review.rating);
+        rating= rating>5?rating/2: rating;
+        rating = String(Math.round(rating));
+        classifiedByRating[rating].push(review);
       });
 
       return {
@@ -611,8 +615,19 @@ export const useCompanyStore = defineStore("company", {
       let result = [];
       const startDate = moment(start_date);
       const endDate = moment(end_date);
+
       result = reviews.filter((review) => {
         const reviewDate = moment(review.date_review);
+        return reviewDate.isBetween(startDate, endDate, null, "[]");
+      });
+      return result;
+    },
+    getReviewsBetweenDatesTemp(reviews, start_date, end_date) {
+      let result = [];
+      const startDate = moment(start_date);
+      const endDate = moment(end_date);
+      result = reviews.filter((review) => {
+        const reviewDate = moment(review.date_review); 
         return reviewDate.isBetween(startDate, endDate, null, "[]");
       });
       return result;

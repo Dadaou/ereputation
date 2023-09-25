@@ -7,7 +7,7 @@
                 <li class="period"><span class="label">Period: </span> <span>{{ moment(event.datefrom).format('DD MMMM YYYY') }}</span> <span v-if="event.dateto != null">{{ `to ${moment(event.dateto).format('DD MMMM YYYY')}` }}</span></li>
             </ul>
             <div class="pie__chart">
-                <Pie :data="data" :options="options" />
+                <Pie :data="companiesStore.eventRatingDataset(establishment, event)" :options="options" />
             </div>
         </div>
     </div>
@@ -34,8 +34,8 @@ ChartJS.register(ArcElement, Tooltip)
 const companiesStore = useCompanyStore();
 const events = inject('events');
 const establishment = inject('establishment');
-const data = companiesStore.eventRatingDataset(establishment.value, events.value);
-console.log(data)
+// const data = companiesStore.eventRatingDataset(establishment.value, events.value);
+// console.log(data)
 const options = {
   responsive: true,
   maintainAspectRatio: false
