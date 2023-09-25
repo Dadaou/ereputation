@@ -260,7 +260,6 @@
             </div>
         </div>
     </div>
-    <!-- <WeatherComponent @updateModal="(value)=>weatherModal=value"/> -->
 </template>
 
 <script setup>

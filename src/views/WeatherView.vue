@@ -8,8 +8,17 @@
             <div class="left__side">
                 <div class="head">
                     <div class="app__title">
-                       <h2>Weather</h2>
+                       <h2>Weather</h2> 
                     </div>
+                    <el-dropdown split-button type="primary">
+                         {{calculType}}
+                      <template #dropdown>
+                        <el-dropdown-menu>
+                          <el-dropdown-item @click="calculType='Fahrenheit °F'">Fahrenheit °F</el-dropdown-item>
+                          <el-dropdown-item @click="calculType='Celcius °C'">Celcius °C</el-dropdown-item>
+                        </el-dropdown-menu>
+                      </template>
+                    </el-dropdown>
                 </div>
                 <div class="reviews__content" ref="el">
                   <GroupedBarChart :plot-data="data" 
@@ -157,6 +166,7 @@ const breadcrumbData = [
 ]
 
 let data = ref([]);
+let calculType = ref('Celcius °C');
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
@@ -217,7 +227,11 @@ const weaherImpact = (startDate, endDate)=>{
           impactByDay[date.format('YYYY-MM-DD')]['reviews']= []
           impactByDay[date.format('YYYY-MM-DD')]['note']= 0;
         }
-        impactByDay[date.format('YYYY-MM-DD')]['temp'] = ((weather.tempmax+weather.tempmin - 64) / 3.6).toFixed(1);
+        if(calculType.value == 'Celcius °C'){
+          impactByDay[date.format('YYYY-MM-DD')]['temp'] = ((weather.tempmax+weather.tempmin - 64) / 3.6).toFixed(1);
+        }else{
+          impactByDay[date.format('YYYY-MM-DD')]['temp'] = ((weather.tempmax+weather.tempmin) / 2).toFixed(1);
+        }
         impactByDay[date.format('YYYY-MM-DD')]['max'] = ((weather.tempmax- 32) / 1.8).toFixed(1);
         impactByDay[date.format('YYYY-MM-DD')]['min'] = ((weather.tempmin- 32) / 1.8).toFixed(1);
         impactByDay[date.format('YYYY-MM-DD')]['condition'] = weather.conditions;
@@ -381,6 +395,9 @@ const groupReviewByCondition = ()=>{
     globalData.value['datasets'] = datasets;
 }
 
+watch(calculType, ()=>{
+  data.value = weaherImpact(datefrom, dateto);
+})
 onBeforeMount(async()=>{
 const companyId = route.params.id;     
 
