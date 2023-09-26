@@ -1,13 +1,33 @@
 <template>
     <div class="staff__list">
         <div class="staff__card" v-if="events.length>0" v-for="event in events">
-            <ul>
+            <ul class="mb-5">
                 <li><h5>{{ event.name }}</h5></li>
-                <li><span class="label">Category: </span> <span>{{ event.category }}</span></li>
-                <li class="period"><span class="label">Period: </span> <span>{{ moment(event.datefrom).format('DD MMMM YYYY') }}</span> <span v-if="event.dateto != null">{{ `to ${moment(event.dateto).format('DD MMMM YYYY')}` }}</span></li>
+                <li class="event_category"><span class="label">Category: </span> <span>{{ event.category }}</span></li>
+                <li class="period"><i class="uil uil-calender"></i> <span>{{ moment(event.datefrom).format('DD MMMM YYYY') }}</span> <span v-if="event.dateto != null">{{ `to ${moment(event.dateto).format('DD MMMM YYYY')}` }}</span></li>
             </ul>
             <div class="pie__chart">
-                <Pie :data="companiesStore.eventRatingDataset(establishment, event)" :options="options" />
+                <div>
+                    <h3 class="mb-2">Before the event</h3>
+                    <Pie 
+                        :data="eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['before'])" 
+                        :options="options" 
+                    />
+                </div>
+                <div>
+                    <h3 class="mb-2">Throughout the event</h3>
+                    <Pie 
+                        :data="eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['between'])" 
+                        :options="options" 
+                    />
+                </div>
+                <div>
+                    <h3 class="mb-2">After the event</h3>
+                    <Pie 
+                        :data="eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['after'])" 
+                        :options="options" 
+                    />
+                </div>
             </div>
         </div>
     </div>
@@ -22,26 +42,55 @@ import { useCompanyStore } from "@Stores/company.js";
 
 ChartJS.register(ArcElement, Tooltip)
 
-// const data = {
-//   labels: ['VueJs', 'EmberJs', 'ReactJs', 'AngularJs'],
-//   datasets: [
-//     {
-//       backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
-//       data: [40, 20, 80, 10]
-//     }
-//   ]
-// }
 const companiesStore = useCompanyStore();
 const events = inject('events');
 const establishment = inject('establishment');
-// const data = companiesStore.eventRatingDataset(establishment.value, events.value);
-// console.log(data)
+
 const options = {
   responsive: true,
   maintainAspectRatio: false
-}
-
- 
+};
+const eventRatingDataset = (eventRating)=> {
+      return {
+        labels: [
+          "0 star",
+          "1 star",
+          "2 stars",
+          "3 stars",
+          "4 stars",
+          "5 stars",
+        ],
+        datasets: [
+          {
+            backgroundColor: [
+            '#90fdff',
+            '#42d3ff',
+            '#e558f7',
+            '#8eaca8',
+            '#fda458',
+            '#90fdac',
+            '#a8ac42',
+            '#444278',
+            '#f7a142',
+            '#de90fd',
+            '#90fdd4',
+            '#784444',
+            '#58f7bf',
+            '#fdaa58',
+            ],
+            data: [
+              eventRating["0"],
+              eventRating["1"],
+              eventRating["2"],
+              eventRating["3"],
+              eventRating["4"],
+              eventRating["5"],
+            ],
+          },
+        ],
+      };
+};
+console.log();
 </script>
 <style scoped>
 @tailwind base;
@@ -61,13 +110,13 @@ const options = {
     flex-grow: 1;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    height: 250px;
 }
 
 .staff__card h5{
     color: var(--color-primary);
+    font-weight: 500;
+    font-size: 16px;
 }
 
 .uil-mars{
@@ -88,9 +137,32 @@ span.label{
 }
 
 .pie__chart{
-    width: 100px !important;
-    height: 100px;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
 }
 
+.pie__chart div{
+    width: 50% !important;
+    height: 100px !important;
+}
 
+.pie__chart h3{
+    text-align: center;
+    font-weight: 500;
+    color: var(--color-bg1);
+    font-size: 14px;
+}
+
+.period span{
+    font-weight: 500;
+}
+
+.period i{
+   color: var(--color-danger)
+}
+
+.event_category{
+     font-weight: 500;
+}
 </style>

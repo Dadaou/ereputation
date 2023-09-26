@@ -341,7 +341,7 @@ companiesStore.establishments.forEach(async company => {
 }
 
 .left__side{
-    width: 1300px;
+   /* width: 1000px;*/
     padding: 50px 5px;
 }
 
@@ -542,7 +542,7 @@ companiesStore.establishments.forEach(async company => {
     gap: 2rem !important;
   }
   .left__side{
-    width: 1000px !important;
+    width: 900px !important;
   }
 }
 

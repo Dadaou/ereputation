@@ -344,7 +344,7 @@ watch(selectedSocials, () => {
 
 watch([socialPages, calculType], ()=>{
     data.value = getFollowers(socialPages.value, calculType.value);
-})
+});
 </script>
 
 <style scoped>
