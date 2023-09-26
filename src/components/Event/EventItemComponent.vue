@@ -15,7 +15,7 @@
                     />
                 </div>
                 <div>
-                    <h3 class="mb-2">Throughout the event</h3>
+                    <h3 class="mb-2">During the event</h3>
                     <Pie 
                         :data="eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['between'])" 
                         :options="options" 
