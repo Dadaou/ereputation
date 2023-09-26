@@ -302,7 +302,7 @@ const generateWeatherIcon = (day) => {
         return moment(weather.date_weather).isSame(day, 'day')
     })
 
-    if (dayWeather) {
+    if (dayWeather && weatherClassification[dayWeather.conditions]) {
         return weatherClassification[dayWeather.conditions]
     }
 
