@@ -257,7 +257,7 @@ export const useCompanyStore = defineStore("company", {
     },
 
     calculateEventRating(company, event) {
-      let reviews = this.getReviewsBetweenDatesTemp(
+      let reviews = this.getReviewsBetweenDates(
         company.reviews,
         event.datefrom,
         event.dateto
@@ -289,6 +289,49 @@ export const useCompanyStore = defineStore("company", {
         4: classifiedByRating["4"].length,
         5: classifiedByRating["5"].length,
       };
+    },
+    generateEventRatingData(reviews) {
+
+      const rate = Number(this.calculateRatingV2(reviews));
+      const total = reviews.length;
+      const classifiedByRating = {
+        0: [],
+        1: [],
+        2: [],
+        3: [],
+        4: [],
+        5: [],
+      };
+      reviews.forEach((review) => {
+        let rating = this.formatRating(review.rating);
+        rating = rating > 5 ? rating / 2 : rating;
+        rating = String(Math.round(rating));
+        classifiedByRating[rating].push(review);
+      });
+
+      return {
+        rate: rate,
+        0: classifiedByRating["0"].length,
+        1: classifiedByRating["1"].length,
+        2: classifiedByRating["2"].length,
+        3: classifiedByRating["3"].length,
+        4: classifiedByRating["4"].length,
+        5: classifiedByRating["5"].length,
+      };
+    },
+    calculateEventRatingV2(company, event) {
+      let data = this.getReviewsBetweenDatesTemp(
+        company.reviews,
+        event.datefrom,
+        event.dateto
+      );
+      console.log(this.generateEventRatingData(data.reviewsBeforeDates))
+
+      return {
+        before: this.generateEventRatingData(data.reviewsBeforeDates),
+        between: this.generateEventRatingData(data.reviewsBetweenDates),
+        after: this.generateEventRatingData(data.reviewsAfterDates)
+      }
     },
     calculateReviewsBySources(
       company,
@@ -643,14 +686,30 @@ export const useCompanyStore = defineStore("company", {
       return result;
     },
     getReviewsBetweenDatesTemp(reviews, start_date, end_date) {
-      let result = [];
+      let reviewsBetweenDates = [];
+      let reviewsBeforeDates = [];
+      let reviewsAfterDates = [];
+
       const startDate = moment(start_date);
       const endDate = moment(end_date);
-      result = reviews.filter((review) => {
+
+      reviews.forEach((review) => {
         const reviewDate = moment(review.date_review);
-        return reviewDate.isBetween(startDate, endDate, null, "[]");
+
+        if (reviewDate.isBetween(startDate, endDate, null, "[]")) {
+          reviewsBetweenDates.push(review);
+        } else if (reviewDate.isBefore(startDate)) {
+          reviewsBeforeDates.push(review);
+        } else if (reviewDate.isAfter(endDate)) {
+          reviewsAfterDates.push(review);
+        }
       });
-      return result;
+
+      return {
+        reviewsBetweenDates,
+        reviewsBeforeDates,
+        reviewsAfterDates
+      };
     },
     splitRangeIntoQuarters(start_date, end_date) {
       const start = new Date(start_date);

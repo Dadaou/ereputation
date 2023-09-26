@@ -428,7 +428,8 @@ watch(selectedSocials, () => {
 
 watch([socialPages, calculType], () => {
     data.value = getFollowers(socialPages.value, calculType.value);
-})
+
+});
 
 // watch(date, ()=>{
 //  if(date.value== null){
@@ -439,6 +440,7 @@ watch([socialPages, calculType], () => {
 //     loadDatasets(_comparisonData, colors, moment(date.value, 'DD/MM/YYYY'));
 //  }
 // });
+
 </script>
 
 <style scoped>
