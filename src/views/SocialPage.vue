@@ -29,6 +29,13 @@
                         <Pie :data="data" :options="options" />
                     </div>
                 </div>
+
+                <!-- <GroupedBarChart class="chart" :plot-data="props.data" x-key="name" :width="barWidth"
+                    :height="chartheight - 100" :margin="margin"
+                    :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
+                    :x-axis-label="_timePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+                </GroupedBarChart> -->
+
                 <div class="head">
                     <div class="app__title">
                         <h2>Social List</h2>
@@ -232,6 +239,30 @@ const dateStart = ref(new Date());
 const dateEnd = ref();
 const enableDateEnd = ref(false);
 
+// let chartData = ref({
+//         labels: [],
+//         datasets: []
+// })
+
+// let colors = ['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff'];
+
+// let chartConfig = reactive({
+//     data: {
+//         labels: [],
+//         datasets: [
+//             {
+//                 label: 'Data One',
+//                 backgroundColor: '#f87979',
+//                 data: [40, 20, 12, 39, 10, 40,]
+//             }
+//         ]
+//     },
+//     options: {
+//         responsive: true,
+//         maintainAspectRatio: false
+//     }
+// });
+
 const format2 = (date) => {
     const day = date.getDate();
     const month = date.getMonth() + 1;
@@ -239,6 +270,30 @@ const format2 = (date) => {
 
     return `${year}/${month}/${day}`;
 }
+
+// const loadDatasets = (establishments, colors, date) => {
+//     let data = [];
+//     var index = 0;
+//     let chartdata = {
+//         labels: companiesStore.getLastMonths(6, date, true),
+//         datasets: []
+//     }
+//     chartConfig.data.datasets = [];
+//     establishments.forEach(establishment => {
+//         let dataset = {
+//             label: establishment.name,
+//             backgroundColor: colors[index],
+//             data: companiesStore.getRatingLastMonths(establishment.reviews, 6, date, true)
+//         };
+//         if(index >= establishments.length) index = 0;
+//         index ++;
+//         data.push(dataset);
+//         chartdata.datasets.push(dataset);
+//     });
+//     chartConfig.data.datasets = data;
+//     chartData.value = chartdata;
+//     return data;
+// }
 
 const handleDate = (modelData) => {
     enableDateEnd.value = (modelData != null) ? true : false;
@@ -374,6 +429,16 @@ watch(selectedSocials, () => {
 watch([socialPages, calculType], () => {
     data.value = getFollowers(socialPages.value, calculType.value);
 })
+
+// watch(date, ()=>{
+//  if(date.value== null){
+//     plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);
+//     loadDatasets(_comparisonData, colors, selected_date);
+//  }else{
+//     plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, moment(date.value, 'DD/MM/YYYY'), true);
+//     loadDatasets(_comparisonData, colors, moment(date.value, 'DD/MM/YYYY'));
+//  }
+// });
 </script>
 
 <style scoped>
