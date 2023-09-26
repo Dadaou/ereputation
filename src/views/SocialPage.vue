@@ -6,29 +6,36 @@
         </div>
         <div class="app__container">
             <div class="left__side">
-                 <div class="head">
+                <div class="head">
                     <div class="app__title">
                         <h2>Social</h2>
                     </div>
                     <el-dropdown split-button type="primary">
-                         {{calculType}}
-                      <template #dropdown>
-                        <el-dropdown-menu>
-                          <el-dropdown-item @click="calculType='Followers'">Followers</el-dropdown-item>
-                          <el-dropdown-item @click="calculType='Likes'">Likes</el-dropdown-item>
-                        </el-dropdown-menu>
-                      </template>
+                        {{ calculType }}
+                        <template #dropdown>
+                            <el-dropdown-menu>
+                                <el-dropdown-item @click="calculType = 'Followers'">Followers</el-dropdown-item>
+                                <el-dropdown-item @click="calculType = 'Likes'">Likes</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </template>
                     </el-dropdown>
                 </div>
                 <div class="reviews__content">
-                     <div>
-                         <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
-                  </BaseLegend>
-                     </div>
-                     <div>
-                         <Pie :data="data" :options="options" />
-                     </div>
+                    <div>
+                        <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
+                        </BaseLegend>
+                    </div>
+                    <div>
+                        <Pie :data="data" :options="options" />
+                    </div>
                 </div>
+
+                <!-- <GroupedBarChart class="chart" :plot-data="props.data" x-key="name" :width="barWidth"
+                    :height="chartheight - 100" :margin="margin"
+                    :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
+                    :x-axis-label="_timePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+                </GroupedBarChart> -->
+
                 <div class="head">
                     <div class="app__title">
                         <h2>Social List</h2>
@@ -37,7 +44,7 @@
                 <div class="reviews__content">
                     <div class="social-list">
                         <ul v-if="socialPages.length > 0">
-                            <li v-for="socialItem in socialPages">
+                            <li v-for="socialItem in getLastSocialPages(socialPages)" :key="socialItem.source">
                                 <div class="social-details">
                                     <h3><i :class="`uil uil-${socialItem.source}`"></i><a
                                             :href="establishment.socials[0][socialItem.source]" target="_blank"><span>{{
@@ -96,10 +103,13 @@
                 </div>
                 <div class="photo">
                     <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
-                    <div v-else role="status" class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
+                    <div v-else role="status"
+                        class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                        <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                            <path
+                                d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
                         </svg>
                         <span class="sr-only">Loading...</span>
                     </div>
@@ -110,11 +120,14 @@
                     class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                     <a href="#">
                         <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
-                        <div v-else role="status" class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
-                        </svg>
+                        <div v-else role="status"
+                            class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                                <path
+                                    d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
+                            </svg>
                             <span class="sr-only">Loading...</span>
                         </div>
                     </a>
@@ -201,19 +214,19 @@ let socialPages = ref([]);
 let socials = ref(['']);
 const maxPostsToShow = ref(2)
 const data = ref({
-  labels: [],
-  datasets: [
-    {
-      backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
-      data: []
-    }
-  ]
+    labels: [],
+    datasets: [
+        {
+            backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
+            data: []
+        }
+    ]
 })
 const legendData = ref([])
 
 const options = {
-  responsive: true,
-  maintainAspectRatio: false
+    responsive: true,
+    maintainAspectRatio: false
 }
 let media = [];
 const all_items = ref([
@@ -226,6 +239,30 @@ const dateStart = ref(new Date());
 const dateEnd = ref();
 const enableDateEnd = ref(false);
 
+// let chartData = ref({
+//         labels: [],
+//         datasets: []
+// })
+
+// let colors = ['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff'];
+
+// let chartConfig = reactive({
+//     data: {
+//         labels: [],
+//         datasets: [
+//             {
+//                 label: 'Data One',
+//                 backgroundColor: '#f87979',
+//                 data: [40, 20, 12, 39, 10, 40,]
+//             }
+//         ]
+//     },
+//     options: {
+//         responsive: true,
+//         maintainAspectRatio: false
+//     }
+// });
+
 const format2 = (date) => {
     const day = date.getDate();
     const month = date.getMonth() + 1;
@@ -234,9 +271,56 @@ const format2 = (date) => {
     return `${year}/${month}/${day}`;
 }
 
+// const loadDatasets = (establishments, colors, date) => {
+//     let data = [];
+//     var index = 0;
+//     let chartdata = {
+//         labels: companiesStore.getLastMonths(6, date, true),
+//         datasets: []
+//     }
+//     chartConfig.data.datasets = [];
+//     establishments.forEach(establishment => {
+//         let dataset = {
+//             label: establishment.name,
+//             backgroundColor: colors[index],
+//             data: companiesStore.getRatingLastMonths(establishment.reviews, 6, date, true)
+//         };
+//         if(index >= establishments.length) index = 0;
+//         index ++;
+//         data.push(dataset);
+//         chartdata.datasets.push(dataset);
+//     });
+//     chartConfig.data.datasets = data;
+//     chartData.value = chartdata;
+//     return data;
+// }
+
 const handleDate = (modelData) => {
     enableDateEnd.value = (modelData != null) ? true : false;
     dateEnd.value = null;
+}
+
+const getLastSocialPages = (socialPages) => {
+    const pages = []
+    const sites = []
+
+    socialPages.forEach(socialPage => {
+        if (sites.includes(socialPage.source)) {
+            for (let i = 0; i < pages.length; i++) {
+                if (pages[i].source == socialPage.source && new Date(socialPage.created_at) >= new Date(pages[i].created_at)) {
+                    pages[i] = socialPage
+                }
+            }
+        } else {
+            sites.push(socialPage.source)
+            pages.push(socialPage)
+        }
+    })
+
+    console.log(pages)
+
+    return pages
+
 }
 
 const capitalizeString = (str) => {
@@ -271,10 +355,10 @@ const getSocials = (socials) => {
 const showMorePosts = () => {
     maxPostsToShow.value += 2;
 }
-const generatedLegend = (colors, dataType)=>{
+const generatedLegend = (colors, dataType) => {
     let legends = [];
 
-    dataType.forEach((type, index)=>{
+    dataType.forEach((type, index) => {
         let legend = {};
         legend['name'] = type;
         legend['color'] = colors[index];
@@ -282,30 +366,30 @@ const generatedLegend = (colors, dataType)=>{
     })
     return legends;
 }
-const getFollowers = (datasets, type)=>{
+const getFollowers = (datasets, type) => {
     let dataChart = {
-      labels: [],
-      datasets: [
-        {
-          backgroundColor: ['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff'],
-          data: []
-        }
-      ]
+        labels: [],
+        datasets: [
+            {
+                backgroundColor: ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff'],
+                data: []
+            }
+        ]
     }
 
-    datasets.forEach(social=>{
+    datasets.forEach(social => {
         const exists = dataChart['labels'].some(item => item === social.source);
-        if(exists == false){
-             dataChart['labels'].push(social.source)
-             if(type == 'Likes'){
-                 dataChart['datasets'][0]['data'].push(social.likes);
-             }else{
-                 dataChart['datasets'][0]['data'].push(social.followers);
-             }
+        if (exists == false) {
+            dataChart['labels'].push(social.source)
+            if (type == 'Likes') {
+                dataChart['datasets'][0]['data'].push(social.likes);
+            } else {
+                dataChart['datasets'][0]['data'].push(social.followers);
+            }
         }
     })
     legendData.value = generatedLegend(
-        dataChart['datasets'][0]['backgroundColor'], 
+        dataChart['datasets'][0]['backgroundColor'],
         dataChart['labels']
     );
     return dataChart;
@@ -316,7 +400,7 @@ onBeforeMount(async () => {
     companiesStore.establishments.forEach(async company => {
         if (company.id == companyId) {
             establishment.value = company;
-            socials.value = [" ",...getSocials(company.socials)];
+            socials.value = [" ", ...getSocials(company.socials)];
             let data = [];
             let promises = [];
             company.socialPages.forEach((social, index) => {
@@ -342,9 +426,21 @@ watch(selectedSocials, () => {
     }
 });
 
-watch([socialPages, calculType], ()=>{
+watch([socialPages, calculType], () => {
     data.value = getFollowers(socialPages.value, calculType.value);
+
 });
+
+// watch(date, ()=>{
+//  if(date.value== null){
+//     plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);
+//     loadDatasets(_comparisonData, colors, selected_date);
+//  }else{
+//     plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, moment(date.value, 'DD/MM/YYYY'), true);
+//     loadDatasets(_comparisonData, colors, moment(date.value, 'DD/MM/YYYY'));
+//  }
+// });
+
 </script>
 
 <style scoped>
