@@ -524,7 +524,7 @@ const companyId = route.params.id;
             let data = [];
             let promises = [];
             establishment.value.competitors.forEach(competitor=>{
-               let promise = services.getRecord('establishments', competitor.id, (response) => {
+               let promise = services.get_Record(`/establishment/${competitor.id}/detail`, (response) => {
                         data.push(response.data);
                 });
                 promises.push(promise);  
@@ -532,6 +532,7 @@ const companyId = route.params.id;
 
             Promise.all(promises).then(() => {
                      competitors.value = data;
+                     console.log(data)
             });
         }
     })

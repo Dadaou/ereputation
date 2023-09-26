@@ -21,7 +21,13 @@
                     </el-dropdown>
                 </div>
                 <div class="reviews__content">
-                    <Pie :data="data" :options="options" />
+                     <div>
+                         <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
+                  </BaseLegend>
+                     </div>
+                     <div>
+                         <Pie :data="data" :options="options" />
+                     </div>
                 </div>
                 <div class="head">
                     <div class="app__title">
@@ -159,10 +165,10 @@ import { useAppStore } from "@Stores/index.js";
 import { useCompanyStore } from "@Stores/company.js";
 import { useRoute, useRouter } from "vue-router";
 import moment from 'moment';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
+import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js'
 import { Pie } from 'vue-chartjs'
 
-ChartJS.register(ArcElement, Tooltip, Legend)
+ChartJS.register(ArcElement, Tooltip)
 import services from '@Services/index.js';
 
 const page = ref({
@@ -203,6 +209,7 @@ const data = ref({
     }
   ]
 })
+const legendData = ref([])
 
 const options = {
   responsive: true,
@@ -264,7 +271,17 @@ const getSocials = (socials) => {
 const showMorePosts = () => {
     maxPostsToShow.value += 2;
 }
+const generatedLegend = (colors, dataType)=>{
+    let legends = [];
 
+    dataType.forEach((type, index)=>{
+        let legend = {};
+        legend['name'] = type;
+        legend['color'] = colors[index];
+        legends.push(legend);
+    })
+    return legends;
+}
 const getFollowers = (datasets, type)=>{
     let dataChart = {
       labels: [],
@@ -287,6 +304,10 @@ const getFollowers = (datasets, type)=>{
              }
         }
     })
+    legendData.value = generatedLegend(
+        dataChart['datasets'][0]['backgroundColor'], 
+        dataChart['labels']
+    );
     return dataChart;
 }
 
