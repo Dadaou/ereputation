@@ -230,30 +230,30 @@
                 </div>
               </div>
               <div class="reviews__star">
-                    <div class="flex items-center mt-1">
-                        <a href="#" class="text-xs font-medium text-yellow-600 dark:text-blue-500 hover:underline">5 star</a>
-                        <div class="h-3 bg-yellow-300 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate5*100/reviews.length}%`}"></div>
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate5 }}</span>
+                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(5)">
+                        <a href="#" class="text-xs font-medium hover:underline">5 star</a>
+                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate5*100/reviews.length}%`}"></div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate5 }}</span>
                     </div>
-                    <div class="flex items-center mt-1">
-                        <a href="#" class="text-xs font-medium text-yellow-600 dark:text-blue-500 hover:underline">4 star</a>
-                        <div class="h-3 bg-yellow-300 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate4*100/reviews.length}%`}"></div>
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate4 }}</span>
+                    <div :class="['flex items-center mt-1','include']" @click="starFilter(4)">
+                        <a href="#" class="text-xs font-medium dark:text-blue-500 hover:underline">4 star</a>
+                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate4*100/reviews.length}%`}"></div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate4 }}</span>
                     </div>
-                    <div class="flex items-center mt-1">
-                        <a href="#" class="text-xs font-medium text-yellow-600 dark:text-blue-500 hover:underline">3 star</a>
-                        <div class="h-3 bg-yellow-300 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate3*100/reviews.length}%`}"></div>
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate3 }}</span>
+                    <div :class="['flex items-center mt-1','include']" @click="starFilter(3)">
+                        <a href="#" class="text-xs font-medium hover:underline">3 star</a>
+                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate3*100/reviews.length}%`}"></div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate3 }}</span>
                     </div>
-                    <div class="flex items-center mt-1">
-                        <a href="#" class="text-xs font-medium text-yellow-600 dark:text-blue-500 hover:underline">2 star</a>
-                        <div class="h-3 bg-yellow-300 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate2*100/reviews.length}%`}"></div>
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate2 }}</span>
+                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(2)">
+                        <a href="#" class="text-xs font-medium hover:underline">2 star</a>
+                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate2*100/reviews.length}%`}"></div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate2 }}</span>
                     </div>
-                    <div class="flex items-center mt-1">
-                        <a href="#" class="text-xs font-medium text-yellow-600 dark:text-blue-500 hover:underline">1 star</a>
-                        <div class="h-3 bg-yellow-300 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate1*100/reviews.length}%`}"></div>
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ companiesStore.getNumberOfRating(reviews).rate1 }}</span>
+                    <div :class="['flex items-center mt-1','include']" @click="starFilter(1)">
+                        <a href="#" class="text-xs font-medium hover:underline">1 star</a>
+                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate1*100/reviews.length}%`}"></div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate1 }}</span>
                     </div>
               </div>
               <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData"/>
@@ -339,6 +339,9 @@ let websites = ref(['Global']);
 
 let establishment =ref({reviews:[]});
 let reviews = ref([]);
+let _reviews = computed(()=>{
+    return reviews.value;
+})
 let reviews_loader = ref(true);
 let competitors = ref([]); 
 let computedCompetitors = computed(()=>{
@@ -551,6 +554,7 @@ const companyId = route.params.id;
         all_items.value[0].value = rating;
     });
     websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
+    reloadStarData();
 })
 
 const reloadComparison = async (competitor) => {
@@ -578,7 +582,6 @@ const reloadComparisonByWebsite = async (website) => {
         plotdata.value = [];
         data.forEach(company => {
             if(company.id == establishment.value.id){
-                console.log(company)
                 all_items.value[1].value = company.reviews.length;
                 all_items.value[0].value = companiesStore.calculateRatingV2(company.reviews);
                 lastReviews.value = companiesStore.getLastReviews(company.reviews, 10);
@@ -651,6 +654,42 @@ const goto = (value) =>{
     router.push({name: value});
 };
 
+let selectedStars = ref('0');
+const starFilter = (star)=>{
+    // if(selectedStars.value.includes(star) == true) {
+    //     selectedStars.value = selectedStars.value.filter(rating=> rating != star);
+    // }else selectedStars.value.push(star);
+    selectedStars.value = star;
+    console.log(selectedStars.value)
+};
+
+const filterReviewsByStar = (star, data)=>{
+    let result = [];
+    data.forEach(review =>{
+        let rating = companiesStore.formatRating(review.rating);
+        rating = rating>5?rating/2:rating;
+        if(Math.abs(rating) == star) result.push(review);
+    })
+    return result;
+}
+const reloadStarData = ()=>{
+    let scores = [1,2,3,4,5];
+    let filteredReviews = _reviews.value;
+    let rating = scores.filter((element) => !selectedStars.value.includes(element));
+    if (selectedStars.value.length > 0) {
+        let result = filterReviewsByStar(rating, filteredReviews);
+        filteredReviews = result;
+    }
+    updateVisibleData(filteredReviews);
+}
+
+watch(selectedStars, ()=>{
+    let filteredReviews = _reviews.value;
+    let result = filterReviewsByStar(selectedStars.value, filteredReviews);
+    updateVisibleData(result);
+});
+
+
 </script>
 
 <style scoped>
@@ -660,6 +699,34 @@ const goto = (value) =>{
 
 *{
     transition: var(--transition);
+}
+
+.include{
+      cursor: pointer;
+}
+
+.include a{
+    color: var(--color-primary);
+}
+
+.not__include a{
+    color: var(--light-color-bg2);
+}
+
+.include .star__barre{
+    background: var(--color-warning);
+}
+
+.not__include .star__barre{
+    background: var(--color-warning2);
+}
+
+.include span {
+    color: var(--color-bg2);
+}
+
+.not__include span{
+    color: rgb(165, 165, 165);
 }
 
 .temp__p{

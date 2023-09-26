@@ -192,9 +192,6 @@ companiesStore.establishments.forEach(async company => {
         if(company.id == companyId){
             establishment.value = company;
             staffs.value = company.staffs;
-            establishment.value.media.forEach(item => {
-                media.push(item.url_source);
-            });
         
             all_items.value[1].value = establishment.value.reviews.length;
             all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);

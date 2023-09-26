@@ -325,7 +325,6 @@ export const useCompanyStore = defineStore("company", {
         event.datefrom,
         event.dateto
       );
-      console.log(this.generateEventRatingData(data.reviewsBeforeDates))
 
       return {
         before: this.generateEventRatingData(data.reviewsBeforeDates),
