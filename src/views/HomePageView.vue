@@ -1,106 +1,6 @@
 <template>
      <div class="main__container">
-        <head-component :isSearch="false" :page="page">
-            <template #content>
-                <Particles
-                    id="tsparticles"
-                    :particlesInit="particlesInit"
-                    :particlesLoaded="particlesLoaded"
-                    :options="{
-                    fullScreen: { enable: false },    
-                    background: {
-                        color: {
-                            value: '#f75842'
-                        }
-                    },
-                    fpsLimit: 120,
-                    interactivity: {
-                        events: {
-                            onClick: {
-                                enable: true,
-                                mode: 'push'
-                            },
-                            onHover: {
-                                enable: true,
-                                mode: 'repulse'
-                            },
-                            resize: true
-                        },
-                        modes: {
-                            bubble: {
-                                distance: 400,
-                                duration: 2,
-                                opacity: 0.8,
-                                size: 40
-                            },
-                            push: {
-                                quantity: 4
-                            },
-                            repulse: {
-                                distance: 200,
-                                duration: 0.4
-                            }
-                        }
-                    },
-                    particles: {
-                        color: {
-                            value: '#ffffff'
-                        },
-                        links: {
-                            color: '#ffffff',
-                            distance: 150,
-                            enable: true,
-                            opacity: 0.5,
-                            width: 1
-                        },
-                        collisions: {
-                            enable: true
-                        },
-                        move: {
-                            direction: 'none',
-                            enable: true,
-                            outMode: 'bounce',
-                            random: false,
-                            speed: 1,
-                            straight: false
-                        },
-                        number: {
-                            density: {
-                                enable: true,
-                                area: 800
-                            },
-                            value: 80
-                        },
-                        opacity: {
-                            value: 0.3
-                        },
-                        shape: {
-                            type: 'circle'
-                        },
-                        size: {
-                            random: true,
-                            value: 5
-                        }
-                    },
-                    detectRetina: true
-                }"
-                />
-                <div class="main__search">
-                    <form>
-                        <div class="search__inputs">
-                            <div class="search__input">
-                                <i class="uil uil-briefcase-alt"></i>
-                                <input type="text" class="first" placeholder="I search ..."/>
-                            </div>
-                            <div class="search__input">
-                                <i class="uil uil-location-point"></i>
-                                <input type="text" placeholder="City, Country"/>
-                            </div>
-                        </div>
-                    </form>
-                </div> 
-            </template>
-        </head-component>
+        <HeadComponent :page="page"></HeadComponent> 
         <div class="container client__container" v-if="userStore.user.customer !== null">
             <div class="search__icon">
                 <i class="uil uil-building"></i>
@@ -112,8 +12,8 @@
             <div class="client__container__head" v-else>
                 Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, no companies found yet.
             </div>
-            <div class="society__list" v-if="companiesStore.establishments.length>0">
-                <div class="list__item" v-for="company in companiesStore.companies">
+            <div class="society__list" v-if="userStore.user.customer.establishments.length>0">
+                <div class="list__item" v-for="company in userStore.user.customer.establishments">
                     <div class="society__info__container">
                         <swiper @click="goToCompany(company)" class="society__logo" :modules="[Virtual]" v-if="company.media.length > 0" :slides-per-view="1" :space-between="10" :virtual="true">
                             <swiper-slide v-show="mediaStore.isImageFile(image.url_source)" v-for="image in company.media">
@@ -233,7 +133,7 @@
                 <div id="qrcode__container mt-5" ref="qrcode">
                     <vue-qrious
                         class="qr__code"
-                        :value="`${baseurl}/companies/${establishment.id}/${establishment.competitor_tag}/feedback`"
+                        :value="`${baseurl}/establishment/${establishment.id}/${establishment.competitor_tag}/feedback`"
                         @change="onDataUrlChange"
                     />
                 </div>
@@ -259,12 +159,12 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { loadFull } from "tsparticles";
 import { useRouter } from "vue-router";
+import { useWindowSize } from '@vueuse/core';
+import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
-import { useCompanyStore } from "@Stores/company.js";
 import { useMediaStore } from "@Stores/media.js";
-import { useAppStore } from "@Stores/index.js";
+import { useCompanyStore } from "@Stores/company.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingComponent from '@Components/utils/RatingComponent.vue'; 
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -272,29 +172,20 @@ import { Virtual } from 'swiper/modules';
 import VueQrious from 'vue-qrious';
 import * as htmlToImage from 'html-to-image';
 import ModalComponent from '@Components/utils/ModalComponent.vue';
-import { useWindowSize } from '@vueuse/core';
 
 // Import Swiper styles
 import 'swiper/css';
 
 const router = useRouter();
 const userStore = useUserStore();
-const companiesStore = useCompanyStore();
 const appStore = useAppStore();
+const companiesStore = useCompanyStore();
 const mediaStore = useMediaStore();
 const baseurl = window.location.origin;
 const showModal = ref(false);
 const downloaded = ref(false);
 const establishment = ref(null);
 const { width, height } = useWindowSize()
-
-const particlesInit = async engine => {
-    await loadFull(engine);
-};
-
-const particlesLoaded = async container => {
-    console.log("Particles container loaded", container);
-};
 
 const page=ref({
     title1: "",
@@ -318,7 +209,7 @@ const goToCompany = (establishment) => {
     appStore.isLoading = true;
     setTimeout(() => {
         router.push({
-            name: 'Company', 
+            name: 'Establishment', 
             params: {
                 id: establishment.id
             },
@@ -329,14 +220,6 @@ const goToCompany = (establishment) => {
 const base64Image = ref(null);
 const qrcode = ref(null);
 const downloadQrcode = ()=>{
-    // htmlToImage.toJpeg(qrcode.value, { quality: 0.95 })
-    // .then(function (dataUrl) {
-    //     var link = document.createElement('a');
-    //     link.download = `${establishment.value.name}-feedback-link.jpeg`;
-    //     link.href = dataUrl;
-    //     link.click();
-    //     downloaded.value = true;
-    // });
     let link = document.createElement('a');
     link.download = `${establishment.value.name}-feedback-link.jpeg`;
     link.href = base64Image.value;
@@ -350,10 +233,6 @@ const onDataUrlChange = (dataUrl) =>{
 </script>
 
 <style scoped>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 .establishment__link label, .establishment__link{
     cursor: pointer !important;
 }

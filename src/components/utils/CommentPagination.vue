@@ -11,7 +11,7 @@
 </template>
 <script>
 import { computed, ref } from 'vue';
-import { useCheckColor } from '@Composables/useful';
+import { useColorStore } from '@Stores/color.js';
     export default{
         name:"Pagination",
         props:{
@@ -22,6 +22,7 @@ import { useCheckColor } from '@Composables/useful';
         },
         emits:['updatePage'],
         setup(props, ctx){
+            const colorStore = useColorStore();
             let disabledNext = computed(() => (props.config.size * (props.config.current + 1) < props.nb));
             let disabled = ref(disabledNext.value); 
             let disabledPrev = computed(() => props.config.current == 0);
@@ -47,7 +48,7 @@ import { useCheckColor } from '@Composables/useful';
             let textColor = computed(()=>{
                 let color = "black";
             
-                if(useCheckColor(props.color) == "light") color = "black";
+                if(colorStore.useCheckColor(props.color) == "light") color = "black";
                 else color= "rgb(238, 246, 254)";
                 return color = 'white';
             })
@@ -57,7 +58,7 @@ import { useCheckColor } from '@Composables/useful';
                 showNextLink, textColor, disabledNext, disabledPrev, disabled
             }
         }
-}
+};
 </script>
 <style scoped>
 

@@ -1,23 +1,55 @@
 <template>
     <nav ref="nav__ref">
-        <div :class="['container nav__container', $route.path == '/' && width <= 700?'nav__login':'']" ref="nav__container__ref">
+        <div :class="['nav__container', $route.path == '/' && width <= 700?'nav__login':'']" ref="nav__container__ref">
             <h4>eReputation</h4>
-            <div class="nav__menu" v-if="userStore.authenticated">
-                <NavbarAvatarComponent class="nav__avatar"/>
-            </div>
+            <ul v-if="showMenu == true">
+                <li>
+                    <RouterLink :to="`/establishment/${$route.params.id}/staffs`">
+                        <i class="uil uil-users-alt"></i> Staff
+                    </RouterLink>
+                </li>
+                <li>
+                    <RouterLink :to="`/establishment/${$route.params.id}/events`">
+                        <i class="uil uil-calendar-alt"></i> Event
+                    </RouterLink>
+                </li>
+                <li>
+                    <RouterLink :to="`/establishment/${$route.params.id}/socials`">
+                        <i class="uil uil-users-alt"></i>Social
+                    </RouterLink>
+                </li>
+                <li>
+                    <RouterLink :to="`/establishment/${$route.params.id}/weathers`">
+                        <i class="uil uil-cloud-sun"></i> Weather
+                    </RouterLink>
+                </li>
+                <li>
+                    <RouterLink :to="`/establishment/${$route.params.id}/reviews`">
+                        <i class="uil uil-comment-alt-dots"></i> Reviews
+                    </RouterLink>
+                </li>
+            </ul>
+            <AvatarComponent v-if="userStore.authenticated"/>
         </div>
     </nav>
 </template>
 <script setup>
-import {ref, watch} from 'vue';
+import {ref, watch, defineAsyncComponent, computed} from 'vue';
 import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import { useUserStore } from "@Stores/user.js";
 import { useRoute } from "vue-router";
-import NavbarAvatarComponent from '@Components/utils/NavbarAvatarComponent.vue';
 
+const AvatarComponent = defineAsyncComponent(()=>
+    import('@Components/utils/AvatarComponent.vue')
+)
 
 const userStore = useUserStore();
 const route = useRoute();
+const showMenu = computed(()=>{
+    let routeName = ['Login', 'FeedBack', 'StaffFeedBack', 'Home', 'Personal_details', 'Account_security', 'Parameters', 'ErepHome', 'NotFound', undefined]
+    console.log(routeName.includes(route.name), route.name)
+    return !routeName.includes(route.name)
+})
 /**
  * Navbar Handler
  * useWindowScroll allows us to detect the scroll event on 
@@ -49,9 +81,6 @@ watch(width, () => {
 </script>
 
 <style scoped>
-@import "@Assets/css/base.css";
-
-/*Navbar*/
 nav{
     width:100vw;
     height: 5rem;
@@ -62,45 +91,33 @@ nav{
     color: var(--color-white);
 }
 
-/*Router-link*/
+ul{
+    display: flex;
+    gap: 1rem;
+}
+
+.nav__onScroll ul li a{
+    color: var(--color-bg2)
+}
+
 a{
     color: var(--color-white);
+}
+
+h4{
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .nav__container{
     height: 100%;
     display: flex;
     justify-content: space-between;
+    flex-direction: row;
     align-items: center;
-}
-
-.nav__login{
-    flex-direction: column !important;
-    justify-content: center !important;
-}
-
-/*nav__menu */
-.nav__menu{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    align-content: center;
-    gap: 2rem;
-}
-
-.nav__notification{
-    align-self: center;
-}
-
-.nav__menu a{
-    font-size: 0.9rem;
-    transition:  var(--transition);
-}
-.nav__menu a.link:hover{
-    color: var(--color-primary);
-}
-.nav__menu a i{
-   margin: 6px;
+    width: var(--container-width-lg);
+    margin: 0 auto;
+    padding: 0;
 }
 
 /* Change the navbar style on scroll using useWindowSroll */
@@ -118,21 +135,12 @@ a{
     /* border-color: var(--color-white); */
 }
 
+.nav__onScroll .avatar__container{
+    color: var(--color-bg2);
+}
+
 .nav__onScroll a.btn:hover{
     color: var(--color-white);
     border-color: var(--color-danger);
 }
-
-/* Media Queries (Phone) */
-@media screen and (max-width:650px) {
-    /* .nav__container{
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .nav__container ul{
-        display: none;
-    } */
-}
-
 </style>

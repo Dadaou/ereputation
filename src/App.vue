@@ -1,36 +1,28 @@
-<template>
-  <NavbarComponent></NavbarComponent>
-    <div class="app__loader" :style="loaderStyle" v-show="appStore.isLoading">
-      <SpinnerComponent :size="'large'"/>
-    </div>
-    <RouterView/>
-  <FooterComponent></FooterComponent>
-</template>
-
 <script setup>
-import {onBeforeMount, ref, watch} from 'vue';
-import { RouterView } from 'vue-router';
-import { initFlowbite } from 'flowbite';
-import NavbarComponent from '@Components/layouts/NavbarComponent.vue';
-import FooterComponent from '@Components/layouts/FooterComponent.vue';
-import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
-import { useWindowSize } from '@vueuse/core';
-import { useUserStore } from "@Stores/user.js";
-import { useAppStore } from "@Stores/index.js";
-import { useRoute, useRouter } from 'vue-router';
+import { onBeforeMount, watch, ref, defineAsyncComponent } from 'vue'
+import { initFlowbite } from 'flowbite'
+import { useWindowSize } from '@vueuse/core'
+import { useAppStore } from "@Stores/app.js"
+import { RouterLink, RouterView } from 'vue-router'
+// import NavbarComponent from '@Components/layouts/NavbarComponent.vue'
+// import FooterComponent from '@Components/layouts/FooterComponent.vue'
 
-const route = useRoute();
-const router = useRouter();
-const userStore = useUserStore();
+const SpinnerComponent = defineAsyncComponent(()=>
+  import('@Components/utils/SpinnerComponent.vue')
+)
+
+const NavbarComponent = defineAsyncComponent(()=>
+  import('@Components/layouts/NavbarComponent.vue')
+)
+
+const FooterComponent = defineAsyncComponent(()=>
+  import('@Components/layouts/FooterComponent.vue')
+)
+
 const appStore = useAppStore();
-if(userStore.roleSummary == ''){
-  userStore.roleSummary = localStorage.getItem('user_role')
-}
-
-// initialize components based on data attribute selectors
 onBeforeMount(() => {
     initFlowbite();
-})
+});
 
 const{ width, height} = useWindowSize();
 const loaderStyle = ref({
@@ -41,13 +33,19 @@ watch(width, () => {
   loaderStyle.value = {
     'width': `${width.value}px`, 
   }
-})
-
-if(router.currentRoute.value.name != 'feedback' && localStorage.getItem('access') == import.meta.env.VITE_APP_TOKEN){
-  if(userStore.authenticated == null) localStorage.removeItem('access');
-}
-
+});
 </script>
+
+<template>
+  <NavbarComponent></NavbarComponent>
+    <div class="app__loader" :style="loaderStyle" v-if="appStore.isLoading">
+      <SpinnerComponent :size="'large'"/>
+    </div>
+    <div class="erep__app">
+      <RouterView/>
+    </div>
+  <FooterComponent></FooterComponent>
+</template>
 
 <style scoped>
 .app__loader{
@@ -65,4 +63,7 @@ if(router.currentRoute.value.name != 'feedback' && localStorage.getItem('access'
   caret-color: transparent !important;
 }
 
+.erep__app{
+  min-height: 500px;
+}
 </style>

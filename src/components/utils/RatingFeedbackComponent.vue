@@ -56,10 +56,6 @@ selectRating(feeling.value);
 
 </script>
 <style scoped>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 .rating__feedback{
     display: flex;
     justify-content: space-between;

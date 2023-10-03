@@ -38,7 +38,7 @@
                     }" :default="timePeriods[2]"/>
                 </li>
                 <li class="w-full mr-3">
-                    <VueDatePicker v-model="date2" range :month-change-on-scroll="false" :format="format2"/>
+                  <!--   <VueDatePicker v-model="date2" range :month-change-on-scroll="false" :format="format2"/> -->
                 </li>
             </ul>
             <div class="modal__container" ref="el2">

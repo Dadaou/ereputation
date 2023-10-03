@@ -42,7 +42,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { useAppStore } from '@Stores/index.js';
+import { useAppStore } from '@Stores/app.js';
 
 const router = useRouter();
 const appStore = useAppStore();
@@ -65,14 +65,10 @@ const goback = (path) => {
   setTimeout(() => {
     router.push(path);
   }, 100)
-}
+};
 </script>
 
 <style scoped>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 .current__url a {
   color: grey;
 }

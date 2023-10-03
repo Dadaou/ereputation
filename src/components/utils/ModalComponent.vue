@@ -1,8 +1,7 @@
 s<template>
 <transition name="modal-flip">
-    <div v-if="props.showModal" class="modal">
-          <!-- Modal content here -->
-        <div class="modal-content" :style="{'width':`${props.width}%`}">
+    <div v-if="showModal" class="modal">
+        <div class="modal-content" :style="{'width':`${width}%`}">
             <slot name="content"></slot>
         </div>
     </div>
@@ -19,7 +18,7 @@ const props = defineProps({
       default: 90
     }
 });
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close']);
 </script>
 <style scoped>
 .modal {

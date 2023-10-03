@@ -24,8 +24,6 @@
 </script>
 
 <style scoped>
-@import "@Assets/css/base.css";
-
 /*Footer*/
 footer{
     position: relative;

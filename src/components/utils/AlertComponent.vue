@@ -31,10 +31,6 @@ const emit = defineEmits(['close']);
 </script>
 
 <style scoped>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 #alert-1{
     width: 25% !important;
     margin: 0 auto;

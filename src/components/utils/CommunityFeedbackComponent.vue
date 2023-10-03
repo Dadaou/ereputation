@@ -34,10 +34,6 @@ const props= defineProps({
 });
 </script>
 <style scoped>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 .community__feedback{
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;

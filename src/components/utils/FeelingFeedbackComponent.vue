@@ -30,10 +30,6 @@ selectFeeling(feeling.value);
 
 </script>
 <style scoped>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 .emoji{
     font-size: 100px;
 }

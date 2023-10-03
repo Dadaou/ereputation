@@ -13,8 +13,8 @@
                 <input type="password" name="Password" placeholder="Password" v-model="form.password" required>
                 <a class="forgot__password" href="http://"><b>Forgot Password?</b></a>
                 <button type="submit" :class="['btn btn__light2', showSpinner==true?'isLoaded':'']">
-                    <SpinnerComponent :show-spinner="showSpinner" :color="'red'"/>
-                    <span v-show="!showSpinner">Login</span>
+                    <SpinnerComponent v-if="showSpinner==true" :color="'red'"/>
+                    <span v-else>Login</span>
                 </button>
             </form>
         </div>
@@ -22,14 +22,22 @@
 </template>
 
 <script setup>
-import {ref, watch, onMounted} from 'vue';
-import HeadComponent from '@Components/layouts/HeadComponent.vue';
-import AlertComponent from '@Components/utils/AlertComponent.vue';
-import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
-import { useUserStore } from "@Stores/user.js";
-import { useRouter } from "vue-router";
-import { useWindowSize } from '@vueuse/core';
+import {ref, watch, onMounted, defineAsyncComponent} from 'vue'
+import HeadComponent from '@Components/layouts/HeadComponent.vue'
+import { useUserStore } from "@Stores/user.js"
+import { useRouter } from "vue-router"
+import { useWindowSize } from '@vueuse/core'
+import { ElMessage } from 'element-plus'
+import 'element-plus/es/components/message/style/css'
 
+
+const SpinnerComponent = defineAsyncComponent(()=>
+	import('@Components/utils/SpinnerComponent.vue')
+)
+
+const AlertComponent = defineAsyncComponent(()=>
+    import('@Components/utils/AlertComponent.vue')
+)
 const router = useRouter();
 const userStore = useUserStore();
 
@@ -58,9 +66,13 @@ const submit = async ()=>{
     await userStore.signIn(form.value.email, form.value.password, (response)=>{
         if(response.authenticated){
             router.push({name:"Home"});
+            showSpinner.value = false;
+             ElMessage({
+                message: 'Congrats, you are authenticated!',
+                type: 'success',
+             })
         } else{
             isError.value = true;
-            console.log(response);
             if(response.status == 401){
                 notification.value.message = "Please verify your password or email!";
                 notification.value.type = "warning";
@@ -70,8 +82,8 @@ const submit = async ()=>{
                 notification.value.message = "Oops! Something unexpected happened. A server connection issue";
                 notification.value.type = "error";
             }
+            showSpinner.value = false;
         }
-        showSpinner.value = false;
     })
 }
 
@@ -133,6 +145,8 @@ button.isLoaded{
     border: 1px solid var(--light-color-bg2);
     border-radius: 5px;
     padding: 10px;
+    font-size: 14px !important;
+    font-weight: 500;
 }
 
 .login__form span{
@@ -154,6 +168,7 @@ button.isLoaded{
     height: 40px;
     cursor: pointer;
     transition: var(--transition);
+    background-color: var(--color-danger) !important;
 }
 
 .login__form button:hover{

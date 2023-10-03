@@ -1,5 +1,5 @@
 <template>
-<div :class="['min-h-screen mt-2 mb-2', props.showTitle==true?'p-10':'']" ref=target>
+<div :class="['mt-2 mb-2', props.showTitle==true?'':'']" ref=target>
   <div class="mx-auto">
     <label for="select" class="font-semibold block" v-if="props.showTitle==true">{{ title }}</label>
     <div class="relative" v-if="isDataObject">

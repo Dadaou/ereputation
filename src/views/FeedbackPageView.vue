@@ -49,7 +49,11 @@
                         </div>
                         <div>
                             <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Visited at <span>*</span></label>
-                            <VueDatePicker v-model="dateVisit" :enable-time-picker="false" :format="format"/>
+                            <!-- <VueDatePicker v-model="dateVisit" :enable-time-picker="false" :format="format"/> -->
+                             <el-date-picker
+                                v-model="dateVisit"
+                                :size="'large'"
+                              />
                         </div>
                     </div>
                     <div class="mb-6 feedback__rating">
@@ -77,19 +81,23 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, provide } from 'vue';
+import { ref, onBeforeMount, provide, defineAsyncComponent } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
-import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
+import RatingFeedbackComponent from '@Components/utils/RatingFeedBackComponent.vue';
 import { useUserStore } from "@Stores/user.js";
 import { useRoute } from "vue-router";
-import services from '@Services/index.js';
+import services from '@Services/services.js';
 import { useCompanyStore } from '@Stores/company.js';
 import { useFeedbackStore } from '@Stores/feedback.js';
-import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import { ElMessage } from 'element-plus';
 import moment from 'moment';
+import { ElDatePicker } from 'element-plus';
+import 'element-plus/es/components/date-picker/style/css'
 
 
+const SpinnerComponent = defineAsyncComponent(()=>
+    import('@Components/utils/SpinnerComponent.vue')
+)
 const route = useRoute();
 const userStore = useUserStore();
 const companyStore = useCompanyStore();
@@ -182,9 +190,6 @@ const submit = async ()=>{
 </script>
 
 <style scoped>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 .feedback__form{
     width: 50%;
@@ -286,7 +291,7 @@ input:focus {
 @media screen and (max-width:1024px) {
     .feedback__form{
         position: relative;
-        top: 10.5rem !important;
+        top: 1rem !important;
         width: 70%;
     }
 }

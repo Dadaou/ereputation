@@ -8,10 +8,10 @@
         <span v-if="Number(props.rating) >= 2 && Number(props.rating)<=2.99">Not Good</span>
         <span v-if="Number(props.rating) >= 0 && Number(props.rating)<=2.99">Bad</span>
        </div>
-       <div class="reviews__value">{{ props.reviews }} <span v-if="Number(props.reviews) >= 2">reviews</span> <span v-else>review</span> </div>
+       <div class="reviews__value">{{ reviews }} <span v-if="Number(props.reviews) >= 2">reviews</span> <span v-else>review</span> </div>
     </div>
     <div class="global__rating">
-        {{ props.rating }}
+        {{ rating }}
     </div>
 </div>
 </template>
@@ -22,10 +22,6 @@ const props = defineProps(['reviews', 'rating']);
 </script>
 
 <style scoped>
-    @tailwind base;
-    @tailwind components;
-    @tailwind utilities;
-
     .society__rating{
         display: flex;
         align-items: center;

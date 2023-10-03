@@ -150,14 +150,10 @@ const updateReview = async () => {
     } catch (error) {
         console.log(error);
     }
-}
+};
 
 </script>
 <style scoped>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 .modal__header{
     display: flex;
     justify-content: space-between;

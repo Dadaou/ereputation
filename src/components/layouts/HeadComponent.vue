@@ -28,8 +28,6 @@ const props = defineProps({
 </script>
 
 <style scoped>
-@import "@Assets/css/base.css";
-
 .head__container{
     background-color: rgb(245, 245, 245);
     width: 100% !important;
