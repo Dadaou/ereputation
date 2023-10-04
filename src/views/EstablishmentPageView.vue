@@ -78,10 +78,17 @@
                             reloadComparisonByWebsite(website);
                         }
                     }" :default="websites[0]"/>
-                   <!--  <VueDatePicker v-model="date2" range :month-change-on-scroll="false" :format="format2"/> -->
                     <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                                 selectedTimePeriod = timePeriod
                         }" :default="timePeriods[0]"/>
+                    <el-date-picker
+                        v-model="date2"
+                        type="daterange"
+                        range-separator="To"
+                        start-placeholder="Start date"
+                        end-placeholder="End date"
+                        :size="'large'"
+                      />
             </div>
             <div class="tablet_mobile__head">
                 <div class="establishment__info_tablet">
@@ -191,7 +198,6 @@
                     }" :default="websites[0]"/>
                     <div class="date__filter">
                         <div class="text-sm title">Select a range of date</div>
-                       <!--  <VueDatePicker v-model="date2" range :month-change-on-scroll="false" :format="format2"/> -->
                        <el-date-picker
                         v-model="date2"
                         type="daterange"

@@ -15,6 +15,10 @@ const NavbarComponent = defineAsyncComponent(()=>
   import('@Components/layouts/NavbarComponent.vue')
 )
 
+const NavbarComponentTemp = defineAsyncComponent(()=>
+  import('@Components/layouts/NavbarComponentTemp.vue')
+)
+
 const FooterComponent = defineAsyncComponent(()=>
   import('@Components/layouts/FooterComponent.vue')
 )
@@ -37,7 +41,7 @@ watch(width, () => {
 </script>
 
 <template>
-  <NavbarComponent></NavbarComponent>
+  <NavbarComponentTemp></NavbarComponentTemp>
     <div class="app__loader" :style="loaderStyle" v-if="appStore.isLoading">
       <SpinnerComponent :size="'large'"/>
     </div>

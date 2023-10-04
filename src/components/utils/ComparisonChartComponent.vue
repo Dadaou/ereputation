@@ -39,6 +39,14 @@
                 </li>
                 <li class="w-full mr-3">
                   <!--   <VueDatePicker v-model="date2" range :month-change-on-scroll="false" :format="format2"/> -->
+                  <el-date-picker
+                        v-model="date2"
+                        type="daterange"
+                        range-separator="To"
+                        start-placeholder="Start date"
+                        end-placeholder="End date"
+                        :size="'large'"
+                      />
                 </li>
             </ul>
             <div class="modal__container" ref="el2">
@@ -60,6 +68,7 @@ import {ref, watch, computed, onUpdated} from 'vue';
 import { useCompanyStore } from "@Stores/company.js";
 import { useResizeObserver } from '@vueuse/core';
 import { useWindowSize } from '@vueuse/core';
+import { ElDatePicker } from 'element-plus';
 
 const props = defineProps({
     data:{

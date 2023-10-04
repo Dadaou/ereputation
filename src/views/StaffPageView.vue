@@ -172,7 +172,7 @@ const route = useRoute();
 const breadcrumbData = [
     {
         title: "Back",
-        path: `/companies/${route.params.id}`,
+        path: `/establishment/${route.params.id}`,
         isCurrent: false,
     },
     {
@@ -233,9 +233,9 @@ watch([ dateStart, dateEnd ], ()=>{
 })
 
 onBeforeMount(async () => {
-const companyId = route.params.id;
+    const companyId = route.params.id;
     appStore.isLoading = true;
-     const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve, reject) => {
         services.get_Record(`/establishment/${companyId}/detail`, (response) => {
                 resolve(response)
         });
