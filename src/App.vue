@@ -4,20 +4,14 @@ import { initFlowbite } from 'flowbite'
 import { useWindowSize } from '@vueuse/core'
 import { useAppStore } from "@Stores/app.js"
 import { RouterLink, RouterView } from 'vue-router'
-import NavbarComponentTemp from '@Components/layouts/NavbarComponentTemp.vue'
-// import FooterComponent from '@Components/layouts/FooterComponent.vue'
 
 const SpinnerComponent = defineAsyncComponent(()=>
   import('@Components/utils/SpinnerComponent.vue')
 )
 
-const NavbarComponent = defineAsyncComponent(()=>
-  import('@Components/layouts/NavbarComponent.vue')
+const NavbarComponentTemp = defineAsyncComponent(()=>
+  import('@Components/layouts/NavBarComponentTemp.vue')
 )
-
-// const NavbarComponentTemp = defineAsyncComponent(()=>
-//   import('@Components/layouts/NavbarComponentTemp.vue')
-// )
 
 const FooterComponent = defineAsyncComponent(()=>
   import('@Components/layouts/FooterComponent.vue')
