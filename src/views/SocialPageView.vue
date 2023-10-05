@@ -81,7 +81,8 @@
                 </template>
             </el-dropdown> -->
 
-            <StatSlider class="stat__cards_mobile" :items="trends"></StatSlider>
+            <StatSlider v-if="establishment && establishment.socials" class="stat__cards_mobile" :items="trends"
+                :websites="establishment.socials[0]"></StatSlider>
             <div class="tablet_mobile__filter">
                 <DropdownComponent class="dropdown" :showTitle="false" title="Filter by social"
                     placeholder="Select a social network" :data="socials" @submit="(social) => {
@@ -209,11 +210,11 @@
                 </div>
                 <div
                     class="stat__cards bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 py-4">
-                    <div class="stat__cards_default">
+                    <div class="stat__cards_default" v-if="establishment && establishment.socials">
                         <StatComponent v-for="(slide, index) in trends" :key="index" :color="slide.color"
                             :bgColor="slide.bgColor" :value="slide.value" :description="slide.description"
                             :icon="slide.icon" :iconStyle="slide.iconStyle" :percentage="slide.percentage"
-                            :trend="slide.trend">
+                            :trend="slide.trend" :websites="establishment.socials[0]" :site="slide.site">
                         </StatComponent>
                     </div>
                 </div>
@@ -239,7 +240,7 @@ import { storeToRefs } from 'pinia';
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css';
 import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js'
-import { Pie, Line } from 'vue-chartjs'
+// import { Pie, Line } from 'vue-chartjs'
 import SocialHistogram from '@Components/utils/SocialHistogram.vue';
 import StatSlider from '@Components/utils/StatSlider.vue';
 import StatComponent from '@Components/utils/StatComponent.vue';
@@ -288,7 +289,7 @@ let establishment = ref({});
 let socialPages = ref([]);
 let socials = ref(['']);
 
-let followersType = ref(true);
+// let followersType = ref(true);
 // const maxPostsToShow = ref(2)
 const data = ref({
     labels: [],
@@ -511,15 +512,16 @@ onBeforeMount(async () => {
             }
         });
     }
-
     if (!socialStore.trendsByEstablishment[`${companyId}`]) {
         await socialStore.fetchEstablishmentTrends(companyId);
     }
 
     await socialStore.getGlobalStats(companyId, 'monthly', 2023);
+
 });
 
 onMounted(async () => {
+
     if (lineChartContainer.value.clientWidth > 400) {
         lineChartWidth.value = lineChartContainer.value.clientWidth;
     } else {
@@ -531,7 +533,7 @@ onMounted(async () => {
     // const datas = socialStore.globalStats[`${companyId}`]['monthly'][2023]
     for (let i = 0; i < datas.dates.length; i++) {
         tmp.push({
-            "date": datas.dates[i],
+            "date": `${datas.dates[i]}-23`,
             "Facebook": datas.websites.facebook['followers'][i],
             "Instagram": datas.websites.instagram['followers'][i],
             "LinkedIn": datas.websites.linkedin['followers'][i],

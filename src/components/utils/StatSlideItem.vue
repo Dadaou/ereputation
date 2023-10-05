@@ -3,14 +3,14 @@
         <div class="carousel__item" v-show="currentSlide == index">
             <StatComponent :color="slide.color" :bgColor="slide.bgColor" :value="slide.value"
                 :description="slide.description" :icon="slide.icon" :iconStyle="slide.iconStyle"
-                :percentage="slide.percentage" :trend="slide.trend">
+                :percentage="slide.percentage" :trend="slide.trend" :websites="websites" :site="slide.site">
             </StatComponent>
         </div>
     </Transition>
 </template>
 <script setup>
 import StatComponent from '@Components/utils/StatComponent.vue';
-const props = defineProps(["slide", "currentSlide", "index"]);
+defineProps(["slide", "currentSlide", "index", "websites"]);
 </script>
 <style scoped>
 .carousel__item {

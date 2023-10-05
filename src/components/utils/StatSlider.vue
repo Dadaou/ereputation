@@ -2,7 +2,7 @@
     <div class="carousel">
         <div class="carousel__inner">
             <StatSlideItem v-for="(stat, index) in items" :key="`item-${index}`" :slide="stat" :current-slide="currentSlide"
-                :index="index">
+                :index="index" :websites="websites">
             </StatSlideItem>
         </div>
     </div>
@@ -12,7 +12,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import StatSlideItem from '@Components/utils/StatSlideItem.vue';
-const props = defineProps(["items"]);
+const props = defineProps(["items", "websites"]);
 let currentSlide = ref(0);
 let slideInterval = ref(null);
 
