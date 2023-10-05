@@ -321,7 +321,24 @@ const lineLegend = ref([]);
 
 const options = {
   responsive: true,
-  maintainAspectRatio: false
+  maintainAspectRatio: false,
+  scales: 
+  {
+    x: {
+            beginAtZero: true, // You can configure other options for the X-axis here
+            title: {
+                display: true,
+                text: 'Month',
+            },
+        },
+    y: {
+            beginAtZero: true, // You can configure other options for the Y-axis here
+            title: {
+                display: true,
+                text: 'Followers',
+            },
+        },
+  },
 }
 
 const { trendsByEstablishment } = storeToRefs(socialStore);
