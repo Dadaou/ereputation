@@ -21,9 +21,6 @@ const props = defineProps(["color", "bgColor", "icon", "iconStyle", "value", "de
 </script>
 
 <style scoped>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 .stat__card {
     width: 95%;

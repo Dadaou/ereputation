@@ -155,8 +155,7 @@ import {
     Chart as ChartJS,
     RadialLinearScale,
     ArcElement,
-    Tooltip,
-    Legend
+    Tooltip
 } from 'chart.js';
 import { PolarArea } from 'vue-chartjs';
 ChartJS.register(RadialLinearScale, ArcElement, Tooltip)

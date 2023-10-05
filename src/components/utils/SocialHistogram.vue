@@ -2,7 +2,6 @@
     <div :style="{ width: width }">
         <div class="inline-flex items-center my-3 w-full pr-6">
             <el-date-picker class="mt-2" v-model="dateEnd" placeholder="Search a date" :size="'large'" />
-            <!-- <VueDatePicker class="mb-2 mt-2" v-model="dateEnd" :format="format2" /> -->
         </div>
         <div v-if="data && data.length > 0" class="chart__container" :style="{ width: width }" ref="barChartContainer">
             <!-- <Bar v-if="data" :data="data" :options="options" :style="{ height: '200px', width: '100%' }" /> -->
@@ -18,7 +17,6 @@ import {
     Chart as ChartJS,
     Title,
     Tooltip,
-    Legend,
     BarElement,
     CategoryScale,
     LinearScale
@@ -29,7 +27,7 @@ import { ref, watch, onBeforeMount } from 'vue';
 import { useRoute } from "vue-router";
 import { useSocialStore } from "@Stores/social.js";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip)
 
 const route = useRoute();
 const companyId = route.params.id;

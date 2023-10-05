@@ -102,10 +102,11 @@ import VueQrious from 'vue-qrious';
 import * as htmlToImage from 'html-to-image';
 import { useWindowSize } from '@vueuse/core';
 import { ElTooltip  } from 'element-plus';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
+import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js'
 import { Pie } from 'vue-chartjs';
 import { useCompanyStore } from "@Stores/company.js";
 
+ChartJS.register(ArcElement, Tooltip)
 const ModalComponent = defineAsyncComponent(()=>
     import('@Components/utils/ModalComponent.vue')
 )
@@ -201,6 +202,7 @@ const staffRatingDataset = (eventRating)=> {
     gap:1rem;
     flex-direction: column;
     height: 275px;
+    margin-bottom: 10px;
 }
 
 .staff__card h5{
