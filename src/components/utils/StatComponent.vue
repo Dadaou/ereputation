@@ -66,7 +66,7 @@ const props = defineProps(["color", "bgColor", "icon", "iconStyle", "value", "de
 .stat__description {
     font-size: .6rem;
     color: rgba(255, 255, 255, .95);
-    margin-top: -12px;
+    margin-top: -6px;
 }
 
 .stat__trend {
