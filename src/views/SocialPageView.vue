@@ -15,8 +15,8 @@
                     <div class="reviews__content_linechart" ref="lineChartContainer">
                         <Line :data="lineData" :options="options" />
                     </div>
-                     <BaseLegend class="legend" :LegendData="lineLegend" :alignment="'horizontal'">
-                </BaseLegend>
+                     <!-- <BaseLegend class="legend" :LegendData="lineLegend" :alignment="'horizontal'">
+                </BaseLegend> -->
                 </div>
                 <div class="head">
                     <div class="app__title">
@@ -242,21 +242,23 @@ import {
   LineElement,
   Title,
   Tooltip,
+  Legend,
  ArcElement,
 } from 'chart.js'
 import SocialHistogram from '@Components/utils/SocialHistogram.vue';
 import StatSlider from '@Components/utils/StatSlider.vue';
 import StatComponent from '@Components/utils/StatComponent.vue';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  ArcElement
-)
+// ChartJS.register(
+//   CategoryScale,
+//   LinearScale,
+//   PointElement,
+//   LineElement,
+//   Title,
+//   Tooltip,
+//   ArcElement,
+//   Legend
+// )
 const page = ref({
     title1: "",
     title2: "Socials",
@@ -321,7 +323,14 @@ const lineLegend = ref([]);
 
 const options = {
   responsive: true,
-  maintainAspectRatio: false,
+  maintainAspectRatio: true,
+  aspectRatio: 3,
+  plugins: {
+    legend: {
+        display: true,
+        position: 'bottom'
+    }
+  },
   scales: 
   {
     x: {
@@ -337,6 +346,12 @@ const options = {
                 display: true,
                 text: 'Followers',
             },
+            // ticks:{
+            //     beginAtZero: true,
+            //     stepSize: 100,
+            //     min: 0,
+            //     max: 70000
+            // }
         },
   },
 }
@@ -494,6 +509,16 @@ onBeforeMount(async () => {
 });
 
 onMounted(async () => {
+    ChartJS.register(
+      CategoryScale,
+      LinearScale,
+      PointElement,
+      LineElement,
+      Title,
+      Tooltip,
+      ArcElement,
+      Legend
+    )
     if (lineChartContainer.value.clientWidth > 400) {
         lineChartWidth.value = lineChartContainer.value.clientWidth;
     } else {
