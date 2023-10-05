@@ -13,7 +13,8 @@
                 </div>
                 <div class="reviews__content">
                     <div class="reviews__content_linechart" ref="lineChartContainer">
-                        <LineChart :plot-data="test" x-key="date" :width="lineChartWidth" height="300"
+                        <LineChart v-if="test && test.length > 0" :plot-data="test" x-key="date" :width="lineChartWidth"
+                            height="300"
                             :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
                             x-axis-label="Time" y-axis-label="Followers" :y-min="0" :point-radius="3" :show-points="true"
                             :margin="{ top: 20, bottom: 30, left: 50, right: 20 }">
@@ -300,80 +301,7 @@ const data = ref({
 })
 const legendData = ref([])
 
-let test = ref([
-    {
-        "date": "01/01/2023",
-        "Utilities": 5921,
-        "Rent": 1026,
-        "Insurance": 2324
-    },
-    {
-        "date": "01/02/2023",
-        "Utilities": 1539,
-        "Rent": 1560,
-        "Insurance": 1257
-    },
-    {
-        "date": "01/03/2023",
-        "Utilities": 5821,
-        "Rent": 1126,
-        "Insurance": 1724
-    },
-    {
-        "date": "01/04/2023",
-        "Utilities": 539,
-        "Rent": 1860,
-        "Insurance": 1457
-    },
-    {
-        "date": "01/05/2023",
-        "Utilities": 5921,
-        "Rent": 1026,
-        "Insurance": 2324
-    },
-    {
-        "date": "01/06/2023",
-        "Utilities": 1539,
-        "Rent": 1560,
-        "Insurance": 1257
-    },
-    {
-        "date": "01/07/2023",
-        "Utilities": 5821,
-        "Rent": 1126,
-        "Insurance": 1724
-    },
-    {
-        "date": "01/08/2023",
-        "Utilities": 539,
-        "Rent": 1860,
-        "Insurance": 1457
-    },
-    {
-        "date": "01/09/2023",
-        "Utilities": 5921,
-        "Rent": 1026,
-        "Insurance": 2324
-    },
-    {
-        "date": "01/10/2023",
-        "Utilities": 1539,
-        "Rent": 1560,
-        "Insurance": 1257
-    },
-    {
-        "date": "01/11/2023",
-        "Utilities": 5821,
-        "Rent": 1126,
-        "Insurance": 1724
-    },
-    {
-        "date": "01/12/2023",
-        "Utilities": 539,
-        "Rent": 1860,
-        "Insurance": 1457
-    },
-])
+const test = ref([])
 
 const { trendsByEstablishment } = storeToRefs(socialStore);
 const trends = ref([]);
