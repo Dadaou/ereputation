@@ -2,10 +2,35 @@
     <div class="main__container">
         <HeadComponent class="head" :page="page"></HeadComponent>
         <div class="breadcrumb__container">
-            <BreadcrumbComponent :data="breadcrumbData"/>
+            <BreadcrumbComponent :data="breadcrumbData" />
         </div>
         <div class="app__container">
             <div class="left__side">
+                <div class="head">
+                    <div class="app__title">
+                        <h2>Social</h2>
+                    </div>
+                </div>
+                <div class="reviews__content">
+                    <div class="reviews__content_linechart" ref="lineChartContainer">
+                        <LineChart :plot-data="test" x-key="date" :width="lineChartWidth" height="300"
+                            :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
+                            x-axis-label="axe x" y-axis-label="axe y" :y-min="0" :point-radius="3" :show-points="true"
+                            :margin="{ top: 20, bottom: 30, left: 50, right: 20 }">
+                        </LineChart>
+                        <!-- <Line :data="testdata" :options="testdataoptions" /> -->
+                    </div>
+                </div>
+                <div class="head">
+                    <div class="app__title">
+                        <h2>Social Histogram</h2>
+                    </div>
+                </div>
+                <social-histogram :width="lineChartWidth"></social-histogram>
+                <div class="reviews__content">
+
+                </div>
+
                 <div class="head">
                     <div class="app__title">
                         <h2>Social List</h2>
@@ -26,7 +51,7 @@
                                 <div class="social-posts" v-if="socialItem.socialPosts.length > 0">
                                     <h4>Social Posts</h4>
                                     <ul>
-                                        <li v-for="post in socialItem.socialPosts">
+                                        <li v-for="(post, index) in socialItem.socialPosts" :key="index">
                                             <p><i class="uil uil-comment"></i>: <span>{{ post.comments }}</span> </p>
                                             <p><i class="uil uil-thumbs-up"></i>: <span>{{ post.likes }}</span> </p>
                                             <p><i class="uil uil-share"></i>: <span>{{ post.share }}</span></p>
@@ -45,130 +70,150 @@
                     </div>
                 </div>
             </div>
+            <!-- <el-dropdown split-button type="primary" class="mb-4 stat__cards_mobile">
+                {{ calculType }}
+                <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item @click="calculType = 'Followers'">Followers</el-dropdown-item>
+                        <el-dropdown-item @click="calculType = 'Likes'">Likes</el-dropdown-item>
+                    </el-dropdown-menu>
+                </template>
+            </el-dropdown> -->
+
+            <StatSlider class="stat__cards_mobile" :items="trends"></StatSlider>
             <div class="tablet_mobile__filter">
-                   <DropdownComponent class="dropdown" :showTitle="false"  title="Filter by social" placeholder="Select a social network"
-                        :data="socials" @submit="(social) => {
-                            selectedSocials = social
-                        }" :default="socials[0]" />
-                      <el-date-picker
-                        v-model="dateStart"
-                        placeholder="Start date"
-                        :size="'large'"
-                      />
-                      <el-date-picker
-                        class="mt-2"
-                        v-model="dateEnd"
-                        placeholder="End date"
-                        :size="'large'"
-                      />
+                <DropdownComponent class="dropdown" :showTitle="false" title="Filter by social"
+                    placeholder="Select a social network" :data="socials" @submit="(social) => {
+                        selectedSocials = social
+                    }" :default="socials[0]" />
+                <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+                <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" />
             </div>
             <div class="tablet_mobile__head">
                 <div class="establishment__info_tablet">
-                        <label v-if="!dataLoading">{{ establishment.name }}</label>
-                        <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
-                        <div>
-                            <i :class="['uil', establishment.category=='Restaurant'?'uil-restaurant':'', establishment.category=='Hotel'?'uil-bed-double':'', establishment.category=='Residence'?'uil-home':'']"></i>
-                                <span v-if="!dataLoading">{{ establishment.category }}</span>
-                                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
-                        </div>
-                        <div class="society__location" v-if="establishment.country != null">
-                                <i class="uil uil-map"></i>
-                                <span v-if="!dataLoading">{{ establishment.country }}</span>
-                                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                        </div> 
-                        <div class="society__location">
-                                <i class="uil uil-location-point"></i>
-                                <span v-if="!dataLoading">{{ establishment.address1 }}, {{ establishment.city }}</span>
-                                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                         </div>
-                         <div class="society__location">
-                                <i class="uil uil-favorite"></i>
-                                <span v-if="!dataLoading" class="society__location">{{ all_items[0].value  }}</span>
-                                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                         </div>
-                         <div class="society__location">
-                            <i class="uil uil-comment-alt"></i>
-                                <span v-if="!dataLoading">{{ all_items[1].value  }}</span>
-                                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                         </div>
-                         <div class="society__location">
-                            <i class="uil uil-building"></i>
-                            <span v-if="!dataLoading">{{ all_items[2].value  }} competitors</span>
-                             <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                         </div>
+                    <label v-if="!dataLoading">{{ establishment.name }}</label>
+                    <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
+                    <div>
+                        <i
+                            :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
+                        <span v-if="!dataLoading">{{ establishment.category }}</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
                     </div>
+                    <div class="society__location" v-if="establishment.country != null">
+                        <i class="uil uil-map"></i>
+                        <span v-if="!dataLoading">{{ establishment.country }}</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                    <div class="society__location">
+                        <i class="uil uil-location-point"></i>
+                        <span v-if="!dataLoading">{{ establishment.address1 }}, {{ establishment.city }}</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                    <div class="society__location">
+                        <i class="uil uil-favorite"></i>
+                        <span v-if="!dataLoading" class="society__location">{{ all_items[0].value }}</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                    <div class="society__location">
+                        <i class="uil uil-comment-alt"></i>
+                        <span v-if="!dataLoading">{{ all_items[1].value }}</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                    <div class="society__location">
+                        <i class="uil uil-building"></i>
+                        <span v-if="!dataLoading">{{ all_items[2].value }} competitors</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                </div>
                 <div class="photo" v-if="!dataLoading">
                     <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
-                    <div v-else role="status" class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
+                    <div v-else role="status"
+                        class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                        <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                            <path
+                                d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
                         </svg>
-                            <span class="sr-only">Loading...</span>
-                        </div>
+                        <span class="sr-only">Loading...</span>
+                    </div>
                 </div>
                 <div class="photo" v-else>
-                    <div role="status" class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
+                    <div role="status"
+                        class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                        <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                            <path
+                                d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
                         </svg>
-                            <span class="sr-only">Loading...</span>
-                        </div>
+                        <span class="sr-only">Loading...</span>
+                    </div>
                 </div>
             </div>
             <div class="right__side">
-                <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div
+                    class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                     <a href="#" v-if="!dataLoading">
                         <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
-                        <div v-else role="status" class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
-                        </svg>
+                        <div v-else role="status"
+                            class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                                <path
+                                    d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
+                            </svg>
                             <span class="sr-only">Loading...</span>
                         </div>
                     </a>
                     <a href="#" v-else>
-                        <div role="status" class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
-                        </svg>
+                        <div role="status"
+                            class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                                <path
+                                    d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
+                            </svg>
                             <span class="sr-only">Loading...</span>
                         </div>
                     </a>
                     <div class="establishment__info">
-                            <label class="society__name" v-if="!dataLoading">{{ establishment.name }}</label>
-                            <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
-                            <div class="society__location">
-                                <i :class="['uil', establishment.category=='Restaurant'?'uil-restaurant':'', establishment.category=='Hotel'?'uil-bed-double':'', establishment.category=='Residence'?'uil-home':'']"></i>
-                                <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
-                                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                            </div>
-                            <div class="society__location">
-                                    <i class="uil uil-location-point"></i>
-                                    <span v-if="!dataLoading" class="society__location">{{ establishment.address1 }}, {{ establishment.city }}</span>
-                                    <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                            </div> 
+                        <label class="society__name" v-if="!dataLoading">{{ establishment.name }}</label>
+                        <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
+                        <div class="society__location">
+                            <i
+                                :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
+                            <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
+                            <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                        </div>
+                        <div class="society__location">
+                            <i class="uil uil-location-point"></i>
+                            <span v-if="!dataLoading" class="society__location">{{ establishment.address1 }}, {{
+                                establishment.city }}</span>
+                            <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                        </div>
                     </div>
-                   <DropdownComponent class="dropdown" title="Filter by social" placeholder="Select a social network"
+
+                    <DropdownComponent class="dropdown" title="Filter by social" placeholder="Select a social network"
                         :data="socials" @submit="(social) => {
                             selectedSocials = social
                         }" :default="socials[0]" />
                     <div class="date__filter">
                         <div class="text-sm title">Select a range of date</div>
-                       <el-date-picker
-                        v-model="dateStart"
-                        placeholder="Start date"
-                        :size="'large'"
-                      />
-                      <el-date-picker
-                        class="mt-2"
-                        v-model="dateEnd"
-                        placeholder="End date"
-                        :size="'large'"
-                      />
+                        <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+                        <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" />
+                    </div>
+                </div>
+                <div
+                    class="stat__cards bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 py-4">
+                    <div class="stat__cards_default">
+                        <StatComponent v-for="(slide, index) in trends" :key="index" :color="slide.color"
+                            :bgColor="slide.bgColor" :value="slide.value" :description="slide.description"
+                            :icon="slide.icon" :iconStyle="slide.iconStyle" :percentage="slide.percentage"
+                            :trend="slide.trend">
+                        </StatComponent>
                     </div>
                 </div>
             </div>
@@ -179,19 +224,24 @@
 <script setup>
 import moment from 'moment';
 import services from '@Services/services.js';
-import { useWindowSize } from '@vueuse/core';
+// import { useWindowSize } from '@vueuse/core';
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
+import { useSocialStore } from "@Stores/social.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
-import {ref, reactive, watch, onBeforeMount, computed, provide} from 'vue';
+import { ref, watch, onBeforeMount, onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css';
 import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js'
-import { Pie } from 'vue-chartjs'
+import { Pie, Line } from 'vue-chartjs'
+import SocialHistogram from '@Components/utils/SocialHistogram.vue';
+import StatSlider from '@Components/utils/StatSlider.vue';
+import StatComponent from '@Components/utils/StatComponent.vue';
 
 
 ChartJS.register(ArcElement, Tooltip)
@@ -201,8 +251,20 @@ const page = ref({
     icon: "uil-users-alt",
 });
 
+const lineChartContainer = ref(null);
+let lineChartWidth = ref(620)
+
+window.onresize = () => {
+    if (lineChartContainer.value.clientWidth > 400) {
+        lineChartWidth.value = lineChartContainer.value.clientWidth;
+    } else {
+        lineChartWidth.value = 400;
+    }
+};
+
 const route = useRoute();
-const router = useRouter();
+const companyId = route.params.id;
+
 const breadcrumbData = [
     {
         title: "Back",
@@ -218,12 +280,15 @@ const breadcrumbData = [
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
+const socialStore = useSocialStore();
 const calculType = ref('Followers')
 let selectedSocials = ref('');
 let establishment = ref({});
 let socialPages = ref([]);
 let socials = ref(['']);
-const maxPostsToShow = ref(2)
+
+let followersType = ref(true);
+// const maxPostsToShow = ref(2)
 const data = ref({
     labels: [],
     datasets: [
@@ -235,10 +300,131 @@ const data = ref({
 })
 const legendData = ref([])
 
-const options = {
-    responsive: true,
-    maintainAspectRatio: false
-}
+let test = ref([
+    {
+        "date": "01/01/2023",
+        "Utilities": 5921,
+        "Rent": 1026,
+        "Insurance": 2324
+    },
+    {
+        "date": "01/02/2023",
+        "Utilities": 1539,
+        "Rent": 1560,
+        "Insurance": 1257
+    },
+    {
+        "date": "01/03/2023",
+        "Utilities": 5821,
+        "Rent": 1126,
+        "Insurance": 1724
+    },
+    {
+        "date": "01/04/2023",
+        "Utilities": 539,
+        "Rent": 1860,
+        "Insurance": 1457
+    },
+    {
+        "date": "01/05/2023",
+        "Utilities": 5921,
+        "Rent": 1026,
+        "Insurance": 2324
+    },
+    {
+        "date": "01/06/2023",
+        "Utilities": 1539,
+        "Rent": 1560,
+        "Insurance": 1257
+    },
+    {
+        "date": "01/07/2023",
+        "Utilities": 5821,
+        "Rent": 1126,
+        "Insurance": 1724
+    },
+    {
+        "date": "01/08/2023",
+        "Utilities": 539,
+        "Rent": 1860,
+        "Insurance": 1457
+    },
+    {
+        "date": "01/09/2023",
+        "Utilities": 5921,
+        "Rent": 1026,
+        "Insurance": 2324
+    },
+    {
+        "date": "01/10/2023",
+        "Utilities": 1539,
+        "Rent": 1560,
+        "Insurance": 1257
+    },
+    {
+        "date": "01/11/2023",
+        "Utilities": 5821,
+        "Rent": 1126,
+        "Insurance": 1724
+    },
+    {
+        "date": "01/12/2023",
+        "Utilities": 539,
+        "Rent": 1860,
+        "Insurance": 1457
+    },
+])
+
+const { trendsByEstablishment } = storeToRefs(socialStore);
+const trends = ref([]);
+
+// const labels = ['Avr', 'Mai', 'Juin', 'Juil', 'Aug', 'Sept']
+// const datas = [1560, 2310, 1700.20, 2500, 998, 100];
+// const datas2 = [1460, 2710, 1710, 1500, 1200, 300];
+// const datas3 = [1260, 2810, 1410, 1300, 1200, 600];
+
+// const testdata = {
+//     labels: labels,
+//     datasets: [
+//         {
+//             label: 'Facebook',
+//             data: datas,
+//             borderWidth: 1,
+//             fill: false,
+//             borderColor: 'rgb(255, 0, 0)',
+//             backgroundColor: 'rgb(255, 0, 0)',
+//             tension: 0.2
+//         },
+//         {
+//             label: 'Instagram',
+//             data: datas2,
+//             borderWidth: 1,
+//             fill: false,
+//             borderColor: 'rgb(0, 255, 0)',
+//             backgroundColor: 'rgb(0, 255, 0)',
+//             tension: 0.2
+//         },
+//         {
+//             label: 'LinkedIn',
+//             data: datas3,
+//             borderWidth: 1,
+//             fill: false,
+//             borderColor: 'rgb(0, 255, 255)',
+//             backgroundColor: 'rgb(0, 255, 255)',
+//             tension: 0.2
+//         },
+//     ],
+// };
+
+// const testdataoptions = {
+//     responsive: true,
+//     maintainAspectRatio: false,
+// }
+
+// const options = {
+//     responsive: true,
+//     maintainAspectRatio: false
+// }
 let media = [];
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
@@ -248,21 +434,21 @@ const all_items = ref([
 
 const dateStart = ref(new Date());
 const dateEnd = ref();
-const enableDateEnd = ref(false);
+// const enableDateEnd = ref(false);
 const dataLoading = ref(true);
 
-const format2 = (date) => {
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
+// const format2 = (date) => {
+//     const day = date.getDate();
+//     const month = date.getMonth() + 1;
+//     const year = date.getFullYear();
 
-    return `${year}/${month}/${day}`;
-}
+//     return `${year}/${month}/${day}`;
+// }
 
-const handleDate = (modelData) => {
-    enableDateEnd.value = (modelData != null) ? true : false;
-    dateEnd.value = null;
-}
+// const handleDate = (modelData) => {
+//     enableDateEnd.value = (modelData != null) ? true : false;
+//     dateEnd.value = null;
+// }
 
 const getLastSocialPages = (socialPages) => {
     const pages = []
@@ -316,9 +502,9 @@ const getSocials = (socials) => {
     return data;
 }
 
-const showMorePosts = () => {
-    maxPostsToShow.value += 2;
-}
+// const showMorePosts = () => {
+//     maxPostsToShow.value += 2;
+// }
 const generatedLegend = (colors, dataType) => {
     let legends = [];
 
@@ -360,49 +546,60 @@ const getFollowers = (datasets, type) => {
 }
 
 onBeforeMount(async () => {
-const companyId = route.params.id;
     appStore.isLoading = true;
-     const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve, reject) => {
         services.get_Record(`/establishment/${companyId}/detail`, (response) => {
-                resolve(response)
+            resolve(response)
         });
     });
 
-      if(response.status == 200){
-            establishment.value = response.data;
-            socials.value = [" ", ...getSocials(establishment.value.socials)];
-            let data = [];
-            let promises = [];
-            establishment.value.socialPages.forEach((social, index) => {
-                let promise = services.get_Record(`/social_pages/${social.id}`, (response) => {
-                    data.push(response.data);
-                });
-                promises.push(promise);
-            })
-            Promise.all(promises).then(() => {
-                socialPages.value = data;
-                data.value = getFollowers(socialPages.value, calculType.value);
-                dataLoading.value = false;
+    if (response.status == 200) {
+        establishment.value = response.data;
+        socials.value = [" ", ...getSocials(establishment.value.socials)];
+        let data = [];
+        let promises = [];
+        establishment.value.socialPages.forEach((social) => {
+            let promise = services.get_Record(`/social_pages/${social.id}`, (response) => {
+                data.push(response.data);
             });
-            all_items.value[1].value = establishment.value.reviews.length;
-            all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
-            appStore.isLoading = false;
-     }
+            promises.push(promise);
+        })
+        Promise.all(promises).then(() => {
+            socialPages.value = data;
+            data.value = getFollowers(socialPages.value, calculType.value);
+            dataLoading.value = false;
+        });
+        all_items.value[1].value = establishment.value.reviews.length;
+        all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
+        appStore.isLoading = false;
+    }
 
-    if(userStore.user.customer !==null){
+    if (userStore.user.customer !== null) {
         userStore.user.customer.establishments.forEach(async (company, index) => {
-            if(company.id == companyId){
+            if (company.id == companyId) {
                 userStore.user.customer.establishments[index].media.forEach(item => {
                     media.push(item.url_source);
                 });
             }
         });
     }
+
+    if (!socialStore.trendsByEstablishment[`${companyId}`]) {
+        await socialStore.fetchEstablishmentTrends(companyId);
+    }
+});
+
+onMounted(() => {
+    if (lineChartContainer.value.clientWidth > 400) {
+        lineChartWidth.value = lineChartContainer.value.clientWidth;
+    } else {
+        lineChartWidth.value = 400;
+    }
 });
 
 watch(selectedSocials, () => {
     if (selectedSocials.value != '') {
-
+        //do nothing
     }
 });
 
@@ -410,6 +607,116 @@ watch([socialPages, calculType], () => {
     data.value = getFollowers(socialPages.value, calculType.value);
 
 });
+
+watch([trendsByEstablishment, calculType], () => {
+    if (socialStore.trendsByEstablishment[`${companyId}`]) {
+        const tmp = [];
+        let value = 0;
+        let percentage = "0%";
+        let trend = "linear";
+        let description = "Total Followers";
+        socialStore.trendsByEstablishment[`${companyId}`].forEach((item) => {
+            switch (calculType.value) {
+                case 'Likes':
+                    value = Array.isArray(item.likes) ? 0 : item.likes.count
+                    percentage = Array.isArray(item.likes) || !item.likes.percentage ? '0%' : `${item.likes.percentage}%`
+                    trend = Array.isArray(item.likes) ? 'linear' : `${item.likes.trend}`
+                    description = "Total Likes"
+                    break
+                case 'Followers':
+                    value = Array.isArray(item.followers) ? 0 : item.followers.count
+                    percentage = Array.isArray(item.followers) || !item.followers.percentage ? '0%' : `${item.followers.percentage}%`
+                    trend = Array.isArray(item.followers) ? 'linear' : `${item.followers.trend}`
+                    description = "Total Followers"
+                    break
+            };
+
+            switch (item.site) {
+                case 'tiktok':
+                    tmp.push({
+                        site: "tiktok",
+                        color: "#010101",
+                        bgColor: "#010101",
+                        icon: "iconoir:tiktok",
+                        iconStyle: "rect",
+                        description: description,
+                        value: value,
+                        percentage: percentage,
+                        trend: trend
+                    });
+                    break;
+                case 'linkedin':
+                    tmp.push({
+                        site: "linkedin",
+                        color: "#0072b1",
+                        bgColor: "#0072b1",
+                        icon: "ri:linkedin-line",
+                        iconStyle: "rect",
+                        description: description,
+                        value: value,
+                        percentage: percentage,
+                        trend: trend
+                    });
+                    break;
+                case 'youtube':
+                    tmp.push({
+                        site: "youtube",
+                        color: "red",
+                        bgColor: "radial-gradient(circle, rgba(107,92,9,1) -7475%, rgba(254,254,255,1) -5600%, rgba(252,220,18,1) -4712%, rgba(219,193,45,1) -2750%, rgba(252,220,18,1) -1791%, rgba(238,238,233,1) 0%, rgba(255,119,119,1) 0%, rgba(255,0,0,1) 100%)",
+                        icon: "uit:youtube",
+                        iconStyle: "rounded",
+                        description: description,
+                        value: value,
+                        percentage: percentage,
+                        trend: trend
+                    });
+                    break;
+                case 'facebook':
+                    tmp.push({
+                        site: "facebook",
+                        color: "#4267b2",
+                        bgColor: "linear-gradient(180deg, rgba(107,92,9,1) -7475%, rgba(254,254,255,1) -5600%, rgba(252,220,18,1) -4712%, rgba(219,193,45,1) -2750%, rgba(252,220,18,1) -1791%, rgba(66,103,178,1) 65%, rgba(107,153,245,1) 100%, rgba(210,188,251,1) 100%)",
+                        icon: "ri:facebook-fill",
+                        iconStyle: "rounded",
+                        description: description,
+                        value: value,
+                        percentage: percentage,
+                        trend: trend
+                    });
+                    break;
+                case 'instagram':
+                    tmp.push({
+                        site: "instagram",
+                        color: "#833AB4",
+                        bgColor: "linear-gradient(160deg, rgba(107,92,9,1) -7475%, rgba(254,254,255,1) -5600%, rgba(252,220,18,1) -4712%, rgba(219,193,45,1) -2750%, rgba(252,220,18,1) -1791%, rgba(64,93,230,1) 0%, rgba(91,81,216,1) 5%, rgba(131,58,180,1) 15%, rgba(193,53,132,1) 34%, rgba(225,48,108,1) 48%, rgba(253,29,29,1) 63%, rgba(245,96,64,1) 75%, rgba(252,175,69,1) 90%, rgba(255,220,128,1) 100%, rgba(210,188,251,1) 100%)",
+                        icon: "mdi:instagram",
+                        iconStyle: "rect",
+                        description: description,
+                        value: value,
+                        percentage: percentage,
+                        trend: trend
+                    });
+                    break;
+                case 'twitter':
+                    tmp.push({
+                        site: "twitter",
+                        color: "#1DA1F2",
+                        bgColor: "#1DA1F2",
+                        icon: "mingcute:twitter-line",
+                        iconStyle: "rect",
+                        description: description,
+                        value: value,
+                        percentage: percentage,
+                        trend: trend
+                    });
+                    break;
+            };
+        });
+        trends.value = tmp;
+    } else {
+        trends.value = [];
+    }
+})
 </script>
 
 <style scoped>
@@ -481,12 +788,14 @@ li:nth-child(odd) {
     border: 1px solid var(--light-color-bg2);
 }
 
-.establishment__info i, .establishment__info_tablet i {
+.establishment__info i,
+.establishment__info_tablet i {
     color: var(--color-danger);
     margin-right: 5px;
 }
 
-.establishment__info label, .establishment__info_tablet label {
+.establishment__info label,
+.establishment__info_tablet label {
     font-size: 14px;
     font-weight: bold;
     color: var(--color-primary)
@@ -819,6 +1128,7 @@ li {
 .social-posts ul {
     list-style: none;
     padding: 0;
+    min-width: 200px;
 }
 
 .social-posts li {
@@ -867,6 +1177,36 @@ li {
 
 .uil-calender {
     console: var(--color-primary)
+}
+
+.reviews__content_linechart {
+    width: 100%;
+    overflow: auto;
+    min-width: 300px;
+    padding: 16px;
+}
+
+.stat__cards {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    border: 1px solid var(--light-color-bg2);
+}
+
+.stat__cards_mobile {
+    display: none;
+}
+
+.stat__cards_default {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 8px;
 }
 
 @media screen and (max-width:1400px) {
@@ -954,6 +1294,40 @@ li {
 
     .tablet_mobile__filter * {
         flex-basis: 200px;
+    }
+
+    .reviews__content_linechart {
+        min-width: 300px;
+        padding: 8px;
+    }
+
+    .stat__cards_mobile {
+        display: flex;
+    }
+
+    .stat__cards_default {
+        display: none;
+    }
+
+    .social-list ul li {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .social-list .social-details {
+        padding-inline: 8px;
+        border-right: none;
+        border-bottom: 1px solid #ccc;
+        width: 100%;
+        padding-bottom: 16px;
+    }
+
+    .social-list .social-posts {
+        padding-top: 12px;
+        padding-inline: 0;
+        max-height: 250px;
+        overflow: auto;
+        width: 100%;
     }
 }
 

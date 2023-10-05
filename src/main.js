@@ -10,8 +10,6 @@ import services from '@Services/services.js'
 import App from './App.vue'
 import router from './router'
 
-
-
 const app = createApp(App)
 services.setURL(import.meta.env.VITE_APP_API_URL)
 const pinia = createPinia()
