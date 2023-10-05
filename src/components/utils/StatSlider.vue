@@ -26,7 +26,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     clearInterval(slideInterval.value);
-})
+});
 </script>
 <style scoped>
 .carousel {

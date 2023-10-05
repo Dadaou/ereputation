@@ -433,6 +433,7 @@ const loadDatasets = (establishments, colors, date) => {
     });
     chartConfig.data.datasets = data;
     chartData.value = chartdata;
+    console.log(chartData)
     return data;
 }
 

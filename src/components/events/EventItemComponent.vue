@@ -36,7 +36,7 @@
 <script setup>
 import {ref, inject, onBeforeMount, computed} from 'vue';
 import moment from 'moment';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
+import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js'
 import { Pie } from 'vue-chartjs';
 import { useCompanyStore } from "@Stores/company.js";
 

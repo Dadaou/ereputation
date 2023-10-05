@@ -13,14 +13,10 @@
                 </div>
                 <div class="reviews__content">
                     <div class="reviews__content_linechart" ref="lineChartContainer">
-                        <LineChart v-if="test && test.length > 0" :plot-data="test" x-key="date" :width="lineChartWidth"
-                            height="300"
-                            :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
-                            x-axis-label="Time" y-axis-label="Followers" :y-min="0" :point-radius="3" :show-points="true"
-                            :margin="{ top: 20, bottom: 30, left: 50, right: 20 }">
-                        </LineChart>
-                        <!-- <Line :data="testdata" :options="testdataoptions" /> -->
+                        <Line :data="lineData" :options="options" />
                     </div>
+                    <!-- <BaseLegend class="legend" :LegendData="lineLegend" :alignment="'horizontal'">
+                </BaseLegend> -->
                 </div>
                 <div class="head">
                     <div class="app__title">
@@ -226,7 +222,6 @@
 <script setup>
 import moment from 'moment';
 import services from '@Services/services.js';
-// import { useWindowSize } from '@vueuse/core';
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
 import { useRoute } from "vue-router";
@@ -239,14 +234,32 @@ import { ref, watch, onBeforeMount, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css';
-import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js'
-// import { Pie, Line } from 'vue-chartjs'
+import { Pie, Line } from 'vue-chartjs';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    ArcElement,
+} from 'chart.js';
 import SocialHistogram from '@Components/utils/SocialHistogram.vue';
 import StatSlider from '@Components/utils/StatSlider.vue';
 import StatComponent from '@Components/utils/StatComponent.vue';
 
-
-ChartJS.register(ArcElement, Tooltip)
+// ChartJS.register(
+//   CategoryScale,
+//   LinearScale,
+//   PointElement,
+//   LineElement,
+//   Title,
+//   Tooltip,
+//   ArcElement,
+//   Legend
+// )
 const page = ref({
     title1: "",
     title2: "Socials",
@@ -300,60 +313,53 @@ const data = ref({
         }
     ]
 })
-const legendData = ref([])
+const legendData = ref([]);
 
-const test = ref([])
+
+const lineData = ref({
+    labels: [],
+    datasets: []
+})
+const lineLegend = ref([]);
+
+const options = {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 3,
+    plugins: {
+        legend: {
+            display: true,
+            position: 'bottom'
+        }
+    },
+    scales:
+    {
+        x: {
+            beginAtZero: true, // You can configure other options for the X-axis here
+            title: {
+                display: true,
+                text: 'Month',
+            },
+        },
+        y: {
+            beginAtZero: true, // You can configure other options for the Y-axis here
+            title: {
+                display: true,
+                text: 'Followers',
+            },
+            // ticks:{
+            //     beginAtZero: true,
+            //     stepSize: 100,
+            //     min: 0,
+            //     max: 70000
+            // }
+        },
+    },
+}
 
 const { trendsByEstablishment } = storeToRefs(socialStore);
 const trends = ref([]);
 
-// const labels = ['Avr', 'Mai', 'Juin', 'Juil', 'Aug', 'Sept']
-// const datas = [1560, 2310, 1700.20, 2500, 998, 100];
-// const datas2 = [1460, 2710, 1710, 1500, 1200, 300];
-// const datas3 = [1260, 2810, 1410, 1300, 1200, 600];
-
-// const testdata = {
-//     labels: labels,
-//     datasets: [
-//         {
-//             label: 'Facebook',
-//             data: datas,
-//             borderWidth: 1,
-//             fill: false,
-//             borderColor: 'rgb(255, 0, 0)',
-//             backgroundColor: 'rgb(255, 0, 0)',
-//             tension: 0.2
-//         },
-//         {
-//             label: 'Instagram',
-//             data: datas2,
-//             borderWidth: 1,
-//             fill: false,
-//             borderColor: 'rgb(0, 255, 0)',
-//             backgroundColor: 'rgb(0, 255, 0)',
-//             tension: 0.2
-//         },
-//         {
-//             label: 'LinkedIn',
-//             data: datas3,
-//             borderWidth: 1,
-//             fill: false,
-//             borderColor: 'rgb(0, 255, 255)',
-//             backgroundColor: 'rgb(0, 255, 255)',
-//             tension: 0.2
-//         },
-//     ],
-// };
-
-// const testdataoptions = {
-//     responsive: true,
-//     maintainAspectRatio: false,
-// }
-
-// const options = {
-//     responsive: true,
-//     maintainAspectRatio: false
-// }
 let media = [];
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
@@ -363,21 +369,7 @@ const all_items = ref([
 
 const dateStart = ref(new Date());
 const dateEnd = ref();
-// const enableDateEnd = ref(false);
 const dataLoading = ref(true);
-
-// const format2 = (date) => {
-//     const day = date.getDate();
-//     const month = date.getMonth() + 1;
-//     const year = date.getFullYear();
-
-//     return `${year}/${month}/${day}`;
-// }
-
-// const handleDate = (modelData) => {
-//     enableDateEnd.value = (modelData != null) ? true : false;
-//     dateEnd.value = null;
-// }
 
 const getLastSocialPages = (socialPages) => {
     const pages = []
@@ -431,9 +423,6 @@ const getSocials = (socials) => {
     return data;
 }
 
-// const showMorePosts = () => {
-//     maxPostsToShow.value += 2;
-// }
 const generatedLegend = (colors, dataType) => {
     let legends = [];
 
@@ -522,42 +511,51 @@ onBeforeMount(async () => {
 
 onMounted(async () => {
 
+    ChartJS.register(
+        CategoryScale,
+        LinearScale,
+        PointElement,
+        LineElement,
+        Title,
+        Tooltip,
+        ArcElement,
+        Legend
+    )
+
     if (lineChartContainer.value.clientWidth > 400) {
         lineChartWidth.value = lineChartContainer.value.clientWidth;
     } else {
         lineChartWidth.value = 400;
     }
-    const datas = await socialStore.getGlobalStats(companyId, 'monthly', 2023);
-    console.log(datas)
-    let tmp = []
-    // const datas = socialStore.globalStats[`${companyId}`]['monthly'][2023]
-    for (let i = 0; i < datas.dates.length; i++) {
-        tmp.push({
-            "date": `${datas.dates[i]}-23`,
-            "Facebook": datas.websites.facebook['followers'][i],
-            "Instagram": datas.websites.instagram['followers'][i],
-            "LinkedIn": datas.websites.linkedin['followers'][i],
-            "Tiktok": datas.websites.tiktok['followers'][i],
-            "Twitter": datas.websites.twitter['followers'][i],
-            "Youtube": datas.websites.youtube['followers'][i]
+    const datas = await socialStore.getGlobalStats(companyId, 'monthly', 2023)
+    let data = {
+        labels: [],
+        datasets: []
+    }
+    const colors = {
+        'facebook': '#1877F2',
+        'instagram': '#E4405F',
+        'linkedin': '#0A66C2',
+        'tiktok': '#000000',
+        'twitter': '#1DA1F2',
+        'youtube': '#FF0000'
+    };
+
+    data.labels = datas.dates;
+
+    for (const website in datas.websites) {
+        data.datasets.push({
+            label: website,
+            backgroundColor: colors[website],
+            data: datas.websites[website]['followers']
+        })
+        lineLegend.value.push({
+            name: website,
+            color: colors[website]
         })
     }
-    test.value = tmp;
-    // do nothing
-    //     [
-    // {
-    //     "date": "01/01/2023",
-    //     "Utilities": 5921,
-    //     "Rent": 1026,
-    //     "Insurance": 2324
-    // },
-    // {
-    //     "date": "01/02/2023",
-    //     "Utilities": 1539,
-    //     "Rent": 1560,
-    //     "Insurance": 1257
-    // },]
 
+    lineData.value = data;
 });
 
 watch(selectedSocials, () => {
@@ -679,7 +677,7 @@ watch([trendsByEstablishment, calculType], () => {
     } else {
         trends.value = [];
     }
-})
+});
 </script>
 
 <style scoped>
