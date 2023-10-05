@@ -7,7 +7,7 @@ export const useSocialStore = defineStore('social', () => {
   const entity = ref('social')
   const trendsByEstablishment = ref({})
   const histogramByDate = {}
-  let globalStatsByYear = {}
+  const globalStats = ref({})
 
   const fetchEstablishmentTrends = async (id, next) => {
     await services.get_Record(`social/establishment/${id}/trend`, (response) => {
@@ -37,43 +37,38 @@ export const useSocialStore = defineStore('social', () => {
     )
   }
 
-  const fetchGlobalStats = async (id, year, type, next) => {
+  const fetchGlobalStats = async (id, value, type, next) => {
     console.log('fetch stats ...')
     if (type == 'monthly') {
       await services.get_Record(
-        `social/establishment/${id}/monthly/non/${year}/statistique`,
+        `social/establishment/${id}/monthly/non/${value}/statistique`,
         (response) => {
           if (response && response.status == 200) {
-            console.log(response.data)
-            const tmp = { ...globalStatsByYear }
-            console.log(tmp)
-            tmp[`${id}`] = tmp[`${id}`] || {}
-            console.log(tmp)
-            tmp[`${id}`][`${year}`] = response.data
-            console.log(tmp)
-            globalStatsByYear = { ...tmp }
-            console.log(globalStatsByYear)
+            const tmp = { ...globalStats.value }
+            tmp[`${id}`] = tmp[`${id}`] || { monthly: {} }
+            tmp[`${id}`]['monthly'][`${value}`] = response.data
+            globalStats.value = { ...tmp }
+            console.log(globalStats)
             next(response)
           }
         }
       )
     }
-    // if (type == "weekly") {
-    //   await services.getRecordAction(
-    //     "social/establishment",
-    //     id,
-    //     `weekly/non/${year}/statistique`,
-    //     (response) => {
-    //       if (response && response.status == 200) {
-    //         const tmp = globalStats[`${id}`]
-    //           ? { ...globalStats[`${id}`], ...response.data }
-    //           : { ...response.data };
-    //         globalStats[`${id}`] = tmp;
-    //         next(response);
-    //       }
-    //     }
-    //   );
-    // }
+    if (type == 'weekly') {
+      await services.get_Record(
+        `social/establishment/${id}/weekly/non/${value}/statistique`,
+        (response) => {
+          if (response && response.status == 200) {
+            const tmp = { ...globalStats.value }
+            tmp[`${id}`] = tmp[`${id}`] || { weekly: {} }
+            tmp[`${id}`]['weekly'][`${value}`] = response.data
+            globalStats.value = { ...tmp }
+            console.log(globalStats)
+            next(response)
+          }
+        }
+      )
+    }
   }
 
   const getHistogram = async (id, date) => {
@@ -91,14 +86,30 @@ export const useSocialStore = defineStore('social', () => {
     }
   }
 
+  const getGlobalStats = async (id, type, value) => {
+    let tmp = globalStats.value
+    if (tmp[`${id}`] && tmp[`${id}`][`${type}`] && tmp[`${id}`][`${type}`][`${value}`]) {
+      return tmp[`${id}`][`${type}`][`${value}`]
+    } else {
+      await fetchGlobalStats(id, value, type)
+      tmp = globalStats.value
+      if (tmp[`${id}`] && tmp[`${id}`][`${type}`] && tmp[`${id}`][`${type}`][`${value}`]) {
+        return tmp[`${id}`][`${type}`][`${value}`]
+      } else {
+        return null
+      }
+    }
+  }
+
   return {
     entity,
     trendsByEstablishment,
     histogramByDate,
-    globalStatsByYear,
+    globalStats,
     fetchEstablishmentTrends,
     fetchHistogramDate,
     getHistogram,
-    fetchGlobalStats
+    fetchGlobalStats,
+    getGlobalStats
   }
 })

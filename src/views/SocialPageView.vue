@@ -15,7 +15,7 @@
                     <div class="reviews__content_linechart" ref="lineChartContainer">
                         <LineChart :plot-data="test" x-key="date" :width="lineChartWidth" height="300"
                             :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
-                            x-axis-label="axe x" y-axis-label="axe y" :y-min="0" :point-radius="3" :show-points="true"
+                            x-axis-label="Time" y-axis-label="Followers" :y-min="0" :point-radius="3" :show-points="true"
                             :margin="{ top: 20, bottom: 30, left: 50, right: 20 }">
                         </LineChart>
                         <!-- <Line :data="testdata" :options="testdataoptions" /> -->
@@ -587,14 +587,47 @@ onBeforeMount(async () => {
     if (!socialStore.trendsByEstablishment[`${companyId}`]) {
         await socialStore.fetchEstablishmentTrends(companyId);
     }
+
+    await socialStore.getGlobalStats(companyId, 'monthly', 2023);
 });
 
-onMounted(() => {
+onMounted(async () => {
     if (lineChartContainer.value.clientWidth > 400) {
         lineChartWidth.value = lineChartContainer.value.clientWidth;
     } else {
         lineChartWidth.value = 400;
     }
+    const datas = await socialStore.getGlobalStats(companyId, 'monthly', 2023);
+    console.log(datas)
+    let tmp = []
+    // const datas = socialStore.globalStats[`${companyId}`]['monthly'][2023]
+    for (let i = 0; i < datas.dates.length; i++) {
+        tmp.push({
+            "date": datas.dates[i],
+            "Facebook": datas.websites.facebook['followers'][i],
+            "Instagram": datas.websites.instagram['followers'][i],
+            "LinkedIn": datas.websites.linkedin['followers'][i],
+            "Tiktok": datas.websites.tiktok['followers'][i],
+            "Twitter": datas.websites.twitter['followers'][i],
+            "Youtube": datas.websites.youtube['followers'][i]
+        })
+    }
+    test.value = tmp;
+    // do nothing
+    //     [
+    // {
+    //     "date": "01/01/2023",
+    //     "Utilities": 5921,
+    //     "Rent": 1026,
+    //     "Insurance": 2324
+    // },
+    // {
+    //     "date": "01/02/2023",
+    //     "Utilities": 1539,
+    //     "Rent": 1560,
+    //     "Insurance": 1257
+    // },]
+
 });
 
 watch(selectedSocials, () => {
