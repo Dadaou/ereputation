@@ -5,7 +5,7 @@
         </div>
         <div v-if="data && data.length > 0" class="chart__container" :style="{ width: width }" ref="barChartContainer">
             <!-- <Bar v-if="data" :data="data" :options="options" :style="{ height: '200px', width: '100%' }" /> -->
-            <GroupedBarChart v-if="data && data.length > 0" :plot-data="data" x-key="website" :width="900" :height="300"
+            <GroupedBarChart v-if="data && data.length > 0" :plot-data="data" x-key="website" :width="900" :height="240"
                 :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Website" y-axis-label=""
                 :y-tick-format="d => `${d}`" />
         </div>

@@ -72,14 +72,13 @@ export const useSocialStore = defineStore('social', () => {
   }
 
   const getHistogram = async (id, date) => {
-    const fDate = moment(date).format('DD-MM-YYYY')
     const bDate = moment(date).format('YYYY-MM-DD')
-    if (histogramByDate[`${id}`] && histogramByDate[`${id}`][`${fDate}`]) {
-      return histogramByDate[`${id}`][`${fDate}`]
+    if (histogramByDate[`${id}`] && histogramByDate[`${id}`][`${bDate}`]) {
+      return histogramByDate[`${id}`][`${bDate}`]
     } else {
       await fetchHistogramDate(id, bDate)
-      if (histogramByDate[`${id}`] && histogramByDate[`${id}`][`${fDate}`]) {
-        return histogramByDate[`${id}`][`${fDate}`]
+      if (histogramByDate[`${id}`] && histogramByDate[`${id}`][`${bDate}`]) {
+        return histogramByDate[`${id}`][`${bDate}`]
       } else {
         return null
       }
