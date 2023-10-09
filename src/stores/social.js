@@ -37,18 +37,34 @@ export const useSocialStore = defineStore('social', () => {
     )
   }
 
-  const fetchGlobalStats = async (id, value, type, next) => {
+  const setGlobalStats = (id, type, data) => {
+    if (globalStats.value) {
+      if (globalStats.value[id]) {
+        const newData = data[id][type]
+        if (globalStats.value[id][type]) {
+          const initialData = globalStats.value[id][type]
+          globalStats.value[id][type] = { ...initialData, ...newData }
+        } else {
+          globalStats.value[id][type] = { ...newData }
+        }
+      } else {
+        const newData = data[id]
+        globalStats.value[id] = { ...newData }
+      }
+    } else {
+      const newData = data
+      globalStats.value = { ...newData }
+    }
+  }
+
+  const fetchGlobalStats = async (id, period, type, next) => {
     console.log('fetch stats ...')
     if (type == 'monthly') {
       await services.get_Record(
-        `social/establishment/${id}/monthly/non/${value}/statistique`,
+        `social/establishment/${id}/monthly/${period}/new_statistique`,
         (response) => {
           if (response && response.status == 200) {
-            const tmp = { ...globalStats.value }
-            tmp[`${id}`] = tmp[`${id}`] || { monthly: {} }
-            tmp[`${id}`]['monthly'][`${value}`] = response.data
-            globalStats.value = { ...tmp }
-            console.log(globalStats)
+            setGlobalStats(id, type, response.data)
             next(response)
           }
         }
@@ -56,14 +72,21 @@ export const useSocialStore = defineStore('social', () => {
     }
     if (type == 'weekly') {
       await services.get_Record(
-        `social/establishment/${id}/weekly/non/${value}/statistique`,
+        `social/establishment/${id}/weekly/${period}/new_statistique`,
         (response) => {
           if (response && response.status == 200) {
-            const tmp = { ...globalStats.value }
-            tmp[`${id}`] = tmp[`${id}`] || { weekly: {} }
-            tmp[`${id}`]['weekly'][`${value}`] = response.data
-            globalStats.value = { ...tmp }
-            console.log(globalStats)
+            setGlobalStats(id, type, response.data)
+            next(response)
+          }
+        }
+      )
+    }
+    if (type == 'yearly') {
+      await services.get_Record(
+        `social/establishment/${id}/yearly/${period}/new_statistique`,
+        (response) => {
+          if (response && response.status == 200) {
+            setGlobalStats(id, type, response.data)
             next(response)
           }
         }
@@ -85,15 +108,15 @@ export const useSocialStore = defineStore('social', () => {
     }
   }
 
-  const getGlobalStats = async (id, type, value) => {
+  const getGlobalStats = async (id, type, period) => {
     let tmp = globalStats.value
-    if (tmp[`${id}`] && tmp[`${id}`][`${type}`] && tmp[`${id}`][`${type}`][`${value}`]) {
-      return tmp[`${id}`][`${type}`][`${value}`]
+    if (tmp[`${id}`] && tmp[`${id}`][`${type}`] && tmp[`${id}`][`${type}`][`${period}`]) {
+      return tmp[`${id}`][`${type}`][`${period}`]
     } else {
-      await fetchGlobalStats(id, value, type)
+      await fetchGlobalStats(id, period, type)
       tmp = globalStats.value
-      if (tmp[`${id}`] && tmp[`${id}`][`${type}`] && tmp[`${id}`][`${type}`][`${value}`]) {
-        return tmp[`${id}`][`${type}`][`${value}`]
+      if (tmp[`${id}`] && tmp[`${id}`][`${type}`] && tmp[`${id}`][`${type}`][`${period}`]) {
+        return tmp[`${id}`][`${type}`][`${period}`]
       } else {
         return null
       }

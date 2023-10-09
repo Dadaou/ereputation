@@ -12,20 +12,16 @@
                     </div>
                 </div>
                 <div class="reviews__content">
-                    <div class="reviews__content_linechart" ref="lineChartContainer">
-                        <Line :data="lineData" :options="options" />
-                    </div>
-                    <!-- <BaseLegend class="legend" :LegendData="lineLegend" :alignment="'horizontal'">
-                </BaseLegend> -->
+                    <social-statistics></social-statistics>
                 </div>
                 <div class="head">
                     <div class="app__title">
-                        <h2>Social Histogram</h2>
+                        <h2>Daily Histogram</h2>
                     </div>
                 </div>
-                <social-histogram :width="lineChartWidth"></social-histogram>
-                <div class="reviews__content">
 
+                <div class="reviews__content" ref="socialHistogramContainer">
+                    <social-histogram :width="lineChartWidth"></social-histogram>
                 </div>
 
                 <div class="head">
@@ -234,7 +230,6 @@ import { ref, watch, onBeforeMount, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css';
-import { Pie, Line } from 'vue-chartjs';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -247,6 +242,7 @@ import {
     ArcElement,
 } from 'chart.js';
 import SocialHistogram from '@Components/utils/SocialHistogram.vue';
+import SocialStatistics from '@Components/utils/SocialStatistics.vue';
 import StatSlider from '@Components/utils/StatSlider.vue';
 import StatComponent from '@Components/utils/StatComponent.vue';
 
@@ -266,12 +262,12 @@ const page = ref({
     icon: "uil-users-alt",
 });
 
-const lineChartContainer = ref(null);
+const socialHistogramContainer = ref(null);
 let lineChartWidth = ref(620)
 
 window.onresize = () => {
-    if (lineChartContainer.value.clientWidth > 400) {
-        lineChartWidth.value = lineChartContainer.value.clientWidth;
+    if (socialHistogramContainer.value.clientWidth > 400) {
+        lineChartWidth.value = socialHistogramContainer.value.clientWidth;
     } else {
         lineChartWidth.value = 400;
     }
@@ -314,48 +310,6 @@ const data = ref({
     ]
 })
 const legendData = ref([]);
-
-
-const lineData = ref({
-    labels: [],
-    datasets: []
-})
-const lineLegend = ref([]);
-
-const options = {
-    responsive: true,
-    maintainAspectRatio: true,
-    aspectRatio: 3,
-    plugins: {
-        legend: {
-            display: true,
-            position: 'bottom'
-        }
-    },
-    scales:
-    {
-        x: {
-            beginAtZero: true, // You can configure other options for the X-axis here
-            title: {
-                display: true,
-                text: 'Month',
-            },
-        },
-        y: {
-            beginAtZero: true, // You can configure other options for the Y-axis here
-            title: {
-                display: true,
-                text: 'Followers',
-            },
-            // ticks:{
-            //     beginAtZero: true,
-            //     stepSize: 100,
-            //     min: 0,
-            //     max: 70000
-            // }
-        },
-    },
-}
 
 const { trendsByEstablishment } = storeToRefs(socialStore);
 const trends = ref([]);
@@ -505,8 +459,6 @@ onBeforeMount(async () => {
         await socialStore.fetchEstablishmentTrends(companyId);
     }
 
-    await socialStore.getGlobalStats(companyId, 'monthly', 2023);
-
 });
 
 onMounted(async () => {
@@ -522,40 +474,12 @@ onMounted(async () => {
         Legend
     )
 
-    if (lineChartContainer.value.clientWidth > 400) {
-        lineChartWidth.value = lineChartContainer.value.clientWidth;
+    if (socialHistogramContainer.value.clientWidth > 400) {
+        lineChartWidth.value = socialHistogramContainer.value.clientWidth;
     } else {
         lineChartWidth.value = 400;
     }
-    const datas = await socialStore.getGlobalStats(companyId, 'monthly', 2023)
-    let data = {
-        labels: [],
-        datasets: []
-    }
-    const colors = {
-        'facebook': '#1877F2',
-        'instagram': '#E4405F',
-        'linkedin': '#0A66C2',
-        'tiktok': '#000000',
-        'twitter': '#1DA1F2',
-        'youtube': '#FF0000'
-    };
 
-    data.labels = datas.dates;
-
-    for (const website in datas.websites) {
-        data.datasets.push({
-            label: website,
-            backgroundColor: colors[website],
-            data: datas.websites[website]['followers']
-        })
-        lineLegend.value.push({
-            name: website,
-            color: colors[website]
-        })
-    }
-
-    lineData.value = data;
 });
 
 watch(selectedSocials, () => {
