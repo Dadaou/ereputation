@@ -6,9 +6,17 @@
         </div>
         <div class="app__container">
             <div class="left__side">
+                 <div class="head">
+                    <div class="app__title">
+                       <h2>Event Histogram</h2>
+                    </div>
+                </div>
+                <div class="reviews__content" ref="el">
+                  <EventChartComponent :width="barWidth"/>
+                </div>
                 <div class="head">
                     <div class="app__title">
-                       <h2>Event</h2>
+                       <h2>Events List</h2>
                     </div>
                 </div>
                 <div class="reviews__content">
@@ -16,25 +24,18 @@
                 </div>
             </div>
             <div class="tablet_mobile__filter">
-                    <DropdownComponent :showTitle="false" class="dropdown" title="Filter by website" placeholder="Select a website" :data="websites" @submit="(website)=>{
-                        selectedWebsites = website
-                        if(website == websites[0]){
-                           
-                        }else{
-                            
-                        }
-                    }" :default="websites[0]"/>
-                      <el-date-picker
-                        v-model="dateStart"
-                        placeholder="Start date"
-                        :size="'large'"
-                      />
-                      <el-date-picker
-                        class="mt-2"
-                        v-model="dateEnd"
-                        placeholder="End date"
-                        :size="'large'"
-                      />
+                    <div class="text-sm title">Select a range of date</div>
+                           <el-date-picker
+                            v-model="date"
+                            type="daterange"
+                            range-separator="To"
+                            start-placeholder="Start date"
+                            end-placeholder="End date"
+                            :size="'large'"
+                          />
+                <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
+                    selectedTimePeriod = timePeriod
+                }" :default="timePeriods[1]"/>
             </div>
             <div class="tablet_mobile__head">
                 <div class="establishment__info_tablet">
@@ -126,27 +127,23 @@
                                     <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                             </div> 
                     </div>
-                    <DropdownComponent class="dropdown" title="Filter by website" placeholder="Select a website" :data="websites" @submit="(website)=>{
-                        selectedWebsites = website
-                        if(website == websites[0]){
-                            
-                        }else{
-                            
-                        }
-                    }" :default="websites[0]"/>
                     <div class="date__filter">
-                        <div class="text-sm title">Select a range of date</div>
-                       <el-date-picker
-                        v-model="dateStart"
-                        placeholder="Start date"
-                        :size="'large'"
-                      />
-                      <el-date-picker
-                        class="mt-2"
-                        v-model="dateEnd"
-                        placeholder="End date"
-                        :size="'large'"
-                      />
+                       <div class="text-sm title">Select a range of date</div>
+                           <el-date-picker
+                            v-model="date"
+                            type="daterange"
+                            range-separator="To"
+                            start-placeholder="Start date"
+                            end-placeholder="End date"
+                            :size="'large'"
+                          />
+                            <DropdownComponent 
+                            :showTitle="false" placeholder="" 
+                            :data="timePeriods" 
+                            @submit="(timePeriod)=>{
+                                selectedTimePeriod = timePeriod
+                            }" 
+                            :default="timePeriods[1]"/>
                     </div>
                 </div>
         </div>
@@ -166,10 +163,24 @@ import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import EventItemComponent from '@Components/events/EventItemComponent.vue';
-import {ref, reactive, watch, onBeforeMount, computed, provide} from 'vue';
+import { 
+    ref, 
+    reactive, 
+    watch, 
+    onBeforeMount, 
+    computed, 
+    onUpdated,
+    provide, 
+    defineAsyncComponent
+} from 'vue';
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css'
+import { useResizeObserver } from '@vueuse/core';
 
+
+const EventChartComponent = defineAsyncComponent(()=>
+    import('@Components/utils/EventChartComponent.vue')
+)
 
 const page=ref({
     title1: "",
@@ -209,35 +220,19 @@ let paginationConfig = ref({
 });
 
 const showModal = ref(false);
-let selectedWebsites = ref('Global');
-let websites = ref(['Global']);
+let timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
+let selectedTimePeriod = ref(timePeriods.value[1]);
+const date = ref(['2023-01-01', '2023-09-01']);
+provide('date', date);
+provide('type', selectedTimePeriod);
+
 let media = [];
 const all_items = ref([
     {title: "Rating", value: 0, icon: "uil-star"},
     {title: "Reviews", value: 0, icon: "uil-comment"},
     {title: "Competitors", value: 0, icon: "uil-building"},
 ]);
-
-const dateStart = ref();
-const dateEnd = ref();
-const enableDateEnd = ref(false);
-
-const format2 = (date) => {
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-
-  return `${day}/${month}/${year}`;
-}
-
-const handleDate = (modelData) => {
- enableDateEnd.value = (modelData != null)?true:false;
- dateEnd.value = null;
-}
-
-watch([ dateStart, dateEnd ], ()=>{
-   
-})
+const { width, height } = useWindowSize(); 
 
 onBeforeMount(async () => {
 const companyId = route.params.id;
@@ -268,9 +263,29 @@ const companyId = route.params.id;
         });
     }
 });
+
+const el = ref(null);
+const chartWidth = ref(0);
+const barWidth = computed(()=>{
+    let result = 0;
+    if(width.value>=800) result = Math.abs(Number(chartWidth.value-100));
+    else result = 800;
+    return result;
+})
+
+onUpdated(()=>{
+    chartWidth.value = (el.value != null && el.value != undefined)?Math.abs(el.value.offsetWidth):chartWidth.value;
+})
+
+useResizeObserver(el, (entries) => {
+      const entry = entries[0]
+      const { width } = entry.contentRect;
+      chartWidth.value = Math.abs(width);
+});
 </script>
 
 <style scoped>
+
 *{
     transition: var(--transition);
 }
@@ -563,9 +578,14 @@ img{
         border-radius: 5px;
     }
 
-    .tablet_mobile__filter *{
-        flex-basis: 200px;
+    .tablet_mobile__filter > * {
+        width: 700px !important;
+        margin-top: 
     }
+
+   /* .tablet_mobile__filter *{
+        flex-basis: 200px;
+    }*/
 }
 
 @media screen and (max-width:800px) {
@@ -609,11 +629,11 @@ img{
        padding: 5px 0px !important;
     }
 
-    .tablet_mobile__filter *{
+   /* .tablet_mobile__filter > *{
         flex-basis: inherit !important;
         width: inherit !important;
         justify-content: center !important;
-    }
+    }*/
 }
 
 @media screen and (max-width:500px) {

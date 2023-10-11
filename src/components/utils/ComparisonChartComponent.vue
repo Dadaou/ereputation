@@ -200,9 +200,6 @@ useResizeObserver(el2, (entries) => {
 </script>
 
 <style scoped>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 .filter__menu{
     display: flex;
     align-items: center;

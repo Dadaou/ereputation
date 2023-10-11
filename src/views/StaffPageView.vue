@@ -8,6 +8,14 @@
             <div class="left__side">
                 <div class="head">
                     <div class="app__title">
+                       <h2>Staffs Histogram</h2>
+                    </div>
+                </div>
+                <div class="reviews__content" ref="el">
+                     <StaffChartComponent :width="barWidth"/>
+                </div>
+                <div class="head">
+                    <div class="app__title">
                        <h2>Staffs</h2>
                     </div>
                 </div>
@@ -16,17 +24,17 @@
                 </div> 
             </div>
             <div class="tablet_mobile__filter">
-                  <el-date-picker
-                        v-model="dateStart"
-                        placeholder="Start date"
-                        :size="'large'"
-                      />
-                      <el-date-picker
-                        class="mt-2"
-                        v-model="dateEnd"
-                        placeholder="End date"
-                        :size="'large'"
-                      />
+                <el-date-picker
+                    v-model="date"
+                    type="daterange"
+                    range-separator="To"
+                    start-placeholder="Start date"
+                    end-placeholder="End date"
+                    :size="'large'"
+                />
+                <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
+                    selectedTimePeriod = timePeriod
+                }" :default="timePeriods[0]"/>
             </div>
             <div class="tablet_mobile__head">
                 <div class="establishment__info_tablet">
@@ -120,17 +128,17 @@
                     </div>
                     <div class="date__filter">
                         <div class="text-sm title">Select a range of date</div>
-                       <el-date-picker
-                        v-model="dateStart"
-                        placeholder="Start date"
-                        :size="'large'"
-                      />
-                      <el-date-picker
-                        class="mt-2"
-                        v-model="dateEnd"
-                        placeholder="End date"
-                        :size="'large'"
-                      />
+                           <el-date-picker
+                            v-model="date"
+                            type="daterange"
+                            range-separator="To"
+                            start-placeholder="Start date"
+                            end-placeholder="End date"
+                            :size="'large'"
+                          />
+                <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
+                    selectedTimePeriod = timePeriod
+                }" :default="timePeriods[0]"/>
                     </div>
                 </div>
             </div>
@@ -149,7 +157,17 @@ import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import StaffItemComponent from '@Components/staffs/StaffItemComponent.vue';
-import {ref, reactive, watch, onBeforeMount, computed, provide, onUpdated} from 'vue';
+import { useWindowSize } from '@vueuse/core';
+import {
+    ref, 
+    reactive, 
+    watch, 
+    onBeforeMount, 
+    computed, 
+    provide, 
+    onUpdated,
+    defineAsyncComponent
+} from 'vue';
 import { ElDatePicker, ElDropdown, ElDropdownMenu, ElDropdownItem  } from 'element-plus';
 import {
     Chart as ChartJS,
@@ -158,8 +176,12 @@ import {
     Tooltip
 } from 'chart.js';
 import { PolarArea } from 'vue-chartjs';
-ChartJS.register(RadialLinearScale, ArcElement, Tooltip)
-
+ChartJS.register(RadialLinearScale, ArcElement, Tooltip);
+import { useResizeObserver } from '@vueuse/core';
+import DashboardComponent from '@Components/utils/DashboardComponent.vue';
+const StaffChartComponent = defineAsyncComponent(()=>
+    import('@Components/utils/StaffChartComponent.vue')
+)
 
 const page=ref({
     title1: "",
@@ -201,35 +223,18 @@ let paginationConfig = ref({
 });
 
 const showModal = ref(false);
-let selectedWebsites = ref('Global');
-let websites = ref(['Global']);
+let timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
+let selectedTimePeriod = ref(timePeriods.value[0]);
+const date = ref(['2023-01-01', '2023-01-07']);
+provide('date', date);
+provide('type', selectedTimePeriod);
 let media = [];
 const all_items = ref([
     {title: "Rating", value: 0, icon: "uil-star"},
     {title: "Reviews", value: 0, icon: "uil-comment"},
     {title: "Competitors", value: 0, icon: "uil-building"},
 ]);
-
-const dateStart = ref();
-const dateEnd = ref();
-const enableDateEnd = ref(false);
-
-const format2 = (date) => {
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-
-  return `${day}/${month}/${year}`;
-}
-
-const handleDate = (modelData) => {
- enableDateEnd.value = (modelData != null)?true:false;
- dateEnd.value = null;
-}
-
-watch([ dateStart, dateEnd ], ()=>{
-   
-})
+const { width, height } = useWindowSize(); 
 
 onBeforeMount(async () => {
     const companyId = route.params.id;
@@ -260,6 +265,25 @@ onBeforeMount(async () => {
             }
         });
     }
+});
+
+const el = ref(null);
+const chartWidth = ref(0);
+const barWidth = computed(()=>{
+    let result = 0;
+    if(width.value>=800) result = Math.abs(Number(chartWidth.value-100));
+    else result = 800;
+    return result;
+})
+
+onUpdated(()=>{
+    chartWidth.value = (el.value != null && el.value != undefined)?Math.abs(el.value.offsetWidth):chartWidth.value;
+})
+
+useResizeObserver(el, (entries) => {
+      const entry = entries[0]
+      const { width } = entry.contentRect;
+      chartWidth.value = Math.abs(width);
 });
 </script>
 
