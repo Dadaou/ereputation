@@ -12,20 +12,16 @@
                     </div>
                 </div>
                 <div class="reviews__content">
-                    <div class="reviews__content_linechart" ref="lineChartContainer">
-                        <Line :data="lineData" :options="options" />
-                    </div>
-                     <!-- <BaseLegend class="legend" :LegendData="lineLegend" :alignment="'horizontal'">
-                </BaseLegend> -->
+                    <social-statistics></social-statistics>
                 </div>
                 <div class="head">
                     <div class="app__title">
-                        <h2>Social Histogram</h2>
+                        <h2>Daily Histogram</h2>
                     </div>
                 </div>
-                <social-histogram :width="lineChartWidth"></social-histogram>
-                <div class="reviews__content">
 
+                <div class="reviews__content" ref="socialHistogramContainer">
+                    <social-histogram :width="lineChartWidth"></social-histogram>
                 </div>
 
                 <div class="head">
@@ -77,7 +73,8 @@
                 </template>
             </el-dropdown> -->
 
-            <StatSlider class="stat__cards_mobile" :items="trends"></StatSlider>
+            <StatSlider v-if="establishment && establishment.socials" class="stat__cards_mobile" :items="trends"
+                :websites="establishment.socials[0]"></StatSlider>
             <div class="tablet_mobile__filter">
                 <DropdownComponent class="dropdown" :showTitle="false" title="Filter by social"
                     placeholder="Select a social network" :data="socials" @submit="(social) => {
@@ -205,11 +202,11 @@
                 </div>
                 <div
                     class="stat__cards bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 py-4">
-                    <div class="stat__cards_default">
+                    <div class="stat__cards_default" v-if="establishment && establishment.socials">
                         <StatComponent v-for="(slide, index) in trends" :key="index" :color="slide.color"
                             :bgColor="slide.bgColor" :value="slide.value" :description="slide.description"
                             :icon="slide.icon" :iconStyle="slide.iconStyle" :percentage="slide.percentage"
-                            :trend="slide.trend">
+                            :trend="slide.trend" :websites="establishment.socials[0]" :site="slide.site">
                         </StatComponent>
                     </div>
                 </div>
@@ -233,19 +230,19 @@ import { ref, watch, onBeforeMount, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css';
-import { Pie, Line } from 'vue-chartjs'
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
- ArcElement,
-} from 'chart.js'
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    ArcElement,
+} from 'chart.js';
 import SocialHistogram from '@Components/utils/SocialHistogram.vue';
+import SocialStatistics from '@Components/utils/SocialStatistics.vue';
 import StatSlider from '@Components/utils/StatSlider.vue';
 import StatComponent from '@Components/utils/StatComponent.vue';
 
@@ -265,12 +262,12 @@ const page = ref({
     icon: "uil-users-alt",
 });
 
-const lineChartContainer = ref(null);
+const socialHistogramContainer = ref(null);
 let lineChartWidth = ref(620)
 
 window.onresize = () => {
-    if (lineChartContainer.value.clientWidth > 400) {
-        lineChartWidth.value = lineChartContainer.value.clientWidth;
+    if (socialHistogramContainer.value.clientWidth > 400) {
+        lineChartWidth.value = socialHistogramContainer.value.clientWidth;
     } else {
         lineChartWidth.value = 400;
     }
@@ -301,7 +298,7 @@ let establishment = ref({});
 let socialPages = ref([]);
 let socials = ref(['']);
 
-let followersType = ref(true);
+// let followersType = ref(true);
 // const maxPostsToShow = ref(2)
 const data = ref({
     labels: [],
@@ -313,48 +310,6 @@ const data = ref({
     ]
 })
 const legendData = ref([]);
-
-
-const lineData = ref({
-      labels: [],
-      datasets: []
-})
-const lineLegend = ref([]);
-
-const options = {
-  responsive: true,
-  maintainAspectRatio: true,
-  aspectRatio: 3,
-  plugins: {
-    legend: {
-        display: true,
-        position: 'bottom'
-    }
-  },
-  scales: 
-  {
-    x: {
-            beginAtZero: true, // You can configure other options for the X-axis here
-            title: {
-                display: true,
-                text: 'Month',
-            },
-        },
-    y: {
-            beginAtZero: true, // You can configure other options for the Y-axis here
-            title: {
-                display: true,
-                text: 'Followers',
-            },
-            // ticks:{
-            //     beginAtZero: true,
-            //     stepSize: 100,
-            //     min: 0,
-            //     max: 70000
-            // }
-        },
-  },
-}
 
 const { trendsByEstablishment } = storeToRefs(socialStore);
 const trends = ref([]);
@@ -500,61 +455,31 @@ onBeforeMount(async () => {
             }
         });
     }
-
     if (!socialStore.trendsByEstablishment[`${companyId}`]) {
         await socialStore.fetchEstablishmentTrends(companyId);
     }
 
-    await socialStore.getGlobalStats(companyId, 'monthly', 2023);
 });
 
 onMounted(async () => {
+
     ChartJS.register(
-      CategoryScale,
-      LinearScale,
-      PointElement,
-      LineElement,
-      Title,
-      Tooltip,
-      ArcElement,
-      Legend
+        CategoryScale,
+        LinearScale,
+        PointElement,
+        LineElement,
+        Title,
+        Tooltip,
+        ArcElement,
+        Legend
     )
-    if (lineChartContainer.value.clientWidth > 400) {
-        lineChartWidth.value = lineChartContainer.value.clientWidth;
+
+    if (socialHistogramContainer.value.clientWidth > 400) {
+        lineChartWidth.value = socialHistogramContainer.value.clientWidth;
     } else {
         lineChartWidth.value = 400;
     }
-    const datas = await socialStore.getGlobalStats(companyId, 'monthly', 2023);
-    console.log(datas)
-    let tmp = []
-    let  data = {
-      labels: [],
-      datasets: []
-    }
-    const colors = {
-      'facebook': '#1877F2',
-      'instagram': '#E4405F',
-      'linkedin': '#0A66C2',
-      'tiktok': '#000000',
-      'twitter': '#1DA1F2',
-      'youtube': '#FF0000'
-    };
 
-    data.labels = datas.dates;
-
-    for(const website in datas.websites){
-        data.datasets.push({
-          label: website,
-          backgroundColor: colors[website],
-          data: datas.websites[website]['followers']
-        })
-        lineLegend.value.push({
-            name: website,
-            color: colors[website]
-        })
-    }
-    
-    lineData.value = data;
 });
 
 watch(selectedSocials, () => {

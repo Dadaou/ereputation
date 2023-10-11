@@ -1,5 +1,6 @@
 <template>
-    <div class="stat__card" :style="{ background: props.bgColor || 'red' }">
+    <a :href="websites[`${props.site}`] ? websites[`${props.site}`] : ''" target="_blank" class="stat__card"
+        :style="{ background: props.bgColor || 'red' }">
         <div class="stat__icon" :class="`stat__icon_${props.iconStyle}`">
             <Icon :icon="icon" width="32" :style="{ color: props.color || 'red', margin: '4px' }"></Icon>
         </div>
@@ -12,19 +13,19 @@
             <Icon v-if="props.trend && props.trend == 'linear'" icon="uil:arrow-right" style="display: inline;"></Icon>
             {{ props.percentage }}
         </span>
-    </div>
+    </a>
 </template>
 
 <script setup>
 import { Icon } from '@iconify/vue';
-const props = defineProps(["color", "bgColor", "icon", "iconStyle", "value", "description", "percentage", "trend"]);
+const props = defineProps(["color", "bgColor", "icon", "iconStyle", "value", "description", "percentage", "trend", "websites", "site"]);
 </script>
 
 <style scoped>
 
 .stat__card {
-    width: 95%;
-    max-width: 300px;
+    width: 100%;
+    margin-inline: 12px;
     height: 130px;
     border-radius: 4px;
     text-align: center;
@@ -33,6 +34,7 @@ const props = defineProps(["color", "bgColor", "icon", "iconStyle", "value", "de
     flex-direction: column;
     display: flex;
     padding: 8px;
+    box-shadow: 2px 4px 4px rgba(120, 150, 150, .6);
 }
 
 .stat__icon {
