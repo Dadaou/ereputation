@@ -45,7 +45,6 @@
                     <i class="uil uil-user-square"></i>
                 	Profile
             </RouterLink>
-            <!-- <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a> -->
           </li>
           <li>
             <RouterLink 
@@ -74,27 +73,32 @@
     	:class="['menu flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-2 md:mt-0 md:border-0']">
       			<li>
                     <RouterLink :to="`/establishment/${$route.params.id}/staffs`">
-                        <i class="uil uil-users-alt"></i> Staff
+                        <i class="uil uil-users-alt"></i> 
+                        <span>Staff</span> 
                     </RouterLink>
                 </li>
                 <li>
                     <RouterLink :to="`/establishment/${$route.params.id}/events`">
-                        <i class="uil uil-calendar-alt"></i> Event
+                        <i class="uil uil-calendar-alt"></i> 
+                        <span>Event</span>
                     </RouterLink>
                 </li>
                 <li>
                     <RouterLink :to="`/establishment/${$route.params.id}/socials`">
-                        <i class="uil uil-users-alt"></i>Social
+                        <i class="uil uil-users-alt"></i>
+                        <span>Social</span> 
                     </RouterLink>
                 </li>
                 <li>
                     <RouterLink :to="`/establishment/${$route.params.id}/weathers`">
-                        <i class="uil uil-cloud-sun"></i> Weather
+                        <i class="uil uil-cloud-sun"></i>
+                        <span>Weather</span> 
                     </RouterLink>
                 </li>
                 <li>
                     <RouterLink :to="`/establishment/${$route.params.id}/reviews`">
-                        <i class="uil uil-comment-alt-dots"></i> Reviews
+                        <i class="uil uil-comment-alt-dots"></i>
+                        <span>Reviews</span> 
                     </RouterLink>
                 </li>
     </ul>
@@ -104,7 +108,7 @@
 
 </template>
 <script setup>
-import {ref, watch, defineAsyncComponent, computed} from 'vue';
+import {ref, watch, defineAsyncComponent, computed, onMounted} from 'vue';
 import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import { useUserStore } from "@Stores/user.js";
 import { useRoute, useRouter } from "vue-router";
@@ -122,8 +126,7 @@ const router = useRouter();
 const route = useRoute();
 const showDropdown = ref(false)
 const showMenu = computed(()=>{
-    let routeName = ['Login', 'FeedBack', 'StaffFeedBack', 'Home', 'Personal_details', 'Account_security', 'Parameters', 'ErepHome', 'NotFound', undefined]
-    console.log(routeName.includes(route.name), route.name)
+    let routeName = ['Login', 'FeedBack', 'StaffFeedBack', 'Home', 'Personal_details', 'Account_security', 'Parameters', 'ErepHome', 'NotFound', undefined];
     return !routeName.includes(route.name)
 })
 
@@ -150,8 +153,15 @@ watch(y, ()=>{
     }  
 });
 
+onMounted(()=>{
+  if(width.value >= 765) show_menu.value = true;
+  else show_menu.value = false;
+  showBg.value = width.value>=765?false:true;
+})
+
 watch(width, () => {
    if(width.value >= 765) show_menu.value = true;
+   else show_menu.value = false;
    showBg.value = width.value>=765?false:true;
 
    if (width.value <= 700 && route.path == '/'){
@@ -182,16 +192,32 @@ nav{
 	box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
-#user-dropdown ul a{
-	color: var(--color-bg2);
-}
-
 ul.menu{
     display: flex;
     gap: 1rem;
+    font-size: 15px;
 }
 
-.nav__onScroll ul li a{
+ul.menu li{
+   cursor: pointer;
+}
+
+ul.menu li a{
+  display: flex;
+   gap: 5px;
+   padding: 0 8px;
+}
+
+ul.menu li a:hover, ul.menu .router-link-exact-active:hover{
+   color: var(--color-danger);
+}
+
+ul.menu .router-link-exact-active {
+   border-bottom: 2px solid var(--color-danger);
+   color: var(--color-danger);
+}
+
+.nav__onScroll ul li a, #user-dropdown ul a{
     color: var(--color-bg2)
 }
 

@@ -6,7 +6,7 @@
         <span v-if="Number(props.rating) >= 4 && Number(props.rating)<=4.99">Good</span>
         <span v-if="Number(props.rating) >= 3 && Number(props.rating)<=3.99">Fine</span>
         <span v-if="Number(props.rating) >= 2 && Number(props.rating)<=2.99">Not Good</span>
-        <span v-if="Number(props.rating) >= 0 && Number(props.rating)<=2.99">Bad</span>
+        <span v-if="Number(props.rating) > 0 && Number(props.rating)<=2.99">Bad</span>
        </div>
        <div class="reviews__value">{{ reviews }} <span v-if="Number(props.reviews) >= 2">reviews</span> <span v-else>review</span> </div>
     </div>
