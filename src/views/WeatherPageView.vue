@@ -493,9 +493,6 @@ const groupReviewByCondition = () => {
     let data = groupedReview(weatherData, reviewData);
     let datasets = getGlobalData(data, _colors)[0];
     legendGlobalData.value = generatedLegend(getGlobalData(data, _colors)[1], labels);
-    // globalData.value['labels'] = labels;
-    // globalData.value['datasets'] = datasets;
-    // console.log(globalData.value)
     let global_data = {
         labels: [],
         datasets: []
@@ -510,39 +507,6 @@ watch(calculType, () => {
     data.value = weaherImpact(datefrom, dateto);
 })
 
-onBeforeMount(async () => {
-const companyId = route.params.id;
-    appStore.isLoading = true;
-     const response = await new Promise((resolve, reject) => {
-        services.get_Record(`/establishment/${companyId}/detail`, (response) => {
-                resolve(response)
-        });
-    });
-
-      if(response.status == 200){
-            establishment.value = response.data;
-            weather.value = establishment.value.weather;
-            reviews.value = establishment.value.reviews;
-            all_items.value[1].value = establishment.value.reviews.length;
-            all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
-            appStore.isLoading = false;
-            data.value = weaherImpact(datefrom, dateto);
-            globalData.value = groupReviewByCondition();
-            console.log(globalData.value)
-            dataLoading.value = false;
-     }
-
-    if(userStore.user.customer !==null){
-        userStore.user.customer.establishments.forEach(async (company, index) => {
-            if(company.id == companyId){
-                userStore.user.customer.establishments[index].media.forEach(item => {
-                    media.push(item.url_source);
-                });
-            }
-        });
-    }
-});
-
 const el = ref(null);
 useResizeObserver(el, (entries) => {
     const entry = entries[0]
@@ -550,8 +514,39 @@ useResizeObserver(el, (entries) => {
     chartWidth.value = Math.abs(width);
 });
 
-watch(globalData, ()=>{
-    console.log(globalData.value)
+onBeforeMount(async () => {
+    const companyId = route.params.id;
+    let company = null;
+    appStore.isLoading = true;
+
+    const response2 = await new Promise((resolve, reject) => {
+        services.get_Record(`establishment/${companyId}/rating`, (response) => {
+                resolve(response)
+        });
+    });
+
+    if(response2.status == 200){
+        establishment.value = response2.data;
+        page.value.title2 = establishment.value.name;
+        all_items.value[0].value = establishment.value.rating;
+        all_items.value[1].value = establishment.value.totalReviews;
+        appStore.isLoading = false;
+        dataLoading.value = false;
+    }
+     const response = await new Promise((resolve, reject) => {
+        services.get_Record(`/establishment/${companyId}/detail`, (response) => {
+                resolve(response)
+        });
+    });
+
+      if(response.status == 200){
+            establishment.value['reviews'] = response.data['reviews'];
+            establishment.value['weather'] = response.data['weather'];
+            weather.value = establishment.value.weather;
+            reviews.value = establishment.value.reviews;
+            data.value = weaherImpact(datefrom, dateto);
+            globalData.value = groupReviewByCondition();
+     }
 });
 </script>
 

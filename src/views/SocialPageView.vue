@@ -63,25 +63,16 @@
                     </div>
                 </div>
             </div>
-            <!-- <el-dropdown split-button type="primary" class="mb-4 stat__cards_mobile">
-                {{ calculType }}
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item @click="calculType = 'Followers'">Followers</el-dropdown-item>
-                        <el-dropdown-item @click="calculType = 'Likes'">Likes</el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown> -->
 
             <StatSlider v-if="establishment && establishment.socials" class="stat__cards_mobile" :items="trends"
                 :websites="establishment.socials[0]"></StatSlider>
             <div class="tablet_mobile__filter">
-                <DropdownComponent class="dropdown" :showTitle="false" title="Filter by social"
+               <!--  <DropdownComponent class="dropdown" :showTitle="false" title="Filter by social"
                     placeholder="Select a social network" :data="socials" @submit="(social) => {
                         selectedSocials = social
-                    }" :default="socials[0]" />
+                    }" :default="socials[0]" /> -->
                 <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
-                <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" />
+                <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
             </div>
             <div class="tablet_mobile__head">
                 <div class="establishment__info_tablet">
@@ -190,10 +181,10 @@
                         </div>
                     </div>
 
-                    <DropdownComponent class="dropdown" title="Filter by social" placeholder="Select a social network"
+                   <!--  <DropdownComponent class="dropdown" title="Filter by social" placeholder="Select a social network"
                         :data="socials" @submit="(social) => {
                             selectedSocials = social
-                        }" :default="socials[0]" />
+                        }" :default="socials[0]" /> -->
                     <div class="date__filter">
                         <div class="text-sm title">Select a range of date</div>
                         <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
@@ -342,10 +333,7 @@ const getLastSocialPages = (socialPages) => {
         }
     })
 
-    console.log(pages)
-
     return pages
-
 }
 
 const capitalizeString = (str) => {
@@ -418,7 +406,26 @@ const getFollowers = (datasets, type) => {
 }
 
 onBeforeMount(async () => {
+    const companyId = route.params.id;
+    let company = null;
     appStore.isLoading = true;
+
+    const response2 = await new Promise((resolve, reject) => {
+        services.get_Record(`establishment/${companyId}/rating`, (response) => {
+                resolve(response)
+        });
+    });
+
+    if(response2.status == 200){
+        establishment.value = response2.data;
+        all_items.value[0].value = establishment.value.rating;
+        all_items.value[1].value = establishment.value.totalReviews;
+        page.value.title2 = establishment.value.name;
+        appStore.isLoading = false;
+        dataLoading.value = false;
+    }
+
+
     const response = await new Promise((resolve, reject) => {
         services.get_Record(`/establishment/${companyId}/detail`, (response) => {
             resolve(response)
@@ -426,7 +433,8 @@ onBeforeMount(async () => {
     });
 
     if (response.status == 200) {
-        establishment.value = response.data;
+        establishment.value['socials'] = response.data['socials'];
+        establishment.value['socialPages'] = response.data['socialPages'];
         socials.value = [" ", ...getSocials(establishment.value.socials)];
         let data = [];
         let promises = [];
@@ -439,20 +447,6 @@ onBeforeMount(async () => {
         Promise.all(promises).then(() => {
             socialPages.value = data;
             data.value = getFollowers(socialPages.value, calculType.value);
-            dataLoading.value = false;
-        });
-        all_items.value[1].value = establishment.value.reviews.length;
-        all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
-        appStore.isLoading = false;
-    }
-
-    if (userStore.user.customer !== null) {
-        userStore.user.customer.establishments.forEach(async (company, index) => {
-            if (company.id == companyId) {
-                userStore.user.customer.establishments[index].media.forEach(item => {
-                    media.push(item.url_source);
-                });
-            }
         });
     }
     if (!socialStore.trendsByEstablishment[`${companyId}`]) {
@@ -480,12 +474,6 @@ onMounted(async () => {
         lineChartWidth.value = 400;
     }
 
-});
-
-watch(selectedSocials, () => {
-    if (selectedSocials.value != '') {
-        //do nothing
-    }
 });
 
 watch([socialPages, calculType], () => {
@@ -1061,7 +1049,7 @@ li {
 }
 
 .uil-calender {
-    console: var(--color-primary)
+    color: var(--color-primary)
 }
 
 .reviews__content_linechart {
@@ -1177,8 +1165,8 @@ li {
         border-radius: 5px;
     }
 
-    .tablet_mobile__filter * {
-        flex-basis: 200px;
+    .tablet_mobile__filter > * {
+        width: 250px !important;
     }
 
     .reviews__content_linechart {

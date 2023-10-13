@@ -433,7 +433,6 @@ const loadDatasets = (establishments, colors, date) => {
     });
     chartConfig.data.datasets = data;
     chartData.value = chartdata;
-    console.log(chartData)
     return data;
 }
 
@@ -505,54 +504,6 @@ const globalComparison = async () => {
     reviews_loader.value = false;
     appStore.isLoading = false;
 }
-
-globalComparison();
-
-onBeforeMount(async () => {
-const companyId = route.params.id;
-    appStore.isLoading = true;
-     const response = await new Promise((resolve, reject) => {
-        services.get_Record(`/establishment/${companyId}/detail`, (response) => {
-                resolve(response)
-        });
-    });
-
-     if(response.status == 200){
-        console.log(response.data)
-        establishment.value = response.data;
-            reviews.value = establishment.value.reviews;
-            page.value.title2 = establishment.value.name;
-            companiesStore.calculateRating(establishment.value.reviews, (rating) =>{
-                all_items.value[0].value = rating;
-            });
-            websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
-            reloadStarData();
-            let data = [];
-            let promises = [];
-            establishment.value.competitors.forEach(competitor=>{
-               let promise = services.get_Record(`/establishment/${competitor.id}/detail`, (response) => {
-                        data.push(response.data);
-                });
-                promises.push(promise);  
-             })
-
-            Promise.all(promises).then(() => {
-                     competitors.value = data;
-            });
-             appStore.isLoading = false;
-             dataLoading.value = false;
-     }
-
-    if(userStore.user.customer !==null){
-        userStore.user.customer.establishments.forEach(async (company, index) => {
-            if(company.id == companyId){
-                userStore.user.customer.establishments[index].media.forEach(item => {
-                    media.push(item.url_source);
-                });
-            }
-        });
-    }
-})
 
 const reloadComparison = async (competitor) => {
     selectedCompetitors.value = competitor.name;
@@ -653,7 +604,6 @@ const goto = (value) =>{
 let selectedStars = ref('0');
 const starFilter = (star)=>{
     selectedStars.value = star;
-    console.log(selectedStars.value)
 };
 
 const filterReviewsByStar = (star, data)=>{
@@ -682,7 +632,55 @@ watch(selectedStars, ()=>{
     updateVisibleData(result);
 });
 
+onBeforeMount(async () => {
+    const companyId = route.params.id;
+    let company = null;
+    appStore.isLoading = true;
 
+    const response2 = await new Promise((resolve, reject) => {
+        services.get_Record(`establishment/${companyId}/rating`, (response) => {
+                resolve(response)
+        });
+    });
+
+    if(response2.status == 200){
+        establishment.value = response2.data;
+        page.value.title2 = establishment.value.name;
+        all_items.value[0].value = establishment.value.rating;
+        all_items.value[1].value = establishment.value.totalReviews;
+        appStore.isLoading = false;
+        dataLoading.value = false;
+    }
+
+    const response = await new Promise((resolve, reject) => {
+        services.get_Record(`/establishment/${companyId}/detail`, (response) => {
+                resolve(response)
+        });
+    });
+
+     if(response.status == 200){
+            establishment.value['reviews'] = response.data['reviews'];
+            establishment.value['websites'] = response.data['websites'];
+            establishment.value['competitors'] = response.data['competitors'];
+            reviews.value = establishment.value.reviews;
+            websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
+            reloadStarData();
+            let data = [];
+            let promises = [];
+
+            establishment.value.competitors.forEach(competitor=>{
+               let promise = services.get_Record(`/establishment/${competitor.id}/detail`, (response) => {
+                        data.push(response.data);
+                });
+                promises.push(promise);  
+            })
+
+            Promise.all(promises).then(() => {
+                     competitors.value = data;
+                     globalComparison();
+            });
+     }
+});
 </script>
 
 <style scoped>

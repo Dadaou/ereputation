@@ -20,9 +20,6 @@
                         <li class="flex items-center"><i class="uil uil-map-pin-alt"></i><span>
                             {{ review.source }}
                         </span></li>
-                         <!-- <li class="flex items-center"  v-if="review.staff !== null"> <span>Staff review: </span>
-                            <span class="ml-2">{{ review.staff.firstname }} {{ review.staff.lastname }}</span>
-                        </li> -->
                     </ul>
                 </div>
             </div>
@@ -92,6 +89,8 @@ const props = defineProps({
     }
 });
 
+const emits = defineEmits(['reloadData']);
+
 const { width, height } = useWindowSize();
 const userStore = useUserStore();
 const feedbackStore = useFeedbackStore();
@@ -112,39 +111,38 @@ const formatRating = (rating) => {
 const showModal = ref(false);
 const feel = ref('okay');
 const id = ref('');
+const selectedReview = ref(null);
 provide('feeling', feel);
 
 const editReview = (review) => {
    feel.value = review.feeling;
    review.feeling = feel.value;
    id.value =review.id;
+   selectedReview.value = review; 
 
    if(feel.value=='neutre') feel.value = 'neutral';
    showModal.value = true;
 }
 
 const reloadData = (reviewUpdated, feeling)=>{
-   companiesStore.establishments.forEach((element, index) => {
-        companiesStore.establishments[index].reviews.forEach((review, index2)=>{
-                if(`/api/reviews/${review.id}` == reviewUpdated['@id']){
-                   companiesStore.establishments[index].reviews[index2].feeling = feeling;
-                }
-            })
-        });
-  }
+   emits('reloadData', reviewUpdated);
+}
 
 const updateReview = async () => {
     let updatedValue = {
         feeling: feel.value
     }
+    selectedReview.value.feeling = feel.value;
 
     try {
+        reloadData(selectedReview.value, feel.value)
+        showModal.value = false;
         await feedbackStore.updateReview(id.value, updatedValue, response=>{
             if(response.status==200){
-                reloadData(response.data, feel.value)
-                setTimeout(()=>{
-                    showModal.value = false;
-                }, 100)
+                 // showModal.value = false;
+                // setTimeout(()=>{
+                //     showModal.value = false;
+                // }, 100)
             } 
         })   
     } catch (error) {

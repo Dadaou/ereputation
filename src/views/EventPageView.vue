@@ -234,35 +234,68 @@ const all_items = ref([
 ]);
 const { width, height } = useWindowSize(); 
 
+// onBeforeMount(async () => {
+// const companyId = route.params.id;
+//     appStore.isLoading = true;
+//      const response = await new Promise((resolve, reject) => {
+//         services.get_Record(`/establishment/${companyId}/detail`, (response) => {
+//                 resolve(response)
+//         });
+//     });
+
+//       if(response.status == 200){
+//         establishment.value = response.data;
+//             events.value = establishment.value.events;
+        
+//             all_items.value[1].value = establishment.value.reviews.length;
+//             all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
+//             appStore.isLoading = false;
+//             dataLoading.value = false
+//      }
+
+//     if(userStore.user.customer !==null){
+//         userStore.user.customer.establishments.forEach(async (company, index) => {
+//             if(company.id == companyId){
+//                 userStore.user.customer.establishments[index].media.forEach(item => {
+//                     media.push(item.url_source);
+//                 });
+//             }
+//         });
+//     }
+// });
+
 onBeforeMount(async () => {
-const companyId = route.params.id;
+    const companyId = route.params.id;
+    let company = null;
     appStore.isLoading = true;
-     const response = await new Promise((resolve, reject) => {
+
+    const response2 = await new Promise((resolve, reject) => {
+        services.get_Record(`establishment/${companyId}/rating`, (response) => {
+                resolve(response)
+        });
+    });
+
+    if(response2.status == 200){
+        establishment.value = response2.data;
+        page.value.title2 = establishment.value.name;
+        all_items.value[0].value = establishment.value.rating;
+        all_items.value[1].value = establishment.value.totalReviews;
+        appStore.isLoading = false;
+        dataLoading.value = false;
+    }
+
+    const response = await new Promise((resolve, reject) => {
         services.get_Record(`/establishment/${companyId}/detail`, (response) => {
                 resolve(response)
         });
     });
 
-      if(response.status == 200){
-        establishment.value = response.data;
+     if(response.status == 200){
+            establishment.value['events'] = response.data['events'];
+            establishment.value['reviews'] = response.data['reviews'];
             events.value = establishment.value.events;
-        
-            all_items.value[1].value = establishment.value.reviews.length;
-            all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
-            appStore.isLoading = false;
-            dataLoading.value = false
      }
-
-    if(userStore.user.customer !==null){
-        userStore.user.customer.establishments.forEach(async (company, index) => {
-            if(company.id == companyId){
-                userStore.user.customer.establishments[index].media.forEach(item => {
-                    media.push(item.url_source);
-                });
-            }
-        });
-    }
-});
+})
 
 const el = ref(null);
 const chartWidth = ref(0);

@@ -23,11 +23,9 @@ import {
 } from 'chart.js'
 import { ElDatePicker } from 'element-plus';
 // import { Bar } from 'vue-chartjs'
-import { ref, watch, onBeforeMount } from 'vue';
+import { ref, watch, onBeforeMount, onMounted } from 'vue';
 import { useRoute } from "vue-router";
 import { useSocialStore } from "@Stores/social.js";
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip)
 
 const route = useRoute();
 const companyId = route.params.id;
@@ -70,7 +68,12 @@ const getHisto = async (dateEnd) => {
     data.value = tmp
 };
 
+// onMounted(()=>{
+//     ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip)
+// })
+
 onBeforeMount(() => {
+     ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip)
     getHisto(new Date());
 })
 

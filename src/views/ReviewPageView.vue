@@ -15,7 +15,12 @@
                     <div class="reviews__pagination">
                         <CommentPagination  v-if="_reviews.length > 0" :config="paginationConfig" @updatePage="updatePage" :color="'#6c63ff'" :nb="_reviews.length" :data="visibleData"></CommentPagination>
                     </div>
-                    <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"/>
+                    <CommentComponent 
+                    v-if="reviews_loader == false" 
+                    :reviews="visibleData" 
+                    :showEmoji="true"
+                    @reloadData = "(review)=>reloadData(review)"
+                    />
                     <div v-else role="status" class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" v-for="index in 5">
                                 <div>
                                     <div class="flex items-center justify-between mb-4">
@@ -291,6 +296,13 @@ const dateStart = ref();
 const dateEnd = ref();
 const enableDateEnd = ref(false);
 const downloaded = ref(false);
+let reviewFeedbackData = ref({
+    width: 0,
+    red: 0,
+    green: 0,
+    feeling: 0
+});
+
 
 const format2 = (date) => {
   const day = date.getDate();
@@ -325,41 +337,6 @@ watch([dateStart, dateEnd, selectedWebsites, checkedFeeling], ()=>{
     updateVisibleData(filteredReviews);
 })
 
-onBeforeMount(async () => {
-const companyId = route.params.id;
-    appStore.isLoading = true;
-     const response = await new Promise((resolve, reject) => {
-        services.get_Record(`/establishment/${companyId}/detail`, (response) => {
-                resolve(response)
-        });
-    });
-
-     if(response.status == 200){
-        establishment.value = response.data;
-            reviews.value = establishment.value.reviews;
-            _reviews.value = reviews.value
-            page.value.title2 = establishment.value.name;
-            companiesStore.calculateRating(establishment.value.reviews, (rating) =>{
-                all_items.value[0].value = rating;
-            });
-            websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
-            reloadStarData();
-             updateVisibleData(reviews.value);
-             appStore.isLoading = false;
-             dataLoading.value = false;
-     }
-
-    if(userStore.user.customer !==null){
-        userStore.user.customer.establishments.forEach(async (company, index) => {
-            if(company.id == companyId){
-                userStore.user.customer.establishments[index].media.forEach(item => {
-                    media.push(item.url_source);
-                });
-            }
-        });
-    }
-})
-
 let selectedStars = ref('0');
 const starFilter = (star)=>{
     selectedStars.value = star;
@@ -385,10 +362,56 @@ const reloadStarData = ()=>{
     updateVisibleData(filteredReviews);
 }
 
+const reloadData = (reviewUpdated)=>{
+    visibleData.value.forEach((review, index)=>{
+                if(review.id == reviewUpdated.id){
+                    visibleData.value[index].feeling = reviewUpdated.feeling;
+                }
+    })
+}
+
 watch(selectedStars, ()=>{
     let filteredReviews = reviews.value;
     let result = filterReviewsByStar(selectedStars.value, filteredReviews);
     updateVisibleData(result);
+});
+
+onBeforeMount(async () => {
+    const companyId = route.params.id;
+    let company = null;
+    appStore.isLoading = true;
+
+    const response2 = await new Promise((resolve, reject) => {
+        services.get_Record(`establishment/${companyId}/rating`, (response) => {
+                resolve(response)
+        });
+    });
+
+    if(response2.status == 200){
+        establishment.value = response2.data;
+        page.value.title2 = establishment.value.name;
+        all_items.value[0].value = establishment.value.rating;
+        all_items.value[1].value = establishment.value.totalReviews;
+        appStore.isLoading = false;
+        dataLoading.value = false;
+    }
+
+    const response = await new Promise((resolve, reject) => {
+        services.get_Record(`/establishment/${companyId}/detail`, (response) => {
+                resolve(response)
+        });
+    });
+
+     if(response.status == 200){
+            establishment.value['reviews'] = response.data['reviews'];
+            establishment.value['websites'] = response.data['websites'];
+            reviews.value = establishment.value.reviews;
+            _reviews.value = establishment.value.reviews;
+            websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
+            reloadStarData();
+            updateVisibleData(reviews.value);
+             reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
+     }
 });
 </script>
 

@@ -238,34 +238,37 @@ const { width, height } = useWindowSize();
 
 onBeforeMount(async () => {
     const companyId = route.params.id;
+    let company = null;
     appStore.isLoading = true;
+
+    const response2 = await new Promise((resolve, reject) => {
+        services.get_Record(`establishment/${companyId}/rating`, (response) => {
+                resolve(response)
+        });
+    });
+
+    if(response2.status == 200){
+        establishment.value = response2.data;
+        page.value.title2 = establishment.value.name;
+        all_items.value[0].value = establishment.value.rating;
+        all_items.value[1].value = establishment.value.totalReviews;
+        appStore.isLoading = false;
+        dataLoading.value = false;
+    }
+
     const response = await new Promise((resolve, reject) => {
         services.get_Record(`/establishment/${companyId}/detail`, (response) => {
                 resolve(response)
         });
     });
 
-      if(response.status == 200){
-            establishment.value = response.data;
-            console.log(establishment.value)
+     if(response.status == 200){
+            establishment.value['reviews'] = response.data['reviews'];
+            establishment.value['staffs'] = response.data['staffs'];
+            reviews.value = establishment.value.reviews;
             staffs.value = establishment.value.staffs;
-            reviews.value = staffs.value.reviews;
-            all_items.value[1].value = establishment.value.reviews.length;
-            all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
-            appStore.isLoading = false;
-            dataLoading.value = false
      }
-
-    if(userStore.user.customer !==null){
-        userStore.user.customer.establishments.forEach(async (company, index) => {
-            if(company.id == companyId){
-                userStore.user.customer.establishments[index].media.forEach(item => {
-                    media.push(item.url_source);
-                });
-            }
-        });
-    }
-});
+})
 
 const el = ref(null);
 const chartWidth = ref(0);
