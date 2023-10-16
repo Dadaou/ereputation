@@ -33,6 +33,7 @@
                     <div class="reviews__pagination">
                         <CommentPagination  v-if="lastReviews.length > 0" :config="paginationConfig" @updatePage="updatePage" :color="'#6c63ff'" :nb="lastReviews.length" :data="visibleData"></CommentPagination>
                     </div>
+                   <!--  <suspense></suspense> -->
                     <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :allReviews="establishment.reviews"  :showEmoji="false"/>
                     <div v-else role="status" class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" v-for="index in 3">
                         <div>

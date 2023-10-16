@@ -295,6 +295,20 @@ watch([dateStart, dateEnd], () => {
     }
 })
 
+function comparerDates(a, b) {
+    // Extrait les parties de date (jour, mois, année) des chaînes
+    var dateA = a.date.split(' ')[1];
+    var dateB = b.date.split(' ')[1];
+
+    // Convertit les dates en objets Date pour la comparaison
+    var dateObjA = new Date(dateA.split('-').reverse().join('-'));
+    var dateObjB = new Date(dateB.split('-').reverse().join('-'));
+
+    // Compare les dates
+    return dateObjA - dateObjB;
+}
+
+
 const weaherImpact = (startDate, endDate) => {
     let reviewData = reviews.value;
     let weatherData = weather.value;
@@ -359,6 +373,7 @@ const weaherImpact = (startDate, endDate) => {
 
     let dataType = ['rating', 'temperature']
     legendData.value = generatedLegend(colors.value, dataType);
+    data.sort(comparerDates)
     return data;
 }
 
