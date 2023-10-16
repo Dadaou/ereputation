@@ -272,7 +272,6 @@ const chartWidth = ref(0);
 
 onUpdated(()=>{
     chartWidth.value = (el.value != null && el.value != undefined)?Math.abs(el.value.offsetWidth-50):chartWidth.value;
-    console.log(chartWidth.value)
 })
 
 const format2 = (date) => {
@@ -308,6 +307,16 @@ function comparerDates(a, b) {
     return dateObjA - dateObjB;
 }
 
+function getDatesBetween(startDate, endDate) {
+    const dates = [];
+    let currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+        dates.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return dates;
+}
 
 const weaherImpact = (startDate, endDate) => {
     let reviewData = reviews.value;
@@ -318,7 +327,7 @@ const weaherImpact = (startDate, endDate) => {
     weatherData.forEach((weather) => {
         const date = moment(weather.date_weather);
 
-        if (date.isSameOrAfter(startDate) && date.isSameOrBefore(endDate)) {
+        if (date.isSameOrAfter(startDate) && date.isSameOrBefore(endDate) || date.isSame(endDate)) {
             if (!impactByDay[date.format('YYYY-MM-DD')]) {
                 impactByDay[date.format('YYYY-MM-DD')] = {};
                 impactByDay[date.format('YYYY-MM-DD')]['reviews'] = []
@@ -332,6 +341,7 @@ const weaherImpact = (startDate, endDate) => {
             impactByDay[date.format('YYYY-MM-DD')]['max'] = ((weather.tempmax - 32) / 1.8).toFixed(1);
             impactByDay[date.format('YYYY-MM-DD')]['min'] = ((weather.tempmin - 32) / 1.8).toFixed(1);
             impactByDay[date.format('YYYY-MM-DD')]['condition'] = weather.conditions;
+             console.log(date.format('YYYY-MM-DD'))
         }
     });
 
@@ -361,6 +371,7 @@ const weaherImpact = (startDate, endDate) => {
 
     let data = [];
     for (const key in impactByDay) {
+        console.log(key)
         let icon = generateWeatherIcon(key)
         let item = {
             "date": `${icon} ${moment(key).format('DD-MM-YYYY')}`,
@@ -373,7 +384,7 @@ const weaherImpact = (startDate, endDate) => {
 
     let dataType = ['rating', 'temperature']
     legendData.value = generatedLegend(colors.value, dataType);
-    data.sort(comparerDates)
+    data.sort(comparerDates);
     return data;
 }
 

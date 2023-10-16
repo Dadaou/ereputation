@@ -2,7 +2,7 @@
 	<div
 		class="chart"
 		:style="{
-			'width': '800px',
+			'width': `${props.width}px`,
 			'overflowX': 'auto'
 		}"
 	>
@@ -62,6 +62,10 @@
 		</li>
 	</ul>
 	</div>
+	<div>
+		<BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
+        </BaseLegend>
+	</div>
 </template>
 <script setup>
 import moment from 'moment';
@@ -103,6 +107,28 @@ const custom_width = computed(()=>{
 		gap: gap
 	} 
 })
+
+const legendData = computed(() => {
+    console.log(plotdata.value.events_per_date);
+    let dates = plotdata.value.events_per_date;
+    let nameSet = new Set();
+    let data = [];
+
+    dates.forEach((date) => {
+        date.events.forEach((event) => {
+            if (!nameSet.has(event.name)) {
+                data.push({
+                    name: event.name,
+                    color: `${generateColor(event.name)}`
+                });
+                nameSet.add(event.name);
+            }
+        });
+    });
+
+    console.log(data);
+    return data;
+});
 
 
 const hashString = (inputString) => {

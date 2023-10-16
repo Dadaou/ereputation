@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div class="reviews__content" ref="el">
-                  <EventChartComponent :width="barWidth"/>
+                  <EventChartComponent :width="chartWidth"/>
                 </div>
                 <div class="head">
                     <div class="app__title">
@@ -24,8 +24,7 @@
                 </div>
             </div>
             <div class="tablet_mobile__filter">
-                    <div class="text-sm title">Select a range of date</div>
-                           <el-date-picker
+                  <el-date-picker
                             v-model="date"
                             type="daterange"
                             range-separator="To"
@@ -36,6 +35,7 @@
                 <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[1]"/>
+                         
             </div>
             <div class="tablet_mobile__head">
                 <div class="establishment__info_tablet">
@@ -234,36 +234,6 @@ const all_items = ref([
 ]);
 const { width, height } = useWindowSize(); 
 
-// onBeforeMount(async () => {
-// const companyId = route.params.id;
-//     appStore.isLoading = true;
-//      const response = await new Promise((resolve, reject) => {
-//         services.get_Record(`/establishment/${companyId}/detail`, (response) => {
-//                 resolve(response)
-//         });
-//     });
-
-//       if(response.status == 200){
-//         establishment.value = response.data;
-//             events.value = establishment.value.events;
-        
-//             all_items.value[1].value = establishment.value.reviews.length;
-//             all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
-//             appStore.isLoading = false;
-//             dataLoading.value = false
-//      }
-
-//     if(userStore.user.customer !==null){
-//         userStore.user.customer.establishments.forEach(async (company, index) => {
-//             if(company.id == companyId){
-//                 userStore.user.customer.establishments[index].media.forEach(item => {
-//                     media.push(item.url_source);
-//                 });
-//             }
-//         });
-//     }
-// });
-
 onBeforeMount(async () => {
     const companyId = route.params.id;
     let company = null;
@@ -301,8 +271,9 @@ const el = ref(null);
 const chartWidth = ref(0);
 const barWidth = computed(()=>{
     let result = 0;
-    if(width.value>=800) result = Math.abs(Number(chartWidth.value-100));
+    if(width.value>=800) result = Math.abs(Number(chartWidth.value));
     else result = 800;
+    console.log(chartWidth.value);
     return result;
 })
 
@@ -318,6 +289,10 @@ useResizeObserver(el, (entries) => {
 </script>
 
 <style scoped>
+
+.main__container, .left__side{
+    overflow-x: hidden;
+}
 
 *{
     transition: var(--transition);
@@ -505,7 +480,7 @@ img{
 }
 
 .right__side{
-    width: 400px;
+    width: 400px !important;
     padding: 50px 0px;
 }
 
@@ -612,12 +587,11 @@ img{
     }
 
     .tablet_mobile__filter > * {
-        width: 700px !important;
-        margin-top: 
+        width: 100% !important;
     }
 
-   /* .tablet_mobile__filter *{
-        flex-basis: 200px;
+  /*  .tablet_mobile__filter > *{
+        flex-basis: 100%;
     }*/
 }
 
