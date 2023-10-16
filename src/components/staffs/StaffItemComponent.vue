@@ -72,7 +72,7 @@
                             <div id="qrcode__container  mt-5" ref="qrcode">
                                 <vue-qrious
                                     class="qr__code_view"
-                                    :value="`${baseurl}/companies/${$route.params.id}/staffs/${staf.id}/feedback`"
+                                     :value="`${baseurl}/establishment/${staf.establishment_id}/${staf.establishment_competitor_tag}/staffs/${staf.id}/${staf.tag}/feedback`"
                                     @change="onDataUrlChange"
                                     />
                             </div>
