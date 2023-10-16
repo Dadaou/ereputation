@@ -52,6 +52,48 @@
     </div>
 </div>
     <div v-if="staffs.length==0">No staff</div>
+    <ModalComponent :showModal="showModal " @close="showModal=false" :width="modalWidth" >
+                    <template #content>
+                        <div class="modal__header">
+                            <div class="modal__title">
+                                <h3 class="font-semibold text-gray-900 dark:text-white">
+                                    <i class="uil uil-qrcode-scan"></i> QR Code
+                                </h3>
+                            </div>
+                            <div class="modal__close">
+                                <i class="uil uil-times-circle"  @click="showModal = false"></i>
+                            </div>
+                        </div>
+
+                        <div  v-if="downloaded==false" class="establishment__review__qrcode">
+                            <p class="mb-5">
+                                Download this QR code to link staff <b>{{ staf.firstname }}</b> to the feedback page
+                            </p>
+                            <div id="qrcode__container  mt-5" ref="qrcode">
+                                <vue-qrious
+                                    class="qr__code_view"
+                                    :value="`${baseurl}/companies/${$route.params.id}/staffs/${staf.id}/feedback`"
+                                    @change="onDataUrlChange"
+                                    />
+                            </div>
+                        </div>
+                        <div v-else class="establishment__review__qrcode">
+                            <p class="mb-5">
+                                Your download is successfully complete!
+                            </p>
+                        </div>
+                        <div class="mt-5 download__qr_btn">
+                            <button v-if="
+                            downloaded==false" class="btn__light_secondary" @click="downloadQrcode(staf.firstname)">
+                                <i class="uil uil-download-alt"></i> Download 
+                            </button>
+                            <button v-else class="btn__light_secondary" @click="close()">
+                                close
+                            </button>
+                        </div>
+
+                    </template>
+    </ModalComponent>
 </template>
 <script setup>
 import {ref, inject, computed, defineAsyncComponent} from 'vue';
@@ -63,6 +105,10 @@ import { ElTooltip  } from 'element-plus';
 import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js'
 import { Pie } from 'vue-chartjs';
 import { useCompanyStore } from "@Stores/company.js";
+
+const ModalComponent = defineAsyncComponent(()=>
+    import('@Components/utils/ModalComponent.vue')
+)
 
 ChartJS.register(ArcElement, Tooltip)
 const staffs = inject('staffs');
@@ -107,6 +153,12 @@ const options = {
         }
   },
 };
+
+const close = ()=>{
+    showModal.value = false; 
+    downloaded.value = false; 
+    staf=null;
+}
 
 const staffRatingDataset = (eventRating)=> {
       return {
@@ -192,7 +244,7 @@ span.label{
     cursor: pointer;
 }
 .qr__code_view{
-    width: 50% !important;
+    width: 30% !important;
     padding: 10px auto !important;
     margin: auto;
 }
@@ -211,6 +263,10 @@ span.label{
    color: red;
    cursor: pointer;
    transition: var(--transition);
+}
+
+.establishment__review__qrcode p{
+    font-size: 14px;
 }
 
 .modal__close i:hover{
