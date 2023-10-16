@@ -13,7 +13,6 @@
             :width="custom_width.chart"
             :height="250"
             :margin="{ top: 20, bottom: 35, left: 55, right: 20 }"
-            x-axis-label="Dates"
             y-axis-label="Rating"
             :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']"
             :y-tick-format="d => `${d}`" />
@@ -21,7 +20,7 @@
 	          Loading
 	      </template>    
 	  </suspense>
-        <ul :style="{
+        <ul class="event" :style="{
         	'gap': `${custom_width.gap}px`,
 			'width': `${custom_width.events}px`,
 		}">
@@ -109,7 +108,6 @@ const custom_width = computed(()=>{
 })
 
 const legendData = computed(() => {
-    console.log(plotdata.value.events_per_date);
     let dates = plotdata.value.events_per_date;
     let nameSet = new Set();
     let data = [];
@@ -200,7 +198,7 @@ watch([date, type],async()=>{
 
 </script>
 <style scoped>
-	ul{
+	ul.event{
 		display: flex;
 		margin-bottom: 1rem;
 		align-items: center;

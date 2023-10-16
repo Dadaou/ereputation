@@ -21,6 +21,10 @@
           Loading
       </template>    
   </suspense>
+   <div>
+    <BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
+    </BaseLegend>
+  </div>
 	</div>
 </template>
 <script setup>
@@ -75,13 +79,37 @@ const getPlotData = async(period, rangedate, next)=>{
                   resolve(response)
           });
       });
-       console.log(response)
       if(response.status == 200){
         data = response.data;
       }
 
       next(data);
 } 
+
+const legendData = computed(() => {
+    console.log(plotdata.value);
+    let data = [];
+    let dates = plotdata.value;
+    let nameSet = new Set();
+    const color = ['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff'];
+
+    dates.forEach((date) => {
+      let n = 0;
+      for(const key in date){
+          if(key !="date"){
+            if (!nameSet.has(key)) {
+                data.push({
+                    name: key,
+                    color: color[n]
+                });
+                nameSet.add(key);
+                n++;
+            }
+          }
+      }
+    });
+    return data;
+});
 
 onMounted(async()=>{
    const response = await new Promise((resolve, reject) => {
@@ -106,16 +134,6 @@ watch([date, type],async()=>{
 
 </script>
 <style scoped>
-	ul{
-		display: flex;
-		gap: 3.5rem;
-		margin-bottom: 1rem;
-		align-items: center;
-		margin: auto;
-		position: relative;
-		left: 60px;
-	}
-
 	.chart{
 	    overflow-x: auto;
 	}

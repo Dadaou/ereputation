@@ -189,8 +189,9 @@ export const useCompanyStore = defineStore("company", {
       if (timePeriod == "Weeks") {
         weeks.forEach((week, index) => {
           let review = {};
-          // review['name'] = `W${index} ${moment(week.begin).format('MM-YY')}/${moment(week.end).format('MM-YY')}`;
-          review["name"] = `${index}`;
+          review["name"] = `W ${moment(week.begin).format(
+            "DD")}-${moment(week.end).format(
+            "DD")}`; 
           companies.forEach((company) => {
             let reviews = this.getReviewsBetweenDates(
               company.reviews,
@@ -435,6 +436,9 @@ export const useCompanyStore = defineStore("company", {
       if (timePeriod == "Weeks") {
         weeks.forEach((week, index) => {
           let review = {};
+          review["name"] = `W ${moment(week.begin).format(
+            "DD")}-${moment(week.end).format(
+            "DD")}`; 
           review["name"] = `${index}`;
           websites.forEach((website) => {
             let data = this.getReviewsBySource(

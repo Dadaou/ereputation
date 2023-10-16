@@ -21,7 +21,7 @@
                     </el-dropdown>
                 </div>
                 <div class="reviews__content" ref="el">
-                    <GroupedBarChart :plot-data="data" x-key="date" :width="chartWidth" :height="300" x-axis-label="Date"
+                    <GroupedBarChart :plot-data="data" x-key="date" :width="chartWidth" :height="300"
                         :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
                         :x-tick-format="d => `${d}`" />
                     <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">

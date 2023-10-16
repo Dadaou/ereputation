@@ -33,26 +33,13 @@
                     <div class="reviews__pagination">
                         <CommentPagination  v-if="lastReviews.length > 0" :config="paginationConfig" @updatePage="updatePage" :color="'#6c63ff'" :nb="lastReviews.length" :data="visibleData"></CommentPagination>
                     </div>
-                   <!--  <suspense></suspense> -->
-                    <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :allReviews="establishment.reviews"  :showEmoji="false"/>
-                    <div v-else role="status" class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" v-for="index in 3">
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <div>
-                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                                    <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
-                                    <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-                                </div>
-                                <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
-                            </div>
-                            <div>
-                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
-                            </div>
-                        </div>
-                        <span class="sr-only">Loading...</span>
-                    </div>
+                    <suspense>
+                         <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :allReviews="establishment.reviews"  :showEmoji="false"/>
+                        <template #fallback>
+                            
+                        </template>
+                    </suspense>
+                    
                     <aside v-if="lastReviews.length > 0">
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{  all_items[1].value - 3 }} reviews remains</p>
                         <div class="flex items-center mt-3 space-x-3 divide-x divide-gray-200 dark:divide-gray-600">
@@ -81,7 +68,7 @@
                     }" :default="websites[0]"/>
                     <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                                 selectedTimePeriod = timePeriod
-                        }" :default="timePeriods[0]"/>
+                        }" :default="timePeriods[1]"/>
                     <el-date-picker
                         v-model="date2"
                         type="daterange"
@@ -209,7 +196,7 @@
                       />
                         <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                                 selectedTimePeriod = timePeriod
-                        }" :default="timePeriods[0]"/>
+                        }" :default="timePeriods[1]"/>
                     </div>
                 </div>
               <div class="rating__customers">
@@ -367,7 +354,7 @@ const format2 = (date) => {
 }
 
 let selectedTimePeriod = ref('');
-let timePeriods = ref(['Months', 'Quarters', 'Semesters']);
+let timePeriods = ref(['Weeks','Months', 'Quarters', 'Semesters']);
 
 let lastReviews = ref([]);
 let media = [];
@@ -395,7 +382,12 @@ let chartConfig = reactive({
     },
     options: {
         responsive: true,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
+    plugins: {
+        legend: {
+            display: false,
+        }
+    },
     }
 });
 
@@ -464,6 +456,9 @@ const globalComparison = async () => {
     
     plotdata.value = [];
 
+    lastReviews.value = companiesStore.getLastReviews(establishment.value.reviews, 100);
+    updateVisibleData(lastReviews.value);
+
     comparisonData.value = [establishment.value, ...competitors.value];
     _comparisonData = [establishment.value, ...competitors.value];
     reviews.value = establishment.value.reviews;
@@ -482,9 +477,6 @@ const globalComparison = async () => {
     legendData.value =  companiesStore.generateLegend(comparisonData.value, colors);
     _legendData =  companiesStore.generateLegend(_comparisonData, colors);
 
-    
-    lastReviews.value = companiesStore.getLastReviews(establishment.value.reviews, 100);
-    updateVisibleData(lastReviews.value);
     reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
     
     setTimeout(() => {

@@ -48,7 +48,12 @@ const establishment = inject('establishment');
 
 const options = {
   responsive: true,
-  maintainAspectRatio: false
+  maintainAspectRatio: false,
+   plugins: {
+        legend: {
+            display: false,
+        }
+  },
 };
 
 const eventRatingDataset = (eventRating)=> {

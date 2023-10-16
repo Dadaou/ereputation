@@ -100,7 +100,12 @@ const props = defineProps({
 
 const options = {
   responsive: true,
-  maintainAspectRatio: false
+  maintainAspectRatio: false,
+  plugins: {
+        legend: {
+            display: false,
+        }
+  },
 };
 
 const staffRatingDataset = (eventRating)=> {
