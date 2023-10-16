@@ -128,10 +128,6 @@ onBeforeMount(()=>{
 </script>
 
 <style scoped>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 .selected{
     background-color: var(--color-danger);
     color: var(--color-white)

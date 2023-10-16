@@ -125,8 +125,6 @@ const legendData = computed(() => {
             }
         });
     });
-
-    console.log(data);
     return data;
 });
 

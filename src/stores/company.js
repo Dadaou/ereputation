@@ -680,7 +680,7 @@ export const useCompanyStore = defineStore("company", {
       let data = [];
       _websites.forEach(([key, value]) => {
         if (typeof value == "string") {
-          if (this.isURL(value) && key !== "url") {
+          if (this.isURL(value) && key !== "url" && key !== "thefork") {
             data.push(this.capitalizeString(key));
           }
         }

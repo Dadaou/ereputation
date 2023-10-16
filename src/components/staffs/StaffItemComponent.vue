@@ -19,7 +19,7 @@
                                  <vue-qrious
                                     class="qr__code"
                                     @click="showModal=true, staf = staff"
-                                    :value="`${baseurl}/establishment/${$route.params.id}/staffs/${staff.id}/feedback`"
+                                     :value="`${baseurl}/establishment/${staff.establishment_id}/${staff.establishment_competitor_tag}/staffs/${staff.id}/${staff.tag}/feedback`"
                                     @change="onDataUrlChange"
                                     />
                              </el-tooltip>
@@ -50,50 +50,8 @@
                 </div>
             </div>
     </div>
-        </div>
+</div>
     <div v-if="staffs.length==0">No staff</div>
-    <ModalComponent :showModal="showModal " @close="showModal=false" :width="modalWidth" >
-                    <template #content>
-                        <div class="modal__header">
-                            <div class="modal__title">
-                                <h3 class="font-semibold text-gray-900 dark:text-white">
-                                    <i class="uil uil-qrcode-scan"></i> QR Code
-                                </h3>
-                            </div>
-                            <div class="modal__close">
-                                <i class="uil uil-times-circle"  @click="showModal = false"></i>
-                            </div>
-                        </div>
-
-                        <div  v-if="downloaded==false" class="establishment__review__qrcode">
-                            <p class="mb-5">
-                                Download this QR code to link staff <b>{{ staf.firstname }}</b> to the feedback page
-                            </p>
-                            <div id="qrcode__container  mt-5" ref="qrcode">
-                                <vue-qrious
-                                            class="qr__code_view"
-                                    :value="`${baseurl}/companies/${$route.params.id}/staffs/${staf.id}/feedback`"
-                                    @change="onDataUrlChange"
-                                    />
-                            </div>
-                        </div>
-                        <div v-else class="establishment__review__qrcode">
-                            <p class="mb-5">
-                                Your download is successfully complete!
-                            </p>
-                        </div>
-                        <div class="mt-5 download__qr_btn">
-                            <button v-if="
-                            downloaded==false" class="btn__light_secondary" @click="downloadQrcode(staf.firstname)">
-                                <i class="uil uil-download-alt"></i> Download 
-                            </button>
-                            <button v-else class="btn__light_secondary" @click="showModal=false, downloaded=false, staf=null">
-                                close
-                            </button>
-                        </div>
-
-                    </template>
-    </ModalComponent>
 </template>
 <script setup>
 import {ref, inject, computed, defineAsyncComponent} from 'vue';
@@ -107,9 +65,6 @@ import { Pie } from 'vue-chartjs';
 import { useCompanyStore } from "@Stores/company.js";
 
 ChartJS.register(ArcElement, Tooltip)
-const ModalComponent = defineAsyncComponent(()=>
-    import('@Components/utils/ModalComponent.vue')
-)
 const staffs = inject('staffs');
 const baseurl = window.location.origin;
 const base64Image = ref(null);

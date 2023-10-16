@@ -282,15 +282,6 @@ import {
 } from 'chart.js'
 import { Line } from 'vue-chartjs';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-)
-
 const page=ref({
     title1: "",
     title2: "",
@@ -634,6 +625,14 @@ watch(selectedStars, ()=>{
 });
 
 onBeforeMount(async () => {
+    ChartJS.register(
+      CategoryScale,
+      LinearScale,
+      PointElement,
+      LineElement,
+      Title,
+      Tooltip,
+    )
     const companyId = route.params.id;
     let company = null;
     appStore.isLoading = true;

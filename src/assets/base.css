@@ -1,36 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
-/*Override the browser's default style*/
-*{
-    margin: 0;
-    padding: 0px;
-    border: 0;
-    outline: 0;
-
-    text-decoration: none;
-    list-style: none;
-    box-sizing: border-box;
-}
-
-*::-webkit-scrollbar-track
-{
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-    background-color: #F5F5F5;
-}
-
-*::-webkit-scrollbar
-{
-    width: 6px;
-    height: 6px; 
-    background-color: #F5F5F5;
-}
-
-*::-webkit-scrollbar-thumb
-{
-    background-color: #6c63ff;
-    border-radius: 10px;
-}
-
 /*All css variables that we need*/
 :root{
 
@@ -63,6 +32,37 @@
 
     --transition: all 400ms ease;
     --transition2: all 1s ease;
+}
+
+/*Override the browser's default style*/
+*{
+    margin: 0;
+    padding: 0px;
+    border: 0;
+    outline: 0;
+
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+}
+
+*::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px white;
+    background-color: white;
+}
+
+*::-webkit-scrollbar
+{
+    width: 6px;
+    height: 6px; 
+    background-color: white;
+}
+
+*::-webkit-scrollbar-thumb
+{
+    background-color: white;
+    border-radius: 10px;
 }
 
 body{

@@ -59,7 +59,7 @@ import {
     ArcElement,
 } from 'chart.js';
 import { ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus';
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, onBeforeMount, onBeforeUnmount } from 'vue';
 import { useRoute } from "vue-router";
 import { useSocialStore } from "@Stores/social.js";
 import moment from 'moment';
@@ -228,10 +228,7 @@ const updateData = async () => {
         lineData.value = data;
     }
 }
-
-onMounted(async () => {
-
-    ChartJS.register(
+ ChartJS.register(
         CategoryScale,
         LinearScale,
         PointElement,
@@ -241,15 +238,9 @@ onMounted(async () => {
         ArcElement,
         Legend
     )
+ 
+onMounted(async () => {
 
-    // if (socialHistogramContainer.value.clientWidth > 400) {
-    //     lineChartWidth.value = socialHistogramContainer.value.clientWidth;
-    // } else {
-    //     lineChartWidth.value = 400;
-    // }
-    // const datas = await socialStore.getGlobalStats(companyId, 'weekly', '24-2023')
-
-    // const datas = await socialStore.getGlobalStats(companyId, 'yearly', '2023')
     const datas = await socialStore.getGlobalStats(companyId, 'yearly', new Date().getFullYear())
 
     let data = {
@@ -298,6 +289,17 @@ window.onresize = () => {
     }
 };
 
+onBeforeUnmount(()=>{
+    ChartJS.register(
+        CategoryScale,
+        LinearScale,
+        PointElement,
+        LineElement,
+        Title,
+        Tooltip,
+        ArcElement
+    )
+});
 </script>
 <style scoped>
 .chart__container {

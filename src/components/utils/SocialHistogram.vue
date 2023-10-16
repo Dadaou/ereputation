@@ -4,7 +4,6 @@
             <el-date-picker class="mt-2" v-model="dateEnd" placeholder="Search a date" :size="'large'" />
         </div>
         <div v-if="data && data.length > 0" class="chart__container" :style="{ width: width }" ref="barChartContainer">
-            <!-- <Bar v-if="data" :data="data" :options="options" :style="{ height: '200px', width: '100%' }" /> -->
             <GroupedBarChart v-if="data && data.length > 0" :plot-data="data" x-key="website" :width="900" :height="240"
                 :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Website" y-axis-label=""
                 :y-tick-format="d => `${d}`" />
@@ -13,16 +12,7 @@
 </template>
 
 <script setup>
-import {
-    Chart as ChartJS,
-    Title,
-    Tooltip,
-    BarElement,
-    CategoryScale,
-    LinearScale
-} from 'chart.js'
 import { ElDatePicker } from 'element-plus';
-// import { Bar } from 'vue-chartjs'
 import { ref, watch, onBeforeMount, onMounted } from 'vue';
 import { useRoute } from "vue-router";
 import { useSocialStore } from "@Stores/social.js";
@@ -38,18 +28,6 @@ const barChartContainer = ref(null);
 const dateEnd = ref();
 
 const data = ref([])
-
-// const options = {
-//     responsive: true,
-//     maintainAspectRatio: false,
-//     legend: {
-//         display: false
-//     }
-// };
-
-// const data = computed(() => {
-//     return props.values;
-// })
 
 const getHisto = async (dateEnd) => {
     const res = await socialStore.getHistogram(companyId, dateEnd.value)
@@ -68,12 +46,7 @@ const getHisto = async (dateEnd) => {
     data.value = tmp
 };
 
-// onMounted(()=>{
-//     ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip)
-// })
-
 onBeforeMount(() => {
-     ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip)
     getHisto(new Date());
 })
 

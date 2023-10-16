@@ -17,7 +17,6 @@ let currentSlide = ref(0);
 let slideInterval = ref(null);
 
 onMounted(() => {
-    console.log("Mounted")
     slideInterval.value = setInterval(() => {
         const index = currentSlide.value < props.items.length - 1 ? currentSlide.value + 1 : 0;
         currentSlide.value = index;
