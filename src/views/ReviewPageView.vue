@@ -406,11 +406,14 @@ onBeforeMount(async () => {
             establishment.value['reviews'] = response.data['reviews'];
             establishment.value['websites'] = response.data['websites'];
             reviews.value = establishment.value.reviews;
-            _reviews.value = establishment.value.reviews;
+            reviews.value.sort(function (a, b) {
+              return moment(b.date_review).diff(moment(a.date_review));
+            });
+            _reviews.value = reviews.value;
             websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
             reloadStarData();
             updateVisibleData(reviews.value);
-             reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
+            reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
      }
 });
 </script>
