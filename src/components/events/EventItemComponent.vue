@@ -8,21 +8,21 @@
             </ul>
             <div class="pie__chart">
                 <div>
-                    <h3 class="mb-2">Before the event</h3>
+                    <h3 class="mb-2">Before the event (<span class="rating">{{calculateAverageRating(eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['before']))}}</span>)</h3>
                     <Pie 
                         :data="eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['before'])" 
                         :options="options" 
                     />
                 </div>
                 <div>
-                    <h3 class="mb-2">During the event</h3>
+                    <h3 class="mb-2">During the event (<span class="rating">{{calculateAverageRating(eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['between']))}}</span>)</h3>
                     <Pie 
                         :data="eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['between'])" 
                         :options="options" 
                     />
                 </div>
                 <div>
-                    <h3 class="mb-2">After the event</h3>
+                    <h3 class="mb-2">After the event  (<span class="rating">{{calculateAverageRating(eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['after']))}}</span>)</h3>
                     <Pie 
                         :data="eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['after'])" 
                         :options="options" 
@@ -69,20 +69,12 @@ const eventRatingDataset = (eventRating)=> {
         datasets: [
           {
             backgroundColor: [
-            '#90fdff',
-            '#42d3ff',
-            '#e558f7',
-            '#8eaca8',
-            '#fda458',
-            '#90fdac',
-            '#a8ac42',
-            '#444278',
-            '#f7a142',
-            '#de90fd',
-            '#90fdd4',
-            '#784444',
-            '#58f7bf',
-            '#fdaa58',
+            '#6c63ff',
+            '#00bf8e',
+            '#fd1f1f',
+            '#2e3267',
+            '#424890',
+            '#aca8fd',
             ],
             data: [
               eventRating["0"],
@@ -95,6 +87,23 @@ const eventRatingDataset = (eventRating)=> {
           },
         ],
       };
+};
+
+const calculateAverageRating = (data) =>  {
+  const starRatings = [0, 1, 2, 3, 4, 5];
+  const ratingsData = data.datasets[0].data;
+
+  // Calcul de la somme pondérée des évaluations
+  let weightedSum = 0;
+  for (let i = 0; i < starRatings.length; i++) {
+    weightedSum += starRatings[i] * ratingsData[i];
+  }
+
+  // Calcul de la moyenne
+  const totalRatings = ratingsData.reduce((total, count) => total + count, 0);
+  const averageRating = weightedSum / totalRatings;
+  if(isNaN(averageRating.toFixed(1))) return 0;
+  return averageRating.toFixed(1);
 };
 </script>
 <style scoped>
@@ -126,6 +135,11 @@ const eventRatingDataset = (eventRating)=> {
 
 .uil-venus{
     color: pink;
+}
+
+span.rating{
+    color: var(--color-danger);
+    font-weight: 600;
 }
 
 span{

@@ -67,10 +67,6 @@
             <StatSlider v-if="establishment && establishment.socials" class="stat__cards_mobile" :items="trends"
                 :websites="establishment.socials[0]"></StatSlider>
             <div class="tablet_mobile__filter">
-               <!--  <DropdownComponent class="dropdown" :showTitle="false" title="Filter by social"
-                    placeholder="Select a social network" :data="socials" @submit="(social) => {
-                        selectedSocials = social
-                    }" :default="socials[0]" /> -->
                 <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
                 <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
             </div>
@@ -180,11 +176,6 @@
                             <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                         </div>
                     </div>
-
-                   <!--  <DropdownComponent class="dropdown" title="Filter by social" placeholder="Select a social network"
-                        :data="socials" @submit="(social) => {
-                            selectedSocials = social
-                        }" :default="socials[0]" /> -->
                     <div class="date__filter">
                         <div class="text-sm title">Select a range of date</div>
                         <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
@@ -237,16 +228,6 @@ import SocialStatistics from '@Components/utils/SocialStatistics.vue';
 import StatSlider from '@Components/utils/StatSlider.vue';
 import StatComponent from '@Components/utils/StatComponent.vue';
 
-// ChartJS.register(
-//   CategoryScale,
-//   LinearScale,
-//   PointElement,
-//   LineElement,
-//   Title,
-//   Tooltip,
-//   ArcElement,
-//   Legend
-// )
 const page = ref({
     title1: "",
     title2: "Socials",

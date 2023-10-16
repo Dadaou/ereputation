@@ -96,6 +96,7 @@ export const useSocialStore = defineStore('social', () => {
 
   const getHistogram = async (id, date) => {
     const bDate = moment(date).format('YYYY-MM-DD')
+    console.log(bDate)
     if (histogramByDate[`${id}`] && histogramByDate[`${id}`][`${bDate}`]) {
       return histogramByDate[`${id}`][`${bDate}`]
     } else {
