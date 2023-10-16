@@ -552,7 +552,7 @@ const gotoReviewPage = (id)=>{
     appStore.isLoading = true;
     setTimeout(()=>{
         router.push({
-            name: 'reviews',
+            name: 'Review',
             params:{
                 id: id,
             }

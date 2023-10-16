@@ -97,7 +97,8 @@ import 'element-plus/es/components/date-picker/style/css'
 
 const SpinnerComponent = defineAsyncComponent(()=>
     import('@Components/utils/SpinnerComponent.vue')
-)
+);
+
 const route = useRoute();
 const userStore = useUserStore();
 const companyStore = useCompanyStore();

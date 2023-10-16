@@ -67,10 +67,10 @@ const submit = async ()=>{
         if(response.authenticated){
             router.push({name:"Home"});
             showSpinner.value = false;
-             ElMessage({
-                message: 'Congrats, you are authenticated!',
-                type: 'success',
-             })
+             // ElMessage({
+             //    message: 'Congrats, you are authenticated!',
+             //    type: 'success',
+             // })
         } else{
             isError.value = true;
             if(response.status == 401){

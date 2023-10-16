@@ -104,8 +104,8 @@ const showSpinner = ref(false);
 
 onBeforeMount(async ()=>{
     if(userStore.authenticated==null) services.setToken(import.meta.env.VITE_APP_TOKEN);
+    console.log(route.params)
     await staffStore.fetchOne(route.params.id, (response)=>{
-    	console.log(response);
     	if(response.status == 200){
     		staff.value = response.data;
     	}
@@ -309,7 +309,7 @@ span.label{
 @media screen and (max-width:1024px) {
     .feedback__form{
         position: relative;
-        top: 10.5rem !important;
+        /*top: 10.5rem !important;*/
         width: 70%;
     }
 }
@@ -317,6 +317,7 @@ span.label{
 @media screen and (max-width:850px) {
     .feedback__form{
         width: 80%;
+        /*top:0rem !important;*/
     }
 }
 

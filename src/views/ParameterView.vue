@@ -95,6 +95,7 @@ onBeforeMount(()=>{
         })
         Promise.all(promises).then(() => {
             companyStore.establishments = data;
+            console.log(data)
             appStore.isLoading = false;
             console.log(data);
         });

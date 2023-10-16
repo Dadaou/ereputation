@@ -55,7 +55,7 @@
                 <div id="qrcode__container mt-5" ref="qrcode">
                     <vue-qrious
                         class="qr__code"
-                        :value="`${baseurl}/establishment/2/staffs/${staff.id}/feedback`"
+                        :value="`${baseurl}/establishment/${staff.establishment_id}/${staff.establishment_tag}/staffs/${staff.id}/${staff.tag}/feedback`"
                         @change="onDataUrlChange"
                     />
                 </div>
@@ -125,6 +125,9 @@ import 'element-plus/es/components/input/style/css'
           department: staff_item.department,
           establishment_name: establishment.name,
           establishment: `/api/establishments/${establishment.id}`,
+          establishment_id: staff_item.establishment_id,
+          establishment_tag: staff_item.establishment_competitor_tag,
+          tag: staff_item.tag,
           name: `${staff_item.firstname} ${staff_item.lastname}`,
           gender: staff_item.gender,
           firstname: staff_item.firstname,
