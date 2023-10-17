@@ -80,7 +80,7 @@
 </template>
   
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, inject } from 'vue';
 import { useUserStore } from "@Stores/user.js";
 import moment from 'moment';
 import { useStaffStore } from "@Stores/staff.js"; 
@@ -179,16 +179,8 @@ import 'element-plus/es/components/input/style/css'
   const base64Image = ref(null);
   const qrcode = ref(null);
   const downloadQrcode = ()=>{
-    // htmlToImage.toJpeg(qrcode.value, { quality: 0.95 })
-    // .then(function (dataUrl) {
-    //     var link = document.createElement('a');
-    //     link.download = `${establishment.value.name}-feedback-link.jpeg`;
-    //     link.href = dataUrl;
-    //     link.click();
-    //     downloaded.value = true;
-    // });
     let link = document.createElement('a');
-    link.download = `${establishment.value.name}-feedback-link.jpeg`;
+    link.download = `${staff.value.name}-feedback-link.jpeg`;
     link.href = base64Image.value;
     link.click();
     downloaded.value = true;
