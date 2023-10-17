@@ -359,7 +359,6 @@ export const useCompanyStore = defineStore("company", {
       let semesters = this.splitRangeIntoSemesters(startDate, endDate);
       let months = this.getAllMonthsInRange(startDate, endDate);
       let weeks = this.getAllWeeksInRange(startDate, endDate);
-      console.log("weeks", weeks);
 
       if (timePeriod == "Quarters") {
         quarters.forEach((quarter, index) => {
@@ -368,9 +367,10 @@ export const useCompanyStore = defineStore("company", {
             "DD/M/YY"
           )} -${moment(quarter.end).format("DD/M/YY")}`;
           websites.forEach((website) => {
+            website = (website== 'App (Private)')?website: website.toLowerCase();
             let data = this.getReviewsBySource(
               company.reviews,
-              website.toLowerCase()
+              website
             );
             let reviews = this.getReviewsBetweenDates(
               data,
@@ -378,7 +378,6 @@ export const useCompanyStore = defineStore("company", {
               moment(quarter.end).format("YYYY-M-DD")
             );
             let key = website;
-            // let value = reviews.length; //this.calculateRatingV2(lastMonthReviews[month]);
             let value = Number(this.calculateRatingV2(reviews));
             review[key] = value;
           });
@@ -548,9 +547,10 @@ export const useCompanyStore = defineStore("company", {
           websites: establishment["websites"],
           zipcode: establishment["zipcode"],
         };
+        website = (website == 'App (Private)')?website:website.toLowerCase();
         company.reviews = this.getReviewsBySource(
           establishment.reviews,
-          website.toLowerCase()
+          website
         );
         data.push(company);
       });
@@ -682,6 +682,7 @@ export const useCompanyStore = defineStore("company", {
     getWebsites(websites) {
       let _websites = Object.entries(websites[0]);
       let data = [];
+       data.push('App (Private)');
       _websites.forEach(([key, value]) => {
         if (typeof value == "string") {
           if (this.isURL(value) && key !== "url" && key !== "thefork") {

@@ -326,7 +326,7 @@ watch([dateStart, dateEnd, selectedWebsites, checkedFeeling], ()=>{
     }
 
     if (selectedWebsites.value !== 'Global') {
-        const websiteFilter = selectedWebsites.value.toLowerCase();
+        const websiteFilter = (selectedWebsites.value == 'App (Private)')? selectedWebsites.value:selectedWebsites.value.toLowerCase();
         filteredReviews = companiesStore.getReviewsBySource(filteredReviews, websiteFilter);
     }
 
