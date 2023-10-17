@@ -173,11 +173,16 @@ const staffRatingDataset = (eventRating)=> {
           {
             backgroundColor: [
             '#6c63ff',
-            '#00bf8e',
-            '#fd1f1f',
-            '#2e3267',
-            '#424890',
-            '#aca8fd',
+            // '#00bf8e',
+            // '#fd1f1f',
+            // '#2e3267',
+            // '#424890',
+            // '#aca8fd',
+             '#FF0000',
+            '#FFA500',
+            '#FFFF00',
+            '#00FF00',
+            '#008000',
             ],
             data: [
               eventRating["0"],

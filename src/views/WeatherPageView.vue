@@ -435,9 +435,10 @@ const generatedLabel = (weatherData) => {
     let data = {};
     weatherData.forEach(weather => {
         let conditions = weather.conditions.split(',');
-        conditions.forEach(condition => {
-            if (!labels.includes(condition.trim())) labels.push(condition.trim());
-        })
+        if (!labels.includes(conditions[0].trim())) labels.push(conditions[0].trim());
+        // conditions.forEach(condition => {
+        //     if (!labels.includes(condition.trim())) labels.push(condition.trim());
+        // })
     })
 
     labels.forEach(label => {
@@ -465,16 +466,9 @@ const groupedReview = (weatherData, reviews) => {
             if (date_review === date_weather) {
                 exist = true;
                 let conditions = weather.conditions.split(',');
-                conditions.forEach(condition => {
-                    if (!data[condition.trim()]['notes'].includes(rating)) data[condition.trim()]['notes'].push(rating)
-                })
+                if (!data[conditions[0].trim()]['notes'].includes(rating)) data[conditions[0].trim()]['notes'].push(rating)
             }
         })
-
-        if (exist == false) {
-            let randomIndex = Math.floor(Math.random() * labels.length);
-            if (!data[labels[randomIndex]]['notes'].includes(rating)) data[labels[randomIndex]]['notes'].push(rating);
-        }
     })
 
     return data;

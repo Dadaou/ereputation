@@ -2,7 +2,10 @@
     <div class="staff__list">
         <div class="staff__card" v-if="events.length>0" v-for="event in events">
             <ul class="mb-5">
-                <li><h5>{{ event.name }}</h5></li>
+                <li><h5 :style="{
+                    color: `${generateColor(event.name)}`,
+                    fontWeight: 600,
+                }">{{ event.name }}</h5></li>
                 <li class="event_category"><span class="label">Category: </span> <span>{{ event.category }}</span></li>
                 <li class="period"><i class="uil uil-calender"></i> <span>{{ moment(event.datefrom).format('DD MMMM YYYY') }}</span> <span v-if="event.dateto != null">{{ `to ${moment(event.dateto).format('DD MMMM YYYY')}` }}</span></li>
             </ul>
@@ -70,11 +73,16 @@ const eventRatingDataset = (eventRating)=> {
           {
             backgroundColor: [
             '#6c63ff',
-            '#00bf8e',
-            '#fd1f1f',
-            '#2e3267',
-            '#424890',
-            '#aca8fd',
+            // '#00bf8e',
+            // '#fd1f1f',
+            // '#2e3267',
+            // '#424890',
+            // '#aca8fd',
+            '#FF0000',
+            '#FFA500',
+            '#FFFF00',
+            '#00FF00',
+            '#008000',
             ],
             data: [
               eventRating["0"],
@@ -105,6 +113,27 @@ const calculateAverageRating = (data) =>  {
   if(isNaN(averageRating.toFixed(1))) return 0;
   return averageRating.toFixed(1);
 };
+
+const hashString = (inputString) => {
+      let hash = 0;
+      for (let i = 0; i < inputString.length; i++) {
+        hash = (hash << 5) - hash + inputString.charCodeAt(i);
+      }
+      return hash;
+}
+
+const generateColor = (text) =>{
+      const inputString = text;
+      const hash = hashString(inputString);
+
+      const red = (hash & 0xFF0000) >> 16;
+      const green = (hash & 0x00FF00) >> 8;
+      const blue = hash & 0x0000FF;
+
+      return `rgb(${red}, ${green}, ${blue})`;
+};
+
+
 </script>
 <style scoped>
 .staff__list{
