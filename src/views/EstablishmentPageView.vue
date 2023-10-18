@@ -1,5 +1,5 @@
 <template>
-    <div class="main__container">
+    <div class="main__container" v-if="exist">
         <HeadComponent class="head" :page="page"></HeadComponent>
         <div class="breadcrumb__container">
             <BreadcrumbComponent :data="breadcrumbData"/>
@@ -236,6 +236,7 @@
             </div>
         </div>
     </div>
+    <EstablishmentNotFound v-else/>
 </template>
 
 <script setup>
@@ -254,7 +255,7 @@ import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import ComparisonChartComponent from '@Components/utils/ComparisonChartComponent.vue';
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
-import {ref, reactive, watch, onBeforeMount, computed, provide} from 'vue';
+import {ref, reactive, watch, onBeforeMount, computed, provide, defineAsyncComponent} from 'vue';
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css'
 
@@ -274,6 +275,11 @@ const page=ref({
     title2: "",
     icon: "uil-estate",
 });
+
+let exist = ref(true);
+const EstablishmentNotFound = defineAsyncComponent(()=>
+    import("@Views/EstablishmentNotFound.vue")
+)
 
 const weatherModal = ref(false);
 provide('showModal', weatherModal);
@@ -632,6 +638,10 @@ onBeforeMount(async () => {
     const response2 = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId}/rating`, (response) => {
                 resolve(response)
+                 if(response.status == 404) {
+                    exist.value = false;
+                    appStore.isLoading = false;
+                }
         });
     });
 
@@ -647,10 +657,13 @@ onBeforeMount(async () => {
     const response = await new Promise((resolve, reject) => {
         services.get_Record(`/establishment/${companyId}/detail`, (response) => {
                 resolve(response)
+                 if(response.status == 404){
+                    exist.value = false
+                 }
         });
     });
 
-     if(response.status == 200){
+    if(response.status == 200){
             establishment.value['reviews'] = response.data['reviews'];
             establishment.value['websites'] = response.data['websites'];
             establishment.value['competitors'] = response.data['competitors'];
@@ -660,14 +673,15 @@ onBeforeMount(async () => {
             let data = [];
             let promises = [];
 
-            establishment.value.competitors.forEach(competitor=>{
-               let promise = services.get_Record(`/establishment/${competitor.id}/detail`, (response) => {
+            establishment.value.competitors.forEach(company=>{
+               let promise = services.get_Record(`/establishment/${company.establishment_competitor_tag}/detail`, (response) => {
                         data.push(response.data);
                 });
                 promises.push(promise);  
             })
 
             Promise.all(promises).then(() => {
+                     console.log(data)
                      competitors.value = data;
                      globalComparison();
             });

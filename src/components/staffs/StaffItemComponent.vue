@@ -19,7 +19,7 @@
                                  <vue-qrious
                                     class="qr__code"
                                     @click="showModal=true, staf = staff"
-                                     :value="`${baseurl}/establishment/${staff.establishment_id}/${staff.establishment_competitor_tag}/staffs/${staff.id}/${staff.tag}/feedback`"
+                                     :value="`${baseurl}/establishment/${staff.establishment_competitor_tag}/staffs/${staff.tag}/feedback`"
                                     @change="onDataUrlChange"
                                     />
                              </el-tooltip>
@@ -72,9 +72,10 @@
                             <div id="qrcode__container  mt-5" ref="qrcode">
                                 <vue-qrious
                                     class="qr__code_view"
-                                     :value="`${baseurl}/establishment/${staf.establishment_id}/${staf.establishment_competitor_tag}/staffs/${staf.id}/${staf.tag}/feedback`"
+                                     :value="`${baseurl}/establishment/${staf.establishment_competitor_tag}/staffs/${staf.tag}/feedback`"
                                     @change="onDataUrlChange"
                                     />
+                                }
                             </div>
                         </div>
                         <div v-else class="establishment__review__qrcode">

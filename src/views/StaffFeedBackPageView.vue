@@ -1,5 +1,5 @@
 <template>
-<div class="main__container">
+<div class="main__container" v-if="exist">
     <HeadComponent :page="page"></HeadComponent> 
     <div class="feedback__form">
         <div class="tablet_mobile__head">
@@ -64,6 +64,7 @@
             </div>
     </div>
 </div>
+<EstablishmentNotFound v-else/>
 </template>
 
 <script setup>
@@ -85,6 +86,12 @@ import 'element-plus/es/components/date-picker/style/css';
 const SpinnerComponent = defineAsyncComponent(()=>
     import('@Components/utils/SpinnerComponent.vue')
 )
+
+let exist = ref(true);
+const EstablishmentNotFound = defineAsyncComponent(()=>
+    import("@Views/EstablishmentNotFound.vue")
+)
+
 const route = useRoute();
 const userStore = useUserStore();
 const companyStore = useCompanyStore();
@@ -105,11 +112,19 @@ const showSpinner = ref(false);
 onBeforeMount(async ()=>{
     if(userStore.authenticated==null) services.setToken(import.meta.env.VITE_APP_TOKEN);
     console.log(route.params)
-    await staffStore.fetchOne(route.params.id, (response)=>{
-    	if(response.status == 200){
-    		staff.value = response.data;
-    	}
-    })
+    // await staffStore.fetchOne(route.params.id, (response)=>{
+    // 	if(response.status == 200){
+    // 		staff.value = response.data;
+    // 	}
+    // })
+    await services.get_Record(`establishment/${route.params.id}/descriptions`, (response)=>{
+        console.log(response)
+            if(response.status == 200){ 
+               staff.value = response.data;
+            }
+
+            if(response.status == 404) exist.value=false
+    });
     
 })
 

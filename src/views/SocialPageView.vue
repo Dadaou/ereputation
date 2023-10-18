@@ -1,5 +1,5 @@
 <template>
-    <div class="main__container">
+    <div class="main__container" v-if="exist">
         <HeadComponent class="head" :page="page"></HeadComponent>
         <div class="breadcrumb__container">
             <BreadcrumbComponent :data="breadcrumbData" />
@@ -195,6 +195,7 @@
             </div>
         </div>
     </div>
+   <EstablishmentNotFound v-else/> 
 </template>
 
 <script setup>
@@ -208,7 +209,7 @@ import { useSocialStore } from "@Stores/social.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
-import { ref, watch, onBeforeMount, onMounted } from 'vue';
+import { ref, watch, onBeforeMount, onMounted, defineAsyncComponent } from 'vue';
 import { storeToRefs } from 'pinia';
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css';
@@ -233,6 +234,11 @@ const page = ref({
     title2: "Socials",
     icon: "uil-users-alt",
 });
+
+let exist = ref(true);
+const EstablishmentNotFound = defineAsyncComponent(()=>
+    import("@Views/EstablishmentNotFound.vue")
+)
 
 const socialHistogramContainer = ref(null);
 let lineChartWidth = ref(620)
@@ -394,6 +400,10 @@ onBeforeMount(async () => {
     const response2 = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId}/rating`, (response) => {
                 resolve(response)
+                if(response.status == 404) {
+                    exist.value = false;
+                    appStore.isLoading = false;
+                }
         });
     });
 

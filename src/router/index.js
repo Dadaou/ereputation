@@ -90,12 +90,12 @@ const router = createRouter({
       component: ()=>import('@Views/StaffPageView.vue'),
     },
     {
-      path:'/establishment/:id/:tag/feedback',
+      path:'/establishment/:id/feedback',
       name: 'FeedBack',
       component: ()=> import('@Views/FeedBackPageView.vue'),
     },
      {
-      path:'/establishment/:etab/:etab_tag/staffs/:id/:tag/feedback',
+      path:'/establishment/:etab/staffs/:id/feedback',
       name: 'StaffFeedBack',
       component: ()=> import('@Views/StaffFeedBackPageView.vue'),
     },
@@ -126,6 +126,11 @@ const router = createRouter({
       path:'/:catchAll(.*)',
       name: 'NotFound',
       component: ()=> import('@Views/NotFoundPageView.vue'),
+    },
+    {
+      path:'/establishment/notFound',
+      name: 'EstablishmentNotFound',
+      component: ()=> import('@Views/EstablishmentNotFound.vue'),
     },
   ]
 })

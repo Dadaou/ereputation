@@ -1,5 +1,5 @@
 <template>
-    <div class="main__container">
+    <div class="main__container" v-if="exist">
         <HeadComponent class="head" :page="page"></HeadComponent>
         <div class="breadcrumb__container">
             <BreadcrumbComponent :data="breadcrumbData"/>
@@ -149,6 +149,7 @@
         </div>
     </div>
 </div>
+<EstablishmentNotFound v-else/>
 </template>
 
 <script setup>
@@ -180,6 +181,11 @@ import { useResizeObserver } from '@vueuse/core';
 
 const EventChartComponent = defineAsyncComponent(()=>
     import('@Components/utils/EventChartComponent.vue')
+)
+
+let exist = ref(true);
+const EstablishmentNotFound = defineAsyncComponent(()=>
+    import("@Views/EstablishmentNotFound.vue")
 )
 
 const page=ref({
@@ -242,6 +248,10 @@ onBeforeMount(async () => {
     const response2 = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId}/rating`, (response) => {
                 resolve(response)
+                if(response.status == 404) {
+                    exist.value = false;
+                    appStore.isLoading = false;
+                }
         });
     });
 
@@ -257,6 +267,10 @@ onBeforeMount(async () => {
     const response = await new Promise((resolve, reject) => {
         services.get_Record(`/establishment/${companyId}/detail`, (response) => {
                 resolve(response)
+                 if(response.status == 404) {
+                    exist.value = false;
+                    appStore.isLoading = false;
+                }
         });
     });
 

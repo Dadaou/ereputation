@@ -7,6 +7,7 @@
                 <div class="line"></div>
             </div>
             <div v-if="!dataLoading">
+
                 <div class="client__container__head" v-if="establishments.length > 0">
                     Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, your establishments are listed bellow.  <span>({{ establishments.length }} found)</span>
                 </div>
@@ -77,13 +78,13 @@ const signOut = () => {
 appStore.isLoading = false;
 
 onBeforeMount(async()=>{
-    console.log(userStore.user)
     if(userStore.user.customer !== null){
          const response = await new Promise((resolve, reject) => {
-            services.get_Record(`/customer/${userStore.user.customer.id}/establishments/reviews`, (response) => {
+            services.get_Record(`/customer/${userStore.user.customer.tag}/establishments/reviews`, (response) => {
                     resolve(response)
             });
         });
+         console.log(response)
 
         if(response.status == 200){
             establishments.value = response.data;    

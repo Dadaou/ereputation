@@ -1,5 +1,5 @@
 <template>
-    <div class="main__container">
+    <div class="main__container" v-if="exist">
         <HeadComponent class="head" :page="page"></HeadComponent>
         <div class="breadcrumb__container">
             <BreadcrumbComponent :data="breadcrumbData"/>
@@ -206,6 +206,7 @@
             </div>
         </div>
     </div>
+    <EstablishmentNotFound v-else/>
 </template>
 
 <script setup>
@@ -222,7 +223,7 @@ import CommentPagination from '@Components/utils/CommentPagination.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
-import {ref, reactive, watch, onBeforeMount, computed, provide} from 'vue';
+import {ref, reactive, watch, onBeforeMount, computed, provide, defineAsyncComponent} from 'vue';
 import { ElDatePicker } from 'element-plus';
 
 
@@ -231,6 +232,11 @@ const page=ref({
     title2: "",
     icon: "uil-estate",
 });
+
+let exist = ref(true);
+const EstablishmentNotFound = defineAsyncComponent(()=>
+    import("@Views/EstablishmentNotFound.vue")
+)
 
 const route = useRoute();
 const router = useRouter();
@@ -399,6 +405,10 @@ onBeforeMount(async () => {
     const response = await new Promise((resolve, reject) => {
         services.get_Record(`/establishment/${companyId}/detail`, (response) => {
                 resolve(response)
+                 if(response.status == 404) {
+                    exist.value = false;
+                    appStore.isLoading = false;
+                }
         });
     });
 

@@ -88,7 +88,7 @@ onBeforeMount(()=>{
     appStore.isLoading = true;
     if(userStore.user.customer !== null){
         userStore.user.customer.establishments.forEach((establishment, index)=> {
-        let promise = services.get_Record(`/establishment/${establishment.id}/detail`, (response) => {
+        let promise = services.get_Record(`/establishment/${establishment.competitor_tag}/detail`, (response) => {
                 data.push(response.data);
             });
             promises.push(promise); 

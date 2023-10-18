@@ -59,6 +59,7 @@ export const useSocialStore = defineStore('social', () => {
 
   const fetchGlobalStats = async (id, period, type, next) => {
     console.log('fetch stats ...')
+    console.log(id)
     if (type == 'monthly') {
       await services.get_Record(
         `social/establishment/${id}/monthly/${period}/new_statistique`,
@@ -116,6 +117,7 @@ export const useSocialStore = defineStore('social', () => {
     } else {
       await fetchGlobalStats(id, period, type)
       tmp = globalStats.value
+        console.log(tmp)
       if (tmp[`${id}`] && tmp[`${id}`][`${type}`] && tmp[`${id}`][`${type}`][`${period}`]) {
         return tmp[`${id}`][`${type}`][`${period}`]
       } else {
