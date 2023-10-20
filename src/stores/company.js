@@ -703,7 +703,7 @@ export const useCompanyStore = defineStore("company", {
       });
       return result;
     },
-    getReviewsBetweenDatesTemp(reviews, start_date, end_date) {
+    /*getReviewsBetweenDatesTemp(reviews, start_date, end_date) {
       let reviewsBetweenDates = [];
       let reviewsBeforeDates = [];
       let reviewsAfterDates = [];
@@ -728,7 +728,36 @@ export const useCompanyStore = defineStore("company", {
         reviewsBeforeDates,
         reviewsAfterDates
       };
+    },*/
+    getReviewsBetweenDatesTemp(reviews, start_date, end_date) {
+      let reviewsBetweenDates = [];
+      let reviewsBeforeDates = [];
+      let reviewsAfterDates = [];
+    
+      const startDate = moment(start_date);
+      const endDate = moment(end_date);
+      const ninetyDaysAgo = moment(start_date).subtract(90, 'days');
+      const ninetyDaysLater = moment(end_date).add(90, 'days');
+    
+      reviews.forEach((review) => {
+        const reviewDate = moment(review.date_review);
+    
+        if (reviewDate.isBetween(ninetyDaysAgo, startDate, null, "[]")) {
+          reviewsBeforeDates.push(review);
+        } else if (reviewDate.isBetween(endDate, ninetyDaysLater, null, "[]")) {
+          reviewsAfterDates.push(review);
+        } else if (reviewDate.isBetween(startDate, endDate, null, "[]")) {
+          reviewsBetweenDates.push(review);
+        }
+      });
+    
+      return {
+        reviewsBetweenDates,
+        reviewsBeforeDates,
+        reviewsAfterDates
+      };
     },
+    
     splitRangeIntoQuarters(start_date, end_date) {
       const start = new Date(start_date);
       const end = new Date(end_date);
