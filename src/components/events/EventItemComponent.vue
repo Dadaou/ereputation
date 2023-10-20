@@ -11,7 +11,7 @@
             </ul>
             <div class="pie__chart">
                 <div>
-                    <h3 class="mb-2">Before the event (<span class="rating">{{calculateAverageRating(eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['before']))}}</span>)</h3>
+                    <h3 class="mb-2">-90 days to event (<span class="rating">{{calculateAverageRating(eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['before']))}}</span>)</h3>
                     <Pie 
                         :data="eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['before'])" 
                         :options="options" 
@@ -25,7 +25,7 @@
                     />
                 </div>
                 <div>
-                    <h3 class="mb-2">After the event  (<span class="rating">{{calculateAverageRating(eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['after']))}}</span>)</h3>
+                    <h3 class="mb-2">Event +90 days  (<span class="rating">{{calculateAverageRating(eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['after']))}}</span>)</h3>
                     <Pie 
                         :data="eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['after'])" 
                         :options="options" 
