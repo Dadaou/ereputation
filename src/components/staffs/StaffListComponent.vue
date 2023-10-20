@@ -55,7 +55,7 @@
                 <div id="qrcode__container mt-5" ref="qrcode">
                     <vue-qrious
                         class="qr__code"
-                        :value="`${baseurl}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`"
+                        :value="`${baseurl}/customer/${tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`"
                         @change="onDataUrlChange"
                     />
                 </div>
@@ -112,6 +112,7 @@ import 'element-plus/es/components/input/style/css'
     return gap + 35;
   })
   const staffs = inject('staffs')
+  const tag = inject('tag');
 
   let tableData = computed(()=>{
     let establishments = userStore.user.customer !=null ? companiesStore.establishments: [];
@@ -133,11 +134,11 @@ import 'element-plus/es/components/input/style/css'
   )
 
   const reloadData = (staff)=>{
-     companiesStore.establishments.forEach((element, index) => {
-            if(`/api/${companiesStore.entity}/${element.id}` == staff.establishment){
-              companiesStore.establishments[index].staffs= companiesStore.establishments[index].staffs.filter(item=>item.id !== staff.id);
-            }
-        });
+    let data = [];
+    staffs.value.forEach(staff_item=>{
+      if(staff_item.id !== staff.id) data.push(staff_item);
+    })
+    staffs.value = data;
   }
 
   const handleEdit = (index, staff) => {

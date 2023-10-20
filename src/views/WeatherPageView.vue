@@ -246,7 +246,7 @@ const router = useRouter();
 const breadcrumbData = [
     {
         title: "Back",
-        path: `/establishment/${route.params.id}`,
+         path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
         isCurrent: false,
     },
     {
@@ -356,7 +356,6 @@ const weaherImpact = (startDate, endDate) => {
             impactByDay[date.format('YYYY-MM-DD')]['max'] = ((weather.tempmax - 32) / 1.8).toFixed(1);
             impactByDay[date.format('YYYY-MM-DD')]['min'] = ((weather.tempmin - 32) / 1.8).toFixed(1);
             impactByDay[date.format('YYYY-MM-DD')]['condition'] = weather.conditions;
-             console.log(date.format('YYYY-MM-DD'))
         }
     });
 
@@ -386,7 +385,6 @@ const weaherImpact = (startDate, endDate) => {
 
     let data = [];
     for (const key in impactByDay) {
-        console.log(key)
         let icon = generateWeatherIcon(key)
         let item = {
             "date": `${icon} ${moment(key).format('DD-MM-YYYY')}`,
@@ -405,12 +403,13 @@ const weaherImpact = (startDate, endDate) => {
 
 const generateWeatherIcon = (day) => {
     const weatherClassification = {
-        'Rain, Overcast': "🌧",
+        'Rain, Overcast': "😄",
         'Rain, Partially cloudy': "🌧",
         'Partially cloudy': "⛅",
         'Clear': "🌞",
         'Rain': "☔"
     }
+
     const weatherData = weather.value;
     const dayWeather = weatherData.find(weather => {
         return moment(weather.date_weather).isSame(day, 'day')
@@ -451,9 +450,6 @@ const generatedLabel = (weatherData) => {
     weatherData.forEach(weather => {
         let conditions = weather.conditions.split(',');
         if (!labels.includes(conditions[0].trim())) labels.push(conditions[0].trim());
-        // conditions.forEach(condition => {
-        //     if (!labels.includes(condition.trim())) labels.push(condition.trim());
-        // })
     })
 
     labels.forEach(label => {

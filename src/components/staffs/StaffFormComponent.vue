@@ -157,38 +157,27 @@ const loadData = (_staff, staff)=>{
     staffs.value.push(new_staff);
 }
 
-const updateData = (staff)=>{
-    if(userStore.user.customer != null){
-       companiesStore.establishments.forEach((element, index) => {
-            if(`/api/${companiesStore.entity}/${element.id}` == staff.establishment){
-                      companiesStore.establishments[index].staffs.forEach((item, index2)=>{
-                             if(item.id == staff.id){
-                                    companiesStore.establishments[index].staffs[index2] = staff;   
-                             }
-                    
-                        })
-            }
-        });
-    }
-}
+const updateData = (_staff)=>{
 
-const refreshTable = ()=>{
-  let data = [];
-    let promises = [];
-    appStore.isLoading = true;
-    if(userStore.user.customer !== null){
-        userStore.user.customer.establishments.forEach((establishment, index)=> {
-        let promise = services.get_Record(`/establishment/${establishment.id}/detail`, (response) => {
-                data.push(response.data);
-            });
-            promises.push(promise); 
-        })
-        Promise.all(promises).then(() => {
-            companiesStore.establishments = data;
-            appStore.isLoading = false;
-            console.log(data);
-        });
+    let new_staff = {
+        id: _staff.id,
+        datefrom : _staff.datefrom,
+        dateto: _staff.dateto,
+        department: _staff.department,
+        establishment_name: _staff.establishment.name,
+        establishment: _staff.establishment['@id'],
+        establishment_id: _staff.establishment.id,
+        establishment_tag: _staff.establishment.competitor_tag,
+        tag: _staff.tag,
+        name: `${_staff.firstname} ${_staff.lastname}`,
+        gender: _staff.gender,
+        firstname: _staff.firstname,
+        lastname: _staff.lastname,
     }
+
+     staffs.value.forEach((staff, index)=>{
+        if(staff.id == new_staff.id) staffs.value[index] = new_staff;
+     })
 }
 
 const submit = async ()=>{

@@ -93,7 +93,7 @@
                 <div id="qrcode__container mt-5" ref="qrcode">
                     <vue-qrious
                         class="qr__code"
-                        :value="`${baseurl}/establishment/${establishment.competitor_tag}/feedback`"
+                        :value="`${baseurl}/customer/${tag}/establishment/${establishment.competitor_tag}/feedback`"
                         @change="onDataUrlChange"
                     />
                 </div>
@@ -123,7 +123,7 @@
     </ModalComponent>
 </template>
 <script setup>
-import { ref, defineAsyncComponent, computed } from 'vue';
+import { ref, defineAsyncComponent, computed, inject } from 'vue';
 import RatingComponent from '@Components/utils/RatingComponent.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Virtual } from 'swiper/modules';
@@ -134,6 +134,7 @@ import { useMediaStore } from "@Stores/media.js";
 import { useAppStore } from "@Stores/app.js";
 import { useRouter } from "vue-router";
 import 'swiper/css';
+import { useUserStore } from "@Stores/user.js";
 
 const ModalComponent = defineAsyncComponent(()=>
 	import('@Components/utils/ModalComponent.vue')
@@ -148,6 +149,9 @@ const props = defineProps({
 		required: true
 	}
 }); 
+
+const userStore = useUserStore();
+const tag = inject('tag')
 
 const establishment = ref(null);
 const showModal = ref(false);
@@ -166,7 +170,8 @@ const goToCompany = (establishment) => {
         router.push({
             name: 'Establishment', 
             params: {
-                id: establishment.competitor_tag
+                id: establishment.competitor_tag,
+                tag: userStore.user.customer.tag
             },
         });
     }, 100); 

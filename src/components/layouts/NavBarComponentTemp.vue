@@ -39,7 +39,7 @@
         <ul class="py-2" aria-labelledby="user-menu-button">
           <li>
           	<RouterLink 
-          		:to="`/users/${userStore.user.id}/profile`"
+          		:to="`/customer/${userStore.user.customer.tag}/account`"
           		class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
           	>
                     <i class="uil uil-user-square"></i>
@@ -48,7 +48,7 @@
           </li>
           <li>
             <RouterLink 
-            	:to="`/users/${userStore.user.id}/profile/security`"
+            	:to="`/customer/${userStore.user.customer.tag}/account/security`"
             	class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
                      <i class="uil uil-setting"></i>
@@ -72,31 +72,31 @@
     <ul 
     	:class="['menu flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-2 md:mt-0 md:border-0']">
       			<li>
-                    <RouterLink :to="`/establishment/${$route.params.id}/staffs`">
+                    <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffs`">
                         <i class="uil uil-users-alt"></i> 
                         <span>Staff</span> 
                     </RouterLink>
                 </li>
                 <li>
-                    <RouterLink :to="`/establishment/${$route.params.id}/events`">
+                    <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/events`">
                         <i class="uil uil-calendar-alt"></i> 
                         <span>Event</span>
                     </RouterLink>
                 </li>
                 <li>
-                    <RouterLink :to="`/establishment/${$route.params.id}/socials`">
+                    <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/socials`">
                         <i class="uil uil-users-alt"></i>
                         <span>Social</span> 
                     </RouterLink>
                 </li>
                 <li>
-                    <RouterLink :to="`/establishment/${$route.params.id}/weathers`">
+                    <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/weathers`">
                         <i class="uil uil-cloud-sun"></i>
                         <span>Weather</span> 
                     </RouterLink>
                 </li>
                 <li>
-                    <RouterLink :to="`/establishment/${$route.params.id}/reviews`">
+                    <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/reviews`">
                         <i class="uil uil-comment-alt-dots"></i>
                         <span>Reviews</span> 
                     </RouterLink>

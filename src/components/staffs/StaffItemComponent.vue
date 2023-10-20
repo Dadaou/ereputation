@@ -19,7 +19,7 @@
                                  <vue-qrious
                                     class="qr__code"
                                     @click="showModal=true, staf = staff"
-                                     :value="`${baseurl}/establishment/${staff.establishment_competitor_tag}/staffs/${staff.tag}/feedback`"
+                                     :value="`${baseurl}/customer/${tag}/establishment/${staff.establishment_competitor_tag}/staffs/${staff.tag}/feedback`"
                                     @change="onDataUrlChange"
                                     />
                              </el-tooltip>
@@ -72,7 +72,7 @@
                             <div id="qrcode__container  mt-5" ref="qrcode">
                                 <vue-qrious
                                     class="qr__code_view"
-                                     :value="`${baseurl}/establishment/${staf.establishment_competitor_tag}/staffs/${staf.tag}/feedback`"
+                                     :value="`${baseurl}/customer/${tag}/establishment/${staf.establishment_competitor_tag}/staffs/${staf.tag}/feedback`"
                                     @change="onDataUrlChange"
                                     />
                                 }
@@ -123,6 +123,7 @@ const showModal = ref(false);
 const downloaded = ref(false);
 const companiesStore = useCompanyStore();
 const establishment = inject('establishment')
+const tag = inject('tag')
 
 const downloadQrcode = (staffname)=>{
     let link = document.createElement('a');

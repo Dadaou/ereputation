@@ -1,8 +1,9 @@
 <script setup>
-import { onBeforeMount, watch, ref, defineAsyncComponent } from 'vue'
+import { onBeforeMount, watch, ref, defineAsyncComponent, provide } from 'vue'
 import { initFlowbite } from 'flowbite'
 import { useWindowSize } from '@vueuse/core'
 import { useAppStore } from "@Stores/app.js"
+import { useUserStore } from "@Stores/user.js"
 import { RouterLink, RouterView } from 'vue-router'
 
 const SpinnerComponent = defineAsyncComponent(()=>
@@ -18,6 +19,9 @@ const FooterComponent = defineAsyncComponent(()=>
 )
 
 const appStore = useAppStore();
+const userStore = useUserStore();
+if(userStore.user.customer.tag) provide('tag', userStore.user.customer.tag)
+
 onBeforeMount(() => {
     initFlowbite();
 });

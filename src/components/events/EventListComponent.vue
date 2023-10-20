@@ -119,15 +119,11 @@
   )
 
   const reloadData = (event)=>{
-    if(userStore.user.customer != null){
-      event.establishment.forEach(item =>{
-         companiesStore.establishments.forEach((element, index) => {
-            if(element.id == item.id){
-              companiesStore.establishments[index].events= companiesStore.establishments[index].events.filter(value=>value.id !== event.id);
-            }
-        });
+     let data = [];
+      tableData.value.forEach(event_item=>{
+        if(event_item.id !== event.id) data.push(event_item);
       })
-    }
+      tableData.value = data;
   }
   const handleEdit = (index, event) => {
     emit('edit', event);

@@ -199,7 +199,7 @@ const router = useRouter();
 const breadcrumbData = [
     {
         title: "Back",
-        path: `/establishment/${route.params.id}`,
+        path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
         isCurrent: false,
     },
     {

@@ -505,6 +505,7 @@ export const useCompanyStore = defineStore("company", {
     },
     getLastReviews(reviews, n) {
       let data = [];
+      console.log(reviews)
       if (reviews.length > 0) {
         reviews.sort(function (a, b) {
           return moment(b.date_review).diff(moment(a.date_review));

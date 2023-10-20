@@ -31,6 +31,7 @@
 import { ref, inject } from 'vue';
 
 const emit = defineEmits(['updateValue']);
+
 const ratingCustomer = ref({
     terrible: { note: 1, clicked: false, feeling: 'negative'},
     bad: { note: 2, clicked: false, feeling: 'negative'},
@@ -49,9 +50,7 @@ const selectRating = (selectedRating)=>{
     }
 }
 
-let feeling = inject('feeling');
-
-selectRating(feeling.value);
+selectRating('okay');
 
 
 </script>

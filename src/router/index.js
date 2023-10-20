@@ -3,6 +3,7 @@ import LoginView from '@Views/LoginView.vue'
 import { useCompanyStore } from "@Stores/company.js"; 
 import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from "@Stores/app.js";
+import {ref} from 'vue';
 import services from '@Services/services.js';
 
 const CheckAuthentication = (to, from, next) => {
@@ -10,6 +11,7 @@ const CheckAuthentication = (to, from, next) => {
       next()
     } else next('/home')
 }
+
 
 const removeAccess = (to, from, next) => {
   localStorage.removeItem("user_authenticated");
@@ -54,53 +56,53 @@ const router = createRouter({
       component: ()=>import('@Views/HomePageView.vue'),
     },
     {
-      path: '/establishment/:id',
+      path: '/customer/:tag/establishment/:id',
       name: 'Establishment',
       beforeEnter: [CheckAccess],
       component: ()=>import('@Views/EstablishmentPageView.vue'),
     },
     {
-      path: '/establishment/:id/reviews',
+      path: '/customer/:tag/establishment/:id/reviews',
       name: 'Review',
       beforeEnter: [CheckAccess],
       component: ()=>import('@Views/ReviewPageView.vue'),
     },
     {
-      path: '/establishment/:id/events',
+      path: '/customer/:tag/establishment/:id/events',
       name: 'Event',
       beforeEnter: [CheckAccess],
       component: ()=>import('@Views/EventPageView.vue'),
     },
      {
-      path: '/establishment/:id/socials',
+      path: '/customer/:tag/establishment/:id/socials',
       name: 'Social',
       beforeEnter: [CheckAccess],
       component: ()=>import('@Views/SocialPageView.vue'),
     },
      {
-      path: '/establishment/:id/weathers',
+      path: '/customer/:tag/establishment/:id/weathers',
       name: 'Weather',
       beforeEnter: [CheckAccess],
       component: ()=>import('@Views/WeatherPageView.vue'),
     },
      {
-      path: '/establishment/:id/staffs',
+      path: '/customer/:tag/establishment/:id/staffs',
       name: 'Staff',
       beforeEnter: [CheckAccess],
       component: ()=>import('@Views/StaffPageView.vue'),
     },
     {
-      path:'/establishment/:id/feedback',
+      path:'/customer/:tag/establishment/:id/feedback',
       name: 'FeedBack',
       component: ()=> import('@Views/FeedBackPageView.vue'),
     },
      {
-      path:'/establishment/:etab/staffs/:id/feedback',
+      path:'/customer/:tag/establishment/:etab/staffs/:id/feedback',
       name: 'StaffFeedBack',
       component: ()=> import('@Views/StaffFeedBackPageView.vue'),
     },
     {
-      path: '/users/:id/profile',
+      path: '/customer/:tag/account',
       name: 'UserProfile',
       component: ()=> import('@Views/ProfilePageView.vue'),
       beforeEnter: [CheckAccess],
@@ -128,7 +130,7 @@ const router = createRouter({
       component: ()=> import('@Views/NotFoundPageView.vue'),
     },
     {
-      path:'/establishment/notFound',
+      path:'/customer/:tag/establishment/notFound',
       name: 'EstablishmentNotFound',
       component: ()=> import('@Views/EstablishmentNotFound.vue'),
     },

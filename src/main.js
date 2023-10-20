@@ -11,6 +11,7 @@ import App from './App.vue'
 import router from './router'
 
 const app = createApp(App)
+app.provide('tag', '');
 services.setURL(import.meta.env.VITE_APP_API_URL)
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)

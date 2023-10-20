@@ -118,7 +118,6 @@ const page=ref({
     icon: "uil-signin",
 });
 
-provide('feeling', 'okay');
 const showSpinner = ref(false);
 
 onBeforeMount(async ()=>{
@@ -151,7 +150,6 @@ const email = ref('');
 const dateVisit = ref('');
 
 const submit = async ()=>{
-    showSpinner.value = true;
     let date_review = new Date();
     let review = {
         "author": `${firstname.value} ${lastname.value}`,
@@ -161,7 +159,7 @@ const submit = async ()=>{
         "translated": null,
         "source": "App (Private)",
         "catering": null,
-        "establishment": `/api/${companyStore.entity}/${route.params.id}`,
+        "establishment": `/api/${companyStore.entity}/${establishment.value.id}`,
         "feeling": ratingCustomer.value.feeling,
         "score": 0,
         "confidence": 0,
@@ -175,10 +173,10 @@ const submit = async ()=>{
     }
 
     try{
-        if(firstname.value !== '' && ratingCustomer.value !== null && email.value !== '' && comment.value !== '' && dateVisit.value !== null){
+        if(firstname.value !== '' && ratingCustomer.value !== null && email.value !== '' && comment.value !== ''){
+            showSpinner.value = true;
             await feedbackStore.createReview(review, (response)=>{
-                console.log(response);
-
+                console.log(response)
                 if(response.status == 201){
                     ElMessage({
                         message: `Thanks for your feedback!`,
@@ -192,7 +190,7 @@ const submit = async ()=>{
                     showSpinner.value = false;
                 }
             })
-        }
+        }else ElMessage.error(`Please, provide all needed information`);
     }catch(error){
         console.log(error)
     }

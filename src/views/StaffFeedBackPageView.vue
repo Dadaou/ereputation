@@ -35,7 +35,7 @@
                             <input type="email" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
                         </div>
                         <div>
-                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Visited at <span>*</span></label>
+                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Visited at<!--  <span>*</span> --></label>
                              <el-date-picker
                                 v-model="dateVisit"
                                 :size="'large'"
@@ -106,21 +106,16 @@ const page=ref({
     icon: "uil-signin",
 });
 
-provide('feeling', 'okay');
 const showSpinner = ref(false);
 
 onBeforeMount(async ()=>{
     if(userStore.authenticated==null) services.setToken(import.meta.env.VITE_APP_TOKEN);
-    console.log(route.params)
-    // await staffStore.fetchOne(route.params.id, (response)=>{
-    // 	if(response.status == 200){
-    // 		staff.value = response.data;
-    // 	}
-    // })
+  
     await services.get_Record(`staffs/${route.params.id}/descriptions`, (response)=>{
         console.log(response)
             if(response.status == 200){ 
                staff.value = response.data[0];
+               console.log(staff.value)
             }
 
             if(response.status == 404) exist.value=false
@@ -143,7 +138,6 @@ const email = ref('');
 const dateVisit = ref('');
 
 const submit = async ()=>{
-    showSpinner.value = true;
     let date_review = new Date();
     let review = {
         "author": `${firstname.value} ${lastname.value}`,
@@ -153,24 +147,23 @@ const submit = async ()=>{
         "translated": null,
         "source": "App (Private)",
         "catering": null,
-        "establishment": `/api/${companyStore.entity}/${route.params.etab}`,
+        "establishment": `/api/${companyStore.entity}/${staff.value.establishment_id}`,
         "feeling": ratingCustomer.value.feeling,
         "score": 0,
         "confidence": 0,
         "authorUrl": null,
         "profilePhoto": null,
         "email": email.value,
-        "staff": `/api/staff/${route.params.id}`,
+        "staff": `/api/staff/${staff.value.id}`,
         "optin": true,
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
         "dateReview": moment(date_review, 'DD/MM/YYYY')
     }
 
     try{
-        if(firstname.value !== '' && ratingCustomer.value !== null && email.value !== '' && comment.value !== '' && dateVisit.value !== null){
+        if(firstname.value !== '' && ratingCustomer.value !== null && email.value !== '' && comment.value !== ''){
+            showSpinner.value = true;
             await feedbackStore.createReview(review, (response)=>{
-                console.log(response);
-
                 if(response.status == 201){
                     ElMessage({
                         message: `Thanks for your feedback!`,
@@ -184,7 +177,7 @@ const submit = async ()=>{
                     showSpinner.value = false;
                 }
             })
-        }
+        }else ElMessage.error(`Please, provide all needed information`);
     }catch(error){
         console.log(error)
     }
