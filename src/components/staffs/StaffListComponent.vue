@@ -110,33 +110,17 @@ import 'element-plus/es/components/input/style/css'
     let windowSize = 1500;
     let gap = (windowSize - width.value)/19;
     return gap + 35;
-})
+  })
+  const staffs = inject('staffs')
 
   let tableData = computed(()=>{
     let establishments = userStore.user.customer !=null ? companiesStore.establishments: [];
     let data = []; 
-    establishments.forEach(establishment => {
-      let staffs = establishment.staffs;
-      staffs.forEach(staff_item => {
-        let staff = {
-          period: staff_item.dateto!=null?`${moment(staff_item.datefrom).format('YYYY MMM DD')} to ${moment(staff_item.dateto).format('YYYY MMM DD')}`:`${moment(staff_item.datefrom).format('YYYY MMM DD')} to -`,
-          datefrom : staff_item.datefrom,
-          dateto: staff_item.dateto,
-          department: staff_item.department,
-          establishment_name: establishment.name,
-          establishment: `/api/establishments/${establishment.id}`,
-          establishment_id: staff_item.establishment_id,
-          establishment_tag: staff_item.establishment_competitor_tag,
-          tag: staff_item.tag,
-          name: `${staff_item.firstname} ${staff_item.lastname}`,
-          gender: staff_item.gender,
-          firstname: staff_item.firstname,
-          lastname: staff_item.lastname,
-          id: staff_item.id,
-        }
-        data.push(staff);
-      });
-    });
+    staffs.value.forEach(staff_item=>{
+      staff_item['period'] = staff_item.dateto!=null?`${moment(staff_item.datefrom).format('YYYY MMM DD')} to ${moment(staff_item.dateto).format('YYYY MMM DD')}`:`${moment(staff_item.datefrom).format('YYYY MMM DD')} to -`;
+       console.log(staff_item) 
+       data.push(staff_item);
+    })
     return data;
   });
   const search = ref('')
@@ -166,9 +150,9 @@ import 'element-plus/es/components/input/style/css'
     if(response.status == 204){
       reloadData(staff);
         ElMessage({
-                    message: `Staff removed successfully.`,
-                    type: 'success',
-                  });
+          message: `Staff removed successfully.`,
+          type: 'success',
+        });
     }
    })
   }

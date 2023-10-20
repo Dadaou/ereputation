@@ -35,14 +35,13 @@
                 <div>
                     <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span>*</span></label>
                     <el-select v-model="establishment" placeholder="Choose establishment" size="large">
-                        <el-option v-for="item in companiesStore.establishments" :key="item.id" :label="item.name" :value="`/api/${companiesStore.entity}/${item.id}`"/>
+                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name" :value="`/api/${companiesStore.entity}/${item.id}`"/>
                     </el-select>
                 </div>
             </div>
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
                     <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start working at <span>*</span></label>
-                   <!--  <VueDatePicker v-model="startDate" :enable-time-picker="false" :format="format"/> -->
                     <el-date-picker
                     v-model="startDate"
                     :size="'large'"
@@ -50,7 +49,6 @@
                 </div>
                 <div>
                     <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End to</label>
-                  <!--   <VueDatePicker v-model="endDate" :enable-time-picker="false" :format="format"/> -->
                    <el-date-picker
                     v-model="endDate"
                     :size="'large'"
@@ -92,6 +90,7 @@ const format = (date) => {
 
   return `${year}/${month}/${day}`;
 }
+const staffs = inject('staffs');
 
 const showSpinner = ref(false);
 
@@ -139,14 +138,23 @@ watch(staff_to_update, ()=>{
     }
 })
 
-const loadData = (data)=>{
-    if(userStore.user.customer != null){
-        companiesStore.establishments.forEach((element, index) => {
-            if(`/api/${companiesStore.entity}/${element.id}` == data.establishment){
-               companiesStore.establishments[index].staffs.push(data);
-            }
-        });
+const loadData = (_staff, staff)=>{
+    let new_staff = {
+        id: _staff.id,
+        datefrom : _staff.datefrom,
+        dateto: _staff.dateto,
+        department: _staff.department,
+        establishment_name: _staff.establishment.name,
+        establishment: _staff.establishment['@id'],
+        establishment_id: _staff.establishment.id,
+        establishment_tag: _staff.establishment.competitor_tag,
+        tag: _staff.tag,
+        name: `${_staff.firstname} ${_staff.lastname}`,
+        gender: _staff.gender,
+        firstname: _staff.firstname,
+        lastname: _staff.lastname,
     }
+    staffs.value.push(new_staff);
 }
 
 const updateData = (staff)=>{
@@ -162,9 +170,9 @@ const updateData = (staff)=>{
             }
         });
     }
-  }
+}
 
-  const refreshTable = ()=>{
+const refreshTable = ()=>{
   let data = [];
     let promises = [];
     appStore.isLoading = true;
@@ -184,7 +192,6 @@ const updateData = (staff)=>{
 }
 
 const submit = async ()=>{
-    showSpinner.value = true;
     let staff = {
         "gender": gender.value,
         "firstname": firstname.value,
@@ -197,6 +204,7 @@ const submit = async ()=>{
 
     try {
         if(gender.value != '' && department.value != '' && startDate.value != null && establishment.value != '' && firstname.value != ''){
+             showSpinner.value = true;
             if(type.value == 'add'){
                 const response = await new Promise((resolve, reject) => {
                   services.createRecord('staff', staff, (response) => {
@@ -206,7 +214,7 @@ const submit = async ()=>{
 
                 console.log(response);
                  if(response.status == 201){
-                        loadData(response.data);
+                        loadData(response.data, staff);
                         ElMessage({
                             message: `${firstname.value} added successfully to staff member.`,
                             type: 'success',
@@ -230,9 +238,8 @@ const submit = async ()=>{
                  console.log(response)
                 if(response.status == 200){
                         let data = response.data;
-                        // data.establishment = response.data.establishment['@id'];
+                        console.log(data);
                         updateData(data);
-                        // refreshTable()
                         ElMessage({
                             message: `Staff updated successfully`,
                             type: 'success',
@@ -250,7 +257,7 @@ const submit = async ()=>{
                     } 
             }
         }else{
-            ElMessage.error(`Please, provide all needed information to ${type} a staff`);
+            ElMessage.error(`Please, provide all needed information to ${type.value} a staff`);
         }  
     } catch (error) {
         console.log(error);

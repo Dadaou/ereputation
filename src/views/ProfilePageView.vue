@@ -52,6 +52,7 @@ const breadcrumbData = [
         isCurrent: true,
     },
 ];
+
 </script>
 
 <style scoped>
