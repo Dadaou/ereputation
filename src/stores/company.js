@@ -337,8 +337,8 @@ export const useCompanyStore = defineStore("company", {
       let dateto = staff.dateto==null?new Date():staff.dateto
       let data = this.getReviewsBetweenDatesTemp(
         company.reviews,
-        event.datefrom,
-        event.dateto
+        staff.datefrom,
+        staff.dateto
       );
 
       return {

@@ -39,7 +39,6 @@
                             
                         </template>
                     </suspense>
-                    
                     <aside v-if="lastReviews.length > 0">
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{  all_items[1].value - 3 }} reviews remains</p>
                         <div class="flex items-center mt-3 space-x-3 divide-x divide-gray-200 dark:divide-gray-600">
@@ -462,9 +461,6 @@ const globalComparison = async () => {
     
     plotdata.value = [];
 
-    lastReviews.value = companiesStore.getLastReviews(establishment.value.reviews, 100);
-    updateVisibleData(lastReviews.value);
-
     comparisonData.value = [establishment.value, ...competitors.value];
     _comparisonData = [establishment.value, ...competitors.value];
     reviews.value = establishment.value.reviews;
@@ -483,12 +479,17 @@ const globalComparison = async () => {
     legendData.value =  companiesStore.generateLegend(comparisonData.value, colors);
     _legendData =  companiesStore.generateLegend(_comparisonData, colors);
 
+    lastReviews.value = companiesStore.getLastReviews(establishment.value.reviews, 100);
+    updateVisibleData(lastReviews.value);
+
     reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
     
     setTimeout(() => {
         loadDatasets(_comparisonData, colors, selected_date);
         viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
     }, 100);
+
+
    
     
     reviews_loader.value = false;
