@@ -75,7 +75,7 @@
                                      :value="`${baseurl}/establishment/${staf.establishment_competitor_tag}/staffs/${staf.tag}/feedback`"
                                     @change="onDataUrlChange"
                                     />
-                                }
+                                
                             </div>
                         </div>
                         <div v-else class="establishment__review__qrcode">

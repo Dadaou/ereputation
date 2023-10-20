@@ -703,37 +703,6 @@ export const useCompanyStore = defineStore("company", {
       });
       return result;
     },
-    /*getReviewsBetweenDatesTemp(reviews, start_date, end_date) {
-      let reviewsBetweenDates = [];
-      let reviewsBeforeDates = [];
-      let reviewsAfterDates = [];
-
-      const startDate = moment(start_date);
-      const endDate = moment(end_date);
-
-      /***
-      * 1- Before: startdate - 90 au startdate
-      * 2- After: endate au endate + 90 
-      * reviewDate.isBetween(startDate, endDate, null, "[]")
-      */
-      reviews.forEach((review) => {
-        const reviewDate = moment(review.date_review);
-
-        if (reviewDate.isBetween(startDate, endDate, null, "[]")) {
-          reviewsBetweenDates.push(review);
-        } else if (reviewDate.isBefore(startDate)) {
-          reviewsBeforeDates.push(review);
-        } else if (reviewDate.isAfter(endDate)) {
-          reviewsAfterDates.push(review);
-        }
-      });
-
-      return {
-        reviewsBetweenDates,
-        reviewsBeforeDates,
-        reviewsAfterDates
-      };
-    },*/
     getReviewsBetweenDatesTemp(reviews, start_date, end_date) {
       let reviewsBetweenDates = [];
       let reviewsBeforeDates = [];
