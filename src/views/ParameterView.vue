@@ -31,6 +31,7 @@
 </template>
 <script setup>
 import { ref, provide, defineAsyncComponent, onBeforeMount } from 'vue';
+import moment from 'moment';
 import { ElTabs, ElTabPane } from 'element-plus';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
@@ -63,10 +64,13 @@ const activeStaffTab = ref('staff_list')
 const staff_to_update = ref(null);
 provide('staff_to_update', staff_to_update);
 
-
+const allEvents = ref([]);
+const allStaffs = ref([]);
 const activeEventTab = ref('event_list')
 const event_to_update = ref(null);
 provide('event_to_update', event_to_update);
+provide('staffs', allStaffs);
+provide('events', allEvents);
 
 const handleClick = (tab, event) => {
   // console.log(tab, event)
@@ -83,21 +87,52 @@ const handleEdit = (value, type)=>{
 };
 
 onBeforeMount(()=>{
-    let data = [];
+    let staffs = [];
+    let events = [];
     let promises = [];
+    let event_promises = [];
     appStore.isLoading = true;
+
     if(userStore.user.customer !== null){
+
         userStore.user.customer.establishments.forEach((establishment, index)=> {
-        let promise = services.get_Record(`/establishment/${establishment.competitor_tag}/detail`, (response) => {
-                data.push(response.data);
+            let promise = services.get_Record(`/establishment/${establishment.competitor_tag}/staffs`, (response) => {
+                staffs.push(response.data);
             });
             promises.push(promise); 
+
+            let promise_event = services.get_Record(`/establishment/${establishment.competitor_tag}/event`, (response) => {
+                events.push(response.data);
+            });
+            event_promises.push(promise_event); 
         })
         Promise.all(promises).then(() => {
-            companyStore.establishments = data;
-            console.log(data)
+            staffs.forEach(staffs_per_establisment=>{
+                  staffs_per_establisment.forEach(staff=>{
+                     allStaffs.value.push(staff);
+                  })
+            })
             appStore.isLoading = false;
-            console.log(data);
+        });
+
+        Promise.all(event_promises).then(() => {
+            events.forEach(events_per_establisment=>{
+                  events_per_establisment.forEach(event=>{
+                    let event_found = allEvents.value.find(obj => obj.id === event.id);
+                    if(event_found) {
+                        event_found.establishment_name =  `${event_found.establishment_name }, ${event.establishment_name}`;
+                        event_found.establishment.push(event.establishment);
+                       
+                    }else{
+                        event['date']= `${moment(event.datefrom).format('YYYY-MM-DD')} to ${moment(event.dateto).format('YYYY-MM-DD')}` 
+                        const uri = event['establishment'];
+                        event['establishment'] = [];
+                        event['establishment'].push(uri)
+                        allEvents.value.push(event);
+                    }
+                  })
+            })
+            console.log(allEvents.value)
         });
     }
 });

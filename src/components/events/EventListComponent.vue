@@ -8,7 +8,7 @@
         <el-table :data="filterTableData" style="width: 100%">
             <el-table-column fixed label="Name" prop="name" width="150"/>
             <el-table-column label="Category" prop="category" width="150"/>
-            <el-table-column label="Establishment" prop="establishmentName" width="250"/>
+            <el-table-column label="Establishment" prop="establishment_name" width="250"/>
             <el-table-column label="Date" prop="date" width="250"/>
             <el-table-column fixed="right" label="Operations" width="150">
                 <template #header>
@@ -34,7 +34,7 @@
 </template>
   
 <script setup>
-  import { computed, ref } from 'vue';
+  import { computed, ref, inject } from 'vue';
   import { useUserStore } from "@Stores/user.js";
   import moment from 'moment';
   import { useEventStore } from "@Stores/event.js"; 
@@ -51,6 +51,7 @@
   const userStore = useUserStore();
   const eventStore = useEventStore();
   const companiesStore = useCompanyStore();
+  const tableData = inject('events');
 
   const getEstablishmentsName = (data)=>{
     let establishments = userStore.user.customer !=null ? companiesStore.establishments: [];
@@ -85,29 +86,29 @@
     return uris;
   }
 
-  let tableData = computed(()=>{
-    let establishments = userStore.user.customer !=null ? companiesStore.establishments: [];
-    let data = []; 
-    establishments.forEach(establishment => {
-      let events = establishment.events;
-      events.forEach(event_item => {
-        let event = {
-          id: event_item.id,
-          name: event_item.name,
-          category: event_item.category,
-          datefrom: event_item.datefrom,
-          dateto: event_item.dateto,
-          establishmentName : getEstablishmentsName(event_item.establishment),
-          event_establishment: getURI(event_item.establishment, 'establishments', establishments),
-          establishment: event_item.establishment,
-          date: `${moment(event_item.datefrom).format('YYYY-MM-DD')} to ${moment(event_item.dateto).format('YYYY-MM-DD')}` 
-        }
-        const exists = data.some(item => item.id === event.id);
-        if(exists == false) data.push(event);
-      });
-    });
-    return data;
-  });
+  // let tableData = computed(()=>{
+  //   let establishments = userStore.user.customer !=null ? companiesStore.establishments: [];
+  //   let data = []; 
+  //   establishments.forEach(establishment => {
+  //     let events = establishment.events;
+  //     events.forEach(event_item => {
+  //       let event = {
+  //         id: event_item.id,
+  //         name: event_item.name,
+  //         category: event_item.category,
+  //         datefrom: event_item.datefrom,
+  //         dateto: event_item.dateto,
+  //         establishmentName : getEstablishmentsName(event_item.establishment),
+  //         event_establishment: getURI(event_item.establishment, 'establishments', establishments),
+  //         establishment: event_item.establishment,
+  //         date: `${moment(event_item.datefrom).format('YYYY-MM-DD')} to ${moment(event_item.dateto).format('YYYY-MM-DD')}` 
+  //       }
+  //       const exists = data.some(item => item.id === event.id);
+  //       if(exists == false) data.push(event);
+  //     });
+  //   });
+  //   return data;
+  // });
   const search = ref('')
   const filterTableData = computed(() =>
     tableData.value.filter(
@@ -139,7 +140,7 @@
          ElMessage({
                     message: `Event removed successfully.`,
                     type: 'success',
-                  });
+         });
       }
      })
   };

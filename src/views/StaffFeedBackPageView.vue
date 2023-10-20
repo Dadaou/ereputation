@@ -117,10 +117,10 @@ onBeforeMount(async ()=>{
     // 		staff.value = response.data;
     // 	}
     // })
-    await services.get_Record(`establishment/${route.params.id}/descriptions`, (response)=>{
+    await services.get_Record(`staffs/${route.params.id}/descriptions`, (response)=>{
         console.log(response)
             if(response.status == 200){ 
-               staff.value = response.data;
+               staff.value = response.data[0];
             }
 
             if(response.status == 404) exist.value=false
