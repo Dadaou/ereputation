@@ -20,7 +20,24 @@
                        <h2>Comparison</h2>
                     </div>
                 </div>
-                <ComparisonChartComponent  v-if="reviews_loader == false" :data="plotdata" :width="chart__width" :height="chart__height" :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors" :timePeriod="selectedTimePeriod"/>
+                <div 
+                v-if="reviews_loader == true" 
+                :style="{
+                    'width': `100%`,
+                    'height': `200px`,
+                    'display': 'flex',
+                    'alignItems': 'center',
+                    'background': 'rgba(0, 0, 0, 0.1)',
+                    'opacity': 0.9,
+                    'justifyContent': 'center',
+                    'alignItems': 'center',
+                    'zIndex': 1,
+                    'marginTop': '10px',
+                    'marginBottom': '10px'
+                }">
+                     <SpinnerComponent/>     
+                </div>
+                <ComparisonChartComponent  v-else :data="plotdata" :width="chart__width" :height="chart__height" :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors" :timePeriod="selectedTimePeriod"/>
                 <BaseLegend v-if="reviews_loader == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
                 </BaseLegend>
                 <div class="head">
@@ -33,12 +50,33 @@
                     <div class="reviews__pagination">
                         <CommentPagination  v-if="lastReviews.length > 0" :config="paginationConfig" @updatePage="updatePage" :color="'#6c63ff'" :nb="lastReviews.length" :data="visibleData"></CommentPagination>
                     </div>
-                    <suspense>
-                         <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :allReviews="establishment.reviews"  :showEmoji="false"/>
-                        <template #fallback>
-                            
-                        </template>
-                    </suspense>
+                    <CommentComponent  
+                    v-if="reviews_loader == false"  
+                    :reviews="visibleData" 
+                    :allReviews="establishment.reviews"  
+                    :showEmoji="false"/>
+                    <div 
+                    v-else 
+                    role="status" 
+                    class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" 
+                    v-for="index in 5">
+                                <div>
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div>
+                                            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                            <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                                            <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                        </div>
+                                        <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
+                                    </div>
+                                    <div>
+                                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
+                                    </div>
+                                </div>
+                                <span class="sr-only">Loading...</span>
+                     </div>
                     <aside v-if="lastReviews.length > 0">
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{  all_items[1].value - 3 }} reviews remains</p>
                         <div class="flex items-center mt-3 space-x-3 divide-x divide-gray-200 dark:divide-gray-600">
@@ -280,6 +318,10 @@ const EstablishmentNotFound = defineAsyncComponent(()=>
     import("@Views/EstablishmentNotFound.vue")
 )
 
+const SpinnerComponent = defineAsyncComponent(()=>
+  import('@Components/utils/SpinnerComponent.vue')
+)
+
 const weatherModal = ref(false);
 provide('showModal', weatherModal);
 const route = useRoute();
@@ -291,14 +333,7 @@ const breadcrumbData = [
         isCurrent: true,
     },
 ]
-const date = ref(new Date());
-const format = (date) => {
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-
-  return `${day}/${month}/${year}`;
-}
+const date = ref(moment(new Date(),'YYYY-MM-DD'));
 
 let selected_date = reactive(moment());
 
@@ -346,17 +381,7 @@ let legendData = ref([]);
 let _legendData = [];
 const dataLoading = ref(true)
 
-const date2 = ref({
-  day: new Date().getDay(),  
-  month: new Date().getMonth(),
-  year: new Date().getFullYear()
-});
-
-const format2 = (date) => {
-  const startDate = new Date(date[0]).toLocaleString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-  const endDate = new Date(date[1]).toLocaleString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-  return `${startDate} - ${endDate}`;
-}
+const date2 = ref([]);
 
 let selectedTimePeriod = ref('');
 let timePeriods = ref(['Weeks','Months', 'Quarters', 'Semesters']);
@@ -458,6 +483,7 @@ let updateVisibleData = function(_data){
 const globalComparison = async () => {
     selectedCompetitors.value = 'Global';
     selectedWebsites.value = 'Global';
+
     
     plotdata.value = [];
 
@@ -484,15 +510,13 @@ const globalComparison = async () => {
 
     reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
     
-    setTimeout(() => {
-        loadDatasets(_comparisonData, colors, selected_date);
-        viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
-    }, 100);
+    // setTimeout(() => {
+    //     loadDatasets(_comparisonData, colors, selected_date);
+    //     viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+    // }, 100);
 
-
-   
-    
-    reviews_loader.value = false;
+    loadDatasets(_comparisonData, colors, selected_date);
+    viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
     appStore.isLoading = false;
 }
 
@@ -635,6 +659,7 @@ onBeforeMount(async () => {
     const companyId = route.params.id;
     let company = null;
     appStore.isLoading = true;
+    reviews_loader.value = true;
 
     const response2 = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId}/rating`, (response) => {
@@ -682,9 +707,9 @@ onBeforeMount(async () => {
             })
 
             Promise.all(promises).then(() => {
-                     console.log(data)
-                     competitors.value = data;
-                     globalComparison();
+                    competitors.value = data;
+                    globalComparison();
+                    reviews_loader.value = false;
             });
      }
 });

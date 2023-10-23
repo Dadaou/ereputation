@@ -70,7 +70,7 @@
 <script setup>
 import { ref, onBeforeMount, provide, defineAsyncComponent } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
-import RatingFeedbackComponent from '@Components/utils/RatingFeedBackComponent.vue';
+import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useUserStore } from "@Stores/user.js";
 import { useRoute } from "vue-router";
 import services from '@Services/services.js';
