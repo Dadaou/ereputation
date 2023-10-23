@@ -98,6 +98,11 @@ const router = createRouter({
       component: ()=> import('@Views/StaffFeedBackPageView.vue'),
     },
     {
+      path:'/customer/:tag/establishment/:etab/feedback-success',
+      name: 'SuccessFeedback',
+      component: ()=> import('@Views/SuccessMessageFeedback.vue'),
+    },
+    {
       path: '/customer/:tag/account',
       name: 'UserProfile',
       component: ()=> import('@Views/ProfilePageView.vue'),

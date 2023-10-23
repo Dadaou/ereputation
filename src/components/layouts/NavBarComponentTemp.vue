@@ -126,7 +126,7 @@ const router = useRouter();
 const route = useRoute();
 const showDropdown = ref(false)
 const showMenu = computed(()=>{
-    let routeName = ['Login', 'FeedBack', 'StaffFeedBack', 'Home', 'Personal_details', 'Account_security', 'Parameters', 'ErepHome', 'NotFound', 'EstablishmentNotFound', undefined];
+    let routeName = ['Login', 'FeedBack', 'StaffFeedBack', 'Home', 'Personal_details', 'Account_security', 'Parameters', 'ErepHome', 'NotFound', 'EstablishmentNotFound', 'SuccessFeedback', undefined];
     return !routeName.includes(route.name)
 })
 

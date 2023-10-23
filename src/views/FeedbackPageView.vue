@@ -44,12 +44,11 @@
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                         <div>
-                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address <span>*</span></label>
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
                         </div>
                         <div>
-                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Visited at <span>*</span></label>
-                            <!-- <VueDatePicker v-model="dateVisit" :enable-time-picker="false" :format="format"/> -->
+                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Visited at <!-- <span>*</span> --></label>
                              <el-date-picker
                                 v-model="dateVisit"
                                 :size="'large'"
@@ -86,7 +85,7 @@ import { ref, onBeforeMount, provide, defineAsyncComponent } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedBackComponent.vue';
 import { useUserStore } from "@Stores/user.js";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
 import { useCompanyStore } from '@Stores/company.js';
 import { useFeedbackStore } from '@Stores/feedback.js';
@@ -106,6 +105,7 @@ const EstablishmentNotFound = defineAsyncComponent(()=>
 )
 
 const route = useRoute();
+const router = useRouter();
 const userStore = useUserStore();
 const companyStore = useCompanyStore();
 const feedbackStore = useFeedbackStore();
@@ -115,7 +115,7 @@ let media = [];
 const page=ref({
     title1: "Leave",
     title2: "your feedback",
-    icon: "uil-signin",
+    icon: "uil-comment-alt",
 });
 
 const showSpinner = ref(false);
@@ -135,13 +135,6 @@ onBeforeMount(async ()=>{
       });
 })
 
-const format = (date) => {
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-
-  return `${year}/${month}/${day}`;
-}
 const firstname = ref('');
 const lastname = ref('');
 const ratingCustomer = ref(null);
@@ -173,7 +166,7 @@ const submit = async ()=>{
     }
 
     try{
-        if(firstname.value !== '' && ratingCustomer.value !== null && email.value !== '' && comment.value !== ''){
+        if(firstname.value !== '' && ratingCustomer.value !== null && comment.value !== ''){
             showSpinner.value = true;
             await feedbackStore.createReview(review, (response)=>{
                 console.log(response)
@@ -188,6 +181,13 @@ const submit = async ()=>{
                     email.value = '';
                     dateVisit.value = null;
                     showSpinner.value = false;
+                    router.push({
+                        name: 'SuccessFeedback',
+                        params: {
+                            etab: route.params.id,
+                            tag: route.params.tag
+                        }
+                    })
                 }
             })
         }else ElMessage.error(`Please, provide all needed information`);

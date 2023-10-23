@@ -7,11 +7,10 @@
 		            <div>
 		                <h5>{{ staff.firstname }} <span v-if="staff.lastname != null">{{ staff.lastname }}</span></h5>
 		                <ul>
+                            <li><span class="label">Department: </span> <span>{{ staff.department }}</span></li>
 		                    <li class="Gender">
-		                    <span class="label">Gender: </span> <i :class="['uil', (staff.gender=='M'&& staff.gender!='F' && staff.gender!='O')?'uil-mars':'', (staff.gender=='F'&& staff.gender!='M' && staff.gender!='O')?'uil-venus':'']"> </i>
+		                    Internal use only, your comment will not be posted on the public platforms.
 		                    </li>
-
-		                    <li><span class="label">Department: </span> <span>{{ staff.department }}</span></li>
 		                </ul>
 		            </div>
 		        </div>
@@ -72,7 +71,7 @@ import { ref, onBeforeMount, provide, defineAsyncComponent } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useUserStore } from "@Stores/user.js";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
 import { useFeedbackStore } from '@Stores/feedback.js';
 import { useCompanyStore } from '@Stores/company.js';
@@ -92,6 +91,7 @@ const EstablishmentNotFound = defineAsyncComponent(()=>
 )
 
 const route = useRoute();
+const router = useRouter();
 const userStore = useUserStore();
 const companyStore = useCompanyStore();
 const staffStore = useStaffStore();
@@ -102,7 +102,7 @@ let media = [];
 const page=ref({
     title1: "Leave",
     title2: "your feedback",
-    icon: "uil-signin",
+    icon: "uil-comment-alt",
 });
 
 const showSpinner = ref(false);
@@ -174,6 +174,13 @@ const submit = async ()=>{
                     email.value = '';
                     dateVisit.value = null;
                     showSpinner.value = false;
+                    router.push({
+                        name: 'SuccessFeedback',
+                        params: {
+                            etab: route.params.etab,
+                            tag: route.params.tag
+                        }
+                    })
                 }
             })
         }else ElMessage.error(`Please, provide all needed information`);

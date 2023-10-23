@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="tablet_mobile__filter">
-                    <DropdownComponent :showTitle="false" class="dropdown" title="Filter by website" placeholder="Select a website" :data="websites" @submit="(website)=>{
+                    <DropdownComponent :showTitle="false" class="dropdown" title="Filter by plateform" placeholder="Select a website" :data="websites" @submit="(website)=>{
                         selectedWebsites = website
                         if(website == websites[0]){
                            
@@ -152,7 +152,7 @@
                                     <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                             </div> 
                     </div>
-                    <DropdownComponent class="dropdown" title="Filter by website" placeholder="Select a website" :data="websites" @submit="(website)=>{
+                    <DropdownComponent class="dropdown" title="Filter by plateform" placeholder="Select a website" :data="websites" @submit="(website)=>{
                         selectedWebsites = website
                         if(website == websites[0]){
                             

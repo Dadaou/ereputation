@@ -46,7 +46,7 @@ const AvatarComponent = defineAsyncComponent(()=>
 const userStore = useUserStore();
 const route = useRoute();
 const showMenu = computed(()=>{
-    let routeName = ['Login', 'FeedBack', 'StaffFeedBack', 'Home', 'Personal_details', 'Account_security', 'Parameters', 'ErepHome', 'NotFound', undefined]
+    let routeName = ['Login', 'FeedBack', 'StaffFeedBack', 'Home', 'Personal_details', 'Account_security', 'Parameters', 'ErepHome', 'NotFound', 'SuccessFeedback', undefined]
     console.log(routeName.includes(route.name), route.name)
     return !routeName.includes(route.name)
 })

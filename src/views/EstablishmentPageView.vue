@@ -95,7 +95,7 @@
                             reloadComparison(competitor);
                         }
                     }" :defaultObj="computedCompetitors[0]" :isDataObject="true"/>
-                    <DropdownComponent :showTitle="false" class="dropdown" title="Filter by website" placeholder="Select a website" :data="websites" @submit="(website)=>{
+                    <DropdownComponent :showTitle="false" class="dropdown" title="Filter by plateform" placeholder="Select a website" :data="websites" @submit="(website)=>{
                         selectedWebsites = website
                         if(website == websites[0]){
                             globalComparison();
@@ -213,7 +213,7 @@
                             reloadComparison(competitor);
                         }
                     }" :defaultObj="computedCompetitors[0]" :isDataObject="true"/>
-                    <DropdownComponent class="dropdown" title="Filter by website" placeholder="Select a website" :data="websites" @submit="(website)=>{
+                    <DropdownComponent class="dropdown" title="Filter by plateform" placeholder="Select a website" :data="websites" @submit="(website)=>{
                         selectedWebsites = website
                         if(website == websites[0]){
                             globalComparison();
