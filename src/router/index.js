@@ -1,10 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@Views/LoginView.vue'
-import { useCompanyStore } from "@Stores/company.js"; 
 import { useUserStore } from "@Stores/user.js";
-import { useAppStore } from "@Stores/app.js";
-import {ref} from 'vue';
-import services from '@Services/services.js';
 
 const CheckAuthentication = (to, from, next) => {
     if(to.name == 'Login' && localStorage.getItem("access") == null){

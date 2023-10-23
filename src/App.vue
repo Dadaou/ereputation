@@ -1,10 +1,20 @@
+<template>
+  <NavbarComponentTemp></NavbarComponentTemp>
+    <div class="app__loader" :style="loaderStyle" v-if="appStore.isLoading">
+      <SpinnerComponent :size="'large'"/>
+    </div>
+    <div class="erep__app">
+      <RouterView/>
+    </div>
+  <FooterComponent></FooterComponent>
+</template>
+
 <script setup>
 import { onBeforeMount, watch, ref, defineAsyncComponent, provide } from 'vue'
 import { initFlowbite } from 'flowbite'
 import { useWindowSize } from '@vueuse/core'
 import { useAppStore } from "@Stores/app.js"
 import { useUserStore } from "@Stores/user.js"
-import { RouterLink, RouterView } from 'vue-router'
 
 const SpinnerComponent = defineAsyncComponent(()=>
   import('@Components/utils/SpinnerComponent.vue')
@@ -20,13 +30,13 @@ const FooterComponent = defineAsyncComponent(()=>
 
 const appStore = useAppStore();
 const userStore = useUserStore();
-if(userStore.user.customer.tag) provide('tag', userStore.user.customer.tag)
+if(userStore.user) provide('tag', userStore.user.customer.tag)
 
 onBeforeMount(() => {
     initFlowbite();
 });
 
-const{ width, height} = useWindowSize();
+const{ width } = useWindowSize();
 const loaderStyle = ref({
   'width': `${width.value}px`, 
 });
@@ -37,17 +47,6 @@ watch(width, () => {
   }
 });
 </script>
-
-<template>
-  <NavbarComponentTemp></NavbarComponentTemp>
-    <div class="app__loader" :style="loaderStyle" v-if="appStore.isLoading">
-      <SpinnerComponent :size="'large'"/>
-    </div>
-    <div class="erep__app">
-      <RouterView/>
-    </div>
-  <FooterComponent></FooterComponent>
-</template>
 
 <style scoped>
 .app__loader{
