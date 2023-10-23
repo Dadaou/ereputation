@@ -6,21 +6,16 @@
 			'overflowX': 'auto'
 		}"
 	>
-  <suspense>
-      <GroupedBarChart 
+  <GroupedBarChart 
         :plot-data="plotdata"
         x-key="date"
         :width="custom_width"
-        :height="300"
+        :height="250"
         :margin="{ top: 20, bottom: 35, left: 55, right: 20 }"
         x-axis-label="Dates"
         y-axis-label="Rating"
         :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']"
         :y-tick-format="d => `${d}`" />
-      <template #fallback>
-          Loading
-      </template>    
-  </suspense>
    <div>
     <BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
     </BaseLegend>
@@ -44,6 +39,7 @@ const route = useRoute();
 
 const type = inject('type');
 const date = inject('date');
+const chartLoading = inject('chartLoading');
 const chartWidth = computed(()=>`${props.width}px`);
 const chart_width = computed(()=>`${props.width}px`);
 const plotdata = ref([]);
@@ -81,13 +77,12 @@ const getPlotData = async(period, rangedate, next)=>{
       });
       if(response.status == 200){
         data = response.data;
+        chartLoading.value = false;
       }
-
       next(data);
 } 
 
 const legendData = computed(() => {
-    console.log(plotdata.value);
     let data = [];
     let dates = plotdata.value;
     let nameSet = new Set();
@@ -122,12 +117,16 @@ onMounted(async()=>{
 
 watch([date, type],async()=>{
   if(date.value !== null){
+      chartLoading.value = true;
       const response = await new Promise((resolve, reject) => {
             getPlotData(type.value, date.value, (response)=>{
               resolve(response)
             })
      });
      plotdata.value = response;
+     // setTimeout(()=>{
+     //    chartLoading.value = false;
+     // }, 100);
   }
 });
 

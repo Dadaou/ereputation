@@ -21,7 +21,26 @@
                     </el-dropdown>
                 </div>
                 <div class="reviews__content" ref="el">
-                    <GroupedBarChart :plot-data="data" x-key="date" :width="chartWidth" :height="300"
+                      <div v-if="chartLoading == true" 
+                        :style="{
+                            'width': `100%`,
+                            'height': `200px`,
+                            'display': 'flex',
+                            'alignItems': 'center',
+                            'background': 'rgba(0, 0, 0, 0.1)',
+                            'opacity': 0.9,
+                            'justifyContent': 'center',
+                            'alignItems': 'center',
+                            'zIndex': 1,
+                            'marginTop': '10px',
+                            'marginBottom': '10px'
+                        }"><SpinnerComponent /></div>
+                    <GroupedBarChart 
+                        v-else 
+                        :plot-data="data" 
+                        x-key="date" 
+                        :width="chartWidth" 
+                        :height="200"
                         :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
                         :x-tick-format="d => `${d}`" />
                     <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
@@ -241,6 +260,10 @@ const EstablishmentNotFound = defineAsyncComponent(()=>
     import("@Views/EstablishmentNotFound.vue")
 )
 
+const SpinnerComponent = defineAsyncComponent(()=>
+  import('@Components/utils/SpinnerComponent.vue')
+)
+
 const route = useRoute();
 const router = useRouter();
 const breadcrumbData = [
@@ -262,6 +285,7 @@ const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 const dataLoading = ref(true);
+const chartLoading = ref(false);
 const { width, height } = useWindowSize(); 
 
 let establishment = ref({});
@@ -305,7 +329,9 @@ const handleDate = (modelData) => {
 watch([dateStart, dateEnd], () => {
     console.log(dateStart.value, dateEnd.value)
     if (dateEnd.value !== null && dateStart.value !== null) {
+        chartLoading.value = true;
         data.value = weaherImpact(moment(dateStart.value).format('YYYY-MM-DD'), moment(dateEnd.value).format('YYYY-MM-DD'));
+        chartLoading.value = false;
     }
 })
 
@@ -549,6 +575,7 @@ onBeforeMount(async () => {
     const companyId = route.params.id;
     let company = null;
     appStore.isLoading = true;
+    chartLoading.value = true;
 
     const response2 = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId}/rating`, (response) => {
@@ -585,6 +612,7 @@ onBeforeMount(async () => {
             reviews.value = establishment.value.reviews;
             data.value = weaherImpact(datefrom, dateto);
             globalData.value = groupReviewByCondition();
+            chartLoading.value = false;
      }
 });
 </script>

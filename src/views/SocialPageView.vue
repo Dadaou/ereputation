@@ -67,8 +67,8 @@
             <StatSlider v-if="establishment && establishment.socials" class="stat__cards_mobile" :items="trends"
                 :websites="establishment.socials[0]"></StatSlider>
             <div class="tablet_mobile__filter">
-                <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
-                <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
+               <!--  <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+                <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" /> -->
             </div>
             <div class="tablet_mobile__head">
                 <div class="establishment__info_tablet">
@@ -177,9 +177,9 @@
                         </div>
                     </div>
                     <div class="date__filter">
-                        <div class="text-sm title">Select a range of date</div>
+                       <!--  <div class="text-sm title">Select a range of date</div>
                         <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
-                        <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" />
+                        <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" /> -->
                     </div>
                 </div>
                 <div

@@ -86,6 +86,7 @@ const route = useRoute();
 
 const type = inject('type');
 const date = inject('date');
+const chartLoading = inject('chartLoading');
 const plotdata = ref({notes:[], events_per_date:[]});
 const custom_width = computed(()=>{
 	let nb = plotdata.value.events_per_date.length;
@@ -187,12 +188,14 @@ onMounted(async()=>{
 
 watch([date, type],async()=>{
   if(date.value !== null){
+  	  chartLoading.value = true;
       const response = await new Promise((resolve, reject) => {
             getPlotData(type.value, date.value, (response)=>{
               resolve(response)
             })
      });
      plotdata.value = response;
+     chartLoading.value = false;
   }
 });
 
