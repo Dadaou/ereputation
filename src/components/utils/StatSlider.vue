@@ -15,6 +15,7 @@ import StatSlideItem from '@Components/utils/StatSlideItem.vue';
 const props = defineProps(["items", "websites"]);
 let currentSlide = ref(0);
 let slideInterval = ref(null);
+console.log('hello')
 
 onMounted(() => {
     slideInterval.value = setInterval(() => {
