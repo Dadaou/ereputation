@@ -90,12 +90,12 @@ const router = createRouter({
     {
       path:'/customer/:tag/establishment/:id/feedback',
       name: 'FeedBack',
-      component: ()=> import('@Views/FeedBackPageView.vue'),
+      component: ()=> import('@Views/FeedbackPageView.vue'),
     },
      {
       path:'/customer/:tag/establishment/:etab/staffs/:id/feedback',
       name: 'StaffFeedBack',
-      component: ()=> import('@Views/StaffFeedBackPageView.vue'),
+      component: ()=> import('@Views/StaffFeedbackPageView.vue'),
     },
     {
       path:'/customer/:tag/establishment/:etab/feedback-success',
