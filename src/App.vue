@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, watch, ref, defineAsyncComponent, provide } from 'vue'
+import { onBeforeMount, watch, ref, defineAsyncComponent, provide, computed } from 'vue'
 import { initFlowbite } from 'flowbite'
 import { useWindowSize } from '@vueuse/core'
 import { useAppStore } from "@Stores/app.js"
@@ -30,7 +30,13 @@ const FooterComponent = defineAsyncComponent(()=>
 
 const appStore = useAppStore();
 const userStore = useUserStore();
-if(userStore.user) provide('tag', userStore.user.customer.tag)
+const tag = computed(()=>{
+  let customer_tag = (userStore.user)?userStore.user.customer.tag:'';
+ 
+  return customer_tag;
+})
+
+provide('tag',tag);
 
 onBeforeMount(() => {
     initFlowbite();
