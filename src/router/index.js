@@ -86,6 +86,18 @@ const router = createRouter({
       name: 'Staff',
       beforeEnter: [CheckAccess],
       component: ()=>import('@Views/StaffPageView.vue'),
+       children: [
+        {
+          path: '',
+          name: 'StaffComparison',
+          component: ()=> import('@Views/StaffComparisonView.vue'),
+        },
+        {
+          path: 'list/:staff_tag/reviews',
+          name: 'StaffReview',
+          component: ()=> import('@Views/StaffReviewsView.vue'),
+        },
+      ]
     },
     {
       path:'/customer/:tag/establishment/:id/feedback',

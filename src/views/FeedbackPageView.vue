@@ -4,18 +4,18 @@
     <div class="feedback__form">
         <div class="tablet_mobile__head">
                 <div class="establishment__info">
-                        <h1 class="society__name">{{ establishment.establishment_name }}</h1>
+                        <h1 class="society__name">{{ establishment.name }}</h1>
                         <div class="society__category">
-                            <i :class="['uil', establishment.establishment_category=='Restaurant'?'uil-restaurant':'', establishment.category=='Hotel'?'uil-bed-double':'', establishment.category=='Residence'?'uil-home':'']"></i>
-                                <span class="ml-2">{{ establishment.establishment_category }}</span>
+                            <i :class="['uil', establishment.category=='Restaurant'?'uil-restaurant':'', establishment.category=='Hotel'?'uil-bed-double':'', establishment.category=='Residence'?'uil-home':'']"></i>
+                                <span class="ml-2">{{ establishment.ategory }}</span>
                         </div>
                         <div class="society__country" v-if="establishment.country != null">
                                 <i class="uil uil-map"></i>
-                                <span class="ml-2">{{ establishment.establishment_country }}</span>
+                                <span class="ml-2">{{ establishment.country }}</span>
                         </div> 
                         <div class="society__location">
                                 <i class="uil uil-location-point"></i>
-                                <span class="ml-2">{{ establishment.establishment_address1 }}, {{ establishment.establishment_city }}</span>
+                                <span class="ml-2">{{ establishment.address1 }}, {{ establishment.city }}</span>
                          </div>
                     </div>
                 <div class="photo">
@@ -125,8 +125,8 @@ onBeforeMount(async ()=>{
      await services.get_Record(`establishment/${route.params.id}/media`, (response)=>{
         console.log(response)
             if(response.status == 200){ 
-                establishment.value = response['data'][0];
-                media.value = response['data'][0].url_source==null?[]:response['data'][0].url_source;
+                establishment.value = response['data'];
+                media.value = response['data'].url_source==null?[]:response['data'].url_source;
             }
 
             if(response.status == 404) {

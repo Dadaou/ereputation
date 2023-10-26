@@ -12,7 +12,7 @@
           Home
         </a>
       </li>
-      <li v-for="item in data" :key="item.title">
+      <li v-for="item in _data" :key="item.title">
         <div v-if="item.isCurrent==false" class="flex items-center" :class="item.isCurrent ? 'current__url' : ''" @click="goback(item.path)">
           <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg">
@@ -43,6 +43,7 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { useAppStore } from '@Stores/app.js';
+import {computed} from 'vue';
 
 const router = useRouter();
 const appStore = useAppStore();
@@ -58,6 +59,10 @@ const props = defineProps({
       },
     ]
   }
+})
+
+const _data = computed(()=>{
+  return props.data;
 })
 
 const goback = (path) => {

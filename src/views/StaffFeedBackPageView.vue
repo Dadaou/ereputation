@@ -30,7 +30,7 @@
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                         <div>
-                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address <span>*</span></label>
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
                         </div>
                         <div>
@@ -160,7 +160,7 @@ const submit = async ()=>{
     }
 
     try{
-        if(firstname.value !== '' && ratingCustomer.value !== null && email.value !== '' && comment.value !== ''){
+        if(firstname.value !== '' && ratingCustomer.value !== null && comment.value !== ''){
             showSpinner.value = true;
             await feedbackStore.createReview(review, (response)=>{
                 if(response.status == 201){

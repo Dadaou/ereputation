@@ -289,7 +289,7 @@ let updatePage = function(pageNumber){
 let updateVisibleData = function(_data, isStarFilter=false){
     let data = paginationConfig.value;
     _reviews.value = _data
-    if (isStarFilter==false) dataReviews= _reviews.value ;
+    if (isStarFilter==false) dataReviews.value= _reviews.value ;
     paginationConfig.value.data = _data.slice(data.current*data.size, (data.current * data.size) + data.size)
     if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
         updatePage( paginationConfig.value.current -1);

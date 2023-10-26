@@ -6,59 +6,7 @@
         </div>
         <div class="app__container">
             <div class="left__side">
-                <div class="head">
-                    <div class="app__title">
-                       <h2>Staffs Histogram</h2>
-                    </div>
-                </div>
-                <div class="reviews__content" ref="el">
-                     <div 
-                        v-if="chartLoading == true" 
-                        :style="{
-                            'width': `100%`,
-                            'height': `200px`,
-                            'display': 'flex',
-                            'alignItems': 'center',
-                            'background': 'rgba(0, 0, 0, 0.1)',
-                            'opacity': 0.9,
-                            'justifyContent': 'center',
-                            'alignItems': 'center',
-                            'zIndex': 1,
-                            'marginTop': '10px',
-                            'marginBottom': '10px'
-                        }"><SpinnerComponent /></div>
-                     <StaffChartComponent  v-else :width="barWidth"/>
-                </div>
-                <div class="head">
-                    <div class="app__title">
-                       <h2>Staffs</h2>
-                    </div>
-                </div>
-                <div class="reviews__content">
-                    <StaffItemComponent  v-if="staffLoading == false"/>
-                    <div 
-                    v-else 
-                    role="status" 
-                    class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" 
-                    v-for="index in 2">
-                                <div>
-                                    <div class="flex items-center justify-between mb-4">
-                                        <div>
-                                            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                                            <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
-                                            <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-                                        </div>
-                                        <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
-                                    </div>
-                                    <div>
-                                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-                                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-                                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
-                                    </div>
-                                </div>
-                                <span class="sr-only">Loading...</span>
-                     </div>
-                </div> 
+                 <RouterView />
             </div>
             <div class="tablet_mobile__filter">
                 <el-date-picker
@@ -186,6 +134,7 @@
 
 <script setup>
 import moment from 'moment';
+import { RouterView } from 'vue-router';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
@@ -194,7 +143,6 @@ import { useCompanyStore } from "@Stores/company.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
-import StaffItemComponent from '@Components/staffs/StaffItemComponent.vue';
 import { useWindowSize } from '@vueuse/core';
 import {
     ref, 
@@ -216,29 +164,15 @@ import {
 import { PolarArea } from 'vue-chartjs';
 ChartJS.register(RadialLinearScale, ArcElement, Tooltip);
 import { useResizeObserver } from '@vueuse/core';
-import DashboardComponent from '@Components/utils/DashboardComponent.vue';
-
-const StaffChartComponent = defineAsyncComponent(()=>
-    import('@Components/utils/StaffChartComponent.vue')
-)
 
 let exist = ref(true);
+
 const EstablishmentNotFound = defineAsyncComponent(()=>
     import("@Views/EstablishmentNotFound.vue")
 )
 
-const SpinnerComponent = defineAsyncComponent(()=>
-  import('@Components/utils/SpinnerComponent.vue')
-)
-
-const page=ref({
-    title1: "",
-    title2: "Staffs",
-    icon: "uil-users-alt",
-});
-
 const route = useRoute();
-const breadcrumbData = [
+const breadcrumbData = ref([
     {
         title: "Back",
          path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
@@ -249,15 +183,30 @@ const breadcrumbData = [
         path: `${route.path}`,
         isCurrent: true
     }
-]
+])
+const route_name = computed(()=>{
+    console.log(breadcrumbData.value);
+    return route.name;
+}) 
+
+const page=ref({
+    title1: "",
+    title2: "Staffs",
+    icon: "uil-users-alt",
+});
+
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
+const selectedStaff = ref(null);
+provide('selectedStaff', selectedStaff);
 
 const dataLoading = ref(true);
 const chartLoading = ref(false);
-const staffLoading = ref(false);
+provide('dataLoading', dataLoading);
 provide('chartLoading', chartLoading);
+const staffLoading = ref(false);
+provide('staffLoading', staffLoading);
 let establishment = ref({});
 provide('establishment', establishment)
 let staffs = ref([]);
@@ -287,12 +236,64 @@ const all_items = ref([
 ]);
 const { width, height } = useWindowSize(); 
 
+
+watch(route_name, ()=>{
+    if(route_name.value == 'StaffReview') {
+        breadcrumbData.value[1].isCurrent= false;
+         breadcrumbData.value[1].path= `/customer/${route.params.tag}/establishment/${route.params.id}/staffs`;
+        breadcrumbData.value.push({
+             title: "reviews",
+             path: `${route.path}`,
+            isCurrent: true,
+        })
+    }
+
+    if(route_name.value == 'StaffComparison'){
+        breadcrumbData.value = [
+            {
+                title: "Back",
+                 path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                isCurrent: false,
+            },
+            {
+                title: "Staffs",
+                path: `${route.path}`,
+                isCurrent: true
+            }
+        ]
+    }
+})
 onBeforeMount(async () => {
     const companyId = route.params.id;
     let company = null;
     appStore.isLoading = true;
     chartLoading.value = true;
     staffLoading.value = true;
+
+    if(route_name.value == 'StaffReview') {
+        breadcrumbData.value[1].isCurrent= false;
+         breadcrumbData.value[1].path= `/customer/${route.params.tag}/establishment/${route.params.id}/staffs`;
+        breadcrumbData.value.push({
+             title: "reviews",
+             path: `${route.path}`,
+            isCurrent: true,
+        }) 
+    }
+
+    if(route_name.value == 'StaffComparison'){
+        breadcrumbData.value = [
+            {
+                title: "Back",
+                 path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                isCurrent: false,
+            },
+            {
+                title: "Staffs",
+                path: `${route.path}`,
+                isCurrent: true
+            }
+        ]
+    }
 
     const response2 = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId}/rating`, (response) => {
@@ -341,6 +342,7 @@ const barWidth = computed(()=>{
     else result = 800;
     return result;
 })
+provide('barWidth', barWidth);
 
 onUpdated(()=>{
     chartWidth.value = (el.value != null && el.value != undefined)?Math.abs(el.value.offsetWidth):chartWidth.value;
@@ -416,28 +418,6 @@ img{
     display: flex;
     flex-direction: row-reverse;
     gap:1rem;
-}
-
-.reviews__content p{
-   font-size: 14px;
-   font-weight: 500;
-   color: var(--color-bg1);
-}
-
-.reviews__content a{
-    color: var(--color-danger);
-    border-bottom: 1px solid var(--color-danger);
-    cursor: pointer;
-    font-size: inherit;
-}
-.reviews__content a:hover{
-   background-color: var(--color-danger);
-   color: white;
-}
-
-.reviews__pagination{
-    display: flex;
-    justify-content: flex-end;
 }
 
 .rating__customers{
@@ -534,32 +514,9 @@ img{
     text-align: justify;
 }
 
-.app__title{
-    font-weight: 800;
-    color: var(--color-danger);
-}
-
-.app__title h1{
-    font-size: 20px;
-    transition: var(--transition);
-}
-
-.app__title h2{
-    font-size: 18px;
-    transition: var(--transition);
-}
-
 .left__side{
     width: 1100px;
     padding: 50px 5px;
-}
-
-.left__side .head{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
 }
 
 #website__dropdown{
@@ -586,27 +543,6 @@ img{
    color: var(--color-white);
 }
 
-.dashboard__content{
-    display: flex;
-    flex-wrap: wrap;
-    gap:1rem;
-    margin: 50px auto;
-}
-
-.counter{
-    flex-grow: 1;
-}
-
-.reviews__content{
-    margin-top: 20px;
-}
-
-.rating{
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--color-warning);
-}
-
 .right__side{
     width: 500px;
     padding: 50px 0px;
@@ -621,10 +557,6 @@ img{
 .filter__container{
     display: none;
     transition: var(--transition);
-}
-
-.see__more{
-    cursor: pointer;
 }
 
 .society__name{
@@ -699,9 +631,10 @@ img{
     height: 150px;
     width: 100%;
    }
-   .dashboard__content, .dashboard, .right__side{
+
+   .right__side{
     display: none !important;
-   }
+}
 
    .tablet_mobile__head{
         display: flex;

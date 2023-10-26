@@ -222,9 +222,10 @@ const onDataUrlChange = (dataUrl) =>{
 }
 
 .society__logo img{
-  height: 100%;
+     object-fit: cover;
+ /* height: 100%;
   width: 100%;
-  object-fit: cover;
+  object-fit: cover;*/
 }
 
 .society__logo svg{

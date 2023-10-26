@@ -3,7 +3,9 @@
         <div class="staff__card" v-if="staffs.length>0" v-for="staff in staffs">
             <div class="staff__qrcode">    
                 <div>
-                    <h5>{{ staff.firstname }} <span v-if="staff.lastname != null">{{ staff.lastname }}</span></h5>
+                    <RouterLink :to="`/customer/${tag}/establishment/${$route.params.id}/staffs/list/${staff.tag}/reviews`" @Click="()=>{ selectedStaff = staff }">
+                        <h5>{{ staff.firstname }} <span v-if="staff.lastname != null">{{ staff.lastname }}</span></h5>
+                    </RouterLink>
                     <ul>
                         <li class="Gender">
                         <span class="label">Gender: </span> <i :class="['uil', (staff.gender=='M'&& staff.gender!='F' && staff.gender!='O')?'uil-mars':'', (staff.gender=='F'&& staff.gender!='M' && staff.gender!='O')?'uil-venus':'']"> </i>
@@ -35,7 +37,7 @@
                     />
                 </div>
                 <div>
-                    <h3 class="mb-2">During the staff period  (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['between']))}}</span>)</h3>
+                    <h3 class="mb-2">During contract  (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['between']))}}</span>)</h3>
                     <Pie 
                         :data="staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['between'])" 
                         :options="options" 
@@ -112,6 +114,7 @@ const ModalComponent = defineAsyncComponent(()=>
 
 ChartJS.register(ArcElement, Tooltip)
 const staffs = inject('staffs');
+const selectedStaff = inject('selectedStaff')
 const baseurl = window.location.origin;
 const base64Image = ref(null);
 const qrcode = ref(null);

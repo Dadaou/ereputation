@@ -56,6 +56,7 @@
                 </BaseLegend>
                 <div class="review__content">
                     <PolarArea :data="globalData" :options="options" />
+                      <!-- <Pie :data="_data" :options="options" /> -->
                 </div>
             </div>
             <div class="tablet_mobile__filter">
@@ -210,7 +211,7 @@ import {
     Tooltip,
     Legend
 } from 'chart.js';
-import { PolarArea } from 'vue-chartjs';
+import { PolarArea, Pie } from 'vue-chartjs';
 import { useResizeObserver, useWindowSize } from '@vueuse/core';
 import 'element-plus/es/components/dropdown/style/css'
 import 'element-plus/es/components/dropdown-menu/style/css'

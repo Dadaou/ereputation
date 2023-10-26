@@ -18,7 +18,7 @@
                     />
                 </div>
                 <div>
-                    <h3 class="mb-2">During the event (<span class="rating">{{calculateAverageRating(eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['between']))}}</span>)</h3>
+                    <h3 class="mb-2">During event (<span class="rating">{{calculateAverageRating(eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['between']))}}</span>)</h3>
                     <Pie 
                         :data="eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['between'])" 
                         :options="options" 

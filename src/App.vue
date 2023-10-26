@@ -1,5 +1,5 @@
 <template>
-  <NavbarComponentTemp></NavbarComponentTemp>
+  <NavbarComponent></NavbarComponent>
     <div class="app__loader" :style="loaderStyle" v-if="appStore.isLoading">
       <SpinnerComponent :size="'large'"/>
     </div>
@@ -20,8 +20,8 @@ const SpinnerComponent = defineAsyncComponent(()=>
   import('@Components/utils/SpinnerComponent.vue')
 )
 
-const NavbarComponentTemp = defineAsyncComponent(()=>
-  import('@Components/layouts/NavBarComponentTemp.vue')
+const NavbarComponent = defineAsyncComponent(()=>
+  import('@Components/layouts/NavBarComponent.vue')
 )
 
 const FooterComponent = defineAsyncComponent(()=>
