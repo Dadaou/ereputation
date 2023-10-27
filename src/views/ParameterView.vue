@@ -7,7 +7,7 @@
         @tab-click="handleClick"
     >
         <el-tab-pane label="Staff" name="staff">
-            <el-tabs :tab-position="'right'" v-model="activeStaffTab" class="demo-tabs mt-10">
+            <el-tabs :tab-position="position" v-model="activeStaffTab" class="demo-tabs mt-10">
                     <el-tab-pane label="Staff list"  name="staff_list">
                         <StaffListComponent @edit="(staff)=>handleEdit(staff, 'staff')"/>
                     </el-tab-pane>
@@ -17,7 +17,7 @@
             </el-tabs>
         </el-tab-pane>
         <el-tab-pane label="Event" name="event">
-            <el-tabs :tab-position="'right'" v-model="activeEventTab" class="demo-tabs mt-10">
+            <el-tabs :tab-position="position" v-model="activeEventTab" class="demo-tabs mt-10">
                     <el-tab-pane label="Event list" name="event_list">
                         <EventListComponent @edit="(event)=>handleEdit(event, 'event')"/>
                     </el-tab-pane>
@@ -30,16 +30,20 @@
     </div>
 </template>
 <script setup>
-import { ref, provide, defineAsyncComponent, onBeforeMount } from 'vue';
+import { ref, provide, defineAsyncComponent, onBeforeMount, watch } from 'vue';
 import moment from 'moment';
 import { ElTabs, ElTabPane } from 'element-plus';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
+import { useWindowSize } from '@vueuse/core';
 import { useCompanyStore } from "@Stores/company.js";
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
 
+const{ width, height} = useWindowSize();
+  
+ 
 const StaffFormComponent = defineAsyncComponent(()=>
         import("@Components/staffs/StaffFormComponent.vue")
 )
@@ -55,6 +59,16 @@ const EventFormComponent = defineAsyncComponent(()=>
 const EventListComponent = defineAsyncComponent(()=>
         import("@Components/events/EventListComponent.vue")
 )
+
+const position = ref('right')
+watch(width, ()=>{
+     if(width.value < 800) {
+          position.value = 'top'
+     } else{
+          position.value = 'right'  
+     } 
+     console.log(position);
+  });
 
 const appStore = useAppStore();
 const userStore = useUserStore();
@@ -92,6 +106,12 @@ onBeforeMount(()=>{
     let promises = [];
     let event_promises = [];
     appStore.isLoading = true;
+    
+    if(width.value < 800){
+          position.value = 'top'
+     } else{
+          position.value = 'right'  
+     }
 
     if(userStore.user.customer !== null){
 
