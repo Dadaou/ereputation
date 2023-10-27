@@ -5,14 +5,14 @@
         </div>
     </div>
     <div class="mt-5">
-        <el-table :data="filterTableData" style="width: 100%">
-            <el-table-column fixed label="Period" prop="period" width="150"/>
+        <el-table :data="filterTableData" :style="{'width': '1000px','overflow' : 'hidden' }">
+            <el-table-column label="Period" prop="period" width="150"/>
             <el-table-column label="Name" prop="name" width="150"/>
             <el-table-column label="Gender" prop="gender" width="100"/>
             <el-table-column label="Establishment" prop="establishment_name" width="150"/>
             <el-table-column label="Department" prop="department" width="150"/>
             
-            <el-table-column fixed="right" width="200">
+            <el-table-column  width="200">
                 <template #header>
                 <el-input v-model="search" size="small" placeholder="Type to search" />
                 </template>
@@ -82,13 +82,13 @@
 <script setup>
 import { computed, ref, inject } from 'vue';
 import { useUserStore } from "@Stores/user.js";
+import { useWindowSize } from '@vueuse/core';
 import moment from 'moment';
 import { useStaffStore } from "@Stores/staff.js"; 
 import { useCompanyStore } from "@Stores/company.js";
 import VueQrious from 'vue-qrious';
 import * as htmlToImage from 'html-to-image';
 import ModalComponent from '@Components/utils/ModalComponent.vue';
-import { useWindowSize } from '@vueuse/core';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
