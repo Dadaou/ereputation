@@ -106,8 +106,8 @@ const lineLegend = ref([]);
 
 const options = ref({
     responsive: true,
-    maintainAspectRatio: true,
-    aspectRatio: 3,
+    maintainAspectRatio: false,
+    aspectRatio: 1,
     plugins: {
         legend: {
             display: true,
