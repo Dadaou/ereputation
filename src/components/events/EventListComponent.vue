@@ -5,12 +5,12 @@
         </div>
     </div>
     <div class="mt-5 erep_table">
-        <el-table :data="filterTableData" style="width: 100%">
-            <el-table-column fixed label="Name" prop="name" width="150"/>
+        <el-table :data="filterTableData" :style="{'width': '1000px','overflow' : 'hidden' }">
+            <el-table-column label="Name" prop="name" width="150"/>
             <el-table-column label="Category" prop="category" width="150"/>
             <el-table-column label="Establishment" prop="establishment_name" width="250"/>
             <el-table-column label="Date" prop="date" width="250"/>
-            <el-table-column fixed="right" label="Operations" width="150">
+            <el-table-column label="Operations" width="150">
                 <template #header>
                 <el-input v-model="search" size="small" placeholder="Type to search" />
                 </template>
@@ -34,9 +34,9 @@
 </template>
   
 <script setup>
-  import { computed, ref, inject } from 'vue';
+  import { computed, ref, inject, watch } from 'vue';
   import { useUserStore } from "@Stores/user.js";
-  import moment from 'moment';
+  import { useWindowSize } from '@vueuse/core';
   import { useEventStore } from "@Stores/event.js"; 
   import { useCompanyStore } from "@Stores/company.js";
   import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
@@ -52,6 +52,9 @@
   const eventStore = useEventStore();
   const companiesStore = useCompanyStore();
   const tableData = inject('events');
+  const{ width, height} = useWindowSize();
+  
+ 
 
   const getEstablishmentsName = (data)=>{
     let establishments = userStore.user.customer !=null ? companiesStore.establishments: [];
