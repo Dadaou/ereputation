@@ -21,7 +21,7 @@ const SpinnerComponent = defineAsyncComponent(()=>
 )
 
 const NavbarComponent = defineAsyncComponent(()=>
-  import('@Components/layouts/NavBarComponent.vue')
+  import('@Components/layouts/NavbarComponent.vue')
 )
 
 const FooterComponent = defineAsyncComponent(()=>
