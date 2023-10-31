@@ -247,5 +247,21 @@ button i.uil-edit{
 .modal__close i:hover{
     transform: rotate(360deg);
 }
+/* Appliquez une largeur de 100% aux éléments parents */
+.security__header {
+  width: 100%;
+}
+
+/* Définissez une largeur maximale pour l'en-tête sur les grands écrans */
+@media screen and (min-width: 800px) {
+  .security__header {
+    max-width: 1000px; /* Largeur maximale pour les grands écrans */
+  }
+}
+
+/* La classe mt-5 appliquera une marge, mais elle occupera toute la largeur */
+.mt-5 {
+  width: 100%;
+}
   </style>
   
