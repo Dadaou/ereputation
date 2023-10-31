@@ -44,11 +44,6 @@
             <div class="tablet_mobile__filter">
                     <DropdownComponent :showTitle="false" class="dropdown" title="Filter by plateform" placeholder="Select a website" :data="websites" @submit="(website)=>{
                         selectedWebsites = website
-                        if(website == websites[0]){
-                           
-                        }else{
-                            
-                        }
                     }" :default="websites[0]"/>
                   <el-date-picker
                         v-model="dateStart"
@@ -56,7 +51,6 @@
                         :size="'large'"
                       />
                       <el-date-picker
-                        class="mt-2"
                         v-model="dateEnd"
                         placeholder="End date"
                         :size="'large'"
@@ -154,11 +148,6 @@
                     </div>
                     <DropdownComponent class="dropdown" title="Filter by plateform" placeholder="Select a website" :data="websites" @submit="(website)=>{
                         selectedWebsites = website
-                        if(website == websites[0]){
-                            
-                        }else{
-                            
-                        }
                     }" :default="websites[0]"/>
                     <div class="date__filter">
                         <div class="text-sm title">Select a range of date</div>
@@ -290,6 +279,7 @@ let updateVisibleData = function(_data, isStarFilter=false){
     let data = paginationConfig.value;
     _reviews.value = _data
     if (isStarFilter==false) dataReviews.value= _reviews.value ;
+
     paginationConfig.value.data = _data.slice(data.current*data.size, (data.current * data.size) + data.size)
     if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
         updatePage( paginationConfig.value.current -1);
@@ -340,6 +330,7 @@ watch([dateStart, dateEnd, selectedWebsites, checkedFeeling], ()=>{
         const selectedFeelings = checkedFeeling.value;
         filteredReviews = filteredReviews.filter(review => selectedFeelings.includes(review.feeling));
     }
+
     updateVisibleData(filteredReviews);
 })
 
@@ -370,9 +361,9 @@ const reloadStarData = ()=>{
 
 const reloadData = (reviewUpdated)=>{
     visibleData.value.forEach((review, index)=>{
-                if(review.id == reviewUpdated.id){
-                    visibleData.value[index].feeling = reviewUpdated.feeling;
-                }
+        if(review.id == reviewUpdated.id){
+            visibleData.value[index].feeling = reviewUpdated.feeling;
+        }
     })
 }
 
@@ -416,12 +407,21 @@ onBeforeMount(async () => {
             establishment.value['reviews'] = response.data['reviews'];
             establishment.value['websites'] = response.data['websites'];
             reviews.value = establishment.value.reviews;
-            reviews.value.sort(function (a, b) {
-              return moment(b.date_review).diff(moment(a.date_review));
-            });
             _reviews.value = reviews.value;
             websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
             reloadStarData();
+            review.value.sort(function (a, b) {
+              if (a.date_review === null && b.date_review === null) {
+                return 0; // No difference if both dates are null
+              } else if (a.date_review === null) {
+                return 1; // Treat null as 'greater' to move it towards the end
+              } else if (b.date_review === null) {
+                return -1; // Treat null as 'smaller' to move it towards the beginning
+              } else {
+                return moment(b.date_review).diff(moment(a.date_review));
+              }
+            });
+
             updateVisibleData(reviews.value);
             reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
      }

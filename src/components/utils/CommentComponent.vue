@@ -1,6 +1,6 @@
 <template>
-<div class="reviews__content">
-    <article v-for="review in reviews" v-if="reviews.length > 0" :class="[review.source=='App (Private)'?'intern__comment':'']">
+<div class="reviews__content" v-if="reviews.length > 0">
+    <article v-for="review in reviews" :class="[review.source=='App (Private)'?'intern__comment':'']">
         <div class="flex items-center review__item">
             <div class="flex items-center mb-1 space-x-4">
                 <div class="review__info space-y-1 dark:text-white info__reviews">
@@ -36,7 +36,6 @@
             <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 comment">{{ review.comment }}</p>
         </div>
     </article>
-  <!--   <article v-else>No reviews ...</article> -->
     <ModalComponent :showModal="showModal" @close="showModal=false" :width="modalWidth">
             <template #content>
                 <div class="modal__header">
@@ -208,6 +207,7 @@ const updateReview = async () => {
     font-size: 13px !important;
     color: var(--color-bg1);
 }
+
 .review__item{
     justify-content: space-between !important;
 }
