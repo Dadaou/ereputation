@@ -35,7 +35,7 @@
                 <li class="w-full mr-3">
                     <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                             selectedTimePeriod = timePeriod
-                    }" :default="timePeriods[2]"/>
+                    }" :default="timePeriods[1]"/>
                 </li>
                 <li class="w-full mr-3">
                   <el-date-picker
@@ -105,11 +105,13 @@ const showModal = ref(false);
 const comparisonByEstablishments = ref(true);
 const companiesStore = useCompanyStore();
 let selectedTimePeriod = ref('');
-let timePeriods = ref(['Weeks','Months', 'Quarters', 'Semesters']);
+let timePeriods = ref(['Days','Weeks','Months', 'Quarters', 'Semesters']);
 let establishmentDropdown = computed(() => comparisonByEstablishments.value?props.competitors:props.companies);
 let selectedCompany = ref(establishmentDropdown.value[0]);
-let startDate = moment().startOf('year').format('YYYY-M-DD');
-let endDate = moment().endOf('year').format('YYYY-M-DD');
+// let startDate = moment().startOf('year').format('YYYY-M-DD');
+// let endDate = moment().endOf('year').format('YYYY-M-DD');
+let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+let endDate = moment().format('YYYY-M-DD');
 let legendData = ref([]);
 let _timePeriod = computed(()=>props.timePeriod);
 const { width, height } = useWindowSize(); 

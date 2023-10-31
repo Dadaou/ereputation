@@ -105,7 +105,7 @@
                     }" :default="websites[0]"/>
                     <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                                 selectedTimePeriod = timePeriod
-                        }" :default="timePeriods[1]"/>
+                        }" :default="timePeriods[2]"/>
                     <el-date-picker
                         v-model="date2"
                         type="daterange"
@@ -233,7 +233,7 @@
                       />
                         <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                                 selectedTimePeriod = timePeriod
-                        }" :default="timePeriods[1]"/>
+                        }" :default="timePeriods[2]"/>
                     </div>
                 </div>
               <div class="rating__customers">
@@ -384,7 +384,7 @@ const dataLoading = ref(true)
 const date2 = ref([]);
 
 let selectedTimePeriod = ref('');
-let timePeriods = ref(['Weeks','Months', 'Quarters', 'Semesters']);
+let timePeriods = ref(['Days', 'Weeks','Months', 'Quarters', 'Semesters']);
 
 let lastReviews = ref([]);
 let media = [];
@@ -461,7 +461,7 @@ watch(date, ()=>{
 });
 
 const viewData = (timePeriod, startDate, endDate, data) => {
-    plotdata.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, data);
+    plotdata.value = companiesStore.calculateReviewsV4(timePeriod, startDate, endDate, data).data;
 }
 
 let updatePage = function(pageNumber){
@@ -484,41 +484,38 @@ const globalComparison = async () => {
     selectedCompetitors.value = 'Global';
     selectedWebsites.value = 'Global';
 
-    
     plotdata.value = [];
 
     comparisonData.value = [establishment.value, ...competitors.value];
     _comparisonData = [establishment.value, ...competitors.value];
     reviews.value = establishment.value.reviews;
    
-    let startDate = moment().startOf('year').format('YYYY-M-DD');
-    let endDate = moment().endOf('year').format('YYYY-M-DD');
-    if(date2.value.length > 0){
-        startDate = moment(date2.value[0]).format('YYYY-M-DD');
-        endDate = moment(date2.value[1]).format('YYYY-M-DD');
+    let startDate = new Date();
+    startDate.setDate(startDate.getDate() - 180);
+    let endDate = new Date();
+    
+    if (date2.value.length > 0) {
+        startDate = new Date(date2.value[0]);
+        endDate = new Date(date2.value[1]);
     }
 
     all_items.value[2].value = competitors.value.length;
-    all_items.value[1].value = establishment.value.reviews.length;
-    all_items.value[0].value = companiesStore.calculateRatingV2(establishment.value.reviews);
+    all_items.value[1].value = establishment.value.totalReviews;
+    all_items.value[0].value = establishment.value.rating;
 
-    legendData.value =  companiesStore.generateLegend(comparisonData.value, colors);
-    _legendData =  companiesStore.generateLegend(_comparisonData, colors);
-
-    lastReviews.value = companiesStore.getLastReviews(establishment.value.reviews, 100);
-    updateVisibleData(lastReviews.value);
-
-    reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
+    legendData.value = await companiesStore.generateLegend(comparisonData.value, colors);
+    _legendData = legendData;
     
-    // setTimeout(() => {
-    //     loadDatasets(_comparisonData, colors, selected_date);
-    //     viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
-    // }, 100);
+    lastReviews.value = companiesStore.getLastReviews(establishment.value.reviews, 100);
+    await updateVisibleData(lastReviews.value);
+    
+    reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
 
     loadDatasets(_comparisonData, colors, selected_date);
     viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+
     appStore.isLoading = false;
-}
+};
 
 const reloadComparison = async (competitor) => {
     selectedCompetitors.value = competitor.name;
@@ -526,8 +523,8 @@ const reloadComparison = async (competitor) => {
     comparisonData.value = [establishment.value, competitor];
     _comparisonData  = [establishment.value, competitor];
     
-    let startDate = moment().startOf('year').format('YYYY-M-DD');
-    let endDate = moment().endOf('year').format('YYYY-M-DD');
+    let startDate = moment().subtract(180, 'days').format('YYYY-M-DD');
+    let endDate = moment().format('YYYY-M-DD');
     if(date2.value.length > 0){
         startDate = moment(date2.value[0]).format('YYYY-M-DD');
         endDate = moment(date2.value[1]).format('YYYY-M-DD');
@@ -540,28 +537,40 @@ const reloadComparisonByWebsite = async (website) => {
     selectedWebsites.value = website;
     showWebsites.value = !showWebsites.value;
     comparisonData.value = _comparisonData;
-    await companiesStore.getReviewsByWebsite(comparisonData.value, selectedWebsites.value, async (data) =>{
-        plotdata.value = [];
-        data.forEach(company => {
-            if(company.id == establishment.value.id){
-                all_items.value[1].value = company.reviews.length;
-                all_items.value[0].value = companiesStore.calculateRatingV2(company.reviews);
-                lastReviews.value = companiesStore.getLastReviews(company.reviews, 10);
-                reviews.value = company.reviews;
-                updateVisibleData(lastReviews.value);
-                reviewFeedbackData.value = companiesStore.getfeedbackData(company.reviews);
-            }
+
+    const data = await new Promise((resolve) => {
+        companiesStore.getReviewsByWebsite(comparisonData.value, selectedWebsites.value, (fetchedData) => {
+            resolve(fetchedData);
         });
-        let startDate = moment().startOf('year').format('YYYY-M-DD');
-        let endDate = moment().endOf('year').format('YYYY-M-DD');
-        if(date2.value.length > 0){
-            startDate = moment(date2.value[0]).format('YYYY-M-DD');
-            endDate = moment(date2.value[1]).format('YYYY-M-DD');
-        }
-        viewData(selectedTimePeriod.value, startDate, endDate, data);
-        loadDatasets(data, colors, selected_date);
     });
-}
+
+    // Find the company matching the establishment ID
+    const establishmentData = data.find(company => company.id === establishment.value.id);
+
+    if (establishmentData) {
+        all_items.value[1].value = establishmentData.reviews.length;
+        all_items.value[0].value = companiesStore.calculateRatingV2(establishmentData.reviews);
+        lastReviews.value = companiesStore.getLastReviews(establishmentData.reviews, 100);
+        reviews.value = establishmentData.reviews;
+        updateVisibleData(lastReviews.value);
+        reviewFeedbackData.value = companiesStore.getfeedbackData(establishmentData.reviews);
+    }
+
+    let startDate = new Date();
+    startDate.setDate(startDate.getDate() - 180);
+    let endDate = new Date();
+    if (date2.value.length > 0) {
+        startDate = new Date(date2.value[0]);
+        endDate = new Date(date2.value[1]);
+    }
+
+    // Perform async tasks concurrently
+    await Promise.all([
+        viewData(selectedTimePeriod.value, startDate, endDate, data),
+        loadDatasets(data, colors, selected_date)
+    ]);
+};
+
 
 const gotoReviewPage = (id)=>{
     appStore.isLoading = true;
@@ -591,26 +600,32 @@ const chart__height2 = ref(200);
 
 
 watch(date2, ()=>{
-    let startDate = moment().startOf('year').format('YYYY-M-DD');
-    let endDate = moment().endOf('year').format('YYYY-M-DD');
+    let startDate = moment().subtract(180, 'days').format('YYYY-M-DD');
+    let endDate = moment().format('YYYY-M-DD');
+    comparisonData.value = _comparisonData;
     if(date2.value){
         startDate = moment(date2.value[0]).format('YYYY-M-DD');
         endDate = moment(date2.value[1]).format('YYYY-M-DD');
+        const reviews = companiesStore.calculateReviewsV4(selectedTimePeriod.value, startDate, endDate, comparisonData.value).reviews;
+        all_items.value[1].value = reviews.length;
+        all_items.value[0].value = companiesStore.calculateRatingV2(reviews);
+    }else{
+         all_items.value[1].value = establishment.value.totalReviews;
+         all_items.value[0].value = establishment.value.rating;  
     }
-    comparisonData.value = _comparisonData;
     viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
 });
 
 watch(selectedTimePeriod, ()=>{
-    let startDate = moment().startOf('year').format('YYYY-M-DD');
-    let endDate = moment().endOf('year').format('YYYY-M-DD');
-    if(date2.value.length > 0){
+    let startDate = moment().subtract(180, 'days').format('YYYY-M-DD');
+    let endDate = moment().format('YYYY-M-DD');
+    comparisonData.value = _comparisonData;
+    if(date2.value){
         startDate = moment(date2.value[0]).format('YYYY-M-DD');
         endDate = moment(date2.value[1]).format('YYYY-M-DD');
     }
-    comparisonData.value = _comparisonData;
-    viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
-});
+   plotdata.value = companiesStore.calculateReviewsV3(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+})
 
 const goto = (value) =>{
     router.push({name: value});
@@ -708,8 +723,8 @@ onBeforeMount(async () => {
 
             Promise.all(promises).then(() => {
                     competitors.value = data;
-                    globalComparison();
                     reviews_loader.value = false;
+                    globalComparison();
             });
      }
 });
