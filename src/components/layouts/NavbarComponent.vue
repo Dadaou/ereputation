@@ -71,17 +71,36 @@
   <div id="navbar-user" class="items-center justify-between w-full md:flex md:w-auto md:order-1" v-if="show_menu && showMenu">
     <ul 
     	:class="['menu flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-2 md:mt-0 md:border-0']">
-      			<li>
-                    <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffs`">
-                        <i class="uil uil-users-alt"></i> 
-                        <span>Staff</span> 
+      			    <li>
+                    <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}`">
+                        <i class="uil uil-dashboard"></i> 
+                        <span>Dashboard</span> 
                     </RouterLink>
                 </li>
                 <li>
-                    <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/events`">
-                        <i class="uil uil-calendar-alt"></i> 
-                        <span>Event</span>
-                    </RouterLink>
+                   <button @click="showDropdown2 = !showDropdown2" class="btn__dropdown flex items-center justify-between w-full py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:p-0 md:w-auto">
+                      <i class="uil uil-chart-bar"></i>
+                      <span class="mr-2 pl-2">Impacts</span>
+                      <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                    </svg>
+                  </button>
+                    <div v-if="showDropdown2" class="comparison z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-48">
+                        <ul class="py-2 text-sm" aria-labelledby="dropdownLargeButton">
+                            <li>
+                               <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffs`">
+                                    <i class="uil uil-users-alt"></i> 
+                                    <span>Staff</span> 
+                                </RouterLink>
+                            </li>
+                            <li>
+                              <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/events`">
+                                  <i class="uil uil-calendar-alt"></i> 
+                                  <span>Event</span>
+                              </RouterLink>
+                            </li>
+                        </ul>
+                    </div>   
                 </li>
                 <li>
                     <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/socials`">
@@ -136,11 +155,11 @@ const nav__ref = ref(null);
 const nav__container__ref = ref(null);
 const isScrolling = ref(false);
 const show_menu = ref(true);
-const showBg = ref(false)
+const showBg = ref(false);
+const showDropdown2 = ref(false);
 
 const show = ()=>{
 	showDropdown.value = !showDropdown.value
-	console.log(showDropdown.value)
 }
 
 watch(y, ()=>{
@@ -172,6 +191,29 @@ watch(width, () => {
 });
 </script>
 <style scoped>
+
+.comparison{
+  position: absolute;
+}
+
+.comparison ul li a{
+  color: var(--color-bg2) !important;
+  padding: 5px 5px !important;
+}
+
+.comparison ul li a:hover{
+ background:  var(--color-danger) !important;
+ color: white !important;
+}
+
+ul li button.btn__dropdown{
+  color: white !important; 
+}
+
+.nav__onScroll ul li button.btn__dropdown{
+  color: var(--color-bg2) !important;
+}
+
 nav{
     width:100vw;
     height: 5rem;
@@ -270,6 +312,15 @@ h4{
 	    color: var(--color-bg2) !important;
 	    background: white;
 	}
+
+  .comparison{
+    position: relative;
+    width: 100% !important;
+  }
+
+  ul li button.btn__dropdown{
+    color: var(--color-bg2) !important; 
+  }
 
    ul.menu a{
    	 color: var(--color-bg2)

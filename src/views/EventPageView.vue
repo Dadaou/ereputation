@@ -270,9 +270,11 @@ let paginationConfig = ref({
 });
 
 const showModal = ref(false);
-let timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
-let selectedTimePeriod = ref(timePeriods.value[1]);
-const date = ref(['2023-01-01', '2023-09-01']);
+const timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
+const selectedTimePeriod = ref(timePeriods.value[1]);
+const startDate = moment().subtract(90, 'days').format('YYYY-M-DD');
+const endDate = moment().format('YYYY-M-DD');
+const date = ref([startDate, endDate]);
 provide('date', date);
 provide('type', selectedTimePeriod);
 
