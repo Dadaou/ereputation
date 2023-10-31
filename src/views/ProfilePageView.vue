@@ -54,95 +54,108 @@ const breadcrumbData = [
 ];
 
 </script>
-
 <style scoped>
+/* Styles existants */
+
 .admin__container {
-    height: inherit;
-    display: flex;
-    gap: 2rem;
-    width: 95% !important;
-    margin: auto;
+  height: inherit;
+  display: flex;
+  gap: 2rem;
+  width: 95% !important;
+  margin: auto;
 }
 
- .breadcrumb__container{
-        width: 95%;
+.breadcrumb__container {
+  width: 95%;
 }
 
 .admin__menu ul {
-    margin-top: 50px;
-    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+  margin-top: 50px;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
 }
 
 .admin__menu li a:hover {
-    background-color: var(--color-light);
-    color: var(--color-bg1);
-    cursor: pointer;
+  background-color: var(--color-light);
+  color: var(--color-bg1);
+  cursor: pointer;
 }
 
 .admin__menu li a {
-    padding: 10px 75px;
-    transition: var(--transition);
-    cursor: pointer;
-    display: flex;
-    gap: 1rem;
-    font-weight: 600;
-    font-size: 14px;
-    color: rgb(101, 101, 101);
+  padding: 10px 75px;
+  transition: var(--transition);
+  cursor: pointer;
+  display: flex;
+  gap: 1rem;
+  font-weight: 600;
+  font-size: 14px;
+  color: rgb(101, 101, 101);
 }
 
 .router-link-exact-active {
-    background-color: var(--color-danger);
-    color: var(--color-white) !important;
+  background-color: var(--color-danger);
+  color: var(--color-white) !important;
 }
 
 .admin__menu li .router-link-exact-active:hover {
-    background-color: var(--color-danger);
-    color: var(--color-white);
+  background-color: var(--color-danger);
+  color: var(--color-white);
 }
 
 .all__content {
-    flex: auto;
-    width: calc(100% - 65px);
-    padding-right: 8px;
+  flex: auto;
+  width: calc(100% - 65px);
+  padding-right: 8px;
 }
 
-/* For tablets */
-@media screen and (max-width:1225px) {
-    .admin__menu li a {
-        padding: 10px 50px;
-    }
+/* Pour les tablettes */
+@media screen and (max-width: 1225px) {
+  .admin__menu li a {
+    padding: 10px 50px;
+  }
 }
 
-@media screen and (max-width:1124px) {
-    .breadcrumb__container{
-        width: 95%;
-    }
+@media screen and (max-width: 1124px) {
+  .breadcrumb__container {
+    width: 95%;
+  }
 
-    .admin__menu li a span {
-        display: none;
-    }
+  .admin__menu li a span {
+    display: none;
+  }
 
-    .admin__menu li a {
-        font-size: 15px;
-        padding: 10px 25px;
-    }
+  .admin__menu li a {
+    font-size: 15px;
+    padding: 10px 25px;
+  }
 }
 
-@media screen and (max-width:800px) {
-    .admin__container {
-        flex-direction: column;
-    }
+/* Styles pour le menu sur les petits écrans */
+.menu-toggle {
+  display: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
 
-    .admin__menu li a span {
-        display: block;
-    }
+.menu-open .admin__menu ul {
+  display: block; /* Affiche toujours la liste du menu sur les petits écrans */
+}
 
-    ul{
-        display: flex;
-    }
+/* Pour les petits écrans (par exemple, les téléphones mobiles) */
+@media screen and (max-width: 800px) {
+  .admin__container {
+    flex-direction: column;
+  }
 
-    .admin__menu li a {
-       flex-direction: row;
-    }
+  .admin__menu li a span {
+    display: block;
+  }
+
+  ul {
+    display: block; /* Affiche toujours la liste du menu sur les petits écrans */
+  }
+
+  .admin__menu li a {
+    flex-direction: row;
+  }
 }
 </style>

@@ -143,4 +143,9 @@ p {
 .info__content span {
     font-weight: 500;
 }
+@media screen and (max-width: 800px) {
+  .user__main__container {
+    width: 120%; /* Occuper toute la largeur sur les petits écrans */
+  }
+}
 </style>
