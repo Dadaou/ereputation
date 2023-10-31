@@ -235,64 +235,126 @@ export const useCompanyStore = defineStore("company", {
       return result;
     },
     calculateReviewsV4(timePeriod, startDate, endDate, companies) {
-    let result = [];
-    let quarters = this.splitRangeIntoQuarters(startDate, endDate);
-    let semesters = this.splitRangeIntoSemesters(startDate, endDate);
-    let months = this.getAllMonthsInRange(startDate, endDate);
-    let weeks = this.getAllWeeksInRange(startDate, endDate);
-    let days = this.splitRangeIntoDays(startDate, endDate);
+      let result = [];
+      let reviews = [];
+      let quarters = this.splitRangeIntoQuarters(startDate, endDate);
+      let semesters = this.splitRangeIntoSemesters(startDate, endDate);
+      let months = this.getAllMonthsInRange(startDate, endDate);
+      let weeks = this.getAllWeeksInRange(startDate, endDate);
+      let days = this.splitRangeIntoDays(startDate, endDate);
 
-    if (timePeriod === 'Days') {
-        days.forEach((day) => {
-            let review = {};
-            review['name'] = `${day.getDate()}/${day.getMonth() + 1}/${day.getFullYear()}`;
 
-            companies.forEach((company) => {
-                let reviews = this.getReviewsBetweenDates(
-                    company.reviews,
-                    this.formatDate(day),
-                    this.formatDate(day)
-                );
-                this.reviews = reviews;
-                let key = company.name;
-                let value = Number(this.calculateRatingV2(reviews));
-                review[key] = value;
-            });
-
-            result.push(review);
+      if (timePeriod == "Days") {
+        days.forEach((day, index) => {
+          let review = {};
+          review["name"] = `${moment(day).format(
+            "DD/M/YY"
+          )}`;
+          companies.forEach((company) => {
+            const _reviews = this.getReviewsBetweenDates(
+              company.reviews,
+              moment(day).format("YYYY-M-DD"),
+              moment(day).format("YYYY-M-DD")
+            );
+            reviews = this.updateReviews(_reviews, reviews);
+            let key = company.name;
+            let value = Number(this.calculateRatingV2(reviews));
+            review[key] = value;
+          });
+          result.push(review);
         });
-    }
+      }
 
-    if (timePeriod === 'Quarters') {
+      if (timePeriod == "Quarters") {
         quarters.forEach((quarter, index) => {
-            let review = {};
-            review['name'] = `Q${index} ${this.formatDate(quarter.start)} - ${this.formatDate(quarter.end)}`;
-
-            companies.forEach((company) => {
-                let reviews = this.getReviewsBetweenDates(
-                    company.reviews,
-                    this.formatDate(quarter.start),
-                    this.formatDate(quarter.end)
-                );
-                this.reviews = reviews;
-                let key = company.name;
-                let value = Number(this.calculateRatingV2(reviews));
-                review[key] = value;
-            });
-
-            result.push(review);
+          let review = {};
+          review["name"] = `Q${index} ${moment(quarter.start).format(
+            "DD/M/YY"
+          )} -${moment(quarter.end).format("DD/M/YY")}`;
+          companies.forEach((company) => {
+            const _reviews = this.getReviewsBetweenDates(
+              company.reviews,
+              moment(quarter.start).format("YYYY-M-DD"),
+              moment(quarter.end).format("YYYY-M-DD")
+            );
+             reviews = this.updateReviews(_reviews, reviews);
+            let key = company.name;
+            let value = Number(this.calculateRatingV2(reviews));
+            review[key] = value;
+          });
+          result.push(review);
         });
-    }
+      }
 
-    // The remaining timePeriod conditions should be handled similarly using native JavaScript Date methods.
+      if (timePeriod == "Semesters") {
+        semesters.forEach((semester, index) => {
+          let review = {};
+          review["name"] = `S${index} ${moment(semester.start).format(
+            "DD/M/YY"
+          )} -${moment(semester.end).format("DD/M/YY")}`;
+          companies.forEach((company) => {
+            const _reviews = this.getReviewsBetweenDates(
+              company.reviews,
+              moment(semester.start).format("YYYY-M-DD"),
+              moment(semester.end).format("YYYY-M-DD")
+            );
+             reviews = this.updateReviews(_reviews, reviews);
+            let key = company.name;
+            let value = Number(this.calculateRatingV2(reviews));
+            review[key] = value;
+          });
+          result.push(review);
+        });
+      }
 
-      return result;
-  },
+      if (timePeriod == "Months") {
+        months.forEach((month) => {
+          let review = {};
+          review["name"] = `${moment(month).format("MMM-YY")}`;
+          companies.forEach((company) => {
+            const _reviews = this.getReviewsByMonth(
+              company.reviews,
+              moment(month).format("MMM-YY")
+            );
+             reviews = this.updateReviews(_reviews, reviews);
+            let key = company.name;
+            let value = Number(this.calculateRatingV2(reviews));
+            review[key] = value;
+          });
+          result.push(review);
+        });
+      }
 
-  formatDate(date) {
-      return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-  },
-
+      if (timePeriod == "Weeks") {
+        weeks.forEach((week, index) => {
+          let review = {};
+          review["name"] = `W ${moment(week.begin).format(
+            "DD")}-${moment(week.end).format(
+            "DD")}`; 
+          companies.forEach((company) => {
+            const _reviews= this.getReviewsBetweenDates(
+              company.reviews,
+              week.begin,
+              week.end
+            );
+             reviews = this.updateReviews(_reviews, reviews);
+            let key = company.name;
+            let value = Number(this.calculateRatingV2(reviews));
+            review[key] = value;
+          });
+          result.push(review);
+        });
+      }
+      return {
+        data: result, reviews: reviews
+      };
+    },
+    updateReviews(data, reviews){
+      data.forEach(item=>{
+        reviews.push(item)
+      })
+      return reviews;
+    },
     eventRatingDataset(company, event) {
       const eventRating = this.calculateEventRating(company, event);
       return {

@@ -461,7 +461,7 @@ watch(date, ()=>{
 });
 
 const viewData = (timePeriod, startDate, endDate, data) => {
-    plotdata.value = companiesStore.calculateReviewsV4(timePeriod, startDate, endDate, data);
+    plotdata.value = companiesStore.calculateReviewsV4(timePeriod, startDate, endDate, data).data;
 }
 
 let updatePage = function(pageNumber){
@@ -507,7 +507,7 @@ const globalComparison = async () => {
     _legendData = legendData;
     
     lastReviews.value = companiesStore.getLastReviews(establishment.value.reviews, 100);
-    updateVisibleData(lastReviews.value);
+    await updateVisibleData(lastReviews.value);
     
     reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
 
@@ -599,17 +599,33 @@ const chart__width2 = ref(300);
 const chart__height2 = ref(200);
 
 
-watch([date2, selectedTimePeriod], ()=>{
+watch(date2, ()=>{
     let startDate = moment().subtract(180, 'days').format('YYYY-M-DD');
     let endDate = moment().format('YYYY-M-DD');
+    comparisonData.value = _comparisonData;
+    if(date2.value){
+        startDate = moment(date2.value[0]).format('YYYY-M-DD');
+        endDate = moment(date2.value[1]).format('YYYY-M-DD');
+        const reviews = companiesStore.calculateReviewsV4(selectedTimePeriod.value, startDate, endDate, comparisonData.value).reviews;
+        all_items.value[1].value = reviews.length;
+        all_items.value[0].value = companiesStore.calculateRatingV2(reviews);
+    }else{
+         all_items.value[1].value = establishment.value.totalReviews;
+         all_items.value[0].value = establishment.value.rating;  
+    }
+    viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+});
+
+watch(selectedTimePeriod, ()=>{
+    let startDate = moment().subtract(180, 'days').format('YYYY-M-DD');
+    let endDate = moment().format('YYYY-M-DD');
+    comparisonData.value = _comparisonData;
     if(date2.value){
         startDate = moment(date2.value[0]).format('YYYY-M-DD');
         endDate = moment(date2.value[1]).format('YYYY-M-DD');
     }
-    comparisonData.value = _comparisonData;
-    viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
-    // plotdata.value = companiesStore.calculateReviewsV4(selectedTimePeriod, startDate, endDate, comparisonData.value).result;
-});
+   plotdata.value = companiesStore.calculateReviewsV3(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+})
 
 const goto = (value) =>{
     router.push({name: value});
