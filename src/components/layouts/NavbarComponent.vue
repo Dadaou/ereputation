@@ -5,7 +5,7 @@
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4" ref="nav__container__ref">
   <button 
         v-if="showMenu"
-        @click="show_menu=!show_menu" 
+        @click="toggleMobileMenu" 
         type="button" 
         class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200" 
         aria-controls="navbar-user" 
@@ -37,16 +37,16 @@
           <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ userStore.user.email }}</span>
         </div>
         <ul class="py-2" aria-labelledby="user-menu-button">
-          <li>
+          <li @click="closeDropdown">
           	<RouterLink 
-          		:to="`/customer/${userStore.user.customer.tag}/account`"
+          		:to="`/customer/${userStore.user.customer.tag}/account` " 
           		class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
           	>
                     <i class="uil uil-user-square"></i>
                 	Profile
             </RouterLink>
           </li>
-          <li>
+          <li @click="closeDropdown">
             <RouterLink 
             	:to="`/customer/${userStore.user.customer.tag}/account/security`"
             	class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -55,7 +55,7 @@
                 	 Settings
             </RouterLink>
           </li>
-          <li>
+          <li @click="closeDropdown">
           	 <RouterLink 
           	 	to="/"
           	 	class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -103,19 +103,19 @@
                     </div>   
                 </li>
                 <li>
-                    <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/socials`">
+                    <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/socials`" @click="closeMobileMenu">
                         <i class="uil uil-users-alt"></i>
                         <span>Social</span> 
                     </RouterLink>
                 </li>
                 <li>
-                    <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/weathers`">
+                    <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/weathers`" @click="closeMobileMenu">
                         <i class="uil uil-cloud-sun"></i>
                         <span>Weather</span> 
                     </RouterLink>
                 </li>
                 <li>
-                    <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/reviews`">
+                    <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/reviews`" @click="closeMobileMenu">
                         <i class="uil uil-comment-alt-dots"></i>
                         <span>Reviews</span> 
                     </RouterLink>
@@ -155,8 +155,22 @@ const nav__ref = ref(null);
 const nav__container__ref = ref(null);
 const isScrolling = ref(false);
 const show_menu = ref(true);
-const showBg = ref(false);
 const showDropdown2 = ref(false);
+const showBg = ref(false)
+const closeDropdown = () => {
+  showDropdown.value = false;
+}
+
+const toggleMobileMenu = () => {
+  show_menu.value = !show_menu.value;
+}
+
+// Ajoutez la logique pour fermer le menu mobile lors de la sélection d'un élément du menu
+const closeMobileMenu = () => {
+  if (window.innerWidth < 800) {
+    show_menu.value = false;
+  }
+};
 
 const show = ()=>{
 	showDropdown.value = !showDropdown.value

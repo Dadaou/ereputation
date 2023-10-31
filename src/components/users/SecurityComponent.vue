@@ -14,18 +14,22 @@
                 <div class="info__container">
                     <span v-if="!enableEdit.password">
                         Click the edit button if you want to change your password
-                    </span>
+                    </span>           
                     <div v-else class="info__edit">
-                        <div class="form__input">
-                            <div class="label">Old Password</div>
-                            <input type="password" name="oldPassword" required>
+                        <div class="grid gap-6 mb-6 md:grid-cols-2">
+                            <div>
+                                <label for="oldPassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Old Password <span>*</span></label>
+                                <input type="password" name="oldPassword"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2 custom-input" required>
+                            </div>
                         </div>
-                        <div class="form__input">
-                            <div class="label">New Password</div>
-                            <input type="password" name="newPassword" required>
+                        <div class="grid gap-6 mb-6 md:grid-cols-2">
+                            <div>
+                                <label for="NewPassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">New Password <span>*</span></label>
+                                <input type="password" name="newPassword" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2 custom-input" required>
+                            </div>
                         </div>
+                        
                     </div>
-                </div>
                 <div class="edit__actions">
                     <span class="cancel" v-if="enableEdit.password" @click="enableEdit.password = false">
                         Cancel
@@ -35,6 +39,8 @@
                         Edit
                     </span>
                 </div>
+                </div>
+                
             </div>
         </div>
     </div>
@@ -82,17 +88,10 @@ let enableEdit = ref({
     justify-content: space-between;
     width: 100%;
     min-width: 200px;
-}
-
-.info__title {
-    width: 20%;
-    min-width: 60px;
-}
-
-.edit__actions {
+}.edit__actions {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    align-items: baseline; /* Aligner les éléments verticalement au centre */
+    gap: 10px; /* Espacement entre les éléments */
 }
 
 .edit__actions .edit {
@@ -115,11 +114,11 @@ let enableEdit = ref({
 }
 
 .info__edit {
-    width: 500px;
+    width: 100%;
 }
 
 .info__edit input {
-    width: 100%;
+    width: 250px;
 }
 
 .info__edit .label {
@@ -147,5 +146,36 @@ p {
   .user__main__container {
     width: 120%; /* Occuper toute la largeur sur les petits écrans */
   }
+  .info__title {
+    display: none; /* Masquer la classe .info__title en version mobile */
+  }
+
+  .info__edit {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .info__edit .form__input {
+    margin: 5px;
+    width: 100%;
+  }
+ 
 }
+
+input, select{
+    border-radius: 4px !important;
+    background-color: white;
+}
+
+label {
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    color: var(--color-bg2) !important;
+}
+
+label span{
+    color: red;
+}
+
 </style>
