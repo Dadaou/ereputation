@@ -88,17 +88,24 @@
                     <div v-if="showDropdown2" class="comparison z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-48">
                         <ul class="py-2 text-sm" aria-labelledby="dropdownLargeButton">
                             <li>
-                               <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffs`">
+                               <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffs`" @click="closeDropdownAndMobileMenu">
                                     <i class="uil uil-users-alt"></i> 
                                     <span>Staff</span> 
                                 </RouterLink>
                             </li>
                             <li>
-                              <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/events`">
+                              <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/events`" @click="closeDropdownAndMobileMenu">
                                   <i class="uil uil-calendar-alt"></i> 
                                   <span>Event</span>
                               </RouterLink>
                             </li>
+                            <li>
+                              <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffsranking`" @click="closeDropdownAndMobileMenu">
+                                <i class="uil uil-users-alt"></i> 
+                                <span>Staff Ranking</span> 
+                              </RouterLink>
+                            </li>
+                        
                         </ul>
                     </div>   
                 </li>
@@ -170,6 +177,10 @@ const closeMobileMenu = () => {
   if (window.innerWidth < 800) {
     show_menu.value = false;
   }
+};
+const closeDropdownAndMobileMenu = () => {
+  showDropdown2.value = false; // Fermez le dropdown
+  closeMobileMenu(); // Fermez le menu mobile si nécessaire
 };
 
 const show = ()=>{
