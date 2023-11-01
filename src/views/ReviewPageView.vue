@@ -410,7 +410,7 @@ onBeforeMount(async () => {
             _reviews.value = reviews.value;
             websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
             reloadStarData();
-            review.value.sort(function (a, b) {
+            reviews.value.sort(function (a, b) {
               if (a.date_review === null && b.date_review === null) {
                 return 0; // No difference if both dates are null
               } else if (a.date_review === null) {

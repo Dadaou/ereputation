@@ -653,10 +653,6 @@ img{
     .tablet_mobile__filter > * {
         width: 100% !important;
     }
-
-  /*  .tablet_mobile__filter > *{
-        flex-basis: 100%;
-    }*/
 }
 
 @media screen and (max-width:800px) {
@@ -699,12 +695,6 @@ img{
        flex-direction: column;
        padding: 5px 0px !important;
     }
-
-   /* .tablet_mobile__filter > *{
-        flex-basis: inherit !important;
-        width: inherit !important;
-        justify-content: center !important;
-    }*/
 }
 
 @media screen and (max-width:500px) {

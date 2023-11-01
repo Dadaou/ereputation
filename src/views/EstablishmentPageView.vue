@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <div class="reviews__content" v-if="!dataLoading">
-                    <p>Discover the latest feedback about your establishment. Click <a @click="gotoReviewPage(establishment.id)">here</a> to access all reviews.</p>
+                    <p>Discover the latest feedback about your establishment. Click <a @click="gotoReviewPage(establishment.competitor_tag, $route.params.tag)">here</a> to access all reviews.</p>
                     <div class="reviews__pagination">
                         <CommentPagination  v-if="lastReviews.length > 0" :config="paginationConfig" @updatePage="updatePage" :color="'#6c63ff'" :nb="lastReviews.length" :data="visibleData"></CommentPagination>
                     </div>
@@ -80,7 +80,7 @@
                     <aside v-if="lastReviews.length > 0">
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{  all_items[1].value - 3 }} reviews remains</p>
                         <div class="flex items-center mt-3 space-x-3 divide-x divide-gray-200 dark:divide-gray-600">
-                            <a @click="gotoReviewPage(establishment.id)" class="see__more text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-xs px-2 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">See more</a>
+                            <a @click="gotoReviewPage(establishment.competitor_tag, $route.params.tag)" class="see__more text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-xs px-2 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">See more</a>
                         </div>
                     </aside> 
                 </div> 
@@ -572,13 +572,14 @@ const reloadComparisonByWebsite = async (website) => {
 };
 
 
-const gotoReviewPage = (id)=>{
+const gotoReviewPage = (id, tag)=>{
     appStore.isLoading = true;
     setTimeout(()=>{
         router.push({
             name: 'Review',
             params:{
                 id: id,
+                tag: tag
             }
         })
     }, 100);
