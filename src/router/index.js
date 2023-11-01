@@ -58,6 +58,11 @@ const router = createRouter({
       component: ()=>import('@Views/EstablishmentPageView.vue'),
     },
     {
+      path: '/customer/:tag/establishment/:id/staffsranking', 
+      name: 'StaffRanking',  
+      component: () => import('@Views/StaffRankingPageView.vue'), 
+    },
+    {
       path: '/customer/:tag/establishment/:id/reviews',
       name: 'Review',
       beforeEnter: [CheckAccess],
