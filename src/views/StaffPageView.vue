@@ -2,7 +2,13 @@
     <div class="main__container" v-if="exist">
         <HeadComponent class="head" :page="page"></HeadComponent>
         <div class="breadcrumb__container">
-            <BreadcrumbComponent :data="breadcrumbData"/>
+            <div style="margin-top: -10px; padding-bottom:10px; color: red;">
+                <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffsranking`" @click="closeMobileMenu" style="text-decoration: none;">
+                    <i class="uil uil-notes"></i>
+                        <span>Staff Ranking</span>
+                </RouterLink>
+            </div>
+            <BreadcrumbComponent :data="breadcrumbData"/>   
         </div>
         <div class="app__container">
             <div class="left__side">
@@ -21,6 +27,7 @@
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[0]"/>
             </div>
+            
             <div class="tablet_mobile__head">
                 <div class="establishment__info_tablet">
                         <label v-if="!dataLoading">{{ establishment.name }}</label>
