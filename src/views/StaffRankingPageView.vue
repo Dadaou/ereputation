@@ -11,26 +11,129 @@
                         <h2>Staffs Ranking</h2>
                     </div>
                 </div>
-                    <table class="ptable">
-                        <thead>
+                
+                <!-- Table of ranking -->
+                <div class="relative overflow-x-auto" style="margin-top: 15px;">
+                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                                <th>Nom Staff</th>
-                                <th>Nombre evaluation </th>
-                                <th>differentes notes</th>
-                                <th>Moyenne notes</th>
-                                <th>5 dernières notes</th>
+                                <th scope="col" class="px-6 py-3">
+                                    Staff Name
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Number of Evaluations 
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Average grades                
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    last 5 grades             
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
-                    <tr v-for="staff in staffs" :key="staff.id">
-                        <td>{{ staff.name }}</td>
-                        <td>{{ staff.nb_eval }}</td>
-                        <td>{{ Array.from(new Set(staff.notes)).sort((a, b) => a - b).join(', ') }}</td>
-                        <td>{{ staff.note_moyenne }}</td>
-                        <td>{{ staff.notes ? staff.notes.slice(-5).join(', ') : '' }}</td>
-                    </tr>
-                </tbody>
+                            <tr v-for="staff in staffs" :key="staff.id"
+                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {{ staff.name }}
+                                </th>
+                                <td class="px-6 py-4">
+                                    {{ staff.nb_eval }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ Math.round(staff.note_moyenne) }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div v-for="index in 5" :key="index" class="rounded-full w-6 h-6 mx-1" :class="{
+                                        'bg-red-600': staff.notes && Math.round(staff.notes[staff.notes.length - index]) == 0,
+                                        'bg-red-500': staff.notes && Math.round(staff.notes[staff.notes.length - index]) == 1,
+                                        'bg-orange-400': staff.notes && Math.round(staff.notes[staff.notes.length - index]) == 2,
+                                        'bg-yellow-200': staff.notes && Math.round(staff.notes[staff.notes.length - index]) == 3,
+                                        'bg-green-400': staff.notes && Math.round(staff.notes[staff.notes.length - index]) == 4,
+                                        'bg-green-600': staff.notes && Math.round(staff.notes[staff.notes.length - index]) == 5
+                                        }">
+                                        <span class="text-white flex items-center justify-center h-full">
+                                            {{ staff.notes && Math.round(staff.notes[staff.notes.length - index]) }}
+                                        </span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                         </tbody>
                     </table>
+                </div>
+
+            </div>
+
+            <div class="tablet_mobile__filter">
+                <el-date-picker
+                    v-model="date"
+                    type="daterange"
+                    range-separator="To"
+                    start-placeholder="Start date"
+                    end-placeholder="End date"
+                    :size="'large'"
+                />
+                <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
+                    selectedTimePeriod = timePeriod
+                }" :default="timePeriods[0]"/>
+            </div>
+
+            <div class="tablet_mobile__head">
+                <div class="establishment__info_tablet">
+                        <label v-if="!dataLoading">{{ establishment.name }}</label>
+                        <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
+                        <div>
+                            <i :class="['uil', establishment.category=='Restaurant'?'uil-restaurant':'', establishment.category=='Hotel'?'uil-bed-double':'', establishment.category=='Residence'?'uil-home':'']"></i>
+                                <span v-if="!dataLoading">{{ establishment.category }}</span>
+                                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
+                        </div>
+                        <div class="society__location" v-if="establishment.country != null">
+                                <i class="uil uil-map"></i>
+                                <span v-if="!dataLoading">{{ establishment.country }}</span>
+                                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                        </div> 
+                        <div class="society__location">
+                                <i class="uil uil-location-point"></i>
+                                <span v-if="!dataLoading">{{ establishment.address1 }}, {{ establishment.city }}</span>
+                                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                         </div>
+                         <div class="society__location">
+                                <i class="uil uil-favorite"></i>
+                                <span v-if="!dataLoading" class="society__location">{{ all_items[0].value  }}</span>
+                                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                         </div>
+                         <div class="society__location">
+                            <i class="uil uil-comment-alt"></i>
+                                <span v-if="!dataLoading">{{ all_items[1].value  }}</span>
+                                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                         </div>
+                         <div class="society__location">
+                            <i class="uil uil-building"></i>
+                            <span v-if="!dataLoading">{{ all_items[2].value  }} competitors</span>
+                             <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                         </div>
+                    </div>
+                <div class="photo" v-if="!dataLoading">
+                    <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
+                    <div v-else role="status" class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
+                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
+                        </svg>
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                </div>
+                <div class="photo" v-else>
+                    <div role="status" class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
+                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
+                        </svg>
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                </div>
             </div>
             <div class="right__side" >
                 <div
@@ -75,11 +178,26 @@
                                 establishment.city }}</span>
                             <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                         </div>
+                        
                     </div>
+                    
                     <div class="date__filter">
-                       <!--  <div class="text-sm title">Select a range of date</div>
-                        <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
-                        <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" /> -->
+                       <div class="text-sm title">Select a range of date</div>
+                           <el-date-picker
+                            v-model="date"
+                            type="daterange"
+                            range-separator="To"
+                            start-placeholder="Start date"
+                            end-placeholder="End date"
+                            :size="'large'"
+                          />
+                            <DropdownComponent 
+                            :showTitle="false" placeholder="" 
+                            :data="timePeriods" 
+                            @submit="(timePeriod)=>{
+                                selectedTimePeriod = timePeriod
+                            }" 
+                            :default="timePeriods[1]"/>
                     </div>
                 </div>
                 <div
@@ -92,6 +210,7 @@
                         </StatComponent>
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>
@@ -194,10 +313,29 @@ const all_items = ref([
 ]);
 const { width, height } = useWindowSize(); 
 
+const loadFromServer = async (daily , monthly, yearly) => {
+      loading.value = true;
+      const fromDate = ''; 
+      const toDate = ''; 
+
+      const response = await new Promise((resolve, reject) => {
+          services.get_Record(`/api/establishment/${companyId}/${selectedOption}/${fromDate}/${toDate}/staffs/notes`, (response) => {
+                  resolve(response)
+          });
+      });
+
+      if(response.status==200){
+        items.value= response.data['data'];
+        loading.value = false;
+      }
+      console.log(response) 
+ }    
+ 
 onBeforeMount(async () => {
     const companyId = route.params.id;
     let company = null;
     appStore.isLoading = true;
+    const currentYear = new Date().getFullYear();
 
     const response2 = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId}/rating`, (response) => {
@@ -219,7 +357,7 @@ onBeforeMount(async () => {
     }
 
     const response = await new Promise((resolve, reject) => {
-        services.get_Record(`establishment/${companyId}/staffs/notes`, (response) => {
+        services.get_Record(`establishment/${companyId}/yearly/${currentYear}/${currentYear}/staffs/notes`, (response) => {
                 resolve(response)
                  if(response.status == 404) {
                     exist.value = false;
@@ -230,7 +368,7 @@ onBeforeMount(async () => {
     });
 
      if(response.status == 200){
-            staffs.value = response['data'];
+            staffs.value = response.data["2023"];
             console.log(staffs.value)
      }
     
@@ -255,6 +393,7 @@ useResizeObserver(el, (entries) => {
       const { width } = entry.contentRect;
       chartWidth.value = Math.abs(width);
 });
+
 </script>
 
 <style scoped>
@@ -673,7 +812,7 @@ img{
 }
 
 .ptable td:nth-child(5) {
-  color: #FF5733;
+  color: #df6145;
 }
 
 /* Styles réactifs (responsive) */
@@ -718,4 +857,5 @@ img{
         padding: 20px; /* Ajoutez un espacement approprié pour les écrans mobiles */
     }
 }
+
 </style>
