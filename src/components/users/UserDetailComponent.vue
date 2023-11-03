@@ -56,108 +56,16 @@
                     </div>
                 </div>
             </div>
-            
         </div>
-
-        <div class="personal__info">
-            <div v-if="!editing" class="info__title">
-               Phone number
-            </div>
-            <div class="info__content">
-                <div class="info__container">
-                    <div class="info__edit">
-                        <span v-if="!editing">Add your phone number</span>
-                        <p v-if="!editing">Allows us to contact you directly.</p>
-                        <div v-else>
-                            <div class="grid gap-6 mb-6 md:grid-cols-2"> 
-                                <div>                            
-                                <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Add your phone number <span>*</span></label>
-                                    <vue-country-code style="width: 100px;" @onSelect="onSelect" :enabledPhoneNumbers="true">
-                                    </vue-country-code>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="personal__info">
-            <div v-if="!editing" class="info__title">
-                Date of Birth
-            </div>
-            <div class="info__content">
-                <div class="info__container">
-                    <div class="info__edit">
-                        <span v-if="!editing">Date of birth</span>
-                        <p v-if="!editing">Enter Your date of Birth</p>
-                        <div v-else>
-                            <div class="grid gap-6 mb-6 md:grid-cols-2">
-                                <div>
-                                    <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date of birth <span>*</span></label>
-                                   <!-- <VueDatePicker v-model="date" :flow="flow" /> -->
-                                        <el-date-picker
-                                            v-model="date"
-                                            :size="'large'"
-                                        />
-                                   </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="personal__info">
-            <div v-if="!editing" class="info__title">
-                Address
-            </div>
-            <div class="info__content">
-                <div class="info__container">
-                    <div class="info__edit">
-                        <span v-if="!editing">Address</span>
-                        <p v-if="!editing">Add your address</p>
-                        <div v-if="editing">
-                            <div class="grid gap-6 mb-6 md:grid-cols-2">
-                                <div>
-                                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adress <span>*</span></label>
-                                    <input type="text" name="address" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" placeholder="Your Street name and house/apartment number">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div v-if="editing" class="multiples__input">
-                            <div class="grid gap-6 mb-6 md:grid-cols-2">
-                            <div>
-                                <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Town/City <span>*</span></label>
-                                <input type="city" name="city" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                            </div>
-                            <div>
-                                <label for="postCode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">PostCode <span>*</span></label>
-                                <input name="zip" type="text" id="last_name"  
-                                    inputmode="numeric"
-                                    pattern="^(?(^00000(|-0000))|(\d{5}(|-\d{4})))$"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                            </div>
-                        </div>
-                        </div>
-                        <div v-if="editing">
-                            <div class="grid gap-6 mb-6 md:grid-cols-2">
-                                <div>
-                                    <label for="country" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country <span>*</span></label>
-                                    <vue-country-code  v-if="editing" @onSelect="onSelect">
-                                    </vue-country-code>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="edit__actions">
                     <span class="cancel" v-if="editing" @click="editing = false">
                         Cancel
                     </span>
-                    <span class="edit" @click="editing = true">
+                     <span class="edit" v-if="editing == true" @click="updateUser">
+                        <i class="uil uil-edit"></i>
+                        Edit
+                    </span>
+                    <span class="edit" v-else @click="editing = !editing">
                         <i class="uil uil-edit"></i>
                         Edit
                     </span>
@@ -169,7 +77,9 @@
 import { ref, onBeforeMount, defineAsyncComponent } from 'vue';
 import { useUserStore } from "@Stores/user.js";
 import { ElDatePicker } from 'element-plus';
-import 'element-plus/es/components/date-picker/style/css'
+import 'element-plus/es/components/date-picker/style/css';
+import services from '@Services/services.js';
+import { ElMessage } from 'element-plus';
 
 const VueCountryCode = defineAsyncComponent(()=>
     import("@Components/utils/CountryCodeComponent.vue")
@@ -177,7 +87,6 @@ const VueCountryCode = defineAsyncComponent(()=>
 const date = ref();
 const flow = ref(['month', 'year', 'calendar']);
 const userStore = useUserStore();
-
 
 let enableEdit = ref({
     name: false,
@@ -194,9 +103,21 @@ let user = ref({
     firstname: '',
     lastname: '',
     email: '',
-    birth: '',
-    address: '',
 });
+
+const updateUser = ()=>{
+    editing.value = true;
+    if(user.value['firstname'] !== '' && user.value['lastname'] !== '' && user.value['email']){
+        services.patchRecord('users', userStore.user.id, user.value, (response)=>{
+            if(response.status == 200){
+                userStore.user['firstname'] = user.value['firstname'];
+                userStore.user['lastname'] = user.value['lastname'];
+                userStore.user['email'] = user.value['email'];
+                editing.value = false;
+            }
+        })
+    }else ElMessage.error(`Please, provide all needed information`);
+}
 
 onBeforeMount(() => {
     user.value.firstname = userStore.user.firstname;
@@ -208,6 +129,7 @@ onBeforeMount(() => {
 
 function toggleEdit() {
     editing.value = !editing.value;
+    updateUser();
 }
 </script>
 

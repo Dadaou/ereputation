@@ -25,7 +25,7 @@
                 />
                 <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                     selectedTimePeriod = timePeriod
-                }" :default="timePeriods[0]"/>
+                }" :default="timePeriods[2]"/>
             </div>
             
             <div class="tablet_mobile__head">
@@ -130,7 +130,7 @@
                           />
                 <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                     selectedTimePeriod = timePeriod
-                }" :default="timePeriods[0]"/>
+                }" :default="timePeriods[2]"/>
                     </div>
                 </div>
             </div>

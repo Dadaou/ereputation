@@ -31,7 +31,7 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody v-if="staffs.length>0">
                             <tr v-for="staff in staffs" :key="staff.id"
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -61,6 +61,15 @@
                                 </td>
                             </tr>
                          </tbody>
+                        <tbody v-else>
+                            <tr class="no__staff">
+                                <td colspan="4">
+                                    <div style="text-align: center;">
+                                        <span>no staff</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
 
@@ -200,17 +209,6 @@
                             :default="timePeriods[1]"/>
                     </div>
                 </div>
-                <div
-                    class="stat__cards bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 py-4">
-                    <div class="stat__cards_default" v-if="establishment && establishment.socials">
-                        <StatComponent v-for="(slide, index) in trends" :key="index" :color="slide.color"
-                            :bgColor="slide.bgColor" :value="slide.value" :description="slide.description"
-                            :icon="slide.icon" :iconStyle="slide.iconStyle" :percentage="slide.percentage"
-                            :trend="slide.trend" :websites="establishment.socials[0]" :site="slide.site">
-                        </StatComponent>
-                    </div>
-                </div>
-                
             </div>
         </div>
     </div>
@@ -240,20 +238,8 @@ import {
     defineAsyncComponent
 } from 'vue';
 import { ElDatePicker, ElDropdown, ElDropdownMenu, ElDropdownItem  } from 'element-plus';
-import {
-    Chart as ChartJS,
-    RadialLinearScale,
-    ArcElement,
-    Tooltip
-} from 'chart.js';
-import { PolarArea } from 'vue-chartjs';
-ChartJS.register(RadialLinearScale, ArcElement, Tooltip);
-import { useResizeObserver } from '@vueuse/core';
-import DashboardComponent from '@Components/utils/DashboardComponent.vue';
 
-const StaffChartComponent = defineAsyncComponent(()=>
-    import('@Components/utils/StaffChartComponent.vue')
-)
+import { useResizeObserver } from '@vueuse/core';
 
 let exist = ref(true);
 const EstablishmentNotFound = defineAsyncComponent(()=>
@@ -298,11 +284,17 @@ let paginationConfig = ref({
     data: [],
     _data: []
 });
+const companyId = route.params.id;
 
 const showModal = ref(false);
 let timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
 let selectedTimePeriod = ref(timePeriods.value[0]);
-const date = ref(['2023-01-01', '2023-01-07']);
+const date = ref([]);
+const currentDate = new Date();
+let firstDateOfPreviousYear = new Date(currentDate.getFullYear() - 1, 0, 1);
+firstDateOfPreviousYear.setHours(0, 0, 0, 0);
+let lastDateOfCurrentYear = new Date(currentDate.getFullYear(), 11, 31, 23, 59, 59);
+
 provide('date', date);
 provide('type', selectedTimePeriod);
 let media = [];
@@ -313,29 +305,48 @@ const all_items = ref([
 ]);
 const { width, height } = useWindowSize(); 
 
-const loadFromServer = async (daily , monthly, yearly) => {
-      loading.value = true;
-      const fromDate = ''; 
-      const toDate = ''; 
+const loadFromServer = async(type, company, datefrom, dateto)=>{
+    switch (type) {
+      case 'yearly':
+        datefrom = moment(datefrom).format('YYYY');
+        dateto = moment(dateto).format('YYYY');
+        break;
+      case 'monthly': 
+       datefrom = moment(datefrom).format('YYYY-MM');
+        dateto = moment(dateto).format('YYYY-MM');
+        break;
+      default:
+        datefrom = moment(datefrom).format('YYYY-MM-DD');
+        dateto = moment(dateto).format('YYYY-MM-DD');
+        break;
+    }
 
-      const response = await new Promise((resolve, reject) => {
-          services.get_Record(`/api/establishment/${companyId}/${selectedOption}/${fromDate}/${toDate}/staffs/notes`, (response) => {
-                  resolve(response)
-          });
-      });
+    const response = await new Promise((resolve, reject) => {
+        services.get_Record(`establishment/${company}/${type}/${datefrom}/${dateto}/staffs/notes`, (response) => {
+                resolve(response)
+        });
+        
+    });
 
-      if(response.status==200){
-        items.value= response.data['data'];
-        loading.value = false;
-      }
-      console.log(response) 
- }    
+     if(response.status == 200){
+        staffs.value = response.data;
+     }
+}    
  
+watch([date, selectedTimePeriod], ()=>{
+    if(date.value.length==0){
+        firstDateOfPreviousYear = moment(firstDateOfPreviousYear).format('YYYY-MM-DD');
+        lastDateOfCurrentYear = moment(lastDateOfCurrentYear).format('YYYY-MM-DD');
+        date.value = [firstDateOfPreviousYear, lastDateOfCurrentYear];
+    }
+    let datefrom = moment(date.value[0]).format('YYYY-MM-DD');
+    let dateto = moment(date.value[1]).format('YYYY-MM-DD');
+    loadFromServer(selectedTimePeriod.value.toLowerCase(), companyId, datefrom, dateto);
+})
+
 onBeforeMount(async () => {
-    const companyId = route.params.id;
     let company = null;
     appStore.isLoading = true;
-    const currentYear = new Date().getFullYear();
 
     const response2 = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId}/rating`, (response) => {
@@ -357,7 +368,9 @@ onBeforeMount(async () => {
     }
 
     const response = await new Promise((resolve, reject) => {
-        services.get_Record(`establishment/${companyId}/yearly/${currentYear}/${currentYear}/staffs/notes`, (response) => {
+        firstDateOfPreviousYear = moment(firstDateOfPreviousYear).format('YYYY-MM-DD');
+        lastDateOfCurrentYear = moment(lastDateOfCurrentYear).format('YYYY-MM-DD');
+        services.get_Record(`establishment/${companyId}/${selectedTimePeriod.value.toLowerCase()}/${firstDateOfPreviousYear}/${lastDateOfCurrentYear}/staffs/notes`, (response) => {
                 resolve(response)
                  if(response.status == 404) {
                     exist.value = false;
@@ -368,8 +381,7 @@ onBeforeMount(async () => {
     });
 
      if(response.status == 200){
-            staffs.value = response.data["2023"];
-            console.log(staffs.value)
+            staffs.value = response.data;
      }
     
 })
@@ -397,6 +409,11 @@ useResizeObserver(el, (entries) => {
 </script>
 
 <style scoped>
+.no__staff{
+    display: flex !important;
+    align-items: center !important;
+}
+
 *{
     transition: var(--transition);
 }

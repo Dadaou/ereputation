@@ -19,13 +19,13 @@
                         <div class="grid gap-6 mb-6 md:grid-cols-2">
                             <div>
                                 <label for="oldPassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Old Password <span>*</span></label>
-                                <input type="password" name="oldPassword"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2 custom-input" required>
+                                <input type="password" name="oldPassword" v-model="user.old" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2 custom-input" required>
                             </div>
                         </div>
                         <div class="grid gap-6 mb-6 md:grid-cols-2">
                             <div>
                                 <label for="NewPassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">New Password <span>*</span></label>
-                                <input type="password" name="newPassword" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2 custom-input" required>
+                                <input type="password" name="newPassword" v-model="user.new" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2 custom-input" required>
                             </div>
                         </div>
                         
@@ -34,7 +34,11 @@
                     <span class="cancel" v-if="enableEdit.password" @click="enableEdit.password = false">
                         Cancel
                     </span>
-                    <span class="edit" @click="enableEdit.password = true">
+                    <span class="edit" v-if="enableEdit.password == false" @click="enableEdit.password = true">
+                        <i class="uil uil-edit"></i>
+                        Edit
+                    </span>
+                    <span class="edit" v-else @click="updatePassword">
                         <i class="uil uil-edit"></i>
                         Edit
                     </span>
@@ -48,10 +52,29 @@
 
 <script setup>
 import { ref } from 'vue';
+import services from '@Services/services.js';
+import { ElMessage } from 'element-plus';
+import { useUserStore } from "@Stores/user.js";
 
 let enableEdit = ref({
     password: false,
 });
+
+let user = ref({
+    old: '',
+    new: ''
+})
+const userStore = useUserStore();
+const updatePassword = ()=>{
+    if(user.value['old'] !== '' && user.value['new'] !== ''){
+        services.patchRecord('users', userStore.user.id, user.value, (response)=>{
+            if(response.status == 200){
+                enableEdit.value['password'] = false;
+            }
+        })
+    }else ElMessage.error(`Please, provide all needed information`);
+};
+
 </script>
 
 <style scoped>

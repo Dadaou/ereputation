@@ -710,7 +710,11 @@ onBeforeMount(async () => {
             establishment.value['websites'] = response.data['websites'];
             establishment.value['competitors'] = response.data['competitors'];
             reviews.value = establishment.value.reviews;
-            websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
+            console.log(establishment.value.websites);
+
+            if(establishment.value.websites != []){
+                websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
+            }
             reloadStarData();
             let data = [];
             let promises = [];

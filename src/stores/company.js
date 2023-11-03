@@ -860,16 +860,22 @@ export const useCompanyStore = defineStore("company", {
       return urlPattern.test(string);
     },
     getWebsites(websites) {
-      let _websites = Object.entries(websites[0]);
+      let _websites = null;
+      if(websites.length>0){
+        _websites = Object.entries(websites[0]);
+      }
+      
       let data = [];
        data.push('App (Private)');
-      _websites.forEach(([key, value]) => {
-        if (typeof value == "string") {
-          if (this.isURL(value) && key !== "url" && key !== "thefork") {
-            data.push(this.capitalizeString(key));
-          }
-        }
-      });
+       if(_websites != null){
+          _websites.forEach(([key, value]) => {
+            if (typeof value == "string") {
+              if (this.isURL(value) && key !== "url" && key !== "thefork") {
+                data.push(this.capitalizeString(key));
+              }
+            }
+          });
+       }
       return data;
     },
     getReviewsBetweenDates(reviews, start_date, end_date) {

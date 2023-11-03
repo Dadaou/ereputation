@@ -140,7 +140,7 @@ watch([date, type],async()=>{
 	.chart::-webkit-scrollbar
 	{
 	    width: 6px;
-	    height: 1px !important; 
+	    height: 10px !important; 
 	    background-color: white;
 	}
 </style>
