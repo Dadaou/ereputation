@@ -380,8 +380,9 @@ let plotdata = ref([]);
 let legendData = ref([]);
 let _legendData = [];
 const dataLoading = ref(true)
-
-const date2 = ref([]);
+let startDate = moment().subtract(180, 'days').format('YYYY-M-DD');
+let endDate = moment().format('YYYY-M-DD');
+const date2 = ref([startDate, endDate]);
 
 let selectedTimePeriod = ref('');
 let timePeriods = ref(['Days', 'Weeks','Months', 'Quarters', 'Semesters']);
@@ -461,7 +462,7 @@ watch(date, ()=>{
 });
 
 const viewData = (timePeriod, startDate, endDate, data) => {
-    plotdata.value = companiesStore.calculateReviewsV4(timePeriod, startDate, endDate, data).data;
+    plotdata.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, data);
 }
 
 let updatePage = function(pageNumber){
@@ -601,8 +602,9 @@ const chart__height2 = ref(200);
 
 
 watch(date2, ()=>{
-    let startDate = moment().subtract(180, 'days').format('YYYY-M-DD');
-    let endDate = moment().format('YYYY-M-DD');
+    // let startDate = moment().subtract(180, 'days').format('YYYY-M-DD');
+    // let endDate = moment().format('YYYY-M-DD');
+    console.log(startDate, endDate)
     comparisonData.value = _comparisonData;
     if(date2.value){
         startDate = moment(date2.value[0]).format('YYYY-M-DD');
@@ -624,8 +626,11 @@ watch(selectedTimePeriod, ()=>{
     if(date2.value){
         startDate = moment(date2.value[0]).format('YYYY-M-DD');
         endDate = moment(date2.value[1]).format('YYYY-M-DD');
+        plotdata.value = companiesStore.calculateReviewsV3(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+    }else{
+        plotdata.value = companiesStore.calculateReviewsV3(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
     }
-   plotdata.value = companiesStore.calculateReviewsV3(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+   
 })
 
 const goto = (value) =>{

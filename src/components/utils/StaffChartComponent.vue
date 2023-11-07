@@ -124,6 +124,7 @@ watch([date, type],async()=>{
             })
      });
      plotdata.value = response;
+     console.log(response)
      // setTimeout(()=>{
      //    chartLoading.value = false;
      // }, 100);

@@ -20,33 +20,7 @@
                         </template>
                     </el-dropdown>
                 </div>
-                <div class="reviews__content" ref="el">
-                      <div v-if="chartLoading == true" 
-                        :style="{
-                            'width': `100%`,
-                            'height': `200px`,
-                            'display': 'flex',
-                            'alignItems': 'center',
-                            'background': 'rgba(0, 0, 0, 0.1)',
-                            'opacity': 0.9,
-                            'justifyContent': 'center',
-                            'alignItems': 'center',
-                            'zIndex': 1,
-                            'marginTop': '10px',
-                            'marginBottom': '10px'
-                        }"><SpinnerComponent /></div>
-                    <GroupedBarChart 
-                        v-else 
-                        :plot-data="data" 
-                        x-key="date" 
-                        :width="chartWidth" 
-                        :height="200"
-                        :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
-                        :x-tick-format="d => `${d}`" />
-                    <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
-                    </BaseLegend>
-                </div>
-
+                <WeatherChartComponent/>
                 <div class="head">
                     <div class="app__title">
                         <h2>Weather's global impact</h2>
@@ -56,7 +30,6 @@
                 </BaseLegend>
                 <div class="review__content">
                     <PolarArea :data="globalData" :options="options" />
-                      <!-- <Pie :data="_data" :options="options" /> -->
                 </div>
             </div>
             <div class="tablet_mobile__filter">
@@ -261,8 +234,8 @@ const EstablishmentNotFound = defineAsyncComponent(()=>
     import("@Views/EstablishmentNotFound.vue")
 )
 
-const SpinnerComponent = defineAsyncComponent(()=>
-  import('@Components/utils/SpinnerComponent.vue')
+const WeatherChartComponent = defineAsyncComponent(()=>
+    import('@Components/utils/WeatherChartComponent.vue')
 )
 
 const route = useRoute();
@@ -281,20 +254,22 @@ const breadcrumbData = [
 ]
 
 let data = ref([]);
+provide('data', data);
 let calculType = ref('Celcius °C');
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 const dataLoading = ref(true);
 const chartLoading = ref(false);
+provide('chartLoading', chartLoading);
 const { width, height } = useWindowSize(); 
 
 let establishment = ref({});
 let weather = ref([]);
 let reviews = ref([]);
-const legendData = ref([])
+const legendData = ref([]);
 const legendGlobalData = ref([]);
-
+provide('legendData', legendData);
 let media = [];
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
@@ -309,6 +284,7 @@ const dateStart = ref(new Date(datefrom));
 const enableDateEnd = ref(false);
 const colors = ref(['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']);
 const chartWidth = ref(0);
+provide('chartWidth', chartWidth);
 
 onUpdated(()=>{
     chartWidth.value = (el.value != null && el.value != undefined)?Math.abs(el.value.offsetWidth-50):chartWidth.value;

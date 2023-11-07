@@ -1,10 +1,15 @@
 <template>
-<div class="establishments__comparison" ref="el">
-    <ul class="filter__menu">
+ <ul class="filter__menu">
       <li @click="viewFullscreen()" > <i class="uil uil-expand-arrows-alt"></i> Expand</li>
     </ul>
+<div class="establishments__comparison" ref="el"
+    :style="{
+            'width': '900px',
+            'overflowX': 'auto'
+    }"
+>
     <GroupedBarChart class="chart" :plot-data="props.data" x-key="name"
-    :width="barWidth" :height="chartheight - 100" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="_timePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+    :width="custom_width" :height="chartheight - 100" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="_timePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
     </GroupedBarChart>
     <ModalComponent :showModal="showModal" @close="showModal=false">
         <template #content>
@@ -35,7 +40,7 @@
                 <li class="w-full mr-3">
                     <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                             selectedTimePeriod = timePeriod
-                    }" :default="timePeriods[1]"/>
+                    }" :default="timePeriods[2]"/>
                 </li>
                 <li class="w-full mr-3">
                   <el-date-picker
@@ -108,13 +113,21 @@ let selectedTimePeriod = ref('');
 let timePeriods = ref(['Days','Weeks','Months', 'Quarters', 'Semesters']);
 let establishmentDropdown = computed(() => comparisonByEstablishments.value?props.competitors:props.companies);
 let selectedCompany = ref(establishmentDropdown.value[0]);
-// let startDate = moment().startOf('year').format('YYYY-M-DD');
-// let endDate = moment().endOf('year').format('YYYY-M-DD');
+
 let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
 let endDate = moment().format('YYYY-M-DD');
 let legendData = ref([]);
 let _timePeriod = computed(()=>props.timePeriod);
-const { width, height } = useWindowSize(); 
+const { width, height } = useWindowSize();
+const custom_width = computed(()=>{
+  let nb = props.data.length;
+  let width = 1000;
+  if(nb>9) {
+    width = (width*nb)/9;
+  }
+
+  return width;
+}) 
 
 const viewFullscreen = () => {
     showModal.value = !showModal.value;
@@ -259,14 +272,10 @@ useResizeObserver(el2, (entries) => {
     margin: 30px auto;
 }
 
-.chart{
-    overflow-x: auto;
-}
-
-.chart::-webkit-scrollbar
+.establishments__comparison::-webkit-scrollbar
 {
     width: 6px;
-    height: 1px !important; 
+    height: 4px !important; 
     background-color: #F5F5F5;
 }
 </style>

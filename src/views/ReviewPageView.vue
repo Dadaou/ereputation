@@ -167,28 +167,28 @@
               <div class="reviews__star">
                     <div :class="['flex items-center mt-1', 'include']" @click="starFilter(5)">
                         <a href="#" class="text-xs font-medium hover:underline">5 star</a>
-                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(_reviews).rate5*100/_reviews.length}%`}"></div>
-                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(_reviews).rate5 }}</span>
+                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate5*100/reviews.length}%`}"></div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate5 }}</span>
                     </div>
                     <div :class="['flex items-center mt-1','include']" @click="starFilter(4)">
                         <a href="#" class="text-xs font-medium dark:text-blue-500 hover:underline">4 star</a>
-                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(_reviews).rate4*100/_reviews.length}%`}"></div>
-                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(_reviews).rate4 }}</span>
+                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate4*100/reviews.length}%`}"></div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate4 }}</span>
                     </div>
                     <div :class="['flex items-center mt-1','include']" @click="starFilter(3)">
                         <a href="#" class="text-xs font-medium hover:underline">3 star</a>
-                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(_reviews).rate3*100/_reviews.length}%`}"></div>
-                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(_reviews).rate3 }}</span>
+                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate3*100/reviews.length}%`}"></div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate3 }}</span>
                     </div>
                     <div :class="['flex items-center mt-1', 'include']" @click="starFilter(2)">
                         <a href="#" class="text-xs font-medium hover:underline">2 star</a>
-                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(_reviews).rate2*100/_reviews.length}%`}"></div>
-                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(_reviews).rate2 }}</span>
+                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate2*100/reviews.length}%`}"></div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate2 }}</span>
                     </div>
                     <div :class="['flex items-center mt-1','include']" @click="starFilter(1)">
                         <a href="#" class="text-xs font-medium hover:underline">1 star</a>
-                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(_reviews).rate1*100/_reviews.length}%`}"></div>
-                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(_reviews).rate1 }}</span>
+                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate1*100/reviews.length}%`}"></div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate1 }}</span>
                     </div>
               </div>
               <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData"/>
