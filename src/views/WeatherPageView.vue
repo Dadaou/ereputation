@@ -1040,4 +1040,7 @@ img{
        height: 100px !important;
     }
 }
+.establishment__info_tablet{
+    margin-top: 30px;
+}
 </style>
