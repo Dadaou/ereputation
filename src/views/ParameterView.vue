@@ -37,12 +37,15 @@ import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
 import { useWindowSize } from '@vueuse/core';
+import { useRouter } from 'vue-router';
 import { useCompanyStore } from "@Stores/company.js";
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
 
+
 const{ width, height} = useWindowSize();
-  
+  const router = useRouter();
+
  
 const StaffFormComponent = defineAsyncComponent(()=>
         import("@Components/staffs/StaffFormComponent.vue")
@@ -77,10 +80,13 @@ const activeName = ref('staff');
 const activeStaffTab = ref('staff_list')
 const staff_to_update = ref(null);
 provide('staff_to_update', staff_to_update);
+provide('staff_activeTab',activeStaffTab);
 
 const allEvents = ref([]);
 const allStaffs = ref([]);
 const activeEventTab = ref('event_list')
+provide('event_activeTab',activeEventTab);
+
 const event_to_update = ref(null);
 provide('event_to_update', event_to_update);
 provide('staffs', allStaffs);

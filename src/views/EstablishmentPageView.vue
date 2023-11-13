@@ -17,29 +17,40 @@
                 </div>
                 <div class="head">
                     <div class="app__title">
-                       <h2>Comparison</h2>
+                      <h2>Comparison</h2>
                     </div>
-                </div>
-                <div 
-                v-if="reviews_loader == true" 
-                :style="{
-                    'width': `100%`,
-                    'height': `200px`,
-                    'display': 'flex',
-                    'alignItems': 'center',
-                    'background': 'rgba(0, 0, 0, 0.1)',
-                    'opacity': 0.9,
-                    'justifyContent': 'center',
-                    'alignItems': 'center',
-                    'zIndex': 1,
-                    'marginTop': '10px',
-                    'marginBottom': '10px'
-                }">
-                    <SpinnerComponent/>     
-                </div>
-                <ComparisonChartComponent  v-else :data="plotdata" :width="chart__width" :chartheight="chart__height" :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors" :timePeriod="selectedTimePeriod"/>
-                <BaseLegend v-if="reviews_loader == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
-                </BaseLegend>
+                  </div>
+                  <div
+                    v-if="reviews_loader == true"
+                    :style="{
+                      'width': `100%`,
+                      'height': `200px`,
+                      'display': 'flex',
+                      'alignItems': 'center',
+                      'background': 'rgba(0, 0, 0, 0.1)',
+                      'opacity': 0.9,
+                      'justifyContent': 'center',
+                      'alignItems': 'center',
+                      'zIndex': 1,
+                      'marginTop': '10px',
+                      'marginBottom': '10px'
+                    }"
+                  >
+                    <SpinnerComponent/>
+                  </div>
+                  <div v-else class="chart-container">
+                    <ComparisonChartComponent
+                      :data="plotdata"
+                      :width="isMobile ? mobileChartWidth : chart__width"
+                      :chartheight="chart__height"
+                      :establishment="establishment"
+                      :companies="comparisonData"
+                      :competitors="computedCompetitors"
+                      :timePeriod="selectedTimePeriod"
+                    />
+                  </div>
+                  <BaseLegend v-if="reviews_loader == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
+                  </BaseLegend>
                 <div class="head">
                     <div class="app__title">
                        <h2>Last reviews</h2>
@@ -113,6 +124,7 @@
                         start-placeholder="Start date"
                         end-placeholder="End date"
                         :size="'large'"
+                        class="custom-date-picker"
                       />
             </div>
             <div class="tablet_mobile__head">
@@ -828,6 +840,14 @@ img{
     justify-content: flex-end;
 }
 
+
+/* Media query pour les écrans de petite taille (mobile) */
+@media screen and (max-width: 600px) {
+  .chart-container {
+    max-height: none;  /* Aucune limite de hauteur pour les écrans de petite taille */
+    overflow: auto;    /* Ajouter une barre de défilement si nécessaire */
+  }
+}
 .rating__customers{
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
@@ -853,7 +873,9 @@ img{
     justify-content: center;
     margin-top: 5px;
 }
-
+.establishment__info_tablet{
+    margin-top: 30px;
+}
 .establishment__info i, .establishment__info_tablet i{
     color: var(--color-danger);
     margin-right: 5px;
@@ -868,6 +890,17 @@ img{
 .establishment div{
     font-size: 13px;
     font-weight: 500;
+}
+/* Pour les écrans de petite taille (mobile) */
+@media only screen and (max-width: 768px) {
+    .custom-date-picker {
+        width: 100%; /* Utilisez la largeur complète */
+    }
+
+    .custom-date-picker .el-date-editor {
+        width: 100%; /* Utilisez la largeur complète pour les dates de début et de fin */
+        margin-bottom: 10px; /* Ajoutez un espacement entre les deux champs de date */
+    }
 }
 
 .establishment__info_tablet div{
@@ -1139,6 +1172,15 @@ img{
         font-weight: 500;
         color: var(--color-bg2);
     }
+    @media only screen and (max-width: 768px) {
+    .tablet_mobile__filter {
+        /* Ajoutez des styles pour ajuster la taille en mode responsive */
+        width: 100%; /* Par exemple, utilisez la largeur totale de l'écran */
+        max-width: 100%; /* Assurez-vous que la largeur maximale est de 100% */
+        margin-bottom: 10px; /* Ajoutez de l'espacement en bas si nécessaire */
+        /* Ajoutez d'autres styles personnalisés au besoin */
+    }
+}
 
     .tablet_mobile__filter{
         display: flex;
