@@ -35,9 +35,9 @@
                     'marginTop': '10px',
                     'marginBottom': '10px'
                 }">
-                     <SpinnerComponent/>     
+                    <SpinnerComponent/>     
                 </div>
-                <ComparisonChartComponent  v-else :data="plotdata" :width="chart__width" :height="chart__height" :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors" :timePeriod="selectedTimePeriod"/>
+                <ComparisonChartComponent  v-else :data="plotdata" :width="chart__width" :chartheight="chart__height" :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors" :timePeriod="selectedTimePeriod"/>
                 <BaseLegend v-if="reviews_loader == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
                 </BaseLegend>
                 <div class="head">
@@ -380,7 +380,7 @@ let plotdata = ref([]);
 let legendData = ref([]);
 let _legendData = [];
 const dataLoading = ref(true)
-let startDate = moment().subtract(180, 'days').format('YYYY-M-DD');
+let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
 let endDate = moment().format('YYYY-M-DD');
 const date2 = ref([startDate, endDate]);
 
@@ -704,6 +704,7 @@ onBeforeMount(async () => {
     const response = await new Promise((resolve, reject) => {
         services.get_Record(`/establishment/${companyId}/detail`, (response) => {
                 resolve(response)
+                console.log(response)
                  if(response.status == 404){
                     exist.value = false
                  }

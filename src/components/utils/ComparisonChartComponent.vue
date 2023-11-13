@@ -278,4 +278,10 @@ useResizeObserver(el2, (entries) => {
     height: 4px !important; 
     background-color: #F5F5F5;
 }
+
+@media screen and (max-width:800px) {
+   .establishments__comparison{
+    width: 360px !important;
+   }
+}
 </style>
