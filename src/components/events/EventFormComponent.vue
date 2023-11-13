@@ -93,6 +93,7 @@ const showSpinner = ref(false);
  const type = ref('add');
  const event_to_update = inject('event_to_update');
  const events = inject('events');
+const activeEventTab = inject('event_activeTab');
 
 watch(event_to_update, ()=>{
     if(event_to_update.value != null){  
@@ -221,6 +222,8 @@ const updateData = (_event)=>{
                     message: `Event updated successfully.`,
                     type: 'success',
                   });
+                  activeEventTab.value= 'event_list';
+
                   dateFrom.value = '';
                   dateTo.value = '';
                   category.value = '';
