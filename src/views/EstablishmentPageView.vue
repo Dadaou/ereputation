@@ -41,7 +41,7 @@
   <div v-else class="chart-container">
     <ComparisonChartComponent
       :data="plotdata"
-      :width="isMobile ? mobileChartWidth : chart__width"
+      :width="chart__width"
       :height="chart__height"
       :establishment="establishment"
       :companies="comparisonData"
@@ -1254,5 +1254,8 @@ img{
        flex-basis: 150px !important;
        height: 100px !important;
     }
+}
+.establishment__info_tablet{
+    margin-top: 50px;
 }
 </style>

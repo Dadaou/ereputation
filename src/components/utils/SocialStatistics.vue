@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full">
+    <div class="w-full" >
         <div class="inline-flex justify-end items-center my-3 w-full" style="gap:8px;">
             <el-dropdown size="large" split-button type="primary">
                 {{ filter != null ? filter.label : 'Filter by' }}

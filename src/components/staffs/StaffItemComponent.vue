@@ -37,14 +37,14 @@
                     />
                 </div>
                 <div>
-                    <h3 class="mb-2">During contract  (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['between']))}}</span>)</h3>
+                    <h3 class="mb-2">During (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['between']))}}</span>)</h3>
                     <Pie 
                         :data="staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['between'])" 
                         :options="options" 
                     />
                 </div>
                 <div>
-                    <h3 class="mb-2">After  (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['after']))}}</span>)</h3>
+                    <h3 class="mb-2">After (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['after']))}}</span>)</h3>
                     <Pie 
                         :data="staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['after'])" 
                         :options="options" 
@@ -156,6 +156,7 @@ const options = {
             display: false,
         }
   },
+  aspectRatio: 1,
 };
 
 const close = ()=>{
@@ -231,7 +232,7 @@ const calculateAverageRating = (data) =>  {
     display: flex;
     gap:1rem;
     flex-direction: column;
-    height: 275px;
+    height: 300px;
     margin-bottom: 10px;
 }
 
@@ -327,4 +328,26 @@ span.label{
     display: flex;
     justify-content: space-between;
 }
+@media (max-width: 768px) {
+        .pie__chart {
+           
+            display: flex;
+            flex-wrap: wrap; /* Permet aux éléments de passer à la ligne lorsque la largeur est insuffisante */
+            justify-content: center;
+            gap: 10px; /* Ajoutez un espacement entre les graphiques */
+        }
+
+        .pie__chart div {
+            width: calc(33.33% - 10px); /* Calculez la largeur des graphiques avec un espace entre eux */
+            height: 150px !important;
+
+        }
+
+        .pie__chart h3 {
+            text-align: center; 
+            margin-bottom: 5px; 
+            
+        }
+        
+    }
 </style>

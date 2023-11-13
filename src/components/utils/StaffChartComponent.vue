@@ -1,10 +1,11 @@
 <template>
 	<div
 		class="chart"
-		:style="{
-			'width': '800px',
-			'overflowX': 'auto'
-		}"
+    :style="{
+      'maxWidth': '100%', // Set a maximum width
+      'width': '800px',
+      'overflowX': isMobile ? 'scroll' : 'auto'
+    }"
 	>
   <GroupedBarChart 
         :plot-data="plotdata"
@@ -52,6 +53,11 @@ const custom_width = computed(()=>{
 
   return width;
 })
+
+const isMobile = computed(() => window.innerWidth <= 768);
+window.addEventListener('resize', () => {
+  isMobile.value = window.innerWidth <= 768;
+});
 
 const getPlotData = async(period, rangedate, next)=>{
         period = period.toLowerCase();
@@ -134,14 +140,20 @@ watch([date, type],async()=>{
 
 </script>
 <style scoped>
-	.chart{
-	    overflow-x: auto;
-	}
+	  .chart {
+    overflow-x: auto;
+    margin-bottom: 50px; /* margin bottom  */
+  }
 
-	.chart::-webkit-scrollbar
-	{
-	    width: 6px;
-	    height: 10px !important; 
-	    background-color: white;
-	}
+  @media (max-width: 768px) {
+    .chart {
+      overflow-x: scroll;
+    }
+  }
+
+  .chart::-webkit-scrollbar {
+    width: 6px;
+    height: 10px !important;
+    background-color: white;
+  }
 </style>
