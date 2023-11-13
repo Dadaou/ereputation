@@ -39,7 +39,6 @@
                         :size="'large'"
                       />
                       <el-date-picker
-                        class="mt-2"
                         v-model="dateEnd"
                         placeholder="End date"
                         :size="'large'"

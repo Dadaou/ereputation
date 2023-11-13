@@ -9,17 +9,27 @@
                  <RouterView />
             </div>
             <div class="tablet_mobile__filter">
+                <!-- <el-date-picker
+                    v-model="date"
+                    type="daterange"
+                    range-separator="To"
+                    start-placeholder="Start date"
+                    end-placeholder="End date"
+                    :size="'large'"
+                /> -->
                 <el-date-picker
-                        v-model="startDate"
-                        placeholder="Start date"
+                        v-model="start_date"
+                        type="date"
+                        placeholder="Select the start date"
                         :size="'large'"
-                      />
-                      <el-date-picker
-                        class="mt-2"
-                        v-model="endDate"
-                        placeholder="End date"
+                />
+                <el-date-picker
+                        v-model="end_date"
+                        type="date"
+                        placeholder="Select the end date"
                         :size="'large'"
-                      />
+                />
+
                 <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[2]"/>
@@ -123,14 +133,27 @@
                     </div>
                     <div class="date__filter">
                         <div class="text-sm title">Select a range of date</div>
-                           <el-date-picker
+                        <!-- <el-date-picker
                             v-model="date"
                             type="daterange"
                             range-separator="To"
                             start-placeholder="Start date"
                             end-placeholder="End date"
                             :size="'large'"
-                          />
+                        /> -->
+                        <el-date-picker
+                            v-model="start_date"
+                            type="date"
+                            placeholder="Select the start date"
+                            :size="'large'"
+                        />
+                        <el-date-picker
+                            class="mt-2"
+                            v-model="end_date"
+                            type="date"
+                            placeholder="Select the end date"
+                            :size="'large'"
+                        />
                 <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[2]"/>
@@ -243,6 +266,8 @@ const timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
 const selectedTimePeriod = ref(timePeriods.value[0]);
 const startDate = moment().subtract(90, 'days').format('YYYY-M-DD');
 const endDate = moment().format('YYYY-M-DD');
+let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
+let end_date = ref(moment().format('YYYY-M-DD'));
 const date = ref([startDate, endDate]);
 provide('date', date);
 provide('type', selectedTimePeriod);
@@ -254,6 +279,14 @@ const all_items = ref([
 ]);
 const { width, height } = useWindowSize(); 
 
+
+watch([start_date,end_date], ()=>{
+    if(start_date.value !=='' && end_date.value !==''){
+        date.value = [start_date.value, end_date.value]
+    }else{
+        date.value = [startDate, endDate];
+    }
+})
 
 watch(route_name, ()=>{
     if(route_name.value == 'StaffReview') {

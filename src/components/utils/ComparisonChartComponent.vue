@@ -11,7 +11,11 @@
     <GroupedBarChart class="chart" :plot-data="props.data" x-key="name"
     :width="custom_width" :height="chartheight - 100" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="_timePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
     </GroupedBarChart>
-    <ModalComponent :showModal="showModal" @close="showModal=false">
+    <ModalComponent 
+    :showModal="showModal"
+    @close="showModal=false"
+    :width="modalWidth"
+    >
         <template #content>
             <div class="modal__close">
                  <i class="uil uil-times-circle mb-8"  @click="showModal = false"></i>
@@ -53,9 +57,14 @@
                       />
                 </li>
             </ul>
-            <div class="modal__container" ref="el2">
+            <div class="modal__container" ref="el2"
+                :style="{
+                        'width': `500px`,
+                        'overflowX': 'auto'
+                }"
+            >
                 <GroupedBarChart class="chart" :plot-data="plotData" x-key="name"
-                        :width="1250" :height="chartheight" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="selectedTimePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+                        :width="custom_width2" :height="chartheight" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="selectedTimePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
                 </GroupedBarChart>
                 <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
                 </BaseLegend>
@@ -128,6 +137,22 @@ const custom_width = computed(()=>{
 
   return width;
 }) 
+
+const custom_width2 = computed(()=>{
+  let nb = props.data.length;
+  let width = 1500;
+  if(nb>9) {
+    width = (width*nb)/9;
+  }
+
+  return width;
+})
+
+const modalWidth= computed(()=>{
+    let windowSize = 1500;
+    let gap = (windowSize - width.value)/19;
+    return gap + 35;
+});
 
 const viewFullscreen = () => {
     showModal.value = !showModal.value;
@@ -278,4 +303,28 @@ useResizeObserver(el2, (entries) => {
     height: 4px !important; 
     background-color: #F5F5F5;
 }
+
+@media screen and (max-width:975px) {
+   .establishments__comparison{
+    width: 850px !important;
+   }
+}
+
+@media screen and (max-width:915px) {
+   .establishments__comparison{
+    width: 800px !important;
+   }
+}
+
+/*@media screen and (max-width:860px) {
+   .establishments__comparison{
+    width: 700px !important;
+   }
+}
+
+@media screen and (max-width:820px) {
+   .establishments__comparison{
+    width: 650px !important;
+   }
+}*/
 </style>
