@@ -795,6 +795,25 @@ export const useCompanyStore = defineStore("company", {
       });
       return data;
     },
+    getRatingLastMonthsV2(reviews, nbMonth, date, year) {
+      let data = [];
+      nbMonth = nbMonth +1;
+      const months = this.getLastMonths(nbMonth, date, year);
+      const lastMonthReviews = this.getLastMonthReviews(
+        reviews,
+        nbMonth,
+        date,
+        year
+      );
+      let previousRating = 0;
+      months.forEach((month, index) => {
+        let rating = this.calculateRatingV2(lastMonthReviews[month]);
+        if(rating == 0) rating = previousRating;
+        if(index>0) data.push(Number(rating));
+        previousRating = rating;
+      });
+      return data;
+    },
     getfeedbackData(reviews) {
       let sumConfidence = 0;
       let percentage = (this.calculateRatingV2(reviews) / 5) * 100;

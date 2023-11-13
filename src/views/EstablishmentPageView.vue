@@ -41,7 +41,7 @@
                   <div v-else class="chart-container">
                     <ComparisonChartComponent
                       :data="plotdata"
-                      :width="isMobile ? mobileChartWidth : chart__width"
+                      :width="chart__width"
                       :chartheight="chart__height"
                       :establishment="establishment"
                       :companies="comparisonData"
@@ -117,7 +117,7 @@
                     <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                                 selectedTimePeriod = timePeriod
                         }" :default="timePeriods[2]"/>
-                    <el-date-picker
+                    <!-- <el-date-picker
                         v-model="date2"
                         type="daterange"
                         range-separator="To"
@@ -125,7 +125,19 @@
                         end-placeholder="End date"
                         :size="'large'"
                         class="custom-date-picker"
-                      />
+                      /> -->
+                    <el-date-picker
+                        v-model="start_date"
+                        type="date"
+                        placeholder="Select the start date"
+                        :size="'large'"
+                    />
+                    <el-date-picker
+                        v-model="end_date"
+                        type="date"
+                        placeholder="Select the end date"
+                        :size="'large'"
+                    />
             </div>
             <div class="tablet_mobile__head">
                 <div class="establishment__info_tablet">
@@ -235,14 +247,27 @@
                     }" :default="websites[0]"/>
                     <div class="date__filter">
                         <div class="text-sm title">Select a range of date</div>
-                       <el-date-picker
-                        v-model="date2"
-                        type="daterange"
-                        range-separator="To"
-                        start-placeholder="Start date"
-                        end-placeholder="End date"
-                        :size="'large'"
-                      />
+                       <!--  <el-date-picker
+                            v-model="date2"
+                            type="daterange"
+                            range-separator="To"
+                            start-placeholder="Start date"
+                            end-placeholder="End date"
+                            :size="'large'"
+                        /> -->
+                        <el-date-picker
+                            v-model="start_date"
+                            type="date"
+                            placeholder="Select the start date"
+                            :size="'large'"
+                        />
+                        <el-date-picker
+                            class="mt-2"
+                            v-model="end_date"
+                            type="date"
+                            placeholder="Select the end date"
+                            :size="'large'"
+                        />
                         <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                                 selectedTimePeriod = timePeriod
                         }" :default="timePeriods[2]"/>
@@ -396,6 +421,9 @@ let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
 let endDate = moment().format('YYYY-M-DD');
 const date2 = ref([startDate, endDate]);
 
+let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
+let end_date = ref(moment().format('YYYY-M-DD'));
+
 let selectedTimePeriod = ref('');
 let timePeriods = ref(['Days', 'Weeks','Months', 'Quarters', 'Semesters']);
 
@@ -451,7 +479,7 @@ const loadDatasets = (establishments, colors, date) => {
         let dataset = {
             label: establishment.name,
             backgroundColor: colors[index],
-            data: companiesStore.getRatingLastMonths(establishment.reviews, 6, date, true)
+            data: companiesStore.getRatingLastMonthsV2(establishment.reviews, 6, date, true)
         };
         if(index >= establishments.length) index = 0;
         index ++;
@@ -627,21 +655,51 @@ watch(date2, ()=>{
     }else{
          all_items.value[1].value = establishment.value.totalReviews;
          all_items.value[0].value = establishment.value.rating;  
+         startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+         endDate = moment().format('YYYY-M-DD');
     }
     viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
 });
+
+watch([start_date, end_date], ()=>{
+ if(start_date.value !== '' && end_date.value !== ''){
+        startDate = moment(start_date.value).format('YYYY-M-DD');
+        endDate = moment(end_date.value).format('YYYY-M-DD');
+        const reviews = companiesStore.calculateReviewsV4(selectedTimePeriod.value, startDate, endDate, comparisonData.value).reviews;
+        all_items.value[1].value = reviews.length;
+        all_items.value[0].value = companiesStore.calculateRatingV2(reviews);
+ }else{
+         all_items.value[1].value = establishment.value.totalReviews;
+         all_items.value[0].value = establishment.value.rating; 
+ }
+ viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+});
+
+// watch(selectedTimePeriod, ()=>{
+//     let startDate = moment().subtract(180, 'days').format('YYYY-M-DD');
+//     let endDate = moment().format('YYYY-M-DD');
+//     comparisonData.value = _comparisonData;
+//     if(date2.value){
+//         startDate = moment(date2.value[0]).format('YYYY-M-DD');
+//         endDate = moment(date2.value[1]).format('YYYY-M-DD');
+//         plotdata.value = companiesStore.calculateReviewsV3(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+//     }else{
+//         plotdata.value = companiesStore.calculateReviewsV3(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+//     }
+   
+// })
 
 watch(selectedTimePeriod, ()=>{
     let startDate = moment().subtract(180, 'days').format('YYYY-M-DD');
     let endDate = moment().format('YYYY-M-DD');
     comparisonData.value = _comparisonData;
-    if(date2.value){
-        startDate = moment(date2.value[0]).format('YYYY-M-DD');
-        endDate = moment(date2.value[1]).format('YYYY-M-DD');
+     if(start_date.value !== '' && end_date.value !== ''){
+        startDate = moment(start_date.value).format('YYYY-M-DD');
+        endDate = moment(end_date.value).format('YYYY-M-DD');
         plotdata.value = companiesStore.calculateReviewsV3(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
-    }else{
+     }else{
         plotdata.value = companiesStore.calculateReviewsV3(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
-    }
+     }
    
 })
 
