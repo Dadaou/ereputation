@@ -2,12 +2,6 @@
     <div class="main__container" v-if="exist">
         <HeadComponent class="head" :page="page"></HeadComponent>
         <div class="breadcrumb__container">
-            <div style="margin-top: -10px; padding-bottom:10px; color: red;">
-                <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffsranking`" @click="closeMobileMenu" style="text-decoration: none;">
-                    <i class="uil uil-notes"></i>
-                        <span>Staff Ranking</span>
-                </RouterLink>
-            </div>
             <BreadcrumbComponent :data="breadcrumbData"/>   
         </div>
         <div class="app__container">
@@ -35,9 +29,16 @@
                         placeholder="Select the end date"
                         :size="'large'"
                 />
+
                 <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[2]"/>
+                    <div style="margin-top: 0px; padding-bottom:10px; color: red;">
+                        <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffsranking`" @click="closeMobileMenu" style="text-decoration: none;">
+                            <i class="uil uil-notes"></i>
+                            <span>Staff Ranking</span>
+                        </RouterLink>
+                    </div>
             </div>
             
             <div class="tablet_mobile__head">
@@ -157,8 +158,14 @@
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[2]"/>
                     </div>
+                    <div style="margin-top: 20px; padding-bottom:10px; color: red;">
+                        <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffsranking`" @click="closeMobileMenu" style="text-decoration: none;">
+                            <i class="uil uil-notes"></i>
+                            <span>Staff Ranking</span>
+                        </RouterLink>
+                    </div>
                 </div>
-            </div>
+            </div>     
         </div>
     </div>
     <EstablishmentNotFound v-else/>
@@ -776,4 +783,8 @@ img{
        height: 100px !important;
     }
 }
+.establishment__info_tablet{
+    margin-top: 50px;
+}
+
 </style>

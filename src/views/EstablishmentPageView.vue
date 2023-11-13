@@ -1314,4 +1314,7 @@ img{
        height: 100px !important;
     }
 }
+.establishment__info_tablet{
+    margin-top: 50px;
+}
 </style>

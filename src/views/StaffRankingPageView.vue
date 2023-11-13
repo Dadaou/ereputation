@@ -874,5 +874,7 @@ img{
         padding: 20px; /* Ajoutez un espacement approprié pour les écrans mobiles */
     }
 }
-
+.establishment__info_tablet{
+    margin-top: 50px;
+}
 </style>

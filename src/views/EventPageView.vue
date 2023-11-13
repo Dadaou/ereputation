@@ -30,7 +30,7 @@
                   <EventChartComponent v-else :width="chartWidth"/>
                 </div>
                 <div class="head">
-                    <div class="app__title">
+                    <div class="app__title" style="margin-top: 50px;">
                        <h2>Events List</h2>
                     </div>
                 </div>
@@ -742,5 +742,8 @@ img{
        flex-basis: 150px !important;
        height: 100px !important;
     }
+}
+.establishment__info_tablet{
+    margin-top: 50px;
 }
 </style>
