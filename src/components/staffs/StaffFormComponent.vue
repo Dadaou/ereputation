@@ -78,7 +78,9 @@ import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const companiesStore = useCompanyStore();
 const userStore = useUserStore();
 const staffStore = useStaffStore();
@@ -91,6 +93,9 @@ const format = (date) => {
   return `${year}/${month}/${day}`;
 }
 const staffs = inject('staffs');
+const activeStaffTab = inject('staff_activeTab');
+const events = inject('events');
+const activeEventTab = inject('event_activeTab');
 
 const showSpinner = ref(false);
 
@@ -233,6 +238,7 @@ const submit = async ()=>{
                             message: `Staff updated successfully`,
                             type: 'success',
                         })
+                        activeStaffTab.value= 'staff_list';
                         gender.value = '';
                         department.value = ''; 
                         startDate.value = '';
