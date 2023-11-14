@@ -19,7 +19,7 @@
         :y-tick-format="d => `${d}`" />
 </div>
  <div>
-    <BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
+    <BaseLegend class="legend" style="margin-bottom: 50px;" :LegendData="legendData" :alignment="'vertical'">
     </BaseLegend>
   </div>
 </template>
@@ -142,7 +142,7 @@ watch([date, type],async()=>{
 <style scoped>
 	  .chart {
     overflow-x: auto;
-    margin-bottom: 50px; /* margin bottom  */
+    margin-bottom: 0px; /* margin bottom  */
   }
 
   @media (max-width: 768px) {
