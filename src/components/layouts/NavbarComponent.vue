@@ -73,31 +73,31 @@
       <ul 
         :class="['menu flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-2 md:mt-0 md:border-0']">
                 
-                  <li>
-                      <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffs`">
+                  <li @click="closeDropdownMenu">
+                      <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffs`" >
                           <i class="uil uil-users-alt"></i> 
                           <span>Staff</span> 
                       </RouterLink>
                   </li>
-                  <li>
-                      <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/events`">
+                  <li @click="closeDropdownMenu">
+                      <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/events`" >
                           <i class="uil uil-calendar-alt"></i> 
                           <span>Event</span>
                       </RouterLink>
                   </li>
-                  <li>
+                  <li @click="closeDropdownMenu">
                       <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/socials`">
                           <i class="uil uil-users-alt"></i>
                           <span>Social</span> 
                       </RouterLink>
                   </li>
-                  <li>
+                  <li @click="closeDropdownMenu">
                       <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/weathers`">
                           <i class="uil uil-cloud-sun"></i>
                           <span>Weather</span> 
                       </RouterLink>
                   </li>
-                  <li>
+                  <li @click="closeDropdownMenu">
                       <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/reviews`">
                           <i class="uil uil-comment-alt-dots"></i>
                           <span>Reviews</span> 
@@ -139,21 +139,21 @@
   const isScrolling = ref(false);
   const show_menu = ref(true);
   const showBg = ref(false)
+
   const closeDropdown = () => {
     showDropdown.value = false;
   }
-  
-  const toggleMobileMenu = () => {
-    show_menu.value = !show_menu.value;
-  }
-  
-  // Ajoutez la logique pour fermer le menu mobile lors de la sélection d'un élément du menu
-  const closeMobileMenu = () => {
-    if (window.innerWidth < 800) {
+  // Condition si la taille de l'ecran est petite
+  const closeDropdownMenu = () => {
+    if (width.value < 765) {
       show_menu.value = false;
     }
-  };
-  
+  }
+  const toggleMobileMenu = () => {
+    if (width.value < 765) {
+      show_menu.value = !show_menu.value;
+    }
+  }
   const show = ()=>{
     showDropdown.value = !showDropdown.value
     console.log(showDropdown.value)
