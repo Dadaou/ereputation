@@ -1,7 +1,7 @@
 <template>
     <div class="w-full" >
         <div class="inline-flex justify-end items-center my-3 w-full" style="gap:8px;">
-            <el-dropdown size="large" split-button type="primary">
+            <el-dropdown  split-button type="primary">
                 {{ filter != null ? filter.label : 'Filter by' }}
                 <template #dropdown>
                     <el-dropdown-menu>
@@ -10,7 +10,7 @@
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
-            <el-dropdown size="large" split-button type="primary">
+            <el-dropdown  split-button type="primary">
                 {{ year != null ? year.label : 'Select Year' }}
                 <template #dropdown>
                     <el-dropdown-menu>
@@ -19,7 +19,7 @@
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
-            <el-dropdown size="large" split-button type="primary">
+            <el-dropdown  split-button type="primary">
                 {{ type != null ? type.label : 'Interval' }}
                 <template #dropdown>
                     <el-dropdown-menu>
@@ -29,7 +29,7 @@
                 </template>
             </el-dropdown>
 
-            <el-dropdown v-if="showPeriod" size="large" split-button type="primary">
+            <el-dropdown v-if="showPeriod"  split-button type="primary">
                 {{ period != null ? period.label : 'Period' }}
                 <template #dropdown>
                     <el-dropdown-menu>
@@ -309,5 +309,30 @@ onBeforeUnmount(()=>{
 .el-dropdown-menu {
     max-height: 200px;
     overflow-y: auto;
+}
+@media screen and (max-width: 768px) {
+    .w-full {
+        width: 100%;
+    }
+
+    .my-3 {
+        margin: 10px 0;
+    }
+
+    .inline-flex {
+        display: flex;
+        justify-content: center;
+        gap: 10px; 
+        flex-wrap: wrap; 
+    }
+
+    .el-dropdown {
+        width: 48%; 
+        font-size: 14px;
+    }
+
+    .el-dropdown-menu {
+        max-height: 300px;
+    }
 }
 </style>

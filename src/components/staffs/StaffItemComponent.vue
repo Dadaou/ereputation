@@ -287,7 +287,6 @@ const showStaffChart = (staff)=>{
 a{
     text-decoration: none;
 }
-
 .staff__card{
     border: 1px solid var(--light-color-bg2);
     padding: 15px;
@@ -299,6 +298,7 @@ a{
     gap:1rem;
     flex-direction: column;
     margin-bottom: 10px;
+
 }
 
 span.rating{
