@@ -48,7 +48,9 @@ const props = defineProps({
     position: relative;
     top: -7px;
 }
-
+.head__title{
+    padding-top: 15px;
+}
 @media screen and (max-width:1024px) {
     /*.head__container{
         position: absolute;
