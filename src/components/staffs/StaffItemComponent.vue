@@ -41,21 +41,21 @@
             </div>
             <!-- <div class="pie__chart">
                 <div>
-                    <h3 class="mb-2">Before (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['before']))}}</span>)</h3>
+                    <h3 class="mb-2">Before contract(<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['before']))}}</span>)</h3>
                     <Pie 
                         :data="staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['before'])" 
                         :options="options" 
                     />
                 </div>
                 <div>
-                    <h3 class="mb-2">During (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['between']))}}</span>)</h3>
+                    <h3 class="mb-2">During contract (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['between']))}}</span>)</h3>
                     <Pie 
                         :data="staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['between'])" 
                         :options="options" 
                     />
                 </div>
                 <div>
-                    <h3 class="mb-2">After (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['after']))}}</span>)</h3>
+                    <h3 class="mb-2">After contract (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['after']))}}</span>)</h3>
                     <Pie 
                         :data="staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['after'])" 
                         :options="options" 
