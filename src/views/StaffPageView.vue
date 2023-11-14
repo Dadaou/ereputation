@@ -17,28 +17,25 @@
                     end-placeholder="End date"
                     :size="'large'"
                 /> -->
-                <el-date-picker
+                 <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
+                    selectedTimePeriod = timePeriod
+                }" :default="timePeriods[2]"/>
+                <div class="date__picker">
+                    <el-date-picker
                         v-model="start_date"
                         type="date"
                         placeholder="Select the start date"
                         :size="'large'"
-                />
-                <el-date-picker
+                    />
+                </div>
+                <div class="date__picker">
+                     <el-date-picker
                         v-model="end_date"
                         type="date"
                         placeholder="Select the end date"
                         :size="'large'"
-                />
-
-                <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
-                    selectedTimePeriod = timePeriod
-                }" :default="timePeriods[2]"/>
-                    <div style="margin-top: 0px; padding-bottom:10px; color: red;">
-                        <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffsranking`" @click="closeMobileMenu" style="text-decoration: none;">
-                            <i class="uil uil-notes"></i>
-                            <span>Staff Ranking</span>
-                        </RouterLink>
-                    </div>
+                    />
+                </div>
             </div>
             
             <div class="tablet_mobile__head">
@@ -75,6 +72,12 @@
                             <span v-if="!dataLoading">{{ all_items[2].value  }} competitors</span>
                              <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                          </div>
+                        <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffsranking`" >
+                                <button class="btn">
+                                    <i class="uil uil-trophy" :style="{'color': 'white'}"></i>
+                                    <span class="ml-2" :style="{'color': 'white'}">Staff Ranking</span>
+                                </button>
+                        </RouterLink>
                     </div>
                 <div class="photo" v-if="!dataLoading">
                     <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
@@ -154,16 +157,16 @@
                             placeholder="Select the end date"
                             :size="'large'"
                         />
-                <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
-                    selectedTimePeriod = timePeriod
-                }" :default="timePeriods[2]"/>
+                        <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
+                            selectedTimePeriod = timePeriod
+                        }" :default="timePeriods[2]"/>
                     </div>
-                    <div style="margin-top: 20px; padding-bottom:10px; color: red;">
-                        <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffsranking`" @click="closeMobileMenu" style="text-decoration: none;">
-                            <i class="uil uil-notes"></i>
-                            <span>Staff Ranking</span>
-                        </RouterLink>
-                    </div>
+                    <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffsranking`" >
+                            <button class="btn">
+                                <i class="uil uil-trophy"></i>
+                                <span class="ml-2">Staff Ranking</span>
+                            </button>
+                    </RouterLink>
                 </div>
             </div>     
         </div>
@@ -214,7 +217,7 @@ const route = useRoute();
 const breadcrumbData = ref([
     {
         title: "Back",
-         path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+        path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
         isCurrent: false,
     },
     {
@@ -262,9 +265,9 @@ let paginationConfig = ref({
 });
 
 const showModal = ref(false);
-const timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
+const timePeriods = ref(['Daily', 'Weekly', 'Monthly', 'Yearly']);
 const selectedTimePeriod = ref(timePeriods.value[0]);
-const startDate = moment().subtract(90, 'days').format('YYYY-M-DD');
+const startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
 const endDate = moment().format('YYYY-M-DD');
 let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
 let end_date = ref(moment().format('YYYY-M-DD'));
@@ -407,6 +410,15 @@ useResizeObserver(el, (entries) => {
 </script>
 
 <style scoped>
+
+.btn{
+    width: 100%;
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
 *{
     transition: var(--transition);
 }
@@ -628,6 +640,11 @@ img{
     line-height: 1.2;
 }
 
+.date__picker{
+    width: 100% !important;
+    margin: 0px 2px !important;
+}
+
 @media screen and (max-width:1400px) {
   .app__container{
     width: var(--container-width-md);
@@ -769,6 +786,10 @@ img{
         flex-basis: inherit !important;
         width: inherit !important;
         justify-content: center !important;
+    }
+
+    .date__picker{
+        margin: 5px 0 10px !important;
     }
 }
 

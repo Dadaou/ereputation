@@ -292,7 +292,6 @@ const onDataUrlChange = (dataUrl) =>{
     font-size: 13px;
     font-weight: 500;
     padding: 2px 6px;
-    transition: var(--transition);
 }
 
 .list__actions button:hover{

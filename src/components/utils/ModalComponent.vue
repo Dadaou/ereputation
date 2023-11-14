@@ -36,8 +36,8 @@ background-color: #fff;
 margin: 6rem auto;
 padding: 25px;
 border-radius: 5px;
-overflow: auto; /* Empêche le contenu de déborder du modal */
-max-width: 90%; /* Limite la largeur du contenu à 90% de la fenêtre */
-min-width: 300px; /* Définissez une largeur minimale pour éviter que le contenu ne devienne trop étroit */
+/*overflow: auto; */
+max-width: 90%; 
+min-width: 300px; 
 }
 </style>  

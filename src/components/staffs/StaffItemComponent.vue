@@ -28,7 +28,18 @@
                     </div>   
                 </div>
             </div>
-            <div class="pie__chart">
+             <div class="list__actions">
+                     <button class="btn mr-2 reviews" @click="showReview(tag, staff.tag, $route.params.id, staff)">
+                        <i class="uil uil-comment-alt-lines"></i> Reviews
+                    </button>
+                   
+                    <button 
+                        class="btn chart" 
+                        @click="showStaffChart(staff)">
+                        <i class="uil uil-chart-pie-alt"></i> View Chart
+                    </button>
+            </div>
+            <!-- <div class="pie__chart">
                 <div>
                     <h3 class="mb-2">Before (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['before']))}}</span>)</h3>
                     <Pie 
@@ -50,7 +61,7 @@
                         :options="options" 
                     />
                 </div>
-            </div>
+            </div> -->
     </div>
 </div>
     <div v-if="staffs.length==0">No staff</div>
@@ -59,7 +70,7 @@
                         <div class="modal__header">
                             <div class="modal__title">
                                 <h3 class="font-semibold text-gray-900 dark:text-white">
-                                    <i class="uil uil-qrcode-scan"></i> QR Code
+                                    <i class="uil uil-qrcode-scan"></i> 
                                 </h3>
                             </div>
                             <div class="modal__close">
@@ -96,6 +107,44 @@
                         </div>
                     </template>
     </ModalComponent>
+    <ModalComponent :showModal="showChart" @close="showChart=false">
+                    <template #content>
+                        <div class="modal__header">
+                            <div class="modal__title">
+                                <h3 class="font-semibold text-gray-900 dark:text-white">
+                                    <i class="uil uil-chart-pie-alt"></i> Graphic Chart
+                                </h3>
+                            </div>
+                            <div class="modal__close">
+                                <i class="uil uil-times-circle"  @click="showChart = false"></i>
+                            </div>
+                        </div>
+
+                       <div class="pie__chart">
+                        <div>
+                            <h3 class="mb-2">Before (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, selectedStaff)['before']))}}</span>)</h3>
+                            <Pie 
+                                :data="staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, selectedStaff)['before'])" 
+                                :options="options" 
+                            />
+                        </div>
+                        <div>
+                            <h3 class="mb-2">During (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, selectedStaff)['between']))}}</span>)</h3>
+                            <Pie 
+                                :data="staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, selectedStaff)['between'])" 
+                                :options="options" 
+                            />
+                        </div>
+                        <div>
+                            <h3 class="mb-2">After (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, selectedStaff)['after']))}}</span>)</h3>
+                            <Pie 
+                                :data="staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, selectedStaff)['after'])" 
+                                :options="options" 
+                            />
+                        </div>
+                    </div>
+                    </template>
+    </ModalComponent>
 </template>
 <script setup>
 import {ref, inject, computed, defineAsyncComponent} from 'vue';
@@ -107,12 +156,14 @@ import { ElTooltip  } from 'element-plus';
 import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js'
 import { Pie } from 'vue-chartjs';
 import { useCompanyStore } from "@Stores/company.js";
+import {useRouter} from 'vue-router';
 
 const ModalComponent = defineAsyncComponent(()=>
     import('@Components/utils/ModalComponent.vue')
 )
 
 ChartJS.register(ArcElement, Tooltip)
+const router = useRouter();
 const staffs = inject('staffs');
 const selectedStaff = inject('selectedStaff')
 const baseurl = window.location.origin;
@@ -123,6 +174,7 @@ const onDataUrlChange = (dataUrl) =>{
 }
 const { width, height } = useWindowSize()
 const showModal = ref(false);
+const showChart = ref(false);
 const downloaded = ref(false);
 const companiesStore = useCompanyStore();
 const establishment = inject('establishment')
@@ -219,12 +271,26 @@ const calculateAverageRating = (data) =>  {
   if(isNaN(averageRating.toFixed(1))) return 0;
   return averageRating.toFixed(1);
 };
+
+const showReview = (customer_tag, staff_tag, establishment_tag, staff)=>{
+    selectedStaff.value = staff;
+    router.push(`/customer/${customer_tag}/establishment/${establishment_tag}/staffs/list/${staff_tag}/reviews`);
+};
+
+const showStaffChart = (staff)=>{
+    selectedStaff.value = staff;
+    showChart.value = true;
+};
 </script>
 <style scoped>
 
+a{
+    text-decoration: none;
+}
+
 .staff__card{
     border: 1px solid var(--light-color-bg2);
-    padding: 5px;
+    padding: 15px;
     flex-basis: 500px;
     flex-grow: 1;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
@@ -232,7 +298,6 @@ const calculateAverageRating = (data) =>  {
     display: flex;
     gap:1rem;
     flex-direction: column;
-    height: 300px;
     margin-bottom: 10px;
 }
 
@@ -310,6 +375,7 @@ span.label{
     display: flex;
     gap: 1rem;
     justify-content: center;
+    height: 150px;
 }
 
 .pie__chart div{
@@ -328,6 +394,46 @@ span.label{
     display: flex;
     justify-content: space-between;
 }
+
+.list__actions{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.list__actions button{
+    border: 1px solid var(--light-color-bg1);
+    transition: var(--transition);
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 2px 6px;
+}
+
+.list__actions button.chart{
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.list__actions button.reviews{
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+}
+
+.list__actions button.chart:hover{
+    color: white;
+    background-color: var(--color-primary);
+}
+
+.list__actions button.reviews:hover{
+   color: white;
+   background-color: var(--color-danger);
+}
+
+.list__actions button:hover{
+    transform: scale(0.95);
+}
+
+
 @media (max-width: 768px) {
         .pie__chart {
            

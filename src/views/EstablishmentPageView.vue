@@ -38,8 +38,8 @@
                   >
                     <SpinnerComponent/>
                   </div>
-                  <div v-else class="chart-container">
-                    <ComparisonChartComponent
+                  <ComparisonChartComponent
+                      v-else
                       :data="plotdata"
                       :width="chart__width"
                       :chartheight="chart__height"
@@ -48,7 +48,6 @@
                       :competitors="computedCompetitors"
                       :timePeriod="selectedTimePeriod"
                     />
-                  </div>
                   <BaseLegend v-if="reviews_loader == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
                   </BaseLegend>
                 <div class="head">
@@ -126,18 +125,22 @@
                         :size="'large'"
                         class="custom-date-picker"
                       /> -->
-                    <el-date-picker
-                        v-model="start_date"
-                        type="date"
-                        placeholder="Select the start date"
-                        :size="'large'"
-                    />
-                    <el-date-picker
-                        v-model="end_date"
-                        type="date"
-                        placeholder="Select the end date"
-                        :size="'large'"
-                    />
+                    <div  class="date__picker">
+                        <el-date-picker
+                            v-model="start_date"
+                            type="date"
+                            placeholder="Select the start date"
+                            :size="'large'"
+                        />
+                    </div>
+                    <div class="date__picker">
+                        <el-date-picker
+                            v-model="end_date"
+                            type="date"
+                            placeholder="Select the end date"
+                            :size="'large'"
+                        />
+                    </div>
             </div>
             <div class="tablet_mobile__head">
                 <div class="establishment__info_tablet">
@@ -564,7 +567,7 @@ const reloadComparison = async (competitor) => {
     comparisonData.value = [establishment.value, competitor];
     _comparisonData  = [establishment.value, competitor];
     
-    let startDate = moment().subtract(180, 'days').format('YYYY-M-DD');
+    let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
     let endDate = moment().format('YYYY-M-DD');
     if(date2.value.length > 0){
         startDate = moment(date2.value[0]).format('YYYY-M-DD');
@@ -898,14 +901,6 @@ img{
     justify-content: flex-end;
 }
 
-
-/* Media query pour les écrans de petite taille (mobile) */
-@media screen and (max-width: 600px) {
-  .chart-container {
-    max-height: none;  /* Aucune limite de hauteur pour les écrans de petite taille */
-    overflow: auto;    /* Ajouter une barre de défilement si nécessaire */
-  }
-}
 .rating__customers{
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
@@ -948,17 +943,6 @@ img{
 .establishment div{
     font-size: 13px;
     font-weight: 500;
-}
-/* Pour les écrans de petite taille (mobile) */
-@media only screen and (max-width: 768px) {
-    .custom-date-picker {
-        width: 100%; /* Utilisez la largeur complète */
-    }
-
-    .custom-date-picker .el-date-editor {
-        width: 100%; /* Utilisez la largeur complète pour les dates de début et de fin */
-        margin-bottom: 10px; /* Ajoutez un espacement entre les deux champs de date */
-    }
 }
 
 .establishment__info_tablet div{
@@ -1151,6 +1135,11 @@ img{
     line-height: 1.2;
 }
 
+.date__picker{
+    width: 100% !important;
+    margin: 0px 2px !important;
+}
+
 @media screen and (max-width:1400px) {
   .app__container{
     width: var(--container-width-md);
@@ -1230,15 +1219,7 @@ img{
         font-weight: 500;
         color: var(--color-bg2);
     }
-    @media only screen and (max-width: 768px) {
-    .tablet_mobile__filter {
-        /* Ajoutez des styles pour ajuster la taille en mode responsive */
-        width: 100%; /* Par exemple, utilisez la largeur totale de l'écran */
-        max-width: 100%; /* Assurez-vous que la largeur maximale est de 100% */
-        margin-bottom: 10px; /* Ajoutez de l'espacement en bas si nécessaire */
-        /* Ajoutez d'autres styles personnalisés au besoin */
-    }
-}
+   
 
     .tablet_mobile__filter{
         display: flex;
@@ -1301,6 +1282,10 @@ img{
         width: inherit !important;
         justify-content: center !important;
     }
+
+    .date__picker{
+        margin: 5px 0 10px !important;
+    }
 }
 
 @media screen and (max-width:500px) {
@@ -1314,7 +1299,10 @@ img{
        height: 100px !important;
     }
 }
-.establishment__info_tablet{
-    margin-top: 50px;
+
+@media screen and (max-width:475px) {
+   .app__container{
+    overflow-x: hidden;
+   }
 }
 </style>

@@ -74,31 +74,31 @@
         :class="['menu flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-2 md:mt-0 md:border-0']">
                 
                   <li>
-                      <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffs`" @click="closeMobileMenu">
+                      <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffs`">
                           <i class="uil uil-users-alt"></i> 
                           <span>Staff</span> 
                       </RouterLink>
                   </li>
                   <li>
-                      <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/events`" @click="closeMobileMenu">
+                      <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/events`">
                           <i class="uil uil-calendar-alt"></i> 
                           <span>Event</span>
                       </RouterLink>
                   </li>
                   <li>
-                      <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/socials`" @click="closeMobileMenu">
+                      <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/socials`">
                           <i class="uil uil-users-alt"></i>
                           <span>Social</span> 
                       </RouterLink>
                   </li>
                   <li>
-                      <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/weathers`" @click="closeMobileMenu">
+                      <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/weathers`">
                           <i class="uil uil-cloud-sun"></i>
                           <span>Weather</span> 
                       </RouterLink>
                   </li>
                   <li>
-                      <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/reviews`" @click="closeMobileMenu">
+                      <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/reviews`">
                           <i class="uil uil-comment-alt-dots"></i>
                           <span>Reviews</span> 
                       </RouterLink>

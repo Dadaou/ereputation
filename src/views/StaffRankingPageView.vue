@@ -76,13 +76,25 @@
             </div>
 
             <div class="tablet_mobile__filter">
-                <el-date-picker
+               <!--  <el-date-picker
                     v-model="date"
                     type="daterange"
                     range-separator="To"
                     start-placeholder="Start date"
                     end-placeholder="End date"
                     :size="'large'"
+                /> -->
+                 <el-date-picker
+                        v-model="start_date"
+                        type="date"
+                        placeholder="Select the start date"
+                        :size="'large'"
+                />
+                <el-date-picker
+                        v-model="end_date"
+                        type="date"
+                        placeholder="Select the end date"
+                        :size="'large'"
                 />
                 <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                     selectedTimePeriod = timePeriod
@@ -192,14 +204,27 @@
                     
                     <div class="date__filter">
                        <div class="text-sm title">Select a range of date</div>
-                           <el-date-picker
+                           <!-- <el-date-picker
                             v-model="date"
                             type="daterange"
                             range-separator="To"
                             start-placeholder="Start date"
                             end-placeholder="End date"
                             :size="'large'"
-                          />
+                          /> -->
+                           <el-date-picker
+                                    v-model="start_date"
+                                    type="date"
+                                    placeholder="Select the start date"
+                                    :size="'large'"
+                            />
+                            <el-date-picker
+                                    class="mt-2"
+                                    v-model="end_date"
+                                    type="date"
+                                    placeholder="Select the end date"
+                                    :size="'large'"
+                            />
                             <DropdownComponent 
                             :showTitle="false" placeholder="" 
                             :data="timePeriods" 
@@ -256,7 +281,12 @@ const route = useRoute();
 const breadcrumbData = [
     {
         title: "Back",
-        path: `/establishment/${route.params.id}`,
+        path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+        isCurrent: false,
+    },
+     {
+        title: "Staffs",
+        path: `/customer/${route.params.tag}/establishment/${route.params.id}/staffs`,
         isCurrent: false,
     },
     {
@@ -265,6 +295,7 @@ const breadcrumbData = [
         isCurrent: true
     }
 ]
+
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
@@ -289,6 +320,8 @@ const companyId = route.params.id;
 const showModal = ref(false);
 let timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
 let selectedTimePeriod = ref(timePeriods.value[0]);
+let start_date = ref();
+let end_date = ref();
 const date = ref([]);
 const currentDate = new Date();
 let firstDateOfPreviousYear = new Date(currentDate.getFullYear() - 1, 0, 1);
@@ -304,6 +337,15 @@ const all_items = ref([
     {title: "Competitors", value: 0, icon: "uil-building"},
 ]);
 const { width, height } = useWindowSize(); 
+
+const IsValueOkay = (value)=> (value == '' || value == null || value == undefined)?false:true;
+watch([start_date,end_date], ()=>{
+    if(IsValueOkay(start_date.value) && IsValueOkay(end_date.value)){
+        date.value = [start_date.value, end_date.value]
+    }else{
+        date.value = [];
+    }
+})
 
 const loadFromServer = async(type, company, datefrom, dateto)=>{
     switch (type) {
@@ -333,7 +375,19 @@ const loadFromServer = async(type, company, datefrom, dateto)=>{
      }
 }    
  
+// watch([date, selectedTimePeriod], ()=>{
+//     if(date.value.length==0){
+//         firstDateOfPreviousYear = moment(firstDateOfPreviousYear).format('YYYY-MM-DD');
+//         lastDateOfCurrentYear = moment(lastDateOfCurrentYear).format('YYYY-MM-DD');
+//         date.value = [firstDateOfPreviousYear, lastDateOfCurrentYear];
+//     }
+//     let datefrom = moment(date.value[0]).format('YYYY-MM-DD');
+//     let dateto = moment(date.value[1]).format('YYYY-MM-DD');
+//     loadFromServer(selectedTimePeriod.value.toLowerCase(), companyId, datefrom, dateto);
+// })
+
 watch([date, selectedTimePeriod], ()=>{
+    console.log(date.value)
     if(date.value.length==0){
         firstDateOfPreviousYear = moment(firstDateOfPreviousYear).format('YYYY-MM-DD');
         lastDateOfCurrentYear = moment(lastDateOfCurrentYear).format('YYYY-MM-DD');

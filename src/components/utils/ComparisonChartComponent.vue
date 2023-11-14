@@ -2,76 +2,89 @@
  <ul class="filter__menu">
       <li @click="viewFullscreen()" > <i class="uil uil-expand-arrows-alt"></i> Expand</li>
     </ul>
-<div class="establishments__comparison" ref="el"
-    :style="{
-            'width': '900px',
-            'overflowX': 'auto'
-    }"
->
-    <GroupedBarChart class="chart" :plot-data="props.data" x-key="name"
-    :width="custom_width" :height="chartheight - 100" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="_timePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
-    </GroupedBarChart>
-    <ModalComponent 
-    :showModal="showModal"
-    @close="showModal=false"
-    :width="modalWidth"
+    <div class="establishments__comparison" ref="el"
+        :style="{
+                'width': `${getWidth()}`,
+                'overflowX': 'auto'
+        }"
     >
-        <template #content>
-            <div class="modal__close">
-                 <i class="uil uil-times-circle mb-8"  @click="showModal = false"></i>
-            </div>
-            <div class="modal__header">
-                 <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">Comparison</h3>
-            </div>
-            <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                <li class="w-full">
-                    <div class="flex items-center pl-3">
-                        <input type="radio" :value="false" v-model="comparisonByEstablishments" name="list-radio" class="w-4 h-4 text-blue-500 bg-gray-100 border-gray-300">
-                        <label for="horizontal-list-radio-id" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Sources</label>
-                    </div>
-                </li>
-                <li class="w-full">
-                    <div class="flex items-center pl-3">
-                        <input type="radio" name="list-radio" :value="true" v-model="comparisonByEstablishments" class="w-4 h-4 text-blue-500 bg-gray-100 border-gray-300">
-                        <label for="horizontal-list-radio-license" class="w-full py-3 ml-2 text-sm font-medium text-gray-900">Establishments</label>
-                    </div>
-                </li>
-                <li class="w-full mr-3">
-                    <DropdownComponent :showTitle="false" placeholder="Select an establishments" :data="establishmentDropdown" @submit="(company)=>{
-                        selectedCompany = company
-                    }" :defaultObj="establishmentDropdown[0]" :isDataObject="true"/>
-                </li>
-                <li class="w-full mr-3">
-                    <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
-                            selectedTimePeriod = timePeriod
-                    }" :default="timePeriods[2]"/>
-                </li>
-                <li class="w-full mr-3">
-                  <el-date-picker
-                        v-model="date2"
-                        type="daterange"
-                        range-separator="To"
-                        start-placeholder="Start date"
-                        end-placeholder="End date"
+        <GroupedBarChart class="chart" :plot-data="props.data" x-key="name"
+        :width="custom_width" :height="chartheight - 100" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="_timePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+        </GroupedBarChart>
+    </div>
+    <ModalComponent 
+        :showModal="showModal"
+        @close="showModal=false"
+        >
+            <template #content>
+                <div class="modal__close">
+                     <i class="uil uil-times-circle mb-8"  @click="showModal = false"></i>
+                </div>
+                <div class="modal__header">
+                     <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">Comparison</h3>
+                </div>
+                <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <li class="w-full">
+                        <div class="flex items-center pl-3">
+                            <input type="radio" :value="false" v-model="comparisonByEstablishments" name="list-radio" class="w-4 h-4 text-blue-500 bg-gray-100 border-gray-300">
+                            <label for="horizontal-list-radio-id" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Sources</label>
+                        </div>
+                    </li>
+                    <li class="w-full">
+                        <div class="flex items-center pl-3">
+                            <input type="radio" name="list-radio" :value="true" v-model="comparisonByEstablishments" class="w-4 h-4 text-blue-500 bg-gray-100 border-gray-300">
+                            <label for="horizontal-list-radio-license" class="w-full py-3 ml-2 text-sm font-medium text-gray-900">Establishments</label>
+                        </div>
+                    </li>
+                    <li class="w-full mr-3">
+                        <DropdownComponent :showTitle="false" placeholder="Select an establishments" :data="establishmentDropdown" @submit="(company)=>{
+                            selectedCompany = company
+                        }" :defaultObj="establishmentDropdown[0]" :isDataObject="true"/>
+                    </li>
+                    <li class="w-full mr-3">
+                        <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
+                                selectedTimePeriod = timePeriod
+                        }" :default="timePeriods[2]"/>
+                    </li>
+                   <!--  <li class="w-full mr-3">
+                      <el-date-picker
+                            v-model="date2"
+                            type="daterange"
+                            range-separator="To"
+                            start-placeholder="Start date"
+                            end-placeholder="End date"
+                            :size="'large'"
+                          />
+                    </li> -->
+                </ul>
+                <div class="range__date">
+                     <el-date-picker
+                        v-model="start_date"
+                        type="date"
+                        placeholder="Select the start date"
                         :size="'large'"
-                      />
-                </li>
-            </ul>
-            <div class="modal__container" ref="el2"
-                :style="{
-                        'width': `500px`,
-                        'overflowX': 'auto'
-                }"
-            >
-                <GroupedBarChart class="chart" :plot-data="plotData" x-key="name"
-                        :width="custom_width2" :height="chartheight" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="selectedTimePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
-                </GroupedBarChart>
+                    />
+                    <el-date-picker
+                        v-model="end_date"
+                        type="date"
+                        placeholder="Select the end date"
+                        :size="'large'"
+                    />
+                </div>
+                <div class="modal__container" ref="el2"
+                    :style="{
+                            'width': `${get_Width()}`,
+                            'overflowX': 'auto'
+                    }"
+                >
+                    <GroupedBarChart class="chart" :plot-data="plotData" x-key="name"
+                            :width="custom_width2" :height="chart_Height" :margin="margin" :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']" :x-axis-label="selectedTimePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+                    </GroupedBarChart>
+                </div>
                 <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
                 </BaseLegend>
-            </div>
-        </template>
-    </ModalComponent>
-</div>
+            </template>
+        </ModalComponent>
 </template>
 <script setup>
 import ModalComponent from '@Components/utils/ModalComponent.vue';
@@ -125,6 +138,8 @@ let selectedCompany = ref(establishmentDropdown.value[0]);
 
 let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
 let endDate = moment().format('YYYY-M-DD');
+let start_date = ref();
+let end_date = ref();
 let legendData = ref([]);
 let _timePeriod = computed(()=>props.timePeriod);
 const { width, height } = useWindowSize();
@@ -154,6 +169,13 @@ const modalWidth= computed(()=>{
     return gap + 35;
 });
 
+const chart_Height = computed(()=>{
+    if(width.value<=900){
+        return 200;
+    }
+    else return props.chartheight;
+})
+
 const viewFullscreen = () => {
     showModal.value = !showModal.value;
 }
@@ -166,6 +188,15 @@ const format2 = (date) => {
 }
 
 const plotData = ref([]);
+
+const IsValueOkay = (value)=> (value == '' || value == null || value == undefined)?false:true;
+watch([start_date,end_date], ()=>{
+    if(IsValueOkay(start_date.value) && IsValueOkay(end_date.value)){
+        date2.value = [start_date.value, end_date.value]
+    }else{
+        date2.value = [];
+    }
+})
 
 const viewDataByEstablishment = (establishments, timePeriod, startDate, endDate, colors) => {
     plotData.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, establishments);
@@ -235,10 +266,37 @@ useResizeObserver(el2, (entries) => {
       chartModalWidth.value = Math.abs(width);
 });
 
+const getWidth = () => {
+    const defaultWidth = 900;
+    if (width.value >= 1500) {
+        return `${defaultWidth}px`;
+    }
+    const percentage = 0.8;
+
+    return `${Math.min(width.value * percentage, 850)}px`;
+};
+
+const get_Width = () => {
+    const defaultWidth = 1400;
+    if (width.value >= 1500) {
+        return `${defaultWidth}px`;
+    }
+    const percentage = 0.8;
+
+    return `${Math.min(width.value * percentage, 850)}px`;
+};
+
 
 </script>
 
 <style scoped>
+.range__date{
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+    margin: 5px 0;
+}
+
 .filter__menu{
     display: flex;
     align-items: center;
@@ -293,10 +351,6 @@ useResizeObserver(el2, (entries) => {
     width: 21%;
 }
 
-.modal__container{
-    margin: 30px auto;
-}
-
 .establishments__comparison::-webkit-scrollbar
 {
     width: 6px;
@@ -304,27 +358,9 @@ useResizeObserver(el2, (entries) => {
     background-color: #F5F5F5;
 }
 
-@media screen and (max-width:975px) {
-   .establishments__comparison{
-    width: 850px !important;
+@media screen and (max-width:900px) {
+   .range__date{
+    flex-direction: column;
    }
 }
-
-@media screen and (max-width:915px) {
-   .establishments__comparison{
-    width: 800px !important;
-   }
-}
-
-/*@media screen and (max-width:860px) {
-   .establishments__comparison{
-    width: 700px !important;
-   }
-}
-
-@media screen and (max-width:820px) {
-   .establishments__comparison{
-    width: 650px !important;
-   }
-}*/
 </style>

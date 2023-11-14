@@ -45,16 +45,20 @@
                     <DropdownComponent :showTitle="false" class="dropdown" title="Filter by plateform" placeholder="Select a website" :data="websites" @submit="(website)=>{
                         selectedWebsites = website
                     }" :default="websites[0]"/>
-                  <el-date-picker
-                        v-model="dateStart"
-                        placeholder="Start date"
-                        :size="'large'"
-                      />
-                      <el-date-picker
-                        v-model="dateEnd"
-                        placeholder="End date"
-                        :size="'large'"
-                      />
+                    <div class="date__picker">
+                         <el-date-picker
+                            v-model="dateStart"
+                            placeholder="Start date"
+                            :size="'large'"
+                          />
+                    </div>
+                     <div class="date__picker">
+                        <el-date-picker
+                            v-model="dateEnd"
+                            placeholder="End date"
+                            :size="'large'"
+                          />
+                    </div>
             </div>
             <div class="tablet_mobile__head">
                 <div class="establishment__info_tablet">
@@ -150,7 +154,7 @@
                         selectedWebsites = website
                     }" :default="websites[0]"/>
                     <div class="date__filter">
-                        <div class="text-sm title">Select a range of date</div>
+                    <div class="text-sm title">Select a range of date</div>
                        <el-date-picker
                         v-model="dateStart"
                         placeholder="Start date"
@@ -714,10 +718,16 @@ img{
 .society__location{
     display: flex;
 }
+
 .society__location span{
     display: block;
     flex-basis: 225px;
     line-height: 1.2;
+}
+
+.date__picker{
+    width: 100% !important;
+    margin: 0px 2px !important;
 }
 
 @media screen and (max-width:1400px) {
@@ -860,6 +870,9 @@ img{
         flex-basis: inherit !important;
         width: inherit !important;
         justify-content: center !important;
+    }
+    .date__picker{
+        margin: 5px 0 10px !important;
     }
 }
 
