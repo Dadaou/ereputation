@@ -1305,4 +1305,7 @@ img{
     overflow-x: hidden;
    }
 }
+.establishment__info_tablet{
+    margin-top: 50px;
+}
 </style>
