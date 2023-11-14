@@ -115,7 +115,7 @@
                     }" :default="websites[0]"/>
                     <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                                 selectedTimePeriod = timePeriod
-                        }" :default="timePeriods[2]"/>
+                        }" :default="timePeriods[0]"/>
                     <!-- <el-date-picker
                         v-model="date2"
                         type="daterange"
@@ -273,7 +273,7 @@
                         />
                         <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                                 selectedTimePeriod = timePeriod
-                        }" :default="timePeriods[2]"/>
+                        }" :default="timePeriods[0]"/>
                     </div>
                 </div>
               <div class="rating__customers">
@@ -535,7 +535,7 @@ const globalComparison = async () => {
     reviews.value = establishment.value.reviews;
    
     let startDate = new Date();
-    startDate.setDate(startDate.getDate() - 180);
+    startDate.setDate(startDate.getDate() - 14);
     let endDate = new Date();
     
     if (date2.value.length > 0) {
@@ -601,7 +601,7 @@ const reloadComparisonByWebsite = async (website) => {
     }
 
     let startDate = new Date();
-    startDate.setDate(startDate.getDate() - 180);
+    startDate.setDate(startDate.getDate() - 14);
     let endDate = new Date();
     if (date2.value.length > 0) {
         startDate = new Date(date2.value[0]);
@@ -1219,7 +1219,6 @@ img{
         font-weight: 500;
         color: var(--color-bg2);
     }
-   
 
     .tablet_mobile__filter{
         display: flex;
