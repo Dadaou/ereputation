@@ -191,7 +191,7 @@ const downloadQrcode = (staffname)=>{
 const modalWidth= computed(()=>{
     let windowSize = 1500;
     let gap = (windowSize - width.value)/19;
-    return gap + 35;
+    return gap + 45;
 })
 
 const props = defineProps({

@@ -42,8 +42,11 @@
                             <input type="text" id="last_name" v-model="lastname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
                     </div>
-                    <div class="grid gap-6 mb-6 md:grid-cols-2">
-                        <div>
+                    <div class="grid gap-6 mb-6 md:grid-cols-2 email">
+                        <div class="author__email">
+                            <span>
+                               <i class="uil uil-info-circle"></i> If you wish to obtain discounts or benefits, please provide your email address below.
+                            </span>
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
                         </div>
@@ -174,7 +177,7 @@ const submit = async ()=>{
     }
 
     try{
-        if(firstname.value !== '' && ratingCustomer.value !== null && comment.value !== ''){
+        if(firstname.value !== '' && ratingCustomer.value !== null){
             showSpinner.value = true;
             await feedbackStore.createReview(review, (response)=>{
                 console.log(response)
@@ -207,6 +210,21 @@ const submit = async ()=>{
 </script>
 
 <style scoped>
+
+.email{
+    display: flex;
+    flex-direction: column;
+}
+
+.author__email span{
+ font-size: 14px;
+ line-height: 1;
+ font-weight: 500;
+}
+
+.author__email i{
+ font-size: 15px;
+}
 
 .checkbox-container {
       margin: 15px;
