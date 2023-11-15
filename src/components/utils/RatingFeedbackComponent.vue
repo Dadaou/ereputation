@@ -102,7 +102,7 @@ selectRating('okay');
 @media screen and (max-width:670px) {
     .rating__feedback{
         width: 100% !important;
-
+        gap:5px;
     }
 }
 
@@ -112,11 +112,12 @@ selectRating('okay');
     }
 
     .rating__feedback i{
-        font-size: 20px !important;
+        font-size: 15px !important;
     }
 
     .rating__feedback span{
-        font-size: 13px !important;
+        font-size: 10px !important;
+        font-weight: 500;
     }
 }
 </style>
