@@ -494,6 +494,30 @@ const loadDatasets = (establishments, colors, date) => {
     return data;
 }
 
+const loadDatasetsAsync = async (establishments, colors, date) => {
+   let data = [];
+   var index = 0;
+   let chartdata = {
+       labels: await companiesStore.getLastMonthsAsync(6, date, true),
+       datasets: []
+   }
+   chartConfig.data.datasets = [];
+   for (const establishment of establishments) {
+       let dataset = {
+           label: establishment.name,
+           backgroundColor: colors[index],
+           data: await companiesStore.getRatingLastMonthsV2(establishment.reviews, 6, date, true)
+       };
+       if(index >= establishments.length) index = 0;
+       index ++;
+       data.push(dataset);
+       chartdata.datasets.push(dataset);
+    }
+   chartConfig.data.datasets = data;
+   chartData.value = chartdata;
+   return data;
+}
+
 watch(date, ()=>{
  if(date.value== null){
     plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);   
@@ -506,6 +530,10 @@ watch(date, ()=>{
 
 const viewData = (timePeriod, startDate, endDate, data) => {
     plotdata.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, data);
+}
+
+const viewDataAsync = async(timePeriod, startDate, endDate, data) => {
+    plotdata.value = await companiesStore.calculateReviewsV3Async(timePeriod, startDate, endDate, data);
 }
 
 let updatePage = function(pageNumber){
@@ -547,15 +575,15 @@ const globalComparison = async () => {
     all_items.value[1].value = establishment.value.totalReviews;
     all_items.value[0].value = establishment.value.rating;
 
-    legendData.value = await companiesStore.generateLegend(comparisonData.value, colors);
+    legendData.value = await companiesStore.generateLegendAsync(comparisonData.value, colors);
     _legendData = legendData;
     
-    lastReviews.value = companiesStore.getLastReviews(establishment.value.reviews, 100);
+    lastReviews.value = await companiesStore.getLastReviewsAsync(establishment.value.reviews, 100);
     await updateVisibleData(lastReviews.value);
     
-    reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
+    reviewFeedbackData.value = await companiesStore.getfeedbackDataAsync(establishment.value.reviews);
 
-    loadDatasets(_comparisonData, colors, selected_date);
+    await loadDatasetsAsync(_comparisonData, colors, selected_date);
     viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
 
     appStore.isLoading = false;
@@ -588,7 +616,6 @@ const reloadComparisonByWebsite = async (website) => {
         });
     });
 
-    // Find the company matching the establishment ID
     const establishmentData = data.find(company => company.id === establishment.value.id);
 
     if (establishmentData) {
@@ -608,7 +635,6 @@ const reloadComparisonByWebsite = async (website) => {
         endDate = new Date(date2.value[1]);
     }
 
-    // Perform async tasks concurrently
     await Promise.all([
         viewData(selectedTimePeriod.value, startDate, endDate, data),
         loadDatasets(data, colors, selected_date)

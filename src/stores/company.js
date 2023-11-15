@@ -234,6 +234,120 @@ export const useCompanyStore = defineStore("company", {
       }
       return result;
     },
+     calculateReviewsV3Async(timePeriod, startDate, endDate, companies) {
+      let result = [];
+      let quarters = this.splitRangeIntoQuarters(startDate, endDate);
+      let semesters = this.splitRangeIntoSemesters(startDate, endDate);
+      let months = this.getAllMonthsInRange(startDate, endDate);
+      let weeks = this.getAllWeeksInRange(startDate, endDate);
+      let days = this.splitRangeIntoDays(startDate, endDate);
+
+
+      if (timePeriod == "Days") {
+        for (const day of days) {
+          let review = {};
+          review["name"] = `${moment(day).format(
+            "DD/M/YY"
+          )}`;
+          for(const company in companies){
+            let reviews = this.getReviewsBetweenDates(
+              company.reviews,
+              moment(day).format("YYYY-M-DD"),
+              moment(day).format("YYYY-M-DD")
+            );
+            this.reviews = reviews;
+              let key = company.name;
+              let value = Number(this.calculateRatingV2(reviews));
+              review[key] = value;
+            result.push(review);
+          }
+        }
+      }
+
+      if (timePeriod == "Quarters") {
+        quarters.forEach((quarter, index) => {
+          let review = {};
+          review["name"] = `Q${index} ${moment(quarter.start).format(
+            "DD/M/YY"
+          )} -${moment(quarter.end).format("DD/M/YY")}`;
+          companies.forEach((company) => {
+            let reviews = this.getReviewsBetweenDates(
+              company.reviews,
+              moment(quarter.start).format("YYYY-M-DD"),
+              moment(quarter.end).format("YYYY-M-DD")
+            );
+            this.reviews = reviews;
+            let key = company.name;
+            let value = Number(this.calculateRatingV2(reviews));
+            review[key] = value;
+          });
+          result.push(review);
+        });
+      }
+
+      if (timePeriod == "Semesters") {
+        semesters.forEach((semester, index) => {
+          let review = {};
+          review["name"] = `S${index} ${moment(semester.start).format(
+            "DD/M/YY"
+          )} -${moment(semester.end).format("DD/M/YY")}`;
+          companies.forEach((company) => {
+            let reviews = this.getReviewsBetweenDates(
+              company.reviews,
+              moment(semester.start).format("YYYY-M-DD"),
+              moment(semester.end).format("YYYY-M-DD")
+            );
+            this.reviews = reviews;
+            let key = company.name;
+            let value = Number(this.calculateRatingV2(reviews));
+            review[key] = value;
+          });
+          result.push(review);
+        });
+      }
+
+      if (timePeriod == "Months") {
+        months.forEach((month) => {
+          let review = {};
+          review["name"] = `${moment(month).format("MMM-YY")}`;
+          companies.forEach((company) => {
+            let reviews = this.getReviewsByMonth(
+              company.reviews,
+              moment(month).format("MMM-YY")
+            );
+            this.reviews = reviews;
+            let key = company.name;
+            // let value = reviews.length;
+            let value = Number(this.calculateRatingV2(reviews));
+            review[key] = value;
+          });
+          result.push(review);
+        });
+      }
+
+      if (timePeriod == "Weeks") {
+        weeks.forEach((week, index) => {
+          let review = {};
+          review["name"] = `W ${moment(week.begin).format(
+            "DD")}-${moment(week.end).format(
+            "DD")}`; 
+          companies.forEach((company) => {
+            let reviews = this.getReviewsBetweenDates(
+              company.reviews,
+              week.begin,
+              week.end
+            );
+            this.reviews = reviews;
+            let key = company.name;
+            // let value = reviews.length;
+            let value = Number(this.calculateRatingV2(reviews));
+            review[key] = value;
+          });
+          result.push(review);
+        });
+      }
+      return Promise.resolve(result);
+    },
     calculateReviewsV4(timePeriod, startDate, endDate, companies) {
       let result = [];
       let reviews = [];
@@ -645,6 +759,20 @@ export const useCompanyStore = defineStore("company", {
       });
       return legend;
     },
+    generateLegendAsync(data, colors) {
+      let legend = [];
+      var index = 0;
+
+      data.forEach((element) => {
+        legend.push({
+          name: element.name,
+          color: colors[index],
+        });
+        if (index >= data.length) index = 0;
+        index++;
+      });
+      return Promise.resolve(legend);
+    },
     generateLegendV2(data, colors) {
       let legend = [];
 
@@ -696,6 +824,27 @@ export const useCompanyStore = defineStore("company", {
       }
       return data;
     },
+    getLastReviewsAsync(reviews, n) {
+      let data = [];
+      reviews.sort(function (a, b) {
+        if (a.date_review === null && b.date_review === null) {
+          return 0; // No difference if both dates are null
+        } else if (a.date_review === null) {
+          return 1; // Treat null as 'greater' to move it towards the end
+        } else if (b.date_review === null) {
+          return -1; // Treat null as 'smaller' to move it towards the beginning
+        } else {
+          return moment(b.date_review).diff(moment(a.date_review));
+        }
+      });
+      if (reviews.length > 0) {
+        let lastReviews = reviews.slice(0, n);
+        lastReviews.forEach(function (review) {
+          data.push(review);
+        });
+      }
+      return Promise.resolve(data);
+    },
     getReviewsBySource(reviews, website) {
       let data = [];
       reviews.forEach((review) => {
@@ -745,6 +894,16 @@ export const useCompanyStore = defineStore("company", {
         lastMonth.push(month);
       }
       return lastMonth.reverse();
+    },
+    getLastMonthsAsync(nbMonth, actualMonth, year) {
+      let lastMonth = [];
+      for (let i = 0; i < nbMonth; i++) {
+        let month = actualMonth.clone().subtract(i, "months").format("MMM");
+        if (year)
+          month = actualMonth.clone().subtract(i, "months").format("MMM-YY");
+        lastMonth.push(month);
+      }
+      return Promise.resolve(lastMonth.reverse());
     },
     initReviewsByMonth(months) {
       const reviewsByMonth = {};
@@ -814,6 +973,25 @@ export const useCompanyStore = defineStore("company", {
       });
       return data;
     },
+     getRatingLastMonthsV2Async(reviews, nbMonth, date, year) {
+      let data = [];
+      nbMonth = nbMonth +1;
+      const months = this.getLastMonths(nbMonth, date, year);
+      const lastMonthReviews = this.getLastMonthReviews(
+        reviews,
+        nbMonth,
+        date,
+        year
+      );
+      let previousRating = 0;
+      months.forEach((month, index) => {
+        let rating = this.calculateRatingV2(lastMonthReviews[month]);
+        if(rating == 0) rating = previousRating;
+        if(index>0) data.push(Number(rating));
+        previousRating = rating;
+      });
+      return Promise.resolve(data);
+    },
     getfeedbackData(reviews) {
       let sumConfidence = 0;
       let percentage = (this.calculateRatingV2(reviews) / 5) * 100;
@@ -821,9 +999,6 @@ export const useCompanyStore = defineStore("company", {
       reviews.forEach((review) => {
         sumConfidence += review.confidence;
       });
-
-      // let confidencePercentage = sumConfidence * 100 / reviews.length;
-      // let rawWidth = confidencePercentage / 1.5;
       let rawWidth = percentage / 3;
       let width = rawWidth < 0 ? -1 * rawWidth : rawWidth;
       let feeling = rawWidth > 0 ? 1 : -1;
@@ -841,6 +1016,31 @@ export const useCompanyStore = defineStore("company", {
         green: green,
         feeling: feeling,
       };
+    },
+    getfeedbackDataAsync(reviews) {
+      let sumConfidence = 0;
+      let percentage = (this.calculateRatingV2(reviews) / 5) * 100;
+
+      reviews.forEach((review) => {
+        sumConfidence += review.confidence;
+      });
+      let rawWidth = percentage / 3;
+      let width = rawWidth < 0 ? -1 * rawWidth : rawWidth;
+      let feeling = rawWidth > 0 ? 1 : -1;
+      let red = 255;
+      let green = 255;
+      if (feeling == 1) {
+        red = 200;
+      } else {
+        green = 200;
+      }
+
+      return Promise.resolve({
+        width: width,
+        red: red,
+        green: green,
+        feeling: feeling,
+      });
     },
     getNumberOfRating(reviews) {
       let value = {
