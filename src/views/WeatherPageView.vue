@@ -388,7 +388,7 @@ const weaherImpact = (startDate, endDate) => {
     for (const key in impactByDay) {
         let icon = generateWeatherIcon(key)
         let item = {
-            "date": `${icon} ${moment(key).format('DD-MM-YYYY')}`,
+            "date": `${icon}\n ${moment(key).format('DD-MM-YYYY')}`,
             "rating": impactByDay[key]['note'],
             "temperature": impactByDay[key]['temp'],
         }
@@ -410,7 +410,8 @@ const generateWeatherIcon = (day) => {
         'Clear': "🌞",
         'Rain': "☔",
         'Rain Overcast': "🌧",
-        'Overcast': "☁"
+        'Overcast': "☁",
+        'Rain Partially cloudy': "🌦"
     }
 
     const weatherData = weather.value;
@@ -1057,4 +1058,5 @@ img {
 
 .head {
     margin-top: 50px;
-}</style>
+}
+</style>
