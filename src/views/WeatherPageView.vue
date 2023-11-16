@@ -2,7 +2,7 @@
     <div class="main__container" v-if="exist">
         <HeadComponent class="head" :page="page"></HeadComponent>
         <div class="breadcrumb__container">
-            <BreadcrumbComponent :data="breadcrumbData"/>
+            <BreadcrumbComponent :data="breadcrumbData" />
         </div>
         <div class="app__container">
             <div class="left__side">
@@ -20,7 +20,7 @@
                         </template>
                     </el-dropdown>
                 </div>
-                <WeatherChartComponent/>
+                <WeatherChartComponent />
                 <div class="head">
                     <div class="app__title">
                         <h2>Weather's global impact</h2>
@@ -33,126 +33,125 @@
                 </div>
             </div>
             <div class="tablet_mobile__filter">
-                  <el-date-picker
-                        v-model="dateStart"
-                        placeholder="Start date"
-                        :size="'large'"
-                      />
-                      <el-date-picker
-                        v-model="dateEnd"
-                        placeholder="End date"
-                        :size="'large'"
-                      />
+                <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+                <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
             </div>
             <div class="tablet_mobile__head">
                 <div class="establishment__info_tablet">
-                        <label v-if="!dataLoading">{{ establishment.name }}</label>
-                        <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
-                        <div>
-                            <i :class="['uil', establishment.category=='Restaurant'?'uil-restaurant':'', establishment.category=='Hotel'?'uil-bed-double':'', establishment.category=='Residence'?'uil-home':'']"></i>
-                                <span v-if="!dataLoading">{{ establishment.category }}</span>
-                                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
-                        </div>
-                        <div class="society__location" v-if="establishment.country != null">
-                                <i class="uil uil-map"></i>
-                                <span v-if="!dataLoading">{{ establishment.country }}</span>
-                                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                        </div> 
-                        <div class="society__location">
-                                <i class="uil uil-location-point"></i>
-                                <span v-if="!dataLoading">{{ establishment.address1 }}, {{ establishment.city }}</span>
-                                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                         </div>
-                         <div class="society__location">
-                                <i class="uil uil-favorite"></i>
-                                <span v-if="!dataLoading" class="society__location">{{ all_items[0].value  }}</span>
-                                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                         </div>
-                         <div class="society__location">
-                            <i class="uil uil-comment-alt"></i>
-                                <span v-if="!dataLoading">{{ all_items[1].value  }}</span>
-                                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                         </div>
-                         <div class="society__location">
-                            <i class="uil uil-building"></i>
-                            <span v-if="!dataLoading">{{ all_items[2].value  }} competitors</span>
-                             <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                         </div>
+                    <label v-if="!dataLoading">{{ establishment.name }}</label>
+                    <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
+                    <div>
+                        <i
+                            :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
+                        <span v-if="!dataLoading">{{ establishment.category }}</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
                     </div>
+                    <div class="society__location" v-if="establishment.country != null">
+                        <i class="uil uil-map"></i>
+                        <span v-if="!dataLoading">{{ establishment.country }}</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                    <div class="society__location">
+                        <i class="uil uil-location-point"></i>
+                        <span v-if="!dataLoading">{{ establishment.address1 }}, {{ establishment.city }}</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                    <div class="society__location">
+                        <i class="uil uil-favorite"></i>
+                        <span v-if="!dataLoading" class="society__location">{{ all_items[0].value }}</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                    <div class="society__location">
+                        <i class="uil uil-comment-alt"></i>
+                        <span v-if="!dataLoading">{{ all_items[1].value }}</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                    <div class="society__location">
+                        <i class="uil uil-building"></i>
+                        <span v-if="!dataLoading">{{ all_items[2].value }} competitors</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                </div>
                 <div class="photo" v-if="!dataLoading">
                     <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
-                    <div v-else role="status" class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
+                    <div v-else role="status"
+                        class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                        <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                            <path
+                                d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
                         </svg>
-                            <span class="sr-only">Loading...</span>
-                        </div>
+                        <span class="sr-only">Loading...</span>
+                    </div>
                 </div>
                 <div class="photo" v-else>
-                    <div role="status" class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
+                    <div role="status"
+                        class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                        <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                            <path
+                                d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
                         </svg>
-                            <span class="sr-only">Loading...</span>
-                        </div>
+                        <span class="sr-only">Loading...</span>
+                    </div>
                 </div>
             </div>
             <div class="right__side">
-                <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div
+                    class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                     <a href="#" v-if="!dataLoading">
                         <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
-                        <div v-else role="status" class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
-                        </svg>
+                        <div v-else role="status"
+                            class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                                <path
+                                    d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
+                            </svg>
                             <span class="sr-only">Loading...</span>
                         </div>
                     </a>
                     <a href="#" v-else>
-                        <div role="status" class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
-                        </svg>
+                        <div role="status"
+                            class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                                <path
+                                    d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
+                            </svg>
                             <span class="sr-only">Loading...</span>
                         </div>
                     </a>
                     <div class="establishment__info">
-                            <label class="society__name" v-if="!dataLoading">{{ establishment.name }}</label>
-                            <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
-                            <div class="society__location">
-                                <i :class="['uil', establishment.category=='Restaurant'?'uil-restaurant':'', establishment.category=='Hotel'?'uil-bed-double':'', establishment.category=='Residence'?'uil-home':'']"></i>
-                                <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
-                                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                            </div>
-                            <div class="society__location">
-                                    <i class="uil uil-location-point"></i>
-                                    <span v-if="!dataLoading" class="society__location">{{ establishment.address1 }}, {{ establishment.city }}</span>
-                                    <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                            </div> 
+                        <label class="society__name" v-if="!dataLoading">{{ establishment.name }}</label>
+                        <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
+                        <div class="society__location">
+                            <i
+                                :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
+                            <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
+                            <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                        </div>
+                        <div class="society__location">
+                            <i class="uil uil-location-point"></i>
+                            <span v-if="!dataLoading" class="society__location">{{ establishment.address1 }}, {{
+                                establishment.city }}</span>
+                            <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                        </div>
                     </div>
                     <div class="date__filter">
                         <div class="text-sm title">Select a range of date</div>
-                       <el-date-picker
-                        v-model="dateStart"
-                        placeholder="Start date"
-                        :size="'large'"
-                      />
-                      <el-date-picker
-                        class="mt-2"
-                        v-model="dateEnd"
-                        placeholder="End date"
-                        :size="'large'"
-                      />
+                        <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+                        <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <EstablishmentNotFound v-else/>
+    <EstablishmentNotFound v-else />
 </template>
 
 <script setup>
@@ -166,16 +165,16 @@ import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import {
-    ref, 
-    reactive, 
-    watch, 
-    onBeforeMount, 
-    computed, 
-    provide, 
-    onUpdated, 
+    ref,
+    reactive,
+    watch,
+    onBeforeMount,
+    computed,
+    provide,
+    onUpdated,
     defineAsyncComponent
 } from 'vue';
-import { ElDatePicker, ElDropdown, ElDropdownMenu, ElDropdownItem  } from 'element-plus';
+import { ElDatePicker, ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus';
 import {
     Chart as ChartJS,
     RadialLinearScale,
@@ -192,35 +191,35 @@ ChartJS.register(RadialLinearScale, ArcElement, Tooltip)
 
 
 const data_test = {
-  labels: [
-    'Eating',
-    'Drinking',
-    'Sleeping',
-    'Designing',
-    'Coding',
-    'Cycling',
-    'Running'
-  ],
-  datasets: [
-    {
-      label: 'My First dataset',
-      backgroundColor: 'rgba(179,181,198,0.2)',
-      pointBackgroundColor: 'rgba(179,181,198,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(179,181,198,1)',
-      data: [65, 59, 90, 81, 56, 55, 40]
-    },
-    {
-      label: 'My Second dataset',
-      backgroundColor: 'rgba(255,99,132,0.2)',
-      pointBackgroundColor: 'rgba(255,99,132,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(255,99,132,1)',
-      data: [28, 48, 40, 19, 96, 27, 100]
-    }
-  ]
+    labels: [
+        'Eating',
+        'Drinking',
+        'Sleeping',
+        'Designing',
+        'Coding',
+        'Cycling',
+        'Running'
+    ],
+    datasets: [
+        {
+            label: 'My First dataset',
+            backgroundColor: 'rgba(179,181,198,0.2)',
+            pointBackgroundColor: 'rgba(179,181,198,1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(179,181,198,1)',
+            data: [65, 59, 90, 81, 56, 55, 40]
+        },
+        {
+            label: 'My Second dataset',
+            backgroundColor: 'rgba(255,99,132,0.2)',
+            pointBackgroundColor: 'rgba(255,99,132,1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(255,99,132,1)',
+            data: [28, 48, 40, 19, 96, 27, 100]
+        }
+    ]
 }
 const page = ref({
     title1: "",
@@ -229,11 +228,11 @@ const page = ref({
 });
 
 let exist = ref(true);
-const EstablishmentNotFound = defineAsyncComponent(()=>
+const EstablishmentNotFound = defineAsyncComponent(() =>
     import("@Views/EstablishmentNotFound.vue")
 )
 
-const WeatherChartComponent = defineAsyncComponent(()=>
+const WeatherChartComponent = defineAsyncComponent(() =>
     import('@Components/utils/WeatherChartComponent.vue')
 )
 
@@ -242,7 +241,7 @@ const router = useRouter();
 const breadcrumbData = [
     {
         title: "Back",
-         path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+        path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
         isCurrent: false,
     },
     {
@@ -261,7 +260,7 @@ const appStore = useAppStore();
 const dataLoading = ref(true);
 const chartLoading = ref(false);
 provide('chartLoading', chartLoading);
-const { width, height } = useWindowSize(); 
+const { width, height } = useWindowSize();
 
 let establishment = ref({});
 let weather = ref([]);
@@ -285,8 +284,8 @@ const colors = ref(['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f
 const chartWidth = ref(0);
 provide('chartWidth', chartWidth);
 
-onUpdated(()=>{
-    chartWidth.value = (el.value != null && el.value != undefined)?Math.abs(el.value.offsetWidth-50):chartWidth.value;
+onUpdated(() => {
+    chartWidth.value = (el.value != null && el.value != undefined) ? Math.abs(el.value.offsetWidth - 50) : chartWidth.value;
 })
 
 const format2 = (date) => {
@@ -405,11 +404,13 @@ const weaherImpact = (startDate, endDate) => {
 
 const generateWeatherIcon = (day) => {
     const weatherClassification = {
-        'Rain, Overcast': "😄",
-        'Rain, Partially cloudy': "🌧",
+        'Rain, Overcast': "🌧",
+        'Rain, Partially cloudy': "🌦",
         'Partially cloudy': "⛅",
         'Clear': "🌞",
-        'Rain': "☔"
+        'Rain': "☔",
+        'Rain Overcast': "🌧",
+        'Overcast': "☁"
     }
 
     const weatherData = weather.value;
@@ -555,15 +556,15 @@ onBeforeMount(async () => {
 
     const response2 = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId}/rating`, (response) => {
-                resolve(response)
-                 if(response.status == 404) {
-                    exist.value = false;
-                    appStore.isLoading = false;
-                }
+            resolve(response)
+            if (response.status == 404) {
+                exist.value = false;
+                appStore.isLoading = false;
+            }
         });
     });
 
-    if(response2.status == 200){
+    if (response2.status == 200) {
         establishment.value = response2.data;
         page.value.title2 = establishment.value.name;
         all_items.value[0].value = establishment.value.rating;
@@ -571,54 +572,54 @@ onBeforeMount(async () => {
         appStore.isLoading = false;
         dataLoading.value = false;
     }
-     const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve, reject) => {
         services.get_Record(`/establishment/${companyId}/detail`, (response) => {
-                resolve(response)
-                 if(response.status == 404) {
-                    exist.value = false;
-                    appStore.isLoading = false;
-                }
+            resolve(response)
+            if (response.status == 404) {
+                exist.value = false;
+                appStore.isLoading = false;
+            }
         });
     });
 
-      if(response.status == 200){
-            establishment.value['reviews'] = response.data['reviews'];
-            establishment.value['weather'] = response.data['weather'];
-            weather.value = establishment.value.weather;
-            reviews.value = establishment.value.reviews;
-            data.value = weaherImpact(datefrom, dateto);
-            globalData.value = groupReviewByCondition();
-            chartLoading.value = false;
-     }
+    if (response.status == 200) {
+        establishment.value['reviews'] = response.data['reviews'];
+        establishment.value['weather'] = response.data['weather'];
+        weather.value = establishment.value.weather;
+        reviews.value = establishment.value.reviews;
+        data.value = weaherImpact(datefrom, dateto);
+        globalData.value = groupReviewByCondition();
+        chartLoading.value = false;
+    }
 });
 </script>
 
 <style scoped>
-*{
+* {
     transition: var(--transition);
 }
 
-img{
+img {
     height: 200px !important;
 }
 
-.include{
-      cursor: pointer;
+.include {
+    cursor: pointer;
 }
 
-.include a{
+.include a {
     color: var(--color-primary);
 }
 
-.not__include a{
+.not__include a {
     color: var(--light-color-bg2);
 }
 
-.include .star__barre{
+.include .star__barre {
     background: var(--color-warning);
 }
 
-.not__include .star__barre{
+.not__include .star__barre {
     background: var(--color-warning2);
 }
 
@@ -626,28 +627,28 @@ img{
     color: var(--color-bg2);
 }
 
-.not__include span{
+.not__include span {
     color: rgb(165, 165, 165);
 }
 
-.temp__p{
+.temp__p {
     font-size: 14px;
     color: var(--color-bg1);
     font-weight: 500;
 }
 
-.temp__p a:hover{
+.temp__p a:hover {
     background-color: var(--color-danger);
     color: white;
 }
 
-.temp__p a{
+.temp__p a {
     color: var(--color-danger);
     border-bottom: 1px solid var(--color-danger);
     cursor: pointer;
 }
 
-.app__container{
+.app__container {
     margin-top: 5rem;
     min-height: 30rem;
     width: var(--container-width-lg);
@@ -655,86 +656,89 @@ img{
     padding: 0;
     display: flex;
     flex-direction: row-reverse;
-    gap:1rem;
+    gap: 1rem;
 }
 
-.reviews__content p{
-   font-size: 14px;
-   font-weight: 500;
-   color: var(--color-bg1);
+.reviews__content p {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-bg1);
 }
 
-.reviews__content a{
+.reviews__content a {
     color: var(--color-danger);
     border-bottom: 1px solid var(--color-danger);
     cursor: pointer;
     font-size: inherit;
 }
-.reviews__content a:hover{
-   background-color: var(--color-danger);
-   color: white;
+
+.reviews__content a:hover {
+    background-color: var(--color-danger);
+    color: white;
 }
 
-.reviews__pagination{
+.reviews__pagination {
     display: flex;
     justify-content: flex-end;
 }
 
-.rating__customers{
+.rating__customers {
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
     margin: 15px auto;
 }
 
-.reviews__star{
+.reviews__star {
     margin-bottom: 15px;
     padding: 15px;
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
 }
 
-.establishment{
+.establishment {
     margin-bottom: 15px;
     padding: 15px;
     border: 1px solid var(--light-color-bg2);
 }
 
-.establishment__info{
+.establishment__info {
     display: flex;
     flex-direction: column;
     justify-content: center;
     margin-top: 5px;
 }
 
-.establishment__info i, .establishment__info_tablet i{
+.establishment__info i,
+.establishment__info_tablet i {
     color: var(--color-danger);
     margin-right: 5px;
 }
 
-.establishment__info label, .establishment__info_tablet label{
+.establishment__info label,
+.establishment__info_tablet label {
     font-size: 14px;
     font-weight: bold;
     color: var(--color-primary)
 }
 
-.establishment div{
+.establishment div {
     font-size: 13px;
     font-weight: 500;
 }
 
-.establishment__info_tablet div{
+.establishment__info_tablet div {
     display: flex;
 }
 
-.date__filter .title{
-    font-weight:600;
+.date__filter .title {
+    font-weight: 600;
 }
 
-.filter__content .title{
+.filter__content .title {
     font-weight: 500;
 }
 
-.filter__content{
+.filter__content {
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
     padding: 15px;
@@ -743,58 +747,58 @@ img{
     justify-content: center;
 }
 
-.rating__customers .title{
-   font-size: 15px;
-   font-weight:600;
-   margin-left: 15px;
-   margin-top:15px;
+.rating__customers .title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-left: 15px;
+    margin-top: 15px;
 }
 
-.reviews__content1 .review span{
-   font-size: 12px;
-   margin: auto;
+.reviews__content1 .review span {
+    font-size: 12px;
+    margin: auto;
 }
 
-.community__feedback .title{
+.community__feedback .title {
     font-size: 15px;
     font-weight: 600;
 }
 
-.community__feedback h2{
+.community__feedback h2 {
     font-size: 14px;
     font-weight: 500;
 }
 
-.legend{
- margin: 15px auto;
+.legend {
+    margin: 15px auto;
 }
 
-.comment{
+.comment {
     overflow: hidden;
     text-align: justify;
 }
 
-.app__title{
+.app__title {
     font-weight: 800;
     color: var(--color-danger);
 }
 
-.app__title h1{
+.app__title h1 {
     font-size: 20px;
     transition: var(--transition);
 }
 
-.app__title h2{
+.app__title h2 {
     font-size: 18px;
     transition: var(--transition);
 }
 
-.left__side{
+.left__side {
     width: 1100px;
     padding: 50px 5px;
 }
 
-.left__side .head{
+.left__side .head {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -802,7 +806,7 @@ img{
     flex-wrap: wrap;
 }
 
-#website__dropdown{
+#website__dropdown {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -810,140 +814,147 @@ img{
     transition: var(--transition);
 }
 
-#dropdownDivider{
+#dropdownDivider {
     position: absolute;
 }
 
-#dropdownDivider li{
+#dropdownDivider li {
     cursor: pointer;
     padding: 5px 10px;
     margin: auto;
     transform: var(--transition);
 }
 
-#dropdownDivider li:hover{
-   background-color: var(--color-danger);
-   color: var(--color-white);
+#dropdownDivider li:hover {
+    background-color: var(--color-danger);
+    color: var(--color-white);
 }
 
-.dashboard__content{
+.dashboard__content {
     display: flex;
     flex-wrap: wrap;
-    gap:1rem;
+    gap: 1rem;
     margin: 50px auto;
 }
 
-.counter{
+.counter {
     flex-grow: 1;
 }
 
-.reviews__content{
+.reviews__content {
     margin-top: 20px;
 }
 
-.rating{
+.rating {
     font-size: 18px;
     font-weight: 600;
     color: var(--color-warning);
 }
 
-.right__side{
+.right__side {
     width: 500px;
     padding: 50px 0px;
 }
 
-.rating__statistics{
-    display:none;
-    margin-bottom:15px;
+.rating__statistics {
+    display: none;
+    margin-bottom: 15px;
     transition: var(--transition);
 }
 
-.filter__container{
+.filter__container {
     display: none;
     transition: var(--transition);
 }
 
-.see__more{
+.see__more {
     cursor: pointer;
 }
 
-.society__name{
+.society__name {
     margin: 5px 0;
     display: flex;
 }
 
-.tablet_mobile__head, .tablet_mobile__filter{
+.tablet_mobile__head,
+.tablet_mobile__filter {
     display: none;
 }
 
-.society__location{
+.society__location {
     display: flex;
 }
-.society__location span{
+
+.society__location span {
     display: block;
     flex-basis: 225px;
     line-height: 1.2;
 }
 
 @media screen and (max-width:1400px) {
-  .app__container{
-    width: var(--container-width-md);
-  }
+    .app__container {
+        width: var(--container-width-md);
+    }
 
-  .breadcrumb__container{
+    .breadcrumb__container {
         width: var(--container-width-md);
     }
 }
 
 @media screen and (max-width:1287px) {
-  .counter{
-    gap: 2rem !important;
-  }
-  .left__side{
-    width: 1000px !important;
-  }
-  
-  .right__side{
-    width: 300px !important;
-  }
+    .counter {
+        gap: 2rem !important;
+    }
+
+    .left__side {
+        width: 1000px !important;
+    }
+
+    .right__side {
+        width: 300px !important;
+    }
 }
 
 
 @media screen and (max-width:1024px) {
-   
-    .right__side{
-     width: 250px !important;
-    } 
+
+    .right__side {
+        width: 250px !important;
+    }
 }
 
 @media screen and (max-width: 975px) {
-   .app__container{
-    flex-direction: column-reverse;
-    width: 95% !important;
-    justify-content: center;
-    align-items: center;
-   }
-   .left__side{
-    width: inherit !important;
-   }
+    .app__container {
+        flex-direction: column-reverse;
+        width: 95% !important;
+        justify-content: center;
+        align-items: center;
+    }
 
-   .photo{
-    flex-basis: 250px;
-   }
+    .left__side {
+        width: inherit !important;
+    }
 
-   .photo div{
-    height: 100%;
-   }
+    .photo {
+        flex-basis: 250px;
+    }
 
-   .photo img{
-    height: 150px;
-    width: 100%;
-   }
-   .dashboard__content, .dashboard, .right__side{
-    display: none !important;
-   }
+    .photo div {
+        height: 100%;
+    }
 
-   .tablet_mobile__head{
+    .photo img {
+        height: 150px;
+        width: 100%;
+    }
+
+    .dashboard__content,
+    .dashboard,
+    .right__side {
+        display: none !important;
+    }
+
+    .tablet_mobile__head {
         display: flex;
         justify-content: space-between;
         margin: auto;
@@ -956,16 +967,16 @@ img{
         font-size: 14px;
     }
 
-    .tablet_mobile__head label{
+    .tablet_mobile__head label {
         font-size: 17px !important;
     }
 
-    .tablet_mobile__head span{
+    .tablet_mobile__head span {
         font-weight: 500;
         color: var(--color-bg2);
     }
 
-    .tablet_mobile__filter{
+    .tablet_mobile__filter {
         display: flex;
         width: inherit;
         align-items: center;
@@ -975,53 +986,53 @@ img{
         border-radius: 5px;
     }
 
-    .tablet_mobile__filter *{
+    .tablet_mobile__filter * {
         flex-basis: 200px;
     }
 }
 
 @media screen and (max-width:800px) {
-    .tablet_mobile__head{
+    .tablet_mobile__head {
         font-size: 13px !important;
     }
 
-    .tablet_mobile__head label{
+    .tablet_mobile__head label {
         font-size: 15px !important;
     }
 
-    .tablet_mobile__filter{
-       gap: 0.25rem;
+    .tablet_mobile__filter {
+        gap: 0.25rem;
     }
 }
 
 @media screen and (max-width:800px) {
-    .photo{
-       flex-basis: 225px !important;
+    .photo {
+        flex-basis: 225px !important;
     }
 }
 
 @media screen and (max-width:675px) {
-    .tablet_mobile__head{
+    .tablet_mobile__head {
         font-size: 12px !important;
         padding: 10px;
     }
 
-    .photo{
-       flex-basis: 210px !important;
+    .photo {
+        flex-basis: 210px !important;
     }
 
-    .tablet_mobile__head label{
+    .tablet_mobile__head label {
         font-size: 14px !important;
     }
 }
 
 @media screen and (max-width:625px) {
-    .tablet_mobile__filter{
-       flex-direction: column;
-       padding: 5px 0px !important;
+    .tablet_mobile__filter {
+        flex-direction: column;
+        padding: 5px 0px !important;
     }
 
-    .tablet_mobile__filter *{
+    .tablet_mobile__filter * {
         flex-basis: inherit !important;
         width: inherit !important;
         justify-content: center !important;
@@ -1029,20 +1040,21 @@ img{
 }
 
 @media screen and (max-width:500px) {
-    .tablet_mobile__head{
+    .tablet_mobile__head {
         flex-direction: column-reverse;
         gap: 1rem;
     }
 
-    .photo{
-       flex-basis: 150px !important;
-       height: 100px !important;
+    .photo {
+        flex-basis: 150px !important;
+        height: 100px !important;
     }
 }
-.establishment__info_tablet{
+
+.establishment__info_tablet {
     margin-top: 50px;
 }
-.head{
+
+.head {
     margin-top: 50px;
-}
-</style>
+}</style>
