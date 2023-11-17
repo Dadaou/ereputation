@@ -41,7 +41,7 @@
                                     {{ staff.nb_eval }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{ Math.round(staff.note_moyenne) }}
+                                    {{ staff.note_moyenne }}
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center">
