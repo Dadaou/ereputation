@@ -45,19 +45,20 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center">
-                                        <div v-for="index in 5" :key="index" class="rounded-full w-6 h-6 mx-1" :class="{
-                                        'bg-red-600': staff.notes && Math.round(staff.notes[staff.notes.length - index]) == 0,
-                                        'bg-red-500': staff.notes && Math.round(staff.notes[staff.notes.length - index]) == 1,
-                                        'bg-orange-400': staff.notes && Math.round(staff.notes[staff.notes.length - index]) == 2,
-                                        'bg-yellow-200': staff.notes && Math.round(staff.notes[staff.notes.length - index]) == 3,
-                                        'bg-green-400': staff.notes && Math.round(staff.notes[staff.notes.length - index]) == 4,
-                                        'bg-green-600': staff.notes && Math.round(staff.notes[staff.notes.length - index]) == 5
-                                        }">
-                                        <span class="text-white flex items-center justify-center h-full">
-                                            {{ staff.notes && Math.round(staff.notes[staff.notes.length - index]) }}
-                                        </span>
-                                        </div>
-                                    </div>
+    <div v-for="(note, index) in staff.last_notes" :key="index" class="rounded-full w-6 h-6 mx-1" :class="{
+        'bg-red-600': Math.round(note.rating) == 0,
+        'bg-red-500': Math.round(note.rating) == 1,
+        'bg-orange-400': Math.round(note.rating) == 2,
+        'bg-yellow-200': Math.round(note.rating) == 3,
+        'bg-green-400': Math.round(note.rating) == 4,
+        'bg-green-600': Math.round(note.rating) == 5
+    }">
+        <span class="text-white flex items-center justify-center h-full">
+            {{ Math.round(note.rating) }}
+        </span>
+    </div>
+</div>
+
                                 </td>
                             </tr>
                          </tbody>
@@ -436,6 +437,8 @@ onBeforeMount(async () => {
 
      if(response.status == 200){
             staffs.value = response.data;
+            console.log(staffs.value)
+            
      }
     
 })
