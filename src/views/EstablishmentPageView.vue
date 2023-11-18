@@ -530,10 +530,12 @@ watch(date, ()=>{
 
 const viewData = (timePeriod, startDate, endDate, data) => {
     plotdata.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, data);
+    console.log(plotdata.value)
 }
 
 const viewDataAsync = async(timePeriod, startDate, endDate, data) => {
     plotdata.value = await companiesStore.calculateReviewsV3Async(timePeriod, startDate, endDate, data);
+    console.log(plotdata.value)
 }
 
 let updatePage = function(pageNumber){

@@ -6,6 +6,7 @@ export const useCompanyStore = defineStore("company", {
   state: () => ({
     establishments: [],
     establishment: null,
+    company: {reviews:[]},
     _establishments: [],
     entity: "establishments",
     reviews: [],
