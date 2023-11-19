@@ -13,7 +13,17 @@
                 </div>
                 <div class="reviews__content">
                     <div class="reviews__pagination">
-                        <CommentPagination  v-if="_reviews.length > 0" :config="paginationConfig" @updatePage="updatePage" :color="'#6c63ff'" :nb="_reviews.length" :data="visibleData"></CommentPagination>
+                       <!--  <CommentPagination  v-if="_reviews.length > 0" :config="paginationConfig" @updatePage="updatePage" :color="'#6c63ff'" :nb="_reviews.length" :data="visibleData"></CommentPagination> -->
+                        <PaginationComponent 
+                            :options="options"
+                            v-if="visibleData.length > 0"
+                            @next="(option)=>{
+                                 loadReviews(companyId, option.page, option.limit, option.current)
+                            }"
+                            @prev="(option)=>{
+                                 loadReviews(companyId, option.page, option.limit, option.current)
+                            }"
+                        />
                     </div>
                     <CommentComponent 
                     v-if="reviews_loader == false" 
@@ -212,7 +222,8 @@ import { useRoute, useRouter } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import CommentComponent from '@Components/utils/CommentComponent.vue';
-import CommentPagination from '@Components/utils/CommentPagination.vue';
+// import CommentPagination from '@Components/utils/CommentPagination.vue';
+import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
@@ -245,6 +256,7 @@ const breadcrumbData = [
         isCurrent: true
     }
 ]
+const companyId = route.params.id;
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
@@ -303,6 +315,13 @@ let reviewFeedbackData = ref({
     feeling: 0
 });
 
+const options = ref({
+    rowLimit: 20,
+    max: 100,
+    current: 1,
+    page: 1,
+})
+
 
 const format2 = (date) => {
   const day = date.getDate();
@@ -335,7 +354,7 @@ watch([dateStart, dateEnd, selectedWebsites, checkedFeeling], ()=>{
         filteredReviews = filteredReviews.filter(review => selectedFeelings.includes(review.feeling));
     }
 
-    updateVisibleData(filteredReviews);
+    // updateVisibleData(filteredReviews);
 })
 
 let selectedStars = ref('0');
@@ -360,7 +379,7 @@ const reloadStarData = ()=>{
         let result = filterReviewsByStar(rating, filteredReviews);
         filteredReviews = result;
     }
-    updateVisibleData(filteredReviews);
+    // updateVisibleData(filteredReviews);
 }
 
 const reloadData = (reviewUpdated)=>{
@@ -371,16 +390,34 @@ const reloadData = (reviewUpdated)=>{
     })
 }
 
+const loadReviews = async (tag, page, limit, current)=>{
+    options.value.current=current;
+    options.value.page=page;
+    reviews_loader.value = true;
+    const response = await new Promise((resolve, reject) => {
+        services.get_Record(`/review/by_establishment?tag=${tag}&page=${page}&limit=${limit}`, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+       reviews_loader.value = false;
+       options.value.max =  response.data['count'];
+       visibleData.value = response.data['data'];
+    }
+}
+
 watch(selectedStars, ()=>{
     let filteredReviews = reviews.value;
     let result = filterReviewsByStar(selectedStars.value, filteredReviews);
-    updateVisibleData(result);
+    // updateVisibleData(result);
 });
 
 onBeforeMount(async () => {
-    const companyId = route.params.id;
     let company = null;
     appStore.isLoading = true;
+
+    loadReviews(companyId, 1, 20, 1);
 
     const response2 = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId}/rating`, (response) => {
@@ -414,19 +451,19 @@ onBeforeMount(async () => {
             _reviews.value = reviews.value;
             websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
             reloadStarData();
-            reviews.value.sort(function (a, b) {
-              if (a.date_review === null && b.date_review === null) {
-                return 0; // No difference if both dates are null
-              } else if (a.date_review === null) {
-                return 1; // Treat null as 'greater' to move it towards the end
-              } else if (b.date_review === null) {
-                return -1; // Treat null as 'smaller' to move it towards the beginning
-              } else {
-                return moment(b.date_review).diff(moment(a.date_review));
-              }
-            });
+            // reviews.value.sort(function (a, b) {
+            //   if (a.date_review === null && b.date_review === null) {
+            //     return 0; // No difference if both dates are null
+            //   } else if (a.date_review === null) {
+            //     return 1; // Treat null as 'greater' to move it towards the end
+            //   } else if (b.date_review === null) {
+            //     return -1; // Treat null as 'smaller' to move it towards the beginning
+            //   } else {
+            //     return moment(b.date_review).diff(moment(a.date_review));
+            //   }
+            // });
 
-            updateVisibleData(reviews.value);
+            // updateVisibleData(reviews.value);
             reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
      }
 });

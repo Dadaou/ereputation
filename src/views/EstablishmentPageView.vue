@@ -20,7 +20,7 @@
                         <h2>Comparison</h2>
                     </div>
                 </div>
-                <div v-if="reviews_loader == true" :style="{
+                <div v-if="chart_loader == true" :style="{
                     'width': `100%`,
                     'height': `200px`,
                     'display': 'flex',
@@ -38,7 +38,7 @@
                 <ComparisonChartComponent v-else :data="plotdata" :width="chart__width" :chartheight="chart__height"
                     :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors"
                     :timePeriod="selectedTimePeriod" />
-                <BaseLegend v-if="reviews_loader == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
+                <BaseLegend v-if="chart_loader == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
                 </BaseLegend>
                 <div class="head">
                     <div class="app__title">
@@ -50,14 +50,23 @@
                             @click="gotoReviewPage(establishment.competitor_tag, $route.params.tag)">here</a> to access all
                         reviews.</p>
                     <div class="reviews__pagination">
-                        <CommentPagination v-if="lastReviews.length > 0" :config="paginationConfig" @updatePage="updatePage"
-                            :color="'#6c63ff'" :nb="lastReviews.length" :data="visibleData"></CommentPagination>
+                       <!--  <CommentPagination v-if="lastReviews.length > 0" :config="paginationConfig" @updatePage="updatePage"
+                            :color="'#6c63ff'" :nb="lastReviews.length" :data="visibleData"></CommentPagination> -->
+                        <PaginationComponent 
+                            :options="options"
+                            @next="(option)=>{
+                                 loadReviews(companyId, option.page, option.limit, option.current)
+                            }"
+                            @prev="(option)=>{
+                                 loadReviews(companyId, option.page, option.limit, option.current)
+                            }"
+                        />
                     </div>
                     <CommentComponent v-if="reviews_loader == false" :reviews="visibleData"
                         :allReviews="establishment.reviews" :showEmoji="false" />
                     <div v-else role="status"
                         class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
-                        v-for="index in 5">
+                        v-for="index in 20">
                         <div>
                             <div class="flex items-center justify-between mb-4">
                                 <div>
@@ -329,7 +338,8 @@ import { useCompanyStore } from "@Stores/company.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import CommentComponent from '@Components/utils/CommentComponent.vue';
 import DashboardComponent from '@Components/utils/DashboardComponent.vue';
-import CommentPagination from '@Components/utils/CommentPagination.vue';
+// import CommentPagination from '@Components/utils/CommentPagination.vue';
+import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import ComparisonChartComponent from '@Components/utils/ComparisonChartComponent.vue';
@@ -355,6 +365,13 @@ const page = ref({
     icon: "uil-estate",
 });
 
+const options = ref({
+    rowLimit: 20,
+    max: 100,
+    current: 1,
+    page: 1,
+})
+
 let exist = ref(true);
 const EstablishmentNotFound = defineAsyncComponent(() =>
     import("@Views/EstablishmentNotFound.vue")
@@ -367,6 +384,7 @@ const SpinnerComponent = defineAsyncComponent(() =>
 const weatherModal = ref(false);
 provide('showModal', weatherModal);
 const route = useRoute();
+const companyId = route.params.id;
 const router = useRouter();
 const breadcrumbData = [
     {
@@ -393,6 +411,7 @@ let _reviews = computed(() => {
     return reviews.value;
 })
 let reviews_loader = ref(true);
+let chart_loader = ref(true);
 let competitors = ref([]);
 let computedCompetitors = computed(() => {
     let data = [{ name: 'Global' }];
@@ -542,7 +561,7 @@ const viewDataAsync = async (timePeriod, startDate, endDate, data) => {
 
 let updatePage = function (pageNumber) {
     paginationConfig.value.current = pageNumber;
-    updateVisibleData(lastReviews.value);
+    // updateVisibleData(lastReviews.value);
 }
 
 let updateVisibleData = function (_data) {
@@ -582,8 +601,8 @@ const globalComparison = async () => {
     legendData.value = await companiesStore.generateLegendAsync(comparisonData.value, colors);
     _legendData = legendData;
 
-    lastReviews.value = await companiesStore.getLastReviewsAsync(establishment.value.reviews, 100);
-    await updateVisibleData(lastReviews.value);
+    // lastReviews.value = await companiesStore.getLastReviewsAsync(establishment.value.reviews, 100);
+    // await updateVisibleData(lastReviews.value);
 
     reviewFeedbackData.value = await companiesStore.getfeedbackDataAsync(establishment.value.reviews);
 
@@ -625,9 +644,9 @@ const reloadComparisonByWebsite = async (website) => {
     if (establishmentData) {
         all_items.value[1].value = establishmentData.reviews.length;
         all_items.value[0].value = companiesStore.calculateRatingV2(establishmentData.reviews);
-        lastReviews.value = companiesStore.getLastReviews(establishmentData.reviews, 100);
+        // lastReviews.value = companiesStore.getLastReviews(establishmentData.reviews, 100);
         reviews.value = establishmentData.reviews;
-        updateVisibleData(lastReviews.value);
+        // updateVisibleData(lastReviews.value);
         reviewFeedbackData.value = companiesStore.getfeedbackData(establishmentData.reviews);
     }
 
@@ -754,6 +773,8 @@ const filterReviewsByStar = (star, data) => {
     })
     return result;
 }
+
+
 const reloadStarData = () => {
     let scores = [1, 2, 3, 4, 5];
     let filteredReviews = _reviews.value;
@@ -762,7 +783,7 @@ const reloadStarData = () => {
         let result = filterReviewsByStar(rating, filteredReviews);
         filteredReviews = result;
     }
-    updateVisibleData(filteredReviews);
+    // updateVisibleData(filteredReviews);
 }
 
 watch(selectedStars, () => {
@@ -770,6 +791,23 @@ watch(selectedStars, () => {
     let result = filterReviewsByStar(selectedStars.value, filteredReviews);
     updateVisibleData(result);
 });
+
+
+const loadReviews = async (tag, page, limit, current)=>{
+    options.value.current=current;
+    options.value.page=page;
+    reviews_loader.value = true;
+    const response = await new Promise((resolve, reject) => {
+        services.get_Record(`/review/by_establishment?tag=${tag}&page=${page}&limit=${limit}`, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+       reviews_loader.value = false;
+       visibleData.value = response.data['data'];
+    }
+}
 
 onBeforeMount(async () => {
     ChartJS.register(
@@ -780,10 +818,12 @@ onBeforeMount(async () => {
         Title,
         Tooltip,
     )
-    const companyId = route.params.id;
+  
     let company = null;
     appStore.isLoading = true;
-    reviews_loader.value = true;
+    chart_loader.value = true;
+
+    loadReviews(companyId, 1, 20, 1);
 
     const response2 = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId}/rating`, (response) => {
@@ -836,7 +876,7 @@ onBeforeMount(async () => {
 
         Promise.all(promises).then(() => {
             competitors.value = data;
-            reviews_loader.value = false;
+            chart_loader.value = false;
             globalComparison();
         });
     }

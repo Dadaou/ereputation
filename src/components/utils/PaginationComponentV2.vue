@@ -1,64 +1,42 @@
 <template>
 <div class="comment__pagination">
-    <i class="uil uil-angle-left" :class="[disabledPrev==false?'':'disabled']" @click="showPreviousLink() ? updatePage(config.current - 1) : null" :style="{}"></i> 
-    <span>{{  (config.size * (config.current + 1)) - config.size + 1}}</span> to 
-    <span v-if="(config.size * (config.current + 1)) < nb">{{ config.size * (config.current + 1) }}</span>
-    <span v-else>{{ nb }}</span>
+    <i class="uil uil-angle-left" @click="prev((serverOptions.current - serverOptions.rowLimit))"></i> 
+    <span>{{serverOptions.current}}</span> to 
+    <span v-if="(serverOptions.current + serverOptions.rowLimit - 1)<serverOptions.max">{{serverOptions.current + serverOptions.rowLimit - 1}}</span>
+    <span v-else>{{serverOptions.max}}</span>
      of 
-    <span>{{ nb }}</span>
-    <i class="uil uil-angle-right" :class="[disabled==false?'disabled':'']" @click="updatePage(config.current+ 1)"></i>
+    <span>{{serverOptions.max}}</span>
+    <i class="uil uil-angle-right" @click="next((serverOptions.current + serverOptions.rowLimit))"></i>
 </div>
 </template>
-<script>
-import { computed, ref } from 'vue';
-import { useColorStore } from '@Stores/color.js';
-    export default{
-        name:"Pagination",
-        props:{
-            config:Object,
-            color: String,
-            nb: Number,
-            data: Array,
-        },
-        emits:['updatePage'],
-        setup(props, ctx){
-            const colorStore = useColorStore();
-            let disabledNext = computed(() => (props.config.size * (props.config.current + 1) < props.nb));
-            let disabled = ref(disabledNext.value); 
-            let disabledPrev = computed(() => props.config.current == 0);
+<script setup>
+import {ref, computed} from 'vue';
 
-            let updatePage = function(pageNumber){
-                ctx.emit('updatePage', pageNumber)
-                disabled.value = props.config.size * (props.config.current + 1) < props.nb; 
-            }
+const props = defineProps({
+	options: {
+		type: Object,
+		required: false,
+		default:{
+			rowLimit: 20,
+    	    max: 100,
+    	    current: 1,
+    	    page:1	
+		}
+	}
+});
 
-            let totalPages = function(){
-                 return Math.ceil(props.config._data.length / props.config.size);
-            }
+const serverOptions = computed(()=> props.options);
 
-            let showPreviousLink = function(){
-                 return props.config.current == 0 ? false : true;
-            }
+const emits = defineEmits(['next', 'prev'])
 
-            let showNextLink = function(){
-                 return  props.config.current == (totalPages()-1) ? false : true;
-            }
-
-            /** this function is not really necessary but it just to make the pagination working */
-            let textColor = computed(()=>{
-                let color = "black";
-            
-                if(colorStore.useCheckColor(props.color) == "light") color = "black";
-                else color= "rgb(238, 246, 254)";
-                return color = 'white';
-            })
-
-            return{
-                updatePage, totalPages, showPreviousLink,
-                showNextLink, textColor, disabledNext, disabledPrev, disabled
-            }
-        }
+const next = (current)=>{
+	if(current<serverOptions.value.max) emits('next', {current: current, page: serverOptions.value.page+1, limit: serverOptions.value.rowLimit});
 };
+
+const prev = (current)=>{
+	if(current>0) emits('prev',  {current: current, page: serverOptions.value.page-1, limit: serverOptions.value.rowLimit});
+};
+
 </script>
 <style scoped>
 
