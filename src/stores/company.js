@@ -951,6 +951,7 @@ export const useCompanyStore = defineStore('company', {
       })
     },
     getNumberOfRating(reviews) {
+      console.log(reviews)
       let value = {
         rate1: 0,
         rate2: 0,

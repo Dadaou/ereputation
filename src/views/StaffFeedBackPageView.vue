@@ -157,7 +157,7 @@ const submit = async ()=>{
         "translated": null,
         "source": "App (Private)",
         "catering": null,
-        "establishment": `/api/${companyStore.entity}/${staff.value.establishment_id}`,
+        "establishment": null,
         "feeling": ratingCustomer.value.feeling,
         "score": 0,
         "confidence": 0,
