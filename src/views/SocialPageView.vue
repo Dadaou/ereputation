@@ -14,7 +14,7 @@
                 <div class="reviews__content" >
                     <social-statistics></social-statistics>
                 </div>
-                <div class="head">
+               <!--  <div class="head">
                     <div class="app__title" style="margin-top: 50px;">
                         <h2>Daily Histogram</h2>
                     </div>
@@ -22,7 +22,7 @@
 
                 <div class="reviews__content" ref="socialHistogramContainer">
                     <social-histogram :width="lineChartWidth"></social-histogram>
-                </div>
+                </div> -->
 
                 <div class="head">
                     <div class="app__title" style="margin-top: 50px;">
@@ -460,11 +460,11 @@ onMounted(async () => {
         Legend
     )
 
-    if (socialHistogramContainer.value.clientWidth > 400) {
-        lineChartWidth.value = socialHistogramContainer.value.clientWidth;
-    } else {
-        lineChartWidth.value = 400;
-    }
+    // if (socialHistogramContainer.value.clientWidth > 400) {
+    //     lineChartWidth.value = socialHistogramContainer.value.clientWidth;
+    // } else {
+    //     lineChartWidth.value = 400;
+    // }
 
 });
 

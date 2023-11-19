@@ -202,10 +202,10 @@ const submit = async ()=>{
                     await services.createRecord('contacts', contactData, (contactResponse) => {
                         console.log(contactResponse);
                         if (contactResponse.status == 201) {
-                            ElMessage({
-                                message: `Thanks for your feedback!`,
-                                type: 'success',
-                            });
+                            // ElMessage({
+                            //     message: `Thanks for your feedback!`,
+                            //     type: 'success',
+                            // });
                             firstname.value = '';
                             lastname.value = '';
                             gender.value = '';
