@@ -337,6 +337,7 @@ import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackCompo
 import { ref, reactive, watch, onBeforeMount, computed, provide, defineAsyncComponent } from 'vue';
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css'
+import { useChartsStore } from "@Stores/charts.js"
 
 import {
     Chart as ChartJS,
@@ -375,6 +376,11 @@ const breadcrumbData = [
         isCurrent: true,
     },
 ]
+
+const chartsStore = useChartsStore();
+
+// chartsStore.checkData([], 'days', '2023-11-01', '2023-11-30');
+
 const date = ref(moment(new Date(), 'YYYY-MM-DD'));
 
 let selected_date = reactive(moment());
@@ -386,6 +392,7 @@ let showWebsites = ref(false);
 let selectedCompetitors = ref('Global');
 let selectedWebsites = ref('Global');
 let websites = ref(['Global']);
+const companyId = ref('')
 
 let establishment = ref({ reviews: [] });
 let reviews = ref([]);
@@ -520,18 +527,31 @@ const loadDatasetsAsync = async (establishments, colors, date) => {
     return data;
 }
 
-watch(date, () => {
-    if (date.value == null) {
-        plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);
-        loadDatasets(_comparisonData, colors, selected_date);
-    } else {
-        plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, moment(date.value, 'DD/MM/YYYY'), true);
-        loadDatasets(_comparisonData, colors, moment(date.value, 'DD/MM/YYYY'));
-    }
-});
+// watch(date, () => {
+//     if (date.value == null) {
+//         console.log("cas date 1")
+//         plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, selected_date, true);
+//         loadDatasets(_comparisonData, colors, selected_date);
+//     } else {
+//         console.log("cas date 2")
+//         plotdata.value = companiesStore.calculateReviewsV2(comparisonData.value, 6, moment(date.value, 'DD/MM/YYYY'), true);
+//         loadDatasets(_comparisonData, colors, moment(date.value, 'DD/MM/YYYY'));
+//     }
+// });
 
-const viewData = (timePeriod, startDate, endDate, data) => {
-    plotdata.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, data);
+const viewData = async () => {
+    // console.log("View Data")
+    // // plotdata.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, data);
+    // plotdata.value = await chartsStore.checkData(tags, timePeriod, moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'))
+    // console.log(plotdata.value)
+    startDate = moment(start_date.value).format('YYYY-M-DD');
+    endDate = moment(end_date.value).format('YYYY-M-DD');
+
+    if (establishment && establishment.value['competitors']) {
+        let competitorInfo = establishment.value['competitors'].find(c => c.establishment_name === selectedCompetitors.value)
+        const tags = competitorInfo ? [companyId.value, competitorInfo.establishment_competitor_tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.establishment_competitor_tag)]
+        plotdata.value = await chartsStore.checkData(tags, selectedTimePeriod.value, startDate, endDate, selectedWebsites.value.toLowerCase())
+    }
 }
 
 const viewDataAsync = async (timePeriod, startDate, endDate, data) => {
@@ -560,87 +580,98 @@ const globalComparison = async () => {
 
     plotdata.value = [];
 
-    comparisonData.value = [establishment.value, ...competitors.value];
-    _comparisonData = [establishment.value, ...competitors.value];
-    reviews.value = establishment.value.reviews;
+    // comparisonData.value = [establishment.value, ...competitors.value];
+    // _comparisonData = [establishment.value, ...competitors.value];
+    // reviews.value = establishment.value.reviews;
 
-    let startDate = new Date();
-    startDate.setDate(startDate.getDate() - 14);
-    let endDate = new Date();
+    // let startDate = new Date();
+    // startDate.setDate(startDate.getDate() - 14);
+    // let endDate = new Date();
 
-    if (date2.value.length > 0) {
-        startDate = new Date(date2.value[0]);
-        endDate = new Date(date2.value[1]);
-    }
+    // if (date2.value.length > 0) {
+    //     startDate = new Date(date2.value[0]);
+    //     endDate = new Date(date2.value[1]);
+    // }
 
-    all_items.value[2].value = competitors.value.length;
-    all_items.value[1].value = establishment.value.totalReviews;
-    all_items.value[0].value = establishment.value.rating;
+    // all_items.value[2].value = competitors.value.length;
+    // all_items.value[1].value = establishment.value.totalReviews;
+    // all_items.value[0].value = establishment.value.rating;
 
-    legendData.value = await companiesStore.generateLegendAsync(comparisonData.value, colors);
-    _legendData = legendData;
+    // legendData.value = await companiesStore.generateLegendAsync(comparisonData.value, colors);
+    // _legendData = legendData;
 
-    lastReviews.value = await companiesStore.getLastReviewsAsync(establishment.value.reviews, 100);
-    await updateVisibleData(lastReviews.value);
+    // lastReviews.value = await companiesStore.getLastReviewsAsync(establishment.value.reviews, 100);
+    // await updateVisibleData(lastReviews.value);
 
-    reviewFeedbackData.value = await companiesStore.getfeedbackDataAsync(establishment.value.reviews);
+    // reviewFeedbackData.value = await companiesStore.getfeedbackDataAsync(establishment.value.reviews);
 
-    await loadDatasetsAsync(_comparisonData, colors, selected_date);
-    viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+    // await loadDatasetsAsync(_comparisonData, colors, selected_date);
+    // // viewData([companyId.value, ...establishment.value['competitors'].map(c => c.establishment_competitor_tag)], selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+
+    viewData();
 
     appStore.isLoading = false;
 };
 
 const reloadComparison = async (competitor) => {
-    selectedCompetitors.value = competitor.name;
+    let competitorInfo = establishment.value['competitors'].find(c => c.establishment_name === competitor.name)
+    selectedCompetitors.value = competitorInfo.establishment_name;
     plotdata.value = [];
-    comparisonData.value = [establishment.value, competitor];
-    _comparisonData = [establishment.value, competitor];
+    // comparisonData.value = [establishment.value, competitor];
+    // _comparisonData = [establishment.value, competitor];
+    // console.log(competitor['competitors'])
 
-    let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-    let endDate = moment().format('YYYY-M-DD');
-    if (date2.value.length > 0) {
-        startDate = moment(date2.value[0]).format('YYYY-M-DD');
-        endDate = moment(date2.value[1]).format('YYYY-M-DD');
-    }
-    viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
-    legendData.value = companiesStore.generateLegend(_comparisonData, colors);
+    // let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+    // let endDate = moment().format('YYYY-M-DD');
+    // if (date2.value.length > 0) {
+    //     startDate = moment(date2.value[0]).format('YYYY-M-DD');
+    //     endDate = moment(date2.value[1]).format('YYYY-M-DD');
+    // }
+    viewData();
+    // legendData.value = companiesStore.generateLegend(_comparisonData, colors);
 }
 
 const reloadComparisonByWebsite = async (website) => {
     selectedWebsites.value = website;
-    showWebsites.value = !showWebsites.value;
-    comparisonData.value = _comparisonData;
+    viewData();
+    // showWebsites.value = !showWebsites.value;
 
-    const data = await new Promise((resolve) => {
-        companiesStore.getReviewsByWebsite(comparisonData.value, selectedWebsites.value, (fetchedData) => {
-            resolve(fetchedData);
-        });
-    });
+    // let competitorInfo = establishment.value['competitors'].find(c => c.establishment_name === competitor.name)
+    // selectedCompetitors.value = competitorInfo.establishment_name;
+    // plotdata.value = [];
+    // viewData([companyId.value, competitorInfo.establishment_competitor_tag], selectedTimePeriod.value, moment(start_date.value).format('YYYY-M-DD'), moment(end_date.value).format('YYYY-M-DD'), comparisonData.value);
+    // comparisonData.value = _comparisonData;
 
-    const establishmentData = data.find(company => company.id === establishment.value.id);
+    // const data = await new Promise((resolve) => {
+    //     companiesStore.getReviewsByWebsite(comparisonData.value, selectedWebsites.value, (fetchedData) => {
+    //         resolve(fetchedData);
+    //     });
+    // });
 
-    if (establishmentData) {
-        all_items.value[1].value = establishmentData.reviews.length;
-        all_items.value[0].value = companiesStore.calculateRatingV2(establishmentData.reviews);
-        lastReviews.value = companiesStore.getLastReviews(establishmentData.reviews, 100);
-        reviews.value = establishmentData.reviews;
-        updateVisibleData(lastReviews.value);
-        reviewFeedbackData.value = companiesStore.getfeedbackData(establishmentData.reviews);
-    }
+    // const establishmentData = data.find(company => company.id === establishment.value.id);
 
-    let startDate = new Date();
-    startDate.setDate(startDate.getDate() - 14);
-    let endDate = new Date();
-    if (date2.value.length > 0) {
-        startDate = new Date(date2.value[0]);
-        endDate = new Date(date2.value[1]);
-    }
+    // if (establishmentData) {
+    //     all_items.value[1].value = establishmentData.reviews.length;
+    //     all_items.value[0].value = companiesStore.calculateRatingV2(establishmentData.reviews);
+    //     lastReviews.value = companiesStore.getLastReviews(establishmentData.reviews, 100);
+    //     reviews.value = establishmentData.reviews;
+    //     updateVisibleData(lastReviews.value);
+    //     reviewFeedbackData.value = companiesStore.getfeedbackData(establishmentData.reviews);
+    // }
 
-    await Promise.all([
-        viewData(selectedTimePeriod.value, startDate, endDate, data),
-        loadDatasets(data, colors, selected_date)
-    ]);
+    // let startDate = new Date();
+    // startDate.setDate(startDate.getDate() - 14);
+    // let endDate = new Date();
+    // if (date2.value.length > 0) {
+    //     startDate = new Date(date2.value[0]);
+    //     endDate = new Date(date2.value[1]);
+    // }
+
+    // await Promise.all([
+    //     viewData(selectedTimePeriod.value, startDate, endDate, data),
+    //     loadDatasets(data, colors, selected_date)
+    // ]);
+
 };
 
 
@@ -675,35 +706,40 @@ const chart__height2 = ref(200);
 watch(date2, () => {
     // let startDate = moment().subtract(180, 'days').format('YYYY-M-DD');
     // let endDate = moment().format('YYYY-M-DD');
-    console.log(startDate, endDate)
-    comparisonData.value = _comparisonData;
-    if (date2.value) {
-        startDate = moment(date2.value[0]).format('YYYY-M-DD');
-        endDate = moment(date2.value[1]).format('YYYY-M-DD');
-        const reviews = companiesStore.calculateReviewsV4(selectedTimePeriod.value, startDate, endDate, comparisonData.value).reviews;
-        all_items.value[1].value = reviews.length;
-        all_items.value[0].value = companiesStore.calculateRatingV2(reviews);
-    } else {
-        all_items.value[1].value = establishment.value.totalReviews;
-        all_items.value[0].value = establishment.value.rating;
-        startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-        endDate = moment().format('YYYY-M-DD');
-    }
-    viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+    // comparisonData.value = _comparisonData;
+    // if (date2.value) {
+    //     startDate = moment(date2.value[0]).format('YYYY-M-DD');
+    //     endDate = moment(date2.value[1]).format('YYYY-M-DD');
+    //     const reviews = companiesStore.calculateReviewsV4(selectedTimePeriod.value, startDate, endDate, comparisonData.value).reviews;
+    //     all_items.value[1].value = reviews.length;
+    //     all_items.value[0].value = companiesStore.calculateRatingV2(reviews);
+    // } else {
+    //     all_items.value[1].value = establishment.value.totalReviews;
+    //     all_items.value[0].value = establishment.value.rating;
+    //     startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+    //     endDate = moment().format('YYYY-M-DD');
+    // }
+    viewData();
 });
 
-watch([start_date, end_date], () => {
+watch([start_date, end_date], async () => {
     if (start_date.value !== '' && end_date.value !== '') {
-        startDate = moment(start_date.value).format('YYYY-M-DD');
-        endDate = moment(end_date.value).format('YYYY-M-DD');
-        const reviews = companiesStore.calculateReviewsV4(selectedTimePeriod.value, startDate, endDate, comparisonData.value).reviews;
-        all_items.value[1].value = reviews.length;
-        all_items.value[0].value = companiesStore.calculateRatingV2(reviews);
+        viewData()
+        // startDate = moment(start_date.value).format('YYYY-M-DD');
+        // endDate = moment(end_date.value).format('YYYY-M-DD');
+
+        // let competitorInfo = establishment.value['competitors'].find(c => c.establishment_name === selectedCompetitors.value)
+        // const tags = competitorInfo ? [companyId.value, competitorInfo.establishment_competitor_tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.establishment_competitor_tag)]
+        // plotdata.value = await chartsStore.checkData(tags, selectedTimePeriod.value, startDate, endDate)
+
+        // const reviews = companiesStore.calculateReviewsV4(selectedTimePeriod.value, startDate, endDate, comparisonData.value).reviews;
+        // all_items.value[1].value = reviews.length;
+        // all_items.value[0].value = companiesStore.calculateRatingV2(reviews);
     } else {
-        all_items.value[1].value = establishment.value.totalReviews;
-        all_items.value[0].value = establishment.value.rating;
+        // all_items.value[1].value = establishment.value.totalReviews;
+        // all_items.value[0].value = establishment.value.rating;
     }
-    viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+    // viewData(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
 });
 
 // watch(selectedTimePeriod, ()=>{
@@ -720,17 +756,20 @@ watch([start_date, end_date], () => {
 
 // })
 
-watch(selectedTimePeriod, () => {
-    let startDate = moment().subtract(180, 'days').format('YYYY-M-DD');
-    let endDate = moment().format('YYYY-M-DD');
-    comparisonData.value = _comparisonData;
-    if (start_date.value !== '' && end_date.value !== '') {
-        startDate = moment(start_date.value).format('YYYY-M-DD');
-        endDate = moment(end_date.value).format('YYYY-M-DD');
-        plotdata.value = companiesStore.calculateReviewsV3(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
-    } else {
-        plotdata.value = companiesStore.calculateReviewsV3(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
-    }
+watch(selectedTimePeriod, async () => {
+    startDate = moment(start_date.value).format('YYYY-M-DD');
+    endDate = moment(end_date.value).format('YYYY-M-DD');
+    // comparisonData.value = _comparisonData;
+
+    viewData()
+
+    // if (start_date.value !== '' && end_date.value !== '') {
+    //     startDate = moment(start_date.value).format('YYYY-M-DD');
+    //     endDate = moment(end_date.value).format('YYYY-M-DD');
+    //     plotdata.value = companiesStore.calculateReviewsV3(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+    // } else {
+    //     plotdata.value = companiesStore.calculateReviewsV3(selectedTimePeriod.value, startDate, endDate, comparisonData.value);
+    // }
 
 })
 
@@ -778,13 +817,13 @@ onBeforeMount(async () => {
         Title,
         Tooltip,
     )
-    const companyId = route.params.id;
+    companyId.value = route.params.id;
     let company = null;
     appStore.isLoading = true;
     reviews_loader.value = true;
 
     const response2 = await new Promise((resolve, reject) => {
-        services.get_Record(`establishment/${companyId}/rating`, (response) => {
+        services.get_Record(`establishment/${companyId.value}/rating`, (response) => {
             resolve(response)
             if (response.status == 404) {
                 exist.value = false;
@@ -803,9 +842,8 @@ onBeforeMount(async () => {
     }
 
     const response = await new Promise((resolve, reject) => {
-        services.get_Record(`/establishment/${companyId}/detail`, (response) => {
+        services.get_Record(`/establishment/${companyId.value}/detail`, (response) => {
             resolve(response)
-            console.log(response)
             if (response.status == 404) {
                 exist.value = false
             }
@@ -816,7 +854,11 @@ onBeforeMount(async () => {
         establishment.value['reviews'] = response.data['reviews'];
         establishment.value['websites'] = response.data['websites'];
         establishment.value['competitors'] = response.data['competitors'];
-        reviews.value = establishment.value.reviews;
+        // const tags = [companyId.value, ...establishment.value['competitors'].map(c => c.establishment_competitor_tag)]
+        // let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+        // let endDate = moment().format('YYYY-M-DD');
+        // // await chartsStore.checkData(tags, 'days', startDate, endDate)
+        // // reviews.value = establishment.value.reviews;
 
         if (establishment.value.websites != []) {
             websites.value = ['Global', ...companiesStore.getWebsites(establishment.value.websites)];
