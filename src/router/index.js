@@ -131,6 +131,11 @@ const router = createRouter({
           component: ()=> import('@Components/users/UserDetailComponent.vue'),
         },
         {
+          path: 'contact',
+          name: 'Contact',
+          component: ()=> import('@Components/users/ContactComponent.vue'),
+        },
+        {
           path: 'security',
           name: 'Account_security',
           component: ()=> import('@Components/users/SecurityComponent.vue'),

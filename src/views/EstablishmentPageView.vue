@@ -13,14 +13,15 @@
                     </div>
                 </div>
                 <div class="dashboard__content">
-                    <DashboardComponent :is-loading="dataLoading" class="counter" v-for="item in all_items" :item="item" />
+                    <DashboardComponent :is-loading="chartLoading" class="counter" v-for="item in all_items" :item="item"
+                        :key="item" />
                 </div>
                 <div class="head">
                     <div class="app__title">
                         <h2>Comparison</h2>
                     </div>
                 </div>
-                <div v-if="reviews_loader == true" :style="{
+                <div v-if="chartLoading == true" :style="{
                     'width': `100%`,
                     'height': `200px`,
                     'display': 'flex',
@@ -38,26 +39,31 @@
                 <ComparisonChartComponent v-else :data="plotdata" :width="chart__width" :chartheight="chart__height"
                     :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors"
                     :timePeriod="selectedTimePeriod" />
-                <BaseLegend v-if="reviews_loader == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
+                <BaseLegend v-if="chartLoading == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
                 </BaseLegend>
                 <div class="head">
                     <div class="app__title">
                         <h2>Last reviews</h2>
                     </div>
                 </div>
-                <div class="reviews__content" v-if="!dataLoading">
+                <div class="reviews__content" v-if="!reviewsLoading">
                     <p>Discover the latest feedback about your establishment. Click <a
                             @click="gotoReviewPage(establishment.competitor_tag, $route.params.tag)">here</a> to access all
                         reviews.</p>
                     <div class="reviews__pagination">
-                        <CommentPagination v-if="lastReviews.length > 0" :config="paginationConfig" @updatePage="updatePage"
-                            :color="'#6c63ff'" :nb="lastReviews.length" :data="visibleData"></CommentPagination>
+                        <!--  <CommentPagination v-if="lastReviews.length > 0" :config="paginationConfig" @updatePage="updatePage"
+                            :color="'#6c63ff'" :nb="lastReviews.length" :data="visibleData"></CommentPagination> -->
+                        <PaginationComponent :options="options" @next="(option) => {
+                            loadReviews(companyId, option.page, option.limit, option.current)
+                        }" @prev="(option) => {
+    loadReviews(companyId, option.page, option.limit, option.current)
+}" />
                     </div>
-                    <CommentComponent v-if="reviews_loader == false" :reviews="visibleData"
+                    <CommentComponent v-if="reviewsLoading == false" :reviews="visibleData"
                         :allReviews="establishment.reviews" :showEmoji="false" />
                     <div v-else role="status"
                         class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
-                        v-for="index in 5">
+                        v-for="index in 20" :key="index">
                         <div>
                             <div class="flex items-center justify-between mb-4">
                                 <div>
@@ -127,41 +133,41 @@
             </div>
             <div class="tablet_mobile__head">
                 <div class="establishment__info_tablet">
-                    <label v-if="!dataLoading">{{ establishment.name }}</label>
+                    <label v-if="!establishmentLoading">{{ establishment.name }}</label>
                     <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
                     <div>
                         <i
                             :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
-                        <span v-if="!dataLoading">{{ establishment.category }}</span>
+                        <span v-if="!establishmentLoading">{{ establishment.category }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
                     </div>
                     <div class="society__location" v-if="establishment.country != null">
                         <i class="uil uil-map"></i>
-                        <span v-if="!dataLoading">{{ establishment.country }}</span>
+                        <span v-if="!establishmentLoading">{{ establishment.country }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
                         <i class="uil uil-location-point"></i>
-                        <span v-if="!dataLoading">{{ establishment.address1 }}, {{ establishment.city }}</span>
+                        <span v-if="!establishmentLoading">{{ establishment.address1 }}, {{ establishment.city }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
                         <i class="uil uil-favorite"></i>
-                        <span v-if="!dataLoading" class="society__location">{{ all_items[0].value }}</span>
+                        <span v-if="!establishmentLoading" class="society__location">{{ all_items[0].value }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
                         <i class="uil uil-comment-alt"></i>
-                        <span v-if="!dataLoading">{{ all_items[1].value }}</span>
+                        <span v-if="!establishmentLoading">{{ all_items[1].value }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
                         <i class="uil uil-building"></i>
-                        <span v-if="!dataLoading">{{ all_items[2].value }} competitors</span>
+                        <span v-if="!establishmentLoading">{{ all_items[2].value }} competitors</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                 </div>
-                <div class="photo" v-if="!dataLoading">
+                <div class="photo" v-if="!establishmentLoading">
                     <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
                     <div v-else role="status"
                         class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
@@ -190,7 +196,7 @@
             <div class="right__side">
                 <div
                     class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#" v-if="!dataLoading">
+                    <a href="#" v-if="!establishmentLoading">
                         <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
                         <div v-else role="status"
                             class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
@@ -216,17 +222,17 @@
                         </div>
                     </a>
                     <div class="establishment__info">
-                        <label class="society__name" v-if="!dataLoading">{{ establishment.name }}</label>
+                        <label class="society__name" v-if="!establishmentLoading">{{ establishment.name }}</label>
                         <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
                         <div class="society__location">
                             <i
                                 :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
-                            <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
+                            <span v-if="!establishmentLoading" class="society__location">{{ establishment.category }}</span>
                             <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                         </div>
                         <div class="society__location">
                             <i class="uil uil-location-point"></i>
-                            <span v-if="!dataLoading" class="society__location">{{ establishment.address1 }}, {{
+                            <span v-if="!establishmentLoading" class="society__location">{{ establishment.address1 }}, {{
                                 establishment.city }}</span>
                             <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                         </div>
@@ -282,34 +288,6 @@
                         </div>
                         <span class="text-xs font-medium">{{ star.value }}</span>
                     </div>
-                    <!-- <div :class="['flex items-center mt-1', 'include']" @click="starFilter(4)">
-                        <a href="#" class="text-xs font-medium dark:text-blue-500 hover:underline">4 star</a>
-                        <div class="star__barre h-3 rounded mx-2"
-                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate4 * 100 / reviews.length}%` }">
-                        </div>
-                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate4 }}</span>
-                    </div>
-                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(3)">
-                        <a href="#" class="text-xs font-medium hover:underline">3 star</a>
-                        <div class="star__barre h-3 rounded mx-2"
-                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate3 * 100 / reviews.length}%` }">
-                        </div>
-                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate3 }}</span>
-                    </div>
-                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(2)">
-                        <a href="#" class="text-xs font-medium hover:underline">2 star</a>
-                        <div class="star__barre h-3 rounded mx-2"
-                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate2 * 100 / reviews.length}%` }">
-                        </div>
-                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate2 }}</span>
-                    </div>
-                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(1)">
-                        <a href="#" class="text-xs font-medium hover:underline">1 star</a>
-                        <div class="star__barre h-3 rounded mx-2"
-                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate1 * 100 / reviews.length}%` }">
-                        </div>
-                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate1 }}</span>
-                    </div> -->
                 </div>
                 <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
             </div>
@@ -329,7 +307,8 @@ import { useCompanyStore } from "@Stores/company.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import CommentComponent from '@Components/utils/CommentComponent.vue';
 import DashboardComponent from '@Components/utils/DashboardComponent.vue';
-import CommentPagination from '@Components/utils/CommentPagination.vue';
+// import CommentPagination from '@Components/utils/CommentPagination.vue';
+import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import ComparisonChartComponent from '@Components/utils/ComparisonChartComponent.vue';
@@ -356,6 +335,13 @@ const page = ref({
     icon: "uil-estate",
 });
 
+const options = ref({
+    rowLimit: 20,
+    max: 100,
+    current: 1,
+    page: 1,
+})
+
 let exist = ref(true);
 const EstablishmentNotFound = defineAsyncComponent(() =>
     import("@Views/EstablishmentNotFound.vue")
@@ -368,6 +354,7 @@ const SpinnerComponent = defineAsyncComponent(() =>
 const weatherModal = ref(false);
 provide('showModal', weatherModal);
 const route = useRoute();
+const companyId = ref(route.params.id);
 const router = useRouter();
 const breadcrumbData = [
     {
@@ -392,14 +379,12 @@ let showWebsites = ref(false);
 let selectedCompetitors = ref('Global');
 let selectedWebsites = ref('Global');
 let websites = ref(['Global']);
-const companyId = ref('')
 
 let establishment = ref({ reviews: [] });
 let reviews = ref([]);
 let _reviews = computed(() => {
     return reviews.value;
 })
-let reviews_loader = ref(true);
 let competitors = ref([]);
 let computedCompetitors = computed(() => {
     let data = [{ name: 'Global' }];
@@ -429,7 +414,12 @@ const all_items = ref([
 let plotdata = ref([]);
 let legendData = ref([]);
 let _legendData = [];
-const dataLoading = ref(true)
+const establishmentLoading = ref(true)
+const reviewsLoading = ref(false)
+const feedbackLoading = ref(false)
+const starsLoading = ref(false)
+const semesterChartLoading = ref(false)
+const chartLoading = ref(false)
 let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
 let endDate = moment().format('YYYY-M-DD');
 const date2 = ref([startDate, endDate]);
@@ -510,6 +500,8 @@ const formatSixMonthsChartData = (datas) => {
 
 const loadDatasets = async () => {
 
+    semesterChartLoading.value = true
+
     let eDate = new Date();
     let sDate = new Date();
     sDate.setMonth(sDate.getMonth() - 5);
@@ -519,6 +511,7 @@ const loadDatasets = async () => {
         const tags = competitorInfo ? [companyId.value, competitorInfo.tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.tag)]
         let datas = await chartsStore.checkData(tags, 'months', moment(sDate).format('YYYY-M-DD'), moment(eDate).format('YYYY-M-DD'), selectedWebsites.value.toLowerCase())
         chartData.value = formatSixMonthsChartData(datas);
+        semesterChartLoading.value = false
     }
 }
 
@@ -563,7 +556,8 @@ const viewData = async () => {
     // // plotdata.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, data);
     // plotdata.value = await chartsStore.checkData(tags, timePeriod, moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'))
     // console.log(plotdata.value)
-    reviews_loader.value = true;
+    // reviews_loader.value = true;
+    chartLoading.value = true
     startDate = moment(start_date.value).format('YYYY-M-DD');
     endDate = moment(end_date.value).format('YYYY-M-DD');
 
@@ -572,12 +566,13 @@ const viewData = async () => {
         const tags = competitorInfo ? [companyId.value, competitorInfo.tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.tag)]
         plotdata.value = await chartsStore.checkData(tags, selectedTimePeriod.value, startDate, endDate, selectedWebsites.value.toLowerCase())
     }
-    reviews_loader.value = false;
+    chartLoading.value = false;
     loadDatasets();
 }
 
 const viewDataAsync = async (timePeriod, startDate, endDate, data) => {
     plotdata.value = await companiesStore.calculateReviewsV3Async(timePeriod, startDate, endDate, data);
+    console.log(plotdata.value)
 }
 
 const formatStarsData = (data) => {
@@ -601,7 +596,7 @@ const formatStarsData = (data) => {
 
 let updatePage = function (pageNumber) {
     paginationConfig.value.current = pageNumber;
-    updateVisibleData(lastReviews.value);
+    // updateVisibleData(lastReviews.value);
 }
 
 let updateVisibleData = function (_data) {
@@ -619,7 +614,7 @@ const globalComparison = async () => {
     selectedCompetitors.value = 'Global';
     selectedWebsites.value = 'Global';
 
-    plotdata.value = [];
+    // plotdata.value = [];
 
     // comparisonData.value = [establishment.value, ...competitors.value];
     // _comparisonData = [establishment.value, ...competitors.value];
@@ -651,7 +646,7 @@ const globalComparison = async () => {
 
     viewData();
 
-    appStore.isLoading = false;
+    // appStore.isLoading = false;
 };
 
 const reloadComparison = async (competitor) => {
@@ -690,6 +685,7 @@ const reloadComparisonByWebsite = async (website) => {
     // });
 
     // const establishmentData = data.find(company => company.id === establishment.value.id);
+
 
     // if (establishmentData) {
     //     all_items.value[1].value = establishmentData.reviews.length;
@@ -832,6 +828,8 @@ const filterReviewsByStar = (star, data) => {
     })
     return result;
 }
+
+
 const reloadStarData = () => {
     let scores = [1, 2, 3, 4, 5];
     let filteredReviews = _reviews.value;
@@ -840,7 +838,7 @@ const reloadStarData = () => {
         let result = filterReviewsByStar(rating, filteredReviews);
         filteredReviews = result;
     }
-    updateVisibleData(filteredReviews);
+    // updateVisibleData(filteredReviews);
 }
 
 watch(selectedStars, () => {
@@ -848,6 +846,24 @@ watch(selectedStars, () => {
     let result = filterReviewsByStar(selectedStars.value, filteredReviews);
     updateVisibleData(result);
 });
+
+
+const loadReviews = async (tag, page, limit, current) => {
+    reviewsLoading.value = true
+    options.value.current = current;
+    options.value.page = page;
+    const response = await new Promise((resolve, reject) => {
+        services.get_Record(`/review/by_establishment?tag=${tag}&page=${page}&limit=${limit}`, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+
+        visibleData.value = response.data['data'];
+        reviewsLoading.value = false;
+    }
+}
 
 onBeforeMount(async () => {
     ChartJS.register(
@@ -858,10 +874,10 @@ onBeforeMount(async () => {
         Title,
         Tooltip,
     )
-    companyId.value = route.params.id;
-    let company = null;
+
     appStore.isLoading = true;
-    reviews_loader.value = true;
+
+    loadReviews(companyId.value, 1, 20, 1);
 
     const response2 = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId.value}/rating`, (response) => {
@@ -874,14 +890,14 @@ onBeforeMount(async () => {
     });
 
     if (response2.status == 200) {
-        console.log()
+        appStore.isLoading = false;
         establishment.value = response2.data;
         page.value.title2 = establishment.value.name;
         all_items.value[0].value = establishment.value.rating;
         all_items.value[1].value = establishment.value.totalReviews;
         all_items.value[2].value = establishment.value.competitors.length;
-        appStore.isLoading = false;
-        dataLoading.value = false;
+
+        establishmentLoading.value = false
         globalComparison();
         websites.value = ['Global', ...establishment.value['websites']];
         loadDatasets();
@@ -897,7 +913,7 @@ onBeforeMount(async () => {
     if (response3.status == 200) {
         if (response3.data && response3.data.data) {
             starsData.value = formatStarsData(response3.data.data)
-            console.log(starsData.value)
+            starsLoading.value = false
         }
     }
 
@@ -929,6 +945,8 @@ onBeforeMount(async () => {
             feeling: feeling,
             score: score
         }
+
+        feedbackLoading.value = false
 
     }
 

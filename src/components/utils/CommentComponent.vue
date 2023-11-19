@@ -17,6 +17,9 @@
                         <li v-if="review.date_review != null" class="flex items-center"><i class="uil uil-calender"></i><span>
                             {{ moment(review.date_review).format('D MMMM YYYY')}}
                         </span></li>
+                         <li v-else class="flex items-center"><i class="uil uil-calender"></i><span>
+                            {{ moment(review.created_at).format('D MMMM YYYY')}}
+                        </span></li>
                         <li class="flex items-center"><i class="uil uil-map-pin-alt"></i><span>
                             {{ review.source }}
                         </span></li>
