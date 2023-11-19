@@ -13,6 +13,11 @@
                         </router-link>
                     </li>
                     <li>
+                        <router-link :to="{ name: 'Contact' }">
+                            <i class="uil uil-envelope"></i> <span>Contact</span>
+                        </router-link>
+                    </li>
+                    <li>
                         <router-link :to="{ name: 'Account_security' }">
                             <i class="uil uil-lock"></i> <span>Security</span>
                         </router-link>

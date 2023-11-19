@@ -41,6 +41,13 @@
                             <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last name</label>
                             <input type="text" id="last_name" v-model="lastname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
+                        <div>
+                            <label for="gender" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender</label>
+                            <select id="gender" v-model="gender" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
                         <div class="author__email">
@@ -148,6 +155,7 @@ onBeforeMount(async ()=>{
 
 const firstname = ref('');
 const lastname = ref('');
+const gender = ref('');
 const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
@@ -174,36 +182,55 @@ const submit = async ()=>{
         "optin": true,
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
         "dateReview": moment(date_review, 'DD/MM/YYYY')
-    }
+    };
+    let contactData = {
+        gender: gender.value, 
+        firstname: firstname.value,
+        lastname: lastname.value,
+        email: email.value,
+        created_at: moment().format('YYYY-MM-DD HH:mm:ss'), // Ajustez le format en conséquence
+    };
 
-    try{
-        if(firstname.value !== '' && ratingCustomer.value !== null){
+    try {
+        if (firstname.value !== '' && ratingCustomer.value !== null) {
             showSpinner.value = true;
-            await feedbackStore.createReview(review, (response)=>{
-                console.log(response)
-                if(response.status == 201){
-                    ElMessage({
-                        message: `Thanks for your feedback!`,
-                        type: 'success',
-                    })
-                    firstname.value = '';
-                    lastname.value = '';
-                    comment.value = '';
-                    email.value = '';
-                    dateVisit.value = null;
-                    showSpinner.value = false;
-                    router.push({
-                        name: 'SuccessFeedback',
-                        params: {
-                            etab: route.params.id,
-                            tag: route.params.tag
+
+            await feedbackStore.createReview(review, async (response) => {
+                console.log(response);
+                if (response.status == 201) {
+                    // INSERTION DANS CONTACT
+                    await services.createRecord('contacts', contactData, (contactResponse) => {
+                        console.log(contactResponse);
+                        if (contactResponse.status == 201) {
+                            ElMessage({
+                                message: `Thanks for your feedback!`,
+                                type: 'success',
+                            });
+                            firstname.value = '';
+                            lastname.value = '';
+                            gender.value = '';
+                            comment.value = '';
+                            email.value = '';
+                            dateVisit.value = null;
+                            showSpinner.value = false;
+                            router.push({
+                                name: 'SuccessFeedback',
+                                params: {
+                                    etab: route.params.id,
+                                    tag: route.params.tag,
+                                },
+                            });
                         }
-                    })
+                    });
                 }
-            })
-        }else ElMessage.error(`Please, provide all needed information`);
-    }catch(error){
-        console.log(error)
+            });
+        } else {
+            ElMessage.error(`Please, provide all needed information`);
+        }
+    } catch (error) {
+        console.log(error);
+    } finally {
+        showSpinner.value = false;
     }
     
 };

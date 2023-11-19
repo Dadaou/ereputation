@@ -49,6 +49,15 @@
             </li>
             <li @click="closeDropdown">
               <RouterLink 
+                :to="`/customer/${userStore.user.customer.tag}/account/contact` " 
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                      <i class="uil uil-envelope"></i>
+                    Contact
+              </RouterLink>
+            </li>
+            <li @click="closeDropdown">
+              <RouterLink 
                 :to="`/customer/${userStore.user.customer.tag}/account/security`"
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >
@@ -128,7 +137,7 @@
   const route = useRoute();
   const showDropdown = ref(false)
   const showMenu = computed(()=>{
-      let routeName = ['Login', 'FeedBack', 'StaffFeedBack', 'Home', 'Personal_details', 'Account_security', 'Parameters', 'ErepHome', 'NotFound', 'EstablishmentNotFound', 'SuccessFeedback', undefined];
+      let routeName = ['Login', 'FeedBack', 'StaffFeedBack', 'Home', 'Personal_details','Contact' , 'Account_security', 'Parameters', 'ErepHome', 'NotFound', 'EstablishmentNotFound', 'SuccessFeedback', undefined];
       return !routeName.includes(route.name)
   })
   
