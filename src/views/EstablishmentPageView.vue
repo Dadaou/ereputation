@@ -275,14 +275,14 @@
                     </div>
                 </div>
                 <div class="reviews__star">
-                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(5)">
-                        <a href="#" class="text-xs font-medium hover:underline">5 star</a>
-                        <div class="star__barre h-3 rounded mx-2"
-                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate5 * 100 / reviews.length}%` }">
+                    <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
+                        @click="starFilter(star.intVal)">
+                        <a href="#" class="text-xs font-medium hover:underline">{{ star.label }}</a>
+                        <div class="star__barre h-3 rounded mx-2" :style="{ 'width': `${star.percentage}%` }">
                         </div>
-                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate5 }}</span>
+                        <span class="text-xs font-medium">{{ star.value }}</span>
                     </div>
-                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(4)">
+                    <!-- <div :class="['flex items-center mt-1', 'include']" @click="starFilter(4)">
                         <a href="#" class="text-xs font-medium dark:text-blue-500 hover:underline">4 star</a>
                         <div class="star__barre h-3 rounded mx-2"
                             :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate4 * 100 / reviews.length}%` }">
@@ -309,7 +309,7 @@
                             :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate1 * 100 / reviews.length}%` }">
                         </div>
                         <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate1 }}</span>
-                    </div>
+                    </div> -->
                 </div>
                 <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
             </div>
@@ -403,13 +403,14 @@ let reviews_loader = ref(true);
 let competitors = ref([]);
 let computedCompetitors = computed(() => {
     let data = [{ name: 'Global' }];
-    competitors.value.forEach(competitor => {
-        data.push(competitor);
-    });
+    establishment.value['competitors'] && establishment.value['competitors'].forEach(c => {
+        data.push(c);
+    })
     return data;
 });
 
 let visibleData = ref([])
+const starsData = ref([])
 let paginationConfig = ref({
     current: 0,
     size: 20,
@@ -479,28 +480,46 @@ let chartData = ref({
     datasets: []
 })
 
-const loadDatasets = (establishments, colors, date) => {
-    let data = [];
-    var index = 0;
+const formatSixMonthsChartData = (datas) => {
     let chartdata = {
-        labels: companiesStore.getLastMonths(6, date, true),
+        labels: [],
         datasets: []
     }
-    chartConfig.data.datasets = [];
-    establishments.forEach(establishment => {
-        let dataset = {
-            label: establishment.name,
-            backgroundColor: colors[index],
-            data: companiesStore.getRatingLastMonthsV2(establishment.reviews, 6, date, true)
-        };
-        if (index >= establishments.length) index = 0;
-        index++;
-        data.push(dataset);
-        chartdata.datasets.push(dataset);
-    });
-    chartConfig.data.datasets = data;
-    chartData.value = chartdata;
-    return data;
+
+    const names = Object.keys(datas[0]).filter(v => v != 'name');
+    const labels = datas.map(d => d.name);
+    let index = 0
+
+    names.forEach(k => {
+        let tmp2 = []
+        datas.forEach(dp => {
+            tmp2.push(dp[k])
+        })
+        chartdata.datasets.push({
+            data: tmp2,
+            label: k,
+            backgroundColor: colors[index]
+        })
+        index++
+    })
+
+    chartdata.labels = labels
+
+    return chartdata
+}
+
+const loadDatasets = async () => {
+
+    let eDate = new Date();
+    let sDate = new Date();
+    sDate.setMonth(sDate.getMonth() - 5);
+
+    if (establishment && establishment.value['competitors']) {
+        let competitorInfo = establishment.value['competitors'].find(c => c.name === selectedCompetitors.value)
+        const tags = competitorInfo ? [companyId.value, competitorInfo.tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.tag)]
+        let datas = await chartsStore.checkData(tags, 'months', moment(sDate).format('YYYY-M-DD'), moment(eDate).format('YYYY-M-DD'), selectedWebsites.value.toLowerCase())
+        chartData.value = formatSixMonthsChartData(datas);
+    }
 }
 
 const loadDatasetsAsync = async (establishments, colors, date) => {
@@ -544,18 +563,40 @@ const viewData = async () => {
     // // plotdata.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, data);
     // plotdata.value = await chartsStore.checkData(tags, timePeriod, moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'))
     // console.log(plotdata.value)
+    reviews_loader.value = true;
     startDate = moment(start_date.value).format('YYYY-M-DD');
     endDate = moment(end_date.value).format('YYYY-M-DD');
 
     if (establishment && establishment.value['competitors']) {
-        let competitorInfo = establishment.value['competitors'].find(c => c.establishment_name === selectedCompetitors.value)
-        const tags = competitorInfo ? [companyId.value, competitorInfo.establishment_competitor_tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.establishment_competitor_tag)]
+        let competitorInfo = establishment.value['competitors'].find(c => c.name === selectedCompetitors.value)
+        const tags = competitorInfo ? [companyId.value, competitorInfo.tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.tag)]
         plotdata.value = await chartsStore.checkData(tags, selectedTimePeriod.value, startDate, endDate, selectedWebsites.value.toLowerCase())
     }
+    reviews_loader.value = false;
+    loadDatasets();
 }
 
 const viewDataAsync = async (timePeriod, startDate, endDate, data) => {
     plotdata.value = await companiesStore.calculateReviewsV3Async(timePeriod, startDate, endDate, data);
+}
+
+const formatStarsData = (data) => {
+    let tmp = []
+    console.log(data)
+    const total = Object.keys(data).reduce(function (previous, key) {
+        return previous + data[key];
+    }, 0);
+    console.log(total)
+    Object.keys(data).forEach(k => {
+        tmp.push({
+            label: k,
+            value: data[k],
+            percentage: data[k] * 100 / total,
+            intVal: k.split()[0]
+        })
+    })
+    return tmp;
+
 }
 
 let updatePage = function (pageNumber) {
@@ -614,8 +655,8 @@ const globalComparison = async () => {
 };
 
 const reloadComparison = async (competitor) => {
-    let competitorInfo = establishment.value['competitors'].find(c => c.establishment_name === competitor.name)
-    selectedCompetitors.value = competitorInfo.establishment_name;
+    let competitorInfo = establishment.value['competitors'].find(c => c.name === competitor.name)
+    selectedCompetitors.value = competitorInfo.name;
     plotdata.value = [];
     // comparisonData.value = [establishment.value, competitor];
     // _comparisonData = [establishment.value, competitor];
@@ -833,53 +874,103 @@ onBeforeMount(async () => {
     });
 
     if (response2.status == 200) {
+        console.log()
         establishment.value = response2.data;
         page.value.title2 = establishment.value.name;
         all_items.value[0].value = establishment.value.rating;
         all_items.value[1].value = establishment.value.totalReviews;
+        all_items.value[2].value = establishment.value.competitors.length;
         appStore.isLoading = false;
         dataLoading.value = false;
+        globalComparison();
+        websites.value = ['Global', ...establishment.value['websites']];
+        loadDatasets();
+
     }
 
-    const response = await new Promise((resolve, reject) => {
+    const response3 = await new Promise((resolve, reject) => {
+        services.get_Record(`charts/stars?tag=${companyId.value}`, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response3.status == 200) {
+        if (response3.data && response3.data.data) {
+            starsData.value = formatStarsData(response3.data.data)
+            console.log(starsData.value)
+        }
+    }
+
+    const response4 = await new Promise((resolve, reject) => {
+        services.get_Record(`charts/feeling?tag=${companyId.value}`, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response4.status == 200) {
+        const score = response4.data[companyId.value]
+        let rawWidth = score * 100 / 2
+        let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
+        let feeling = rawWidth > 0 ? 1 : -1
+        let red = 255
+        let green = 255
+        if (feeling == -1) {
+            red = 255
+            green = 0
+        } else {
+            green = 255
+            red = 0
+        }
+
+        reviewFeedbackData.value = {
+            width: width,
+            red: red,
+            green: green,
+            feeling: feeling,
+            score: score
+        }
+
+    }
+
+    /*const response = await new Promise((resolve, reject) => {
         services.get_Record(`/establishment/${companyId.value}/detail`, (response) => {
             resolve(response)
             if (response.status == 404) {
                 exist.value = false
             }
         });
-    });
+    });*/
 
-    if (response.status == 200) {
-        establishment.value['reviews'] = response.data['reviews'];
-        establishment.value['websites'] = response.data['websites'];
-        establishment.value['competitors'] = response.data['competitors'];
-        // const tags = [companyId.value, ...establishment.value['competitors'].map(c => c.establishment_competitor_tag)]
-        // let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-        // let endDate = moment().format('YYYY-M-DD');
-        // // await chartsStore.checkData(tags, 'days', startDate, endDate)
-        // // reviews.value = establishment.value.reviews;
+    // if (response.status == 200) {
+    //     establishment.value['reviews'] = response.data['reviews'];
+    //     establishment.value['websites'] = response.data['websites'];
+    //     establishment.value['competitors'] = response.data['competitors'];
+    //     // const tags = [companyId.value, ...establishment.value['competitors'].map(c => c.establishment_competitor_tag)]
+    //     // let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+    //     // let endDate = moment().format('YYYY-M-DD');
+    //     // // await chartsStore.checkData(tags, 'days', startDate, endDate)
+    //     // // reviews.value = establishment.value.reviews;
 
-        if (establishment.value.websites != []) {
-            websites.value = ['Global', ...companiesStore.getWebsites(establishment.value.websites)];
-        }
-        reloadStarData();
-        let data = [];
-        let promises = [];
+    //     if (establishment.value.websites != []) {
+    //         websites.value = ['Global', ...companiesStore.getWebsites(establishment.value.websites)];
+    //     }
+    //     reloadStarData();
+    //     let data = [];
+    //     let promises = [];
 
-        establishment.value.competitors.forEach(company => {
-            let promise = services.get_Record(`/establishment/${company.establishment_competitor_tag}/detail`, (response) => {
-                data.push(response.data);
-            });
-            promises.push(promise);
-        })
+    //     establishment.value.competitors.forEach(company => {
+    //         let promise = services.get_Record(`/establishment/${company.establishment_competitor_tag}/detail`, (response) => {
+    //             data.push(response.data);
+    //         });
+    //         promises.push(promise);
+    //     })
 
-        Promise.all(promises).then(() => {
-            competitors.value = data;
-            reviews_loader.value = false;
-            globalComparison();
-        });
-    }
+    //     Promise.all(promises).then(() => {
+    //         competitors.value = data;
+    //         reviews_loader.value = false;
+    //         globalComparison();
+    //     });
+    // }
 });
 </script>
 

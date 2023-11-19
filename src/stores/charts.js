@@ -116,6 +116,8 @@ export const useChartsStore = defineStore(
         fTo = `${tTo[2]}-${tTo[1]}-${tTo[0]}`
       }
 
+      console.log(tag)
+
       await fetchData(tag.join(','), type, fFrom, fTo, platform, (response) => {
         const data = response.data
         switch (type) {
