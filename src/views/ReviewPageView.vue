@@ -2,213 +2,224 @@
     <div class="main__container" v-if="exist">
         <HeadComponent class="head" :page="page"></HeadComponent>
         <div class="breadcrumb__container">
-            <BreadcrumbComponent :data="breadcrumbData"/>
+            <BreadcrumbComponent :data="breadcrumbData" />
         </div>
         <div class="app__container">
             <div class="left__side">
                 <div class="head">
                     <div class="app__title">
-                       <h2>Reviews</h2>
+                        <h2>Reviews</h2>
                     </div>
                 </div>
                 <div class="reviews__content">
                     <div class="reviews__pagination">
-                        <PaginationComponent 
-                            :options="options"
-                            v-if="visibleData.length > 0"
-                            @next="(option)=>{
-                                 loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
-                            }"
-                            @prev="(option)=>{
-                                 loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
-                            }"
-                        />
+                        <PaginationComponent :options="options" v-if="visibleData.length > 0" @next="(option) => {
+                            loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+                        }" @prev="(option) => {
+    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+}" />
                     </div>
-                    <CommentComponent 
-                    v-if="reviews_loader == false" 
-                    :reviews="visibleData" 
-                    :showEmoji="true"
-                    @reloadData = "(review)=>reloadData(review)"
-                    />
-                    <div v-else role="status" class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" v-for="index in 5">
+                    <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
+                        @reloadData="(review) => reloadData(review)" />
+                    <div v-else role="status"
+                        class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
+                        v-for="index in 5">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
                                 <div>
-                                    <div class="flex items-center justify-between mb-4">
-                                        <div>
-                                            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                                            <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
-                                            <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-                                        </div>
-                                        <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
-                                    </div>
-                                    <div>
-                                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-                                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-                                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
-                                    </div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
                                 </div>
-                                <span class="sr-only">Loading...</span>
-                     </div>
+                                <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
+                            </div>
+                            <div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
+                            </div>
+                        </div>
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <div class="reviews__pagination">
+                        <PaginationComponent :options="options" v-if="visibleData.length > 0" @next="(option) => {
+                            loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+                        }" @prev="(option) => {
+    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+}" />
+                    </div>
                 </div>
             </div>
             <div class="tablet_mobile__filter">
-                    <DropdownComponent :showTitle="false" class="dropdown" title="Filter by plateform" placeholder="Select a website" :data="websites" @submit="(website)=>{
+                <DropdownComponent :showTitle="false" class="dropdown" title="Filter by plateform"
+                    placeholder="Select a website" :data="websites" @submit="(website) => {
                         selectedWebsites = website
-                    }" :default="websites[0]"/>
-                    <div class="date__picker">
-                         <el-date-picker
-                            v-model="dateStart"
-                            placeholder="Start date"
-                            :size="'large'"
-                          />
-                    </div>
-                     <div class="date__picker">
-                        <el-date-picker
-                            v-model="dateEnd"
-                            placeholder="End date"
-                            :size="'large'"
-                          />
-                    </div>
+                    }" :default="websites[0]" />
+                <div class="date__picker">
+                    <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+                </div>
+                <div class="date__picker">
+                    <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
+                </div>
             </div>
             <div class="tablet_mobile__head">
                 <div class="establishment__info_tablet">
-                        <label v-if="!dataLoading">{{ establishment.name }}</label>
-                        <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
-                        <div>
-                            <i :class="['uil', establishment.category=='Restaurant'?'uil-restaurant':'', establishment.category=='Hotel'?'uil-bed-double':'', establishment.category=='Residence'?'uil-home':'']"></i>
-                                <span v-if="!dataLoading">{{ establishment.category }}</span>
-                                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
-                        </div>
-                        <div class="society__location" v-if="establishment.country != null">
-                                <i class="uil uil-map"></i>
-                                <span v-if="!dataLoading">{{ establishment.country }}</span>
-                                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                        </div> 
-                        <div class="society__location">
-                                <i class="uil uil-location-point"></i>
-                                <span v-if="!dataLoading">{{ establishment.address1 }}, {{ establishment.city }}</span>
-                                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                         </div>
-                         <div class="society__location">
-                                <i class="uil uil-favorite"></i>
-                                <span v-if="!dataLoading" class="society__location">{{ all_items[0].value  }}</span>
-                                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                         </div>
-                         <div class="society__location">
-                            <i class="uil uil-comment-alt"></i>
-                                <span v-if="!dataLoading">{{ all_items[1].value  }}</span>
-                                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                         </div>
-                         <div class="society__location">
-                            <i class="uil uil-building"></i>
-                            <span v-if="!dataLoading">{{ all_items[2].value  }} competitors</span>
-                             <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                         </div>
+                    <label v-if="!dataLoading">{{ establishment.name }}</label>
+                    <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
+                    <div>
+                        <i
+                            :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
+                        <span v-if="!dataLoading">{{ establishment.category }}</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
                     </div>
+                    <div class="society__location" v-if="establishment.country != null">
+                        <i class="uil uil-map"></i>
+                        <span v-if="!dataLoading">{{ establishment.country }}</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                    <div class="society__location">
+                        <i class="uil uil-location-point"></i>
+                        <span v-if="!dataLoading">{{ establishment.address1 }}, {{ establishment.city }}</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                    <div class="society__location">
+                        <i class="uil uil-favorite"></i>
+                        <span v-if="!dataLoading" class="society__location">{{ all_items[0].value }}</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                    <div class="society__location">
+                        <i class="uil uil-comment-alt"></i>
+                        <span v-if="!dataLoading">{{ all_items[1].value }}</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                    <div class="society__location">
+                        <i class="uil uil-building"></i>
+                        <span v-if="!dataLoading">{{ all_items[2].value }} competitors</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                </div>
                 <div class="photo" v-if="!dataLoading">
                     <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
-                    <div v-else role="status" class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
+                    <div v-else role="status"
+                        class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                        <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                            <path
+                                d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
                         </svg>
-                            <span class="sr-only">Loading...</span>
-                        </div>
+                        <span class="sr-only">Loading...</span>
+                    </div>
                 </div>
                 <div class="photo" v-else>
-                    <div role="status" class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
+                    <div role="status"
+                        class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                        <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                            <path
+                                d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
                         </svg>
-                            <span class="sr-only">Loading...</span>
-                        </div>
+                        <span class="sr-only">Loading...</span>
+                    </div>
                 </div>
             </div>
             <div class="right__side">
-                <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div
+                    class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                     <a href="#" v-if="!dataLoading">
                         <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
-                        <div v-else role="status" class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
-                        </svg>
+                        <div v-else role="status"
+                            class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                                <path
+                                    d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
+                            </svg>
                             <span class="sr-only">Loading...</span>
                         </div>
                     </a>
                     <a href="#" v-else>
-                        <div role="status" class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
-                        </svg>
+                        <div role="status"
+                            class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                                <path
+                                    d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
+                            </svg>
                             <span class="sr-only">Loading...</span>
                         </div>
                     </a>
                     <div class="establishment__info">
-                            <label class="society__name" v-if="!dataLoading">{{ establishment.name }}</label>
-                            <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
-                            <div class="society__location">
-                                <i :class="['uil', establishment.category=='Restaurant'?'uil-restaurant':'', establishment.category=='Hotel'?'uil-bed-double':'', establishment.category=='Residence'?'uil-home':'']"></i>
-                                <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
-                                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                            </div>
-                            <div class="society__location">
-                                    <i class="uil uil-location-point"></i>
-                                    <span v-if="!dataLoading" class="society__location">{{ establishment.address1 }}, {{ establishment.city }}</span>
-                                    <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                            </div> 
+                        <label class="society__name" v-if="!dataLoading">{{ establishment.name }}</label>
+                        <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
+                        <div class="society__location">
+                            <i
+                                :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
+                            <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
+                            <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                        </div>
+                        <div class="society__location">
+                            <i class="uil uil-location-point"></i>
+                            <span v-if="!dataLoading" class="society__location">{{ establishment.address1 }}, {{
+                                establishment.city }}</span>
+                            <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                        </div>
                     </div>
-                    <DropdownComponent class="dropdown" title="Filter by plateform" placeholder="Select a website" :data="websites" @submit="(website)=>{
-                        selectedWebsites = website
-                    }" :default="websites[0]"/>
+                    <DropdownComponent class="dropdown" title="Filter by plateform" placeholder="Select a website"
+                        :data="websites" @submit="(website) => {
+                            selectedWebsites = website
+                        }" :default="websites[0]" />
                     <div class="date__filter">
-                    <div class="text-sm title">Select a range of date</div>
-                       <el-date-picker
-                        v-model="dateStart"
-                        placeholder="Start date"
-                        :size="'large'"
-                      />
-                      <el-date-picker
-                        class="mt-2"
-                        v-model="dateEnd"
-                        placeholder="End date"
-                        :size="'large'"
-                      />
+                        <div class="text-sm title">Select a range of date</div>
+                        <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+                        <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" />
                     </div>
                 </div>
-              <div class="reviews__star">
+                <div class="reviews__star">
                     <div :class="['flex items-center mt-1', 'include']" @click="starFilter(5)">
                         <a href="#" class="text-xs font-medium hover:underline">5 star</a>
-                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate5*100/reviews.length}%`}"></div>
+                        <div class="star__barre h-3 rounded mx-2"
+                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate5 * 100 / reviews.length}%` }">
+                        </div>
                         <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate5 }}</span>
                     </div>
-                    <div :class="['flex items-center mt-1','include']" @click="starFilter(4)">
+                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(4)">
                         <a href="#" class="text-xs font-medium dark:text-blue-500 hover:underline">4 star</a>
-                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate4*100/reviews.length}%`}"></div>
+                        <div class="star__barre h-3 rounded mx-2"
+                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate4 * 100 / reviews.length}%` }">
+                        </div>
                         <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate4 }}</span>
                     </div>
-                    <div :class="['flex items-center mt-1','include']" @click="starFilter(3)">
+                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(3)">
                         <a href="#" class="text-xs font-medium hover:underline">3 star</a>
-                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate3*100/reviews.length}%`}"></div>
+                        <div class="star__barre h-3 rounded mx-2"
+                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate3 * 100 / reviews.length}%` }">
+                        </div>
                         <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate3 }}</span>
                     </div>
                     <div :class="['flex items-center mt-1', 'include']" @click="starFilter(2)">
                         <a href="#" class="text-xs font-medium hover:underline">2 star</a>
-                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate2*100/reviews.length}%`}"></div>
+                        <div class="star__barre h-3 rounded mx-2"
+                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate2 * 100 / reviews.length}%` }">
+                        </div>
                         <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate2 }}</span>
                     </div>
-                    <div :class="['flex items-center mt-1','include']" @click="starFilter(1)">
+                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(1)">
                         <a href="#" class="text-xs font-medium hover:underline">1 star</a>
-                        <div class="star__barre h-3 rounded mx-2" :style="{'width':`${companiesStore.getNumberOfRating(reviews).rate1*100/reviews.length}%`}"></div>
+                        <div class="star__barre h-3 rounded mx-2"
+                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate1 * 100 / reviews.length}%` }">
+                        </div>
                         <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate1 }}</span>
                     </div>
-              </div>
-              <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData"/>
+                </div>
+                <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
             </div>
         </div>
     </div>
-    <EstablishmentNotFound v-else/>
+    <EstablishmentNotFound v-else />
 </template>
 
 <script setup>
@@ -226,18 +237,18 @@ import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
-import {ref, reactive, watch, onBeforeMount, computed, provide, defineAsyncComponent} from 'vue';
+import { ref, reactive, watch, onBeforeMount, computed, provide, defineAsyncComponent } from 'vue';
 import { ElDatePicker } from 'element-plus';
 
 
-const page=ref({
+const page = ref({
     title1: "",
     title2: "",
     icon: "uil-estate",
 });
 
 let exist = ref(true);
-const EstablishmentNotFound = defineAsyncComponent(()=>
+const EstablishmentNotFound = defineAsyncComponent(() =>
     import("@Views/EstablishmentNotFound.vue")
 )
 
@@ -246,7 +257,7 @@ const router = useRouter();
 const breadcrumbData = [
     {
         title: "Back",
-         path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+        path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
         isCurrent: false,
     },
     {
@@ -267,37 +278,37 @@ let dataReviews = ref([]);
 let reviews_loader = ref(true);
 let visibleData = ref([])
 let paginationConfig = ref({
-    current:0,
+    current: 0,
     size: 5,
     data: [],
     _data: []
 });
 let dataLoading = ref(true)
 
-let checkedFeeling = ref(['positive','neutre','negative']);
+let checkedFeeling = ref(['positive', 'neutre', 'negative']);
 const showModal = ref(false);
 let selectedWebsites = ref('Global');
 let websites = ref(['Global']);
 let media = [];
 const all_items = ref([
-    {title: "Rating", value: 0, icon: "uil-star"},
-    {title: "Reviews", value: 0, icon: "uil-comment"},
-    {title: "Competitors", value: 0, icon: "uil-building"},
+    { title: "Rating", value: 0, icon: "uil-star" },
+    { title: "Reviews", value: 0, icon: "uil-comment" },
+    { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
 
-let updatePage = function(pageNumber){
+let updatePage = function (pageNumber) {
     paginationConfig.value.current = pageNumber;
     updateVisibleData(_reviews.value);
 }
 
-let updateVisibleData = function(_data, isStarFilter=false){
+let updateVisibleData = function (_data, isStarFilter = false) {
     let data = paginationConfig.value;
     _reviews.value = _data
-    if (isStarFilter==false) dataReviews.value= _reviews.value ;
+    if (isStarFilter == false) dataReviews.value = _reviews.value;
 
-    paginationConfig.value.data = _data.slice(data.current*data.size, (data.current * data.size) + data.size)
+    paginationConfig.value.data = _data.slice(data.current * data.size, (data.current * data.size) + data.size)
     if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
-        updatePage( paginationConfig.value.current -1);
+        updatePage(paginationConfig.value.current - 1);
     }
     visibleData.value = paginationConfig.value.data
     reviews_loader.value = false;
@@ -323,38 +334,38 @@ const options = ref({
 
 
 const format2 = (date) => {
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
 
-  return `${day}/${month}/${year}`;
+    return `${day}/${month}/${year}`;
 }
 
 const handleDate = (modelData) => {
- enableDateEnd.value = (modelData != null)?true:false;
- dateEnd.value = null;
+    enableDateEnd.value = (modelData != null) ? true : false;
+    dateEnd.value = null;
 }
 
-watch([dateStart, dateEnd, selectedWebsites, checkedFeeling], ()=>{
-      loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
+watch([dateStart, dateEnd, selectedWebsites, checkedFeeling], () => {
+    loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
 })
 
 let selectedStars = ref('0');
-const starFilter = (star)=>{
+const starFilter = (star) => {
     selectedStars.value = star;
 };
 
-const filterReviewsByStar = (star, data)=>{
+const filterReviewsByStar = (star, data) => {
     let result = [];
-    data.forEach(review =>{
+    data.forEach(review => {
         let rating = companiesStore.formatRating(review.rating);
-        rating = rating>5?rating/2:rating;
-        if(Math.abs(rating) == star) result.push(review);
+        rating = rating > 5 ? rating / 2 : rating;
+        if (Math.abs(rating) == star) result.push(review);
     })
     return result;
 }
-const reloadStarData = ()=>{
-    let scores = [1,2,3,4,5];
+const reloadStarData = () => {
+    let scores = [1, 2, 3, 4, 5];
     let filteredReviews = _reviews.value;
     let rating = scores.filter((element) => !selectedStars.value.includes(element));
     if (selectedStars.value.length > 0) {
@@ -364,43 +375,43 @@ const reloadStarData = ()=>{
     // updateVisibleData(filteredReviews);
 }
 
-const reloadData = (reviewUpdated)=>{
-    visibleData.value.forEach((review, index)=>{
-        if(review.id == reviewUpdated.id){
+const reloadData = (reviewUpdated) => {
+    visibleData.value.forEach((review, index) => {
+        if (review.id == reviewUpdated.id) {
             visibleData.value[index].feeling = reviewUpdated.feeling;
         }
     })
 }
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
-const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source, stars)=>{
-    console.log('dateStart ',dateStart,  IsValueOkay(dateStart))
-    console.log('dateEnd ',dateEnd, IsValueOkay(dateEnd))
-    console.log('source ',source, IsValueOkay(source))
-    console.log('stars ',stars, IsValueOkay(stars))
-    options.value.current=current;
-    options.value.page=page;
+const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source, stars) => {
+    console.log('dateStart ', dateStart, IsValueOkay(dateStart))
+    console.log('dateEnd ', dateEnd, IsValueOkay(dateEnd))
+    console.log('source ', source, IsValueOkay(source))
+    console.log('stars ', stars, IsValueOkay(stars))
+    options.value.current = current;
+    options.value.page = page;
     reviews_loader.value = true;
 
     let apiBase = '/review/by_establishment';
     let apiParams = `tag=${tag}&page=${page}&limit=${limit}`;
-    
-    if(IsValueOkay(dateStart) && IsValueOkay(dateEnd)){
+
+    if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(dateStart).format('YYYY-MM-DD');
         dateEnd = moment(dateEnd).format('YYYY-MM-DD');
         apiParams += `&from=${dateStart}&to=${dateEnd}`;
     }
 
-    if(IsValueOkay(source)){
-        source=(source=='App (Private)')?'App (Private)':source.toLowerCase();
-        apiParams +=`&platform=${source}`
+    if (IsValueOkay(source)) {
+        source = (source == 'App (Private)') ? 'App (Private)' : source.toLowerCase();
+        apiParams += `&platform=${source}`
     }
 
-    if(IsValueOkay(stars)){
-        apiParams +=`&star=${stars}`
+    if (IsValueOkay(stars)) {
+        apiParams += `&star=${stars}`
     }
 
-    const api = apiBase+'?'+apiParams;
+    const api = apiBase + '?' + apiParams;
     console.log(api)
 
     const response = await new Promise((resolve, reject) => {
@@ -411,13 +422,13 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     console.log(response)
 
     if (response.status == 200) {
-       reviews_loader.value = false;
-       options.value.max =  response.data['count'];
-       visibleData.value = response.data['data'];
+        reviews_loader.value = false;
+        options.value.max = response.data['count'];
+        visibleData.value = response.data['data'];
     }
 }
 
-watch(selectedStars, ()=>{
+watch(selectedStars, () => {
     loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
 });
 
@@ -429,11 +440,11 @@ onBeforeMount(async () => {
 
     const response2 = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId}/rating`, (response) => {
-                resolve(response)
+            resolve(response)
         });
     });
 
-    if(response2.status == 200){
+    if (response2.status == 200) {
         establishment.value = response2.data;
         page.value.title2 = establishment.value.name;
         all_items.value[0].value = establishment.value.rating;
@@ -444,53 +455,53 @@ onBeforeMount(async () => {
 
     const response = await new Promise((resolve, reject) => {
         services.get_Record(`/establishment/${companyId}/detail`, (response) => {
-                resolve(response)
-                 if(response.status == 404) {
-                    exist.value = false;
-                    appStore.isLoading = false;
-                }
+            resolve(response)
+            if (response.status == 404) {
+                exist.value = false;
+                appStore.isLoading = false;
+            }
         });
     });
 
-     if(response.status == 200){
-            establishment.value['reviews'] = response.data['reviews'];
-            establishment.value['websites'] = response.data['websites'];
-            reviews.value = establishment.value.reviews;
-            _reviews.value = reviews.value;
-            websites.value = ['Global',...companiesStore.getWebsites(establishment.value.websites)];
-            reloadStarData();
-            reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
-            appStore.isLoading = false;
-     }
+    if (response.status == 200) {
+        establishment.value['reviews'] = response.data['reviews'];
+        establishment.value['websites'] = response.data['websites'];
+        reviews.value = establishment.value.reviews;
+        _reviews.value = reviews.value;
+        websites.value = ['Global', ...companiesStore.getWebsites(establishment.value.websites)];
+        reloadStarData();
+        reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
+        appStore.isLoading = false;
+    }
 });
 </script>
 
 <style scoped>
-*{
+* {
     transition: var(--transition);
 }
 
-img{
+img {
     height: 200px !important;
 }
 
-.include{
-      cursor: pointer;
+.include {
+    cursor: pointer;
 }
 
-.include a{
+.include a {
     color: var(--color-primary);
 }
 
-.not__include a{
+.not__include a {
     color: var(--light-color-bg2);
 }
 
-.include .star__barre{
+.include .star__barre {
     background: var(--color-warning);
 }
 
-.not__include .star__barre{
+.not__include .star__barre {
     background: var(--color-warning2);
 }
 
@@ -498,28 +509,28 @@ img{
     color: var(--color-bg2);
 }
 
-.not__include span{
+.not__include span {
     color: rgb(165, 165, 165);
 }
 
-.temp__p{
+.temp__p {
     font-size: 14px;
     color: var(--color-bg1);
     font-weight: 500;
 }
 
-.temp__p a:hover{
+.temp__p a:hover {
     background-color: var(--color-danger);
     color: white;
 }
 
-.temp__p a{
+.temp__p a {
     color: var(--color-danger);
     border-bottom: 1px solid var(--color-danger);
     cursor: pointer;
 }
 
-.app__container{
+.app__container {
     margin-top: 5rem;
     min-height: 30rem;
     width: var(--container-width-lg);
@@ -527,86 +538,89 @@ img{
     padding: 0;
     display: flex;
     flex-direction: row-reverse;
-    gap:1rem;
+    gap: 1rem;
 }
 
-.reviews__content p{
-   font-size: 14px;
-   font-weight: 500;
-   color: var(--color-bg1);
+.reviews__content p {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-bg1);
 }
 
-.reviews__content a{
+.reviews__content a {
     color: var(--color-danger);
     border-bottom: 1px solid var(--color-danger);
     cursor: pointer;
     font-size: inherit;
 }
-.reviews__content a:hover{
-   background-color: var(--color-danger);
-   color: white;
+
+.reviews__content a:hover {
+    background-color: var(--color-danger);
+    color: white;
 }
 
-.reviews__pagination{
+.reviews__pagination {
     display: flex;
     justify-content: flex-end;
 }
 
-.rating__customers{
+.rating__customers {
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
     margin: 15px auto;
 }
 
-.reviews__star{
+.reviews__star {
     margin-bottom: 15px;
     padding: 15px;
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
 }
 
-.establishment{
+.establishment {
     margin-bottom: 15px;
     padding: 15px;
     border: 1px solid var(--light-color-bg2);
 }
 
-.establishment__info{
+.establishment__info {
     display: flex;
     flex-direction: column;
     justify-content: center;
     margin-top: 5px;
 }
 
-.establishment__info i, .establishment__info_tablet i{
+.establishment__info i,
+.establishment__info_tablet i {
     color: var(--color-danger);
     margin-right: 5px;
 }
 
-.establishment__info label, .establishment__info_tablet label{
+.establishment__info label,
+.establishment__info_tablet label {
     font-size: 14px;
     font-weight: bold;
     color: var(--color-primary)
 }
 
-.establishment div{
+.establishment div {
     font-size: 13px;
     font-weight: 500;
 }
 
-.establishment__info_tablet div{
+.establishment__info_tablet div {
     display: flex;
 }
 
-.date__filter .title{
-    font-weight:600;
+.date__filter .title {
+    font-weight: 600;
 }
 
-.filter__content .title{
+.filter__content .title {
     font-weight: 500;
 }
 
-.filter__content{
+.filter__content {
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
     padding: 15px;
@@ -615,58 +629,58 @@ img{
     justify-content: center;
 }
 
-.rating__customers .title{
-   font-size: 15px;
-   font-weight:600;
-   margin-left: 15px;
-   margin-top:15px;
+.rating__customers .title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-left: 15px;
+    margin-top: 15px;
 }
 
-.reviews__content1 .review span{
-   font-size: 12px;
-   margin: auto;
+.reviews__content1 .review span {
+    font-size: 12px;
+    margin: auto;
 }
 
-.community__feedback .title{
+.community__feedback .title {
     font-size: 15px;
     font-weight: 600;
 }
 
-.community__feedback h2{
+.community__feedback h2 {
     font-size: 14px;
     font-weight: 500;
 }
 
-.legend{
- margin: 15px auto;
+.legend {
+    margin: 15px auto;
 }
 
-.comment{
+.comment {
     overflow: hidden;
     text-align: justify;
 }
 
-.app__title{
+.app__title {
     font-weight: 800;
     color: var(--color-danger);
 }
 
-.app__title h1{
+.app__title h1 {
     font-size: 20px;
     transition: var(--transition);
 }
 
-.app__title h2{
+.app__title h2 {
     font-size: 18px;
     transition: var(--transition);
 }
 
-.left__side{
+.left__side {
     width: 1300px;
     padding: 50px 5px;
 }
 
-.left__side .head{
+.left__side .head {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -674,7 +688,7 @@ img{
     flex-wrap: wrap;
 }
 
-#website__dropdown{
+#website__dropdown {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -682,146 +696,152 @@ img{
     transition: var(--transition);
 }
 
-#dropdownDivider{
+#dropdownDivider {
     position: absolute;
 }
 
-#dropdownDivider li{
+#dropdownDivider li {
     cursor: pointer;
     padding: 5px 10px;
     margin: auto;
     transform: var(--transition);
 }
 
-#dropdownDivider li:hover{
-   background-color: var(--color-danger);
-   color: var(--color-white);
+#dropdownDivider li:hover {
+    background-color: var(--color-danger);
+    color: var(--color-white);
 }
 
-.dashboard__content{
+.dashboard__content {
     display: flex;
     flex-wrap: wrap;
-    gap:1rem;
+    gap: 1rem;
     margin: 50px auto;
 }
 
-.counter{
+.counter {
     flex-grow: 1;
 }
 
-.reviews__content{
+.reviews__content {
     margin-top: 20px;
 }
 
-.rating{
+.rating {
     font-size: 18px;
     font-weight: 600;
     color: var(--color-warning);
 }
 
-.right__side{
+.right__side {
     width: 500px;
     padding: 50px 0px;
 }
 
-.rating__statistics{
-    display:none;
-    margin-bottom:15px;
+.rating__statistics {
+    display: none;
+    margin-bottom: 15px;
     transition: var(--transition);
 }
 
-.filter__container{
+.filter__container {
     display: none;
     transition: var(--transition);
 }
 
-.see__more{
+.see__more {
     cursor: pointer;
 }
 
-.society__name{
+.society__name {
     margin: 5px 0;
     display: flex;
 }
 
-.tablet_mobile__head, .tablet_mobile__filter{
+.tablet_mobile__head,
+.tablet_mobile__filter {
     display: none;
 }
 
-.society__location{
+.society__location {
     display: flex;
 }
 
-.society__location span{
+.society__location span {
     display: block;
     flex-basis: 225px;
     line-height: 1.2;
 }
 
-.date__picker{
+.date__picker {
     width: 100% !important;
     margin: 0px 2px !important;
 }
 
 @media screen and (max-width:1400px) {
-  .app__container{
-    width: var(--container-width-md);
-  }
+    .app__container {
+        width: var(--container-width-md);
+    }
 
-  .breadcrumb__container{
+    .breadcrumb__container {
         width: var(--container-width-md);
     }
 }
 
 @media screen and (max-width:1287px) {
-  .counter{
-    gap: 2rem !important;
-  }
-  .left__side{
-    width: 1000px !important;
-  }
-  
-  .right__side{
-    width: 300px !important;
-  }
+    .counter {
+        gap: 2rem !important;
+    }
+
+    .left__side {
+        width: 1000px !important;
+    }
+
+    .right__side {
+        width: 300px !important;
+    }
 }
 
 
 @media screen and (max-width:1024px) {
-   
-    .right__side{
-     width: 250px !important;
-    } 
+
+    .right__side {
+        width: 250px !important;
+    }
 }
 
 @media screen and (max-width: 975px) {
-   .app__container{
-    flex-direction: column-reverse;
-    width: 95% !important;
-    justify-content: center;
-    align-items: center;
-   }
-   .left__side{
-    width: inherit !important;
-   }
+    .app__container {
+        flex-direction: column-reverse;
+        width: 95% !important;
+        justify-content: center;
+        align-items: center;
+    }
 
-   .photo{
-    flex-basis: 250px;
-   }
+    .left__side {
+        width: inherit !important;
+    }
 
-   .photo div{
-    height: 100%;
-   }
+    .photo {
+        flex-basis: 250px;
+    }
 
-   .photo img{
-    height: 150px;
-    width: 100%;
-   }
-   .dashboard__content, .dashboard, .right__side{
-    display: none !important;
-   }
+    .photo div {
+        height: 100%;
+    }
 
-   .tablet_mobile__head{
+    .photo img {
+        height: 150px;
+        width: 100%;
+    }
+
+    .dashboard__content,
+    .dashboard,
+    .right__side {
+        display: none !important;
+    }
+
+    .tablet_mobile__head {
         display: flex;
         justify-content: space-between;
         margin: auto;
@@ -834,16 +854,16 @@ img{
         font-size: 14px;
     }
 
-    .tablet_mobile__head label{
+    .tablet_mobile__head label {
         font-size: 17px !important;
     }
 
-    .tablet_mobile__head span{
+    .tablet_mobile__head span {
         font-weight: 500;
         color: var(--color-bg2);
     }
 
-    .tablet_mobile__filter{
+    .tablet_mobile__filter {
         display: flex;
         width: inherit;
         align-items: center;
@@ -853,75 +873,75 @@ img{
         border-radius: 5px;
     }
 
-    .tablet_mobile__filter *{
+    .tablet_mobile__filter * {
         flex-basis: 200px;
     }
 }
 
 @media screen and (max-width:800px) {
-    .tablet_mobile__head{
+    .tablet_mobile__head {
         font-size: 13px !important;
     }
 
-    .tablet_mobile__head label{
+    .tablet_mobile__head label {
         font-size: 15px !important;
     }
 
-    .tablet_mobile__filter{
-       gap: 0.25rem;
+    .tablet_mobile__filter {
+        gap: 0.25rem;
     }
 }
 
 @media screen and (max-width:800px) {
-    .photo{
-       flex-basis: 225px !important;
+    .photo {
+        flex-basis: 225px !important;
     }
 }
 
 @media screen and (max-width:675px) {
-    .tablet_mobile__head{
+    .tablet_mobile__head {
         font-size: 12px !important;
         padding: 10px;
     }
 
-    .photo{
-       flex-basis: 210px !important;
+    .photo {
+        flex-basis: 210px !important;
     }
 
-    .tablet_mobile__head label{
+    .tablet_mobile__head label {
         font-size: 14px !important;
     }
 }
 
 @media screen and (max-width:625px) {
-    .tablet_mobile__filter{
-       flex-direction: column;
-       padding: 5px 0px !important;
+    .tablet_mobile__filter {
+        flex-direction: column;
+        padding: 5px 0px !important;
     }
 
-    .tablet_mobile__filter *{
+    .tablet_mobile__filter * {
         flex-basis: inherit !important;
         width: inherit !important;
         justify-content: center !important;
     }
-    .date__picker{
+
+    .date__picker {
         margin: 5px 0 10px !important;
     }
 }
 
 @media screen and (max-width:500px) {
-    .tablet_mobile__head{
+    .tablet_mobile__head {
         flex-direction: column-reverse;
         gap: 1rem;
     }
 
-    .photo{
-       flex-basis: 150px !important;
-       height: 100px !important;
+    .photo {
+        flex-basis: 150px !important;
+        height: 100px !important;
     }
 }
 
-.establishment__info_tablet{
+.establishment__info_tablet {
     margin-top: 50px;
-}
-</style>
+}</style>

@@ -13,8 +13,8 @@
                     </div>
                 </div>
                 <div class="dashboard__content">
-                    <DashboardComponent :is-loading="chartLoading" class="counter" v-for="item in all_items" :item="item"
-                        :key="item" />
+                    <DashboardComponent :is-loading="establishmentLoading" class="counter" v-for="item in all_items"
+                        :item="item" :key="item" />
                 </div>
                 <div class="head">
                     <div class="app__title">
@@ -81,6 +81,11 @@
                         </div>
                         <span class="sr-only">Loading...</span>
                     </div>
+                    <PaginationComponent :options="options" @next="(option) => {
+                        loadReviews(companyId, option.page, option.limit, option.current)
+                    }" @prev="(option) => {
+    loadReviews(companyId, option.page, option.limit, option.current)
+}" />
                     <aside v-if="lastReviews.length > 0">
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ all_items[1].value - 3 }} reviews
                             remains</p>
@@ -860,7 +865,7 @@ const loadReviews = async (tag, page, limit, current) => {
     });
 
     if (response.status == 200) {
-
+        options.value.max = response.data['count'];
         visibleData.value = response.data['data'];
         reviewsLoading.value = false;
     }
