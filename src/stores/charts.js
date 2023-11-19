@@ -116,8 +116,6 @@ export const useChartsStore = defineStore(
         fTo = `${tTo[2]}-${tTo[1]}-${tTo[0]}`
       }
 
-      console.log(tag)
-
       await fetchData(tag.join(','), type, fFrom, fTo, platform, (response) => {
         const data = response.data
         switch (type) {
@@ -283,7 +281,6 @@ export const useChartsStore = defineStore(
             }
           }
           if (dates.length) {
-            console.log(dates)
             dates = sortDates(dates)
             await updateData(tags, 'days', dates[0], dates.pop(), platform, false)
           } else {
@@ -299,7 +296,6 @@ export const useChartsStore = defineStore(
             if (data) {
               dayList.forEach((date) => {
                 if (!Object.keys(data).includes(date)) {
-                  console.log(date)
                   update = true
                 }
               })
@@ -330,7 +326,6 @@ export const useChartsStore = defineStore(
             dates = dates.sort(function (a, b) {
               return a > b ? 1 : a < b ? -1 : 0
             })
-            console.log(dates)
             const tFrom = dates[0].split('-')
             const tTo = dates.pop().split('-')
             await updateData(

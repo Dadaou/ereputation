@@ -565,6 +565,7 @@ const viewData = async () => {
         let competitorInfo = establishment.value['competitors'].find(c => c.name === selectedCompetitors.value)
         const tags = competitorInfo ? [companyId.value, competitorInfo.tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.tag)]
         plotdata.value = await chartsStore.checkData(tags, selectedTimePeriod.value, startDate, endDate, selectedWebsites.value.toLowerCase())
+        legendData.value = companiesStore.generateLegend(plotdata.value, colors);
     }
     chartLoading.value = false;
     loadDatasets();
@@ -664,7 +665,7 @@ const reloadComparison = async (competitor) => {
     //     endDate = moment(date2.value[1]).format('YYYY-M-DD');
     // }
     viewData();
-    // legendData.value = companiesStore.generateLegend(_comparisonData, colors);
+
 }
 
 const reloadComparisonByWebsite = async (website) => {
