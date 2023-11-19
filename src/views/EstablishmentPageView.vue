@@ -891,8 +891,10 @@ onBeforeMount(async () => {
     });
 
     if (response2.status == 200) {
-        appStore.isLoading = false;
+
         establishment.value = response2.data;
+        establishment.value['tag'] = companyId.value;
+        appStore.isLoading = false;
         page.value.title2 = establishment.value.name;
         all_items.value[0].value = establishment.value.rating;
         all_items.value[1].value = establishment.value.totalReviews;
