@@ -340,7 +340,7 @@ const isURL = (string) => {
 }
 
 const getSocials = (socials) => {
-    socials = Object.entries(socials[0]);
+    socials = (socials.length>0)?Object.entries(socials[0]):socials;
     let data = [];
     socials.forEach(([key, value]) => {
         if (typeof (value) == 'string') {
@@ -426,6 +426,7 @@ onBeforeMount(async () => {
     if (response.status == 200) {
         establishment.value['socials'] = response.data['socials'];
         establishment.value['socialPages'] = response.data['socialPages'];
+        console.log(establishment.value)
         socials.value = [" ", ...getSocials(establishment.value.socials)];
         let data = [];
         let promises = [];
