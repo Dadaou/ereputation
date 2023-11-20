@@ -5,63 +5,25 @@
             <BreadcrumbComponent :data="breadcrumbData" />
         </div>
         <div class="app__container">
-
             <div class="left__side">
-                <div class="head dashboard">
-                    <div class="app__title">
-                        <h1>Dashboard</h1>
-                    </div>
-                </div>
-                <div class="dashboard__content">
-                    <DashboardComponent :is-loading="establishmentLoading" class="counter" v-for="item in all_items"
-                        :item="item" :key="item" />
-                </div>
                 <div class="head">
                     <div class="app__title">
-                        <h2>Comparison</h2>
+                        <h2>Reviews</h2>
                     </div>
                 </div>
-                <div v-if="chartLoading == true" :style="{
-                    'width': `100%`,
-                    'height': `200px`,
-                    'display': 'flex',
-                    'alignItems': 'center',
-                    'background': 'rgba(0, 0, 0, 0.1)',
-                    'opacity': 0.9,
-                    'justifyContent': 'center',
-                    'alignItems': 'center',
-                    'zIndex': 1,
-                    'marginTop': '10px',
-                    'marginBottom': '10px'
-                }">
-                    <SpinnerComponent />
-                </div>
-                <ComparisonChartComponent v-else :data="plotdata" :width="chart__width" :chartheight="chart__height"
-                    :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors"
-                    :timePeriod="selectedTimePeriod" />
-                <BaseLegend v-if="chartLoading == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
-                </BaseLegend>
-                <div class="head">
-                    <div class="app__title">
-                        <h2>Last reviews</h2>
-                    </div>
-                </div>
-                <div class="reviews__content" v-if="!reviewsLoading">
-                    <p>Discover the latest feedback about your establishment. Click <a
-                            @click="gotoReviewPage(establishment.competitor_tag, $route.params.tag)">here</a> to access all
-                        reviews.</p>
+                <div class="reviews__content">
                     <div class="reviews__pagination">
-                        <PaginationComponent :options="options" @next="(option) => {
-                            loadReviews(companyId, option.page, option.limit, option.current)
+                        <PaginationComponent :options="options" v-if="visibleData.length > 0" @next="(option) => {
+                            loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
                         }" @prev="(option) => {
-    loadReviews(companyId, option.page, option.limit, option.current)
+    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
 }" />
                     </div>
-                    <CommentComponent v-if="reviewsLoading == false" :reviews="visibleData"
-                        :allReviews="establishment.reviews" :showEmoji="false" />
+                    <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
+                        @reloadData="(review) => reloadData(review)" />
                     <div v-else role="status"
                         class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
-                        v-for="index in 20" :key="index">
+                        v-for="index in 5">
                         <div>
                             <div class="flex items-center justify-between mb-4">
                                 <div>
@@ -79,89 +41,64 @@
                         </div>
                         <span class="sr-only">Loading...</span>
                     </div>
-                    <PaginationComponent :options="options" @next="(option) => {
-                        loadReviews(companyId, option.page, option.limit, option.current)
-                    }" @prev="(option) => {
-    loadReviews(companyId, option.page, option.limit, option.current)
+                    <div class="reviews__pagination">
+                        <PaginationComponent :options="options" v-if="visibleData.length > 0" @next="(option) => {
+                            loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+                        }" @prev="(option) => {
+    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
 }" />
-                    <aside v-if="lastReviews.length > 0">
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ all_items[1].value - 3 }} reviews
-                            remains</p>
-                        <div class="flex items-center mt-3 space-x-3 divide-x divide-gray-200 dark:divide-gray-600">
-                            <a @click="gotoReviewPage(establishment.competitor_tag, $route.params.tag)"
-                                class="see__more text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-xs px-2 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">See
-                                more</a>
-                        </div>
-                    </aside>
+                    </div>
                 </div>
-                <div v-else>Loading</div>
             </div>
             <div class="tablet_mobile__filter">
-                <DropdownComponent class="dropdown" :showTitle="false" title="Compare to" placeholder="Select a competitor"
-                    :data="computedCompetitors" @submit="(competitor) => {
-                        selectedCompetitors = competitor.name
-                        if (competitor.name == computedCompetitors[0].name) {
-                            globalComparison();
-                        } else {
-                            reloadComparison(competitor);
-                        }
-                    }" :defaultObj="computedCompetitors[0]" :isDataObject="true" />
                 <DropdownComponent :showTitle="false" class="dropdown" title="Filter by plateform"
                     placeholder="Select a website" :data="websites" @submit="(website) => {
                         selectedWebsites = website
-                        if (website == websites[0]) {
-                            globalComparison();
-                        } else {
-                            reloadComparisonByWebsite(website);
-                        }
                     }" :default="websites[0]" />
-                <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
-                    selectedTimePeriod = timePeriod
-                }" :default="timePeriods[0]" />
                 <div class="date__picker">
-                    <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
+                    <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
                 </div>
                 <div class="date__picker">
-                    <el-date-picker v-model="end_date" type="date" placeholder="Select the end date" :size="'large'" />
+                    <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
                 </div>
             </div>
             <div class="tablet_mobile__head">
                 <div class="establishment__info_tablet">
-                    <label v-if="!establishmentLoading">{{ establishment.name }}</label>
+                    <label v-if="!dataLoading">{{ establishment.name }}</label>
                     <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
                     <div>
                         <i
                             :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
-                        <span v-if="!establishmentLoading">{{ establishment.category }}</span>
+                        <span v-if="!dataLoading">{{ establishment.category }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
                     </div>
                     <div class="society__location" v-if="establishment.country != null">
                         <i class="uil uil-map"></i>
-                        <span v-if="!establishmentLoading">{{ establishment.country }}</span>
+                        <span v-if="!dataLoading">{{ establishment.country }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
                         <i class="uil uil-location-point"></i>
-                        <span v-if="!establishmentLoading">{{ establishment.address1 }}, {{ establishment.city }}</span>
+                        <span v-if="!dataLoading">{{ establishment.address1 }}, {{ establishment.city }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
                         <i class="uil uil-favorite"></i>
-                        <span v-if="!establishmentLoading" class="society__location">{{ all_items[0].value }}</span>
+                        <span v-if="!dataLoading" class="society__location">{{ all_items[0].value }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
                         <i class="uil uil-comment-alt"></i>
-                        <span v-if="!establishmentLoading">{{ all_items[1].value }}</span>
+                        <span v-if="!dataLoading">{{ all_items[1].value }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
                         <i class="uil uil-building"></i>
-                        <span v-if="!establishmentLoading">{{ all_items[2].value }} competitors</span>
+                        <span v-if="!dataLoading">{{ all_items[2].value }} competitors</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                 </div>
-                <div class="photo" v-if="!establishmentLoading">
+                <div class="photo" v-if="!dataLoading">
                     <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
                     <div v-else role="status"
                         class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
@@ -190,7 +127,7 @@
             <div class="right__side">
                 <div
                     class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#" v-if="!establishmentLoading">
+                    <a href="#" v-if="!dataLoading">
                         <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
                         <div v-else role="status"
                             class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
@@ -216,63 +153,66 @@
                         </div>
                     </a>
                     <div class="establishment__info">
-                        <label class="society__name" v-if="!establishmentLoading">{{ establishment.name }}</label>
+                        <label class="society__name" v-if="!dataLoading">{{ establishment.name }}</label>
                         <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
                         <div class="society__location">
                             <i
                                 :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
-                            <span v-if="!establishmentLoading" class="society__location">{{ establishment.category }}</span>
+                            <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
                             <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                         </div>
                         <div class="society__location">
                             <i class="uil uil-location-point"></i>
-                            <span v-if="!establishmentLoading" class="society__location">{{ establishment.address1 }}, {{
+                            <span v-if="!dataLoading" class="society__location">{{ establishment.address1 }}, {{
                                 establishment.city }}</span>
                             <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                         </div>
                     </div>
-                    <DropdownComponent class="dropdown" title="Compare to" placeholder="Select a competitor"
-                        :data="computedCompetitors" @submit="(competitor) => {
-                            selectedCompetitors = competitor.name
-                            if (competitor.name == computedCompetitors[0].name) {
-                                globalComparison();
-                            } else {
-                                reloadComparison(competitor);
-                            }
-                        }" :defaultObj="computedCompetitors[0]" :isDataObject="true" />
                     <DropdownComponent class="dropdown" title="Filter by plateform" placeholder="Select a website"
                         :data="websites" @submit="(website) => {
                             selectedWebsites = website
-                            if (website == websites[0]) {
-                                globalComparison();
-                            } else {
-                                reloadComparisonByWebsite(website);
-                            }
                         }" :default="websites[0]" />
                     <div class="date__filter">
                         <div class="text-sm title">Select a range of date</div>
-                        <el-date-picker v-model="start_date" type="date" placeholder="Select the start date"
-                            :size="'large'" />
-                        <el-date-picker class="mt-2" v-model="end_date" type="date" placeholder="Select the end date"
-                            :size="'large'" />
-                        <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
-                            selectedTimePeriod = timePeriod
-                        }" :default="timePeriods[0]" />
-                    </div>
-                </div>
-                <div class="rating__customers">
-                    <div class="title">Rating by Customers</div>
-                    <div class="chart__rating">
-                        <Line :data="chartData" :options="chartConfig.options" />
+                        <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+                        <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" />
                     </div>
                 </div>
                 <div class="reviews__star">
-                    <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
-                        @click="starFilter(star.intVal)">
-                        <a href="#" class="text-xs font-medium hover:underline">{{ star.label }}</a>
-                        <div class="star__barre h-3 rounded mx-2" :style="{ 'width': `${star.percentage}%` }">
+                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(5)">
+                        <a href="#" class="text-xs font-medium hover:underline">5 star</a>
+                        <div class="star__barre h-3 rounded mx-2"
+                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate5 * 100 / reviews.length}%` }">
                         </div>
-                        <span class="text-xs font-medium">{{ star.value }}</span>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate5 }}</span>
+                    </div>
+                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(4)">
+                        <a href="#" class="text-xs font-medium dark:text-blue-500 hover:underline">4 star</a>
+                        <div class="star__barre h-3 rounded mx-2"
+                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate4 * 100 / reviews.length}%` }">
+                        </div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate4 }}</span>
+                    </div>
+                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(3)">
+                        <a href="#" class="text-xs font-medium hover:underline">3 star</a>
+                        <div class="star__barre h-3 rounded mx-2"
+                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate3 * 100 / reviews.length}%` }">
+                        </div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate3 }}</span>
+                    </div>
+                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(2)">
+                        <a href="#" class="text-xs font-medium hover:underline">2 star</a>
+                        <div class="star__barre h-3 rounded mx-2"
+                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate2 * 100 / reviews.length}%` }">
+                        </div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate2 }}</span>
+                    </div>
+                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(1)">
+                        <a href="#" class="text-xs font-medium hover:underline">1 star</a>
+                        <div class="star__barre h-3 rounded mx-2"
+                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate1 * 100 / reviews.length}%` }">
+                        </div>
+                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate1 }}</span>
                     </div>
                 </div>
                 <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
@@ -292,33 +232,96 @@ import { useRoute, useRouter } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import CommentComponent from '@Components/utils/CommentComponent.vue';
-import DashboardComponent from '@Components/utils/DashboardComponent.vue';
-// import CommentPagination from '@Components/utils/CommentPagination.vue';
 import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
-import ComparisonChartComponent from '@Components/utils/ComparisonChartComponent.vue';
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
 import { ref, reactive, watch, onBeforeMount, computed, provide, defineAsyncComponent } from 'vue';
 import { ElDatePicker } from 'element-plus';
-import 'element-plus/es/components/date-picker/style/css'
-import { useChartsStore } from "@Stores/charts.js"
 
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-} from 'chart.js'
-import { Line } from 'vue-chartjs';
 
 const page = ref({
     title1: "",
     title2: "",
     icon: "uil-estate",
+});
+
+let exist = ref(true);
+const EstablishmentNotFound = defineAsyncComponent(() =>
+    import("@Views/EstablishmentNotFound.vue")
+)
+
+const route = useRoute();
+const router = useRouter();
+const breadcrumbData = [
+    {
+        title: "Back",
+        path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+        isCurrent: false,
+    },
+    {
+        title: "Reviews",
+        path: `${route.path}`,
+        isCurrent: true
+    }
+]
+const companyId = route.params.id;
+const userStore = useUserStore();
+const companiesStore = useCompanyStore();
+const appStore = useAppStore();
+
+let establishment = ref({});
+let reviews = ref([]);
+let _reviews = ref([]);
+let dataReviews = ref([]);
+let reviews_loader = ref(true);
+let visibleData = ref([])
+let paginationConfig = ref({
+    current: 0,
+    size: 5,
+    data: [],
+    _data: []
+});
+let dataLoading = ref(true)
+
+let checkedFeeling = ref(['positive', 'neutre', 'negative']);
+const showModal = ref(false);
+let selectedWebsites = ref('Global');
+let websites = ref(['Global']);
+let media = [];
+const all_items = ref([
+    { title: "Rating", value: 0, icon: "uil-star" },
+    { title: "Reviews", value: 0, icon: "uil-comment" },
+    { title: "Competitors", value: 0, icon: "uil-building" },
+]);
+
+let updatePage = function (pageNumber) {
+    paginationConfig.value.current = pageNumber;
+    updateVisibleData(_reviews.value);
+}
+
+let updateVisibleData = function (_data, isStarFilter = false) {
+    let data = paginationConfig.value;
+    _reviews.value = _data
+    if (isStarFilter == false) dataReviews.value = _reviews.value;
+
+    paginationConfig.value.data = _data.slice(data.current * data.size, (data.current * data.size) + data.size)
+    if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
+        updatePage(paginationConfig.value.current - 1);
+    }
+    visibleData.value = paginationConfig.value.data
+    reviews_loader.value = false;
+}
+
+const dateStart = ref();
+const dateEnd = ref();
+const enableDateEnd = ref(false);
+const downloaded = ref(false);
+let reviewFeedbackData = ref({
+    width: 0,
+    red: 0,
+    green: 0,
+    feeling: 0
 });
 
 const options = ref({
@@ -328,324 +331,23 @@ const options = ref({
     page: 1,
 })
 
-let exist = ref(true);
-const EstablishmentNotFound = defineAsyncComponent(() =>
-    import("@Views/EstablishmentNotFound.vue")
-)
 
-const SpinnerComponent = defineAsyncComponent(() =>
-    import('@Components/utils/SpinnerComponent.vue')
-)
+const format2 = (date) => {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
 
-const weatherModal = ref(false);
-provide('showModal', weatherModal);
-const route = useRoute();
-const companyId = ref(route.params.id);
-const router = useRouter();
-const breadcrumbData = [
-    {
-        title: "Establishment",
-        path: `${route.path}`,
-        isCurrent: true,
-    },
-]
+    return `${day}/${month}/${year}`;
+}
 
-const chartsStore = useChartsStore();
+const handleDate = (modelData) => {
+    enableDateEnd.value = (modelData != null) ? true : false;
+    dateEnd.value = null;
+}
 
-// chartsStore.checkData([], 'days', '2023-11-01', '2023-11-30');
-
-const date = ref(moment(new Date(), 'YYYY-MM-DD'));
-
-let selected_date = reactive(moment());
-
-const userStore = useUserStore();
-const companiesStore = useCompanyStore();
-const appStore = useAppStore();
-let showWebsites = ref(false);
-let selectedCompetitors = ref('Global');
-let selectedWebsites = ref('Global');
-let websites = ref(['Global']);
-
-let establishment = ref({ reviews: [] });
-let reviews = ref([]);
-let _reviews = computed(() => {
-    return reviews.value;
+watch([dateStart, dateEnd, selectedWebsites, checkedFeeling], () => {
+    loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
 })
-let competitors = ref([]);
-let computedCompetitors = computed(() => {
-    let data = [{ name: 'Global' }];
-    establishment.value['competitors'] && establishment.value['competitors'].forEach(c => {
-        data.push(c);
-    })
-    return data;
-});
-
-let visibleData = ref([])
-const starsData = ref([])
-let paginationConfig = ref({
-    current: 0,
-    size: 20,
-    data: [],
-    _data: []
-})
-
-let comparisonData = ref([establishment.value, ...competitors.value]);
-let _comparisonData = [establishment.value, ...competitors.value];
-const all_items = ref([
-    { title: "Rating", value: 0, icon: "uil-star" },
-    { title: "Reviews", value: 0, icon: "uil-comment" },
-    { title: "Competitors", value: 0, icon: "uil-building" },
-]);
-
-let plotdata = ref([]);
-let legendData = ref([]);
-let _legendData = [];
-const establishmentLoading = ref(true)
-const reviewsLoading = ref(false)
-const feedbackLoading = ref(false)
-const starsLoading = ref(false)
-const semesterChartLoading = ref(false)
-const chartLoading = ref(false)
-let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-let endDate = moment().format('YYYY-M-DD');
-const date2 = ref([startDate, endDate]);
-
-let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
-let end_date = ref(moment().format('YYYY-M-DD'));
-
-let selectedTimePeriod = ref('');
-let timePeriods = ref(['Days', 'Weeks', 'Months', 'Quarters', 'Semesters']);
-
-let lastReviews = ref([]);
-let media = [];
-
-let reviewsConfidence = ref(0);
-let reviewFeedbackData = ref({
-    width: 0,
-    red: 0,
-    green: 0,
-    feeling: 0
-});
-
-let colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff'];
-
-let chartConfig = reactive({
-    data: {
-        labels: [],
-        datasets: [
-            {
-                label: 'Data One',
-                backgroundColor: '#f87979',
-                data: [40, 20, 12, 39, 10, 40,]
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: false,
-            }
-        },
-    }
-});
-
-let chartData = ref({
-    labels: [],
-    datasets: []
-})
-
-const formatSixMonthsChartData = (datas) => {
-    let chartdata = {
-        labels: [],
-        datasets: []
-    }
-
-    const names = Object.keys(datas[0]).filter(v => v != 'name');
-    const labels = datas.map(d => d.name);
-    let index = 0
-
-    names.forEach(k => {
-        let tmp2 = []
-        datas.forEach(dp => {
-            tmp2.push(dp[k])
-        })
-        chartdata.datasets.push({
-            data: tmp2,
-            label: k,
-            backgroundColor: colors[index]
-        })
-        index++
-    })
-
-    chartdata.labels = labels
-
-    return chartdata
-}
-
-const loadDatasets = async () => {
-
-    semesterChartLoading.value = true
-
-    let eDate = new Date();
-    let sDate = new Date();
-    sDate.setMonth(sDate.getMonth() - 5);
-
-    if (establishment && establishment.value['competitors']) {
-        let competitorInfo = establishment.value['competitors'].find(c => c.name === selectedCompetitors.value)
-        const tags = competitorInfo ? [companyId.value, competitorInfo.tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.tag)]
-        let datas = await chartsStore.checkData(tags, 'months', moment(sDate).format('YYYY-M-DD'), moment(eDate).format('YYYY-M-DD'), selectedWebsites.value.toLowerCase())
-        chartData.value = formatSixMonthsChartData(datas);
-        semesterChartLoading.value = false
-    }
-}
-
-const loadDatasetsAsync = async (establishments, colors, date) => {
-    let data = [];
-    var index = 0;
-    let chartdata = {
-        labels: await companiesStore.getLastMonthsAsync(6, date, true),
-        datasets: []
-    }
-    chartConfig.data.datasets = [];
-    for (const establishment of establishments) {
-        let dataset = {
-            label: establishment.name,
-            backgroundColor: colors[index],
-            data: await companiesStore.getRatingLastMonthsV2(establishment.reviews, 6, date, true)
-        };
-        if (index >= establishments.length) index = 0;
-        index++;
-        data.push(dataset);
-        chartdata.datasets.push(dataset);
-    }
-    chartConfig.data.datasets = data;
-    chartData.value = chartdata;
-    return data;
-}
-
-const viewData = async () => {
-    chartLoading.value = true
-    startDate = moment(start_date.value).format('YYYY-M-DD');
-    endDate = moment(end_date.value).format('YYYY-M-DD');
-
-    if (establishment && establishment.value['competitors']) {
-        let competitorInfo = establishment.value['competitors'].find(c => c.name === selectedCompetitors.value)
-        const tags = competitorInfo ? [companyId.value, competitorInfo.tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.tag)]
-        plotdata.value = await chartsStore.checkData(tags, selectedTimePeriod.value, startDate, endDate, selectedWebsites.value.toLowerCase())
-        legendData.value = companiesStore.generateLegend(plotdata.value, colors);
-    }
-    chartLoading.value = false;
-    loadDatasets();
-}
-
-const viewDataAsync = async (timePeriod, startDate, endDate, data) => {
-    plotdata.value = await companiesStore.calculateReviewsV3Async(timePeriod, startDate, endDate, data);
-    console.log(plotdata.value)
-}
-
-const formatStarsData = (data) => {
-    let tmp = []
-    console.log(data)
-    const total = Object.keys(data).reduce(function (previous, key) {
-        return previous + data[key];
-    }, 0);
-    console.log(total)
-    Object.keys(data).forEach(k => {
-        tmp.push({
-            label: k,
-            value: data[k],
-            percentage: data[k] * 100 / total,
-            intVal: k.split()[0]
-        })
-    })
-    return tmp;
-
-}
-
-let updatePage = function (pageNumber) {
-    paginationConfig.value.current = pageNumber;
-    // updateVisibleData(lastReviews.value);
-}
-
-let updateVisibleData = function (_data) {
-    let data = paginationConfig.value;
-
-    paginationConfig.value.data = _data.slice(data.current * data.size, (data.current * data.size) + data.size);
-
-    if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
-        updatePage(paginationConfig.value.current - 1);
-    }
-    visibleData.value = paginationConfig.value.data;
-}
-
-const globalComparison = async () => {
-    selectedCompetitors.value = 'Global';
-    selectedWebsites.value = 'Global';
-    viewData();
-};
-
-const reloadComparison = async (competitor) => {
-    let competitorInfo = establishment.value['competitors'].find(c => c.name === competitor.name)
-    selectedCompetitors.value = competitorInfo.name;
-    plotdata.value = [];
-    viewData();
-}
-
-const reloadComparisonByWebsite = async (website) => {
-    selectedWebsites.value = website;
-    viewData();
-};
-
-
-const gotoReviewPage = (id, tag) => {
-    appStore.isLoading = true;
-    setTimeout(() => {
-        router.push({
-            name: 'Review',
-            params: {
-                id: id,
-                tag: tag
-            }
-        })
-    }, 100);
-}
-
-/**
- * Navbar Handler
- * useWindowScroll allows us to detect the scroll event on 
- * the browser
- */
-const { width, height } = useWindowSize();
-//For Group bar chart
-const chart__width = ref(800);
-const chart__height = ref(300);
-
-//For Line chart
-const chart__width2 = ref(300);
-const chart__height2 = ref(200);
-
-
-watch(date2, () => {
-    viewData();
-});
-
-watch([start_date, end_date], async () => {
-    if (start_date.value !== '' && end_date.value !== '') {
-        viewData()
-    }
-});
-
-watch(selectedTimePeriod, async () => {
-    startDate = moment(start_date.value).format('YYYY-M-DD');
-    endDate = moment(end_date.value).format('YYYY-M-DD');
-    viewData()
-})
-
-const goto = (value) => {
-    router.push({ name: value });
-};
 
 let selectedStars = ref('0');
 const starFilter = (star) => {
@@ -661,8 +363,6 @@ const filterReviewsByStar = (star, data) => {
     })
     return result;
 }
-
-
 const reloadStarData = () => {
     let scores = [1, 2, 3, 4, 5];
     let filteredReviews = _reviews.value;
@@ -671,17 +371,26 @@ const reloadStarData = () => {
         let result = filterReviewsByStar(rating, filteredReviews);
         filteredReviews = result;
     }
+    // updateVisibleData(filteredReviews);
 }
 
-watch(selectedStars, () => {
-     loadReviews(companyId.value, 1, options.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value);
-});
+const reloadData = (reviewUpdated) => {
+    visibleData.value.forEach((review, index) => {
+        if (review.id == reviewUpdated.id) {
+            visibleData.value[index].feeling = reviewUpdated.feeling;
+        }
+    })
+}
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source, stars) => {
+    console.log('dateStart ', dateStart, IsValueOkay(dateStart))
+    console.log('dateEnd ', dateEnd, IsValueOkay(dateEnd))
+    console.log('source ', source, IsValueOkay(source))
+    console.log('stars ', stars, IsValueOkay(stars))
     options.value.current = current;
     options.value.page = page;
-    reviewsLoading.value = true
+    reviews_loader.value = true;
 
     let apiBase = '/review/by_establishment';
     let apiParams = `tag=${tag}&page=${page}&limit=${limit}`;
@@ -712,27 +421,39 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     console.log(response)
 
     if (response.status == 200) {
-        reviewsLoading.value = false;
+        reviews_loader.value = false;
+        options.value.max = response.data['count'];
         visibleData.value = response.data['data'];
     }
 }
 
-onBeforeMount(async () => {
-    ChartJS.register(
-        CategoryScale,
-        LinearScale,
-        PointElement,
-        LineElement,
-        Title,
-        Tooltip,
-    )
+watch(selectedStars, () => {
+    loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
+});
 
+onBeforeMount(async () => {
+    let company = null;
     appStore.isLoading = true;
 
-    loadReviews(companyId.value, 1, options.value['rowLimit'], 1, '', '', selectedWebsites.value, selectedStars.value);
+    loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
 
     const response2 = await new Promise((resolve, reject) => {
-        services.get_Record(`establishment/${companyId.value}/rating`, (response) => {
+        services.get_Record(`establishment/${companyId}/rating`, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response2.status == 200) {
+        establishment.value = response2.data;
+        page.value.title2 = establishment.value.name;
+        all_items.value[0].value = establishment.value.rating;
+        all_items.value[1].value = establishment.value.totalReviews;
+        appStore.isLoading = false;
+        dataLoading.value = false;
+    }
+
+    const response = await new Promise((resolve, reject) => {
+        services.get_Record(`/establishment/${companyId}/detail`, (response) => {
             resolve(response)
             if (response.status == 404) {
                 exist.value = false;
@@ -741,68 +462,16 @@ onBeforeMount(async () => {
         });
     });
 
-    if (response2.status == 200) {
-
-        establishment.value = response2.data;
-        console.log(establishment.value)
-        establishment.value['tag'] = companyId.value;
+    if (response.status == 200) {
+        establishment.value['reviews'] = response.data['reviews'];
+        establishment.value['websites'] = response.data['websites'];
+        reviews.value = establishment.value.reviews;
+        console.log(response.data)
+        _reviews.value = reviews.value;
+        websites.value = ['Global', ...companiesStore.getWebsites(establishment.value.websites)];
+        reloadStarData();
+        reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
         appStore.isLoading = false;
-        page.value.title2 = establishment.value.name;
-        all_items.value[0].value = establishment.value.rating;
-        all_items.value[1].value = establishment.value.totalReviews;
-        all_items.value[2].value = establishment.value.competitors.length;
-
-        establishmentLoading.value = false
-        globalComparison();
-        websites.value = ['Global', ...establishment.value['websites']];
-        loadDatasets();
-
-    }
-
-    const response3 = await new Promise((resolve, reject) => {
-        services.get_Record(`charts/stars?tag=${companyId.value}`, (response) => {
-            resolve(response)
-        });
-    });
-
-    if (response3.status == 200) {
-        if (response3.data && response3.data.data) {
-            starsData.value = formatStarsData(response3.data.data)
-            starsLoading.value = false
-        }
-    }
-
-    const response4 = await new Promise((resolve, reject) => {
-        services.get_Record(`charts/feeling?tag=${companyId.value}`, (response) => {
-            resolve(response)
-        });
-    });
-
-    if (response4.status == 200) {
-        const score = response4.data[companyId.value]
-        let rawWidth = score * 100 / 2
-        let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
-        let feeling = rawWidth > 0 ? 1 : -1
-        let red = 255
-        let green = 255
-        if (feeling == -1) {
-            red = 255
-            green = 0
-        } else {
-            green = 255
-            red = 0
-        }
-
-        reviewFeedbackData.value = {
-            width: width,
-            red: red,
-            green: green,
-            feeling: feeling,
-            score: score
-        }
-
-        feedbackLoading.value = false
-
     }
 });
 </script>
@@ -921,10 +590,6 @@ img {
     margin-top: 5px;
 }
 
-.establishment__info_tablet {
-    margin-top: 30px;
-}
-
 .establishment__info i,
 .establishment__info_tablet i {
     color: var(--color-danger);
@@ -976,10 +641,6 @@ img {
     margin: auto;
 }
 
-.chart__rating {
-    display: flex;
-}
-
 .community__feedback .title {
     font-size: 15px;
     font-weight: 600;
@@ -1027,14 +688,6 @@ img {
     flex-wrap: wrap;
 }
 
-#competitors__dropdown {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
 #website__dropdown {
     display: flex;
     align-items: center;
@@ -1070,25 +723,8 @@ img {
     flex-grow: 1;
 }
 
-.dashboard__content,
-.chart__content,
 .reviews__content {
     margin-top: 20px;
-}
-
-.chart__content {
-    display: flex;
-    justify-content: center;
-}
-
-.head .competitors {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.competitors .select__title {
-    font-weight: 500;
 }
 
 .rating {
@@ -1306,13 +942,6 @@ img {
     }
 }
 
-@media screen and (max-width:475px) {
-    .app__container {
-        overflow-x: hidden;
-    }
-}
-
 .establishment__info_tablet {
     margin-top: 50px;
-}
-</style>
+}</style>

@@ -178,41 +178,13 @@
                         <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" />
                     </div>
                 </div>
-                <div class="reviews__star">
-                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(5)">
-                        <a href="#" class="text-xs font-medium hover:underline">5 star</a>
-                        <div class="star__barre h-3 rounded mx-2"
-                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate5 * 100 / reviews.length}%` }">
+                 <div class="reviews__star">
+                    <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
+                        @click="starFilter(star.intVal)">
+                        <a href="#" class="text-xs font-medium hover:underline">{{ star.label }}</a>
+                        <div class="star__barre h-3 rounded mx-2" :style="{ 'width': `${star.percentage}%` }">
                         </div>
-                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate5 }}</span>
-                    </div>
-                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(4)">
-                        <a href="#" class="text-xs font-medium dark:text-blue-500 hover:underline">4 star</a>
-                        <div class="star__barre h-3 rounded mx-2"
-                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate4 * 100 / reviews.length}%` }">
-                        </div>
-                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate4 }}</span>
-                    </div>
-                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(3)">
-                        <a href="#" class="text-xs font-medium hover:underline">3 star</a>
-                        <div class="star__barre h-3 rounded mx-2"
-                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate3 * 100 / reviews.length}%` }">
-                        </div>
-                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate3 }}</span>
-                    </div>
-                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(2)">
-                        <a href="#" class="text-xs font-medium hover:underline">2 star</a>
-                        <div class="star__barre h-3 rounded mx-2"
-                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate2 * 100 / reviews.length}%` }">
-                        </div>
-                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate2 }}</span>
-                    </div>
-                    <div :class="['flex items-center mt-1', 'include']" @click="starFilter(1)">
-                        <a href="#" class="text-xs font-medium hover:underline">1 star</a>
-                        <div class="star__barre h-3 rounded mx-2"
-                            :style="{ 'width': `${companiesStore.getNumberOfRating(reviews).rate1 * 100 / reviews.length}%` }">
-                        </div>
-                        <span class="text-xs font-medium">{{ companiesStore.getNumberOfRating(reviews).rate1 }}</span>
+                        <span class="text-xs font-medium">{{ star.value }}</span>
                     </div>
                 </div>
                 <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
@@ -232,7 +204,6 @@ import { useRoute, useRouter } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import CommentComponent from '@Components/utils/CommentComponent.vue';
-// import CommentPagination from '@Components/utils/CommentPagination.vue';
 import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
@@ -364,6 +335,7 @@ const filterReviewsByStar = (star, data) => {
     })
     return result;
 }
+
 const reloadStarData = () => {
     let scores = [1, 2, 3, 4, 5];
     let filteredReviews = _reviews.value;
@@ -385,10 +357,6 @@ const reloadData = (reviewUpdated) => {
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source, stars) => {
-    console.log('dateStart ', dateStart, IsValueOkay(dateStart))
-    console.log('dateEnd ', dateEnd, IsValueOkay(dateEnd))
-    console.log('source ', source, IsValueOkay(source))
-    console.log('stars ', stars, IsValueOkay(stars))
     options.value.current = current;
     options.value.page = page;
     reviews_loader.value = true;
@@ -431,7 +399,28 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
 watch(selectedStars, () => {
     loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
 });
+const starsData = ref([]);
+const starsLoading = ref(false);
+const feedbackLoading = ref(false)
 
+const formatStarsData = (data) => {
+    let tmp = []
+    console.log(data)
+    const total = Object.keys(data).reduce(function (previous, key) {
+        return previous + data[key];
+    }, 0);
+    console.log(total)
+    Object.keys(data).forEach(k => {
+        tmp.push({
+            label: k,
+            value: data[k],
+            percentage: data[k] * 100 / total,
+            intVal: k.split()[0]
+        })
+    })
+    return tmp;
+
+}
 onBeforeMount(async () => {
     let company = null;
     appStore.isLoading = true;
@@ -439,8 +428,10 @@ onBeforeMount(async () => {
     loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
 
     const response2 = await new Promise((resolve, reject) => {
+        console.log(`establishment/${companyId}/rating`)
         services.get_Record(`establishment/${companyId}/rating`, (response) => {
             resolve(response)
+            console.log(response)
         });
     });
 
@@ -451,27 +442,53 @@ onBeforeMount(async () => {
         all_items.value[1].value = establishment.value.totalReviews;
         appStore.isLoading = false;
         dataLoading.value = false;
+        websites.value = ['Global', ...establishment.value['websites']];
     }
 
-    const response = await new Promise((resolve, reject) => {
-        services.get_Record(`/establishment/${companyId}/detail`, (response) => {
+    const response3 = await new Promise((resolve, reject) => {
+        services.get_Record(`charts/stars?tag=${companyId}`, (response) => {
             resolve(response)
-            if (response.status == 404) {
-                exist.value = false;
-                appStore.isLoading = false;
-            }
         });
     });
 
-    if (response.status == 200) {
-        establishment.value['reviews'] = response.data['reviews'];
-        establishment.value['websites'] = response.data['websites'];
-        reviews.value = establishment.value.reviews;
-        _reviews.value = reviews.value;
-        websites.value = ['Global', ...companiesStore.getWebsites(establishment.value.websites)];
-        reloadStarData();
-        reviewFeedbackData.value = companiesStore.getfeedbackData(establishment.value.reviews);
-        appStore.isLoading = false;
+    if (response3.status == 200) {
+        if (response3.data && response3.data.data) {
+            starsData.value = formatStarsData(response3.data.data)
+            starsLoading.value = false
+        }
+    }
+
+    const response4 = await new Promise((resolve, reject) => {
+        services.get_Record(`charts/feeling?tag=${companyId}`, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response4.status == 200) {
+        const score = response4.data[companyId]
+        let rawWidth = score * 100 / 2
+        let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
+        let feeling = rawWidth > 0 ? 1 : -1
+        let red = 255
+        let green = 255
+        if (feeling == -1) {
+            red = 255
+            green = 0
+        } else {
+            green = 255
+            red = 0
+        }
+
+        reviewFeedbackData.value = {
+            width: width,
+            red: red,
+            green: green,
+            feeling: feeling,
+            score: score
+        }
+
+        feedbackLoading.value = false
+
     }
 });
 </script>

@@ -26,10 +26,35 @@
                         <h2>Weather's global impact</h2>
                     </div>
                 </div>
-                <BaseLegend class="legend" :LegendData="legendGlobalData" :alignment="'horizontal'">
-                </BaseLegend>
+               <!--  <BaseLegend class="legend" :LegendData="legendGlobalData" :alignment="'horizontal'">
+                </BaseLegend> -->
                 <div class="review__content">
-                    <PolarArea :data="globalData" :options="options" />
+                    <!-- <PolarArea :data="globalData" :options="options" /> -->
+
+                <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    Conditions
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                   Note
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700" v-for="conditionData in formattedWeatherRating" :key="conditionData.condition">
+                                <td class="px-6 py-4">
+                                    {{ conditionData.condition }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ conditionData.note }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 </div>
             </div>
             <div class="tablet_mobile__filter">
@@ -237,6 +262,7 @@ const WeatherChartComponent = defineAsyncComponent(() =>
 )
 
 const route = useRoute();
+const companyId = route.params.id;
 const router = useRouter();
 const breadcrumbData = [
     {
@@ -301,13 +327,14 @@ const handleDate = (modelData) => {
     dateEnd.value = null;
 }
 
-watch([dateStart, dateEnd], () => {
+watch([dateStart, dateEnd], async() => {
     console.log(dateStart.value, dateEnd.value)
-    if (dateEnd.value !== null && dateStart.value !== null) {
-        chartLoading.value = true;
-        data.value = weaherImpact(moment(dateStart.value).format('YYYY-MM-DD'), moment(dateEnd.value).format('YYYY-MM-DD'));
-        chartLoading.value = false;
-    }
+    // if (dateEnd.value !== null && dateStart.value !== null) {
+    //     chartLoading.value = true;
+    //     data.value = weaherImpact(moment(dateStart.value).format('YYYY-MM-DD'), moment(dateEnd.value).format('YYYY-MM-DD'));
+    //     chartLoading.value = false;
+    // }
+     await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, calculType.value);
 })
 
 function comparerDates(a, b) {
@@ -538,8 +565,8 @@ const groupReviewByCondition = () => {
     return global_data;
 }
 
-watch(calculType, () => {
-    data.value = weaherImpact(datefrom, dateto);
+watch(calculType, async() => {
+    await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, calculType.value);
 })
 
 const el = ref(null);
@@ -549,12 +576,68 @@ useResizeObserver(el, (entries) => {
     chartWidth.value = Math.abs(width);
 });
 
+const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
+const loadWeatherFromServer = async(tag, dateStart, dateEnd, unit)=>{
+    chartLoading.value = true;
+    let apiBase = '/charts/weather';
+
+    if(unit == 'Fahrenheit °F') unit="F"
+    else unit = "C"
+    let apiParams = `tag=${tag}&unit=${unit}`;
+
+    if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
+        dateStart = moment(dateStart).format('YYYY-MM-DD');
+        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        apiParams += `&from=${dateStart}&to=${dateEnd}`;
+    }
+
+    const api = apiBase + '?' + apiParams;
+    console.log(api)
+
+    const response = await new Promise((resolve, reject) => {
+        services.get_Record(api, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+        data.value = response.data['data'].reverse();
+        chartLoading.value = false;
+    }
+}
+const weatherRating = ref(null);
+const formattedWeatherRating = computed(()=>{
+    return weatherRating.value.conditions.map(condition => ({
+        condition,
+        note: weatherRating.value[condition].note,
+        color: weatherRating.value[condition].color
+      }))
+})
+
+const loadConditionFromServer = async(tag)=>{
+    let apiBase = '/etablissement/conditions';
+    let apiParams = `tag=${tag}`;
+
+    const api = apiBase + '?' + apiParams;
+
+    const response = await new Promise((resolve, reject) => {
+        services.get_Record(api, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+        console.log(response.data['data']);
+        weatherRating.value =response.data['data']
+    }
+}
+
 onBeforeMount(async () => {
-    const companyId = route.params.id;
     let company = null;
     appStore.isLoading = true;
     chartLoading.value = true;
-
+    await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, 'C');
+    await loadConditionFromServer(companyId);
     const response2 = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId}/rating`, (response) => {
             resolve(response)
@@ -588,8 +671,8 @@ onBeforeMount(async () => {
         establishment.value['weather'] = response.data['weather'];
         weather.value = establishment.value.weather;
         reviews.value = establishment.value.reviews;
-        data.value = weaherImpact(datefrom, dateto);
-        globalData.value = groupReviewByCondition();
+        // data.value = weaherImpact(datefrom, dateto);
+        // globalData.value = groupReviewByCondition();
         chartLoading.value = false;
     }
 });

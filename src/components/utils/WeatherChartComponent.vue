@@ -21,7 +21,7 @@
     <GroupedBarChart
       v-else
       :plot-data="data"
-      x-key="date"
+      x-key="name"
       :width="custom_width"
       :height="200"
       :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
