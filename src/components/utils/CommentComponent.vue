@@ -32,7 +32,7 @@
                     <span v-if="review.feeling=='neutre' || review.feeling=='neutral'">😐</span>
                     <span v-if="review.feeling=='negative'">😕</span>
                 </span>
-                <p class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center px-3 py-1 rounded dark:bg-yellow-200 dark:text-yellow-800">{{ formatRating(review.rating) }}</p>
+                <p class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center px-3 py-1 rounded dark:bg-yellow-200 dark:text-yellow-800">{{ formatRating(review.rating, review.source) }}</p>
             </div> 
         </div>
         <div class="col-span-2">
@@ -102,7 +102,10 @@ const modalWidth= computed(()=>{
     let gap = (windowSize - width.value)/19;
     return gap + 35;
 })
-const formatRating = (rating) => {
+const formatRating = (rating, source) => {
+    if (source == 'tripadvisor' && rating*5 <= 5) {
+        rating = rating * 5
+    }
     rating = parseFloat(rating);
     if(rating > 5){
         rating = rating / 2;
