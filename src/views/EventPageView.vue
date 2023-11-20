@@ -397,9 +397,9 @@ useResizeObserver(el, (entries) => {
     transition: var(--transition);
 }
 
-img{
+/*img{
     height: 200px !important;
-}
+}*/
 
 .include{
       cursor: pointer;

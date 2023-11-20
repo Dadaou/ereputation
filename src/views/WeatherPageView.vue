@@ -33,22 +33,28 @@
 
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                       <!--  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-6 py-3">
-                                    Conditions
+                                   
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                    Note
                                 </th>
                             </tr>
-                        </thead>
+                        </thead> -->
                         <tbody>
                             <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700" v-for="conditionData in formattedWeatherRating" :key="conditionData.condition">
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4" :style="{
+                                    'fontWeight': 'bold',
+                                }">
                                     {{ conditionData.condition }}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4" :style="{
+                                    'backgroundColor': conditionData.color,
+                                    'fontWeight': 'bold',
+                                    'color': 'white'
+                                }">
                                     {{ conditionData.note }}
                                 </td>
                             </tr>
@@ -607,11 +613,19 @@ const loadWeatherFromServer = async(tag, dateStart, dateEnd, unit)=>{
 }
 const weatherRating = ref(null);
 const formattedWeatherRating = computed(()=>{
-    return weatherRating.value.conditions.map(condition => ({
+    console.log( weatherRating.value)
+    if(weatherRating.value==null) return [];
+    else{
+
+        let data = weatherRating.value.conditions.map(condition => ({
         condition,
         note: weatherRating.value[condition].note,
         color: weatherRating.value[condition].color
-      }))
+      }));
+        data.unshift({condition: 'Global rating', note: weatherRating.value['rating'], color: 'green'})
+
+    return data; 
+    }
 })
 
 const loadConditionFromServer = async(tag)=>{
@@ -681,10 +695,6 @@ onBeforeMount(async () => {
 <style scoped>
 * {
     transition: var(--transition);
-}
-
-img {
-    height: 200px !important;
 }
 
 .include {
