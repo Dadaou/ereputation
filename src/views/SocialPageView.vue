@@ -34,11 +34,9 @@
                         <ul v-if="socialPages.length > 0">
                             <li v-for="socialItem in getLastSocialPages(socialPages)" :key="socialItem.source">
                                 <div class="social-details">
-                                   <!--  <h3><i :class="`uil uil-${socialItem.source}`"></i><a
-                                            :href="establishment.socials[0][socialItem.source]" target="_blank"><span>{{
-                                                socialItem.source }}</span></a></h3> -->
-                                                <h3><i :class="`uil uil-${socialItem.source}`"></i><a
-                                            target="_blank"><span>{{
+                                    <h3><i :class="`uil uil-${socialItem.source}`"></i>
+                                    <a :href="socials[socialItem.source]" 
+                                    target="_blank"><span>{{
                                                 socialItem.source }}</span></a></h3>
                                     <p><span>Followers:</span> {{ socialItem.followers }}</p>
                                     <p><span>Likes:</span> {{ socialItem.likes }}</p>
@@ -187,11 +185,11 @@
                 </div>
                 <div
                     class="stat__cards bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 py-4">
-                    <div class="stat__cards_default" v-if="establishment && establishment.socials">
+                    <div class="stat__cards_default" v-if="establishment && socials">
                         <StatComponent v-for="(slide, index) in trends" :key="index" :color="slide.color"
                             :bgColor="slide.bgColor" :value="slide.value" :description="slide.description"
                             :icon="slide.icon" :iconStyle="slide.iconStyle" :percentage="slide.percentage"
-                            :trend="slide.trend" :websites="establishment.socials[0]" :site="slide.site">
+                            :trend="slide.trend" :websites="socials" :site="slide.site">
                         </StatComponent>
                     </div>
                 </div>
@@ -256,6 +254,7 @@ window.onresize = () => {
 
 const route = useRoute();
 const companyId = route.params.id;
+const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 
 const breadcrumbData = [
     {
@@ -281,6 +280,7 @@ let socials = ref(['']);
 
 // let followersType = ref(true);
 // const maxPostsToShow = ref(2)
+
 const data = ref({
     labels: [],
     datasets: [
@@ -395,6 +395,17 @@ const getFollowers = (datasets, type) => {
     return dataChart;
 }
 
+function transformToSourceURL(obj) {
+  const result = {};
+  for (const key in obj) {
+    const arr = obj[key];
+    arr.forEach(item => {
+      result[item.source] = item.url;
+    });
+  }
+  return result;
+}
+
 onBeforeMount(async () => {
     const companyId = route.params.id;
     let company = null;
@@ -427,10 +438,10 @@ onBeforeMount(async () => {
     });
 
     if (response.status == 200) {
-        establishment.value['socials'] = response.data['socials'];
+        // establishment.value['socials'] = response.data['socials'];
         establishment.value['socialPages'] = response.data['socialPages'];
         console.log(establishment.value)
-        socials.value = [" ", ...getSocials(establishment.value.socials)];
+        // socials.value = [" ", ...getSocials(establishment.value.socials)];
         let data = [];
         let promises = [];
         establishment.value.socialPages.forEach((social) => {
@@ -443,6 +454,18 @@ onBeforeMount(async () => {
             socialPages.value = data;
             data.value = getFollowers(socialPages.value, calculType.value);
         });
+    }
+
+    const socialResponse = await new Promise((resolve, reject) => {
+        services.get_Record(`/establishment/settings?tag=${companyId}&type=Social`, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (socialResponse.status == 200) {
+        console.log(transformToSourceURL(socialResponse.data))
+         establishment.value['socials'] = transformToSourceURL(socialResponse.data);
+         socials.value = transformToSourceURL(socialResponse.data);
     }
     if (!socialStore.trendsByEstablishment[`${companyId}`]) {
         await socialStore.fetchEstablishmentTrends(companyId);
