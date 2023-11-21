@@ -1028,18 +1028,20 @@ export const useCompanyStore = defineStore('company', {
       const endDate = moment(end_date)
       const ninetyDaysAgo = moment(start_date).subtract(90, 'days')
       const ninetyDaysLater = moment(end_date).add(90, 'days')
+      console.log(reviews)
+      if(reviews !== undefined){
+         reviews.forEach((review) => {
+          const reviewDate = moment(review.date_review)
 
-      reviews.forEach((review) => {
-        const reviewDate = moment(review.date_review)
-
-        if (reviewDate.isBetween(ninetyDaysAgo, startDate, null, '[]')) {
-          reviewsBeforeDates.push(review)
-        } else if (reviewDate.isBetween(endDate, ninetyDaysLater, null, '[]')) {
-          reviewsAfterDates.push(review)
-        } else if (reviewDate.isBetween(startDate, endDate, null, '[]')) {
-          reviewsBetweenDates.push(review)
-        }
-      })
+          if (reviewDate.isBetween(ninetyDaysAgo, startDate, null, '[]')) {
+            reviewsBeforeDates.push(review)
+          } else if (reviewDate.isBetween(endDate, ninetyDaysLater, null, '[]')) {
+            reviewsAfterDates.push(review)
+          } else if (reviewDate.isBetween(startDate, endDate, null, '[]')) {
+            reviewsBetweenDates.push(review)
+          }
+        })
+      }
 
       return {
         reviewsBetweenDates,

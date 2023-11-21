@@ -1,5 +1,20 @@
 <template>
-    <a :href="websites[`${props.site}`] ? websites[`${props.site}`] : ''" target="_blank" class="stat__card"
+  <!--   <a :href="websites[`${props.site}`] ? websites[`${props.site}`] : ''" target="_blank" class="stat__card"
+        :style="{ background: props.bgColor || 'red' }">
+        <div class="stat__icon" :class="`stat__icon_${props.iconStyle}`">
+            <Icon :icon="icon" width="32" :style="{ color: props.color || 'red', margin: '4px' }"></Icon>
+        </div>
+        <div class="stat__value">{{ Number(props.value)/10 }}</div>
+        <p class="stat__description">{{ props.description }}</p>
+        <span class="stat__trend">
+            <Icon v-if="props.trend && props.trend == 'negative'" icon="uil:arrow-growth" style="display: inline;"
+                :rotate="1" />
+            <Icon v-if="props.trend && props.trend == 'positive'" icon="uil:arrow-growth" style="display: inline;" />
+            <Icon v-if="props.trend && props.trend == 'linear'" icon="uil:arrow-right" style="display: inline;"></Icon>
+            {{ props.percentage }}
+        </span>
+    </a> -->
+       <a target="_blank" class="stat__card"
         :style="{ background: props.bgColor || 'red' }">
         <div class="stat__icon" :class="`stat__icon_${props.iconStyle}`">
             <Icon :icon="icon" width="32" :style="{ color: props.color || 'red', margin: '4px' }"></Icon>

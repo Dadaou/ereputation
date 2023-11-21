@@ -13,11 +13,22 @@ export const useChartsStore = defineStore(
     const bySemesters = ref({})
 
     const fetchData = async (tags, type, from, to, platform, next) => {
-      let url = `/charts/comparaison?tags=${tags}&type=${type}&from=${from}&to=${to}`
-      if (platform && platform != 'global') {
-        url += `&platform=${platform}`
+      console.log(from, to)
+      let apiBase = `/charts/comparaison`;
+      let apiParams = `tags=${tags}&type=${type}`;
+      if(from !== 'Invalid Date' && to !== 'Invalid Date'){
+        apiParams+=`&from=${from}&to=${to}`;
       }
-      await services.get_Record(url, (response) => {
+     
+      // let url = `/charts/comparaison?tags=${tags}&type=${type}&from=${from}&to=${to}`
+
+      if (platform && platform != 'global') {
+        apiParams += `&platform=${platform}`
+      }
+
+      const api = apiBase+'?'+apiParams;
+      console.log(api)
+      await services.get_Record(api, (response) => {
         if (response.status == 200) {
           next(response)
         }

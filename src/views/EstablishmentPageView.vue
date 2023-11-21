@@ -117,7 +117,7 @@
                     }" :default="websites[0]" />
                 <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
                     selectedTimePeriod = timePeriod
-                }" :default="timePeriods[0]" />
+                }" :default="timePeriods[2]" />
                 <div class="date__picker">
                     <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
                 </div>
@@ -257,7 +257,7 @@
                             :size="'large'" />
                         <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
                             selectedTimePeriod = timePeriod
-                        }" :default="timePeriods[0]" />
+                        }" :default="timePeriods[2]" />
                     </div>
                 </div>
                 <div class="rating__customers">
@@ -527,8 +527,12 @@ const loadDatasetsAsync = async (establishments, colors, date) => {
 
 const viewData = async () => {
     chartLoading.value = true
-    startDate = moment(start_date.value).format('YYYY-M-DD');
-    endDate = moment(end_date.value).format('YYYY-M-DD');
+     if (IsValueOkay(startDate) && IsValueOkay(endDate)) {
+        startDate = moment(start_date.value).format('YYYY-MM-DD');
+        endDate = moment(end_date.value).format('YYYY-MM-DD');
+    }
+    // startDate = moment(start_date.value).format('YYYY-M-DD');
+    // endDate = moment(end_date.value).format('YYYY-M-DD');
 
     if (establishment && establishment.value['competitors']) {
         let competitorInfo = establishment.value['competitors'].find(c => c.name === selectedCompetitors.value)
@@ -649,7 +653,7 @@ const goto = (value) => {
 
 let selectedStars = ref('0');
 const starFilter = (star) => {
-    selectedStars.value = star;
+    selectedStars.value = parseInt(star, 10);
 };
 
 const filterReviewsByStar = (star, data) => {
@@ -674,7 +678,7 @@ const reloadStarData = () => {
 }
 
 watch(selectedStars, () => {
-     loadReviews(companyId.value, 1, options.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value);
+     loadReviews(companyId.value, 1, options.value['rowLimit'], 1, '', '', selectedWebsites.value, selectedStars.value);
 });
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
@@ -698,6 +702,7 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     }
 
     if (IsValueOkay(stars)) {
+        console.log(stars)
         apiParams += `&star=${stars}`
     }
 
@@ -713,7 +718,11 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
 
     if (response.status == 200) {
         reviewsLoading.value = false;
-        visibleData.value = response.data['data'];
+        visibleData.value = response.data['data'].reverse();
+        if(options.value.rowLimit>response.data['count']){
+           options.value.max = response.data['count'];
+           options.value.rowLimit = response.data['count']; 
+        }  
     }
 }
 
@@ -767,6 +776,7 @@ onBeforeMount(async () => {
 
     if (response3.status == 200) {
         if (response3.data && response3.data.data) {
+            console.log(response3.data.data)
             starsData.value = formatStarsData(response3.data.data)
             starsLoading.value = false
         }

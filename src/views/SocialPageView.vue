@@ -34,8 +34,11 @@
                         <ul v-if="socialPages.length > 0">
                             <li v-for="socialItem in getLastSocialPages(socialPages)" :key="socialItem.source">
                                 <div class="social-details">
-                                    <h3><i :class="`uil uil-${socialItem.source}`"></i><a
+                                   <!--  <h3><i :class="`uil uil-${socialItem.source}`"></i><a
                                             :href="establishment.socials[0][socialItem.source]" target="_blank"><span>{{
+                                                socialItem.source }}</span></a></h3> -->
+                                                <h3><i :class="`uil uil-${socialItem.source}`"></i><a
+                                            target="_blank"><span>{{
                                                 socialItem.source }}</span></a></h3>
                                     <p><span>Followers:</span> {{ socialItem.followers }}</p>
                                     <p><span>Likes:</span> {{ socialItem.likes }}</p>

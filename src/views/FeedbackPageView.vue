@@ -7,7 +7,7 @@
                         <h1 class="society__name">{{ establishment.name }}</h1>
                         <div class="society__category">
                             <i :class="['uil', establishment.category=='Restaurant'?'uil-restaurant':'', establishment.category=='Hotel'?'uil-bed-double':'', establishment.category=='Residence'?'uil-home':'']"></i>
-                                <span class="ml-2">{{ establishment.ategory }}</span>
+                                <span class="ml-2">{{ establishment.category }}</span>
                         </div>
                         <div class="society__country" v-if="establishment.country != null">
                                 <i class="uil uil-map"></i>
@@ -42,11 +42,18 @@
                             <input type="text" id="last_name" v-model="lastname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
                         <div>
-                            <label for="gender" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender</label>
-                            <select id="gender" v-model="gender" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            </select>
+                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender <span>*</span></label>
+                            <el-select v-model="gender" placeholder="Choose gender" size="large">
+                                <el-option v-for="item in genders" :key="item.value" :label="item.label" :value="item.value"/>
+                            </el-select>
+                        </div>
+                         <div>
+                            
+                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Visited at <!-- <span>*</span> --></label>
+                             <el-date-picker
+                                v-model="dateVisit"
+                                :size="'large'"
+                              />
                         </div>
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
@@ -56,13 +63,6 @@
                             </span>
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
-                        </div>
-                        <div>
-                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Visited at <!-- <span>*</span> --></label>
-                             <el-date-picker
-                                v-model="dateVisit"
-                                :size="'large'"
-                              />
                         </div>
                     </div>
                     <div class="mb-6 feedback__rating">
@@ -107,9 +107,11 @@ import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
 import { useCompanyStore } from '@Stores/company.js';
 import { useFeedbackStore } from '@Stores/feedback.js';
-import { ElMessage } from 'element-plus';
 import moment from 'moment';
-import { ElDatePicker } from 'element-plus';
+import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus';
+import 'element-plus/es/components/message/style/css'
+import 'element-plus/es/components/option/style/css'
+import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
 
 
@@ -144,6 +146,7 @@ onBeforeMount(async ()=>{
         console.log(response)
             if(response.status == 200){ 
                 establishment.value = response['data'];
+                console.log(establishment.value)
                 media.value = response['data'].url_source==null?[]:response['data'].url_source;
             }
 
@@ -160,6 +163,20 @@ const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
 const dateVisit = ref('');
+const genders = [
+  {
+    value: 'M',
+    label: 'Male',
+  },
+  {
+    value: 'F',
+    label: 'Female',
+  },
+  {
+    value: 'O',
+    label: 'Other',
+  }
+]
 
 const submit = async ()=>{
     let date_review = new Date();
@@ -188,8 +205,9 @@ const submit = async ()=>{
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,
-        created_at: moment().format('YYYY-MM-DD HH:mm:ss'), // Ajustez le format en conséquence
+        establishment: `/api/${companyStore.entity}/${establishment.value.id}`
     };
+    console.log(contactData);
 
     try {
         if (firstname.value !== '' && ratingCustomer.value !== null) {
