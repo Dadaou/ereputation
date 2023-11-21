@@ -39,29 +39,6 @@
                         <i class="uil uil-chart-pie-alt"></i> View Chart
                     </button>
             </div>
-            <!-- <div class="pie__chart">
-                <div>
-                    <h3 class="mb-2">Before contract(<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['before']))}}</span>)</h3>
-                    <Pie 
-                        :data="staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['before'])" 
-                        :options="options" 
-                    />
-                </div>
-                <div>
-                    <h3 class="mb-2">During contract (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['between']))}}</span>)</h3>
-                    <Pie 
-                        :data="staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['between'])" 
-                        :options="options" 
-                    />
-                </div>
-                <div>
-                    <h3 class="mb-2">After contract (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['after']))}}</span>)</h3>
-                    <Pie 
-                        :data="staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, staff)['after'])" 
-                        :options="options" 
-                    />
-                </div>
-            </div> -->
     </div>
 </div>
     <div v-if="staffs.length==0">No staff</div>
@@ -122,23 +99,23 @@
 
                        <div class="pie__chart">
                         <div>
-                            <h3 class="mb-2">Before (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, selectedStaff)['before']))}}</span>)</h3>
+                            <h3 class="mb-2">Before (<span class="rating">{{calculateAverageRating(staffRatingDataset(staffComparison, 'beforeData'))}}</span>)</h3>
                             <Pie 
-                                :data="staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, selectedStaff)['before'])" 
+                                :data="staffRatingDataset(staffComparison, 'beforeData')" 
                                 :options="options" 
                             />
                         </div>
                         <div>
-                            <h3 class="mb-2">During (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, selectedStaff)['between']))}}</span>)</h3>
+                            <h3 class="mb-2">During (<span class="rating">{{calculateAverageRating(staffRatingDataset(staffComparison, 'duringData'))}}</span>)</h3>
                             <Pie 
-                                :data="staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, selectedStaff)['between'])" 
+                                :data="staffRatingDataset(staffComparison, 'duringData')" 
                                 :options="options" 
                             />
                         </div>
                         <div>
-                            <h3 class="mb-2">After (<span class="rating">{{calculateAverageRating(staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, selectedStaff)['after']))}}</span>)</h3>
+                            <h3 class="mb-2">After (<span class="rating">{{calculateAverageRating(staffRatingDataset(staffComparison, 'afterData'))}}</span>)</h3>
                             <Pie 
-                                :data="staffRatingDataset(companiesStore.calculateStaffRatingV2(establishment, selectedStaff)['after'])" 
+                                :data="staffRatingDataset(staffComparison, 'afterData')" 
                                 :options="options" 
                             />
                         </div>
@@ -157,6 +134,7 @@ import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js'
 import { Pie } from 'vue-chartjs';
 import { useCompanyStore } from "@Stores/company.js";
 import {useRouter} from 'vue-router';
+import services from '@Services/services.js';
 
 const ModalComponent = defineAsyncComponent(()=>
     import('@Components/utils/ModalComponent.vue')
@@ -200,6 +178,8 @@ const props = defineProps({
     }, 
 });
 
+const staffComparison = ref({})
+
 const options = {
   responsive: true,
   maintainAspectRatio: false,
@@ -216,47 +196,84 @@ const close = ()=>{
     downloaded.value = false; 
     staf=null;
 }
+const staffPeriod = ref({
+    before: {
 
-const staffRatingDataset = (eventRating)=> {
+    }
+})
+
+// const staffRatingDataset = (eventRating)=> {
+//       return {
+//         labels: [
+//           "0 star",
+//           "1 star",
+//           "2 stars",
+//           "3 stars",
+//           "4 stars",
+//           "5 stars",
+//         ],
+//         datasets: [
+//           {
+//             backgroundColor: [
+//             '#6c63ff',
+//             // '#00bf8e',
+//             // '#fd1f1f',
+//             // '#2e3267',
+//             // '#424890',
+//             // '#aca8fd',
+//              '#FF0000',
+//             '#FFA500',
+//             '#FFFF00',
+//             '#00FF00',
+//             '#008000',
+//             ],
+//             data: [
+//               eventRating["0"],
+//               eventRating["1"],
+//               eventRating["2"],
+//               eventRating["3"],
+//               eventRating["4"],
+//               eventRating["5"],
+//             ],
+//           },
+//         ],
+//       };
+// };
+
+const staffRatingDataset = (periods, type)=> {
       return {
-        labels: [
-          "0 star",
-          "1 star",
-          "2 stars",
-          "3 stars",
-          "4 stars",
-          "5 stars",
-        ],
+        labels: periods.labels,
         datasets: [
           {
             backgroundColor: [
-            '#6c63ff',
-            // '#00bf8e',
-            // '#fd1f1f',
-            // '#2e3267',
-            // '#424890',
-            // '#aca8fd',
-             '#FF0000',
+            '#FF0000',
             '#FFA500',
             '#FFFF00',
             '#00FF00',
             '#008000',
             ],
-            data: [
-              eventRating["0"],
-              eventRating["1"],
-              eventRating["2"],
-              eventRating["3"],
-              eventRating["4"],
-              eventRating["5"],
-            ],
+            data: periods[`${type}`], //beforeData, duringData, afterData
           },
         ],
       };
 };
 
+const loadDataFromServer = async(tag)=>{
+    const response = await new Promise((resolve, reject) => {
+        services.get_Record(`/staffs/periods?tag=${tag}`, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+       console.log(response)
+       staffComparison.value = response.data['data'];
+       showChart.value = true;
+    }
+}
+
 const calculateAverageRating = (data) =>  {
-  const starRatings = [0, 1, 2, 3, 4, 5];
+  const starRatings = [1, 2, 3, 4, 5];
   const ratingsData = data.datasets[0].data;
 
   // Calcul de la somme pondérée des évaluations
@@ -279,7 +296,7 @@ const showReview = (customer_tag, staff_tag, establishment_tag, staff)=>{
 
 const showStaffChart = (staff)=>{
     selectedStaff.value = staff;
-    showChart.value = true;
+    loadDataFromServer(staff.tag)
 };
 </script>
 <style scoped>

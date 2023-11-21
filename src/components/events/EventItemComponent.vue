@@ -6,10 +6,18 @@
                     color: `${generateColor(event.name)}`,
                     fontWeight: 600,
                 }">{{ event.name }}</h5></li>
+                {{event.id}}
                 <li class="event_category"><span class="label">Category: </span> <span>{{ event.category }}</span></li>
                 <li class="period"><i class="uil uil-calender"></i> <span>{{ moment(event.datefrom).format('DD MMMM YYYY') }}</span> <span v-if="event.dateto != null">{{ `to ${moment(event.dateto).format('DD MMMM YYYY')}` }}</span></li>
             </ul>
-            <div class="pie__chart">
+            <div class="list__actions">
+                    <button 
+                        class="btn chart" 
+                        @click="showEventChart(event)">
+                        <i class="uil uil-chart-pie-alt"></i> View Chart
+                    </button>
+            </div>
+            <!-- <div class="pie__chart">
                 <div>
                     <h3 class="mb-2">-90 days to event (<span class="rating">{{calculateAverageRating(eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['before']))}}</span>)</h3>
                     <Pie 
@@ -31,23 +39,67 @@
                         :options="options" 
                     />
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     <div v-if="events.length==0">No Event</div>
+      <ModalComponent :showModal="showChart" @close="showChart=false">
+                    <template #content>
+                        <div class="modal__header">
+                            <div class="modal__title">
+                                <h3 class="font-semibold text-gray-900 dark:text-white">
+                                    <i class="uil uil-chart-pie-alt"></i> Graphic Chart
+                                </h3>
+                            </div>
+                            <div class="modal__close">
+                                <i class="uil uil-times-circle"  @click="showChart = false"></i>
+                            </div>
+                        </div>
+
+                       
+                        <div class="pie__chart">
+                        <div>
+                            <h3 class="mb-2">-90 days to event (<span class="rating">{{calculateAverageRating(eventRatingDataset(eventComparison, 'beforeData'))}}</span>)</h3>
+                            <Pie 
+                                :data="eventRatingDataset(eventComparison, 'beforeData')" 
+                                :options="options" 
+                            />
+                        </div>
+                        <div>
+                            <h3 class="mb-2">During event (<span class="rating">{{calculateAverageRating(eventRatingDataset(eventComparison, 'duringData'))}}</span>)</h3>
+                            <Pie 
+                                :data="eventRatingDataset(eventComparison, 'duringData')" 
+                                :options="options" 
+                            />
+                        </div>
+                        <div>
+                            <h3 class="mb-2">Event +90 days  (<span class="rating">{{calculateAverageRating(eventRatingDataset(eventComparison, 'afterData'))}}</span>)</h3>
+                            <Pie 
+                                :data="eventRatingDataset(eventComparison, 'afterData')" 
+                                :options="options" 
+                            />
+                        </div>
+                    </div>
+                    </template>
+    </ModalComponent>
 </template>
 <script setup>
-import {ref, inject, onBeforeMount, computed} from 'vue';
+import {ref, inject, onBeforeMount, computed, defineAsyncComponent} from 'vue';
 import moment from 'moment';
 import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js'
 import { Pie } from 'vue-chartjs';
 import { useCompanyStore } from "@Stores/company.js";
+import services from '@Services/services.js';
 
 ChartJS.register(ArcElement, Tooltip)
 
 const companiesStore = useCompanyStore();
 const events = inject('events');
 const establishment = inject('establishment');
+const showModal = ref(false);
+const showChart = ref(false);
+const selectedEvent = ref({})
+const eventComparison = ref({});
 
 const options = {
   responsive: true,
@@ -59,46 +111,30 @@ const options = {
   },
 };
 
-const eventRatingDataset = (eventRating)=> {
+const ModalComponent = defineAsyncComponent(()=>
+    import('@Components/utils/ModalComponent.vue')
+)
+
+const eventRatingDataset = (periods, type)=> {
       return {
-        labels: [
-          "0 star",
-          "1 star",
-          "2 stars",
-          "3 stars",
-          "4 stars",
-          "5 stars",
-        ],
+        labels: periods.labels,
         datasets: [
           {
             backgroundColor: [
-            '#6c63ff',
-            // '#00bf8e',
-            // '#fd1f1f',
-            // '#2e3267',
-            // '#424890',
-            // '#aca8fd',
             '#FF0000',
             '#FFA500',
             '#FFFF00',
             '#00FF00',
             '#008000',
             ],
-            data: [
-              eventRating["0"],
-              eventRating["1"],
-              eventRating["2"],
-              eventRating["3"],
-              eventRating["4"],
-              eventRating["5"],
-            ],
+            data: periods[`${type}`], //beforeData, duringData, afterData
           },
         ],
       };
 };
 
 const calculateAverageRating = (data) =>  {
-  const starRatings = [0, 1, 2, 3, 4, 5];
+  const starRatings = [1, 2, 3, 4, 5];
   const ratingsData = data.datasets[0].data;
 
   // Calcul de la somme pondérée des évaluations
@@ -113,6 +149,19 @@ const calculateAverageRating = (data) =>  {
   if(isNaN(averageRating.toFixed(1))) return 0;
   return averageRating.toFixed(1);
 };
+
+const loadDataFromServer = async(id)=>{
+    const response = await new Promise((resolve, reject) => {
+        services.get_Record(`/event/periods?id=${id}`, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+       eventComparison.value = response.data['data']
+       showChart.value = true;
+    }
+}
 
 const hashString = (inputString) => {
       let hash = 0;
@@ -133,6 +182,11 @@ const generateColor = (text) =>{
       return `rgb(${red}, ${green}, ${blue})`;
 };
 
+const showEventChart = (event)=>{
+    selectedEvent.value = event;
+    showChart.value = true;
+    loadDataFromServer(event.id)
+};
 
 </script>
 <style scoped>
@@ -142,7 +196,28 @@ const generateColor = (text) =>{
     flex-wrap: wrap;
 }
 
-.staff__card{
+.modal__header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal__header div{
+    align-self: center;
+}
+
+.modal__close i{
+   float: right;
+   font-size: 25px;
+   color: red;
+   cursor: pointer;
+   transition: var(--transition);
+}
+
+.modal__close i:hover{
+    transform: rotate(360deg);
+}
+
+/*.staff__card{
     border: 1px solid var(--light-color-bg2);
     padding: 5px;
     flex-basis: 400px;
@@ -150,6 +225,19 @@ const generateColor = (text) =>{
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     border-radius: 5px;
     height: 250px;
+}*/
+
+.staff__card{
+    border: 1px solid var(--light-color-bg2);
+    padding: 15px;
+    flex-basis: 500px;
+    flex-grow: 1;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    border-radius: 5px;
+    display: flex;
+    gap:1rem;
+    flex-direction: column;
+    margin-bottom: 10px;
 }
 
 .staff__card h5{
@@ -184,6 +272,7 @@ span.label{
     display: flex;
     gap: 1rem;
     justify-content: center;
+    height: 150px;
 }
 
 .pie__chart div{
@@ -209,4 +298,33 @@ span.label{
 .event_category{
      font-weight: 500;
 }
+
+.list__actions{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.list__actions button{
+    border: 1px solid var(--light-color-bg1);
+    transition: var(--transition);
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 2px 6px;
+}
+
+.list__actions button.chart{
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.list__actions button.chart:hover{
+    color: white;
+    background-color: var(--color-primary);
+}
+
+.list__actions button:hover{
+    transform: scale(0.95);
+}
+
 </style>
