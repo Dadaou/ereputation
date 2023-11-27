@@ -36,8 +36,14 @@
                 }">
                     <SpinnerComponent />
                 </div>
-                <ComparisonChartComponent v-else :data="plotdata" :width="chart__width" :chartheight="chart__height"
-                    :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors"
+                <ComparisonChartComponent 
+                    v-else 
+                    :data="plotdata" 
+                    :width="chart__width" 
+                    :chartheight="chart__height"
+                    :establishment="establishment" 
+                    :companies="comparisonData" 
+                    :competitors="computedCompetitors"
                     :timePeriod="selectedTimePeriod" />
                 <BaseLegend v-if="chartLoading == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
                 </BaseLegend>
@@ -51,11 +57,14 @@
                             @click="gotoReviewPage(establishment.competitor_tag, $route.params.tag)">here</a> to access all
                         reviews.</p>
                     <div class="reviews__pagination">
-                        <PaginationComponent :options="options" @next="(option) => {
+                        <PaginationComponent 
+                        :options="options" 
+                        @next="(option) => {
                             loadReviews(companyId, option.page, option.limit, option.current)
-                        }" @prev="(option) => {
-    loadReviews(companyId, option.page, option.limit, option.current)
-}" />
+                        }" 
+                        @prev="(option) => {
+                            loadReviews(companyId, option.page, option.limit, option.current)
+                        }" />
                     </div>
                     <CommentComponent v-if="reviewsLoading == false" :reviews="visibleData"
                         :allReviews="establishment.reviews" :showEmoji="false" />
@@ -79,11 +88,14 @@
                         </div>
                         <span class="sr-only">Loading...</span>
                     </div>
-                    <PaginationComponent :options="options" @next="(option) => {
+                    <PaginationComponent 
+                    :options="options" 
+                    @next="(option) => {
                         loadReviews(companyId, option.page, option.limit, option.current)
-                    }" @prev="(option) => {
-    loadReviews(companyId, option.page, option.limit, option.current)
-}" />
+                    }" 
+                    @prev="(option) => {
+                        loadReviews(companyId, option.page, option.limit, option.current)
+                    }" />
                     <aside v-if="lastReviews.length > 0">
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ all_items[1].value - 3 }} reviews
                             remains</p>
@@ -117,7 +129,7 @@
                     }" :default="websites[0]" />
                 <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
                     selectedTimePeriod = timePeriod
-                }" :default="timePeriods[2]" />
+                }" :default="timePeriods[0]" />
                 <div class="date__picker">
                     <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
                 </div>
@@ -257,7 +269,7 @@
                             :size="'large'" />
                         <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
                             selectedTimePeriod = timePeriod
-                        }" :default="timePeriods[2]" />
+                        }" :default="timePeriods[0]" />
                     </div>
                 </div>
                 <div class="rating__customers">
@@ -630,15 +642,13 @@ const chart__height = ref(300);
 const chart__width2 = ref(300);
 const chart__height2 = ref(200);
 
-
-watch(date2, () => {
-    viewData();
-});
-
-watch([start_date, end_date], async () => {
+watch([start_date, end_date, selectedWebsites], async () => {
     if (start_date.value !== '' && end_date.value !== '') {
+        startDate = moment(start_date.value).format('YYYY-M-DD');
+        endDate = moment(end_date.value).format('YYYY-M-DD');
         viewData()
     }
+    loadReviews(companyId.value, 1, options.value['rowLimit'], 1, startDate, endDate, selectedWebsites.value, selectedStars.value);
 });
 
 watch(selectedTimePeriod, async () => {

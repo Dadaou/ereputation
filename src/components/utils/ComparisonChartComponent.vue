@@ -245,37 +245,7 @@ const viewDataBySource = (websites, establishment, timePeriod, startDate, endDat
 watch([date2, comparisonByEstablishments, selectedCompany, selectedTimePeriod], () => {
     startDate = moment().startOf('year').format('YYYY-M-DD');
     endDate = moment().endOf('year').format('YYYY-M-DD');
-
-    console.log("date2", date2.value)
-    console.log("comparisonByEstablishment", comparisonByEstablishments.value)
-    console.log("selectedCompany", selectedCompany.value)
-    console.log("selectedTimePeriod", selectedTimePeriod.value)
-
     viewData();
-
-    // if (date2.value !== null) {
-    //     if (date2.value.length > 0) {
-    //         startDate = moment(date2.value[0]).format('YYYY-M-DD');
-    //         endDate = moment(date2.value[1]).format('YYYY-M-DD');
-    //     }
-    // }
-
-    // if (comparisonByEstablishments.value == true) {
-    //     let data = props.companies;
-    //     if (selectedCompany.value.name !== 'Global') {
-    //         data = data.filter(item => item.id == selectedCompany.value.id || item.id == props.establishment.id);
-    //         console.log(data)
-    //     }
-
-    //     setTimeout(() => {
-    //         viewDataByEstablishment(data, selectedTimePeriod.value, startDate, endDate, props.colors);
-    //     }, 100);
-    // } else {
-    //     let websites = establishmentDropdown.value[0].websites; // get all websites of the current establishment
-    //     setTimeout(() => {
-    //         viewDataBySource(websites, selectedCompany.value, selectedTimePeriod.value, startDate, endDate, props.colors);
-    //     }, 100);
-    // }
 })
 
 const el = ref(null);

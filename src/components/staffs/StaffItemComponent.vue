@@ -315,7 +315,6 @@ a{
     gap:1rem;
     flex-direction: column;
     margin-bottom: 10px;
-
 }
 
 span.rating{

@@ -32,7 +32,7 @@
                     <span v-if="review.feeling=='neutre' || review.feeling=='neutral'">😐</span>
                     <span v-if="review.feeling=='negative'">😕</span>
                 </span>
-                <p class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center px-3 py-1 rounded dark:bg-yellow-200 dark:text-yellow-800">{{ formatRating(review.rating, review.source) }}</p>
+                <p class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center px-3 py-1 rounded dark:bg-yellow-200 dark:text-yellow-800">{{ review.star }}</p>
             </div> 
         </div>
         <div class="col-span-2">

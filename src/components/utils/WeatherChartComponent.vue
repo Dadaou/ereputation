@@ -1,9 +1,13 @@
 <template>
-  <div class="reviews__content" ref="el" :style="containerStyles">
+  <div class="reviews__content" ref="el" :style="{
+   'width': `${getWidth()}`,
+        'overflowX': 'auto'
+  }
+  ">
     <div
       v-if="chartLoading == true"
       :style="{
-        'width': `100%`,
+        'width': '100%',
         'height': `200px`,
         'display': 'flex',
         'alignItems': 'center',
@@ -43,10 +47,11 @@ const legendData = inject('legendData');
 const data = inject('data');
 const el = ref(null);
 const chartWidth = inject('chartWidth');
+const { width, height } = useWindowSize();
 
 const custom_width = computed(() => {
   let nb = data.value.length;
-  let width = 800;
+  let width = 1000;
   if (nb > 9) {
     width = (width * nb) / 9;
   }
@@ -55,9 +60,19 @@ const custom_width = computed(() => {
 });
 
 const containerStyles = computed(() => ({
-  maxWidth: '100%', // Set a maximum width
-  overflowX: 'auto', // Add horizontal scroll when content exceeds the width
+  maxWidth: '100%', 
+  overflowX: 'auto',
 }));
+
+const getWidth = () => {
+    const defaultWidth = 900;
+    if (width.value >= 1500) {
+        return `${defaultWidth}px`;
+    }
+    const percentage = 0.8;
+
+    return `${Math.min(width.value * percentage, 850)}px`;
+};
 
 useResizeObserver(el, (entries) => {
   const entry = entries[0];

@@ -26,23 +26,9 @@
                         <h2>Weather's global impact</h2>
                     </div>
                 </div>
-               <!--  <BaseLegend class="legend" :LegendData="legendGlobalData" :alignment="'horizontal'">
-                </BaseLegend> -->
                 <div class="review__content">
-                    <!-- <PolarArea :data="globalData" :options="options" /> -->
-
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                       <!--  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">
-                                   
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                   Note
-                                </th>
-                            </tr>
-                        </thead> -->
                         <tbody>
                             <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700" v-for="conditionData in formattedWeatherRating" :key="conditionData.condition">
                                 <td class="px-6 py-4" :style="{
@@ -309,7 +295,7 @@ const all_items = ref([
 
 const dateEnd = ref(new Date());
 const dateto = moment(dateEnd.value).format('YYYY-MM-DD');
-const datefrom = moment().subtract(7, 'days').format('YYYY-MM-DD')
+const datefrom = moment().subtract(30, 'days').format('YYYY-MM-DD')
 const dateStart = ref(new Date(datefrom));
 const enableDateEnd = ref(false);
 const colors = ref(['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']);
@@ -335,20 +321,14 @@ const handleDate = (modelData) => {
 
 watch([dateStart, dateEnd], async() => {
     console.log(dateStart.value, dateEnd.value)
-    // if (dateEnd.value !== null && dateStart.value !== null) {
-    //     chartLoading.value = true;
-    //     data.value = weaherImpact(moment(dateStart.value).format('YYYY-MM-DD'), moment(dateEnd.value).format('YYYY-MM-DD'));
-    //     chartLoading.value = false;
-    // }
      await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, calculType.value);
+     await loadConditionFromServer(companyId, dateStart.value, dateEnd.value);
 })
 
 function comparerDates(a, b) {
-    // Extrait les parties de date (jour, mois, année) des chaînes
     var dateA = a.date.split(' ')[1];
     var dateB = b.date.split(' ')[1];
 
-    // Convertit les dates en objets Date pour la comparaison
     var dateObjA = new Date(dateA.split('-').reverse().join('-'));
     var dateObjB = new Date(dateB.split('-').reverse().join('-'));
 
@@ -590,6 +570,8 @@ const loadWeatherFromServer = async(tag, dateStart, dateEnd, unit)=>{
     if(unit == 'Fahrenheit °F') unit="F"
     else unit = "C"
     let apiParams = `tag=${tag}&unit=${unit}`;
+    let dataType = ['rating', 'temperature']
+    legendData.value = generatedLegend(colors.value, dataType);
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(dateStart).format('YYYY-MM-DD');
@@ -628,9 +610,15 @@ const formattedWeatherRating = computed(()=>{
     }
 })
 
-const loadConditionFromServer = async(tag)=>{
+const loadConditionFromServer = async(tag, dateStart, dateEnd)=>{
     let apiBase = '/etablissement/conditions';
     let apiParams = `tag=${tag}`;
+    
+     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
+        dateStart = moment(dateStart).format('YYYY-MM-DD');
+        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        apiParams += `&from=${dateStart}&to=${dateEnd}`;
+    }
 
     const api = apiBase + '?' + apiParams;
 
@@ -651,7 +639,7 @@ onBeforeMount(async () => {
     appStore.isLoading = true;
     chartLoading.value = true;
     await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, 'C');
-    await loadConditionFromServer(companyId);
+    await loadConditionFromServer(companyId, '', '');
     const response2 = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId}/rating`, (response) => {
             resolve(response)
@@ -685,8 +673,6 @@ onBeforeMount(async () => {
         establishment.value['weather'] = response.data['weather'];
         weather.value = establishment.value.weather;
         reviews.value = establishment.value.reviews;
-        // data.value = weaherImpact(datefrom, dateto);
-        // globalData.value = groupReviewByCondition();
         chartLoading.value = false;
     }
 });

@@ -13,11 +13,15 @@
                 </div>
                 <div class="reviews__content">
                     <div class="reviews__pagination">
-                        <PaginationComponent :options="options" v-if="visibleData.length > 0" @next="(option) => {
+                        <PaginationComponent 
+                        :options="options" 
+                        v-if="visibleData.length > 0" 
+                        @next="(option) => {
                             loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
-                        }" @prev="(option) => {
-    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
-}" />
+                        }" 
+                        @prev="(option) => {
+                        loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+                        }" />
                     </div>
                     <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
                         @reloadData="(review) => reloadData(review)" />
@@ -42,11 +46,14 @@
                         <span class="sr-only">Loading...</span>
                     </div>
                     <div class="reviews__pagination">
-                        <PaginationComponent :options="options" v-if="visibleData.length > 0" @next="(option) => {
+                        <PaginationComponent 
+                        :options="options" v-if="visibleData.length > 0" 
+                        @next="(option) => {
                             loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
-                        }" @prev="(option) => {
-    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
-}" />
+                        }" 
+                        @prev="(option) => {
+                        loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+                        }" />
                     </div>
                 </div>
             </div>
@@ -380,14 +387,12 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     }
 
     const api = apiBase + '?' + apiParams;
-    console.log(api)
 
     const response = await new Promise((resolve, reject) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
     });
-    console.log(response)
 
     if (response.status == 200) {
         reviews_loader.value = false;

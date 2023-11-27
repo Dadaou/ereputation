@@ -61,14 +61,6 @@
                 </div>
             </div>
             <div class="tablet_mobile__filter">
-                  <!-- <el-date-picker
-                            v-model="date"
-                            type="daterange"
-                            range-separator="To"
-                            start-placeholder="Start date"
-                            end-placeholder="End date"
-                            :size="'large'"
-                          /> -->
                     <el-date-picker
                             v-model="start_date"
                             type="date"
@@ -83,7 +75,7 @@
                     />
                 <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                     selectedTimePeriod = timePeriod
-                }" :default="timePeriods[2]"/>
+                }" :default="timePeriods[0]"/>
                          
             </div>
             <div class="tablet_mobile__head">
@@ -178,14 +170,6 @@
                     </div>
                     <div class="date__filter">
                        <div class="text-sm title">Select a range of date</div>
-                           <!-- <el-date-picker
-                            v-model="date"
-                            type="daterange"
-                            range-separator="To"
-                            start-placeholder="Start date"
-                            end-placeholder="End date"
-                            :size="'large'"
-                          /> -->
                            <el-date-picker
                                 v-model="start_date"
                                 type="date"
@@ -205,7 +189,7 @@
                             @submit="(timePeriod)=>{
                                 selectedTimePeriod = timePeriod
                             }" 
-                            :default="timePeriods[2]"/>
+                            :default="timePeriods[0]"/>
                     </div>
                 </div>
         </div>
@@ -295,7 +279,7 @@ let paginationConfig = ref({
 });
 
 const showModal = ref(false);
-const timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
+const timePeriods = ref(['Daily','Weekly', 'Monthly', 'Yearly']);
 const selectedTimePeriod = ref(timePeriods.value[1]);
 const startDate = moment().subtract(90, 'days').format('YYYY-M-DD');
 const endDate = moment().format('YYYY-M-DD');
