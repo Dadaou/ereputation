@@ -61,18 +61,23 @@
                 </div>
             </div>
             <div class="tablet_mobile__filter">
-                    <el-date-picker
+                <div class="date__picker">
+                   <el-date-picker
                             v-model="start_date"
                             type="date"
                             placeholder="Select the start date"
                             :size="'large'"
                     />
-                    <el-date-picker
+                </div>
+
+                <div class="date__picker">
+                   <el-date-picker
                             v-model="end_date"
                             type="date"
                             placeholder="Select the end date"
                             :size="'large'"
                     />
+                </div>
                 <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[0]"/>
@@ -381,10 +386,6 @@ useResizeObserver(el, (entries) => {
     transition: var(--transition);
 }
 
-/*img{
-    height: 200px !important;
-}*/
-
 .include{
       cursor: pointer;
 }
@@ -670,7 +671,7 @@ useResizeObserver(el, (entries) => {
     }
 
     .tablet_mobile__filter > * {
-        width: 100% !important;
+        width: 95% !important;
     }
 }
 
@@ -728,6 +729,6 @@ useResizeObserver(el, (entries) => {
     }
 }
 .establishment__info_tablet{
-    margin-top: 50px;
+    margin-top: 10px;
 }
 </style>

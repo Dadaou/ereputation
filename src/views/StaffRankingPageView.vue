@@ -76,26 +76,23 @@
             </div>
 
             <div class="tablet_mobile__filter">
-               <!--  <el-date-picker
-                    v-model="date"
-                    type="daterange"
-                    range-separator="To"
-                    start-placeholder="Start date"
-                    end-placeholder="End date"
-                    :size="'large'"
-                /> -->
-                 <el-date-picker
+                <div class="date__picker">
+                    <el-date-picker
                         v-model="start_date"
                         type="date"
                         placeholder="Select the start date"
                         :size="'large'"
-                />
-                <el-date-picker
+                    />
+                </div>
+
+                <div class="date__picker">
+                     <el-date-picker
                         v-model="end_date"
                         type="date"
                         placeholder="Select the end date"
                         :size="'large'"
-                />
+                    />
+                </div>
                 <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[0]"/>
@@ -204,14 +201,6 @@
                     
                     <div class="date__filter">
                        <div class="text-sm title">Select a range of date</div>
-                           <!-- <el-date-picker
-                            v-model="date"
-                            type="daterange"
-                            range-separator="To"
-                            start-placeholder="Start date"
-                            end-placeholder="End date"
-                            :size="'large'"
-                          /> -->
                            <el-date-picker
                                     v-model="start_date"
                                     type="date"
@@ -374,17 +363,6 @@ const loadFromServer = async(type, company, datefrom, dateto)=>{
         staffs.value = response.data;
      }
 }    
- 
-// watch([date, selectedTimePeriod], ()=>{
-//     if(date.value.length==0){
-//         firstDateOfPreviousYear = moment(firstDateOfPreviousYear).format('YYYY-MM-DD');
-//         lastDateOfCurrentYear = moment(lastDateOfCurrentYear).format('YYYY-MM-DD');
-//         date.value = [firstDateOfPreviousYear, lastDateOfCurrentYear];
-//     }
-//     let datefrom = moment(date.value[0]).format('YYYY-MM-DD');
-//     let dateto = moment(date.value[1]).format('YYYY-MM-DD');
-//     loadFromServer(selectedTimePeriod.value.toLowerCase(), companyId, datefrom, dateto);
-// })
 
 watch([date, selectedTimePeriod], ()=>{
     console.log(date.value)
@@ -761,6 +739,38 @@ img{
     line-height: 1.2;
 }
 
+.ptable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.ptable th {
+  background-color: #678bb1;
+  color: white;
+}
+
+.ptable th, .ptable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.ptable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.ptable tr:hover {
+  background-color: #ddd;
+}
+
+.ptable td:nth-child(3) {
+  font-weight: bold;
+}
+
+.ptable td:nth-child(5) {
+  color: #df6145;
+}
+
 @media screen and (max-width:1400px) {
   .app__container{
     width: var(--container-width-md);
@@ -799,9 +809,11 @@ img{
     justify-content: center;
     align-items: center;
    }
+
    .left__side{
     width: inherit !important;
    }
+
    .photo{
     flex-basis: 250px;
    }
@@ -855,41 +867,23 @@ img{
     }
 }
 
-.ptable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
+@media screen and (max-width:800px) {
+    .tablet_mobile__head {
+        font-size: 13px !important;
+    }
 
-.ptable th {
-  background-color: #678bb1;
-  color: white;
-}
+    .tablet_mobile__head label {
+        font-size: 15px !important;
+    }
 
-.ptable th, .ptable td {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
+    .tablet_mobile__filter {
+        gap: 0.25rem;
+    }
 
-.ptable tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
+    .photo {
+        flex-basis: 225px !important;
+    }
 
-.ptable tr:hover {
-  background-color: #ddd;
-}
-
-/* Styles spécifiques pour les colonnes (ajustez-les selon vos besoins) */
-.ptable td:nth-child(3) {
-  font-weight: bold;
-}
-
-.ptable td:nth-child(5) {
-  color: #df6145;
-}
-
-/* Styles réactifs (responsive) */
-@media screen and (max-width: 800px) {
   .ptable th, .ptable td {
     padding: 4px;
   }
@@ -901,36 +895,72 @@ img{
   .ptable td {
     font-size: 14px;
   }
-  .right__side {
-        
-        width: 100%; /* ou toute autre largeur appropriée pour les écrans mobiles */
-        padding: 20px; /* Ajoutez un espacement approprié pour les écrans mobiles */
+}
+
+@media screen and (max-width:675px) {
+    .tablet_mobile__head {
+        font-size: 12px !important;
+        padding: 10px;
+    }
+
+    .tablet{
+        display: none !important;
+    }
+
+    .mobile__filter__btn{
+        display: flex !important;
+        gap:0.5rem;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .photo {
+        flex-basis: 210px !important;
+    }
+
+    .tablet_mobile__head label {
+        font-size: 14px !important;
     }
 }
 
-@media screen and (max-width: 500px) {
-  .ptable th {
-    font-size: 10px;
-  }
-
-  .ptable td {
-    font-size: 12px;
-  }
-  .right__side {
-        
-        width: 100%; /* ou toute autre largeur appropriée pour les écrans mobiles */
-        padding: 20px; /* Ajoutez un espacement approprié pour les écrans mobiles */
+@media screen and (max-width:625px) {
+    .tablet_mobile__filter {
+        flex-direction: column;
+        padding: 5px 0px !important;
     }
-} 
 
-@media screen and (max-width: 767px) {
-    .right__side {
-        
-        width: 100%; /* ou toute autre largeur appropriée pour les écrans mobiles */
-        padding: 20px; /* Ajoutez un espacement approprié pour les écrans mobiles */
+    .tablet_mobile__filter * {
+        flex-basis: inherit !important;
+        width: inherit !important;
+        justify-content: center !important;
+    }
+
+    .date__picker {
+        margin: 5px 0 10px !important;
     }
 }
-.establishment__info_tablet{
+
+@media screen and (max-width:500px) {
+    .tablet_mobile__head {
+        flex-direction: column-reverse;
+        gap: 1rem;
+    }
+
+    .photo {
+        flex-basis: 150px !important;
+        height: 100px !important;
+    }
+
+    .ptable th {
+        font-size: 10px;
+      }
+
+      .ptable td {
+        font-size: 12px;
+      }
+}
+
+.establishment__info_tablet {
     margin-top: 50px;
 }
 </style>

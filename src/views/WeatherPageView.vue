@@ -50,8 +50,12 @@
                 </div>
             </div>
             <div class="tablet_mobile__filter">
-                <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
-                <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
+                <div class="date__picker">
+                   <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+                </div>
+                 <div class="date__picker">
+                  <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
+                </div>
             </div>
             <div class="tablet_mobile__head">
                 <div class="establishment__info_tablet">
@@ -1066,8 +1070,8 @@ onBeforeMount(async () => {
         border-radius: 5px;
     }
 
-    .tablet_mobile__filter * {
-        flex-basis: 200px;
+    .tablet_mobile__filter > * {
+        flex-basis: 95%;
     }
 }
 

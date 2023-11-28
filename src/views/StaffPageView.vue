@@ -9,14 +9,6 @@
                  <RouterView />
             </div>
             <div class="tablet_mobile__filter">
-                <!-- <el-date-picker
-                    v-model="date"
-                    type="daterange"
-                    range-separator="To"
-                    start-placeholder="Start date"
-                    end-placeholder="End date"
-                    :size="'large'"
-                /> -->
                  <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[2]"/>
@@ -136,14 +128,6 @@
                     </div>
                     <div class="date__filter">
                         <div class="text-sm title">Select a range of date</div>
-                        <!-- <el-date-picker
-                            v-model="date"
-                            type="daterange"
-                            range-separator="To"
-                            start-placeholder="Start date"
-                            end-placeholder="End date"
-                            :size="'large'"
-                        /> -->
                         <el-date-picker
                             v-model="start_date"
                             type="date"
@@ -701,8 +685,8 @@ img{
    }
 
    .right__side{
-    display: none !important;
-}
+        display: none !important;
+    }
 
    .tablet_mobile__head{
         display: flex;

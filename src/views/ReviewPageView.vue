@@ -394,7 +394,6 @@ const reloadStarData = () => {
         let result = filterReviewsByStar(rating, filteredReviews);
         filteredReviews = result;
     }
-    // updateVisibleData(filteredReviews);
 }
 
 const reloadData = (reviewUpdated) => {
@@ -990,9 +989,7 @@ onBeforeMount(async () => {
     .tablet_mobile__filter {
         gap: 0.25rem;
     }
-}
 
-@media screen and (max-width:800px) {
     .photo {
         flex-basis: 225px !important;
     }
