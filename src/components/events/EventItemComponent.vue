@@ -16,29 +16,6 @@
                         <i class="uil uil-chart-pie-alt"></i> View Chart
                     </button>
             </div>
-            <!-- <div class="pie__chart">
-                <div>
-                    <h3 class="mb-2">-90 days to event (<span class="rating">{{calculateAverageRating(eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['before']))}}</span>)</h3>
-                    <Pie 
-                        :data="eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['before'])" 
-                        :options="options" 
-                    />
-                </div>
-                <div>
-                    <h3 class="mb-2">During event (<span class="rating">{{calculateAverageRating(eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['between']))}}</span>)</h3>
-                    <Pie 
-                        :data="eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['between'])" 
-                        :options="options" 
-                    />
-                </div>
-                <div>
-                    <h3 class="mb-2">Event +90 days  (<span class="rating">{{calculateAverageRating(eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['after']))}}</span>)</h3>
-                    <Pie 
-                        :data="eventRatingDataset(companiesStore.calculateEventRatingV2(establishment, event)['after'])" 
-                        :options="options" 
-                    />
-                </div>
-            </div> -->
         </div>
     </div>
     <div v-if="events.length==0">No Event</div>
@@ -57,28 +34,30 @@
 
                        
                         <div class="pie__chart">
-                        <div>
-                            <h3 class="mb-2">-90 days to event (<span class="rating">{{calculateAverageRating(eventRatingDataset(eventComparison, 'beforeData'))}}</span>)</h3>
-                            <Pie 
-                                :data="eventRatingDataset(eventComparison, 'beforeData')" 
-                                :options="options" 
-                            />
+                            <div>
+                                <h3 class="mb-2">-90 days to event (<span class="rating">{{calculateAverageRating(eventRatingDataset(eventComparison, 'beforeData'))}}</span>)</h3>
+                                <Pie 
+                                    :data="eventRatingDataset(eventComparison, 'beforeData')" 
+                                    :options="options" 
+                                />
+                            </div>
+                            <div>
+                                <h3 class="mb-2">During event (<span class="rating">{{calculateAverageRating(eventRatingDataset(eventComparison, 'duringData'))}}</span>)</h3>
+                                <Pie 
+                                    :data="eventRatingDataset(eventComparison, 'duringData')" 
+                                    :options="options" 
+                                />
+                            </div>
+                            <div>
+                                <h3 class="mb-2">Event +90 days  (<span class="rating">{{calculateAverageRating(eventRatingDataset(eventComparison, 'afterData'))}}</span>)</h3>
+                                <Pie 
+                                    :data="eventRatingDataset(eventComparison, 'afterData')" 
+                                    :options="options" 
+                                />
+                            </div>
                         </div>
-                        <div>
-                            <h3 class="mb-2">During event (<span class="rating">{{calculateAverageRating(eventRatingDataset(eventComparison, 'duringData'))}}</span>)</h3>
-                            <Pie 
-                                :data="eventRatingDataset(eventComparison, 'duringData')" 
-                                :options="options" 
-                            />
-                        </div>
-                        <div>
-                            <h3 class="mb-2">Event +90 days  (<span class="rating">{{calculateAverageRating(eventRatingDataset(eventComparison, 'afterData'))}}</span>)</h3>
-                            <Pie 
-                                :data="eventRatingDataset(eventComparison, 'afterData')" 
-                                :options="options" 
-                            />
-                        </div>
-                    </div>
+                        <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
+                        </BaseLegend>
                     </template>
     </ModalComponent>
 </template>
@@ -99,6 +78,13 @@ const showModal = ref(false);
 const showChart = ref(false);
 const selectedEvent = ref({})
 const eventComparison = ref({});
+const legendData = ref([
+    {name: '1 star', color: '#FF0000'},
+    {name: '2 stars', color: '#FFA500'},
+    {name: '3 stars', color: '#FFFF00'},
+    {name: '4 stars', color: '#00FF00'},
+    {name: '5 stars', color: '#008000'},
+])
 
 const options = {
   responsive: true,

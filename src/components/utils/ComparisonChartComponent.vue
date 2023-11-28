@@ -49,16 +49,6 @@
                         selectedTimePeriod = timePeriod
                     }" :default="timePeriods[2]" />
                 </li>
-                <!--  <li class="w-full mr-3">
-                      <el-date-picker
-                            v-model="date2"
-                            type="daterange"
-                            range-separator="To"
-                            start-placeholder="Start date"
-                            end-placeholder="End date"
-                            :size="'large'"
-                          />
-                    </li> -->
             </ul>
             <div class="range__date">
                 <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />

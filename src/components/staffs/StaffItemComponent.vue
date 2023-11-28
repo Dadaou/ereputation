@@ -98,28 +98,30 @@
                         </div>
 
                        <div class="pie__chart">
-                        <div>
-                            <h3 class="mb-2">Before (<span class="rating">{{calculateAverageRating(staffRatingDataset(staffComparison, 'beforeData'))}}</span>)</h3>
-                            <Pie 
-                                :data="staffRatingDataset(staffComparison, 'beforeData')" 
-                                :options="options" 
-                            />
+                            <div>
+                                <h3 class="mb-2">Before (<span class="rating">{{calculateAverageRating(staffRatingDataset(staffComparison, 'beforeData'))}}</span>)</h3>
+                                <Pie 
+                                    :data="staffRatingDataset(staffComparison, 'beforeData')" 
+                                    :options="options" 
+                                />
+                            </div>
+                            <div>
+                                <h3 class="mb-2">During (<span class="rating">{{calculateAverageRating(staffRatingDataset(staffComparison, 'duringData'))}}</span>)</h3>
+                                <Pie 
+                                    :data="staffRatingDataset(staffComparison, 'duringData')" 
+                                    :options="options" 
+                                />
+                            </div>
+                            <div>
+                                <h3 class="mb-2">After (<span class="rating">{{calculateAverageRating(staffRatingDataset(staffComparison, 'afterData'))}}</span>)</h3>
+                                <Pie 
+                                    :data="staffRatingDataset(staffComparison, 'afterData')" 
+                                    :options="options" 
+                                />
+                            </div>
                         </div>
-                        <div>
-                            <h3 class="mb-2">During (<span class="rating">{{calculateAverageRating(staffRatingDataset(staffComparison, 'duringData'))}}</span>)</h3>
-                            <Pie 
-                                :data="staffRatingDataset(staffComparison, 'duringData')" 
-                                :options="options" 
-                            />
-                        </div>
-                        <div>
-                            <h3 class="mb-2">After (<span class="rating">{{calculateAverageRating(staffRatingDataset(staffComparison, 'afterData'))}}</span>)</h3>
-                            <Pie 
-                                :data="staffRatingDataset(staffComparison, 'afterData')" 
-                                :options="options" 
-                            />
-                        </div>
-                    </div>
+                         <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
+                        </BaseLegend>
                     </template>
     </ModalComponent>
 </template>
@@ -157,6 +159,14 @@ const downloaded = ref(false);
 const companiesStore = useCompanyStore();
 const establishment = inject('establishment')
 const tag = inject('tag')
+
+const legendData = ref([
+    {name: '1 star', color: '#FF0000'},
+    {name: '2 stars', color: '#FFA500'},
+    {name: '3 stars', color: '#FFFF00'},
+    {name: '4 stars', color: '#00FF00'},
+    {name: '5 stars', color: '#008000'},
+])
 
 const downloadQrcode = (staffname)=>{
     let link = document.createElement('a');

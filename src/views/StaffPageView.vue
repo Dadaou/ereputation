@@ -11,7 +11,7 @@
             <div class="tablet_mobile__filter">
                  <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                     selectedTimePeriod = timePeriod
-                }" :default="timePeriods[2]"/>
+                }" :default="timePeriods[0]"/>
                 <div class="date__picker">
                     <el-date-picker
                         v-model="start_date"
@@ -143,7 +143,7 @@
                         />
                         <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
                             selectedTimePeriod = timePeriod
-                        }" :default="timePeriods[2]"/>
+                        }" :default="timePeriods[0]"/>
                     </div>
                     <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffsranking`" >
                             <button class="btn">
