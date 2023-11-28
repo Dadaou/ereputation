@@ -1271,20 +1271,20 @@ onBeforeMount(async () => {
         width: 250px !important;
     }
 
-     .tablet{
-            display: flex !important;
-            align-items: center;
-            vertical-align: center;
-            flex-wrap: wrap !important;
-            flex-direction: horizontal;
-            gap:3px !important;
-        }
+    .tablet{
+        display: flex !important;
+        align-items: center;
+        vertical-align: center;
+        flex-wrap: wrap !important;
+        flex-direction: horizontal;
+        gap:3px !important;
+    }
 
-        .tablet > div{
-            height: 200px;
-            margin: 0 !important;
-            flex-basis: 30%
-        }
+    .tablet > div{
+        height: 200px;
+        margin: 0 !important;
+        flex-basis: 30%
+    }
 }
 
 @media screen and (max-width: 975px) {
@@ -1381,7 +1381,7 @@ onBeforeMount(async () => {
         padding: 10px;
     }
 
-     .tablet{
+    .tablet{
         display: none !important;
     }
 

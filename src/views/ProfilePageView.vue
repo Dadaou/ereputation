@@ -17,11 +17,11 @@
                             <i class="uil uil-envelope"></i> <span>Contact</span>
                         </router-link>
                     </li>
-                    <li>
+                   <!--  <li>
                         <router-link :to="{ name: 'Account_security' }">
                             <i class="uil uil-lock"></i> <span>Security</span>
                         </router-link>
-                    </li>
+                    </li> -->
                     <li>
                         <router-link :to="{ name: 'Parameters' }">
                             <i class="uil uil-setting"></i> <span>Parameters</span>

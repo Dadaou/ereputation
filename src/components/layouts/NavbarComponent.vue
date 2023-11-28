@@ -56,7 +56,7 @@
                     Contact
               </RouterLink>
             </li>
-            <li @click="closeDropdown">
+           <!--  <li @click="closeDropdown">
               <RouterLink 
                 :to="`/customer/${userStore.user.customer.tag}/account/security`"
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -64,7 +64,7 @@
                        <i class="uil uil-setting"></i>
                      Settings
               </RouterLink>
-            </li>
+            </li> -->
             <li @click="closeDropdown">
                <RouterLink 
                  to="/"

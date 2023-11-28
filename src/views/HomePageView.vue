@@ -75,13 +75,15 @@ const signOut = () => {
     userStore.authenticated = false;
     if(userStore.authenticated == false) router.push({name:"Login"});
 }
-appStore.isLoading = false;
 
 onBeforeMount(async()=>{
+    appStore.isLoading = true;
+    dataLoading.value = true;
     if(userStore.user.customer !== null){
          const response = await new Promise((resolve, reject) => {
             services.get_Record(`/customer/${userStore.user.customer.tag}/establishments/reviews`, (response) => {
                     resolve(response)
+                    appStore.isLoading = false;
             });
         });
          console.log(response)

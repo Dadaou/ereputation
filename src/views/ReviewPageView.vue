@@ -57,7 +57,19 @@
                     </div>
                 </div>
             </div>
-            <div class="tablet_mobile__filter">
+            <div class="tablet_mobile__filter tablet">
+                <div class="reviews__star">
+                    <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
+                        @click="starFilter(star.intVal)">
+                        <a href="#" class="text-xs font-medium hover:underline">{{ star.label }}</a>
+                        <div class="star__barre h-3 rounded mx-2" :style="{ 'width': `${star.percentage}%` }">
+                        </div>
+                        <span class="text-xs font-medium">{{ star.value }}</span>
+                    </div>
+                </div>
+                <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
+            </div>
+            <div class="tablet_mobile__filter"  v-if="currentFilter=='filter'">
                 <DropdownComponent :showTitle="false" class="dropdown" title="Filter by plateform"
                     placeholder="Select a website" :data="websites" @submit="(website) => {
                         selectedWebsites = website
@@ -67,6 +79,20 @@
                 </div>
                 <div class="date__picker">
                     <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
+                </div>
+            </div>
+            <div class="tablet_mobile__filter" v-if="currentFilter=='feedback'">
+                <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
+            </div>
+            <div class="tablet_mobile__filter" v-if="currentFilter=='star'">
+                <div class="reviews__star">
+                    <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
+                        @click="starFilter(star.intVal)">
+                        <a href="#" class="text-xs font-medium hover:underline">{{ star.label }}</a>
+                        <div class="star__barre h-3 rounded mx-2" :style="{ 'width': `${star.percentage}%` }">
+                        </div>
+                        <span class="text-xs font-medium">{{ star.value }}</span>
+                    </div>
                 </div>
             </div>
             <div class="tablet_mobile__head">
@@ -103,6 +129,22 @@
                         <i class="uil uil-building"></i>
                         <span v-if="!dataLoading">{{ all_items[2].value }} competitors</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                    <div class="mobile__filter__btn">
+                          <button :class="['btn', (currentFilter=='feedback')?'isactive':'']" 
+                          @click="currentFilter='feedback'">
+                            <i class="uil uil-arrow-growth"></i>
+                           <!--  <i class="uil uil-chart-down"></i> -->
+                            Stat
+                          </button>
+                          <button :class="['btn', (currentFilter=='star')?'isactive':'']" 
+                          @click="currentFilter='star'">
+                            <i class="uis uil-star"></i> Stars
+                          </button>
+                          <button :class="['btn', (currentFilter=='filter')?'isactive':'']"
+                          @click="currentFilter='filter'">
+                            <i class="uil uil-filter"></i>Filters
+                          </button>
                     </div>
                 </div>
                 <div class="photo" v-if="!dataLoading">
@@ -261,7 +303,8 @@ let paginationConfig = ref({
     data: [],
     _data: []
 });
-let dataLoading = ref(true)
+let dataLoading = ref(true);
+let currentFilter = ref('filter');
 
 let checkedFeeling = ref(['positive', 'neutre', 'negative']);
 const showModal = ref(false);
@@ -504,9 +547,28 @@ onBeforeMount(async () => {
     transition: var(--transition);
 }
 
-/*img {
-    height: 200px !important;
-}*/
+.tablet, .mobile__filter__btn{
+    display: none !important;
+}
+
+.mobile__filter__btn button{
+    border: 1px solid var(--light-color-bg1);
+    transition: var(--transition);
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 2px 6px;
+    flex-basis: 100%;
+}
+
+.isactive, .mobile__filter__btn button:hover{
+    background-color: var(--color-primary);
+    color: white !important;
+}
+
+.isactive i, .mobile__filter__btn button:hover i{
+    color: white !important;
+}
 
 .include {
     cursor: pointer;
@@ -831,6 +893,21 @@ onBeforeMount(async () => {
     .right__side {
         width: 250px !important;
     }
+
+    .tablet{
+        display: flex !important;
+        align-items: center;
+        vertical-align: center;
+        flex-wrap: wrap !important;
+        flex-direction: horizontal;
+        gap:3px !important;
+    }
+
+    .tablet > div{
+        height: 200px;
+        margin: 0 !important;
+        flex-basis: 30%
+    }
 }
 
 @media screen and (max-width: 975px) {
@@ -927,6 +1004,17 @@ onBeforeMount(async () => {
         padding: 10px;
     }
 
+    .tablet{
+        display: none !important;
+    }
+
+    .mobile__filter__btn{
+        display: flex !important;
+        gap:0.5rem;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
     .photo {
         flex-basis: 210px !important;
     }
@@ -966,5 +1054,6 @@ onBeforeMount(async () => {
 }
 
 .establishment__info_tablet {
-    margin-top: 50px;
-}</style>
+    margin-top: 10px;
+}
+</style>
