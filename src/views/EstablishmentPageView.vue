@@ -45,7 +45,11 @@
                     :companies="comparisonData" 
                     :competitors="computedCompetitors"
                     :timePeriod="selectedTimePeriod" />
-                <BaseLegend v-if="chartLoading == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
+                <BaseLegend 
+                    v-if="chartLoading == false" 
+                    class="legend" 
+                    :LegendData="legendData" 
+                    :alignment="'vertical'">
                 </BaseLegend>
                 <div class="head">
                     <div class="app__title">
@@ -60,10 +64,10 @@
                         <PaginationComponent 
                         :options="options" 
                         @next="(option) => {
-                            loadReviews(companyId, option.page, option.limit, option.current)
+                             loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
                         }" 
                         @prev="(option) => {
-                            loadReviews(companyId, option.page, option.limit, option.current)
+                             loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
                         }" />
                     </div>
                     <CommentComponent v-if="reviewsLoading == false" :reviews="visibleData"
@@ -91,10 +95,10 @@
                     <PaginationComponent 
                     :options="options" 
                     @next="(option) => {
-                        loadReviews(companyId, option.page, option.limit, option.current)
+                        loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
                     }" 
                     @prev="(option) => {
-                        loadReviews(companyId, option.page, option.limit, option.current)
+                         loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
                     }" />
                     <aside v-if="lastReviews.length > 0">
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ all_items[1].value - 3 }} reviews
@@ -108,24 +112,42 @@
                 </div>
                 <div v-else>Loading</div>
             </div>
-            <div class="tablet_mobile__filter">
+            <div class="tablet_mobile__filter tablet">
+               <div class="rating__customers">
+                    <div class="title">Rating by Customers</div>
+                    <div class="chart__rating">
+                        <Line :data="chartData" :options="chartConfig.options" />
+                    </div>
+                </div>
+                <div class="reviews__star">
+                    <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
+                        @click="starFilter(star.intVal)">
+                        <a href="#" class="text-xs font-medium hover:underline">{{ star.label }}</a>
+                        <div class="star__barre h-3 rounded mx-2" :style="{ 'width': `${star.percentage}%` }">
+                        </div>
+                        <span class="text-xs font-medium">{{ star.value }}</span>
+                    </div>
+                </div>
+                <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
+            </div>
+            <div class="tablet_mobile__filter" v-if="currentFilter=='filter'">
                 <DropdownComponent class="dropdown" :showTitle="false" title="Compare to" placeholder="Select a competitor"
                     :data="computedCompetitors" @submit="(competitor) => {
                         selectedCompetitors = competitor.name
-                        if (competitor.name == computedCompetitors[0].name) {
+                        /*if (competitor.name == computedCompetitors[0].name) {
                             globalComparison();
                         } else {
                             reloadComparison(competitor);
-                        }
+                        }*/
                     }" :defaultObj="computedCompetitors[0]" :isDataObject="true" />
                 <DropdownComponent :showTitle="false" class="dropdown" title="Filter by plateform"
                     placeholder="Select a website" :data="websites" @submit="(website) => {
                         selectedWebsites = website
-                        if (website == websites[0]) {
+                        /*if (website == websites[0]) {
                             globalComparison();
                         } else {
                             reloadComparisonByWebsite(website);
-                        }
+                        }*/
                     }" :default="websites[0]" />
                 <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
                     selectedTimePeriod = timePeriod
@@ -135,6 +157,26 @@
                 </div>
                 <div class="date__picker">
                     <el-date-picker v-model="end_date" type="date" placeholder="Select the end date" :size="'large'" />
+                </div>
+            </div>
+            <div class="tablet_mobile__filter" v-if="currentFilter=='feedback'">
+                 <div class="rating__customers">
+                    <div class="title">Rating by Customers</div>
+                    <div class="chart__rating">
+                        <Line :data="chartData" :options="chartConfig.options" />
+                    </div>
+                </div>
+                <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
+            </div>
+            <div class="tablet_mobile__filter" v-if="currentFilter=='star'">
+                <div class="reviews__star">
+                    <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
+                        @click="starFilter(star.intVal)">
+                        <a href="#" class="text-xs font-medium hover:underline">{{ star.label }}</a>
+                        <div class="star__barre h-3 rounded mx-2" :style="{ 'width': `${star.percentage}%` }">
+                        </div>
+                        <span class="text-xs font-medium">{{ star.value }}</span>
+                    </div>
                 </div>
             </div>
             <div class="tablet_mobile__head">
@@ -171,6 +213,22 @@
                         <i class="uil uil-building"></i>
                         <span v-if="!establishmentLoading">{{ all_items[2].value }} competitors</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                    <div class="mobile__filter__btn">
+                          <button :class="['btn', (currentFilter=='feedback')?'isactive':'']" 
+                          @click="currentFilter='feedback'">
+                            <i class="uil uil-arrow-growth"></i>
+                           <!--  <i class="uil uil-chart-down"></i> -->
+                            Stat
+                          </button>
+                          <button :class="['btn', (currentFilter=='star')?'isactive':'']" 
+                          @click="currentFilter='star'">
+                            <i class="uis uil-star"></i> Stars
+                          </button>
+                          <button :class="['btn', (currentFilter=='filter')?'isactive':'']"
+                          @click="currentFilter='filter'">
+                            <i class="uil uil-filter"></i>Filters
+                          </button>
                     </div>
                 </div>
                 <div class="photo" v-if="!establishmentLoading">
@@ -246,20 +304,20 @@
                     <DropdownComponent class="dropdown" title="Compare to" placeholder="Select a competitor"
                         :data="computedCompetitors" @submit="(competitor) => {
                             selectedCompetitors = competitor.name
-                            if (competitor.name == computedCompetitors[0].name) {
+                            /*if (competitor.name == computedCompetitors[0].name) {
                                 globalComparison();
                             } else {
                                 reloadComparison(competitor);
-                            }
+                            }*/
                         }" :defaultObj="computedCompetitors[0]" :isDataObject="true" />
                     <DropdownComponent class="dropdown" title="Filter by plateform" placeholder="Select a website"
                         :data="websites" @submit="(website) => {
                             selectedWebsites = website
-                            if (website == websites[0]) {
+                            /*if (website == websites[0]) {
                                 globalComparison();
                             } else {
                                 reloadComparisonByWebsite(website);
-                            }
+                            }*/
                         }" :default="websites[0]" />
                     <div class="date__filter">
                         <div class="text-sm title">Select a range of date</div>
@@ -305,7 +363,6 @@ import { useCompanyStore } from "@Stores/company.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import CommentComponent from '@Components/utils/CommentComponent.vue';
 import DashboardComponent from '@Components/utils/DashboardComponent.vue';
-// import CommentPagination from '@Components/utils/CommentPagination.vue';
 import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
@@ -408,6 +465,7 @@ const all_items = ref([
     { title: "Reviews", value: 0, icon: "uil-comment" },
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
+let currentFilter = ref('filter');
 
 let plotdata = ref([]);
 let legendData = ref([]);
@@ -543,8 +601,6 @@ const viewData = async () => {
         startDate = moment(start_date.value).format('YYYY-MM-DD');
         endDate = moment(end_date.value).format('YYYY-MM-DD');
     }
-    // startDate = moment(start_date.value).format('YYYY-M-DD');
-    // endDate = moment(end_date.value).format('YYYY-M-DD');
 
     if (establishment && establishment.value['competitors']) {
         let competitorInfo = establishment.value['competitors'].find(c => c.name === selectedCompetitors.value)
@@ -600,6 +656,7 @@ const globalComparison = async () => {
     selectedCompetitors.value = 'Global';
     selectedWebsites.value = 'Global';
     viewData();
+    loadReviews(companyId.value, 1, 20, 1, startDate, endDate, selectedWebsites.value, selectedStars.value);
 };
 
 const reloadComparison = async (competitor) => {
@@ -642,14 +699,17 @@ const chart__height = ref(300);
 const chart__width2 = ref(300);
 const chart__height2 = ref(200);
 
-watch([start_date, end_date, selectedWebsites], async () => {
-    if (start_date.value !== '' && end_date.value !== '') {
-        startDate = moment(start_date.value).format('YYYY-M-DD');
-        endDate = moment(end_date.value).format('YYYY-M-DD');
-        viewData()
-    }
-    loadReviews(companyId.value, 1, options.value['rowLimit'], 1, startDate, endDate, selectedWebsites.value, selectedStars.value);
-});
+watch([start_date, end_date, selectedWebsites], () => {
+   viewData()
+   loadReviews(companyId.value, 1, 20, 1, start_date, end_date, selectedWebsites.value, '');
+})
+
+watch(selectedCompetitors, async () => {
+    startDate = moment(start_date.value).format('YYYY-M-DD');
+    endDate = moment(end_date.value).format('YYYY-M-DD');
+    viewData()
+})
+
 
 watch(selectedTimePeriod, async () => {
     startDate = moment(start_date.value).format('YYYY-M-DD');
@@ -729,10 +789,8 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     if (response.status == 200) {
         reviewsLoading.value = false;
         visibleData.value = response.data['data'].reverse();
-        if(options.value.rowLimit>response.data['count']){
-           options.value.max = response.data['count'];
-           options.value.rowLimit = response.data['count']; 
-        }  
+        // options.value.max = response.data['count'];
+        // options.value.rowLimit = response.data['count'];  
     }
 }
 
@@ -748,7 +806,7 @@ onBeforeMount(async () => {
 
     appStore.isLoading = true;
 
-    loadReviews(companyId.value, 1, options.value['rowLimit'], 1, '', '', selectedWebsites.value, selectedStars.value);
+    await loadReviews(companyId.value, 1, options.value['rowLimit'], 1, '', '', selectedWebsites.value, selectedStars.value);
 
     const response2 = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId.value}/rating`, (response) => {
@@ -832,9 +890,29 @@ onBeforeMount(async () => {
     transition: var(--transition);
 }
 
-/*img {
-    height: 200px !important;
-}*/
+
+.tablet, .mobile__filter__btn{
+    display: none !important;
+}
+
+.mobile__filter__btn button{
+    border: 1px solid var(--light-color-bg1);
+    transition: var(--transition);
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 2px 6px;
+    flex-basis: 100%;
+}
+
+.isactive, .mobile__filter__btn button:hover{
+    background-color: var(--color-primary);
+    color: white !important;
+}
+
+.isactive i, .mobile__filter__btn button:hover i{
+    color: white !important;
+}
 
 .include {
     cursor: pointer;
@@ -1192,6 +1270,21 @@ onBeforeMount(async () => {
     .right__side {
         width: 250px !important;
     }
+
+     .tablet{
+            display: flex !important;
+            align-items: center;
+            vertical-align: center;
+            flex-wrap: wrap !important;
+            flex-direction: horizontal;
+            gap:3px !important;
+        }
+
+        .tablet > div{
+            height: 200px;
+            margin: 0 !important;
+            flex-basis: 30%
+        }
 }
 
 @media screen and (max-width: 975px) {
@@ -1288,6 +1381,17 @@ onBeforeMount(async () => {
         padding: 10px;
     }
 
+     .tablet{
+        display: none !important;
+    }
+
+    .mobile__filter__btn{
+        display: flex !important;
+        gap:0.5rem;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
     .photo {
         flex-basis: 210px !important;
     }
@@ -1333,6 +1437,6 @@ onBeforeMount(async () => {
 }
 
 .establishment__info_tablet {
-    margin-top: 50px;
+    margin-top: 0px;
 }
 </style>

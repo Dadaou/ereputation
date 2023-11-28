@@ -426,6 +426,7 @@ const formatStarsData = (data) => {
     return tmp;
 
 }
+
 onBeforeMount(async () => {
     let company = null;
     appStore.isLoading = true;

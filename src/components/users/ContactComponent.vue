@@ -1,5 +1,9 @@
 <template>
   <div class="relative overflow-x-auto" style="margin-top: 15px;">
+    <button class="btn" @click="showExport = true">
+          <i class="uil uil-file-download"></i>
+          Export
+    </button>
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
@@ -49,15 +53,18 @@
         </tr>
       </tbody>
     </table>
+    <ExportcsvexcelComponent :showModal="showExport" :downloaded="downloaded"
+    @close="showExport = false, downloaded = false"  @submit="(data) => exportData(data.type, data.filename)"/>
   </div>
 </template>
 
 <script setup>
 import moment from 'moment';
 import services from '@Services/services.js';
+import csvXlsx from '@Services/csvXlsx.js';
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
-import { useRoute, useRouter } from "vue-router"; // Import manquant
+import { useRoute, useRouter } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
@@ -75,16 +82,33 @@ import {
     defineAsyncComponent
 } from 'vue';
 
+const ExportcsvexcelComponent = defineAsyncComponent(() =>
+  import('@Components/utils/ExportcsvexcelComponent.vue')
+)
+
 const route = useRoute();
 const customer = route.params.tag;
 const formatCreatedAt = (createdAt) => {
   return moment(createdAt).format('YYYY/MM/DD');
 };
+const query = ref('');
 
 const contacts = ref([]);
+
+const showExport = ref(false);
+const downloaded = ref(false);
+const exportData = (type, filename) => {
+  csvXlsx.exportContact(type, filename, query.value,
+    ['Id','Name', 'Gender', 'Email', 'Establishment', 'Date']);
+  downloaded.value = true;
+}
+
+
 onBeforeMount(async () => {
   try {
     const response = await new Promise((resolve, reject) => {
+      query.value = `customer/establishments/contacts?tag=${customer}`;
+
       services.get_Record(`customer/establishments/contacts?tag=${customer}`, (response) => {
         resolve(response);
         console.log(response);
@@ -103,3 +127,24 @@ onBeforeMount(async () => {
   }
 });
 </script>
+<style scoped>
+
+button i{
+  color: var(--color-danger);
+}
+
+button {
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0px 10px;
+  border-radius: 5px;
+  border: 1px solid grey;
+  margin-bottom: 10px;
+}
+
+button:hover{
+  background-color: var(--color-primary);
+  color: white;
+}
+</style>
