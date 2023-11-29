@@ -795,9 +795,10 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         reviewsLoading.value = false;
         visibleData.value = response.data['data'].reverse();
         console.log(response.data['count'])   
-         console.log(options.value.max)        
+        console.log(options.value.max)        
         if(response.data['count'] <= 100 ) options.value.max = response.data['count'];
         else  options.value.max = 100;
+        all_items.value[1].value = response.data['count'];
         // if(options.value.rowLimit <= response.data['count']) options.value.rowLimit = response.data['count'];
     }
 }
@@ -834,7 +835,7 @@ onBeforeMount(async () => {
         appStore.isLoading = false;
         page.value.title2 = establishment.value.name;
         all_items.value[0].value = establishment.value.rating;
-        all_items.value[1].value = establishment.value.totalReviews;
+        // all_items.value[1].value = establishment.value.totalReviews;
         all_items.value[2].value = establishment.value.competitors.length;
 
         establishmentLoading.value = false
