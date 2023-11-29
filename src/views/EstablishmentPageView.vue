@@ -62,12 +62,13 @@
                         reviews.</p>
                     <div class="reviews__pagination">
                         <PaginationComponent 
+                        v-if="visibleData.length > 0" 
                         :options="options" 
                         @next="(option) => {
-                             loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+                             loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars)
                         }" 
                         @prev="(option) => {
-                             loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+                             loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars)
                         }" />
                     </div>
                     <CommentComponent v-if="reviewsLoading == false" :reviews="visibleData"
@@ -92,7 +93,11 @@
                         </div>
                         <span class="sr-only">Loading...</span>
                     </div>
-                    <PaginationComponent 
+                    <div v-if="visibleData.length == 0" >
+                        No Reviews
+                    </div>
+                    <PaginationComponent
+                    v-if="visibleData.length > 0" 
                     :options="options" 
                     @next="(option) => {
                         loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
@@ -597,7 +602,7 @@ const loadDatasetsAsync = async (establishments, colors, date) => {
 
 const viewData = async () => {
     chartLoading.value = true
-     if (IsValueOkay(startDate) && IsValueOkay(endDate)) {
+    if (IsValueOkay(start_date.value) && IsValueOkay(end_date.value)) {
         startDate = moment(start_date.value).format('YYYY-MM-DD');
         endDate = moment(end_date.value).format('YYYY-MM-DD');
     }
@@ -701,7 +706,7 @@ const chart__height2 = ref(200);
 
 watch([start_date, end_date, selectedWebsites], () => {
    viewData()
-   loadReviews(companyId.value, 1, 20, 1, start_date, end_date, selectedWebsites.value, '');
+   loadReviews(companyId.value, 1, 20, 1, start_date.value, end_date.value, selectedWebsites.value, '');
 })
 
 watch(selectedCompetitors, async () => {
@@ -789,8 +794,11 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     if (response.status == 200) {
         reviewsLoading.value = false;
         visibleData.value = response.data['data'].reverse();
-        // options.value.max = response.data['count'];
-        // options.value.rowLimit = response.data['count'];  
+        console.log(response.data['count'])   
+         console.log(options.value.max)        
+        if(response.data['count'] <= 100 ) options.value.max = response.data['count'];
+        else  options.value.max = 100;
+        // if(options.value.rowLimit <= response.data['count']) options.value.rowLimit = response.data['count'];
     }
 }
 
@@ -831,7 +839,7 @@ onBeforeMount(async () => {
 
         establishmentLoading.value = false
         globalComparison();
-        websites.value = ['Global', ...establishment.value['websites']];
+        websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
         loadDatasets();
 
     }
