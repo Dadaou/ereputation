@@ -309,13 +309,13 @@ const companyId = route.params.id;
 const showModal = ref(false);
 let timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
 let selectedTimePeriod = ref(timePeriods.value[0]);
-let start_date = ref();
-let end_date = ref();
 const date = ref([]);
 const currentDate = new Date();
 let firstDateOfPreviousYear = new Date(currentDate.getFullYear() - 1, 0, 1);
 firstDateOfPreviousYear.setHours(0, 0, 0, 0);
 let lastDateOfCurrentYear = new Date(currentDate.getFullYear(), 11, 31, 23, 59, 59);
+let start_date = ref(firstDateOfPreviousYear);
+let end_date = ref(lastDateOfCurrentYear);
 
 provide('date', date);
 provide('type', selectedTimePeriod);

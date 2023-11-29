@@ -395,40 +395,6 @@ export const useChartsStore = defineStore(
       return getData(tags, type.toLowerCase(), from, to, platform)
     }
 
-    // const signIn = async (email, password, next) => {
-    //   const response = await services.login(email, password)
-    //   if (response.status == 200) {
-    //     services.setUser()
-    //     user.value = response.data['user']
-    //     authenticated.value = true
-    //     next({ authenticated: authenticated.value, status: 200 })
-    //   } else if (response.status == 401) {
-    //     next({ authenticated: authenticated.value, status: 401 })
-    //   } else if (response.status == 500) {
-    //     next({ authenticated: authenticated.value, status: 500 })
-    //   }
-    // }
-
-    // const signOut = () => {
-    //   services.logout()
-    // }
-
-    // const getInitials = (firstName, lastName) => {
-    //   const firstInitial = firstName.charAt(0).toUpperCase()
-    //   const secondInitial = lastName.charAt(0).toUpperCase()
-    //   return `${firstInitial}${secondInitial}`
-    // }
-
-    // const getInitialsV2 = (name) => {
-    //   let full_name = name.split(' ')
-    //   let firstInitial = full_name[0].charAt(0).toUpperCase()
-    //   let secondInitial = ''
-    //   if (full_name.length >= 2) {
-    //     secondInitial = full_name[1].charAt(0).toUpperCase()
-    //   }
-    //   return `${firstInitial}${secondInitial}`
-    // }
-
     return {
       byDays,
       byWeeks,

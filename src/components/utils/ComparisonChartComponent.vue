@@ -149,10 +149,14 @@ const viewData = async () => {
     let sDate = moment().subtract(6, 'months').format('YYYY-M-DD');
     let eDate = moment().format('YYYY-M-DD');
 
-    if (start_date.value)
+    // if (start_date.value)
+    //     sDate = moment(start_date.value).format('YYYY-M-DD');
+    // if (end_date.value) eDate = moment(end_date.value).format('YYYY-M-DD');
+    
+    if (IsValueOkay(start_date.value) && IsValueOkay(end_date.value)){
         sDate = moment(start_date.value).format('YYYY-M-DD');
-    if (end_date.value) eDate = moment(end_date.value).format('YYYY-M-DD');
-
+        eDate = moment(end_date.value).format('YYYY-M-DD');
+    }
     chart2Loading.value = true
 
     if (comparisonByEstablishments.value) {
@@ -232,9 +236,10 @@ const viewDataBySource = (websites, establishment, timePeriod, startDate, endDat
     legendData.value = companiesStore.generateLegendV2(websites, colors);
 }
 
-watch([date2, comparisonByEstablishments, selectedCompany, selectedTimePeriod], () => {
-    startDate = moment().startOf('year').format('YYYY-M-DD');
-    endDate = moment().endOf('year').format('YYYY-M-DD');
+watch([start_date, end_date, comparisonByEstablishments, selectedCompany, selectedTimePeriod], () => {
+    // startDate = moment().startOf('year').format('YYYY-M-DD');
+    // endDate = moment().endOf('year').format('YYYY-M-DD');
+    console.log(selectedCompany.value)
     viewData();
 })
 
