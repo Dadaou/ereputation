@@ -14,7 +14,7 @@
                     </li>
                     <li>
                         <router-link :to="{ name: 'Contact' }">
-                            <i class="uil uil-envelope"></i> <span>Contact</span>
+                            <i class="uil uil-envelope"></i> <span>Contacts</span>
                         </router-link>
                     </li>
                    <!--  <li>
