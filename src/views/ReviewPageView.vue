@@ -45,6 +45,9 @@
                         </div>
                         <span class="sr-only">Loading...</span>
                     </div>
+                    <div v-if="visibleData.length == 0" >
+                        No Reviews
+                    </div>
                     <div class="reviews__pagination">
                         <PaginationComponent 
                         :options="options" v-if="visibleData.length > 0" 
@@ -490,7 +493,7 @@ onBeforeMount(async () => {
         all_items.value[1].value = establishment.value.totalReviews;
         appStore.isLoading = false;
         dataLoading.value = false;
-        websites.value = ['Global', ...establishment.value['websites']];
+        websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
     }
 
     const response3 = await new Promise((resolve, reject) => {

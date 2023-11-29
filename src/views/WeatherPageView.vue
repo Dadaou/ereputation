@@ -27,7 +27,25 @@
                     </div>
                 </div>
                 <div class="review__content">
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
+                     <div
+                      v-if="load == true"
+                      :style="{
+                        'width': '100%',
+                        'height': `350px`,
+                        'display': 'flex',
+                        'alignItems': 'center',
+                        'background': 'rgba(0, 0, 0, 0.1)',
+                        'opacity': 0.9,
+                        'justifyContent': 'center',
+                        'alignItems': 'center',
+                        'zIndex': 1,
+                        'marginTop': '10px',
+                        'marginBottom': '10px'
+                      }"
+                    >
+                      <SpinnerComponent />
+                    </div>
+                <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5" v-else>
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <tbody>
                             <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700" v-for="conditionData in formattedWeatherRating" :key="conditionData.condition">
@@ -37,9 +55,8 @@
                                     {{ conditionData.condition }}
                                 </td>
                                 <td class="px-6 py-4" :style="{
-                                    'backgroundColor': conditionData.color,
+                                    'color': conditionData.color,
                                     'fontWeight': 'bold',
-                                    'color': 'white'
                                 }">
                                     {{ conditionData.note }}
                                 </td>
@@ -257,6 +274,10 @@ const WeatherChartComponent = defineAsyncComponent(() =>
     import('@Components/utils/WeatherChartComponent.vue')
 )
 
+const SpinnerComponent = defineAsyncComponent(() =>
+  import('@Components/utils/SpinnerComponent.vue')
+);
+
 const route = useRoute();
 const companyId = route.params.id;
 const router = useRouter();
@@ -283,6 +304,7 @@ const dataLoading = ref(true);
 const chartLoading = ref(false);
 provide('chartLoading', chartLoading);
 const { width, height } = useWindowSize();
+let load = ref(true);
 
 let establishment = ref({});
 let weather = ref([]);
@@ -325,6 +347,7 @@ const handleDate = (modelData) => {
 
 watch([dateStart, dateEnd], async() => {
     console.log(dateStart.value, dateEnd.value)
+     load.value = true
      await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, calculType.value);
      await loadConditionFromServer(companyId, dateStart.value, dateEnd.value);
 })
@@ -617,6 +640,7 @@ const formattedWeatherRating = computed(()=>{
 const loadConditionFromServer = async(tag, dateStart, dateEnd)=>{
     let apiBase = '/etablissement/conditions';
     let apiParams = `tag=${tag}`;
+    // load.value = true
     
      if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(dateStart).format('YYYY-MM-DD');
@@ -635,6 +659,7 @@ const loadConditionFromServer = async(tag, dateStart, dateEnd)=>{
     if (response.status == 200) {
         console.log(response.data['data']);
         weatherRating.value =response.data['data']
+        load.value = false;
     }
 }
 
