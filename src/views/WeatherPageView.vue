@@ -27,9 +27,7 @@
                     </div>
                 </div>
                 <div class="review__content">
-                     <div
-                      v-if="load == true"
-                      :style="{
+                    <div v-if="load == true" :style="{
                         'width': '100%',
                         'height': `350px`,
                         'display': 'flex',
@@ -41,37 +39,37 @@
                         'zIndex': 1,
                         'marginTop': '10px',
                         'marginBottom': '10px'
-                      }"
-                    >
-                      <SpinnerComponent />
+                    }">
+                        <SpinnerComponent />
                     </div>
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5" v-else>
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <tbody>
-                            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700" v-for="conditionData in formattedWeatherRating" :key="conditionData.condition">
-                                <td class="px-6 py-4" :style="{
-                                    'fontWeight': 'bold',
-                                }">
-                                    {{ conditionData.condition }}
-                                </td>
-                                <td class="px-6 py-4" :style="{
-                                    'color': conditionData.color,
-                                    'fontWeight': 'bold',
-                                }">
-                                    {{ conditionData.note }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5" v-else>
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <tbody>
+                                <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
+                                    v-for="conditionData in formattedWeatherRating" :key="conditionData.condition">
+                                    <td class="px-6 py-4" :style="{
+                                        'fontWeight': 'bold',
+                                    }">
+                                        {{ conditionData.condition }}
+                                    </td>
+                                    <td class="px-6 py-4" :style="{
+                                        'color': conditionData.color,
+                                        'fontWeight': 'bold',
+                                    }">
+                                        {{ conditionData.note }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="tablet_mobile__filter">
                 <div class="date__picker">
-                   <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+                    <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
                 </div>
-                 <div class="date__picker">
-                  <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
+                <div class="date__picker">
+                    <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
                 </div>
             </div>
             <div class="tablet_mobile__head">
@@ -275,7 +273,7 @@ const WeatherChartComponent = defineAsyncComponent(() =>
 )
 
 const SpinnerComponent = defineAsyncComponent(() =>
-  import('@Components/utils/SpinnerComponent.vue')
+    import('@Components/utils/SpinnerComponent.vue')
 );
 
 const route = useRoute();
@@ -295,7 +293,10 @@ const breadcrumbData = [
 ]
 
 let data = ref([]);
+let weatherIcons = ref([]);
+
 provide('data', data);
+provide('icons', weatherIcons);
 let calculType = ref('Celcius °C');
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
@@ -345,11 +346,11 @@ const handleDate = (modelData) => {
     dateEnd.value = null;
 }
 
-watch([dateStart, dateEnd], async() => {
+watch([dateStart, dateEnd], async () => {
     console.log(dateStart.value, dateEnd.value)
-     load.value = true
-     await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, calculType.value);
-     await loadConditionFromServer(companyId, dateStart.value, dateEnd.value);
+    load.value = true
+    await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, calculType.value);
+    await loadConditionFromServer(companyId, dateStart.value, dateEnd.value);
 })
 
 function comparerDates(a, b) {
@@ -578,7 +579,7 @@ const groupReviewByCondition = () => {
     return global_data;
 }
 
-watch(calculType, async() => {
+watch(calculType, async () => {
     await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, calculType.value);
 })
 
@@ -590,11 +591,11 @@ useResizeObserver(el, (entries) => {
 });
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
-const loadWeatherFromServer = async(tag, dateStart, dateEnd, unit)=>{
+const loadWeatherFromServer = async (tag, dateStart, dateEnd, unit) => {
     chartLoading.value = true;
     let apiBase = '/charts/weather';
 
-    if(unit == 'Fahrenheit °F') unit="F"
+    if (unit == 'Fahrenheit °F') unit = "F"
     else unit = "C"
     let apiParams = `tag=${tag}&unit=${unit}`;
     let dataType = ['rating', 'temperature']
@@ -616,33 +617,44 @@ const loadWeatherFromServer = async(tag, dateStart, dateEnd, unit)=>{
     });
 
     if (response.status == 200) {
-        data.value = response.data['data'].reverse();
+        let results = response.data['data'].reverse()
+        data.value = results.map(r =>
+        ({
+            name: r['name'],
+            rating: r['rating'],
+            temperature: r['temperature']
+        }));
+        weatherIcons.value = results.map(r =>
+        ({
+            code: r['code'],
+            title: r['condition']
+        }));
         chartLoading.value = false;
     }
 }
 const weatherRating = ref(null);
-const formattedWeatherRating = computed(()=>{
-    console.log( weatherRating.value)
-    if(weatherRating.value==null) return [];
-    else{
+const formattedWeatherRating = computed(() => {
+    console.log(weatherRating.value)
+    if (weatherRating.value == null) return [];
+    else {
 
         let data = weatherRating.value.conditions.map(condition => ({
-        condition,
-        note: weatherRating.value[condition].note,
-        color: weatherRating.value[condition].color
-      }));
-        data.unshift({condition: 'Global rating', note: weatherRating.value['rating'], color: 'green'})
+            condition,
+            note: weatherRating.value[condition].note,
+            color: weatherRating.value[condition].color
+        }));
+        data.unshift({ condition: 'Global rating', note: weatherRating.value['rating'], color: 'green' })
 
-    return data; 
+        return data;
     }
 })
 
-const loadConditionFromServer = async(tag, dateStart, dateEnd)=>{
+const loadConditionFromServer = async (tag, dateStart, dateEnd) => {
     let apiBase = '/etablissement/conditions';
     let apiParams = `tag=${tag}`;
     // load.value = true
-    
-     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
+
+    if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(dateStart).format('YYYY-MM-DD');
         dateEnd = moment(dateEnd).format('YYYY-MM-DD');
         apiParams += `&from=${dateStart}&to=${dateEnd}`;
@@ -658,7 +670,7 @@ const loadConditionFromServer = async(tag, dateStart, dateEnd)=>{
 
     if (response.status == 200) {
         console.log(response.data['data']);
-        weatherRating.value =response.data['data']
+        weatherRating.value = response.data['data']
         load.value = false;
     }
 }
@@ -1095,7 +1107,7 @@ onBeforeMount(async () => {
         border-radius: 5px;
     }
 
-    .tablet_mobile__filter > * {
+    .tablet_mobile__filter>* {
         flex-basis: 95%;
     }
 }
