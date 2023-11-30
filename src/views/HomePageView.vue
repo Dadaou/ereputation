@@ -1,6 +1,6 @@
 <template>
-     <div class="main__container">
-        <HeadComponent :page="page"></HeadComponent> 
+    <div class="main__container">
+        <HeadComponent :page="page"></HeadComponent>
         <div class="container client__container" v-if="userStore.user.customer !== null">
             <div class="search__icon">
                 <i class="uil uil-building"></i>
@@ -9,7 +9,8 @@
             <div v-if="!dataLoading">
 
                 <div class="client__container__head" v-if="establishments.length > 0">
-                    Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, your establishments are listed bellow.  <span>({{ establishments.length }} found)</span>
+                    Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, your establishments are
+                    listed bellow. <span>({{ establishments.length }} found)</span>
                 </div>
                 <div class="client__container__head" v-else>
                     Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, no companies found yet.
@@ -17,17 +18,16 @@
             </div>
             <div v-else>
                 <div class="client__container__head">
-                    Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, your establishments are listed bellow.
+                    Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, your establishments are
+                    listed bellow.
                 </div>
             </div>
-            <div class="society__list" v-if="establishments.length>0">
+            <div class="society__list" v-if="establishments.length > 0">
                 <suspense>
-                    <establishments-list-component 
-                        :establishments = "establishments"
-                    />
+                    <establishments-list-component :establishments="establishments" />
                     <template #fallback>
-                        <establishment-list-loaded-component :nb="3"/>
-                    </template>    
+                        <establishment-list-loaded-component :nb="3" />
+                    </template>
                 </suspense>
             </div>
         </div>
@@ -37,11 +37,13 @@
                 <div class="line"></div>
             </div>
             <div class="app__message">
-                <p>Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, It seems you are not yet an active customer. To proceed further and access our services, kindly get in touch with our admin team. They will assist you in finalizing your registration and become a valued customer.</p>
-                <button class="btn" @click="signOut">Disconnect</button>        
+                <p>Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, It seems you are not yet an
+                    active customer. To proceed further and access our services, kindly get in touch with our admin team.
+                    They will assist you in finalizing your registration and become a valued customer.</p>
+                <button class="btn" @click="signOut">Disconnect</button>
             </div>
         </div>
-     </div> 
+    </div>
 </template>
 
 <script setup>
@@ -54,7 +56,7 @@ import EstablishmentListLoadedComponent from '@Components/utils/EstablishmentLis
 import services from '@Services/services.js';
 
 
-const EstablishmentsListComponent = defineAsyncComponent(()=>
+const EstablishmentsListComponent = defineAsyncComponent(() =>
     import('@Components/utils/EstablishmentsListComponent.vue')
 )
 
@@ -64,7 +66,7 @@ const companiesStore = useCompanyStore();
 const establishments = ref([]);
 const dataLoading = ref(true);
 
-const page=ref({
+const page = ref({
     title1: "",
     title2: "Home",
     icon: "uil-estate",
@@ -73,23 +75,23 @@ const page=ref({
 const signOut = () => {
     userStore.signOut();
     userStore.authenticated = false;
-    if(userStore.authenticated == false) router.push({name:"Login"});
+    if (userStore.authenticated == false) router.push({ name: "Login" });
 }
 
-onBeforeMount(async()=>{
+onBeforeMount(async () => {
     appStore.isLoading = true;
     dataLoading.value = true;
-    if(userStore.user.customer !== null){
-         const response = await new Promise((resolve, reject) => {
-            services.get_Record(`/customer/${userStore.user.customer.tag}/establishments/reviews`, (response) => {
-                    resolve(response)
-                    appStore.isLoading = false;
+    if (userStore.user.customer !== null) {
+        const response = await new Promise((resolve, reject) => {
+            services.get_Record(`/customer/${userStore.user.customer.tag}/establishments/all`, (response) => {
+                resolve(response)
+                appStore.isLoading = false;
             });
         });
-         console.log(response)
+        console.log(response)
 
-        if(response.status == 200){
-            establishments.value = response.data;    
+        if (response.status == 200) {
+            establishments.value = response.data;
             dataLoading.value = false
         }
     }
@@ -97,50 +99,52 @@ onBeforeMount(async()=>{
 </script>
 
 <style scoped>
-.establishment__link label, .establishment__link{
+.establishment__link label,
+.establishment__link {
     cursor: pointer !important;
 }
 
-.first{
-    border-right:2px solid var(--light-color-bg1)
+.first {
+    border-right: 2px solid var(--light-color-bg1)
 }
 
-.client__container{
+.client__container {
     position: relative;
-    top:1rem;
+    top: 1rem;
     height: inherit;
     display: flex;
-    gap:1rem;
+    gap: 1rem;
     width: 50%;
     display: flex;
     flex-direction: column;
     margin-bottom: 20px;
 }
 
-.search__icon i{
+.search__icon i {
     font-size: 30px;
     color: var(--color-danger);
 }
 
-.search__icon .line{
+.search__icon .line {
     font-size: 30px;
     background-color: var(--color-bg2);
     height: 2px;
     width: 40px;
 }
 
-.client__container__head{
+.client__container__head {
     font-size: 19px;
     color: var(--color-bg2);
     transform: var(--transition);
 }
 
-.client__container__head div, .client__container__head span{
+.client__container__head div,
+.client__container__head span {
     font-size: 15px;
     font-weight: bold;
 }
 
-.society__list{
+.society__list {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -149,10 +153,11 @@ onBeforeMount(async()=>{
     transform: var(--transition)
 }
 
-.app__message p{
+.app__message p {
     margin: 15px auto;
 }
-.app__message button{
+
+.app__message button {
     border: 1px solid var(--color-danger);
     transition: var(--transition);
     border-radius: 5px;
@@ -162,61 +167,61 @@ onBeforeMount(async()=>{
     color: var(--color-danger);
 }
 
-.app__message button:hover{
+.app__message button:hover {
     background-color: var(--color-danger);
     color: white;
 }
 
-.list__actions button:hover{
+.list__actions button:hover {
     background-color: var(--color-primary);
 }
 
 @media screen and (max-width:1163px) {
-    .client__container{
-      width: 55% !important;
+    .client__container {
+        width: 55% !important;
     }
 }
 
 @media screen and (max-width:1163px) {
-    .client__container{
-      width: 60% !important;
+    .client__container {
+        width: 60% !important;
     }
 }
 
 @media screen and (max-width:964px) {
-    .client__container{
-      width: 65% !important;
+    .client__container {
+        width: 65% !important;
     }
 }
 
 @media screen and (max-width:884px) {
-    .client__container{
-      width: 70% !important;
+    .client__container {
+        width: 70% !important;
     }
-    .client__container__head{
+
+    .client__container__head {
         font-size: 18px;
     }
 }
 
 @media screen and (max-width:779px) {
-    .client__container{
-      width: 80% !important;
+    .client__container {
+        width: 80% !important;
     }
 
-    .client__container__head{
+    .client__container__head {
         font-size: 16px;
     }
 }
 
 @media screen and (max-width:670px) {
-    .client__container{
-      width: var(--container-width-md) !important;
+    .client__container {
+        width: var(--container-width-md) !important;
     }
 }
 
 @media screen and (max-width:600px) {
-    .client__container__head{
+    .client__container__head {
         font-size: 15px;
     }
-}
-</style>
+}</style>
