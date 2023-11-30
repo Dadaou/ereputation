@@ -627,7 +627,8 @@ const loadWeatherFromServer = async (tag, dateStart, dateEnd, unit) => {
         weatherIcons.value = results.map(r =>
         ({
             code: r['code'],
-            title: r['condition']
+            title: r['condition'],
+            color: r['color']
         }));
         chartLoading.value = false;
     }

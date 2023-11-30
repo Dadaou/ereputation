@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { ref, inject, defineAsyncComponent, computed, onMounted } from 'vue';
+import { ref, inject, defineAsyncComponent, computed, onMounted, watch } from 'vue';
 import { useResizeObserver, useWindowSize } from '@vueuse/core';
 const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
@@ -68,6 +68,32 @@ const getWidth = () => {
   return `${Math.min(width.value * percentage, 850)}px`;
 };
 
+const deleteIcons = () => {
+  const weathers = document.getElementById("weatherIcons");
+  weathers.innerHTML = "";
+}
+
+const positionIcons = () => {
+  let positions = [];
+
+  const elements = document.querySelectorAll(".weather__chart .xaxis g.tick");
+
+
+  elements.forEach(e => {
+    positions.push((e.getAttribute("transform").split(',')[0]).split('(')[1]);
+  })
+
+  const weathers = document.getElementById("weatherIcons");
+
+  for (let i = 0; i < positions.length; i++) {
+    let textNode = document.createElement("span");
+    textNode.innerHTML = icons.value[i]['code'];
+    textNode.setAttribute("style", `left: calc(${positions[i]}px - 16px); opacity: 1; top: -4px; position: absolute; font-size: 28px; cursor: pointer; color: ${icons.value[i]['color']};`);
+    textNode.setAttribute("title", icons.value[i]['title']);
+    weathers.appendChild(textNode);
+  }
+}
+
 useResizeObserver(el, (entries) => {
   const entry = entries[0];
   const { width } = entry.contentRect;
@@ -75,23 +101,14 @@ useResizeObserver(el, (entries) => {
 });
 
 onMounted(() => {
+  deleteIcons();
+  positionIcons();
+});
 
-  let positions = [];
-
-  const elements = document.querySelectorAll(".weather__chart .xaxis g.tick");
-  elements.forEach(e => {
-    positions.push((e.getAttribute("transform").split(',')[0]).split('(')[1]);
-  })
-  const weathers = document.getElementById("weatherIcons");
-
-  for (let i = 0; i < positions.length; i++) {
-    let textNode = document.createElement("span");
-    textNode.innerHTML = icons.value[i]['code'];
-    textNode.setAttribute("style", `left: calc(${positions[i]}px - 16px); opacity: 1; top: -10px; position: absolute; font-size: 32px; cursor: pointer;`);
-    textNode.setAttribute("title", icons.value[i]['title']);
-    weathers.appendChild(textNode);
-  }
-
+watch(data, () => {
+  deleteIcons();
+  setTimeout(() => positionIcons(), 2000)
+    ;
 });
 </script>
 
