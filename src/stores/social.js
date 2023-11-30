@@ -117,7 +117,7 @@ export const useSocialStore = defineStore('social', () => {
     } else {
       await fetchGlobalStats(id, period, type)
       tmp = globalStats.value
-        console.log(tmp)
+      console.log(tmp)
       if (tmp[`${id}`] && tmp[`${id}`][`${type}`] && tmp[`${id}`][`${type}`][`${period}`]) {
         return tmp[`${id}`][`${type}`][`${period}`]
       } else {

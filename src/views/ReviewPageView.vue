@@ -338,8 +338,8 @@ let updateVisibleData = function (_data, isStarFilter = false) {
     reviews_loader.value = false;
 }
 
-const dateStart = ref();
-const dateEnd = ref();
+const dateStart = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
+const dateEnd = ref(moment().format('YYYY-M-DD'));
 const enableDateEnd = ref(false);
 const downloaded = ref(false);
 let reviewFeedbackData = ref({
@@ -355,7 +355,6 @@ const options = ref({
     current: 1,
     page: 1,
 })
-
 
 const format2 = (date) => {
     const day = date.getDate();
@@ -449,6 +448,7 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
 watch(selectedStars, () => {
     loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
 });
+
 const starsData = ref([]);
 const starsLoading = ref(false);
 const feedbackLoading = ref(false)

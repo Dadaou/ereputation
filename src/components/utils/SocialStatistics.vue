@@ -240,8 +240,11 @@ const updateData = async () => {
     )
  
 onMounted(async () => {
-
-    const datas = await socialStore.getGlobalStats(companyId, 'yearly', new Date().getFullYear())
+    type.value = { label: "Month", value: "monthly" }
+    period.value = { label: 'November', value: '11' }
+    year.value =  { label: "2023", value: 2023 }
+    filter.value = { label: "Followers", value: "followers" }
+    const datas = await socialStore.getGlobalStats(companyId, 'monthly', `11-2023`)
 
     let data = {
         labels: [],
@@ -278,6 +281,7 @@ watch([type], () => {
 });
 
 watch([type, year, period, filter], () => {
+    console.log(type.value)
     updateData();
 })
 
