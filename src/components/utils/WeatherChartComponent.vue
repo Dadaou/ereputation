@@ -88,7 +88,7 @@ const positionIcons = () => {
   for (let i = 0; i < positions.length; i++) {
     let textNode = document.createElement("span");
     textNode.innerHTML = icons.value[i]['code'];
-    textNode.setAttribute("style", `left: calc(${positions[i]}px - 16px); opacity: 1; top: -4px; position: absolute; font-size: 28px; cursor: pointer; color: ${icons.value[i]['color']};`);
+    textNode.setAttribute("style", `left: calc(${positions[i]}px - 14px); opacity: 1; top: -4px; position: absolute; font-size: 28px; cursor: pointer; color: ${icons.value[i]['color']};`);
     textNode.setAttribute("title", icons.value[i]['title']);
     weathers.appendChild(textNode);
   }
