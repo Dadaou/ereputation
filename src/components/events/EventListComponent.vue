@@ -5,12 +5,12 @@
         </div>
     </div>
     <div class="mt-5 erep_table">
-        <el-table :data="filterTableData" :style="{'width': '1000px','overflow' : 'hidden' }">
-            <el-table-column label="Name" prop="name" width="150"/>
+        <el-table :data="filterTableData">
+            <el-table-column label="Name" prop="name" width="250"/>
             <el-table-column label="Category" prop="category" width="150"/>
-            <el-table-column label="Establishment" prop="establishment_name" width="250"/>
+            <el-table-column label="Establishment" prop="establishment_name" width="400"/>
             <el-table-column label="Date" prop="date" width="250"/>
-            <el-table-column label="Operations" width="150">
+            <el-table-column label="Operations" width="200">
                 <template #header>
                 <el-input v-model="search" size="small" placeholder="Type to search" />
                 </template>

@@ -5,12 +5,12 @@
         </div>
     </div>
     <div class="mt-5">
-        <el-table :data="filterTableData" :style="{'width': '1000px','overflow' : 'hidden' }">
-            <el-table-column label="Period" prop="period" width="150"/>
-            <el-table-column label="Name" prop="name" width="150"/>
+        <el-table :data="filterTableData">
+            <el-table-column label="Period" prop="period" width="250"/>
+            <el-table-column label="Name" prop="name" width="250"/>
             <el-table-column label="Gender" prop="gender" width="100"/>
-            <el-table-column label="Establishment" prop="establishment_name" width="150"/>
-            <el-table-column label="Department" prop="department" width="150"/>
+            <el-table-column label="Establishment" prop="establishment_name" width="250"/>
+            <el-table-column label="Department" prop="department" width="250"/>
             
             <el-table-column  width="200">
                 <template #header>

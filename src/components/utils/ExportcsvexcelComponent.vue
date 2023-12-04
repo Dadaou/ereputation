@@ -12,12 +12,12 @@
                 <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">Export data</h3>
             </div>
             <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="login__form">
-                <input 
+               <!--  <input 
                 	name="filename" 
                 	placeholder="filename" 
                 	v-model="form.filename"
                 	required
-                >
+                > -->
 				<select 
 				class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 				v-model="form.type"
@@ -27,7 +27,7 @@
 					  <option value="csv">csv file</option>
 					  <option value="xlsx">xlsx file</option>
 				</select>
-				<div v-if="is_downloaded" class="downloaded">{{text}} downloaded</div>
+				<div v-if="is_downloaded" class="downloaded">file downloaded</div>
 				<button sybmit class="btn" v-if="is_downloaded == false">
 			        <i class="uil uil-file-download"></i>
 			        Export

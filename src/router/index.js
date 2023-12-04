@@ -136,6 +136,11 @@ const router = createRouter({
           component: ()=> import('@Components/users/ContactComponent.vue'),
         },
         {
+          path: 'subscription',
+          name: 'Subscription',
+          component: ()=> import('@Views/SubscriptionView.vue'),
+        },
+        {
           path: 'security',
           name: 'Account_security',
           component: ()=> import('@Components/users/SecurityComponent.vue'),

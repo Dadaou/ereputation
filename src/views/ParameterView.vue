@@ -7,21 +7,21 @@
         @tab-click="handleClick"
     >
         <el-tab-pane label="Staff" name="staff">
-            <el-tabs :tab-position="position" v-model="activeStaffTab" class="demo-tabs mt-10">
+            <el-tabs v-model="activeStaffTab" class="demo-tabs">
                     <el-tab-pane label="Staff list"  name="staff_list">
                         <StaffListComponent @edit="(staff)=>handleEdit(staff, 'staff')"/>
                     </el-tab-pane>
-                    <el-tab-pane label="Staff Form"  name="staff_form">
+                    <el-tab-pane label="Add a new staff member"  name="staff_form">
                         <StaffFormComponent/>
                     </el-tab-pane>
             </el-tabs>
         </el-tab-pane>
         <el-tab-pane label="Event" name="event">
-            <el-tabs :tab-position="position" v-model="activeEventTab" class="demo-tabs mt-10">
+            <el-tabs v-model="activeEventTab" class="demo-tabs">
                     <el-tab-pane label="Event list" name="event_list">
                         <EventListComponent @edit="(event)=>handleEdit(event, 'event')"/>
                     </el-tab-pane>
-                    <el-tab-pane label="Event Form" name="event_form">
+                    <el-tab-pane label="Add a new event" name="event_form">
                         <EventFormComponent/>
                     </el-tab-pane>
             </el-tabs>
@@ -63,7 +63,7 @@ const EventListComponent = defineAsyncComponent(()=>
         import("@Components/events/EventListComponent.vue")
 )
 
-const position = ref('right')
+const position = ref('top')
 watch(width, ()=>{
      if(width.value < 800) {
           position.value = 'top'

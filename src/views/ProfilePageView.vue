@@ -9,7 +9,12 @@
                 <ul>
                     <li>
                         <router-link :to="{ name: 'Personal_details' }">
-                            <i class="uil uil-building"></i><span>Personal details</span>
+                           <i class="uil uil-user"></i><span>Account</span>
+                        </router-link>
+                    </li>
+                     <li>
+                        <router-link :to="{ name: 'Subscription' }">
+                            <i class="uil uil-user-check"></i><span>Subscription</span>
                         </router-link>
                     </li>
                     <li>
@@ -68,6 +73,7 @@ const breadcrumbData = [
   gap: 2rem;
   width: 95% !important;
   margin: auto;
+  overflow-x: hidden; 
 }
 
 .breadcrumb__container {

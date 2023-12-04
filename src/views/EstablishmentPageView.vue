@@ -56,7 +56,7 @@
                         <h2>Last reviews</h2>
                     </div>
                 </div>
-                <div class="reviews__content" v-if="!reviewsLoading">
+                <div class="reviews__content">
                     <p>Discover the latest feedback about your establishment. Click <a
                             @click="gotoReviewPage(establishment.competitor_tag, $route.params.tag)">here</a> to access all
                         reviews.</p>
@@ -115,7 +115,6 @@
                         </div>
                     </aside>
                 </div>
-                <div v-else>Loading</div>
             </div>
             <div class="tablet_mobile__filter tablet">
                <div class="rating__customers">
@@ -614,7 +613,7 @@ const viewData = async () => {
         legendData.value = companiesStore.generateLegend(plotdata.value, colors);
     }
     chartLoading.value = false;
-    loadDatasets();
+    await loadDatasets();
 }
 
 const viewDataAsync = async (timePeriod, startDate, endDate, data) => {
@@ -660,20 +659,20 @@ let updateVisibleData = function (_data) {
 const globalComparison = async () => {
     selectedCompetitors.value = 'Global';
     selectedWebsites.value = 'Global';
-    viewData();
-    loadReviews(companyId.value, 1, 20, 1, startDate, endDate, selectedWebsites.value, selectedStars.value);
+    await viewData();
+    // loadReviews(companyId.value, 1, 20, 1, startDate, endDate, selectedWebsites.value, selectedStars.value);
 };
 
 const reloadComparison = async (competitor) => {
     let competitorInfo = establishment.value['competitors'].find(c => c.name === competitor.name)
     selectedCompetitors.value = competitorInfo.name;
     plotdata.value = [];
-    viewData();
+    await viewData();
 }
 
 const reloadComparisonByWebsite = async (website) => {
     selectedWebsites.value = website;
-    viewData();
+    await viewData();
 };
 
 
@@ -704,22 +703,22 @@ const chart__height = ref(300);
 const chart__width2 = ref(300);
 const chart__height2 = ref(200);
 
-watch([start_date, end_date, selectedWebsites], () => {
-   viewData()
-   loadReviews(companyId.value, 1, 20, 1, start_date.value, end_date.value, selectedWebsites.value, '');
+watch([start_date, end_date, selectedWebsites], async() => {
+   await viewData()
+   await loadReviews(companyId.value, 1, 20, 1, start_date.value, end_date.value, selectedWebsites.value, '');
 })
 
 watch(selectedCompetitors, async () => {
     startDate = moment(start_date.value).format('YYYY-M-DD');
     endDate = moment(end_date.value).format('YYYY-M-DD');
-    viewData()
+    await viewData()
 })
 
 
 watch(selectedTimePeriod, async () => {
     startDate = moment(start_date.value).format('YYYY-M-DD');
     endDate = moment(end_date.value).format('YYYY-M-DD');
-    viewData()
+    await viewData()
 })
 
 const goto = (value) => {
@@ -752,8 +751,8 @@ const reloadStarData = () => {
     }
 }
 
-watch(selectedStars, () => {
-     loadReviews(companyId.value, 1, options.value['rowLimit'], 1, '', '', selectedWebsites.value, selectedStars.value);
+watch(selectedStars, async() => {
+     await loadReviews(companyId.value, 1, options.value['rowLimit'], 1, '', '', selectedWebsites.value, selectedStars.value);
 });
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
@@ -817,6 +816,8 @@ onBeforeMount(async () => {
     appStore.isLoading = true;
 
     await loadReviews(companyId.value, 1, options.value['rowLimit'], 1, '', '', selectedWebsites.value, selectedStars.value);
+    appStore.isLoading = false;
+
 
     const response2 = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId.value}/rating`, (response) => {
@@ -831,19 +832,15 @@ onBeforeMount(async () => {
     if (response2.status == 200) {
 
         establishment.value = response2.data;
-        console.log(establishment.value)
         establishment.value['tag'] = companyId.value;
         appStore.isLoading = false;
         page.value.title2 = establishment.value.name;
         all_items.value[0].value = establishment.value.rating;
-        // all_items.value[1].value = establishment.value.totalReviews;
         all_items.value[2].value = establishment.value.competitors.length;
 
         establishmentLoading.value = false
-        globalComparison();
         websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
-        loadDatasets();
-
+        // await globalComparison()
     }
 
     const response3 = await new Promise((resolve, reject) => {
@@ -890,7 +887,6 @@ onBeforeMount(async () => {
         }
 
         feedbackLoading.value = false
-
     }
 });
 </script>

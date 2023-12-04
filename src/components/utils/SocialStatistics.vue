@@ -74,7 +74,7 @@ const periods = ref([]);
 const types = ref([
     { label: "Week", value: "weekly" },
     { label: "Month", value: "monthly" },
-    { label: "Year", value: "Yearly" }
+    { label: "Year", value: "yearly" }
 ]);
 
 const filters = ref([
