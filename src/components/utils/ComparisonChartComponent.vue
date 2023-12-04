@@ -121,7 +121,7 @@ let timePeriods = ref(['Days', 'Weeks', 'Months', 'Quarters', 'Semesters']);
 let establishmentDropdown = computed(() => comparisonByEstablishments.value ? props.competitors : props.establishment.websites.map(w => ({ name: w })));
 let selectedCompany = ref(establishmentDropdown.value[0]);
 
-console.log(establishmentDropdown.value);
+// console.log(establishmentDropdown.value);
 
 let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
 let endDate = moment().format('YYYY-M-DD');
@@ -152,8 +152,8 @@ const viewData = async () => {
     // if (start_date.value)
     //     sDate = moment(start_date.value).format('YYYY-M-DD');
     // if (end_date.value) eDate = moment(end_date.value).format('YYYY-M-DD');
-    
-    if (IsValueOkay(start_date.value) && IsValueOkay(end_date.value)){
+
+    if (IsValueOkay(start_date.value) && IsValueOkay(end_date.value)) {
         sDate = moment(start_date.value).format('YYYY-M-DD');
         eDate = moment(end_date.value).format('YYYY-M-DD');
     }
@@ -162,16 +162,16 @@ const viewData = async () => {
     if (comparisonByEstablishments.value) {
         if (selectedCompany.value.name != 'Global') {
             const tags = [props.establishment.tag, selectedCompany.value.tag]
-            plotData.value = await chartsStore.checkData(tags, selectedTimePeriod.value, sDate, eDate, 'global')
+            plotData.value = await chartsStore.loadData(tags, selectedTimePeriod.value, sDate, eDate, 'global')
             legendData.value = companiesStore.generateLegend(plotData.value, colors2);
         } else {
             const tags = [props.establishment.tag, ...props.establishment.competitors.map(c => c.tag)]
-            plotData.value = await chartsStore.checkData(tags, selectedTimePeriod.value, sDate, eDate, 'global')
+            plotData.value = await chartsStore.loadData(tags, selectedTimePeriod.value, sDate, eDate, 'global')
             legendData.value = companiesStore.generateLegend(plotData.value, colors2);
         }
     } else {
         const tags = [props.establishment.tag, ...props.establishment.competitors.map(c => c.tag)]
-        plotData.value = await chartsStore.checkData(tags, selectedTimePeriod.value, sDate, eDate, selectedCompany.value.name)
+        plotData.value = await chartsStore.loadData(tags, selectedTimePeriod.value, sDate, eDate, selectedCompany.value.name)
         legendData.value = companiesStore.generateLegend(plotData.value, colors2);
     }
 

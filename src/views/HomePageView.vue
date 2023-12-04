@@ -88,7 +88,7 @@ onBeforeMount(async () => {
                 appStore.isLoading = false;
             });
         });
-        console.log(response)
+        // console.log(response)
 
         if (response.status == 200) {
             establishments.value = response.data;
@@ -224,4 +224,5 @@ onBeforeMount(async () => {
     .client__container__head {
         font-size: 15px;
     }
-}</style>
+}
+</style>

@@ -36,20 +36,10 @@
                 }">
                     <SpinnerComponent />
                 </div>
-                <ComparisonChartComponent 
-                    v-else 
-                    :data="plotdata" 
-                    :width="chart__width" 
-                    :chartheight="chart__height"
-                    :establishment="establishment" 
-                    :companies="comparisonData" 
-                    :competitors="computedCompetitors"
+                <ComparisonChartComponent v-else :data="plotdata" :width="chart__width" :chartheight="chart__height"
+                    :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors"
                     :timePeriod="selectedTimePeriod" />
-                <BaseLegend 
-                    v-if="chartLoading == false" 
-                    class="legend" 
-                    :LegendData="legendData" 
-                    :alignment="'vertical'">
+                <BaseLegend v-if="chartLoading == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
                 </BaseLegend>
                 <div class="head">
                     <div class="app__title">
@@ -61,15 +51,11 @@
                             @click="gotoReviewPage(establishment.competitor_tag, $route.params.tag)">here</a> to access all
                         reviews.</p>
                     <div class="reviews__pagination">
-                        <PaginationComponent 
-                        v-if="visibleData.length > 0" 
-                        :options="options" 
-                        @next="(option) => {
-                             loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars)
-                        }" 
-                        @prev="(option) => {
-                             loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars)
-                        }" />
+                        <PaginationComponent v-if="visibleData.length > 0" :options="options" @next="(option) => {
+                            loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars)
+                        }" @prev="(option) => {
+    loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars)
+}" />
                     </div>
                     <CommentComponent v-if="reviewsLoading == false" :reviews="visibleData"
                         :allReviews="establishment.reviews" :showEmoji="false" />
@@ -93,18 +79,14 @@
                         </div>
                         <span class="sr-only">Loading...</span>
                     </div>
-                    <div v-if="visibleData.length == 0" >
+                    <div v-if="visibleData.length == 0">
                         No Reviews
                     </div>
-                    <PaginationComponent
-                    v-if="visibleData.length > 0" 
-                    :options="options" 
-                    @next="(option) => {
+                    <PaginationComponent v-if="visibleData.length > 0" :options="options" @next="(option) => {
                         loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
-                    }" 
-                    @prev="(option) => {
-                         loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
-                    }" />
+                    }" @prev="(option) => {
+    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+}" />
                     <aside v-if="lastReviews.length > 0">
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ all_items[1].value - 3 }} reviews
                             remains</p>
@@ -118,7 +100,7 @@
                 <div v-else>Loading</div>
             </div>
             <div class="tablet_mobile__filter tablet">
-               <div class="rating__customers">
+                <div class="rating__customers">
                     <div class="title">Rating by Customers</div>
                     <div class="chart__rating">
                         <Line :data="chartData" :options="chartConfig.options" />
@@ -135,7 +117,7 @@
                 </div>
                 <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
             </div>
-            <div class="tablet_mobile__filter" v-if="currentFilter=='filter'">
+            <div class="tablet_mobile__filter" v-if="currentFilter == 'filter'">
                 <DropdownComponent class="dropdown" :showTitle="false" title="Compare to" placeholder="Select a competitor"
                     :data="computedCompetitors" @submit="(competitor) => {
                         selectedCompetitors = competitor.name
@@ -164,8 +146,8 @@
                     <el-date-picker v-model="end_date" type="date" placeholder="Select the end date" :size="'large'" />
                 </div>
             </div>
-            <div class="tablet_mobile__filter" v-if="currentFilter=='feedback'">
-                 <div class="rating__customers">
+            <div class="tablet_mobile__filter" v-if="currentFilter == 'feedback'">
+                <div class="rating__customers">
                     <div class="title">Rating by Customers</div>
                     <div class="chart__rating">
                         <Line :data="chartData" :options="chartConfig.options" />
@@ -173,7 +155,7 @@
                 </div>
                 <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
             </div>
-            <div class="tablet_mobile__filter" v-if="currentFilter=='star'">
+            <div class="tablet_mobile__filter" v-if="currentFilter == 'star'">
                 <div class="reviews__star">
                     <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
                         @click="starFilter(star.intVal)">
@@ -220,20 +202,20 @@
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="mobile__filter__btn">
-                          <button :class="['btn', (currentFilter=='feedback')?'isactive':'']" 
-                          @click="currentFilter='feedback'">
+                        <button :class="['btn', (currentFilter == 'feedback') ? 'isactive' : '']"
+                            @click="currentFilter = 'feedback'">
                             <i class="uil uil-arrow-growth"></i>
-                           <!--  <i class="uil uil-chart-down"></i> -->
+                            <!--  <i class="uil uil-chart-down"></i> -->
                             Stat
-                          </button>
-                          <button :class="['btn', (currentFilter=='star')?'isactive':'']" 
-                          @click="currentFilter='star'">
+                        </button>
+                        <button :class="['btn', (currentFilter == 'star') ? 'isactive' : '']"
+                            @click="currentFilter = 'star'">
                             <i class="uis uil-star"></i> Stars
-                          </button>
-                          <button :class="['btn', (currentFilter=='filter')?'isactive':'']"
-                          @click="currentFilter='filter'">
+                        </button>
+                        <button :class="['btn', (currentFilter == 'filter') ? 'isactive' : '']"
+                            @click="currentFilter = 'filter'">
                             <i class="uil uil-filter"></i>Filters
-                          </button>
+                        </button>
                     </div>
                 </div>
                 <div class="photo" v-if="!establishmentLoading">
@@ -570,7 +552,7 @@ const loadDatasets = async () => {
     if (establishment && establishment.value['competitors']) {
         let competitorInfo = establishment.value['competitors'].find(c => c.name === selectedCompetitors.value)
         const tags = competitorInfo ? [companyId.value, competitorInfo.tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.tag)]
-        let datas = await chartsStore.checkData(tags, 'months', moment(sDate).format('YYYY-M-DD'), moment(eDate).format('YYYY-M-DD'), selectedWebsites.value.toLowerCase())
+        let datas = await chartsStore.loadData(tags, 'months', moment(sDate).format('YYYY-M-DD'), moment(eDate).format('YYYY-M-DD'), selectedWebsites.value.toLowerCase())
         chartData.value = formatSixMonthsChartData(datas);
         semesterChartLoading.value = false
     }
@@ -610,7 +592,7 @@ const viewData = async () => {
     if (establishment && establishment.value['competitors']) {
         let competitorInfo = establishment.value['competitors'].find(c => c.name === selectedCompetitors.value)
         const tags = competitorInfo ? [companyId.value, competitorInfo.tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.tag)]
-        plotdata.value = await chartsStore.checkData(tags, selectedTimePeriod.value, startDate, endDate, selectedWebsites.value.toLowerCase())
+        plotdata.value = await chartsStore.loadData(tags, selectedTimePeriod.value, startDate, endDate, selectedWebsites.value.toLowerCase())
         legendData.value = companiesStore.generateLegend(plotdata.value, colors);
     }
     chartLoading.value = false;
@@ -619,16 +601,16 @@ const viewData = async () => {
 
 const viewDataAsync = async (timePeriod, startDate, endDate, data) => {
     plotdata.value = await companiesStore.calculateReviewsV3Async(timePeriod, startDate, endDate, data);
-    console.log(plotdata.value)
+    // console.log(plotdata.value)
 }
 
 const formatStarsData = (data) => {
     let tmp = []
-    console.log(data)
+    // console.log(data)
     const total = Object.keys(data).reduce(function (previous, key) {
         return previous + data[key];
     }, 0);
-    console.log(total)
+    // console.log(total)
     Object.keys(data).forEach(k => {
         tmp.push({
             label: k,
@@ -705,8 +687,8 @@ const chart__width2 = ref(300);
 const chart__height2 = ref(200);
 
 watch([start_date, end_date, selectedWebsites], () => {
-   viewData()
-   loadReviews(companyId.value, 1, 20, 1, start_date.value, end_date.value, selectedWebsites.value, '');
+    viewData()
+    loadReviews(companyId.value, 1, 20, 1, start_date.value, end_date.value, selectedWebsites.value, '');
 })
 
 watch(selectedCompetitors, async () => {
@@ -753,7 +735,7 @@ const reloadStarData = () => {
 }
 
 watch(selectedStars, () => {
-     loadReviews(companyId.value, 1, options.value['rowLimit'], 1, '', '', selectedWebsites.value, selectedStars.value);
+    loadReviews(companyId.value, 1, options.value['rowLimit'], 1, '', '', selectedWebsites.value, selectedStars.value);
 });
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
@@ -777,27 +759,27 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     }
 
     if (IsValueOkay(stars)) {
-        console.log(stars)
+        // console.log(stars)
         apiParams += `&star=${stars}`
     }
 
     const api = apiBase + '?' + apiParams;
-    console.log(api)
+    // console.log(api)
 
     const response = await new Promise((resolve, reject) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
     });
-    console.log(response)
+    // console.log(response)
 
     if (response.status == 200) {
         reviewsLoading.value = false;
         visibleData.value = response.data['data'];
-        console.log(response.data['count'])   
-        console.log(options.value.max)        
-        if(response.data['count'] <= 100 ) options.value.max = response.data['count'];
-        else  options.value.max = 100;
+        // console.log(response.data['count'])
+        // console.log(options.value.max)
+        if (response.data['count'] <= 100) options.value.max = response.data['count'];
+        else options.value.max = 100;
         all_items.value[1].value = response.data['count'];
         all_items.value[0].value = response.data['rating'];
         // if(options.value.rowLimit <= response.data['count']) options.value.rowLimit = response.data['count'];
@@ -831,7 +813,7 @@ onBeforeMount(async () => {
     if (response2.status == 200) {
 
         establishment.value = response2.data;
-        console.log(establishment.value)
+        // console.log(establishment.value)
         establishment.value['tag'] = companyId.value;
         appStore.isLoading = false;
         page.value.title2 = establishment.value.name;
@@ -854,7 +836,7 @@ onBeforeMount(async () => {
 
     if (response3.status == 200) {
         if (response3.data && response3.data.data) {
-            console.log(response3.data.data)
+            // console.log(response3.data.data)
             starsData.value = formatStarsData(response3.data.data)
             starsLoading.value = false
         }
@@ -901,11 +883,12 @@ onBeforeMount(async () => {
 }
 
 
-.tablet, .mobile__filter__btn{
+.tablet,
+.mobile__filter__btn {
     display: none !important;
 }
 
-.mobile__filter__btn button{
+.mobile__filter__btn button {
     border: 1px solid var(--light-color-bg1);
     transition: var(--transition);
     border-radius: 5px;
@@ -915,12 +898,14 @@ onBeforeMount(async () => {
     flex-basis: 100%;
 }
 
-.isactive, .mobile__filter__btn button:hover{
+.isactive,
+.mobile__filter__btn button:hover {
     background-color: var(--color-primary);
     color: white !important;
 }
 
-.isactive i, .mobile__filter__btn button:hover i{
+.isactive i,
+.mobile__filter__btn button:hover i {
     color: white !important;
 }
 
@@ -1281,16 +1266,16 @@ onBeforeMount(async () => {
         width: 250px !important;
     }
 
-    .tablet{
+    .tablet {
         display: flex !important;
         align-items: center;
         vertical-align: center;
         flex-wrap: wrap !important;
         flex-direction: horizontal;
-        gap:3px !important;
+        gap: 3px !important;
     }
 
-    .tablet > div{
+    .tablet>div {
         height: 200px;
         margin: 0 !important;
         flex-basis: 30%
@@ -1391,13 +1376,13 @@ onBeforeMount(async () => {
         padding: 10px;
     }
 
-    .tablet{
+    .tablet {
         display: none !important;
     }
 
-    .mobile__filter__btn{
+    .mobile__filter__btn {
         display: flex !important;
-        gap:0.5rem;
+        gap: 0.5rem;
         justify-content: center;
         margin-top: 10px;
     }
