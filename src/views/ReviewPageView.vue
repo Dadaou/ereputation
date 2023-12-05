@@ -502,7 +502,7 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source)=>{
     });
 
     if (response.status == 200) {
-        const score = response.data[companyId]
+        const score = response.data[tag]
         let rawWidth = score * 100 / 2
         let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
         let feeling = rawWidth > 0 ? 1 : -1

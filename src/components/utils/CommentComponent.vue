@@ -134,8 +134,10 @@ const reloadData = (reviewUpdated, feeling)=>{
 }
 
 const updateReview = async () => {
+
     let updatedValue = {
-        feeling: feel.value
+        feeling: feel.value,
+        confidence: 1
     }
     selectedReview.value.feeling = feel.value;
 
@@ -144,10 +146,7 @@ const updateReview = async () => {
         showModal.value = false;
         await feedbackStore.updateReview(id.value, updatedValue, response=>{
             if(response.status==200){
-                 // showModal.value = false;
-                // setTimeout(()=>{
-                //     showModal.value = false;
-                // }, 100)
+    
             } 
         })   
     } catch (error) {

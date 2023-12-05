@@ -112,15 +112,40 @@
                           <span>Reviews</span> 
                       </RouterLink>
                   </li>
+                   <li @click="showModal=true">
+                      <a>
+                          <i class="uil uil-shop"></i>
+                          <span>Sales</span> 
+                      </a>
+                  </li>
       </ul>
     </div>
     </div>
+    <ModalComponent :showModal="showModal" @close="showModal=false" :width="modalWidth">
+            <template #content>
+                <div class="modal__header">
+                    <div class="modal__title">
+                        <h3>
+                            <i class="uil uil-shop"></i> Sales
+                        </h3>
+                    </div>
+                    <div class="modal__close">
+                        <i class="uil uil-times-circle"  @click="showModal = false"></i>
+                    </div>
+                </div>
+                <div class="text__message">
+                  <i class="uil uil-padlock"></i> 
+                  <span>This feature is only accessible with the premium version</span>
+                </div>
+            </template>
+        </ModalComponent>
   </nav>
   
   </template>
   <script setup>
   import {ref, watch, defineAsyncComponent, computed, onMounted} from 'vue';
   import { useWindowScroll, useWindowSize } from '@vueuse/core';
+  import ModalComponent from '@Components/utils/ModalComponent.vue';
   import { useUserStore } from "@Stores/user.js";
   import { useRoute, useRouter } from "vue-router";
   
@@ -148,6 +173,12 @@
   const isScrolling = ref(false);
   const show_menu = ref(true);
   const showBg = ref(false)
+  const showModal = ref(false);
+  const modalWidth= computed(()=>{
+      let windowSize = 1500;
+      let gap = (windowSize - width.value)/21;
+      return gap + 35;
+  })
 
   const closeDropdown = () => {
     showDropdown.value = false;
@@ -197,6 +228,33 @@
   });
   </script>
   <style scoped>
+
+  .modal__header{
+      display: flex;
+      justify-content: space-between;
+  }
+
+  .modal__header div{
+      align-self: center;
+  }
+
+  .modal__close i{
+     float: right;
+     font-size: 25px;
+     color: red;
+     cursor: pointer;
+     transition: var(--transition);
+  }
+
+  .modal__close i:hover{
+      transform: rotate(360deg);
+  }
+
+  .modal__title{
+    color: var(--color-danger);
+    font-weight: bold;
+  }
+
   nav{
       width:100vw;
       height: 5rem;
@@ -288,6 +346,18 @@
   .nav__onScroll a.btn:hover{
       color: var(--color-white);
       border-color: var(--color-danger);
+  }
+
+  .text__message{
+    color: black;
+    display: flex;
+    font-size: 15px;
+    margin-top: 10px; 
+    font-weight: 500
+  }
+
+  .text__message i{
+    font-size: 30px;
   }
   
   @media screen and (max-width:765px) {

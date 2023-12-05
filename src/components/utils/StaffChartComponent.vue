@@ -119,6 +119,7 @@ onMounted(async()=>{
           })
    });
    plotdata.value = response;
+   console.log(plotdata.value)
 });
 
 watch([date, type],async()=>{
