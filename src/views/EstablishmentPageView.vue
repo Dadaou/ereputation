@@ -569,7 +569,7 @@ const viewData = async () => {
         legendData.value = companiesStore.generateLegend(plotdata.value, colors);
     }
     chartLoading.value = false;
-    loadDatasets();
+    // loadDatasets();
 }
 
 const formatStarsData = (data) => {
@@ -717,6 +717,7 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     const api = apiBase + '?' + apiParams;
     console.log(api)
 
+    loadDatasets();
     await loadFeelingData(tag, dateStart, dateEnd, source);
     await loadStarData(tag, dateStart, dateEnd, source);
     const response = await new Promise((resolve, reject) => {
@@ -765,7 +766,6 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source)=>{
 
     if (response.status == 200) {
         const score = response.data[companyId.value]
-        console.log(score)
         let rawWidth = score * 100 / 2
         let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
         let feeling = rawWidth > 0 ? 1 : -1
@@ -838,7 +838,7 @@ onBeforeMount(async () => {
 
     appStore.isLoading = true;
 
-    const response2 = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve, reject) => {
         services.get_Record(`establishment/${companyId.value}/rating`, (response) => {
             resolve(response)
             if (response.status == 404) {
@@ -848,9 +848,9 @@ onBeforeMount(async () => {
         });
     });
 
-    if (response2.status == 200) {
+    if (response.status == 200) {
 
-        establishment.value = response2.data;
+        establishment.value = response.data;
         establishment.value['tag'] = companyId.value;
         appStore.isLoading = false;
         page.value.title2 = establishment.value.name;

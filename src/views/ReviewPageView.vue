@@ -432,6 +432,8 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
 
     const api = apiBase + '?' + apiParams;
 
+    await loadFeelingData(tag, dateStart, dateEnd, source);
+    await loadStarData(tag, dateStart, dateEnd, source);
     const response = await new Promise((resolve, reject) => {
         services.get_Record(api, (response) => {
             resolve(response)
@@ -472,51 +474,35 @@ const formatStarsData = (data) => {
 
 }
 
-onBeforeMount(async () => {
-    let company = null;
-    appStore.isLoading = true;
+const loadFeelingData = async (tag, dateStart, dateEnd, source)=>{
+    let apiBase = 'charts/feeling';
+    let apiParams = `tag=${tag}`;
 
-    loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
+    if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
+        dateStart = moment(dateStart).format('YYYY-MM-DD');
+        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+    }else{
+        startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+        endDate = moment().format('YYYY-M-DD');
+    }
+    apiParams += `&fromDate=${dateStart}&toDate=${dateEnd}`;
 
-    const response2 = await new Promise((resolve, reject) => {
-        console.log(`establishment/${companyId}/rating`)
-        services.get_Record(`establishment/${companyId}/rating`, (response) => {
-            resolve(response)
-            console.log(response)
-        });
-    });
-
-    if (response2.status == 200) {
-        establishment.value = response2.data;
-        page.value.title2 = establishment.value.name;
-        all_items.value[0].value = establishment.value.rating;
-        all_items.value[1].value = establishment.value.totalReviews;
-        appStore.isLoading = false;
-        dataLoading.value = false;
-        websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
+    if (IsValueOkay(source)) {
+        source = (source == 'App (Private)') ? source : source.toLowerCase();
+        apiParams += `&platform=${source}`
     }
 
-    const response3 = await new Promise((resolve, reject) => {
-        services.get_Record(`charts/stars?tag=${companyId}`, (response) => {
+    const api = apiBase + '?' + apiParams;
+    console.log(api)
+
+    const response = await new Promise((resolve, reject) => {
+        services.get_Record(api, (response) => {
             resolve(response)
         });
     });
 
-    if (response3.status == 200) {
-        if (response3.data && response3.data.data) {
-            starsData.value = formatStarsData(response3.data.data)
-            starsLoading.value = false
-        }
-    }
-
-    const response4 = await new Promise((resolve, reject) => {
-        services.get_Record(`charts/feeling?tag=${companyId}`, (response) => {
-            resolve(response)
-        });
-    });
-
-    if (response4.status == 200) {
-        const score = response4.data[companyId]
+    if (response.status == 200) {
+        const score = response.data[companyId]
         let rawWidth = score * 100 / 2
         let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
         let feeling = rawWidth > 0 ? 1 : -1
@@ -539,8 +525,112 @@ onBeforeMount(async () => {
         }
 
         feedbackLoading.value = false
-
     }
+}
+
+
+const loadStarData = async (tag, dateStart, dateEnd, source)=>{
+    let apiBase = 'charts/stars';
+    let apiParams = `tag=${tag}`;
+
+    if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
+        dateStart = moment(dateStart).format('YYYY-MM-DD');
+        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+    }else{
+        startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+        endDate = moment().format('YYYY-M-DD');
+    }
+    apiParams += `&fromDate=${dateStart}&toDate=${dateEnd}`;
+
+    if (IsValueOkay(source)) {
+        source = (source == 'App (Private)') ? source : source.toLowerCase();
+        apiParams += `&platform=${source}`
+    }
+
+    const api = apiBase + '?' + apiParams;
+    console.log(api)
+
+    const response = await new Promise((resolve, reject) => {
+        services.get_Record(api, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+        if (response.data && response.data.data) {
+            starsData.value = formatStarsData(response.data.data)
+        }
+    }
+}
+
+onBeforeMount(async () => {
+    let company = null;
+    appStore.isLoading = true;
+
+    await loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
+
+    const response = await new Promise((resolve, reject) => {
+        console.log(`establishment/${companyId}/rating`)
+        services.get_Record(`establishment/${companyId}/rating`, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+        establishment.value = response.data;
+        page.value.title2 = establishment.value.name;
+        all_items.value[0].value = establishment.value.rating;
+        all_items.value[1].value = establishment.value.totalReviews;
+        appStore.isLoading = false;
+        dataLoading.value = false;
+        websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
+    }
+
+    // const response3 = await new Promise((resolve, reject) => {
+    //     services.get_Record(`charts/stars?tag=${companyId}`, (response) => {
+    //         resolve(response)
+    //     });
+    // });
+
+    // if (response3.status == 200) {
+    //     if (response3.data && response3.data.data) {
+    //         starsData.value = formatStarsData(response3.data.data)
+    //         starsLoading.value = false
+    //     }
+    // }
+
+    // const response4 = await new Promise((resolve, reject) => {
+    //     services.get_Record(`charts/feeling?tag=${companyId}`, (response) => {
+    //         resolve(response)
+    //     });
+    // });
+
+    // if (response4.status == 200) {
+    //     const score = response4.data[companyId]
+    //     let rawWidth = score * 100 / 2
+    //     let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
+    //     let feeling = rawWidth > 0 ? 1 : -1
+    //     let red = 255
+    //     let green = 255
+    //     if (feeling == -1) {
+    //         red = 255
+    //         green = 0
+    //     } else {
+    //         green = 255
+    //         red = 0
+    //     }
+
+    //     reviewFeedbackData.value = {
+    //         width: width,
+    //         red: red,
+    //         green: green,
+    //         feeling: feeling,
+    //         score: score
+    //     }
+
+    //     feedbackLoading.value = false
+
+    // }
 });
 </script>
 
