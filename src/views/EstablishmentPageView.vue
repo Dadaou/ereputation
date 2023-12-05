@@ -574,11 +574,11 @@ const viewData = async () => {
 
 const formatStarsData = (data) => {
     let tmp = []
-    // console.log(data)
+    
     const total = Object.keys(data).reduce(function (previous, key) {
         return previous + data[key];
     }, 0);
-    // console.log(total)
+   
     Object.keys(data).forEach(k => {
         tmp.push({
             label: k,
@@ -717,6 +717,8 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     const api = apiBase + '?' + apiParams;
     console.log(api)
 
+    await loadFeelingData(tag, dateStart, dateEnd, source);
+    await loadStarData(tag, dateStart, dateEnd, source);
     const response = await new Promise((resolve, reject) => {
         services.get_Record(api, (response) => {
             resolve(response)
@@ -731,7 +733,6 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         else options.value.max = 100;
         all_items.value[1].value = response.data['count'];
         all_items.value[0].value = response.data['rating'];
-        await loadFeelingData(tag, dateStart, dateEnd, source);
     }
 }
 
@@ -790,6 +791,41 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source)=>{
     }
 }
 
+
+const loadStarData = async (tag, dateStart, dateEnd, source)=>{
+    let apiBase = 'charts/stars';
+    let apiParams = `tag=${tag}`;
+
+    if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
+        dateStart = moment(dateStart).format('YYYY-MM-DD');
+        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+    }else{
+        startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+        endDate = moment().format('YYYY-M-DD');
+    }
+    apiParams += `&fromDate=${dateStart}&toDate=${dateEnd}`;
+
+    if (IsValueOkay(source)) {
+        source = (source == 'App (Private)') ? source : source.toLowerCase();
+        apiParams += `&platform=${source}`
+    }
+
+    const api = apiBase + '?' + apiParams;
+    console.log(api)
+
+    const response = await new Promise((resolve, reject) => {
+        services.get_Record(api, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+        if (response.data && response.data.data) {
+            starsData.value = formatStarsData(response.data.data)
+        }
+    }
+}
+
 onBeforeMount(async () => {
     ChartJS.register(
         CategoryScale,
@@ -815,7 +851,6 @@ onBeforeMount(async () => {
     if (response2.status == 200) {
 
         establishment.value = response2.data;
-        // console.log(establishment.value)
         establishment.value['tag'] = companyId.value;
         appStore.isLoading = false;
         page.value.title2 = establishment.value.name;
@@ -824,56 +859,20 @@ onBeforeMount(async () => {
         establishmentLoading.value = false
         globalComparison();
         websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
-        // loadDatasets();
-
     }
 
-    const response3 = await new Promise((resolve, reject) => {
-        services.get_Record(`charts/stars?tag=${companyId.value}`, (response) => {
-            resolve(response)
-        });
-    });
-
-    if (response3.status == 200) {
-        if (response3.data && response3.data.data) {
-            starsData.value = formatStarsData(response3.data.data)
-            starsLoading.value = false
-        }
-    }
-
-    // const response4 = await new Promise((resolve, reject) => {
-    //     services.get_Record(`charts/feeling?tag=${companyId.value}`, (response) => {
+    // const response3 = await new Promise((resolve, reject) => {
+    //     services.get_Record(`charts/stars?tag=${companyId.value}`, (response) => {
     //         resolve(response)
     //     });
     // });
 
-    // if (response4.status == 200) {
-    //     const score = response4.data[companyId.value]
-    //     let rawWidth = score * 100 / 2
-    //     let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
-    //     let feeling = rawWidth > 0 ? 1 : -1
-    //     let red = 255
-    //     let green = 255
-    //     if (feeling == -1) {
-    //         red = 255
-    //         green = 0
-    //     } else {
-    //         green = 255
-    //         red = 0
+    // if (response3.status == 200) {
+    //     if (response3.data && response3.data.data) {
+    //         starsData.value = formatStarsData(response3.data.data)
+    //         starsLoading.value = false
     //     }
-
-    //     reviewFeedbackData.value = {
-    //         width: width,
-    //         red: red,
-    //         green: green,
-    //         feeling: feeling,
-    //         score: score
-    //     }
-
-    //     feedbackLoading.value = false
-
     // }
-
 });
 </script>
 
