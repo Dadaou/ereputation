@@ -15,8 +15,8 @@
         </div>
     </div>
     <div class="global__rating">
-            <span class="font-bold" :data-tooltip="`Score: ${score}`">{{ score }} </span>
-            <span> | </span>
+           <!--  <span class="font-bold" :data-tooltip="`Score: ${score}`">{{ score }} </span>
+            <span> | </span> -->
             <span class="font-medium" :data-tooltip="`Rating: ${rating}`">{{ rating }}</span>
     </div>
 </div>
@@ -31,11 +31,11 @@ const props = defineProps(['reviews', 'rating', 'score', 'feeling']);
     .society__rating{
         display: flex;
         align-items: center;
-        width: 200px;
+        width: 125px;
     }
 
     .reviews{
-        flex-basis: 150px;
+        flex-basis: 100px;
         font-size: 11px;
     }
 
@@ -47,7 +47,7 @@ const props = defineProps(['reviews', 'rating', 'score', 'feeling']);
 
     .global__rating{
         flex-grow: 1;
-        flex-basis: 130px;
+        flex-basis: 50px;
         background-color: var(--color-danger);
         color: white;
         font-size: 12px;

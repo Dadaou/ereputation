@@ -40,7 +40,7 @@
                                     	class="establishment__link" 
                                     	@click="goToCompany(company)"
                                     >
-                                    <label class="society__name">{{ company.name }}</label>
+                                    <label class="society__name">{{ company.name }} ({{company.score}})</label>
                                 	</a>
                                     <div class="society__category">
                                         <i 
