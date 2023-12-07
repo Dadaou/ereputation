@@ -2,22 +2,28 @@
 <div class="society__rating">
     <div class="reviews">
        <div class="rating__observation">
-        <span v-if="Number(props.rating) >=5">Excellent</span>
-        <span v-if="Number(props.rating) >= 4 && Number(props.rating)<=4.99">Good</span>
-        <span v-if="Number(props.rating) >= 3 && Number(props.rating)<=3.99">Fine</span>
-        <span v-if="Number(props.rating) >= 2 && Number(props.rating)<=2.99">Not Good</span>
-        <span v-if="Number(props.rating) > 0 && Number(props.rating)<=2.99">Bad</span>
+       {{feeling}}
        </div>
-       <div class="reviews__value">{{ reviews }} <span v-if="Number(props.reviews) >= 2">reviews</span> <span v-else>review</span> </div>
+       <div class="reviews__value">
+            {{ reviews }} 
+            <span v-if="Number(props.reviews) >= 2">
+                reviews
+            </span> 
+            <span v-else>
+                review
+            </span> 
+        </div>
     </div>
     <div class="global__rating">
-        {{ rating }}
+            <span class="font-bold" :data-tooltip="`Score: ${score}`">{{ score }} </span>
+            <span> | </span>
+            <span class="font-medium" :data-tooltip="`Rating: ${rating}`">{{ rating }}</span>
     </div>
 </div>
 </template>
 
 <script setup>
-const props = defineProps(['reviews', 'rating']);
+const props = defineProps(['reviews', 'rating', 'score', 'feeling']);
 
 </script>
 
@@ -25,7 +31,7 @@ const props = defineProps(['reviews', 'rating']);
     .society__rating{
         display: flex;
         align-items: center;
-        width: 110px;
+        width: 200px;
     }
 
     .reviews{
@@ -41,14 +47,16 @@ const props = defineProps(['reviews', 'rating']);
 
     .global__rating{
         flex-grow: 1;
-        flex-basis: 50px;
+        flex-basis: 130px;
         background-color: var(--color-danger);
-        text-align: center;
         color: white;
-        font-weight: 600;
-        font-size: 11px;
-        padding: 6px 3px;
+        font-size: 12px;
+        padding: 4px 3px;
         border-radius: 5px 5px 5px 0px;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        gap: 3px;
     }
 
     .society__rating a{
@@ -59,6 +67,34 @@ const props = defineProps(['reviews', 'rating']);
     .society__rating .rating__observation{
         font-size: 13px;
         font-weight: bold;
+    }
+
+    [data-tooltip] {
+      position: relative;
+      cursor: pointer;
+    }
+
+    /* Tooltip text */
+    [data-tooltip]::before {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 5px); /* Adjust the position of the tooltip */
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      pointer-events: none;
+    }
+
+    /* Tooltip visibility on hover */
+    [data-tooltip]:hover::before {
+      opacity: 1;
     }
 
 </style>

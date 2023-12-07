@@ -161,6 +161,10 @@ const breadcrumbData = [
     display: block;
   }
 
+ .all__content{
+  width: 100%;
+ }
+
   ul {
     display: block; /* Affiche toujours la liste du menu sur les petits écrans */
   }

@@ -60,10 +60,12 @@
                     	class="rating__content" 
                     	:reviews="company.totalReviews" 
                     	:rating="Number(company.rating).toFixed(1)"
+                        :score="company.score"
+                        :feeling="company.feeling"
                     />
                 </div>
                 <div class="list__actions">
-                    <button class="btn mr-2" @click="showModal=true, establishment=company">QR Code <i class="uil uil-qrcode-scan"></i></button>
+                    <button class="btn mr-2 qrcode" @click="showModal=true, establishment=company">QR Code <i class="uil uil-qrcode-scan"></i></button>
                     <button class="btn" @click="goToCompany(company)">More details</button>
                 </div>
             </div>
@@ -296,6 +298,10 @@ const onDataUrlChange = (dataUrl) =>{
 
 .list__actions button:hover{
     background-color: var(--color-primary);
+}
+
+.list__actions button.qrcode{
+    padding: 0 10px !important;
 }
 
 /*************

@@ -622,12 +622,14 @@ const loadWeatherFromServer = async (tag, dateStart, dateEnd, unit) => {
         ({
             name: r['name'],
             rating: r['rating'],
-            temperature: r['temperature']
+            // temperature: r['temperature']
         }));
         weatherIcons.value = results.map(r =>
         ({
             code: r['code'],
             title: r['condition'],
+            temperature: r['temperature'],
+            unit: (calculType.value=='Celcius °C')?'°C':'°F',
             color: r['color']
         }));
         chartLoading.value = false;
