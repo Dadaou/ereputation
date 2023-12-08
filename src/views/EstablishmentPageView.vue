@@ -88,7 +88,7 @@
     loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
 }" />
                     <aside v-if="lastReviews.length > 0">
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ all_items[1].value - 3 }} reviews
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ all_items[0].value - 3 }} reviews
                             remains</p>
                         <div class="flex items-center mt-3 space-x-3 divide-x divide-gray-200 dark:divide-gray-600">
                             <a @click="gotoReviewPage(establishment.competitor_tag, $route.params.tag)"
@@ -186,13 +186,13 @@
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
-                        <i class="uil uil-analysis"></i>
-                        <span v-if="!establishmentLoading">{{ all_items[0].value }}</span>
+                        <i class="uil uil-favorite"></i>
+                        <span v-if="!establishmentLoading" class="society__location">{{ all_items[0].value }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
-                        <i class="uil uil-favorite"></i>
-                        <span v-if="!establishmentLoading" class="society__location">{{ all_items[1].value }}</span>
+                        <i class="uil uil-analysis"></i>
+                        <span v-if="!establishmentLoading">{{ all_items[1].value }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
@@ -449,8 +449,8 @@ let paginationConfig = ref({
 
 let comparisonData = ref([establishment.value, ...competitors.value]);
 const all_items = ref([
-    { title: "Index", value: 0, icon: "uil-analysis" },
     { title: "Rating", value: 0, icon: "uil-star" },
+    { title: "Index", value: 0, icon: "uil-analysis" },
     { title: "Reviews", value: 0, icon: "uil-comment" },
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
@@ -740,7 +740,7 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         if (response.data['count'] <= 100) options.value.max = response.data['count'];
         else options.value.max = 100;
         all_items.value[2].value = response.data['count'];
-        all_items.value[1].value = response.data['rating'];
+        all_items.value[0].value = response.data['rating'];
     }
 }
 
@@ -862,7 +862,7 @@ const loadIndiceData = async (tag, dateStart, dateEnd, source) => {
 
     if (response.status == 200) {
         if (response.data) {
-            all_items.value[0].value = response.data['score'];
+            all_items.value[1].value = response.data['score'];
         }
     }
 }
