@@ -26,6 +26,16 @@
                     </el-tab-pane>
             </el-tabs>
         </el-tab-pane>
+        <el-tab-pane label="Advantage" name="advantage">
+            <el-tabs v-model="activeAdvantageTab" class="demo-tabs">
+                <el-tab-pane label="Advantage list" name="advantage_list">
+                   <AdvantageListComponent @edit="(advantage)=>handleEdit(advantage, 'advantage')"/>
+                  </el-tab-pane>
+                    <el-tab-pane label="Add a new advantage" name="advantage_form">
+                        <AdvantageFormComponent/>
+                    </el-tab-pane>
+            </el-tabs>
+        </el-tab-pane>
   </el-tabs>
     </div>
 </template>
@@ -63,6 +73,13 @@ const EventListComponent = defineAsyncComponent(()=>
         import("@Components/events/EventListComponent.vue")
 )
 
+const AdvantageFormComponent = defineAsyncComponent(()=>
+        import("@Components/advantage/AdvantageFormComponent.vue")
+)
+
+const AdvantageListComponent = defineAsyncComponent(()=>
+        import("@Components/advantage/AdvantageListComponent.vue")
+)
 const position = ref('top')
 watch(width, ()=>{
      if(width.value < 800) {
@@ -84,13 +101,23 @@ provide('staff_activeTab',activeStaffTab);
 
 const allEvents = ref([]);
 const allStaffs = ref([]);
+const allAdvantages = ref([]);
 const activeEventTab = ref('event_list')
 provide('event_activeTab',activeEventTab);
 
+const activeAdvantageTab = ref('advantage_list')
+provide('advantage_activeTab',activeAdvantageTab);
+
+
 const event_to_update = ref(null);
 provide('event_to_update', event_to_update);
+
+const advantage_to_update = ref(null);
+provide('advantage_to_update', advantage_to_update);
+
 provide('staffs', allStaffs);
 provide('events', allEvents);
+provide('advantages', allAdvantages);
 
 const handleClick = (tab, event) => {
   // console.log(tab, event)
@@ -100,17 +127,26 @@ const handleEdit = (value, type)=>{
     if(type=='staff'){
          activeStaffTab.value = 'staff_form';
          staff_to_update.value = value;
-    }else{
+    }
+    if(type=='advantage'){
+         activeAdvantageTab.value = 'advantage_form';
+         advantage_to_update.value = value;
+    }
+    else{
          activeEventTab.value = 'event_form';
          event_to_update.value = value;
     }
 };
 
-onBeforeMount(()=>{
+onBeforeMount(async()=>{
     let staffs = [];
     let events = [];
+    let advantages = [];
+    
     let promises = [];
     let event_promises = [];
+    let advantage_promises = [];
+
     appStore.isLoading = true;
     
     if(width.value < 800){
@@ -127,6 +163,7 @@ onBeforeMount(()=>{
             });
             promises.push(promise); 
 
+    
             let promise_event = services.get_Record(`/establishment/${establishment.competitor_tag}/event`, (response) => {
                 events.push(response.data);
             });
@@ -140,7 +177,7 @@ onBeforeMount(()=>{
             })
             appStore.isLoading = false;
         });
-
+            
         Promise.all(event_promises).then(() => {
             events.forEach(events_per_establisment=>{
                   events_per_establisment.forEach(event=>{
@@ -161,7 +198,25 @@ onBeforeMount(()=>{
             console.log(allEvents.value)
         });
     }
+  
+    try {
+        const response = await new Promise((resolve, reject) => {
+            services.get_Record(`advantage/list`, (response) => {
+                resolve(response);
+            });
+        });
+        console.log('Raw Advantage Data:', response.data);
+        if (response.status === 200) {
+            allAdvantages.value = response.data;
+            console.log('Processed Advantage Data:', allAdvantages.value);
+        } else {
+            console.error('Error fetching advantages:', response);
+        }
+    } catch (error) {
+        console.error('Error in onBeforeMount:', error);
+    }
 });
+
 </script>
 <style scoped>
 @media screen and (max-width: 800px) {
