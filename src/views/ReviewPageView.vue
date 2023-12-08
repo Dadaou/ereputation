@@ -13,15 +13,11 @@
                 </div>
                 <div class="reviews__content">
                     <div class="reviews__pagination">
-                        <PaginationComponent 
-                        :options="options" 
-                        v-if="visibleData.length > 0" 
-                        @next="(option) => {
+                        <PaginationComponent :options="options" v-if="visibleData.length > 0" @next="(option) => {
                             loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
-                        }" 
-                        @prev="(option) => {
-                        loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
-                        }" />
+                        }" @prev="(option) => {
+    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+}" />
                     </div>
                     <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
                         @reloadData="(review) => reloadData(review)" />
@@ -45,18 +41,15 @@
                         </div>
                         <span class="sr-only">Loading...</span>
                     </div>
-                    <div v-if="visibleData.length == 0" >
+                    <div v-if="visibleData.length == 0">
                         No Reviews
                     </div>
                     <div class="reviews__pagination">
-                        <PaginationComponent 
-                        :options="options" v-if="visibleData.length > 0" 
-                        @next="(option) => {
+                        <PaginationComponent :options="options" v-if="visibleData.length > 0" @next="(option) => {
                             loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
-                        }" 
-                        @prev="(option) => {
-                        loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
-                        }" />
+                        }" @prev="(option) => {
+    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+}" />
                     </div>
                 </div>
             </div>
@@ -72,7 +65,7 @@
                 </div>
                 <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
             </div>
-            <div class="tablet_mobile__filter"  v-if="currentFilter=='filter'">
+            <div class="tablet_mobile__filter" v-if="currentFilter == 'filter'">
                 <DropdownComponent :showTitle="false" class="dropdown" title="Filter by plateform"
                     placeholder="Select a website" :data="websites" @submit="(website) => {
                         selectedWebsites = website
@@ -84,10 +77,10 @@
                     <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
                 </div>
             </div>
-            <div class="tablet_mobile__filter" v-if="currentFilter=='feedback'">
+            <div class="tablet_mobile__filter" v-if="currentFilter == 'feedback'">
                 <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
             </div>
-            <div class="tablet_mobile__filter" v-if="currentFilter=='star'">
+            <div class="tablet_mobile__filter" v-if="currentFilter == 'star'">
                 <div class="reviews__star">
                     <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
                         @click="starFilter(star.intVal)">
@@ -134,20 +127,20 @@
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="mobile__filter__btn">
-                          <button :class="['btn', (currentFilter=='feedback')?'isactive':'']" 
-                          @click="currentFilter='feedback'">
+                        <button :class="['btn', (currentFilter == 'feedback') ? 'isactive' : '']"
+                            @click="currentFilter = 'feedback'">
                             <i class="uil uil-arrow-growth"></i>
-                           <!--  <i class="uil uil-chart-down"></i> -->
+                            <!--  <i class="uil uil-chart-down"></i> -->
                             Stat
-                          </button>
-                          <button :class="['btn', (currentFilter=='star')?'isactive':'']" 
-                          @click="currentFilter='star'">
+                        </button>
+                        <button :class="['btn', (currentFilter == 'star') ? 'isactive' : '']"
+                            @click="currentFilter = 'star'">
                             <i class="uis uil-star"></i> Stars
-                          </button>
-                          <button :class="['btn', (currentFilter=='filter')?'isactive':'']"
-                          @click="currentFilter='filter'">
+                        </button>
+                        <button :class="['btn', (currentFilter == 'filter') ? 'isactive' : '']"
+                            @click="currentFilter = 'filter'">
                             <i class="uil uil-filter"></i>Filters
-                          </button>
+                        </button>
                     </div>
                 </div>
                 <div class="photo" v-if="!dataLoading">
@@ -230,7 +223,7 @@
                         <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" />
                     </div>
                 </div>
-                 <div class="reviews__star">
+                <div class="reviews__star">
                     <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
                         @click="starFilter(star.intVal)">
                         <a href="#" class="text-xs font-medium hover:underline">{{ star.label }}</a>
@@ -474,14 +467,14 @@ const formatStarsData = (data) => {
 
 }
 
-const loadFeelingData = async (tag, dateStart, dateEnd, source)=>{
+const loadFeelingData = async (tag, dateStart, dateEnd, source) => {
     let apiBase = 'charts/feeling';
     let apiParams = `tag=${tag}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(dateStart).format('YYYY-MM-DD');
         dateEnd = moment(dateEnd).format('YYYY-MM-DD');
-    }else{
+    } else {
         startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
         endDate = moment().format('YYYY-M-DD');
     }
@@ -529,14 +522,14 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source)=>{
 }
 
 
-const loadStarData = async (tag, dateStart, dateEnd, source)=>{
+const loadStarData = async (tag, dateStart, dateEnd, source) => {
     let apiBase = 'charts/stars';
     let apiParams = `tag=${tag}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(dateStart).format('YYYY-MM-DD');
         dateEnd = moment(dateEnd).format('YYYY-MM-DD');
-    }else{
+    } else {
         startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
         endDate = moment().format('YYYY-M-DD');
     }
@@ -567,24 +560,25 @@ onBeforeMount(async () => {
     let company = null;
     appStore.isLoading = true;
 
+    companiesStore.getEstablishment(companyId).then((data) => {
+
+        if (data == false) {
+            exist.value = false;
+            appStore.isLoading = false;
+        }
+        else {
+            establishment.value = data;
+            page.value.title2 = establishment.value.name;
+            all_items.value[0].value = establishment.value.rating;
+            all_items.value[1].value = establishment.value.totalReviews;
+            appStore.isLoading = false;
+            dataLoading.value = false;
+            websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
+
+        }
+    })
+
     await loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
-
-    const response = await new Promise((resolve, reject) => {
-        console.log(`establishment/${companyId}/rating`)
-        services.get_Record(`establishment/${companyId}/rating`, (response) => {
-            resolve(response)
-        });
-    });
-
-    if (response.status == 200) {
-        establishment.value = response.data;
-        page.value.title2 = establishment.value.name;
-        all_items.value[0].value = establishment.value.rating;
-        all_items.value[1].value = establishment.value.totalReviews;
-        appStore.isLoading = false;
-        dataLoading.value = false;
-        websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
-    }
 
     // const response3 = await new Promise((resolve, reject) => {
     //     services.get_Record(`charts/stars?tag=${companyId}`, (response) => {
@@ -639,11 +633,12 @@ onBeforeMount(async () => {
     transition: var(--transition);
 }
 
-.tablet, .mobile__filter__btn{
+.tablet,
+.mobile__filter__btn {
     display: none !important;
 }
 
-.mobile__filter__btn button{
+.mobile__filter__btn button {
     border: 1px solid var(--light-color-bg1);
     transition: var(--transition);
     border-radius: 5px;
@@ -653,12 +648,14 @@ onBeforeMount(async () => {
     flex-basis: 100%;
 }
 
-.isactive, .mobile__filter__btn button:hover{
+.isactive,
+.mobile__filter__btn button:hover {
     background-color: var(--color-primary);
     color: white !important;
 }
 
-.isactive i, .mobile__filter__btn button:hover i{
+.isactive i,
+.mobile__filter__btn button:hover i {
     color: white !important;
 }
 
@@ -986,16 +983,16 @@ onBeforeMount(async () => {
         width: 250px !important;
     }
 
-    .tablet{
+    .tablet {
         display: flex !important;
         align-items: center;
         vertical-align: center;
         flex-wrap: wrap !important;
         flex-direction: horizontal;
-        gap:3px !important;
+        gap: 3px !important;
     }
 
-    .tablet > div{
+    .tablet>div {
         height: 200px;
         margin: 0 !important;
         flex-basis: 30%
@@ -1094,13 +1091,13 @@ onBeforeMount(async () => {
         padding: 10px;
     }
 
-    .tablet{
+    .tablet {
         display: none !important;
     }
 
-    .mobile__filter__btn{
+    .mobile__filter__btn {
         display: flex !important;
-        gap:0.5rem;
+        gap: 0.5rem;
         justify-content: center;
         margin-top: 10px;
     }

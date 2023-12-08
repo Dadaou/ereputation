@@ -879,16 +879,6 @@ onBeforeMount(async () => {
 
     appStore.isLoading = true;
 
-    // const response = await new Promise((resolve, reject) => {
-    //     services.get_Record(`establishment/${companyId.value}/rating`, (response) => {
-    //         resolve(response)
-    //         if (response.status == 404) {
-    //             exist.value = false;
-    //             appStore.isLoading = false;
-    //         }
-    //     });
-    // });
-
     companiesStore.getEstablishment(companyId.value).then((data) => {
 
         if (data == false) {

@@ -629,7 +629,7 @@ const loadWeatherFromServer = async (tag, dateStart, dateEnd, unit) => {
             code: r['code'],
             title: r['condition'],
             temperature: r['temperature'],
-            unit: (calculType.value=='Celcius °C')?'°C':'°F',
+            unit: (calculType.value == 'Celcius °C') ? '°C' : '°F',
             color: r['color']
         }));
         chartLoading.value = false;
@@ -684,24 +684,24 @@ onBeforeMount(async () => {
     chartLoading.value = true;
     await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, 'C');
     await loadConditionFromServer(companyId, '', '');
-    const response2 = await new Promise((resolve, reject) => {
-        services.get_Record(`establishment/${companyId}/rating`, (response) => {
-            resolve(response)
-            if (response.status == 404) {
-                exist.value = false;
-                appStore.isLoading = false;
-            }
-        });
-    });
 
-    if (response2.status == 200) {
-        establishment.value = response2.data;
-        page.value.title2 = establishment.value.name;
-        all_items.value[0].value = establishment.value.rating;
-        all_items.value[1].value = establishment.value.totalReviews;
-        appStore.isLoading = false;
-        dataLoading.value = false;
-    }
+    companiesStore.getEstablishment(companyId).then((data) => {
+
+        if (data == false) {
+            exist.value = false;
+            appStore.isLoading = false;
+        }
+        else {
+            establishment.value = data;
+            page.value.title2 = establishment.value.name;
+            all_items.value[0].value = establishment.value.rating;
+            all_items.value[1].value = establishment.value.totalReviews;
+            appStore.isLoading = false;
+            dataLoading.value = false;
+
+        }
+    })
+
     const response = await new Promise((resolve, reject) => {
         services.get_Record(`/establishment/${companyId}/detail`, (response) => {
             resolve(response)

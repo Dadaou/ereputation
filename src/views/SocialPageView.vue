@@ -7,14 +7,14 @@
         <div class="app__container">
             <div class="left__side">
                 <div class="head">
-                    <div class="app__title" >
+                    <div class="app__title">
                         <h2>Social</h2>
                     </div>
                 </div>
-                <div class="reviews__content" >
+                <div class="reviews__content">
                     <social-statistics></social-statistics>
                 </div>
-               <!--  <div class="head">
+                <!--  <div class="head">
                     <div class="app__title" style="margin-top: 50px;">
                         <h2>Daily Histogram</h2>
                     </div>
@@ -35,9 +35,9 @@
                             <li v-for="socialItem in getLastSocialPages(socialPages)" :key="socialItem.source">
                                 <div class="social-details">
                                     <h3><i :class="`uil uil-${socialItem.source}`"></i>
-                                    <a :href="socials[socialItem.source]" 
-                                    target="_blank"><span>{{
-                                                socialItem.source }}</span></a></h3>
+                                        <a :href="socials[socialItem.source]" target="_blank"><span>{{
+                                            socialItem.source }}</span></a>
+                                    </h3>
                                     <p><span>Followers:</span> {{ socialItem.followers }}</p>
                                     <p><span>Likes:</span> {{ socialItem.likes }}</p>
                                     <p><span>Posts:</span> {{ socialItem.posts }}</p>
@@ -68,7 +68,7 @@
             <StatSlider v-if="establishment && establishment.socials" class="stat__cards_mobile" :items="trends"
                 :websites="establishment.socials[0]"></StatSlider>
             <div class="tablet_mobile__filter">
-               <!--  <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+                <!--  <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
                 <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" /> -->
             </div>
             <div class="tablet_mobile__head">
@@ -178,7 +178,7 @@
                         </div>
                     </div>
                     <div class="date__filter">
-                       <!--  <div class="text-sm title">Select a range of date</div>
+                        <!--  <div class="text-sm title">Select a range of date</div>
                         <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
                         <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" /> -->
                     </div>
@@ -196,7 +196,7 @@
             </div>
         </div>
     </div>
-   <EstablishmentNotFound v-else/> 
+    <EstablishmentNotFound v-else />
 </template>
 
 <script setup>
@@ -237,7 +237,7 @@ const page = ref({
 });
 
 let exist = ref(true);
-const EstablishmentNotFound = defineAsyncComponent(()=>
+const EstablishmentNotFound = defineAsyncComponent(() =>
     import("@Views/EstablishmentNotFound.vue")
 )
 
@@ -259,7 +259,7 @@ const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 |
 const breadcrumbData = [
     {
         title: "Back",
-         path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+        path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
         isCurrent: false,
     },
     {
@@ -343,7 +343,7 @@ const isURL = (string) => {
 }
 
 const getSocials = (socials) => {
-    socials = (socials.length>0)?Object.entries(socials[0]):socials;
+    socials = (socials.length > 0) ? Object.entries(socials[0]) : socials;
     let data = [];
     socials.forEach(([key, value]) => {
         if (typeof (value) == 'string') {
@@ -396,14 +396,14 @@ const getFollowers = (datasets, type) => {
 }
 
 function transformToSourceURL(obj) {
-  const result = {};
-  for (const key in obj) {
-    const arr = obj[key];
-    arr.forEach(item => {
-      result[item.source] = item.url;
-    });
-  }
-  return result;
+    const result = {};
+    for (const key in obj) {
+        const arr = obj[key];
+        arr.forEach(item => {
+            result[item.source] = item.url;
+        });
+    }
+    return result;
 }
 
 onBeforeMount(async () => {
@@ -411,25 +411,22 @@ onBeforeMount(async () => {
     let company = null;
     appStore.isLoading = true;
 
-    const response2 = await new Promise((resolve, reject) => {
-        services.get_Record(`establishment/${companyId}/rating`, (response) => {
-                resolve(response)
-                if(response.status == 404) {
-                    exist.value = false;
-                    appStore.isLoading = false;
-                }
-        });
-    });
+    companiesStore.getEstablishment(companyId).then((data) => {
 
-    if(response2.status == 200){
-        establishment.value = response2.data;
-        all_items.value[0].value = establishment.value.rating;
-        all_items.value[1].value = establishment.value.totalReviews;
-        page.value.title2 = establishment.value.name;
-        appStore.isLoading = false;
-        dataLoading.value = false;
-    }
+        if (data == false) {
+            exist.value = false;
+            appStore.isLoading = false;
+        }
+        else {
+            establishment.value = data;
+            all_items.value[0].value = establishment.value.rating;
+            all_items.value[1].value = establishment.value.totalReviews;
+            page.value.title2 = establishment.value.name;
+            appStore.isLoading = false;
+            dataLoading.value = false;
 
+        }
+    })
 
     const response = await new Promise((resolve, reject) => {
         services.get_Record(`/establishment/${companyId}/detail`, (response) => {
@@ -464,8 +461,8 @@ onBeforeMount(async () => {
 
     if (socialResponse.status == 200) {
         console.log(transformToSourceURL(socialResponse.data))
-         establishment.value['socials'] = transformToSourceURL(socialResponse.data);
-         socials.value = transformToSourceURL(socialResponse.data);
+        establishment.value['socials'] = transformToSourceURL(socialResponse.data);
+        socials.value = transformToSourceURL(socialResponse.data);
     }
     if (!socialStore.trendsByEstablishment[`${companyId}`]) {
         await socialStore.fetchEstablishmentTrends(companyId);
@@ -1183,7 +1180,7 @@ li {
         border-radius: 5px;
     }
 
-    .tablet_mobile__filter > * {
+    .tablet_mobile__filter>* {
         width: 250px !important;
     }
 
@@ -1281,5 +1278,4 @@ li {
         height: 100px !important;
     }
 }
-
 </style>
