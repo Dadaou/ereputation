@@ -450,7 +450,7 @@ const starsData = ref([])
 let comparisonData = ref([establishment.value, ...competitors.value]);
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
-    { title: "Index", value: 0, icon: "uil-analysis" },
+    { title: "Index", value: 0, icon: "uil-analysis", description: "Index is an indicator betwenn 0 and 1 built on algorithms with differents metrics such as scores, AI reviews analysis, social media trends… The closer the indicator is to 1, the better your reputation." },
     { title: "Reviews", value: 0, icon: "uil-comment" },
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
