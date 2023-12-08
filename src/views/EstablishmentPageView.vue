@@ -890,15 +890,22 @@ onBeforeMount(async () => {
     // });
 
     companiesStore.getEstablishment(companyId.value).then((data) => {
-        establishment.value = data;
-        appStore.isLoading = false;
-        establishment.value['tag'] = companyId.value;
-        page.value.title2 = establishment.value.name;
-        all_items.value[3].value = establishment.value.competitors.length;
 
-        establishmentLoading.value = false
-        globalComparison();
-        websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
+        if (data == false) {
+            exist.value = false;
+            appStore.isLoading = false;
+        }
+        else {
+            establishment.value = data;
+            appStore.isLoading = false;
+            establishment.value['tag'] = companyId.value;
+            page.value.title2 = establishment.value.name;
+            all_items.value[3].value = establishment.value.competitors.length;
+
+            establishmentLoading.value = false
+            globalComparison();
+            websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
+        }
     })
 
     // if (response.status == 200) {

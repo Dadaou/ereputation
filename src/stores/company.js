@@ -43,6 +43,10 @@ export const useCompanyStore = defineStore('company', () => {
       await fetchCustomerEstablishments()
     }
 
+    if (!(tag in establishments.value)) {
+      return false
+    }
+
     return establishments.value[tag]
   }
 
