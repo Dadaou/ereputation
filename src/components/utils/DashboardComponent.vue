@@ -41,9 +41,9 @@ const props = defineProps({
     border-radius: 10px;
 }
 
-.item__left{
+/* .item__left{
     width: 100px;
-}
+} */
 
 .item__title{
     color: var(--color-bg2);

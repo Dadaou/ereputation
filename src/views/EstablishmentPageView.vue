@@ -186,18 +186,23 @@
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
+                        <i class="uil uil-analysis"></i>
+                        <span v-if="!establishmentLoading">{{ all_items[0].value }}</span>
+                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                    </div>
+                    <div class="society__location">
                         <i class="uil uil-favorite"></i>
-                        <span v-if="!establishmentLoading" class="society__location">{{ all_items[0].value }}</span>
+                        <span v-if="!establishmentLoading" class="society__location">{{ all_items[1].value }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
                         <i class="uil uil-comment-alt"></i>
-                        <span v-if="!establishmentLoading">{{ all_items[1].value }}</span>
+                        <span v-if="!establishmentLoading">{{ all_items[2].value }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
                         <i class="uil uil-building"></i>
-                        <span v-if="!establishmentLoading">{{ all_items[2].value }} competitors</span>
+                        <span v-if="!establishmentLoading">{{ all_items[3].value }} competitors</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="mobile__filter__btn">
@@ -444,6 +449,7 @@ let paginationConfig = ref({
 
 let comparisonData = ref([establishment.value, ...competitors.value]);
 const all_items = ref([
+    { title: "Index", value: 0, icon: "uil-analysis" },
     { title: "Rating", value: 0, icon: "uil-star" },
     { title: "Reviews", value: 0, icon: "uil-comment" },
     { title: "Competitors", value: 0, icon: "uil-building" },
@@ -547,7 +553,7 @@ const loadDatasets = async () => {
     if (establishment && establishment.value['competitors']) {
         let competitorInfo = establishment.value['competitors'].find(c => c.name === selectedCompetitors.value)
         const tags = competitorInfo ? [companyId.value, competitorInfo.tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.tag)]
-        const website = (selectedWebsites.value == 'App (Private)')?selectedWebsites.value:selectedWebsites.value.toLowerCase()
+        const website = (selectedWebsites.value == 'App (Private)') ? selectedWebsites.value : selectedWebsites.value.toLowerCase()
         let datas = await chartsStore.loadData(tags, 'months', moment(sDate).format('YYYY-M-DD'), moment(eDate).format('YYYY-M-DD'), website)
         chartData.value = formatSixMonthsChartData(datas);
         semesterChartLoading.value = false
@@ -564,7 +570,7 @@ const viewData = async () => {
     if (establishment && establishment.value['competitors']) {
         let competitorInfo = establishment.value['competitors'].find(c => c.name === selectedCompetitors.value)
         const tags = competitorInfo ? [companyId.value, competitorInfo.tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.tag)]
-        const website = (selectedWebsites.value == 'App (Private)')?selectedWebsites.value:selectedWebsites.value.toLowerCase()
+        const website = (selectedWebsites.value == 'App (Private)') ? selectedWebsites.value : selectedWebsites.value.toLowerCase()
         plotdata.value = await chartsStore.loadData(tags, selectedTimePeriod.value, startDate, endDate, website)
         legendData.value = companiesStore.generateLegend(plotdata.value, colors);
     }
@@ -574,11 +580,11 @@ const viewData = async () => {
 
 const formatStarsData = (data) => {
     let tmp = []
-    
+
     const total = Object.keys(data).reduce(function (previous, key) {
         return previous + data[key];
     }, 0);
-   
+
     Object.keys(data).forEach(k => {
         tmp.push({
             label: k,
@@ -720,6 +726,7 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     loadDatasets();
     await loadFeelingData(tag, dateStart, dateEnd, source);
     await loadStarData(tag, dateStart, dateEnd, source);
+    await loadIndiceData(tag, dateStart, dateEnd, source);
     const response = await new Promise((resolve, reject) => {
         services.get_Record(api, (response) => {
             resolve(response)
@@ -729,22 +736,22 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     if (response.status == 200) {
         reviewsLoading.value = false;
         visibleData.value = response.data['data'];
-    
+
         if (response.data['count'] <= 100) options.value.max = response.data['count'];
         else options.value.max = 100;
-        all_items.value[1].value = response.data['count'];
-        all_items.value[0].value = response.data['rating'];
+        all_items.value[2].value = response.data['count'];
+        all_items.value[1].value = response.data['rating'];
     }
 }
 
-const loadFeelingData = async (tag, dateStart, dateEnd, source)=>{
+const loadFeelingData = async (tag, dateStart, dateEnd, source) => {
     let apiBase = 'charts/feeling';
     let apiParams = `tag=${tag}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(dateStart).format('YYYY-MM-DD');
         dateEnd = moment(dateEnd).format('YYYY-MM-DD');
-    }else{
+    } else {
         startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
         endDate = moment().format('YYYY-M-DD');
     }
@@ -792,14 +799,14 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source)=>{
 }
 
 
-const loadStarData = async (tag, dateStart, dateEnd, source)=>{
+const loadStarData = async (tag, dateStart, dateEnd, source) => {
     let apiBase = 'charts/stars';
     let apiParams = `tag=${tag}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(dateStart).format('YYYY-MM-DD');
         dateEnd = moment(dateEnd).format('YYYY-MM-DD');
-    }else{
+    } else {
         startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
         endDate = moment().format('YYYY-M-DD');
     }
@@ -822,6 +829,40 @@ const loadStarData = async (tag, dateStart, dateEnd, source)=>{
     if (response.status == 200) {
         if (response.data && response.data.data) {
             starsData.value = formatStarsData(response.data.data)
+        }
+    }
+}
+
+const loadIndiceData = async (tag, dateStart, dateEnd, source) => {
+    let apiBase = `establishment/${tag}/global/score`;
+    let apiParams = "";
+
+    if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
+        dateStart = moment(dateStart).format('YYYY-MM-DD');
+        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+    } else {
+        startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+        endDate = moment().format('YYYY-M-DD');
+    }
+    apiParams += `&from=${dateStart}&to=${dateEnd}`;
+
+    // if (IsValueOkay(source)) {
+    //     source = (source == 'App (Private)') ? source : source.toLowerCase();
+    //     apiParams += `&platform=${source}`
+    // }
+
+    const api = apiBase + '?' + apiParams;
+    console.log(api)
+
+    const response = await new Promise((resolve, reject) => {
+        services.get_Record(api, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+        if (response.data) {
+            all_items.value[0].value = response.data['score'];
         }
     }
 }
@@ -854,7 +895,7 @@ onBeforeMount(async () => {
         establishment.value['tag'] = companyId.value;
         appStore.isLoading = false;
         page.value.title2 = establishment.value.name;
-        all_items.value[2].value = establishment.value.competitors.length;
+        all_items.value[3].value = establishment.value.competitors.length;
 
         establishmentLoading.value = false
         globalComparison();
