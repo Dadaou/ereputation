@@ -47,13 +47,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onBeforeMount, defineAsyncComponent } from 'vue'
+import { ref, onBeforeMount, defineAsyncComponent } from 'vue'
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
 import { useCompanyStore } from "@Stores/company.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import EstablishmentListLoadedComponent from '@Components/utils/EstablishmentListLoadedComponent.vue';
-import services from '@Services/services.js';
+import { useRouter } from "vue-router";
+// import services from '@Services/services.js';
 
 
 const EstablishmentsListComponent = defineAsyncComponent(() =>
@@ -65,6 +66,7 @@ const appStore = useAppStore();
 const companiesStore = useCompanyStore();
 const establishments = ref([]);
 const dataLoading = ref(true);
+const router = useRouter();
 
 const page = ref({
     title1: "",
@@ -82,18 +84,26 @@ onBeforeMount(async () => {
     appStore.isLoading = true;
     dataLoading.value = true;
     if (userStore.user.customer !== null) {
-        const response = await new Promise((resolve, reject) => {
-            services.get_Record(`/customer/${userStore.user.customer.tag}/establishments/all`, (response) => {
-                resolve(response)
-                appStore.isLoading = false;
-            });
-        });
-        // console.log(response)
-
-        if (response.status == 200) {
-            establishments.value = response.data;
+        companiesStore.getEstablishments().then((data) => {
+            establishments.value = data;
             dataLoading.value = false
-        }
+        })
+
+        // const response = await new Promise((resolve, reject) => {
+        //     services.get_Record(`/customer/${userStore.user.customer.tag}/establishments/all`, (response) => {
+        //         resolve(response)
+        //         appStore.isLoading = false;
+        //     });
+        // });
+        // // console.log(response)
+
+        // if (response.status == 200) {
+        //     establishments.value = response.data;
+        //     dataLoading.value = false
+        // }
+
+        // companiesStore.fetchCustomerEstablishments(userStore.user.customer.tag);
+        // setTimeout(() => { companiesStore.getEstablishment('645de52f135e8') }, 2000);
     }
 });
 </script>

@@ -346,9 +346,9 @@
 <script setup>
 import moment from 'moment';
 import services from '@Services/services.js';
-import { useWindowSize } from '@vueuse/core';
+// import { useWindowSize } from '@vueuse/core';
 import { useAppStore } from "@Stores/app.js";
-import { useUserStore } from "@Stores/user.js";
+// import { useUserStore } from "@Stores/user.js";
 import { useRoute, useRouter } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
@@ -412,23 +412,23 @@ const breadcrumbData = [
 
 const chartsStore = useChartsStore();
 
-const date = ref(moment(new Date(), 'YYYY-MM-DD'));
+// const date = ref(moment(new Date(), 'YYYY-MM-DD'));
 
-let selected_date = reactive(moment());
+// let selected_date = reactive(moment());
 
-const userStore = useUserStore();
+// const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
-let showWebsites = ref(false);
+// let showWebsites = ref(false);
 let selectedCompetitors = ref('Global');
 let selectedWebsites = ref('Global');
 let websites = ref(['Global']);
 
 let establishment = ref({ reviews: [] });
-let reviews = ref([]);
-let _reviews = computed(() => {
-    return reviews.value;
-})
+// let reviews = ref([]);
+// let _reviews = computed(() => {
+//     return reviews.value;
+// })
 let competitors = ref([]);
 let computedCompetitors = computed(() => {
     let data = [{ name: 'Global' }];
@@ -440,12 +440,12 @@ let computedCompetitors = computed(() => {
 
 let visibleData = ref([])
 const starsData = ref([])
-let paginationConfig = ref({
-    current: 0,
-    size: 20,
-    data: [],
-    _data: []
-})
+// let paginationConfig = ref({
+//     current: 0,
+//     size: 20,
+//     data: [],
+//     _data: []
+// })
 
 let comparisonData = ref([establishment.value, ...competitors.value]);
 const all_items = ref([
@@ -461,12 +461,12 @@ let legendData = ref([]);
 const establishmentLoading = ref(true)
 const reviewsLoading = ref(false)
 const feedbackLoading = ref(false)
-const starsLoading = ref(false)
+// const starsLoading = ref(false)
 const semesterChartLoading = ref(false)
 const chartLoading = ref(false)
 let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
 let endDate = moment().format('YYYY-M-DD');
-const date2 = ref([startDate, endDate]);
+// const date2 = ref([startDate, endDate]);
 
 let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
 let end_date = ref(moment().format('YYYY-M-DD'));
@@ -475,9 +475,9 @@ let selectedTimePeriod = ref('');
 let timePeriods = ref(['Days', 'Weeks', 'Months', 'Quarters', 'Semesters']);
 
 let lastReviews = ref([]);
-let media = [];
+// let media = [];
 
-let reviewsConfidence = ref(0);
+// let reviewsConfidence = ref(0);
 let reviewFeedbackData = ref({
     width: 0,
     red: 0,
@@ -604,17 +604,17 @@ const globalComparison = async () => {
     loadReviews(companyId.value, 1, 20, 1, startDate, endDate, selectedWebsites.value, selectedStars.value);
 };
 
-const reloadComparison = async (competitor) => {
-    let competitorInfo = establishment.value['competitors'].find(c => c.name === competitor.name)
-    selectedCompetitors.value = competitorInfo.name;
-    plotdata.value = [];
-    viewData();
-}
+// const reloadComparison = async (competitor) => {
+//     let competitorInfo = establishment.value['competitors'].find(c => c.name === competitor.name)
+//     selectedCompetitors.value = competitorInfo.name;
+//     plotdata.value = [];
+//     viewData();
+// }
 
-const reloadComparisonByWebsite = async (website) => {
-    selectedWebsites.value = website;
-    viewData();
-};
+// const reloadComparisonByWebsite = async (website) => {
+//     selectedWebsites.value = website;
+//     viewData();
+// };
 
 
 const gotoReviewPage = (id, tag) => {
@@ -635,14 +635,14 @@ const gotoReviewPage = (id, tag) => {
  * useWindowScroll allows us to detect the scroll event on 
  * the browser
  */
-const { width, height } = useWindowSize();
+// const { width, height } = useWindowSize();
 //For Group bar chart
 const chart__width = ref(800);
 const chart__height = ref(300);
 
 //For Line chart
-const chart__width2 = ref(300);
-const chart__height2 = ref(200);
+// const chart__width2 = ref(300);
+// const chart__height2 = ref(200);
 
 watch([start_date, end_date, selectedWebsites], () => {
     viewData()
@@ -662,35 +662,35 @@ watch(selectedTimePeriod, async () => {
     viewData()
 })
 
-const goto = (value) => {
-    router.push({ name: value });
-};
+// const goto = (value) => {
+//     router.push({ name: value });
+// };
 
 let selectedStars = ref('0');
 const starFilter = (star) => {
     selectedStars.value = parseInt(star, 10);
 };
 
-const filterReviewsByStar = (star, data) => {
-    let result = [];
-    data.forEach(review => {
-        let rating = companiesStore.formatRating(review.rating);
-        rating = rating > 5 ? rating / 2 : rating;
-        if (Math.abs(rating) == star) result.push(review);
-    })
-    return result;
-}
+// const filterReviewsByStar = (star, data) => {
+//     let result = [];
+//     data.forEach(review => {
+//         let rating = companiesStore.formatRating(review.rating);
+//         rating = rating > 5 ? rating / 2 : rating;
+//         if (Math.abs(rating) == star) result.push(review);
+//     })
+//     return result;
+// }
 
 
-const reloadStarData = () => {
-    let scores = [1, 2, 3, 4, 5];
-    let filteredReviews = _reviews.value;
-    let rating = scores.filter((element) => !selectedStars.value.includes(element));
-    if (selectedStars.value.length > 0) {
-        let result = filterReviewsByStar(rating, filteredReviews);
-        filteredReviews = result;
-    }
-}
+// const reloadStarData = () => {
+//     let scores = [1, 2, 3, 4, 5];
+//     let filteredReviews = _reviews.value;
+//     let rating = scores.filter((element) => !selectedStars.value.includes(element));
+//     if (selectedStars.value.length > 0) {
+//         let result = filterReviewsByStar(rating, filteredReviews);
+//         filteredReviews = result;
+//     }
+// }
 
 watch(selectedStars, () => {
     loadReviews(companyId.value, 1, options.value['rowLimit'], 1, '', '', selectedWebsites.value, selectedStars.value);
@@ -726,8 +726,8 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     loadDatasets();
     await loadFeelingData(tag, dateStart, dateEnd, source);
     await loadStarData(tag, dateStart, dateEnd, source);
-    await loadIndiceData(tag, dateStart, dateEnd, source);
-    const response = await new Promise((resolve, reject) => {
+    await loadIndiceData(tag, dateStart, dateEnd);
+    const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
@@ -765,7 +765,7 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source) => {
     const api = apiBase + '?' + apiParams;
     console.log(api)
 
-    const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
@@ -820,7 +820,7 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
     const api = apiBase + '?' + apiParams;
     console.log(api)
 
-    const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
@@ -833,7 +833,7 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
     }
 }
 
-const loadIndiceData = async (tag, dateStart, dateEnd, source) => {
+const loadIndiceData = async (tag, dateStart, dateEnd) => {
     let apiBase = `establishment/${tag}/global/score`;
     let apiParams = "";
 
@@ -854,7 +854,7 @@ const loadIndiceData = async (tag, dateStart, dateEnd, source) => {
     const api = apiBase + '?' + apiParams;
     console.log(api)
 
-    const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
@@ -879,28 +879,40 @@ onBeforeMount(async () => {
 
     appStore.isLoading = true;
 
-    const response = await new Promise((resolve, reject) => {
-        services.get_Record(`establishment/${companyId.value}/rating`, (response) => {
-            resolve(response)
-            if (response.status == 404) {
-                exist.value = false;
-                appStore.isLoading = false;
-            }
-        });
-    });
+    // const response = await new Promise((resolve, reject) => {
+    //     services.get_Record(`establishment/${companyId.value}/rating`, (response) => {
+    //         resolve(response)
+    //         if (response.status == 404) {
+    //             exist.value = false;
+    //             appStore.isLoading = false;
+    //         }
+    //     });
+    // });
 
-    if (response.status == 200) {
-
-        establishment.value = response.data;
-        establishment.value['tag'] = companyId.value;
+    companiesStore.getEstablishment(companyId.value).then((data) => {
+        establishment.value = data;
         appStore.isLoading = false;
+        establishment.value['tag'] = companyId.value;
         page.value.title2 = establishment.value.name;
         all_items.value[3].value = establishment.value.competitors.length;
 
         establishmentLoading.value = false
         globalComparison();
         websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
-    }
+    })
+
+    // if (response.status == 200) {
+
+    //     establishment.value = response.data;
+    //     establishment.value['tag'] = companyId.value;
+    //     appStore.isLoading = false;
+    //     page.value.title2 = establishment.value.name;
+    //     all_items.value[3].value = establishment.value.competitors.length;
+
+    //     establishmentLoading.value = false
+    //     globalComparison();
+    //     websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
+    // }
 
     // const response3 = await new Promise((resolve, reject) => {
     //     services.get_Record(`charts/stars?tag=${companyId.value}`, (response) => {
