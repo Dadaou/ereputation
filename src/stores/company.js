@@ -11,8 +11,6 @@ export const useCompanyStore = defineStore('company', () => {
   const appStore = useAppStore()
 
   const fetchCustomerEstablishments = async () => {
-    console.log('fetching data')
-
     const userStore = useUserStore()
 
     if (userStore.user.customer !== null) {
@@ -34,11 +32,14 @@ export const useCompanyStore = defineStore('company', () => {
       } else {
         return true
       }
+    } else {
+      establishments.value = {}
+      return true
     }
   }
 
   const getEstablishment = async (tag) => {
-    if (!(tag in establishments.value)) {
+    if (!establishments.value || !(tag in establishments.value)) {
       await fetchCustomerEstablishments()
     }
 
