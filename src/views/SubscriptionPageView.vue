@@ -47,8 +47,11 @@
         </div>
       </el-tab-pane>
       <el-tab-pane name="account">
-        <div class="app__title">
-          <h1>Subscription account</h1>
+        <div class="tab-pane-header">
+          <h6>STEP 2 OF 3</h6>
+          <div class="app__title">
+            <h1>Fill your account informations.</h1>
+          </div>
         </div>
         <div class="navigation-container">
           <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
@@ -58,8 +61,11 @@
         </div>
       </el-tab-pane>
       <el-tab-pane name="checkout">
-        <div class="app__title">
-          <h1>Checkout</h1>
+        <div class="tab-pane-header">
+          <h6>STEP 3 OF 3</h6>
+          <div class="app__title">
+            <h1>Checkout</h1>
+          </div>
         </div>
         <div class="navigation-container">
           <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
@@ -147,6 +153,7 @@ provide('checkout_to_update', checkout_to_update);
   align-items: center;
   justify-content: flex-start;
   text-align: center;
+  padding-block: 32px;
 }
 
 .subscription-tabs .tab-pane-header h6 {
