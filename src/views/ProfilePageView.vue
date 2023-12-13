@@ -1,44 +1,39 @@
 <template>
-    <div class="main__container">
-        <HeadComponent :page="page"></HeadComponent>
-        <div class="breadcrumb__container">
-            <BreadcrumbComponent :data="breadcrumbData" />
-        </div>
-        <div class="admin__container">
-            <div class="admin__menu">
-                <ul>
-                    <li>
-                        <router-link :to="{ name: 'Personal_details' }">
-                           <i class="uil uil-user"></i><span>Account</span>
-                        </router-link>
-                    </li>
-                     <li>
-                        <router-link :to="{ name: 'Subscription' }">
-                            <i class="uil uil-user-check"></i><span>Subscription</span>
-                        </router-link>
-                    </li>
-                    <li>
-                        <router-link :to="{ name: 'Contact' }">
-                            <i class="uil uil-envelope"></i> <span>Contacts</span>
-                        </router-link>
-                    </li>
-                   <!--  <li>
+  <div class="main__container">
+    <HeadComponent :page="page"></HeadComponent>
+    <div class="breadcrumb__container">
+      <BreadcrumbComponent :data="breadcrumbData" />
+    </div>
+    <div class="admin__container">
+      <div class="admin__menu">
+        <ul>
+          <li>
+            <router-link :to="{ name: 'Personal_details' }">
+              <i class="uil uil-user"></i><span>Account</span>
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="{ name: 'Contact' }">
+              <i class="uil uil-envelope"></i> <span>Contacts</span>
+            </router-link>
+          </li>
+          <!--  <li>
                         <router-link :to="{ name: 'Account_security' }">
                             <i class="uil uil-lock"></i> <span>Security</span>
                         </router-link>
                     </li> -->
-                    <li>
-                        <router-link :to="{ name: 'Parameters' }">
-                            <i class="uil uil-setting"></i> <span>Parameters</span>
-                        </router-link>
-                    </li>
-                </ul>
-            </div>
-            <div class="all__content">
-                <RouterView />
-            </div>
-        </div>
+          <li>
+            <router-link :to="{ name: 'Parameters' }">
+              <i class="uil uil-setting"></i> <span>Parameters</span>
+            </router-link>
+          </li>
+        </ul>
+      </div>
+      <div class="all__content">
+        <RouterView />
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>
@@ -50,17 +45,17 @@ import { useRoute } from "vue-router";
 
 
 const page = ref({
-    title1: "My",
-    title2: "Profile",
-    icon: "uil-user-square",
+  title1: "My",
+  title2: "Profile",
+  icon: "uil-user-square",
 });
 const route = useRoute();
 const breadcrumbData = [
-    {
-        title: "Profile",
-        path: `${route.path}`,
-        isCurrent: true,
-    },
+  {
+    title: "Profile",
+    path: `${route.path}`,
+    isCurrent: true,
+  },
 ];
 
 </script>
@@ -73,7 +68,7 @@ const breadcrumbData = [
   gap: 2rem;
   width: 95% !important;
   margin: auto;
-  overflow-x: hidden; 
+  overflow-x: hidden;
 }
 
 .breadcrumb__container {
@@ -148,7 +143,8 @@ const breadcrumbData = [
 }
 
 .menu-open .admin__menu ul {
-  display: block; /* Affiche toujours la liste du menu sur les petits écrans */
+  display: block;
+  /* Affiche toujours la liste du menu sur les petits écrans */
 }
 
 /* Pour les petits écrans (par exemple, les téléphones mobiles) */
@@ -161,12 +157,13 @@ const breadcrumbData = [
     display: block;
   }
 
- .all__content{
-  width: 100%;
- }
+  .all__content {
+    width: 100%;
+  }
 
   ul {
-    display: block; /* Affiche toujours la liste du menu sur les petits écrans */
+    display: block;
+    /* Affiche toujours la liste du menu sur les petits écrans */
   }
 
   .admin__menu li a {

@@ -33,6 +33,12 @@
   --transition2: all 1s ease;
 }
 
+#app {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+
 /*Override the browser's default style*/
 * {
   margin: 0;
@@ -244,6 +250,23 @@ img {
 .btn-primary {
   background-color: var(--color-danger);
   color: var(--color-white);
+}
+
+.btn-primary:hover {
+  background-color: white;
+  color: var(--color-danger);
+  outline: 2px solid var(--color-danger);
+}
+
+.btn-primary-2 {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.btn-primary-2:hover {
+  background-color: white;
+  color: var(--color-primary);
+  outline: 2px solid var(--color-primary);
 }
 
 .btn__light2 {

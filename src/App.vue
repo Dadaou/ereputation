@@ -1,11 +1,11 @@
 <template>
   <NavbarComponent></NavbarComponent>
-    <div class="app__loader" :style="loaderStyle" v-if="appStore.isLoading">
-      <SpinnerComponent :size="'large'"/>
-    </div>
-    <div class="erep__app">
-      <RouterView/>
-    </div>
+  <div class="app__loader" :style="loaderStyle" v-if="appStore.isLoading">
+    <SpinnerComponent :size="'large'" />
+  </div>
+  <div class="erep__app">
+    <RouterView />
+  </div>
   <FooterComponent></FooterComponent>
 </template>
 
@@ -16,46 +16,46 @@ import { useWindowSize } from '@vueuse/core'
 import { useAppStore } from "@Stores/app.js"
 import { useUserStore } from "@Stores/user.js"
 
-const SpinnerComponent = defineAsyncComponent(()=>
+const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
 )
 
-const NavbarComponent = defineAsyncComponent(()=>
+const NavbarComponent = defineAsyncComponent(() =>
   import('@Components/layouts/NavbarComponent.vue')
 )
 
-const FooterComponent = defineAsyncComponent(()=>
+const FooterComponent = defineAsyncComponent(() =>
   import('@Components/layouts/FooterComponent.vue')
 )
 
 const appStore = useAppStore();
 const userStore = useUserStore();
-const tag = computed(()=>{
-  let customer_tag = (userStore.user)?userStore.user.customer.tag:'';
- 
+const tag = computed(() => {
+  let customer_tag = (userStore.user) ? userStore.user.customer.tag : '';
+
   return customer_tag;
 })
 
-provide('tag',tag);
+provide('tag', tag);
 
 onBeforeMount(() => {
-    initFlowbite();
+  initFlowbite();
 });
 
-const{ width } = useWindowSize();
+const { width } = useWindowSize();
 const loaderStyle = ref({
-  'width': `${width.value}px`, 
+  'width': `${width.value}px`,
 });
 
 watch(width, () => {
   loaderStyle.value = {
-    'width': `${width.value}px`, 
+    'width': `${width.value}px`,
   }
 });
 </script>
 
 <style scoped>
-.app__loader{
+.app__loader {
   background: white;
   opacity: 0.9;
   display: flex;
@@ -66,11 +66,12 @@ watch(width, () => {
   height: 100%;
 }
 
-*{
+* {
   caret-color: transparent !important;
 }
 
-.erep__app{
+.erep__app {
   min-height: 500px;
+  width: 100vw;
 }
 </style>
