@@ -80,8 +80,8 @@ watch(enumber, () => {
     transition: transform .3s ease-in-out;
     transform: scale(1);
     cursor: pointer;
-    min-width: 320px;
-    height: 472px;
+    min-width: 280px;
+    height: 532px;
 }
 
 .plan-card:hover {
@@ -96,14 +96,14 @@ watch(enumber, () => {
 
 .plan-card h4 {
     font-weight: 500;
-    font-size: 22px;
+    font-size: 18px;
     color: var(--color-black2);
     height: 31px;
 }
 
 .plan-card h2 {
     font-weight: 800;
-    font-size: 46px;
+    font-size: 38px;
     color: var(--color-danger);
     margin-block: 24px;
 }
@@ -116,7 +116,7 @@ watch(enumber, () => {
 }
 
 .plan-card h2 span {
-    font-size: 21px;
+    font-size: 18px;
 }
 
 .plan-card ul {
