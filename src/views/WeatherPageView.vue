@@ -437,7 +437,7 @@ const weaherImpact = (startDate, endDate) => {
         data.push(item);
     }
 
-    let dataType = ['rating', 'temperature']
+    let dataType = ['rating']
     legendData.value = generatedLegend(colors.value, dataType);
     data.sort(comparerDates);
     return data;
@@ -598,7 +598,7 @@ const loadWeatherFromServer = async (tag, dateStart, dateEnd, unit) => {
     if (unit == 'Fahrenheit °F') unit = "F"
     else unit = "C"
     let apiParams = `tag=${tag}&unit=${unit}`;
-    let dataType = ['rating', 'temperature']
+    let dataType = ['rating']
     legendData.value = generatedLegend(colors.value, dataType);
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {

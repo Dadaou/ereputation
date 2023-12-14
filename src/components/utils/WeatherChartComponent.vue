@@ -22,7 +22,7 @@
     <GroupedBarChart v-else :plot-data="data" x-key="name" :width="custom_width" :height="200"
       :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
       :x-tick-format="d => `${d}`" />
-    <div id="weatherIcons" style="height: 28px; width: 100%; position: relative;">
+    <div id="weatherIcons" style="height: 58px; width: 100%; position: relative;">
     </div>
     <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'"></BaseLegend>
   </div>
@@ -86,12 +86,33 @@ const positionIcons = () => {
   const weathers = document.getElementById("weatherIcons");
 
   for (let i = 0; i < positions.length; i++) {
+    // let color = '';
+    // let temp = icons.value[i]['temperature'];
+
+    // if (icons.value[i]['unit'] != '°C') {
+    //   temp = (temp - 32) * 5 / 9;
+    // }
+
+    // if (temp <= 0) {
+    //   color = '#00008B'
+    // } else if (temp <= 15) {
+    //   color = '#00BFFF'
+    // } else if (temp <= 20) {
+    //   color = '#006400'
+    // } else if (temp <= 25) {
+    //   color = '#FFA500'
+    // } else if (temp <= 30) {
+    //   color = '#FF5733'
+    // } else {
+    //   color = '#B22222'
+    // }
+
     let textNode = document.createElement("span");
     let tempTextNode = document.createElement("span");
     textNode.innerHTML = icons.value[i]['code'];
     tempTextNode.innerHTML = `${icons.value[i]['temperature'].toFixed(0)} ${icons.value[i]['unit']}`;
-    textNode.setAttribute("style", `left: calc(${positions[i]}px - 25px); opacity: 1; top: -4px; position: absolute; font-size: 28px; cursor: pointer; color: ${icons.value[i]['color']};`);
-    tempTextNode.setAttribute("style", `left: calc(${positions[i]}px + 10px); opacity: 1; top: 4.5px; position: absolute; font-size: 14px; font-weight:500; cursor: pointer; color: ${icons.value[i]['color']};`);
+    textNode.setAttribute("style", `left: calc(${positions[i]}px - 12px); opacity: 1; top: -4px; position: absolute; font-size: 28px; cursor: pointer; color: ${icons.value[i]['color']};`);
+    tempTextNode.setAttribute("style", `left: calc(${positions[i]}px - 15px); opacity: 1; top: 28px; position: absolute; font-size: 14px; font-weight:500; cursor: pointer; color: ${icons.value[i]['color']}; width: 40px;`);
     textNode.setAttribute("title", icons.value[i]['title']);
     weathers.appendChild(textNode);
     weathers.appendChild(tempTextNode);
