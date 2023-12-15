@@ -382,6 +382,9 @@ const loadFromServer = async(type, company, datefrom, dateto)=>{
 
      if(response.status == 200){
         data.value = transformData({...response.data})
+        console.log('data value', data.value)
+        console.log('response data', response.data)
+
         // options.value = {
         //       responsive: true,
         //       aspectRatio: 2,
@@ -494,8 +497,7 @@ function transformData(inputData) {
 
   labels.forEach(date => {
     Object.keys(inputData.data[date]).forEach(key => {
-      if (key !== 'total') {
-        if (!datasets[key]) {
+     if (!datasets[key]) {
           const colorIndex = Object.keys(datasets).length % colors.length; 
           datasets[key] = {
             label: key,
@@ -504,7 +506,6 @@ function transformData(inputData) {
           };
         }
         datasets[key].data[labels.indexOf(date)] = inputData.data[date][key];
-      }
     });
   });
 

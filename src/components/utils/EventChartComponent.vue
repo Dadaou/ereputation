@@ -20,7 +20,7 @@
 	          Loading
 	      </template>    
 	  </suspense>
-        <ul class="event" :style="{
+        <!-- <ul class="event" :style="{
         	'gap': `${custom_width.gap}px`,
 			'width': `${custom_width.events}px`,
 		}">
@@ -59,7 +59,7 @@
 				></div>
 			</div>
 		</li>
-	</ul>
+	</ul> -->
 	</div>
 	<div>
 		<BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
