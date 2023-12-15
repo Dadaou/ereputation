@@ -100,7 +100,19 @@
           </li>
           <li @click="showModal = true">
             <a>
-              <i class="uil uil-shop"></i>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24">
+                <g transform="scale(0.8 1)">
+                  <g transform="scale(0.4 0.35) translate(52 -9)">
+                    <path fill="currentColor" fill-rule="evenodd"
+                      d="M26 8a2 2 0 1 0-4 0v2a8 8 0 1 0 0 16v8a4.002 4.002 0 0 1-3.773-2.666a2 2 0 0 0-3.771 1.332A8.003 8.003 0 0 0 22 38v2a2 2 0 1 0 4 0v-2a8 8 0 1 0 0-16v-8a4.002 4.002 0 0 1 3.773 2.666a2 2 0 0 0 3.771-1.332A8.003 8.003 0 0 0 26 10zm-4 6a4 4 0 0 0 0 8zm4 12v8a4 4 0 0 0 0-8"
+                      clip-rule="evenodd" />
+                  </g>
+                  <g transform="translate(0 0)">
+                    <path fill="none" stroke="currentColor" stroke-width="2"
+                      d="m1 16l7-7l5 5L23 4M0 22h23.999M16 4h7v7" />
+                  </g>
+                </g>
+              </svg>
               <span>Sales</span>
             </a>
           </li>
@@ -111,8 +123,20 @@
       <template #content>
         <div class="modal__header">
           <div class="modal__title">
-            <h3>
-              <i class="uil uil-shop"></i> Sales
+            <h3 class="flex gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24">
+                <g transform="scale(0.8 1)">
+                  <g transform="scale(0.4 0.35) translate(52 -9)">
+                    <path fill="currentColor" fill-rule="evenodd"
+                      d="M26 8a2 2 0 1 0-4 0v2a8 8 0 1 0 0 16v8a4.002 4.002 0 0 1-3.773-2.666a2 2 0 0 0-3.771 1.332A8.003 8.003 0 0 0 22 38v2a2 2 0 1 0 4 0v-2a8 8 0 1 0 0-16v-8a4.002 4.002 0 0 1 3.773 2.666a2 2 0 0 0 3.771-1.332A8.003 8.003 0 0 0 26 10zm-4 6a4 4 0 0 0 0 8zm4 12v8a4 4 0 0 0 0-8"
+                      clip-rule="evenodd" />
+                  </g>
+                  <g transform="translate(0 0)">
+                    <path fill="none" stroke="currentColor" stroke-width="2"
+                      d="m1 16l7-7l5 5L23 4M0 22h23.999M16 4h7v7" />
+                  </g>
+                </g>
+              </svg> Sales
             </h3>
           </div>
           <div class="modal__close">
