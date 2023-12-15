@@ -90,6 +90,12 @@ const router = createRouter({
       beforeEnter: [CheckAccess],
       component: () => import('@Views/WeatherPageView.vue')
     },
+     {
+      path: '/customer/:tag/establishment/:id/trends',
+      name: 'Trends',
+      beforeEnter: [CheckAccess],
+      component: () => import('@Views/TrendsView.vue')
+    },
     {
       path: '/customer/:tag/establishment/:id/staffs',
       name: 'Staff',
