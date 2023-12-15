@@ -11,7 +11,7 @@
                         <h2>Trends</h2>
                     </div>
                 </div>
-                <div>
+                <div style="margin-top: 15px;">
                     <Line :data="data" :options="options" />
                 </div>
                 <!--
@@ -330,20 +330,27 @@ let data = ref( {
 })
 
 const options = ref({
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                y: {
-                  min: 0,
-                  max: 5,
-                  ticks: {
-                    stepSize: 1,
-                    precision: 0,
-                    beginAtZero: true
-                  }
-                }
-              }
-            });
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2,
+    plugins: {
+        legend: {
+            display: true,
+            position: 'bottom'
+        }
+    },
+    scales: {
+      y: {
+        min: 0,
+        max: 6,
+        ticks: {
+            stepSize: 1,
+            precision: 0,
+            beginAtZero: true
+        }
+      }
+    }
+});
 
 provide('date', date);
 provide('type', selectedTimePeriod);
@@ -375,22 +382,22 @@ const loadFromServer = async(type, company, datefrom, dateto)=>{
 
      if(response.status == 200){
         data.value = transformData({...response.data})
-        options.value = {
-              responsive: true,
-              aspectRatio: 2,
-              maintainAspectRatio: false,
-              scales: {
-                y: {
-                  min: 0,
-                  max: 5,
-                  ticks: {
-                    stepSize: 1,
-                    precision: 0,
-                    beginAtZero: true
-                  }
-                }
-              }
-            };
+        // options.value = {
+        //       responsive: true,
+        //       aspectRatio: 2,
+        //       maintainAspectRatio: false,
+        //       scales: {
+        //         y: {
+        //           min: 0,
+        //           max: 5,
+        //           ticks: {
+        //             stepSize: 1,
+        //             precision: 0,
+        //             beginAtZero: true
+        //           }
+        //         }
+        //       }
+        //     };
      }
 }    
 
