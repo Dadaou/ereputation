@@ -834,7 +834,9 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
 
     if (response.status == 200) {
         if (response.data && response.data.data) {
+            console.log(response.data.data)
             starsData.value = formatStarsData(response.data.data)
+            console.log(starsData.value)
         }
     }
 }

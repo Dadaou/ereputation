@@ -655,7 +655,6 @@ const formattedWeatherRating = computed(() => {
 const loadConditionFromServer = async (tag, dateStart, dateEnd) => {
     let apiBase = '/etablissement/conditions';
     let apiParams = `tag=${tag}`;
-    // load.value = true
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(dateStart).format('YYYY-MM-DD');

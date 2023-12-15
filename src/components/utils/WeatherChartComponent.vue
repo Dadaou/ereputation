@@ -77,6 +77,7 @@ const positionIcons = () => {
   let positions = [];
 
   const elements = document.querySelectorAll(".weather__chart .xaxis g.tick");
+  console.log(elements)
 
 
   elements.forEach(e => {
@@ -86,27 +87,6 @@ const positionIcons = () => {
   const weathers = document.getElementById("weatherIcons");
 
   for (let i = 0; i < positions.length; i++) {
-    // let color = '';
-    // let temp = icons.value[i]['temperature'];
-
-    // if (icons.value[i]['unit'] != '°C') {
-    //   temp = (temp - 32) * 5 / 9;
-    // }
-
-    // if (temp <= 0) {
-    //   color = '#00008B'
-    // } else if (temp <= 15) {
-    //   color = '#00BFFF'
-    // } else if (temp <= 20) {
-    //   color = '#006400'
-    // } else if (temp <= 25) {
-    //   color = '#FFA500'
-    // } else if (temp <= 30) {
-    //   color = '#FF5733'
-    // } else {
-    //   color = '#B22222'
-    // }
-
     let textNode = document.createElement("span");
     let tempTextNode = document.createElement("span");
     textNode.innerHTML = icons.value[i]['code'];

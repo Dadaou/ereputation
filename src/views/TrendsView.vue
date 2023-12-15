@@ -462,34 +462,6 @@ useResizeObserver(el, (entries) => {
       chartWidth.value = Math.abs(width);
 });
 
-// const data = {
-//   "data": {
-//     "2022-01-01": {
-//       "review": 5,
-//       "app": 1,
-//       "total": 0
-//     },
-//     "2022-01-02": {
-//       "review": 4.5,
-//       "app": 1.2,
-//       "total": 0
-//     },
-//     "2022-10-03": {
-//       "SAMBANY Michel laurenzio": 1,
-//       "review": 4,
-//       "app": 0,
-//       "total": 0
-//     },
-//     "2022-10-04": {
-//       "SAMBANY Michel laurenzio": 3,
-//       "Nicolas Pilon": 3.5,
-//       "review": 2,
-//       "app": 2,
-//       "total": 0
-//     }
-//   }
-// };
-
 function transformData(inputData) {
   const labels = Object.keys(inputData.data);
   const datasets = {};
@@ -497,10 +469,10 @@ function transformData(inputData) {
 
   labels.forEach(date => {
     Object.keys(inputData.data[date]).forEach(key => {
-     if (!datasets[key]) {
+      if (!datasets[key]) {
           const colorIndex = Object.keys(datasets).length % colors.length; 
           datasets[key] = {
-            label: (key == "total")? "global": (key == "review")? "reviews": key,
+            label: key,
             backgroundColor: colors[colorIndex],
             data: Array(labels.length).fill(0)
           };

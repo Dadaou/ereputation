@@ -1,13 +1,29 @@
 <template>
 	<div
+	    id="chart__event"
 		class="chart"
 		:style="{
 			'width': `${props.width}px`,
 			'overflowX': 'auto'
 		}"
 	>
-	  <suspense>
-	      <GroupedBarChart 
+	 <div v-if="loading == true" :style="{
+                    'width': `100%`,
+                    'height': `200px`,
+                    'display': 'flex',
+                    'alignItems': 'center',
+                    'background': 'rgba(0, 0, 0, 0.1)',
+                    'opacity': 0.9,
+                    'justifyContent': 'center',
+                    'alignItems': 'center',
+                    'zIndex': 1,
+                    'marginTop': '10px',
+                    'marginBottom': '10px'
+                }">
+                    <SpinnerComponent />
+                </div>
+	 <GroupedBarChart 
+	        v-else
 			:plot-data="plotdata.notes"
             x-key="date"
             :width="custom_width.chart"
@@ -16,50 +32,8 @@
             y-axis-label="Rating"
             :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']"
             :y-tick-format="d => `${d}`" />
-	      <template #fallback>
-	          Loading
-	      </template>    
-	  </suspense>
-        <!-- <ul class="event" :style="{
-        	'gap': `${custom_width.gap}px`,
-			'width': `${custom_width.events}px`,
-		}">
-		<li v-for="date in plotdata.events_per_date">
-			<div v-if="date.events.length>0">
-				<el-tooltip
-					v-for="event in date.events"
-			        class="box-item"
-			        effect="light"
-			        :content="event.name"
-			        placement="top"
-			    >
-					<div  
-						:style="{
-							'width': '60.5px',
-					        'height': '10px',
-					        'margin': 'auto',
-					        'marginBottom': '3px',
-					        'backgroundColor': `${generateColor(event.name)}`,
-					        'backgroundPosition': 'center',
-					        'cursor': 'pointer',
-						}"
-					></div>
-				</el-tooltip>
-			</div>
-			<div v-else>
-				<div 
-					:style="{
-						'width': '60.5px',
-				        'height': '10px',
-				        'margin': 'auto',
-				        'marginBottom': '3px',
-				        'backgroundColor': 'white',
-				        'backgroundPosition': 'center'
-					}"
-				></div>
-			</div>
-		</li>
-	</ul> -->
+       <div id="chartEvents" style="min-height: 30px; width: 100%; position: relative;">
+    </div>
 	</div>
 	<div>
 		<BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
@@ -69,7 +43,7 @@
 <script setup>
 import moment from 'moment';
 import { ElTooltip } from 'element-plus';
-import {computed, onMounted, ref, watch, inject} from 'vue';
+import {computed, onMounted, ref, watch, inject, onBeforeMount, defineAsyncComponent} from 'vue';
 import services from '@Services/services.js';
 import { useRoute, useRouter } from "vue-router";
 
@@ -80,6 +54,10 @@ const props = defineProps({
 	}
 });
 
+const SpinnerComponent = defineAsyncComponent(() =>
+    import('@Components/utils/SpinnerComponent.vue')
+)
+
 const chartWidth = computed(()=>`${props.width}px`);
 const chart_width = computed(()=>`${props.width}px`);
 const route = useRoute();
@@ -87,6 +65,7 @@ const route = useRoute();
 const type = inject('type');
 const date = inject('date');
 const chartLoading = inject('chartLoading');
+const loading = ref(true);
 const plotdata = ref({notes:[], events_per_date:[]});
 const custom_width = computed(()=>{
 	let nb = plotdata.value.events_per_date.length;
@@ -107,6 +86,38 @@ const custom_width = computed(()=>{
 		gap: gap
 	} 
 })
+
+const deleteEvents = () => {
+  // const events = document.getElementById("events");
+  // events.innerHTML = "";
+}
+
+const positionEvent = ()=>{
+	let positions = [];
+
+  setTimeout(() => {
+  	const elements = document.querySelectorAll(".xaxis g.tick");
+	   elements.forEach(e => {
+	    positions.push((e.getAttribute("transform").split(',')[0]).split('(')[1]);
+	  })
+
+	  const chartEvents = document.getElementById("chartEvents");
+
+	  for(let i = 0; i < positions.length; i++){
+	  	const events = plotdata.value.events_per_date[i];
+	    const data = events.events;
+
+	    data.forEach((event,index)=>{
+	    	let textNode = document.createElement("span");
+            console.log(index)
+            const mgTop = index * 17;
+	        textNode.setAttribute("style", `left: calc(${positions[i]}px - 30px); opacity: 1; height: 10px; top: calc(5px + ${mgTop}px); position: absolute; font-size: 14px; font-weight:500; cursor: pointer; color: green; width: 60.5px; background-color: ${generateColor(event.name)};`);
+	        textNode.setAttribute("title", event.name);
+	        chartEvents.appendChild(textNode);
+	    })
+	  }
+  }, 1000);
+}
 
 const legendData = computed(() => {
     let dates = plotdata.value.events_per_date;
@@ -177,25 +188,40 @@ const getPlotData = async(period, rangedate, next)=>{
       next(data);
 } 
 
-onMounted(async()=>{
-   const response = await new Promise((resolve, reject) => {
+onBeforeMount(async()=>{
+	loading.value = true;
+	const response = await new Promise((resolve, reject) => {
           getPlotData(type.value, date.value, (response)=>{
             resolve(response)
           })
    });
-   plotdata.value = response;
-});
+   plotdata.value = response;  
+   if(plotdata.value){
+    console.log("ito lasa aloha")
+    deleteEvents()
+    positionEvent()
+   }
+   loading.value = false;
+})
+
+// onMounted(()=>{
+// 	console.log("ito lasa aloha")
+//     deleteEvents()
+//     positionEvent()
+// })
 
 watch([date, type],async()=>{
   if(date.value !== null){
-  	  chartLoading.value = true;
+  	  loading.value = true;
       const response = await new Promise((resolve, reject) => {
             getPlotData(type.value, date.value, (response)=>{
               resolve(response)
             })
      });
      plotdata.value = response;
-     chartLoading.value = false;
+	 deleteEvents()
+	 positionEvent()
+	 loading.value = false;
   }
 });
 

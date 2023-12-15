@@ -277,11 +277,9 @@ let paginationConfig = ref({
 const showModal = ref(false);
 const timePeriods = ref(['Daily', 'Weekly', 'Monthly', 'Yearly']);
 const selectedTimePeriod = ref(timePeriods.value[1]);
-const startDate = moment().subtract(90, 'days').format('YYYY-M-DD');
-const endDate = moment().format('YYYY-M-DD');
 let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
 let end_date = ref(moment().format('YYYY-M-DD'));
-const date = ref([startDate, endDate]);
+const date = ref([moment().subtract(30, 'days').format('YYYY-M-DD'), moment().format('YYYY-M-DD')]);
 provide('date', date);
 provide('type', selectedTimePeriod);
 
@@ -297,7 +295,7 @@ watch([start_date, end_date], () => {
     if (start_date.value !== '' && end_date.value !== '') {
         date.value = [start_date.value, end_date.value]
     } else {
-        date.value = [startDate, endDate];
+        date.value = [moment().subtract(30, 'days').format('YYYY-M-DD'), moment().format('YYYY-M-DD')];
     }
 })
 
