@@ -500,7 +500,7 @@ function transformData(inputData) {
      if (!datasets[key]) {
           const colorIndex = Object.keys(datasets).length % colors.length; 
           datasets[key] = {
-            label: key,
+            label: (key == "total")? "global": (key == "review")? "reviews": key,
             backgroundColor: colors[colorIndex],
             data: Array(labels.length).fill(0)
           };
