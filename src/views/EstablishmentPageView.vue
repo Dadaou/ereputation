@@ -320,6 +320,12 @@
                             selectedTimePeriod = timePeriod
                         }" :default="timePeriods[0]" />
                     </div>
+                     <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/trends`" >
+                            <button class="btn">
+                                <i class="uil uil-trophy"></i>
+                                <span class="ml-2">Trends</span>
+                            </button>
+                    </RouterLink>
                 </div>
                 <div class="rating__customers">
                     <div class="title">Rating by Customers</div>
@@ -348,7 +354,7 @@ import moment from 'moment';
 import services from '@Services/services.js';
 // import { useWindowSize } from '@vueuse/core';
 import { useAppStore } from "@Stores/app.js";
-// import { useUserStore } from "@Stores/user.js";
+import { useUserStore } from "@Stores/user.js";
 import { useRoute, useRouter } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
@@ -416,7 +422,7 @@ const chartsStore = useChartsStore();
 
 // let selected_date = reactive(moment());
 
-// const userStore = useUserStore();
+const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 // let showWebsites = ref(false);
@@ -927,6 +933,16 @@ onBeforeMount(async () => {
 </script>
 
 <style scoped>
+
+.btn{
+    width: 100%;
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+}
+
 * {
     transition: var(--transition);
 }
