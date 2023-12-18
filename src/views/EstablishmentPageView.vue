@@ -88,7 +88,7 @@
     loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
 }" />
                     <aside v-if="lastReviews.length > 0">
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ all_items[0].value - 3 }} reviews
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ all_items.rating.value - 3 }} reviews
                             remains</p>
                         <div class="flex items-center mt-3 space-x-3 divide-x divide-gray-200 dark:divide-gray-600">
                             <a @click="gotoReviewPage(establishment.competitor_tag, $route.params.tag)"
@@ -187,22 +187,22 @@
                     </div>
                     <div class="society__location">
                         <i class="uil uil-favorite"></i>
-                        <span v-if="!establishmentLoading" class="society__location">{{ all_items[0].value }}</span>
+                        <span v-if="!establishmentLoading" class="society__location">{{ all_items.rating.value }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
                         <i class="uil uil-analysis"></i>
-                        <span v-if="!establishmentLoading">{{ all_items[1].value }}</span>
+                        <span v-if="!establishmentLoading">{{ all_items.index.value }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
                         <i class="uil uil-comment-alt"></i>
-                        <span v-if="!establishmentLoading">{{ all_items[2].value }}</span>
+                        <span v-if="!establishmentLoading">{{ all_items.reviews.value }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
                         <i class="uil uil-building"></i>
-                        <span v-if="!establishmentLoading">{{ all_items[3].value }} competitors</span>
+                        <span v-if="!establishmentLoading">{{ all_items.competitors.value }} competitors</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="mobile__filter__btn">
@@ -320,11 +320,11 @@
                             selectedTimePeriod = timePeriod
                         }" :default="timePeriods[0]" />
                     </div>
-                     <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/trends`" >
-                            <button class="btn">
-                                <i class="uil uil-trophy"></i>
-                                <span class="ml-2">Trends</span>
-                            </button>
+                    <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/trends`">
+                        <button class="btn">
+                            <i class="uil uil-trophy"></i>
+                            <span class="ml-2">Trends</span>
+                        </button>
                     </RouterLink>
                 </div>
                 <div class="rating__customers">
@@ -454,12 +454,13 @@ const starsData = ref([])
 // })
 
 let comparisonData = ref([establishment.value, ...competitors.value]);
-const all_items = ref([
-    { title: "Rating", value: 0, icon: "uil-star" },
-    { title: "Index", value: 0, icon: "uil-analysis", description: "Index is an indicator betwenn 0 and 1 built on algorithms with differents metrics such as scores, AI reviews analysis, social media trends… The closer the indicator is to 1, the better your reputation." },
-    { title: "Reviews", value: 0, icon: "uil-comment" },
-    { title: "Competitors", value: 0, icon: "uil-building" },
-]);
+const all_items = ref({
+    rating: { title: "Rating", value: 0, icon: "uil-thumbs-up" },
+    global: { title: "Global", value: 0, icon: "uil-star" },
+    index: { title: "Index", value: 0, icon: "uil-analysis", description: "Index is an indicator betwenn 0 and 1 built on algorithms with differents metrics such as scores, AI reviews analysis, social media trends… The closer the indicator is to 1, the better your reputation." },
+    reviews: { title: "Reviews", value: 0, icon: "uil-comment" },
+    competitors: { title: "Competitors", value: 0, icon: "uil-building" }
+});
 let currentFilter = ref('filter');
 
 let plotdata = ref([]);
@@ -745,8 +746,9 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
 
         if (response.data['count'] <= 100) options.value.max = response.data['count'];
         else options.value.max = 100;
-        all_items.value[2].value = response.data['count'];
-        all_items.value[0].value = response.data['rating'];
+        all_items.value.reviews.value = response.data['count'];
+        all_items.value.rating.value = response.data['rating'];
+        all_items.value.global.value = response.data['global'];
     }
 }
 
@@ -868,7 +870,7 @@ const loadIndiceData = async (tag, dateStart, dateEnd) => {
 
     if (response.status == 200) {
         if (response.data) {
-            all_items.value[1].value = response.data['score'];
+            all_items.value.index.value = response.data['score'];
         }
     }
 }
@@ -896,7 +898,7 @@ onBeforeMount(async () => {
             appStore.isLoading = false;
             establishment.value['tag'] = companyId.value;
             page.value.title2 = establishment.value.name;
-            all_items.value[3].value = establishment.value.competitors.length;
+            all_items.value.competitors.value = establishment.value.competitors.length;
 
             establishmentLoading.value = false
             globalComparison();
@@ -910,7 +912,7 @@ onBeforeMount(async () => {
     //     establishment.value['tag'] = companyId.value;
     //     appStore.isLoading = false;
     //     page.value.title2 = establishment.value.name;
-    //     all_items.value[3].value = establishment.value.competitors.length;
+    //     all_items.value.competitors.value = establishment.value.competitors.length;
 
     //     establishmentLoading.value = false
     //     globalComparison();
@@ -933,8 +935,7 @@ onBeforeMount(async () => {
 </script>
 
 <style scoped>
-
-.btn{
+.btn {
     width: 100%;
     background-color: var(--color-primary);
     color: white;
