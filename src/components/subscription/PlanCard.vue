@@ -10,8 +10,16 @@
             <li v-if="hasinput">+ {{ addprice }} {{ devise }} per additionnal establishment</li>
             <li v-for="item in items" :key="item">{{ item }}</li>
         </ul>
-        <button v-if="premium" class="btn btn-primary-2" style="margin-top: 12px; border-radius: 8px;">Contact our
+        <button v-if="premium" class="selection-btn btn btn-primary-2" style="margin-top: 12px; border-radius: 8px;"
+            @click="() => emitEvent(name)">Contact
+            our
             team</button>
+        <button v-else-if="hasinput" class="selection-btn btn btn-danger-o" style="margin-top: 12px; border-radius: 8px;"
+            @click="() => emitEvent(name, enumber)">Get {{ name
+            }} plan</button>
+        <button v-else class="selection-btn btn btn-danger-o" style="margin-top: 12px; border-radius: 8px;"
+            @click="() => emitEvent(name)">Get {{ name
+            }} plan</button>
     </div>
 </template>
 <script setup>
@@ -58,8 +66,18 @@ const props = defineProps({
         default: false
     }
 })
+
+const emits = defineEmits(['selected']);
 const fprice = ref(props.price);
 const enumber = ref(0);
+
+const emitEvent = (name, eNumber) => {
+    if (props.hasinput && eNumber == 0) {
+        alert("Please add the number of establishments.");
+    } else {
+        emits('selected', name, eNumber);
+    }
+}
 
 watch(enumber, () => {
     fprice.value = Math.round((((enumber.value * props.addprice) + props.price) + Number.EPSILON) * 100) / 100;
@@ -81,7 +99,7 @@ watch(enumber, () => {
     transform: scale(1);
     cursor: pointer;
     min-width: 280px;
-    height: 532px;
+    height: 562px;
 }
 
 .plan-card:hover {
@@ -145,5 +163,11 @@ watch(enumber, () => {
 
 .plan-card ul li::before {
     content: "\2714   ";
+}
+
+.plan-card .selection-btn {
+    position: absolute;
+    bottom: 24px;
+    width: 200px;
 }
 </style>

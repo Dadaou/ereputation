@@ -269,6 +269,30 @@ img {
   outline: 2px solid var(--color-primary);
 }
 
+.btn-primary-o {
+  background-color: transparent;
+  outline: 2px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+.btn-primary-o:hover {
+  background-color: color-mix(in srgb, var(--color-primary) 25%, white);
+  outline: 2px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+.btn-danger-o {
+  background-color: transparent;
+  outline: 2px solid var(--color-danger);
+  color: var(--color-danger);
+}
+
+.btn-danger-o:hover {
+  background-color: color-mix(in srgb, var(--color-danger) 15%, white);
+  outline: 2px solid var(--color-danger);
+  color: var(--color-danger);
+}
+
 .btn__light2 {
   display: inline-block;
   background: var(--color-danger);

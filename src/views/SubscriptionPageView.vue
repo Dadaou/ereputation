@@ -25,26 +25,27 @@
             'Illimited intern reviews',
             'Illimited leads',
             'Illimited events',
-            '3 monitored points of sale (1 QR Code by point of sale)']" @click="selectedPlan = 'basic-1'"></plan-card>
+            '3 monitored points of sale (1 QR Code by point of sale)']" @click="selectedPlan = 'basic-1'"
+            @selected="setPlan"></plan-card>
           <plan-card name="Custom Basic 1-Year" :active="selectedPlan == 'c-basic-1'" :hasinput="true" :price="9.99"
             :addprice="4.99" devise="$" :items="[
               'Illimited intern reviews',
               'Illimited leads',
               'Illimited events',
-              '3 monitored points of sale (1 QR Code by point of sale)']"
-            @click="selectedPlan = 'c-basic-1'"></plan-card>
+              '3 monitored points of sale (1 QR Code by point of sale)']" @click="selectedPlan = 'c-basic-1'"
+            @selected="setPlan"></plan-card>
           <plan-card name="Premium 1-Year" :active="selectedPlan == 'premium'" :premium="true" :items="[
             'Illimited intern reviews',
             'Illimited leads',
             'Illimited events',
             'Illimited monitored points of sale (QR Codes illimited)',
             'Leads integration in your CRM',
-            'Sales integration (API)']" @click="selectedPlan = 'premium'"></plan-card>
+            'Sales integration (API)']" @click="selectedPlan = 'premium'" @selected="setPlan"></plan-card>
         </div>
-        <div class="navigation-container">
+        <!-- <div class="navigation-container">
           <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
             @click="activeName = 'user-info'">Next</button>
-        </div>
+        </div> -->
       </el-tab-pane>
       <el-tab-pane name="user-info">
         <div class="tab-pane-header">
@@ -442,6 +443,12 @@ provide('account_to_update', account_to_update);
 
 const checkout_to_update = ref(null);
 provide('checkout_to_update', checkout_to_update);
+
+const setPlan = (name, eNumber) => {
+  console.log(name);
+  console.log(eNumber);
+  activeName.value = 'user-info'
+}
 
 </script>
 <style>
