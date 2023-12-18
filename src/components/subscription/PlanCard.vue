@@ -125,16 +125,22 @@ watch(enumber, () => {
     justify-self: flex-start;
 }
 
+.plan-card input[type=number] {
+    border: none;
+    padding: 0;
+    width: 32px;
+}
+
+.plan-card input[type=number]::-webkit-inner-spin-button {
+    opacity: 1;
+}
+
 .plan-card ul li {
     font-size: 14px;
     font-weight: 500;
     color: #444;
     display: inline-block;
     margin-block: 8px;
-}
-
-.plan-card ul li input {
-    width: 60px;
 }
 
 .plan-card ul li::before {
