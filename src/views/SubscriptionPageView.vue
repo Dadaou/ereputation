@@ -54,43 +54,65 @@
             <h1>Fill your account informations.</h1>
           </div>
         </div>
-        <div class="form-group">
-          <p class="mb-5">User informations</p>
-          <div class="w-full">
-            <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First
-              name <span>*</span></label>
-            <input type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+        <form @submit.prevent="submitUserForm">
+          <div class="form-group">
+            <p class="mb-5">User informations</p>
+            <div class="w-full">
+              <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First
+                name <span>*</span></label>
+              <input v-model="planInfo.uFName" type="text" id="first_name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+              <span v-for="error in v$User.uFName.$errors" :key="error.$uid" class="field-msg">
+                {{ error.$message }}
+              </span>
+            </div>
+            <div class="w-full">
+              <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last
+                name <span>*</span></label>
+              <input v-model="planInfo.uLName" type="text" id="last_name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+              <span v-for="error in v$User.uLName.$errors" :key="error.$uid" class="field-msg">
+                {{ error.$message }}
+              </span>
+            </div>
+            <div class="w-full">
+              <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
+                <span>*</span></label>
+              <input v-model="planInfo.uEmail" type="email" id="email"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+              <span v-for="error in v$User.uEmail.$errors" :key="error.$uid" class="field-msg">
+                {{ error.$message }}
+              </span>
+            </div>
+            <div class="w-full">
+              <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password
+                <span>*</span></label>
+              <input v-model="planInfo.uPassword" type="password" id="password"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+              <span v-for="error in v$User.uPassword.$errors" :key="error.$uid" class="field-msg">
+                {{ error.$message }}
+              </span>
+            </div>
+            <div class="w-full">
+              <label for="cpassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password
+                <span>*</span></label>
+              <input v-model="planInfo.uCPassword" type="password" id="cpassword"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+              <span v-for="error in v$User.uCPassword.$errors" :key="error.$uid" class="field-msg">
+                {{ error.$message }}
+              </span>
+            </div>
+            <!-- <span v-for="error in v$User.$errors" :key="error.uid">{{ error.$property }} - {{ error.$message }}</span> -->
           </div>
-          <div class="w-full">
-            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last
-              name <span>*</span></label>
-            <input type="text" id="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+          <div class="navigation-container">
+            <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+              @click="activeName = 'plan'">Previous</button>
+            <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+              @click="activeName = 'company-info'">Next</button> -->
+            <button type="submit" class="btn btn-primary btn-navigation"
+              style="margin-top: 12px; border-radius: 2px;">Next</button>
           </div>
-          <div class="w-full">
-            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
-              <span>*</span></label>
-            <input type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2"
-              required>
-          </div>
-          <div class="w-full">
-            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password
-              <span>*</span></label>
-            <input type="password" id="password"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-          </div>
-          <div class="w-full">
-            <label for="cpassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password
-              <span>*</span></label>
-            <input type="password" id="cpassword"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-          </div>
-        </div>
-        <div class="navigation-container">
-          <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-            @click="activeName = 'plan'">Previous</button>
-          <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-            @click="activeName = 'company-info'">Next</button>
-        </div>
+        </form>
       </el-tab-pane>
       <el-tab-pane name="company-info">
         <div class="tab-pane-header">
@@ -99,59 +121,80 @@
             <h1>Fill your account informations.</h1>
           </div>
         </div>
-        <div class="form-group">
-          <p class="mb-5">Company informations</p>
-          <div class="w-full">
-            <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
-              name <span>*</span></label>
-            <input type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-          </div>
-          <div class="w-full">
-            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adress
-              <span>*</span></label>
-            <input type="text" id="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-          </div>
-          <div class="w-full">
-            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Secondary
-              adress</label>
-            <input type="text" id="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-          </div>
-          <div class="w-full">
-            <div class="grid gap-6 md:grid-cols-4">
-              <div>
-                <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ZIP Code
-                  <span>*</span></label>
-                <input type="text" id="first_name"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-              </div>
-              <div>
-                <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City
-                  <span>*</span></label>
-                <input type="text" id="first_name"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-              </div>
-              <div class="md:col-span-2 mb-4">
-                <label for="last_name"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country</label>
-                <select id="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                  <option v-for="(country, index) in countries" :key="index">{{ country.name }}</option>
-                </select>
-              </div>
+        <form @submit.prevent="submitCompanyForm">
+          <div class="form-group">
+            <p class="mb-5">Company informations</p>
+            <div class="w-full">
+              <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
+                name <span>*</span></label>
+              <input v-model="planInfo.cName" type="text" id="first_name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+              <span v-for="error in v$Company.cName.$errors" :key="error.$uid" class="field-msg">
+                {{ error.$message }}
+              </span>
             </div>
-            <div class="w-full inline-flex items-center gap-2 mt-5">
-              <input type="checkbox" id="coding" name="interest" value="coding" />
-              <label for="coding">I read and accept <a href="" class="terms-conditions-link">Terms and Conditions</a> of
-                service.</label>
+            <div class="w-full">
+              <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adress
+                <span>*</span></label>
+              <input v-model="planInfo.cAdress" type="text" id="last_name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+              <span v-for="error in v$Company.cAdress.$errors" :key="error.$uid" class="field-msg">
+                {{ error.$message }}
+              </span>
             </div>
+            <div class="w-full">
+              <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Secondary
+                adress</label>
+              <input v-model="planInfo.cSAdress" type="text" id="last_name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+            </div>
+            <div class="w-full">
+              <div class="grid gap-6 md:grid-cols-4">
+                <div>
+                  <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ZIP Code
+                    <span>*</span></label>
+                  <input v-model="planInfo.cZip" type="text" id="first_name"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                  <span v-for="error in v$Company.cZip.$errors" :key="error.$uid" class="field-msg">
+                    {{ error.$message }}
+                  </span>
+                </div>
+                <div>
+                  <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City
+                    <span>*</span></label>
+                  <input v-model="planInfo.cCity" type="text" id="first_name"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                  <span v-for="error in v$Company.cCity.$errors" :key="error.$uid" class="field-msg">
+                    {{ error.$message }}
+                  </span>
+                </div>
+                <div class="md:col-span-2 mb-4">
+                  <label for="last_name"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country</label>
+                  <select v-model="planInfo.cCountry" id="last_name"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                    <option v-for="(country, index) in countries" :key="index">{{ country.name }}</option>
+                  </select>
+                  <span v-for="error in v$Company.cCountry.$errors" :key="error.$uid" class="field-msg">
+                    {{ error.$message }}
+                  </span>
+                </div>
+              </div>
+              <div class="w-full inline-flex items-center gap-2 mt-5">
+                <input v-model="planInfo.acceptConditions" type="checkbox" id="coding" name="interest" value="coding" />
+                <label for="coding">I read and accept <a href="" class="terms-conditions-link">Terms and Conditions</a> of
+                  service.</label>
+              </div>
 
+            </div>
           </div>
-        </div>
-        <div class="navigation-container">
-          <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-            @click="activeName = 'user-info'">Previous</button>
-          <button class="btn btn-primary-2 btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-            @click="activeName = 'checkout'">Sign In</button>
-        </div>
+          <div class="navigation-container">
+            <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+              @click="activeName = 'user-info'">Previous</button>
+            <button type="submit" v-if="planInfo.acceptConditions" class="btn btn-primary-2 btn-navigation"
+              style="margin-top: 12px; border-radius: 2px;">Sign In</button>
+          </div>
+        </form>
       </el-tab-pane>
 
       <el-tab-pane name="checkout">
@@ -162,8 +205,12 @@
           </div>
         </div>
         <div class="navigation-container">
-          <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-            @click="activeName = 'company-info'">Previous</button>
+          <div class="w-full">
+            <div class="grid gap-6 md:grid-cols-2">
+            </div>
+          </div>
+          <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+            @click="activeName = 'company-info'">Previous</button> -->
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -171,11 +218,56 @@
 </template>
 
 <script setup>
-import { ref, provide } from 'vue';
+import { ref, provide, computed } from 'vue';
 import { ElTabs, ElTabPane } from 'element-plus';
 import PlanCard from '@Components/subscription/PlanCard.vue';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
+import useVuelidate from '@vuelidate/core'
+import { required, minLength, email, sameAs, helpers } from '@vuelidate/validators'
+
+const planInfo = ref({});
+
+const userRules = computed(() => {
+  return {
+    uFName: { required },
+    uLName: { required },
+    uEmail: { required, email },
+    uPassword: { required, minLength: minLength(8) },
+    uCPassword: { required, sameAs: helpers.withMessage("The value must be equal to the password value.", sameAs(planInfo.value.uPassword)) }
+  }
+});
+
+const companyRules = computed(() => {
+  return {
+    cName: { required },
+    cAdress: { required },
+    cCity: { required },
+    cCountry: { required },
+    cZip: { required },
+  }
+});
+
+const v$User = useVuelidate(userRules, planInfo);
+const v$Company = useVuelidate(companyRules, planInfo);
+
+const submitUserForm = async () => {
+  const result = await v$User.value.$validate();
+  if (result) {
+    activeName.value = 'company-info';
+  } else {
+    console.log("error");
+  }
+}
+
+const submitCompanyForm = async () => {
+  const result = await v$Company.value.$validate();
+  if (result) {
+    activeName.value = 'checkout';
+  } else {
+    console.log("error");
+  }
+}
 
 const countries = ref([
   { name: 'Afghanistan', code: 'AF' },
@@ -422,6 +514,7 @@ const countries = ref([
   { name: 'Zambia', code: 'ZM' },
   { name: 'Zimbabwe', code: 'ZW' }
 ])
+
 const activeName = ref('plan');
 const activeStaffTab = ref('plan_list')
 const plan_to_update = ref(null);
@@ -445,8 +538,8 @@ const checkout_to_update = ref(null);
 provide('checkout_to_update', checkout_to_update);
 
 const setPlan = (name, eNumber) => {
-  console.log(name);
-  console.log(eNumber);
+  planInfo.value['planName'] = name;
+  planInfo.value['establishmentNumber'] = eNumber;
   activeName.value = 'user-info'
 }
 
@@ -584,7 +677,17 @@ const setPlan = (name, eNumber) => {
   width: 100%;
 }
 
-.subscription__container .form-group .w-full {
-  margin-block: 8px;
+.subscription__container .form-group label {
+  margin-top: 16px;
+}
+
+.subscription__container button[type=submit] {
+  background-color: var(--color-danger) !important;
+  color: var(--color-white) !important;
+}
+
+.subscription__container .field-msg {
+  font-size: 14px;
+  color: var(--color-danger);
 }
 </style>
