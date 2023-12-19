@@ -21,22 +21,8 @@
                         <h2>Comparison</h2>
                     </div>
                 </div>
-                <div v-if="chartLoading == true" :style="{
-                    'width': `100%`,
-                    'height': `200px`,
-                    'display': 'flex',
-                    'alignItems': 'center',
-                    'background': 'rgba(0, 0, 0, 0.1)',
-                    'opacity': 0.9,
-                    'justifyContent': 'center',
-                    'alignItems': 'center',
-                    'zIndex': 1,
-                    'marginTop': '10px',
-                    'marginBottom': '10px'
-                }">
-                    <SpinnerComponent />
-                </div>
-                <ComparisonChartComponent v-else :data="plotdata" :width="chart__width" :chartheight="chart__height"
+               
+                <ComparisonChartComponent :data="plotdata" :width="chart__width" :chartheight="chart__height"
                     :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors"
                     :timePeriod="selectedTimePeriod" />
                 <BaseLegend v-if="chartLoading == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
@@ -641,14 +627,9 @@ const gotoReviewPage = (id, tag) => {
  * useWindowScroll allows us to detect the scroll event on 
  * the browser
  */
-// const { width, height } = useWindowSize();
-//For Group bar chart
 const chart__width = ref(800);
 const chart__height = ref(300);
 
-//For Line chart
-// const chart__width2 = ref(300);
-// const chart__height2 = ref(200);
 
 watch([start_date, end_date, selectedWebsites], () => {
     viewData()
@@ -668,35 +649,10 @@ watch(selectedTimePeriod, async () => {
     viewData()
 })
 
-// const goto = (value) => {
-//     router.push({ name: value });
-// };
-
 let selectedStars = ref('0');
 const starFilter = (star) => {
     selectedStars.value = parseInt(star, 10);
 };
-
-// const filterReviewsByStar = (star, data) => {
-//     let result = [];
-//     data.forEach(review => {
-//         let rating = companiesStore.formatRating(review.rating);
-//         rating = rating > 5 ? rating / 2 : rating;
-//         if (Math.abs(rating) == star) result.push(review);
-//     })
-//     return result;
-// }
-
-
-// const reloadStarData = () => {
-//     let scores = [1, 2, 3, 4, 5];
-//     let filteredReviews = _reviews.value;
-//     let rating = scores.filter((element) => !selectedStars.value.includes(element));
-//     if (selectedStars.value.length > 0) {
-//         let result = filterReviewsByStar(rating, filteredReviews);
-//         filteredReviews = result;
-//     }
-// }
 
 watch(selectedStars, () => {
     loadReviews(companyId.value, 1, options.value['rowLimit'], 1, '', '', selectedWebsites.value, selectedStars.value);
@@ -854,11 +810,6 @@ const loadIndiceData = async (tag, dateStart, dateEnd) => {
     }
     apiParams += `&from=${dateStart}&to=${dateEnd}`;
 
-    // if (IsValueOkay(source)) {
-    //     source = (source == 'App (Private)') ? source : source.toLowerCase();
-    //     apiParams += `&platform=${source}`
-    // }
-
     const api = apiBase + '?' + apiParams;
     console.log(api)
 
@@ -905,32 +856,6 @@ onBeforeMount(async () => {
             websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
         }
     })
-
-    // if (response.status == 200) {
-
-    //     establishment.value = response.data;
-    //     establishment.value['tag'] = companyId.value;
-    //     appStore.isLoading = false;
-    //     page.value.title2 = establishment.value.name;
-    //     all_items.value[3].value = establishment.value.competitors.length;
-
-    //     establishmentLoading.value = false
-    //     globalComparison();
-    //     websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
-    // }
-
-    // const response3 = await new Promise((resolve, reject) => {
-    //     services.get_Record(`charts/stars?tag=${companyId.value}`, (response) => {
-    //         resolve(response)
-    //     });
-    // });
-
-    // if (response3.status == 200) {
-    //     if (response3.data && response3.data.data) {
-    //         starsData.value = formatStarsData(response3.data.data)
-    //         starsLoading.value = false
-    //     }
-    // }
 });
 </script>
 

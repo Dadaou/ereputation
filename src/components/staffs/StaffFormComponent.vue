@@ -35,7 +35,7 @@
                 <div>
                     <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span>*</span></label>
                     <el-select v-model="establishment" placeholder="Choose establishment" size="large">
-                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name" :value="`/api/${companiesStore.entity}/${item.id}`"/>
+                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name" :value="`/api/establishments/${item.id}`"/>
                     </el-select>
                 </div>
             </div>
@@ -192,10 +192,11 @@ const submit = async ()=>{
         "lastname": lastname.value,
         "department": department.value,
         "datefrom": moment(startDate.value).format('YYYY-MM-DD'),
-        "dateto": endDate.value==null?null:moment(endDate.value).format('YYYY-MM-DD'),
+        "dateto": (endDate.value==null ||endDate.value == "")?null:moment(endDate.value).format('YYYY-MM-DD'),
         "establishment": establishment.value,
     }
 
+    console.log(staff);
     try {
         if(gender.value != '' && department.value != '' && startDate.value != null && establishment.value != '' && firstname.value != ''){
              showSpinner.value = true;

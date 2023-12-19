@@ -25,7 +25,7 @@
                                 v-for="item in userStore.user.customer.establishments"
                                 :key="item.id"
                                 :label="item.name"
-                                :value="`/api/${companiesStore.entity}/${item.id}`"
+                                :value="`/api/establishments/${item.id}`"
                                 />
                             </el-select>
                         </div>

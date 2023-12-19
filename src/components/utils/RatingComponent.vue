@@ -1,7 +1,7 @@
 <template>
 <div class="society__rating">
     <div class="reviews">
-       <div class="rating__observation">
+       <div class="rating__observation" v-if="rating > 0">
        {{feeling}}
        </div>
        <div class="reviews__value">

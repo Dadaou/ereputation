@@ -2,7 +2,8 @@
 <div class="main__container" v-if="exist">
     <HeadComponent :page="page"></HeadComponent> 
     <div class="feedback__form">
-        We appreciate your anonymous feedback. Your insights are crucial in our journey to better serve you. Rest assured that your input will be used to drive positive changes, and we're dedicated to delivering an improved experience. Thank you for sharing your thoughts with us.
+        Thank you for your valuable feedback.
+        If you have provided your email, you will soon receive a benefit to use at our establishment. We look forward to seeing you again soon and wish you a pleasant day.
     </div>
 </div>
 <EstablishmentNotFound v-else/>
