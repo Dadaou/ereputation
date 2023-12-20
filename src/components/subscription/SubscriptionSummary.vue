@@ -45,24 +45,16 @@
             </div>
             <table>
                 <tr>
-                    <td>Name</td>
-                    <td>: Knocky</td>
+                    <td>First Name</td>
+                    <td>: {{ data.uFName }}</td>
                 </tr>
                 <tr>
-                    <td>Race</td>
-                    <td>: Jack Russell</td>
+                    <td>Last Name</td>
+                    <td>: {{ data.uLName }}</td>
                 </tr>
                 <tr>
-                    <td>Age</td>
-                    <td>: 16</td>
-                </tr>
-                <tr>
-                    <td>Propriétaire</td>
-                    <td>: Belle-mère</td>
-                </tr>
-                <tr>
-                    <td>Habitudes alimentaires</td>
-                    <td>: Mange tous les restes</td>
+                    <td>Email</td>
+                    <td>: {{ data.uEmail }}</td>
                 </tr>
             </table>
         </div>
@@ -73,23 +65,19 @@
             <table>
                 <tr>
                     <td>Name</td>
-                    <td>: Knocky</td>
+                    <td>: {{ data.cName }}</td>
                 </tr>
                 <tr>
-                    <td>Race</td>
-                    <td>: Jack Russell</td>
+                    <td>Adress</td>
+                    <td>: {{ data.cAdress }}</td>
                 </tr>
                 <tr>
-                    <td>Age</td>
-                    <td>: 16</td>
+                    <td>Second Adress</td>
+                    <td>: {{ data.cSAdress }}</td>
                 </tr>
                 <tr>
-                    <td>Propriétaire</td>
-                    <td>: Belle-mère</td>
-                </tr>
-                <tr>
-                    <td>Habitudes alimentaires</td>
-                    <td>: Mange tous les restes</td>
+                    <td>Location</td>
+                    <td>: {{ data.cZip }} {{ data.cCity }}, {{ data.cCountry }}</td>
                 </tr>
             </table>
         </div>
