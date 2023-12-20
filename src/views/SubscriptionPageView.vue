@@ -2,7 +2,7 @@
   <div class="subscription__container">
     <div class="subscription-page-header">
       <div class="container" style="padding-inline: 16px;">
-        <a :href="baseurl" class="flex items-center">
+        <a :href="'/'" class="flex items-center">
           <span class="self-center text-xl font-bold whitespace-nowrap dark:text-white"
             style="color: var(--color-danger)">eReputation</span>
         </a>
@@ -19,7 +19,7 @@
             <h1>Choose your plan.</h1>
           </div>
         </div>
-        <div class="plan-container" ref="planContainer">
+        <div v-if="plans" class="plan-container" ref="planContainer">
           <plan-card v-for="item in plans" :key="item.tag" :data="item" @selected="setPlan"></plan-card>
           <!-- <plan-card name="Basic 1-Year" :price="9.99" devise="$" :active="selectedPlan == 'basic-1'" :items="[
             '1 establishement (1 QR CODE by establishment)',
