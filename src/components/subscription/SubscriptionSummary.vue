@@ -46,15 +46,15 @@
             <table>
                 <tr>
                     <td>First Name</td>
-                    <td>: {{ data.uFName }}</td>
+                    <td>: {{ data.uFName || '──' }}</td>
                 </tr>
                 <tr>
                     <td>Last Name</td>
-                    <td>: {{ data.uLName }}</td>
+                    <td>: {{ data.uLName || '──' }}</td>
                 </tr>
                 <tr>
                     <td>Email</td>
-                    <td>: {{ data.uEmail }}</td>
+                    <td>: <strong>{{ data.uEmail || '──' }}</strong></td>
                 </tr>
             </table>
         </div>
@@ -65,15 +65,15 @@
             <table>
                 <tr>
                     <td>Name</td>
-                    <td>: {{ data.cName }}</td>
+                    <td>: <strong>{{ data.cName || '──' }}</strong></td>
                 </tr>
                 <tr>
                     <td>Adress</td>
-                    <td>: {{ data.cAdress }}</td>
+                    <td>: {{ data.cAdress || '──' }}</td>
                 </tr>
                 <tr>
                     <td>Second Adress</td>
-                    <td>: {{ data.cSAdress }}</td>
+                    <td>: {{ data.cSAdress || '──' }}</td>
                 </tr>
                 <tr>
                     <td>Location</td>
