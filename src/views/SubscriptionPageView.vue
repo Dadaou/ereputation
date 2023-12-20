@@ -20,7 +20,8 @@
           </div>
         </div>
         <div class="plan-container" ref="planContainer">
-          <plan-card name="Basic 1-Year" :price="9.99" devise="$" :active="selectedPlan == 'basic-1'" :items="[
+          <plan-card v-for="item in plans" :key="item.tag" :data="item" @selected="setPlan"></plan-card>
+          <!-- <plan-card name="Basic 1-Year" :price="9.99" devise="$" :active="selectedPlan == 'basic-1'" :items="[
             '1 establishement (1 QR CODE by establishment)',
             'Illimited intern reviews',
             'Illimited leads',
@@ -40,7 +41,7 @@
             'Illimited events',
             'Illimited monitored points of sale (QR Codes illimited)',
             'Leads integration in your CRM',
-            'Sales integration (API)']" @click="selectedPlan = 'premium'" @selected="setPlan"></plan-card>
+            'Sales integration (API)']" @click="selectedPlan = 'premium'" @selected="setPlan"></plan-card> -->
         </div>
         <!-- <div class="navigation-container">
           <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
@@ -204,11 +205,58 @@
             <h1>Checkout</h1>
           </div>
         </div>
-        <div class="navigation-container">
-          <div class="w-full">
-            <div class="grid gap-6 md:grid-cols-2">
+        <div class="w-full">
+          <div class="flex flex-col items-start lg:flex-row lg:space-x-8 p-4">
+            <div class="flex-1">
+              <SubscriptionSummary :data="planInfo"></SubscriptionSummary>
+            </div>
+            <div class="shrink-0 lg:order-2">
+              <div class="summary-card">
+                <div class="summary-card__content">
+                  <div class="app__title">
+                    <h1>Order Summary</h1>
+                  </div>
+                  <table class="w-full">
+                    <tr>
+                      <td>Plan</td>
+                      <td>Knocky</td>
+                    </tr>
+                    <tr>
+                      <td>Subtotal</td>
+                      <td>700$</td>
+                    </tr>
+                    <tr>
+                      <td>Order Total</td>
+                      <td>700$</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="summary-card shrink-0 lg:order-2">
+                <div class="summary-card__content">
+                  <div class="app__title">
+                    <h1>Payment information</h1>
+                  </div>
+                  <table class="w-full">
+                    <tr>
+                      <td>Plan</td>
+                      <td>Knocky</td>
+                    </tr>
+                    <tr>
+                      <td>Subtotal</td>
+                      <td>700$</td>
+                    </tr>
+                    <tr>
+                      <td>Order Total</td>
+                      <td>700$</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
+        <div class="navigation-container">
           <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
             @click="activeName = 'company-info'">Previous</button> -->
         </div>
@@ -218,13 +266,16 @@
 </template>
 
 <script setup>
-import { ref, provide, computed } from 'vue';
+import { ref, provide, computed, onBeforeMount } from 'vue';
 import { ElTabs, ElTabPane } from 'element-plus';
 import PlanCard from '@Components/subscription/PlanCard.vue';
+import SubscriptionSummary from '@Components/subscription/SubscriptionSummary.vue';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
-import useVuelidate from '@vuelidate/core'
-import { required, minLength, email, sameAs, helpers } from '@vuelidate/validators'
+import useVuelidate from '@vuelidate/core';
+import { required, minLength, email, sameAs, helpers } from '@vuelidate/validators';
+import services from '@Services/services.js';
+import { useAppStore } from "@Stores/app.js";
 
 const planInfo = ref({});
 
@@ -268,6 +319,55 @@ const submitCompanyForm = async () => {
     console.log("error");
   }
 }
+
+const plans = ref([]);
+
+const activeName = ref('plan');
+const activeStaffTab = ref('plan_list')
+const plan_to_update = ref(null);
+provide('plan_to_update', plan_to_update);
+provide('plan_activeTab', activeStaffTab);
+
+const activeEventTab = ref('account_list')
+const selectedPlan = ref('');
+const planContainer = ref(null);
+
+provide('account_activeTab', activeEventTab);
+
+const activeAdvantageTab = ref('checkout_list')
+provide('checkout_activeTab', activeAdvantageTab);
+
+
+const account_to_update = ref(null);
+provide('account_to_update', account_to_update);
+
+const checkout_to_update = ref(null);
+provide('checkout_to_update', checkout_to_update);
+
+const setPlan = (data, eNumber, total) => {
+  planInfo.value['planName'] = data.name;
+  planInfo.value['plan'] = data;
+  planInfo.value['total'] = total;
+  planInfo.value['establishmentNumber'] = eNumber;
+  activeName.value = 'user-info';
+}
+
+const appStore = useAppStore();
+
+onBeforeMount(async () => {
+  const response = await new Promise((resolve) => {
+    services.get_Record('/plan/list', (response) => {
+      resolve(response)
+      if (response.status == 404) {
+        appStore.isLoading = false;
+      }
+    });
+  });
+
+  if (response.status == 200 && response.data) {
+    plans.value = response.data;
+  }
+})
 
 const countries = ref([
   { name: 'Afghanistan', code: 'AF' },
@@ -515,34 +615,6 @@ const countries = ref([
   { name: 'Zimbabwe', code: 'ZW' }
 ])
 
-const activeName = ref('plan');
-const activeStaffTab = ref('plan_list')
-const plan_to_update = ref(null);
-provide('plan_to_update', plan_to_update);
-provide('plan_activeTab', activeStaffTab);
-
-const activeEventTab = ref('account_list')
-const selectedPlan = ref('');
-const planContainer = ref(null);
-
-provide('account_activeTab', activeEventTab);
-
-const activeAdvantageTab = ref('checkout_list')
-provide('checkout_activeTab', activeAdvantageTab);
-
-
-const account_to_update = ref(null);
-provide('account_to_update', account_to_update);
-
-const checkout_to_update = ref(null);
-provide('checkout_to_update', checkout_to_update);
-
-const setPlan = (name, eNumber) => {
-  planInfo.value['planName'] = name;
-  planInfo.value['establishmentNumber'] = eNumber;
-  activeName.value = 'user-info'
-}
-
 </script>
 <style>
 .terms-conditions-link {
@@ -565,7 +637,7 @@ const setPlan = (name, eNumber) => {
 .subscription-page-header {
   width: 100vw;
   height: 5rem;
-  position: sticky;
+  position: fixed;
   top: 0;
   z-index: 11;
   color: var(--color-white);
@@ -612,9 +684,9 @@ const setPlan = (name, eNumber) => {
   margin-block: 16px;
 }
 
-/* .subscription-tabs {
-  padding: 32px 0;
-} */
+.subscription-tabs {
+  margin-top: 80px;
+}
 
 .subscription-tabs .el-tabs__header {
   display: none;
@@ -689,5 +761,54 @@ const setPlan = (name, eNumber) => {
 .subscription__container .field-msg {
   font-size: 14px;
   color: var(--color-danger);
+}
+
+.summary-card {
+  display: flex;
+  /* flex-direction: column;
+  justify-content: flex-start;
+  text-align: center; */
+  box-shadow: rgba(149, 157, 165, 0.2) 2px 4px 16px;
+  flex-basis: 150px;
+  padding: 28px 38px;
+  border-radius: 10px;
+  border-radius: 12px;
+  border: 1px outset rgba(149, 157, 165, 0.1);
+  cursor: pointer;
+}
+
+.summary-card__content {
+  width: 360px;
+}
+
+.account-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 28px 24px 0 0;
+}
+
+.account-summary .summary-card__content {
+  width: 100%;
+}
+
+.summary-card__content h1 {
+  border-bottom: rgba(116, 116, 116, .4) 1px solid;
+  width: 100%;
+  margin-block: 12px 8px;
+}
+
+.account-summary table td {
+  padding-right: 16px;
+}
+
+@media (max-width: 768px) {
+  .summary-card__content {
+    width: 100%;
+  }
+
+  .summary-card {
+    width: 100%;
+  }
 }
 </style>
