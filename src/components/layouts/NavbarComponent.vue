@@ -45,6 +45,13 @@
                 Contacts
               </RouterLink>
             </li>
+            <li @click="closeDropdown">
+              <RouterLink :to="`/customer/${userStore.user.customer.tag}/account/parameters`"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <i class="uil uil-setting"></i>
+                Parameters
+              </RouterLink>
+            </li>
             <!--  <li @click="closeDropdown">
               <RouterLink 
                 :to="`/customer/${userStore.user.customer.tag}/account/security`"
