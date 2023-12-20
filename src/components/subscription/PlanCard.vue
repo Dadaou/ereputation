@@ -36,46 +36,6 @@ const props = defineProps({
         type: Object,
         required: true,
     }
-    // name: {
-    //     type: String,
-    //     required: false,
-    //     default: ""
-    // },
-    // active: {
-    //     type: Boolean,
-    //     required: false,
-    //     default: false
-    // },
-    // price: {
-    //     type: Number,
-    //     required: false,
-    //     default: 0
-    // },
-    // devise: {
-    //     type: String,
-    //     required: false,
-    //     default: "$"
-    // },
-    // addprice: {
-    //     type: Number,
-    //     required: false,
-    //     default: 0
-    // },
-    // hasinput: {
-    //     type: Boolean,
-    //     required: false,
-    //     default: false
-    // },
-    // items: {
-    //     type: Array,
-    //     required: false,
-    //     default: () => []
-    // },
-    // premium: {
-    //     type: Boolean,
-    //     required: false,
-    //     default: false
-    // }
 })
 
 const emits = defineEmits(['selected']);

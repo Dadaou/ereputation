@@ -1,5 +1,5 @@
 <template>
-    <div class="account-summary">
+    <div v-if="data && data.plan" class="account-summary">
         <div class="summary-card__content">
             <div class="app__title">
                 <h1>Plan Details</h1>
@@ -10,16 +10,32 @@
                     <td>: <span class="plan-name">{{ data.planName || '' }}</span></td>
                 </tr>
                 <tr>
-                    <td>Age</td>
-                    <td>: 16</td>
+                    <td>Establishment(s)</td>
+                    <td>: {{ data.establishmentNumber || 'Illimited' }}</td>
                 </tr>
                 <tr>
-                    <td>Propriétaire</td>
-                    <td>: Belle-mère</td>
+                    <td>Intern reviews</td>
+                    <td>: Illimited</td>
                 </tr>
                 <tr>
-                    <td>Habitudes alimentaires</td>
-                    <td>: Mange tous les restes</td>
+                    <td>Leads</td>
+                    <td>: Illimited</td>
+                </tr>
+                <tr>
+                    <td>Events</td>
+                    <td>: {{ data.plan.event_limit || 'Illimited' }}</td>
+                </tr>
+                <tr>
+                    <td>Monitored points of sale</td>
+                    <td>: {{ data.plan.pointofsale_limit || 'Illimited' }}</td>
+                </tr>
+                <tr>
+                    <td>Leads integration in your CRM</td>
+                    <td>: <i class="uil" :class="data.plan.crm ? 'uil-check-square' : 'uil-times-square'"></i></td>
+                </tr>
+                <tr>
+                    <td>Sales integration (API)</td>
+                    <td>: <i class="uil" :class="data.plan.sale ? 'uil-check-square' : 'uil-times-square'"></i></td>
                 </tr>
             </table>
         </div>
@@ -94,6 +110,18 @@ const props = defineProps({
     color: var(--color-bg);
 }
 
+.uil-check-square {
+    color: var(--el-color-success);
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.uil-times-square {
+    color: var(--color-danger3);
+    font-size: 20px;
+    font-weight: 700;
+}
+
 .plan-name {
     border-radius: 20px;
     padding: 4px 12px;
@@ -140,6 +168,7 @@ const props = defineProps({
 .account-summary table td {
     padding-right: 16px;
     padding-block: 4px;
+    font-size: .85rem;
 }
 
 @media (max-width: 768px) {
