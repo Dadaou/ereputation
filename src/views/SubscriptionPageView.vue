@@ -219,15 +219,15 @@
                   <table class="w-full">
                     <tr>
                       <td>Plan</td>
-                      <td>Knocky</td>
+                      <td style="text-align:right;"><strong>{{ planInfo.plan.name }}</strong></td>
                     </tr>
                     <tr>
                       <td>Subtotal</td>
-                      <td>700$</td>
+                      <td style="text-align:right;">{{ planInfo.total }}{{ planInfo.plan.currency }}</td>
                     </tr>
                     <tr>
                       <td>Order Total</td>
-                      <td>700$</td>
+                      <td style="text-align:right;"><strong>{{ planInfo.total }}{{ planInfo.plan.currency }}</strong></td>
                     </tr>
                   </table>
                 </div>
@@ -781,25 +781,15 @@ const countries = ref([
   width: 360px;
 }
 
-.account-summary {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 28px 24px 0 0;
-}
-
-.account-summary .summary-card__content {
-  width: 100%;
-}
-
 .summary-card__content h1 {
   border-bottom: rgba(116, 116, 116, .4) 1px solid;
   width: 100%;
   margin-block: 12px 8px;
 }
 
-.account-summary table td {
-  padding-right: 16px;
+.summary-card__content table td {
+  padding-block: 4px;
+  font-size: .85rem;
 }
 
 @media (max-width: 768px) {
