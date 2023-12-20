@@ -211,7 +211,7 @@
               <SubscriptionSummary :data="planInfo"></SubscriptionSummary>
             </div>
             <div class="shrink-0 lg:order-2">
-              <div class="summary-card">
+              <div v-if="planInfo && planInfo.plan" class="summary-card">
                 <div class="summary-card__content">
                   <div class="app__title">
                     <h1>Order Summary</h1>
@@ -361,7 +361,7 @@ onBeforeMount(async () => {
       if (response.status == 404) {
         appStore.isLoading = false;
       }
-    });
+    }, true);
   });
 
   if (response.status == 200 && response.data) {
