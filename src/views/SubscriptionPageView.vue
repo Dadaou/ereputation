@@ -262,53 +262,22 @@ import PlanCard from '@Components/subscription/PlanCard.vue';
 import SubscriptionSummary from '@Components/subscription/SubscriptionSummary.vue';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
-// import useVuelidate from '@vuelidate/core';
-// import { required, minLength, email, sameAs, helpers } from '@vuelidate/validators';
+import moment from 'moment';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { loadStripe } from '@stripe/stripe-js';
 
 const planInfo = ref({});
 
-// const userRules = computed(() => {
-//   return {
-//     uFName: { required },
-//     uLName: { required },
-//     uEmail: { required, email },
-//     uPassword: { required, minLength: minLength(8) },
-//     uCPassword: { required, sameAs: helpers.withMessage("The value must be equal to the password value.", sameAs(planInfo.value.uPassword)) }
-//   }
-// });
-
-// const companyRules = computed(() => {
-//   return {
-//     cName: { required },
-//     cAdress: { required },
-//     cCity: { required },
-//     cCountry: { required },
-//     cZip: { required },
-//   }
-// });
-
-// const v$User = useVuelidate(userRules, planInfo);
-// const v$Company = useVuelidate(companyRules, planInfo);
-
 const submitUserForm = async () => {
-  // const result = await v$User.value.$validate();
-  // if (result) {
   activeName.value = 'company-info';
-  // } else {
-  //   console.log("error");
-  // }
 }
 
 const submitCompanyForm = async () => {
-  // const result = await v$Company.value.$validate();
-  // if (result) {
-  activeName.value = 'checkout';
-  // } else {
-  //   console.log("error");
-  // }
+  createAccount().then((response) => {
+    planInfo.value.customer = response.customer.tag;
+    activeName.value = 'checkout';
+  }).catch((error) => { console.log(error); })
 }
 
 let stripe = null;
@@ -344,6 +313,49 @@ const setPlan = (data, eNumber, total) => {
   planInfo.value['total'] = total;
   planInfo.value['establishmentNumber'] = eNumber;
   activeName.value = 'user-info';
+}
+
+const createAccount = async () => {
+  const response = await new Promise((resolve) => {
+    services.post_Record('/account/create', {
+      name: planInfo.value.cName,
+      firstname: planInfo.value.uFName,
+      lastname: planInfo.value.uLName,
+      password: planInfo.value.uPassword,
+      email: planInfo.value.uEmail,
+      city: planInfo.value.cCity,
+      zipcode: planInfo.value.cZip,
+      country: planInfo.value.cCountry,
+      address1: planInfo.value.cAdress,
+      address2: planInfo.value.cSAdress,
+      plan: planInfo.value.plan.tag
+    }, (response) => {
+      resolve(response)
+    }, true);
+  });
+
+  if (response.status == 200 && response.data) {
+    return response.data;
+  }
+}
+
+const subscribe = async () => {
+  const response = await new Promise((resolve) => {
+    services.post_Record('/subscription/create', {
+      customer: planInfo.value.customer,
+      plan: planInfo.value.plan.tag,
+      amount: planInfo.value.total,
+      email: planInfo.value.uEmail,
+      updated_at: moment().format('YYYY-MM-DD'),
+      expired_at: moment().add(366, 'days').format('YYYY-MM-DD')
+    }, (response) => {
+      resolve(response)
+    }, true);
+  });
+
+  if (response.status == 200 && response.data) {
+    return response.data;
+  }
 }
 
 const appStore = useAppStore();

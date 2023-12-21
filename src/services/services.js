@@ -120,6 +120,34 @@ const get_Record = async (url, next, isPublic = false) => {
   }
 }
 
+const post_Record = async (url, body, next, isPublic = false) => {
+  const headers = {
+    'Content-Type': 'application/json'
+  }
+
+  if (!isPublic) {
+    headers['Authorization'] = `Bearer ${localStorage.getItem('access')}`
+
+    try {
+      if (checkConnexionInfo()) {
+        await axiosInstance.post(`${url}`, body, { headers }).then((response) => {
+          next(response)
+        })
+      }
+    } catch (error) {
+      return next(error.response)
+    }
+  } else {
+    try {
+      await publicAxiosInstance.post(`${url}`, body, { headers }).then((response) => {
+        next(response)
+      })
+    } catch (error) {
+      return next(error.response)
+    }
+  }
+}
+
 const createRecord = async (entity, value, next) => {
   const headers = {
     'Content-Type': 'application/json',
@@ -246,5 +274,6 @@ export default {
   login_2nd,
   setUser,
   getRecordsByParams,
-  reviewAnalysis
+  reviewAnalysis,
+  post_Record
 }
