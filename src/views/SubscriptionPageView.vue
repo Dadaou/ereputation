@@ -239,7 +239,7 @@
                   </div>
                   <div class="w-full my-8" id="payment-element"></div>
                   <div style="text-align: right"><button class="btn btn-primary-2"
-                      style="margin-top: 12px; border-radius: 2px;">Process to
+                      style="margin-top: 12px; border-radius: 2px;" @click="() => subscribe()">Process to
                       payment</button></div>
                 </div>
               </div>
