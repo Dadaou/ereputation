@@ -232,25 +232,15 @@
                   </table>
                 </div>
               </div>
-              <div class="summary-card shrink-0 lg:order-2">
+              <div class="summary-card shrink-0 lg:order-2 my-4">
                 <div class="summary-card__content">
                   <div class="app__title">
                     <h1>Payment information</h1>
                   </div>
-                  <table class="w-full">
-                    <tr>
-                      <td>Plan</td>
-                      <td>Knocky</td>
-                    </tr>
-                    <tr>
-                      <td>Subtotal</td>
-                      <td>700$</td>
-                    </tr>
-                    <tr>
-                      <td>Order Total</td>
-                      <td>700$</td>
-                    </tr>
-                  </table>
+                  <div class="w-full my-8" id="payment-element"></div>
+                  <div style="text-align: right"><button class="btn btn-primary-2"
+                      style="margin-top: 12px; border-radius: 2px;">Process to
+                      payment</button></div>
                 </div>
               </div>
             </div>
@@ -266,7 +256,7 @@
 </template>
 
 <script setup>
-import { ref, provide, onBeforeMount } from 'vue';
+import { ref, provide, onBeforeMount, onMounted } from 'vue';
 import { ElTabs, ElTabPane } from 'element-plus';
 import PlanCard from '@Components/subscription/PlanCard.vue';
 import SubscriptionSummary from '@Components/subscription/SubscriptionSummary.vue';
@@ -276,6 +266,7 @@ import 'element-plus/es/components/tab-pane/style/css';
 // import { required, minLength, email, sameAs, helpers } from '@vuelidate/validators';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
+import { loadStripe } from '@stripe/stripe-js';
 
 const planInfo = ref({});
 
@@ -319,6 +310,9 @@ const submitCompanyForm = async () => {
   //   console.log("error");
   // }
 }
+
+let stripe = null;
+let stripeElements = null;
 
 const plans = ref([]);
 
@@ -367,6 +361,19 @@ onBeforeMount(async () => {
   if (response.status == 200 && response.data) {
     plans.value = response.data;
   }
+})
+
+onMounted(async () => {
+  stripe = await loadStripe(import.meta.env.VITE_PUBLIC_STRIPE_KEY);
+
+  stripeElements = stripe.elements({
+    mode: "payment",
+    amount: 1999,
+    currency: "usd"
+  })
+
+  const paymentElement = stripeElements.create("payment");
+  paymentElement.mount("#payment-element");
 })
 
 const countries = ref([
