@@ -106,8 +106,8 @@
             <!-- <span v-for="error in v$User.$errors" :key="error.uid">{{ error.$property }} - {{ error.$message }}</span> -->
           </div>
           <div class="navigation-container">
-            <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-              @click="activeName = 'plan'">Previous</button>
+            <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+              @click="activeName = 'plan'">Previous</button> -->
             <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
               @click="activeName = 'company-info'">Next</button> -->
             <button type="submit" class="btn btn-primary btn-navigation"
@@ -190,8 +190,8 @@
             </div>
           </div>
           <div class="navigation-container">
-            <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-              @click="activeName = 'user-info'">Previous</button>
+            <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+              @click="activeName = 'user-info'">Previous</button> -->
             <button type="submit" v-if="planInfo.acceptConditions" class="btn btn-primary-2 btn-navigation"
               style="margin-top: 12px; border-radius: 2px;">Sign In</button>
           </div>
@@ -246,10 +246,10 @@
             </div>
           </div>
         </div>
-        <div class="navigation-container">
-          <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+        <!-- <div class="navigation-container"> -->
+        <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
             @click="activeName = 'company-info'">Previous</button> -->
-        </div>
+        <!-- </div> -->
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -266,6 +266,7 @@ import moment from 'moment';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { loadStripe } from '@stripe/stripe-js';
+import { useRouter } from 'vue-router';
 
 const planInfo = ref({});
 
@@ -306,6 +307,8 @@ provide('account_to_update', account_to_update);
 
 const checkout_to_update = ref(null);
 provide('checkout_to_update', checkout_to_update);
+
+const router = useRouter();
 
 const setPlan = (data, eNumber, total) => {
   planInfo.value['planName'] = data.name;
@@ -354,7 +357,12 @@ const subscribe = async () => {
   });
 
   if (response.status == 200 && response.data) {
-    return response.data;
+    console.log(response.data);
+    if (response.data != "ok") {
+      alert("An error was occured!");
+    } else {
+      router.push(`/`);
+    }
   }
 }
 
