@@ -63,45 +63,45 @@
                 name <span>*</span></label>
               <input v-model="planInfo.uFName" type="text" id="first_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-              <span v-for="error in v$User.uFName.$errors" :key="error.$uid" class="field-msg">
+              <!-- <span v-for="error in v$User.uFName.$errors" :key="error.$uid" class="field-msg">
                 {{ error.$message }}
-              </span>
+              </span> -->
             </div>
             <div class="w-full">
               <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last
                 name <span>*</span></label>
               <input v-model="planInfo.uLName" type="text" id="last_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-              <span v-for="error in v$User.uLName.$errors" :key="error.$uid" class="field-msg">
+              <!-- <span v-for="error in v$User.uLName.$errors" :key="error.$uid" class="field-msg">
                 {{ error.$message }}
-              </span>
+              </span> -->
             </div>
             <div class="w-full">
               <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
                 <span>*</span></label>
               <input v-model="planInfo.uEmail" type="email" id="email"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-              <span v-for="error in v$User.uEmail.$errors" :key="error.$uid" class="field-msg">
+              <!-- <span v-for="error in v$User.uEmail.$errors" :key="error.$uid" class="field-msg">
                 {{ error.$message }}
-              </span>
+              </span> -->
             </div>
             <div class="w-full">
               <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password
                 <span>*</span></label>
               <input v-model="planInfo.uPassword" type="password" id="password"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-              <span v-for="error in v$User.uPassword.$errors" :key="error.$uid" class="field-msg">
+              <!-- <span v-for="error in v$User.uPassword.$errors" :key="error.$uid" class="field-msg">
                 {{ error.$message }}
-              </span>
+              </span> -->
             </div>
             <div class="w-full">
               <label for="cpassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password
                 <span>*</span></label>
               <input v-model="planInfo.uCPassword" type="password" id="cpassword"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-              <span v-for="error in v$User.uCPassword.$errors" :key="error.$uid" class="field-msg">
+              <!-- <span v-for="error in v$User.uCPassword.$errors" :key="error.$uid" class="field-msg">
                 {{ error.$message }}
-              </span>
+              </span> -->
             </div>
             <!-- <span v-for="error in v$User.$errors" :key="error.uid">{{ error.$property }} - {{ error.$message }}</span> -->
           </div>
@@ -130,18 +130,18 @@
                 name <span>*</span></label>
               <input v-model="planInfo.cName" type="text" id="first_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-              <span v-for="error in v$Company.cName.$errors" :key="error.$uid" class="field-msg">
+              <!-- <span v-for="error in v$Company.cName.$errors" :key="error.$uid" class="field-msg">
                 {{ error.$message }}
-              </span>
+              </span> -->
             </div>
             <div class="w-full">
               <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adress
                 <span>*</span></label>
               <input v-model="planInfo.cAdress" type="text" id="last_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-              <span v-for="error in v$Company.cAdress.$errors" :key="error.$uid" class="field-msg">
+              <!-- <span v-for="error in v$Company.cAdress.$errors" :key="error.$uid" class="field-msg">
                 {{ error.$message }}
-              </span>
+              </span> -->
             </div>
             <div class="w-full">
               <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Secondary
@@ -156,18 +156,18 @@
                     <span>*</span></label>
                   <input v-model="planInfo.cZip" type="text" id="first_name"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                  <span v-for="error in v$Company.cZip.$errors" :key="error.$uid" class="field-msg">
+                  <!-- <span v-for="error in v$Company.cZip.$errors" :key="error.$uid" class="field-msg">
                     {{ error.$message }}
-                  </span>
+                  </span> -->
                 </div>
                 <div>
                   <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City
                     <span>*</span></label>
                   <input v-model="planInfo.cCity" type="text" id="first_name"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                  <span v-for="error in v$Company.cCity.$errors" :key="error.$uid" class="field-msg">
+                  <!-- <span v-for="error in v$Company.cCity.$errors" :key="error.$uid" class="field-msg">
                     {{ error.$message }}
-                  </span>
+                  </span> -->
                 </div>
                 <div class="md:col-span-2 mb-4">
                   <label for="last_name"
@@ -176,9 +176,9 @@
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                     <option v-for="(country, index) in countries" :key="index">{{ country.name }}</option>
                   </select>
-                  <span v-for="error in v$Company.cCountry.$errors" :key="error.$uid" class="field-msg">
+                  <!-- <span v-for="error in v$Company.cCountry.$errors" :key="error.$uid" class="field-msg">
                     {{ error.$message }}
-                  </span>
+                  </span> -->
                 </div>
               </div>
               <div class="w-full inline-flex items-center gap-2 mt-5">
@@ -266,58 +266,58 @@
 </template>
 
 <script setup>
-import { ref, provide, computed, onBeforeMount } from 'vue';
+import { ref, provide, onBeforeMount } from 'vue';
 import { ElTabs, ElTabPane } from 'element-plus';
 import PlanCard from '@Components/subscription/PlanCard.vue';
 import SubscriptionSummary from '@Components/subscription/SubscriptionSummary.vue';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
-import useVuelidate from '@vuelidate/core';
-import { required, minLength, email, sameAs, helpers } from '@vuelidate/validators';
+// import useVuelidate from '@vuelidate/core';
+// import { required, minLength, email, sameAs, helpers } from '@vuelidate/validators';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 
 const planInfo = ref({});
 
-const userRules = computed(() => {
-  return {
-    uFName: { required },
-    uLName: { required },
-    uEmail: { required, email },
-    uPassword: { required, minLength: minLength(8) },
-    uCPassword: { required, sameAs: helpers.withMessage("The value must be equal to the password value.", sameAs(planInfo.value.uPassword)) }
-  }
-});
+// const userRules = computed(() => {
+//   return {
+//     uFName: { required },
+//     uLName: { required },
+//     uEmail: { required, email },
+//     uPassword: { required, minLength: minLength(8) },
+//     uCPassword: { required, sameAs: helpers.withMessage("The value must be equal to the password value.", sameAs(planInfo.value.uPassword)) }
+//   }
+// });
 
-const companyRules = computed(() => {
-  return {
-    cName: { required },
-    cAdress: { required },
-    cCity: { required },
-    cCountry: { required },
-    cZip: { required },
-  }
-});
+// const companyRules = computed(() => {
+//   return {
+//     cName: { required },
+//     cAdress: { required },
+//     cCity: { required },
+//     cCountry: { required },
+//     cZip: { required },
+//   }
+// });
 
-const v$User = useVuelidate(userRules, planInfo);
-const v$Company = useVuelidate(companyRules, planInfo);
+// const v$User = useVuelidate(userRules, planInfo);
+// const v$Company = useVuelidate(companyRules, planInfo);
 
 const submitUserForm = async () => {
-  const result = await v$User.value.$validate();
-  if (result) {
-    activeName.value = 'company-info';
-  } else {
-    console.log("error");
-  }
+  // const result = await v$User.value.$validate();
+  // if (result) {
+  activeName.value = 'company-info';
+  // } else {
+  //   console.log("error");
+  // }
 }
 
 const submitCompanyForm = async () => {
-  const result = await v$Company.value.$validate();
-  if (result) {
-    activeName.value = 'checkout';
-  } else {
-    console.log("error");
-  }
+  // const result = await v$Company.value.$validate();
+  // if (result) {
+  activeName.value = 'checkout';
+  // } else {
+  //   console.log("error");
+  // }
 }
 
 const plans = ref([]);
@@ -329,7 +329,7 @@ provide('plan_to_update', plan_to_update);
 provide('plan_activeTab', activeStaffTab);
 
 const activeEventTab = ref('account_list')
-const selectedPlan = ref('');
+// const selectedPlan = ref('');
 const planContainer = ref(null);
 
 provide('account_activeTab', activeEventTab);
