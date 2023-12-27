@@ -53,7 +53,7 @@ const props = defineProps({
     gap: 3rem;
     justify-content: space-between;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    flex-basis: 150px;
+    flex-basis: 210px;
     padding: 25px;
     border-radius: 10px;
 }

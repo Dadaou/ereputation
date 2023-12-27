@@ -6,6 +6,10 @@
 @tailwind components;
 @tailwind utilities;
 
+#app {
+  overflow-x: hidden;
+}
+
 /*Header*/
 header {
   position: relative;

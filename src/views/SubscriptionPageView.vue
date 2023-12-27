@@ -2,7 +2,7 @@
   <div class="subscription__container">
     <div class="subscription-page-header">
       <div class="container" style="padding-inline: 16px;">
-        <a :href="baseurl" class="flex items-center">
+        <a :href="'/'" class="flex items-center">
           <span class="self-center text-xl font-bold whitespace-nowrap dark:text-white"
             style="color: var(--color-danger)">eReputation</span>
         </a>
@@ -19,32 +19,34 @@
             <h1>Choose your plan.</h1>
           </div>
         </div>
-        <div class="plan-container" ref="planContainer">
-          <plan-card name="Basic 1-Year" :price="9.99" devise="$" :active="selectedPlan == 'basic-1'" :items="[
+        <div v-if="plans" class="plan-container" ref="planContainer">
+          <plan-card v-for="item in plans" :key="item.tag" :data="item" @selected="setPlan"></plan-card>
+          <!-- <plan-card name="Basic 1-Year" :price="9.99" devise="$" :active="selectedPlan == 'basic-1'" :items="[
             '1 establishement (1 QR CODE by establishment)',
             'Illimited intern reviews',
             'Illimited leads',
             'Illimited events',
-            '3 monitored points of sale (1 QR Code by point of sale)']" @click="selectedPlan = 'basic-1'"></plan-card>
+            '3 monitored points of sale (1 QR Code by point of sale)']" @click="selectedPlan = 'basic-1'"
+            @selected="setPlan"></plan-card>
           <plan-card name="Custom Basic 1-Year" :active="selectedPlan == 'c-basic-1'" :hasinput="true" :price="9.99"
             :addprice="4.99" devise="$" :items="[
               'Illimited intern reviews',
               'Illimited leads',
               'Illimited events',
-              '3 monitored points of sale (1 QR Code by point of sale)']"
-            @click="selectedPlan = 'c-basic-1'"></plan-card>
+              '3 monitored points of sale (1 QR Code by point of sale)']" @click="selectedPlan = 'c-basic-1'"
+            @selected="setPlan"></plan-card>
           <plan-card name="Premium 1-Year" :active="selectedPlan == 'premium'" :premium="true" :items="[
             'Illimited intern reviews',
             'Illimited leads',
             'Illimited events',
             'Illimited monitored points of sale (QR Codes illimited)',
             'Leads integration in your CRM',
-            'Sales integration (API)']" @click="selectedPlan = 'premium'"></plan-card>
+            'Sales integration (API)']" @click="selectedPlan = 'premium'" @selected="setPlan"></plan-card> -->
         </div>
-        <div class="navigation-container">
+        <!-- <div class="navigation-container">
           <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
             @click="activeName = 'user-info'">Next</button>
-        </div>
+        </div> -->
       </el-tab-pane>
       <el-tab-pane name="user-info">
         <div class="tab-pane-header">
@@ -53,43 +55,65 @@
             <h1>Fill your account informations.</h1>
           </div>
         </div>
-        <div class="form-group">
-          <p class="mb-5">User informations</p>
-          <div class="w-full">
-            <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First
-              name <span>*</span></label>
-            <input type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+        <form @submit.prevent="submitUserForm">
+          <div class="form-group">
+            <p class="mb-5">User informations</p>
+            <div class="w-full">
+              <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First
+                name <span>*</span></label>
+              <input v-model="planInfo.uFName" type="text" id="first_name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+              <!-- <span v-for="error in v$User.uFName.$errors" :key="error.$uid" class="field-msg">
+                {{ error.$message }}
+              </span> -->
+            </div>
+            <div class="w-full">
+              <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last
+                name <span>*</span></label>
+              <input v-model="planInfo.uLName" type="text" id="last_name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+              <!-- <span v-for="error in v$User.uLName.$errors" :key="error.$uid" class="field-msg">
+                {{ error.$message }}
+              </span> -->
+            </div>
+            <div class="w-full">
+              <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
+                <span>*</span></label>
+              <input v-model="planInfo.uEmail" type="email" id="email"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+              <!-- <span v-for="error in v$User.uEmail.$errors" :key="error.$uid" class="field-msg">
+                {{ error.$message }}
+              </span> -->
+            </div>
+            <div class="w-full">
+              <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password
+                <span>*</span></label>
+              <input v-model="planInfo.uPassword" type="password" id="password"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+              <!-- <span v-for="error in v$User.uPassword.$errors" :key="error.$uid" class="field-msg">
+                {{ error.$message }}
+              </span> -->
+            </div>
+            <div class="w-full">
+              <label for="cpassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password
+                <span>*</span></label>
+              <input v-model="planInfo.uCPassword" type="password" id="cpassword"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+              <!-- <span v-for="error in v$User.uCPassword.$errors" :key="error.$uid" class="field-msg">
+                {{ error.$message }}
+              </span> -->
+            </div>
+            <!-- <span v-for="error in v$User.$errors" :key="error.uid">{{ error.$property }} - {{ error.$message }}</span> -->
           </div>
-          <div class="w-full">
-            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last
-              name <span>*</span></label>
-            <input type="text" id="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+          <div class="navigation-container">
+            <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+              @click="activeName = 'plan'">Previous</button> -->
+            <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+              @click="activeName = 'company-info'">Next</button> -->
+            <button type="submit" class="btn btn-primary btn-navigation"
+              style="margin-top: 12px; border-radius: 2px;">Next</button>
           </div>
-          <div class="w-full">
-            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
-              <span>*</span></label>
-            <input type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2"
-              required>
-          </div>
-          <div class="w-full">
-            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password
-              <span>*</span></label>
-            <input type="password" id="password"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-          </div>
-          <div class="w-full">
-            <label for="cpassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password
-              <span>*</span></label>
-            <input type="password" id="cpassword"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-          </div>
-        </div>
-        <div class="navigation-container">
-          <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-            @click="activeName = 'plan'">Previous</button>
-          <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-            @click="activeName = 'company-info'">Next</button>
-        </div>
+        </form>
       </el-tab-pane>
       <el-tab-pane name="company-info">
         <div class="tab-pane-header">
@@ -98,59 +122,80 @@
             <h1>Fill your account informations.</h1>
           </div>
         </div>
-        <div class="form-group">
-          <p class="mb-5">Company informations</p>
-          <div class="w-full">
-            <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
-              name <span>*</span></label>
-            <input type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-          </div>
-          <div class="w-full">
-            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adress
-              <span>*</span></label>
-            <input type="text" id="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-          </div>
-          <div class="w-full">
-            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Secondary
-              adress</label>
-            <input type="text" id="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-          </div>
-          <div class="w-full">
-            <div class="grid gap-6 md:grid-cols-4">
-              <div>
-                <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ZIP Code
-                  <span>*</span></label>
-                <input type="text" id="first_name"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-              </div>
-              <div>
-                <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City
-                  <span>*</span></label>
-                <input type="text" id="first_name"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-              </div>
-              <div class="md:col-span-2 mb-4">
-                <label for="last_name"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country</label>
-                <select id="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                  <option v-for="(country, index) in countries" :key="index">{{ country.name }}</option>
-                </select>
-              </div>
+        <form @submit.prevent="submitCompanyForm">
+          <div class="form-group">
+            <p class="mb-5">Company informations</p>
+            <div class="w-full">
+              <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
+                name <span>*</span></label>
+              <input v-model="planInfo.cName" type="text" id="first_name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+              <!-- <span v-for="error in v$Company.cName.$errors" :key="error.$uid" class="field-msg">
+                {{ error.$message }}
+              </span> -->
             </div>
-            <div class="w-full inline-flex items-center gap-2 mt-5">
-              <input type="checkbox" id="coding" name="interest" value="coding" />
-              <label for="coding">I read and accept <a href="" class="terms-conditions-link">Terms and Conditions</a> of
-                service.</label>
+            <div class="w-full">
+              <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adress
+                <span>*</span></label>
+              <input v-model="planInfo.cAdress" type="text" id="last_name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+              <!-- <span v-for="error in v$Company.cAdress.$errors" :key="error.$uid" class="field-msg">
+                {{ error.$message }}
+              </span> -->
             </div>
+            <div class="w-full">
+              <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Secondary
+                adress</label>
+              <input v-model="planInfo.cSAdress" type="text" id="last_name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+            </div>
+            <div class="w-full">
+              <div class="grid gap-6 md:grid-cols-4">
+                <div>
+                  <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ZIP Code
+                    <span>*</span></label>
+                  <input v-model="planInfo.cZip" type="text" id="first_name"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                  <!-- <span v-for="error in v$Company.cZip.$errors" :key="error.$uid" class="field-msg">
+                    {{ error.$message }}
+                  </span> -->
+                </div>
+                <div>
+                  <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City
+                    <span>*</span></label>
+                  <input v-model="planInfo.cCity" type="text" id="first_name"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                  <!-- <span v-for="error in v$Company.cCity.$errors" :key="error.$uid" class="field-msg">
+                    {{ error.$message }}
+                  </span> -->
+                </div>
+                <div class="md:col-span-2 mb-4">
+                  <label for="last_name"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country</label>
+                  <select v-model="planInfo.cCountry" id="last_name"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                    <option v-for="(country, index) in countries" :key="index">{{ country.name }}</option>
+                  </select>
+                  <!-- <span v-for="error in v$Company.cCountry.$errors" :key="error.$uid" class="field-msg">
+                    {{ error.$message }}
+                  </span> -->
+                </div>
+              </div>
+              <div class="w-full inline-flex items-center gap-2 mt-5">
+                <input v-model="planInfo.acceptConditions" type="checkbox" id="coding" name="interest" value="coding" />
+                <label for="coding">I read and accept <a href="" class="terms-conditions-link">Terms and Conditions</a> of
+                  service.</label>
+              </div>
 
+            </div>
           </div>
-        </div>
-        <div class="navigation-container">
-          <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-            @click="activeName = 'user-info'">Previous</button>
-          <button class="btn btn-primary-2 btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-            @click="activeName = 'checkout'">Sign In</button>
-        </div>
+          <div class="navigation-container">
+            <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+              @click="activeName = 'user-info'">Previous</button> -->
+            <button type="submit" v-if="planInfo.acceptConditions" class="btn btn-primary-2 btn-navigation"
+              style="margin-top: 12px; border-radius: 2px;">Sign In</button>
+          </div>
+        </form>
       </el-tab-pane>
 
       <el-tab-pane name="checkout">
@@ -160,21 +205,196 @@
             <h1>Checkout</h1>
           </div>
         </div>
-        <div class="navigation-container">
-          <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-            @click="activeName = 'company-info'">Previous</button>
+        <div class="w-full">
+          <div class="flex flex-col items-start lg:flex-row lg:space-x-8 p-4">
+            <div class="flex-1">
+              <SubscriptionSummary :data="planInfo"></SubscriptionSummary>
+            </div>
+            <div class="shrink-0 lg:order-2">
+              <div v-if="planInfo && planInfo.plan" class="summary-card">
+                <div class="summary-card__content">
+                  <div class="app__title">
+                    <h1>Order Summary</h1>
+                  </div>
+                  <table class="w-full">
+                    <tr>
+                      <td>Plan</td>
+                      <td style="text-align:right;"><strong>{{ planInfo.plan.name }}</strong></td>
+                    </tr>
+                    <tr>
+                      <td>Subtotal</td>
+                      <td style="text-align:right;">{{ planInfo.total }}{{ planInfo.plan.currency }}</td>
+                    </tr>
+                    <tr>
+                      <td>Order Total</td>
+                      <td style="text-align:right;"><strong>{{ planInfo.total }}{{ planInfo.plan.currency }}</strong></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="summary-card shrink-0 lg:order-2 my-4">
+                <div class="summary-card__content">
+                  <div class="app__title">
+                    <h1>Payment information</h1>
+                  </div>
+                  <div class="w-full my-8" id="payment-element"></div>
+                  <div style="text-align: right"><button class="btn btn-primary-2"
+                      style="margin-top: 12px; border-radius: 2px;" @click="() => subscribe()">Process to
+                      payment</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+        <!-- <div class="navigation-container"> -->
+        <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+            @click="activeName = 'company-info'">Previous</button> -->
+        <!-- </div> -->
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script setup>
-import { ref, provide } from 'vue';
+import { ref, provide, onBeforeMount, onMounted } from 'vue';
 import { ElTabs, ElTabPane } from 'element-plus';
 import PlanCard from '@Components/subscription/PlanCard.vue';
+import SubscriptionSummary from '@Components/subscription/SubscriptionSummary.vue';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
+import moment from 'moment';
+import services from '@Services/services.js';
+import { useAppStore } from "@Stores/app.js";
+import { loadStripe } from '@stripe/stripe-js';
+import { useRouter } from 'vue-router';
+
+const planInfo = ref({});
+
+const submitUserForm = async () => {
+  activeName.value = 'company-info';
+}
+
+const submitCompanyForm = async () => {
+  createAccount().then((response) => {
+    planInfo.value.customer = response.customer.tag;
+    activeName.value = 'checkout';
+  }).catch((error) => { console.log(error); })
+}
+
+let stripe = null;
+let stripeElements = null;
+
+const plans = ref([]);
+
+const activeName = ref('plan');
+const activeStaffTab = ref('plan_list')
+const plan_to_update = ref(null);
+provide('plan_to_update', plan_to_update);
+provide('plan_activeTab', activeStaffTab);
+
+const activeEventTab = ref('account_list')
+// const selectedPlan = ref('');
+const planContainer = ref(null);
+
+provide('account_activeTab', activeEventTab);
+
+const activeAdvantageTab = ref('checkout_list')
+provide('checkout_activeTab', activeAdvantageTab);
+
+
+const account_to_update = ref(null);
+provide('account_to_update', account_to_update);
+
+const checkout_to_update = ref(null);
+provide('checkout_to_update', checkout_to_update);
+
+const router = useRouter();
+
+const setPlan = (data, eNumber, total) => {
+  planInfo.value['planName'] = data.name;
+  planInfo.value['plan'] = data;
+  planInfo.value['total'] = total;
+  planInfo.value['establishmentNumber'] = eNumber;
+  activeName.value = 'user-info';
+}
+
+const createAccount = async () => {
+  const response = await new Promise((resolve) => {
+    services.post_Record('/account/create', {
+      name: planInfo.value.cName,
+      firstname: planInfo.value.uFName,
+      lastname: planInfo.value.uLName,
+      password: planInfo.value.uPassword,
+      email: planInfo.value.uEmail,
+      city: planInfo.value.cCity,
+      zipcode: planInfo.value.cZip,
+      country: planInfo.value.cCountry,
+      address1: planInfo.value.cAdress,
+      address2: planInfo.value.cSAdress,
+      plan: planInfo.value.plan.tag
+    }, (response) => {
+      resolve(response)
+    }, true);
+  });
+
+  if (response.status == 200 && response.data) {
+    return response.data;
+  }
+}
+
+const subscribe = async () => {
+  const response = await new Promise((resolve) => {
+    services.post_Record('/subscription/create', {
+      customer: planInfo.value.customer,
+      plan: planInfo.value.plan.tag,
+      amount: planInfo.value.total,
+      email: planInfo.value.uEmail,
+      updated_at: moment().format('YYYY-MM-DD'),
+      expired_at: moment().add(366, 'days').format('YYYY-MM-DD')
+    }, (response) => {
+      resolve(response)
+    }, true);
+  });
+
+  if (response.status == 200 && response.data) {
+    console.log(response.data);
+    if (response.data != "ok") {
+      alert("An error was occured!");
+    } else {
+      router.push(`/`);
+    }
+  }
+}
+
+const appStore = useAppStore();
+
+onBeforeMount(async () => {
+  const response = await new Promise((resolve) => {
+    services.get_Record('/plan/list', (response) => {
+      resolve(response)
+      if (response.status == 404) {
+        appStore.isLoading = false;
+      }
+    }, true);
+  });
+
+  if (response.status == 200 && response.data) {
+    plans.value = response.data;
+  }
+})
+
+onMounted(async () => {
+  stripe = await loadStripe(import.meta.env.VITE_PUBLIC_STRIPE_KEY);
+
+  stripeElements = stripe.elements({
+    mode: "payment",
+    amount: 1999,
+    currency: "usd"
+  })
+
+  const paymentElement = stripeElements.create("payment");
+  paymentElement.mount("#payment-element");
+})
 
 const countries = ref([
   { name: 'Afghanistan', code: 'AF' },
@@ -421,27 +641,6 @@ const countries = ref([
   { name: 'Zambia', code: 'ZM' },
   { name: 'Zimbabwe', code: 'ZW' }
 ])
-const activeName = ref('plan');
-const activeStaffTab = ref('plan_list')
-const plan_to_update = ref(null);
-provide('plan_to_update', plan_to_update);
-provide('plan_activeTab', activeStaffTab);
-
-const activeEventTab = ref('account_list')
-const selectedPlan = ref('');
-const planContainer = ref(null);
-
-provide('account_activeTab', activeEventTab);
-
-const activeAdvantageTab = ref('checkout_list')
-provide('checkout_activeTab', activeAdvantageTab);
-
-
-const account_to_update = ref(null);
-provide('account_to_update', account_to_update);
-
-const checkout_to_update = ref(null);
-provide('checkout_to_update', checkout_to_update);
 
 </script>
 <style>
@@ -465,7 +664,7 @@ provide('checkout_to_update', checkout_to_update);
 .subscription-page-header {
   width: 100vw;
   height: 5rem;
-  position: sticky;
+  position: fixed;
   top: 0;
   z-index: 11;
   color: var(--color-white);
@@ -512,9 +711,9 @@ provide('checkout_to_update', checkout_to_update);
   margin-block: 16px;
 }
 
-/* .subscription-tabs {
-  padding: 32px 0;
-} */
+.subscription-tabs {
+  margin-top: 80px;
+}
 
 .subscription-tabs .el-tabs__header {
   display: none;
@@ -577,7 +776,56 @@ provide('checkout_to_update', checkout_to_update);
   width: 100%;
 }
 
-.subscription__container .form-group .w-full {
-  margin-block: 8px;
+.subscription__container .form-group label {
+  margin-top: 16px;
+}
+
+.subscription__container button[type=submit] {
+  background-color: var(--color-danger) !important;
+  color: var(--color-white) !important;
+}
+
+.subscription__container .field-msg {
+  font-size: 14px;
+  color: var(--color-danger);
+}
+
+.summary-card {
+  display: flex;
+  /* flex-direction: column;
+  justify-content: flex-start;
+  text-align: center; */
+  box-shadow: rgba(149, 157, 165, 0.2) 2px 4px 16px;
+  flex-basis: 150px;
+  padding: 28px 38px;
+  border-radius: 10px;
+  border-radius: 12px;
+  border: 1px outset rgba(149, 157, 165, 0.1);
+  cursor: pointer;
+}
+
+.summary-card__content {
+  width: 360px;
+}
+
+.summary-card__content h1 {
+  border-bottom: rgba(116, 116, 116, .4) 1px solid;
+  width: 100%;
+  margin-block: 12px 8px;
+}
+
+.summary-card__content table td {
+  padding-block: 4px;
+  font-size: .85rem;
+}
+
+@media (max-width: 768px) {
+  .summary-card__content {
+    width: 100%;
+  }
+
+  .summary-card {
+    width: 100%;
+  }
 }
 </style>

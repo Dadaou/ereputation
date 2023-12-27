@@ -1,68 +1,57 @@
 <template>
-    <div v-if="name" class="plan-card" :class="active && 'active'">
-        <h4>{{ name }}</h4>
-        <h3 v-if="premium">Let's Talk!</h3>
-        <h2 v-else>{{ devise }}{{ fprice }}<span>/month</span></h2>
-        <ul>
-            <li v-if="hasinput">
+    <div v-if="data.name" class="plan-card">
+        <h4>{{ data.name }}</h4>
+        <h3 v-if="data.amount == '0'">Let's Talk!</h3>
+        <h2 v-else>{{ data.currency }}{{ fprice }}<span>/{{ data.periodicity }}</span></h2>
+        <ul class="grid">
+            <li v-if="data.additional_establishment != '0'">
                 <input v-model="enumber" type="number" name="enumber" min="0"> establishment(s)
             </li>
-            <li v-if="hasinput">+ {{ addprice }} {{ devise }} per additionnal establishment</li>
-            <li v-for="item in items" :key="item">{{ item }}</li>
+            <li v-if="data.additional_establishment != '0'">+ {{ data.additional_establishment }} {{ data.currency }} per
+                additionnal establishment</li>
+            <li>1 establishement (1 QR CODE by establishment)</li>
+            <li>Illimited intern reviews</li>
+            <li>Illimited leads</li>
+            <li>{{ data.event_limit || 'Illimited' }} events</li>
+            <li>{{ data.pointofsale_limit || 'Illimited' }} monitored points of sale (1 QR Code by point of sale)</li>
+            <li v-if="data.crm">Leads integration in your CRM</li>
+            <li v-if="data.sale">Sales integration (API)</li>
         </ul>
-        <button v-if="premium" class="btn btn-primary-2" style="margin-top: 12px; border-radius: 8px;">Contact our
+        <button v-if="data.amount == '0'" class="selection-btn btn btn-primary-2"
+            style="margin-top: 12px; border-radius: 8px;" @click="() => emitEvent(data)">Contact
+            our
             team</button>
+        <button v-else-if="data.additional_establishment != '0'" class="selection-btn btn btn-danger-o"
+            style="margin-top: 12px; border-radius: 8px;" @click="() => emitEvent(data, enumber)">Get {{ data.name
+            }}</button>
+        <button v-else class="selection-btn btn btn-danger-o" style="margin-top: 12px; border-radius: 8px;"
+            @click="() => emitEvent(data)">Get {{ data.name
+            }}</button>
     </div>
 </template>
 <script setup>
 import { ref, watch } from 'vue';
 const props = defineProps({
-    name: {
-        type: String,
-        required: false,
-        default: ""
-    },
-    active: {
-        type: Boolean,
-        required: false,
-        default: false
-    },
-    price: {
-        type: Number,
-        required: false,
-        default: 0
-    },
-    devise: {
-        type: String,
-        required: false,
-        default: "$"
-    },
-    addprice: {
-        type: Number,
-        required: false,
-        default: 0
-    },
-    hasinput: {
-        type: Boolean,
-        required: false,
-        default: false
-    },
-    items: {
-        type: Array,
-        required: false,
-        default: () => []
-    },
-    premium: {
-        type: Boolean,
-        required: false,
-        default: false
+    data: {
+        type: Object,
+        required: true,
     }
 })
-const fprice = ref(props.price);
+
+const emits = defineEmits(['selected']);
+const fprice = ref(parseFloat(props.data.amount));
 const enumber = ref(0);
 
+const emitEvent = (data, eNumber) => {
+    if (props.hasinput && eNumber == 0) {
+        alert("Please add the number of establishments.");
+    } else {
+        emits('selected', data, eNumber, fprice.value);
+    }
+}
+
 watch(enumber, () => {
-    fprice.value = Math.round((((enumber.value * props.addprice) + props.price) + Number.EPSILON) * 100) / 100;
+    fprice.value = Math.round((((enumber.value * parseFloat(props.data.additional_establishment)) + parseFloat(props.data.amount)) + Number.EPSILON) * 100) / 100;
 })
 </script>
 <style>
@@ -80,8 +69,8 @@ watch(enumber, () => {
     transition: transform .3s ease-in-out;
     transform: scale(1);
     cursor: pointer;
-    min-width: 280px;
-    height: 532px;
+    min-width: 340px;
+    height: 600px;
 }
 
 .plan-card:hover {
@@ -125,6 +114,16 @@ watch(enumber, () => {
     justify-self: flex-start;
 }
 
+.plan-card input[type=number] {
+    border: none;
+    padding: 0;
+    width: 32px;
+}
+
+.plan-card input[type=number]::-webkit-inner-spin-button {
+    opacity: 1;
+}
+
 .plan-card ul li {
     font-size: 14px;
     font-weight: 500;
@@ -133,11 +132,13 @@ watch(enumber, () => {
     margin-block: 8px;
 }
 
-.plan-card ul li input {
-    width: 60px;
-}
-
 .plan-card ul li::before {
     content: "\2714   ";
+}
+
+.plan-card .selection-btn {
+    position: absolute;
+    bottom: 24px;
+    width: calc(100% - 76px);
 }
 </style>

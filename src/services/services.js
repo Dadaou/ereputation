@@ -1,5 +1,6 @@
 import axios from 'axios'
 var axiosInstance = null
+var publicAxiosInstance = null
 
 const setToken = (token) => {
   localStorage.setItem('access', token)
@@ -12,6 +13,12 @@ const setUser = () => {
 const setURL = (baseURL) => {
   axiosInstance = axios.create({
     baseURL: baseURL,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  publicAxiosInstance = axios.create({
+    baseURL: baseURL.slice(0, baseURL.length - 3),
     headers: {
       'Content-Type': 'application/json'
     }
@@ -85,19 +92,59 @@ const getRecord = async (entity, recordId, next) => {
   }
 }
 
-const get_Record = async (url, next) => {
+const get_Record = async (url, next, isPublic = false) => {
   const headers = {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${localStorage.getItem('access')}`
+    'Content-Type': 'application/json'
   }
-  try {
-    if (checkConnexionInfo()) {
-      await axiosInstance.get(`${url}`, { headers }).then((response) => {
+
+  if (!isPublic) {
+    headers['Authorization'] = `Bearer ${localStorage.getItem('access')}`
+
+    try {
+      if (checkConnexionInfo()) {
+        await axiosInstance.get(`${url}`, { headers }).then((response) => {
+          next(response)
+        })
+      }
+    } catch (error) {
+      return next(error.response)
+    }
+  } else {
+    try {
+      await publicAxiosInstance.get(`${url}`, { headers }).then((response) => {
         next(response)
       })
+    } catch (error) {
+      return next(error.response)
     }
-  } catch (error) {
-    return next(error.response)
+  }
+}
+
+const post_Record = async (url, body, next, isPublic = false) => {
+  const headers = {
+    'Content-Type': 'application/json'
+  }
+
+  if (!isPublic) {
+    headers['Authorization'] = `Bearer ${localStorage.getItem('access')}`
+
+    try {
+      if (checkConnexionInfo()) {
+        await axiosInstance.post(`${url}`, body, { headers }).then((response) => {
+          next(response)
+        })
+      }
+    } catch (error) {
+      return next(error.response)
+    }
+  } else {
+    try {
+      await publicAxiosInstance.post(`${url}`, body, { headers }).then((response) => {
+        next(response)
+      })
+    } catch (error) {
+      return next(error.response)
+    }
   }
 }
 
@@ -227,5 +274,6 @@ export default {
   login_2nd,
   setUser,
   getRecordsByParams,
-  reviewAnalysis
+  reviewAnalysis,
+  post_Record
 }
