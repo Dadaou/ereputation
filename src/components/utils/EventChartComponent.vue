@@ -9,7 +9,7 @@
 	>
 	 <div v-if="loading == true" :style="{
                     'width': `100%`,
-                    'height': `200px`,
+                    'minHeight': `200px`,
                     'display': 'flex',
                     'alignItems': 'center',
                     'background': 'rgba(0, 0, 0, 0.1)',
@@ -32,7 +32,7 @@
             y-axis-label="Rating"
             :colors="['#6c63ff','#f75842','#aca8fd','#424890','#ff42e5','#58f742','#8eaca8','#fda458','#90fdac','#444278','#f7a142','#de90fd','#42d3ff','#e558f7','#a8ac42','#90fdd4','#784444','#58f7bf','#fdaa58','#90fdff']"
             :y-tick-format="d => `${d}`" />
-       <div id="chartEvents" style="min-height: 30px; width: 100%; position: relative;"></div>
+       <div id="chartEvents" style="min-height: 60px; width: 100%; position: relative;"></div>
 	</div>
 	<div>
 		<BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
@@ -91,33 +91,42 @@ const deleteEvents = () => {
   // events.innerHTML = "";
 }
 
-const positionEvent = ()=>{
-	let positions = [];
-
+const positionEvent = () => {
   setTimeout(() => {
-  	const elements = document.querySelectorAll(".xaxis g.tick");
-  	console.log(elements)
-	   elements.forEach(e => {
-	    positions.push((e.getAttribute("transform").split(',')[0]).split('(')[1]);
-	  })
+    const elements = document.querySelectorAll(".xaxis g.tick");
+    let positions = Array.from(elements).map(e => parseFloat(e.getAttribute("transform").match(/translate\(([^)]+)\)/)[1]));
+    const elementWidth = elements[0].getBoundingClientRect().width; // Supposons que tous les éléments ont la même largeur
 
-	  const chartEvents = document.getElementById("chartEvents");
+    const chartEvents = document.getElementById("chartEvents");
+    let eventGroups = {}; // Stocker les groupes d'événements identiques et leurs positions
 
-	  for(let i = 0; i < positions.length; i++){
-	  	const events = plotdata.value.events_per_date[i];
-	    const data = events.events;
+    // Créer des groupes d'événements identiques
+    plotdata.value.events_per_date.forEach((eventData, index) => {
+      eventData.events.forEach(event => {
+        let position = positions[index]; // Ajuster pour prendre en compte la largeur de l'élément
+        if (!eventGroups[event.name]) {
+          eventGroups[event.name] = { startPosition: position, endPosition: position };
+        } else {
+          eventGroups[event.name].endPosition = position;
+        }
+      });
+    });
 
-	    data.forEach((event,index)=>{
-	    	let textNode = document.createElement("span");
-            console.log(index)
-            const mgTop = index * 17;
-	        textNode.setAttribute("style", `left: calc(${positions[i]}px - 30px); opacity: 1; height: 10px; top: calc(5px + ${mgTop}px); position: absolute; font-size: 14px; font-weight:500; cursor: pointer; color: green; width: 60.5px; background-color: ${generateColor(event.name)};`);
-	        textNode.setAttribute("title", event.name);
-	        chartEvents.appendChild(textNode);
-	    })
-	  }
+    // Afficher chaque groupe d'événements
+    Object.keys(eventGroups).forEach((eventName, idx) => {
+      let group = eventGroups[eventName];
+      let topOffset = 5 + (idx * 15); // Positionnement vertical pour chaque groupe
+
+      let textNode = document.createElement("span");
+      let width = group.endPosition - group.startPosition + elementWidth; // Ajuster la largeur pour inclure l'élément de fin
+      textNode.setAttribute("style", `left: ${group.startPosition - elementWidth / 2}px; width: ${width}px; top: ${topOffset}px; opacity: 1; height: 10px; position: absolute; font-size: 14px; font-weight: 500; cursor: pointer; color: green; background-color: ${generateColor(eventName)};`);
+      textNode.setAttribute("title", eventName);
+      chartEvents.appendChild(textNode);
+    });
   }, 1000);
-}
+};
+
+
 
 const legendData = computed(() => {
     let dates = plotdata.value.events_per_date;

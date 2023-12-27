@@ -465,21 +465,43 @@ useResizeObserver(el, (entries) => {
 function transformData(inputData) {
   const labels = Object.keys(inputData.data);
   const datasets = {};
-  const colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff'];
+  const colors = ['#6c63ff', '#58f742', '#8eaca8', '#90fdac', '#444278', '#42d3ff', '#a8ac42', '#90fdd4', '#58f7bf', '#90fdff'];
+
+  // labels.forEach(date => {
+  //   Object.keys(inputData.data[date]).forEach(key => {
+  //     if (!datasets[key]) {
+  //         const colorIndex = Object.keys(datasets).length % colors.length; 
+  //         datasets[key] = {
+  //           label: key,
+  //           backgroundColor: colors[colorIndex],
+  //           data: Array(labels.length).fill(0)
+  //         };
+  //       }
+  //       datasets[key].data[labels.indexOf(date)] = inputData.data[date][key];
+  //   });
+  // });
 
   labels.forEach(date => {
-    Object.keys(inputData.data[date]).forEach(key => {
-      if (!datasets[key]) {
-          const colorIndex = Object.keys(datasets).length % colors.length; 
-          datasets[key] = {
-            label: key,
-            backgroundColor: colors[colorIndex],
-            data: Array(labels.length).fill(0)
-          };
+    console.log(Object.keys(inputData.data[date]).sort())
+    Object.keys(inputData.data[date]).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())).forEach(key => {
+        if (!datasets[key]) {
+            const colorIndex = Object.keys(datasets).length % colors.length; 
+           
+            datasets[key] = {
+                label: key,
+                borderColor: (key=='global')?'#f75842':colors[colorIndex],
+                borderWidth: (key=='global')?5:3,
+                backgroundColor: (key=='global')?'#f75842':colors[colorIndex],
+                data: Array(labels.length).fill(0),
+                pointRadius: 0,
+                fill: false,
+                tension: 0.1
+            };
         }
         datasets[key].data[labels.indexOf(date)] = inputData.data[date][key];
     });
-  });
+});
+
 
   const result = {
     labels: labels,
