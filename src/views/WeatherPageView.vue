@@ -56,7 +56,7 @@
                                         'color': conditionData.color,
                                         'fontWeight': 'bold',
                                     }">
-                                        {{ conditionData.note }}
+                                       {{ conditionData.note != 0 ? conditionData.note : '' }}
                                     </td>
                                 </tr>
                             </tbody>

@@ -484,44 +484,35 @@ const generateColor = (text) =>{
 function transformData(inputData) {
   const labels = Object.keys(inputData.data);
   const datasets = {};
-  const colors = ['#6c63ff', '#58f742', '#8eaca8', '#90fdac', '#444278', '#42d3ff', '#a8ac42', '#90fdd4', '#58f7bf', '#90fdff'];
-
-  // labels.forEach(date => {
-  //   Object.keys(inputData.data[date]).forEach(key => {
-  //     if (!datasets[key]) {
-  //         const colorIndex = Object.keys(datasets).length % colors.length; 
-  //         datasets[key] = {
-  //           label: key,
-  //           backgroundColor: colors[colorIndex],
-  //           data: Array(labels.length).fill(0)
-  //         };
-  //       }
-  //       datasets[key].data[labels.indexOf(date)] = inputData.data[date][key];
-  //   });
-  // });
 
   labels.forEach(date => {
-    console.log(Object.keys(inputData.data[date]).sort())
     Object.keys(inputData.data[date]).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())).forEach(key => {
         if (!datasets[key]) {
             const colorIndex = Object.keys(datasets).length % colors.length; 
 
-            datasets[key] = {
-                label: key,
-                borderColor: generateColor(key),
-                borderWidth: (key=='global')?5:3,
-                backgroundColor: generateColor(key),
-                data: Array(labels.length).fill(0),
-                pointRadius: 0,
-                fill: false,
-                tension: 0.1
-            };
+            if(key=='global'){
+                datasets[key] = {
+                    label: key,
+                    borderColor: generateColor(key),
+                    borderWidth: 5,
+                    backgroundColor: generateColor(key),
+                    data: Array(labels.length).fill(0),
+                    pointRadius: 0,
+                    fill: false,
+                    tension: 0.1
+                };
+            }else{
+                datasets[key] = {
+                    label: key,
+                    backgroundColor: generateColor(key),
+                    data: Array(labels.length).fill(0)
+                };
+            }
         }
         datasets[key].data[labels.indexOf(date)] = inputData.data[date][key];
     });
 });
-
-
+  
   const result = {
     labels: labels,
     datasets: Object.values(datasets)
