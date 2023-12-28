@@ -462,6 +462,25 @@ useResizeObserver(el, (entries) => {
       chartWidth.value = Math.abs(width);
 });
 
+const hashString = (inputString) => {
+      let hash = 0;
+      for (let i = 0; i < inputString.length; i++) {
+        hash = (hash << 5) - hash + inputString.charCodeAt(i);
+      }
+      return hash;
+}
+
+const generateColor = (text) =>{
+      const inputString = text;
+      const hash = hashString(inputString);
+
+      const red = (hash & 0xFF0000) >> 16;
+      const green = (hash & 0x00FF00) >> 8;
+      const blue = hash & 0x0000FF;
+
+      return `rgb(${red}, ${green}, ${blue})`;
+}
+
 function transformData(inputData) {
   const labels = Object.keys(inputData.data);
   const datasets = {};
@@ -487,11 +506,22 @@ function transformData(inputData) {
         if (!datasets[key]) {
             const colorIndex = Object.keys(datasets).length % colors.length; 
            
+            // datasets[key] = {
+            //     label: key,
+            //     borderColor: (key=='global')?'#f75842':colors[colorIndex],
+            //     borderWidth: (key=='global')?5:3,
+            //     backgroundColor: (key=='global')?'#f75842':colors[colorIndex],
+            //     data: Array(labels.length).fill(0),
+            //     pointRadius: 0,
+            //     fill: false,
+            //     tension: 0.1
+            // };
+
             datasets[key] = {
                 label: key,
-                borderColor: (key=='global')?'#f75842':colors[colorIndex],
+                borderColor: generateColor(key),
                 borderWidth: (key=='global')?5:3,
-                backgroundColor: (key=='global')?'#f75842':colors[colorIndex],
+                backgroundColor: generateColor(key),
                 data: Array(labels.length).fill(0),
                 pointRadius: 0,
                 fill: false,
