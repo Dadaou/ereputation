@@ -505,17 +505,6 @@ function transformData(inputData) {
     Object.keys(inputData.data[date]).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())).forEach(key => {
         if (!datasets[key]) {
             const colorIndex = Object.keys(datasets).length % colors.length; 
-           
-            // datasets[key] = {
-            //     label: key,
-            //     borderColor: (key=='global')?'#f75842':colors[colorIndex],
-            //     borderWidth: (key=='global')?5:3,
-            //     backgroundColor: (key=='global')?'#f75842':colors[colorIndex],
-            //     data: Array(labels.length).fill(0),
-            //     pointRadius: 0,
-            //     fill: false,
-            //     tension: 0.1
-            // };
 
             datasets[key] = {
                 label: key,
