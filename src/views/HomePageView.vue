@@ -43,6 +43,7 @@
                 <button class="btn" @click="signOut">Disconnect</button>
             </div>
         </div>
+        <call-us-selector phonesystem-url="https://m-unit.on3cx.fr:5001" :party="chatID"></call-us-selector>
     </div>
 </template>
 
@@ -67,6 +68,7 @@ const companiesStore = useCompanyStore();
 const establishments = ref([]);
 const dataLoading = ref(true);
 const router = useRouter();
+const chatID = ref(import.meta.env.VITE_3CX_CHAT_ID);
 
 const page = ref({
     title1: "",
