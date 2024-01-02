@@ -252,6 +252,7 @@
         <!-- </div> -->
       </el-tab-pane>
     </el-tabs>
+    <call-us-selector phonesystem-url="https://m-unit.on3cx.fr:5001" :party="chatID"></call-us-selector>
   </div>
 </template>
 
@@ -285,6 +286,8 @@ let stripe = null;
 let stripeElements = null;
 
 const plans = ref([]);
+
+const chatID = ref(import.meta.env.VITE_3CX_CHAT_ID);
 
 const activeName = ref('plan');
 const activeStaffTab = ref('plan_list')
