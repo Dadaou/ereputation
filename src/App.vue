@@ -3,6 +3,8 @@
   <div class="app__loader" :style="loaderStyle" v-if="appStore.isLoading">
     <SpinnerComponent :size="'large'" />
   </div>
+  <div id="w3cx">
+  </div>
   <div class="erep__app">
     <RouterView />
   </div>
@@ -10,7 +12,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, watch, ref, defineAsyncComponent, provide, computed } from 'vue'
+import { onBeforeMount, watch, ref, defineAsyncComponent, provide, computed, onMounted } from 'vue'
 import { initFlowbite } from 'flowbite'
 import { useWindowSize } from '@vueuse/core'
 import { useAppStore } from "@Stores/app.js"
@@ -41,6 +43,14 @@ provide('tag', tag);
 onBeforeMount(() => {
   initFlowbite();
 });
+
+onMounted(() => {
+  let w3cx = document.createElement("script");
+  w3cx.setAttribute("src", "https://downloads-global.3cx.com/downloads/livechatandtalk/v1/callus.js");
+  w3cx.setAttribute("id", "tcx-callus-js");
+  w3cx.setAttribute("charset", "utf-8");
+  document.getElementById("w3cx").appendChild(w3cx);
+})
 
 const { width } = useWindowSize();
 const loaderStyle = ref({

@@ -15,8 +15,8 @@
                 </button>
                 <p><a href="/sign-up" class="register-link">Don't have an account?</a></p>
             </form>
-
         </div>
+        <call-us-selector phonesystem-url="https://m-unit.on3cx.fr:5001" :party="chatID"></call-us-selector>
     </div>
 </template>
 
@@ -39,6 +39,8 @@ const AlertComponent = defineAsyncComponent(() =>
 )
 const router = useRouter();
 const userStore = useUserStore();
+
+const chatID = ref(import.meta.env.VITE_3CX_CHAT_ID);
 
 const page = ref({
     title1: "Sign in to",
