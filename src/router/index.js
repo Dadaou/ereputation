@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@Views/LoginView.vue'
 import SubscriptionPageView from '@Views/SubscriptionPageView.vue'
+import ForgotPwdPageView from '@Views/ForgotPwdPageView.vue'
+import ResetPwdPageView from '@Views/ResetPwdPageView.vue'
+import ExpiredTokenPageView from '@Views/ExpiredTokenPageView.vue'
 import { useUserStore } from '@Stores/user.js'
 
 const CheckAuthentication = (to, from, next) => {
@@ -42,6 +45,21 @@ const router = createRouter({
       path: '/sign-up',
       name: 'Subscription',
       component: SubscriptionPageView
+    },
+    {
+      path: '/forgot-pwd',
+      name: 'ForgotPwd',
+      component: ForgotPwdPageView
+    },
+    {
+      path: '/password/reset/:token',
+      name: 'ResetPwd',
+      component: ResetPwdPageView
+    },
+    {
+      path: '/expired/email',
+      name: 'LinkExpired',
+      component: ExpiredTokenPageView
     },
     {
       path: '/home/establishments',

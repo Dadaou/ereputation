@@ -5,15 +5,18 @@
             v-on:close="isError = false" />
         <div class="login__container" ref="form__ref">
             <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="login__form">
-                <span>Connect to your account</span>
-                <input type="email" name="Email Address" placeholder="Email address" v-model="form.email" required>
-                <input type="password" name="Password" placeholder="Password" v-model="form.password" required>
-                <a class="register-link forgot__password" href="/forgot-pwd">Forgot Password?</a>
+                <span>Set your password</span>
+               <div class="mb-3">
+			        <input type="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="New password" v-model="form.password" required>
+			    </div> 
+			    <div class="mb-3">
+			        <input type="password" id="confirm_password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Confim password" v-model="form.confirmation" required>
+			    </div> 
                 <button type="submit" :class="['btn btn__light2', showSpinner == true ? 'isLoaded' : '']">
                     <SpinnerComponent v-if="showSpinner == true" :color="'red'" />
                     <span v-else>Submit</span>
                 </button>
-                <p><a href="/sign-up" class="register-link">Don't have an account?</a></p>
+                <p class="back_to_login"> <i class="uil uil-angle-left"></i> <a href="/forgot-pwd">Go back</a></p>
             </form>
 
         </div>
@@ -24,9 +27,10 @@
 import { ref, watch, onMounted, defineAsyncComponent } from 'vue'
 import HeadComponent from '@Components/layouts/HeadComponent.vue'
 import { useUserStore } from "@Stores/user.js"
-import { useRouter } from "vue-router"
+import { useRouter, useRoute } from "vue-router"
 import { useWindowSize } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
+import services from '@Services/services.js'
 import 'element-plus/es/components/message/style/css'
 
 
@@ -37,18 +41,19 @@ const SpinnerComponent = defineAsyncComponent(() =>
 const AlertComponent = defineAsyncComponent(() =>
     import('@Components/utils/AlertComponent.vue')
 )
-const router = useRouter();
-const userStore = useUserStore();
+const router = useRouter()
+const route = useRoute()
+const userStore = useUserStore()
 
 const page = ref({
-    title1: "Sign in to",
-    title2: "your Account",
-    icon: "uil-signin",
+    title1: "",
+    title2: "Reset Password",
+    icon: "uil-key-skeleton",
 });
 
 const form = ref({
-    email: '',
     password: '',
+    confirmation: ''
 });
 
 const isError = ref(false);
@@ -61,6 +66,29 @@ const notification = ref({
 const showSpinner = ref(false)
 
 const submit = async () => {
+	showSpinner.value = true;
+	services.setURL(import.meta.env.VITE_APP_URL)
+	console.log(route.params.token)
+	await userStore.resetPassword(
+		form.value.password, 
+		form.value.confirmation,
+		route.params.token,
+		(response) => {
+			console.log(response)
+			isError.value = true;
+		    notification.value.message = response.data
+		    notification.value.type = (response.data == "the password and confirmation password does not have same value")?"warning":"success"
+
+			showSpinner.value = false
+			services.setURL(import.meta.env.VITE_APP_API_URL)
+			if(response.data !== "the password and confirmation password does not have same value"){
+				router.push("/");
+			}
+		}
+	)
+}
+
+const submitTest = async () => {
     showSpinner.value = true;
     await userStore.signIn(form.value.email, form.value.password, (response) => {
         if (response.authenticated) {
@@ -73,7 +101,7 @@ const submit = async () => {
         } else {
             isError.value = true;
             if (response.status == 401) {
-                notification.value.message = "Please verify your password or email!";
+                notification.value.message = "We can not find your email!";
                 notification.value.type = "warning";
             }
 
@@ -143,7 +171,6 @@ button.isLoaded {
     height: 40px;
     border: 1px solid var(--light-color-bg2);
     border-radius: 5px;
-    padding: 10px;
     font-size: 14px !important;
     font-weight: 500;
 }
@@ -151,11 +178,13 @@ button.isLoaded {
 .login__form span {
     text-align: center;
     font-weight: 600;
+    padding-bottom: 20px;
 }
 
 .login__form a {
     color: var(--color-black2);
-    font-size: 12px;
+    font-size: 13px;
+    color: grey;
 }
 
 .forgot__password {
@@ -179,6 +208,15 @@ button.isLoaded {
 
 .login__form button:hover {
     transform: scale(0.95);
+}
+
+.back_to_login{
+	display: flex;
+	align-content: center;
+	align-items: center;
+	font-size: 16px !important;
+	font-weight: 500;
+	justify-content: center;
 }
 
 /* For tablets */

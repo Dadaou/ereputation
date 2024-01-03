@@ -5,15 +5,21 @@
             v-on:close="isError = false" />
         <div class="login__container" ref="form__ref">
             <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="login__form">
-                <span>Connect to your account</span>
-                <input type="email" name="Email Address" placeholder="Email address" v-model="form.email" required>
-                <input type="password" name="Password" placeholder="Password" v-model="form.password" required>
-                <a class="register-link forgot__password" href="/forgot-pwd">Forgot Password?</a>
+                <span>Enter your email and we will send you a link to reset your password.</span>
+                <div class="relative">
+				  <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+				    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
+				        <path d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z"/>
+				        <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z"/>
+				    </svg>
+				  </div>
+				  <input type="text" id="input-group-1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="example@nexties.fr" v-model="form.email">
+				</div>
                 <button type="submit" :class="['btn btn__light2', showSpinner == true ? 'isLoaded' : '']">
                     <SpinnerComponent v-if="showSpinner == true" :color="'red'" />
                     <span v-else>Submit</span>
                 </button>
-                <p><a href="/sign-up" class="register-link">Don't have an account?</a></p>
+                <p class="back_to_login"> <i class="uil uil-angle-left"></i> <a href="/">Back to login</a></p>
             </form>
 
         </div>
@@ -27,6 +33,7 @@ import { useUserStore } from "@Stores/user.js"
 import { useRouter } from "vue-router"
 import { useWindowSize } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
+import services from '@Services/services.js'
 import 'element-plus/es/components/message/style/css'
 
 
@@ -41,14 +48,13 @@ const router = useRouter();
 const userStore = useUserStore();
 
 const page = ref({
-    title1: "Sign in to",
-    title2: "your Account",
-    icon: "uil-signin",
+    title1: "",
+    title2: "Forgot Password",
+    icon: "uil-exclamation-circle",
 });
 
 const form = ref({
     email: '',
-    password: '',
 });
 
 const isError = ref(false);
@@ -60,30 +66,17 @@ const notification = ref({
 
 const showSpinner = ref(false)
 
-const submit = async () => {
-    showSpinner.value = true;
-    await userStore.signIn(form.value.email, form.value.password, (response) => {
-        if (response.authenticated) {
-            router.push({ name: "Home" });
-            showSpinner.value = false;
-            // ElMessage({
-            //    message: 'Congrats, you are authenticated!',
-            //    type: 'success',
-            // })
-        } else {
-            isError.value = true;
-            if (response.status == 401) {
-                notification.value.message = "Please verify your password or email!";
-                notification.value.type = "warning";
-            }
-
-            if (response.status == 500) {
-                notification.value.message = "Oops! Something unexpected happened. A server connection issue";
-                notification.value.type = "error";
-            }
-            showSpinner.value = false;
-        }
-    })
+const submit = async () =>{
+	showSpinner.value = true;
+	console.log(form.value.email)
+	services.setURL(import.meta.env.VITE_APP_URL)
+	await userStore.verifyPassword(form.value.email, (response)=>{
+		isError.value = true;
+		notification.value.message = response.data;
+		notification.value.type = (response.status == 202)?"success":(response.status==404)?"warning":"error"
+		showSpinner.value = false
+		services.setURL(import.meta.env.VITE_APP_API_URL)
+	})
 }
 
 /**
@@ -143,7 +136,6 @@ button.isLoaded {
     height: 40px;
     border: 1px solid var(--light-color-bg2);
     border-radius: 5px;
-    padding: 10px;
     font-size: 14px !important;
     font-weight: 500;
 }
@@ -151,11 +143,13 @@ button.isLoaded {
 .login__form span {
     text-align: center;
     font-weight: 600;
+    padding-bottom: 20px;
 }
 
 .login__form a {
     color: var(--color-black2);
-    font-size: 12px;
+    font-size: 13px;
+    color: grey;
 }
 
 .forgot__password {
@@ -179,6 +173,15 @@ button.isLoaded {
 
 .login__form button:hover {
     transform: scale(0.95);
+}
+
+.back_to_login{
+	display: flex;
+	align-content: center;
+	align-items: center;
+	font-size: 16px !important;
+	font-weight: 500;
+	justify-content: center;
 }
 
 /* For tablets */

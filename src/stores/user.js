@@ -37,6 +37,22 @@ export const useUserStore = defineStore(
       services.logout()
     }
 
+    const verifyPassword = async (email, next) =>{
+      await services.post_Record('password/reset', {email: email}, (response)=>{
+        console.log(response);
+        next(response);
+      })
+    }
+
+    const resetPassword = async (password, confirmation, token, next) => {
+      await services.post_Record(`/reinitialiser-mot-de-pass/${token}`, {
+        password: password, confirmation: confirmation
+      }, (response)=>{
+        console.log(response);
+        next(response);
+      })
+    }
+
     const getInitials = (firstName, lastName) => {
       const firstInitial = firstName.charAt(0).toUpperCase()
       const secondInitial = lastName.charAt(0).toUpperCase()
@@ -62,7 +78,9 @@ export const useUserStore = defineStore(
       signIn,
       signOut,
       getInitials,
-      getInitialsV2
+      getInitialsV2,
+      verifyPassword,
+      resetPassword
     }
   },
   {
