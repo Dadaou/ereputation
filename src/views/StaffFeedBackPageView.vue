@@ -5,7 +5,7 @@
         <div class="tablet_mobile__head">
             <div class="staff__card" v-if="staff !== null">
 		            <div>
-		                <h5>{{ staff.firstname }} <span v-if="staff.lastname != null">{{ staff.lastname }}</span></h5>
+		                <h5>{{ staff.firstname }} <!-- <span v-if="staff.lastname != null">{{ staff.lastname }}</span> --></h5>
 		                <ul>
                             <li><span class="label">Department: </span> <span>{{ staff.department }}</span></li>
 		                    <li class="Gender">
@@ -18,6 +18,12 @@
             <div class="feedback">
                 <h3>Customer experiences feedback</h3>
                 <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4">
+                     <div class="mb-6 feedback__rating">
+                       <label>Rating <span>*</span></label>
+                       <RatingFeedbackComponent @updateValue="(rating)=>{
+                        ratingCustomer = rating
+                       }"/>
+                    </div> 
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                         <div>
                             <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First name <span>*</span></label>
@@ -33,27 +39,31 @@
                             <span>
                                <i class="uil uil-info-circle"></i> If you wish to obtain discounts or benefits, please provide your email address below.
                             </span>
+                            <p v-if="randomAdvantage">
+                                <b>Promotion of the day:</b>  {{randomAdvantage.name}}
+                            </p>
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
                         </div>
                         <div>
-                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Visited at<!--  <span>*</span> --></label>
-                             <el-date-picker
+                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date visit<!--  <span>*</span> --></label>
+                             <!-- <el-date-picker
                                 v-model="dateVisit"
+                                :size="'large'"
+                              /> -->
+                              <el-date-picker
+                                v-model="dateVisit"
+                                type="datetime"
+                                placeholder="Select date and time"
                                 :size="'large'"
                               />
                         </div>
                     </div>
-                    <div class="mb-6 feedback__rating">
-                       <label>Rating <span>*</span></label>
-                       <RatingFeedbackComponent @updateValue="(rating)=>{
-                        ratingCustomer = rating
-                       }"/>
-                    </div> 
+                   
                     <div class="feedback__text w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
                         <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
-                            <label for="comment" class="text-sm comment__label">Please leave a comment <span>*</span></label>
-                            <textarea id="comment" v-model="comment" rows="4" class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" required></textarea>
+                            <label for="comment" class="text-sm comment__label">Please leave a comment</label>
+                            <textarea id="comment" v-model="comment" rows="4" class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"></textarea>
                         </div>
                          <div>
                             <div class="checkbox-container">
@@ -117,6 +127,7 @@ const page=ref({
 });
 
 const showSpinner = ref(false);
+const allAdvantages = ref(null)
 
 onBeforeMount(async ()=>{
     if(userStore.authenticated==null) services.setToken(import.meta.env.VITE_APP_TOKEN);
@@ -130,6 +141,26 @@ onBeforeMount(async ()=>{
 
             if(response.status == 404) exist.value=false
     });
+
+    let advantage_promises = [];
+    try {
+        const response = await new Promise((resolve, reject) => {
+            services.get_Record(`advantage/list`, (response) => {
+                resolve(response);
+            });
+        });
+        console.log('Raw Advantage Data:', response.data);
+        if (response.status === 200) {
+            allAdvantages.value = response.data;
+            if(allAdvantages.value.length > 0) randomAdvantage.value = allAdvantages.value[getRandomValue(allAdvantages.value.length)];
+
+            console.log('Processed Advantage Data:', allAdvantages.value);
+        } else {
+            console.error('Error fetching advantages:', response);
+        }
+    } catch (error) {
+        console.error('Error in onBeforeMount:', error);
+    }
     
 })
 
@@ -209,10 +240,21 @@ const submit = async ()=>{
     flex-direction: column;
 }
 
+.author__email p{
+ font-size: 14px;
+ line-height: 1;
+ font-weight: 500;
+}
+
+.author__email p b{
+ color: var(--color-danger)
+}
+
 .author__email span{
  font-size: 14px;
  line-height: 1;
  font-weight: 500;
+ color: var(--color-primary)
 }
 
 .author__email i{
