@@ -38,10 +38,9 @@
 
 <script setup>
 import { ref } from 'vue';
-import { RouterView } from 'vue-router';
+import { RouterView, useRoute } from 'vue-router';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
-import { useRoute } from "vue-router";
 
 
 const page = ref({
@@ -145,6 +144,11 @@ const breadcrumbData = [
 .menu-open .admin__menu ul {
   display: block;
   /* Affiche toujours la liste du menu sur les petits écrans */
+}
+
+.erep__app {
+  position: absolute;
+  top: -5em;  
 }
 
 /* Pour les petits écrans (par exemple, les téléphones mobiles) */

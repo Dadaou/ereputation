@@ -88,7 +88,7 @@
                     </div>
                     <div class="society__location">
                         <i class="uil uil-location-point"></i>
-                        <span v-if="!dataLoading">{{ establishment.address1 }}, {{ establishment.city }}</span>
+                        <span v-if="!dataLoading">{{ establishment.city }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
@@ -172,13 +172,13 @@
                         </div>
                         <div class="society__location">
                             <i class="uil uil-location-point"></i>
-                            <span v-if="!dataLoading" class="society__location">{{ establishment.address1 }}, {{
+                            <span v-if="!dataLoading" class="society__location">{{
                                 establishment.city }}</span>
                             <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                         </div>
                     </div>
                     <div class="date__filter">
-                        <div class="text-sm title">Select a range of date</div>
+                        <div class="text-sm title">Select a date range</div>
                         <el-date-picker v-model="start_date" type="date" placeholder="Select the start date"
                             :size="'large'" />
                         <el-date-picker class="mt-2" v-model="end_date" type="date" placeholder="Select the end date"
@@ -421,7 +421,7 @@ useResizeObserver(el, (entries) => {
 .app__container {
     margin-top: 5rem;
     min-height: 30rem;
-    width: var(--container-width-lg);
+    max-width: 1200px; 
     margin: 0 auto;
     padding: 0;
     display: flex;

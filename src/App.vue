@@ -3,8 +3,6 @@
   <div class="app__loader" :style="loaderStyle" v-if="appStore.isLoading">
     <SpinnerComponent :size="'large'" />
   </div>
-  <div id="w3cx">
-  </div>
   <div class="erep__app">
     <RouterView />
   </div>
@@ -17,6 +15,7 @@ import { initFlowbite } from 'flowbite'
 import { useWindowSize } from '@vueuse/core'
 import { useAppStore } from "@Stores/app.js"
 import { useUserStore } from "@Stores/user.js"
+import { RouterView, useRoute } from 'vue-router';
 
 const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
@@ -30,14 +29,14 @@ const FooterComponent = defineAsyncComponent(() =>
   import('@Components/layouts/FooterComponent.vue')
 )
 
-const appStore = useAppStore();
-const userStore = useUserStore();
+const appStore = useAppStore()
+const userStore = useUserStore()
+const route = useRoute()
 const tag = computed(() => {
   let customer_tag = (userStore.user) ? userStore.user.customer.tag : '';
 
   return customer_tag;
 })
-
 provide('tag', tag);
 
 onBeforeMount(() => {
@@ -45,6 +44,9 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
+  var w3cxDiv = document.createElement("div");
+  w3cxDiv.id = "w3cx";
+  document.getElementById("app").appendChild(w3cxDiv);
   let w3cx = document.createElement("script");
   w3cx.setAttribute("src", "https://downloads-global.3cx.com/downloads/livechatandtalk/v1/callus.js");
   w3cx.setAttribute("id", "tcx-callus-js");
@@ -83,5 +85,15 @@ watch(width, () => {
 .erep__app {
   min-height: 500px;
   width: 100vw;
+}
+
+.extern_erep_app {
+  position: relative;
+  top:-2em;
+}
+
+.other_erep_app {
+  position: relative;
+  top:-5em;
 }
 </style>

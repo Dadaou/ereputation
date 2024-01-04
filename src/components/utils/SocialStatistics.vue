@@ -178,6 +178,14 @@ const change = (value, element) => {
     }
 }
 
+const checkData = (data) => {
+    let allzero = true;
+    data.forEach(value=>{
+        if(value != 0) allzero = false 
+    })
+    return allzero;
+}
+
 const updateData = async () => {
 
     const yearValue = year.value ? year.value.value : new Date().getFullYear()
@@ -215,15 +223,17 @@ const updateData = async () => {
         data.labels = datas.labels;
 
         for (const [key, value] of Object.entries(datas.data)) {
-            data.datasets.push({
-                label: key,
-                backgroundColor: colors[key],
-                data: value[filterValue]
-            })
-            lineLegend.value.push({
-                name: key,
-                color: colors[key]
-            })
+            if(!checkData(value[filterValue])){
+                data.datasets.push({
+                    label: key,
+                    backgroundColor: colors[key],
+                    data: value[filterValue]
+                })
+            }
+            // lineLegend.value.push({
+            //     name: key,
+            //     color: colors[key]
+            // })
         }
         lineData.value = data;
     }
@@ -267,10 +277,10 @@ onMounted(async () => {
             backgroundColor: colors[key],
             data: value['followers']
         })
-        lineLegend.value.push({
-            name: key,
-            color: colors[key]
-        })
+        // lineLegend.value.push({
+        //     name: key,
+        //     color: colors[key]
+        // })
     }
 
     lineData.value = data;

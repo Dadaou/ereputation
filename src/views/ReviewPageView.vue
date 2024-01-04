@@ -54,11 +54,23 @@
                 </div>
             </div>
             <div class="tablet_mobile__filter tablet">
-                <div class="reviews__star">
+               <!--  <div class="reviews__star">
                     <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
                         @click="starFilter(star.intVal)">
                         <a href="#" class="text-xs font-medium hover:underline">{{ star.label }}</a>
                         <div class="star__barre h-3 rounded mx-2" :style="{ 'width': `${star.percentage}%` }">
+                        </div>
+                        <span class="text-xs font-medium">{{ star.value }}</span>
+                    </div>
+                </div> -->
+                 <div class="reviews__star">
+                    <div v-for="star in starsData" :key="star.label" class="flex items-center mt-1">
+                        <a href="#" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
+                            {{ star.label }}
+                        </a>
+                        <div class="star__bar h-3 bg-gray-200 rounded mx-2 flex-grow">
+                            <div class="star__bar-fill h-3 bg-yellow-300 rounded" :style="{ 'width': `${star.percentage}%` }">
+                            </div>
                         </div>
                         <span class="text-xs font-medium">{{ star.value }}</span>
                     </div>
@@ -81,11 +93,23 @@
                 <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
             </div>
             <div class="tablet_mobile__filter" v-if="currentFilter == 'star'">
-                <div class="reviews__star">
+                <!-- <div class="reviews__star">
                     <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
                         @click="starFilter(star.intVal)">
                         <a href="#" class="text-xs font-medium hover:underline">{{ star.label }}</a>
                         <div class="star__barre h-3 rounded mx-2" :style="{ 'width': `${star.percentage}%` }">
+                        </div>
+                        <span class="text-xs font-medium">{{ star.value }}</span>
+                    </div>
+                </div> -->
+                 <div class="reviews__star">
+                    <div v-for="star in starsData" :key="star.label" class="flex items-center mt-1">
+                        <a href="#" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
+                            {{ star.label }}
+                        </a>
+                        <div class="star__bar h-3 bg-gray-200 rounded mx-2 flex-grow">
+                            <div class="star__bar-fill h-3 bg-yellow-300 rounded" :style="{ 'width': `${star.percentage}%` }">
+                            </div>
                         </div>
                         <span class="text-xs font-medium">{{ star.value }}</span>
                     </div>
@@ -108,7 +132,7 @@
                     </div>
                     <div class="society__location">
                         <i class="uil uil-location-point"></i>
-                        <span v-if="!dataLoading">{{ establishment.address1 }}, {{ establishment.city }}</span>
+                        <span v-if="!dataLoading">{{ establishment.city }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
                     <div class="society__location">
@@ -208,7 +232,7 @@
                         </div>
                         <div class="society__location">
                             <i class="uil uil-location-point"></i>
-                            <span v-if="!dataLoading" class="society__location">{{ establishment.address1 }}, {{
+                            <span v-if="!dataLoading" class="society__location">{{
                                 establishment.city }}</span>
                             <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                         </div>
@@ -218,16 +242,28 @@
                             selectedWebsites = website
                         }" :default="websites[0]" />
                     <div class="date__filter">
-                        <div class="text-sm title">Select a range of date</div>
+                        <div class="text-sm title">Select a date range</div>
                         <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
                         <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" />
                     </div>
                 </div>
-                <div class="reviews__star">
+               <!--  <div class="reviews__star">
                     <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
                         @click="starFilter(star.intVal)">
                         <a href="#" class="text-xs font-medium hover:underline">{{ star.label }}</a>
                         <div class="star__barre h-3 rounded mx-2" :style="{ 'width': `${star.percentage}%` }">
+                        </div>
+                        <span class="text-xs font-medium">{{ star.value }}</span>
+                    </div>
+                </div> -->
+                 <div class="reviews__star">
+                    <div v-for="star in starsData" :key="star.label" class="flex items-center mt-1">
+                        <a href="#" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
+                            {{ star.label }}
+                        </a>
+                        <div class="star__bar h-3 bg-gray-200 rounded mx-2 flex-grow">
+                            <div class="star__bar-fill h-3 bg-yellow-300 rounded" :style="{ 'width': `${star.percentage}%` }">
+                            </div>
                         </div>
                         <span class="text-xs font-medium">{{ star.value }}</span>
                     </div>

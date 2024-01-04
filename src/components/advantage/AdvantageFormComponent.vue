@@ -11,12 +11,12 @@
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                         <div>
                             <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span></span></label>
-                            <el-select v-model="establishments" placeholder="Choose establishment" size="large" multiple collapse-tags collapse-tags-tooltip>
+                            <el-select v-model="establishment" placeholder="Choose establishment" size="large">
                                 <el-option
                                 v-for="item in userStore.user.customer.establishments"
                                 :key="item.id"
                                 :label="item.name"
-                                :value="`/api/${companiesStore.entity}/${item.id}`"
+                                :value="`/api/establishments/${item.id},${item.name}`"
                                 />
                             </el-select>
                         </div>
@@ -47,7 +47,7 @@
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                         <div>
                             <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount <span></span></label>
-                            <input type="number" id="amount" v-model="amount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                            <input type="number" id="amount" v-model="amount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
                         </div>
                         <div>
                             <label for="metric" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Metric <span></span></label>
@@ -59,7 +59,7 @@
                        
                         <div>
                             <label for="validity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Validity <span></span></label>
-                            <input type="number" id="validity" v-model="validity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                            <input type="number" id="validity" v-model="validity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
                         </div>
                         <div>
                             <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Expired at <span></span></label>
@@ -121,26 +121,22 @@ const showSpinner = ref(false);
  const category = ref('');
  const advantageName = ref('');
  const eventName = ref('');
- const establishments = ref([]);
+ const establishment = ref("");
  const code = ref('');
  const amount = ref('');
  const metric = ref('');
  const scope = ref(null);
  const validity = ref('');
 
- const type = ref('add');
- const advantage_to_update = inject('advantage_to_update');
- const advantages = inject('advantages');
+const type = ref('add');
+const advantage_to_update = inject('advantage_to_update');
+const advantages = inject('advantages');
 const activeAdvantageTab = inject('advantage_activeTab');
-const handleAdvantageAdded = (newAdvantage) => {
-    // Mettez à jour la liste des avantages dans le composant parent
-    advantages.value.push(newAdvantage);
-};
+
 watch(advantage_to_update, ()=>{
     if(advantage_to_update.value != null){  
     console.log(advantage_to_update.value) 
-        // dateFrom.value = new Date(advantage_to_update.value["datefrom"]);
-        dateTo.value = new Date(advantage_to_update.value["dateTo"]);
+        dateTo.value = new Date(advantage_to_update.value["expired_at"]);
         category.value = advantage_to_update.value["category"];
         code.value = advantage_to_update.value["code"];
         metric.value = advantage_to_update.value["metric"];
@@ -148,7 +144,7 @@ watch(advantage_to_update, ()=>{
         validity.value = advantage_to_update.value["validity"];
         amount.value = advantage_to_update.value["amount"];
         advantageName.value = advantage_to_update.value["name"];
-        establishments.value = advantage_to_update.value['establishment']
+        establishment.value = `${advantage_to_update.value['establishment_iri']},${advantage_to_update.value['establishment_name']}`
         type.value = 'edit';
     }
 })
@@ -186,16 +182,8 @@ const getEstablishmentsName = (data) => {
     return names;
 }
 
-
-const getUris = (establishments)=>{
-  let uris = [];
-  establishments.forEach(establishment=>{
-    uris.push(establishment.competitor_tag) 
-  })
-  return uris;
-}
-
-const loadData = (_advantage, advantage)=>{
+const loadData = (_advantage, advantage, establishment_name) => {
+  console.log(_advantage)
   const new_advantage = {
           id: _advantage.id,
           name: _advantage.name,
@@ -205,25 +193,25 @@ const loadData = (_advantage, advantage)=>{
           validity: _advantage.validity,
           metric: _advantage.metric,           
           scope: _advantage.scope,                           
-          dateTo: moment(_advantage.dateTo).toISOString(),
-          establishment_name :  getEstablishmentsName(_advantage.establishment), 
+          expired_at: moment(_advantage.expiredAt).format('YYYY-MM-DD'),
+          establishment_name : establishment_name, 
   }
-  advantages.value.push(new_event);
+  advantages.value.push(new_advantage);
+  activeAdvantageTab.value = 'advantage_list'
 }
 
-const updateData = (_advantage)=>{
+const updateData = (_advantage, establishment_name)=>{
      const new_advantage = {
           id: _advantage.id,
           name: _advantage.name,
           category: _advantage.category,
+          code: _advantage.code,     
           amount: _advantage.amount,
-          code: _advantage.code,  
           validity: _advantage.validity,
           metric: _advantage.metric,           
           scope: _advantage.scope,                           
-          expiredAt: moment(_advantage.dateTo).toISOString(),
-          establishment_name :  getEstablishmentsName(_advantage.establishment),
-          establishment: _event.establishment,
+          expired_at: moment(_advantage.expiredAt).format('YYYY-MM-DD'),
+          establishment_name : establishment_name, 
       }
 
       console.log(new_advantage);
@@ -243,9 +231,8 @@ const updateData = (_advantage)=>{
         "scope": scope.value,
         "validity": validity.value,
         "enable": true,
-        "establishment": establishments.value.length > 0 ? establishments.value[0] : "",
-        "expiredAt": moment(dateTo.value).toISOString(),
-        "createdAt": moment().toISOString(),
+        "establishment": establishment.value.split(",")[0],
+        "expiredAt": dateTo.value
     };
 
     try {
@@ -253,15 +240,16 @@ const updateData = (_advantage)=>{
             showSpinner.value = true;
 
             if (type.value === 'add') {
-                // Logique pour ajouter un nouvel avantage
                 const response = await new Promise((resolve, reject) => {
                     services.createRecord('advantages', advantageData, (response) => {
                         resolve(response);
+                        console.log(response)
                     });
                 });
+                console.log(response)
 
                 if (response.status === 201) {
-                    // loadData(response.data, advantageData);
+                    loadData(response.data, advantageData, establishment.value.split(",")[1]);
                     ElMessage({
                         message: `Advantage added successfully.`,
                         type: 'success',
@@ -273,13 +261,12 @@ const updateData = (_advantage)=>{
                     metric.value = '';
                     scope.value = '';
                     validity.value = '';
-                    establishments.value = [];
+                    establishment.value = "";
                     dateTo.value = '';
                     showSpinner.value = false;
 
                 }
             } else if (type.value === 'edit' && advantage_to_update.value !== null) {
-                // Logique pour mettre à jour un avantage existant
                 const advantageId = advantage_to_update.value.id;
                 const response = await new Promise((resolve, reject) => {
                     services.putRecord('advantages', advantageId, advantageData, (response) => {
@@ -292,8 +279,16 @@ const updateData = (_advantage)=>{
                         message: `Advantage updated successfully.`,
                         type: 'success',
                     });
-                    updateData(response.data);
-                    console.log(response.data);
+                    updateData(response.data, establishment.value.split(",")[1]);
+                     category.value = '';
+                    code.value = '';
+                    advantageName.value = '';
+                    amount.value = '';
+                    metric.value = '';
+                    scope.value = '';
+                    validity.value = '';
+                    establishment.value = "";
+                    dateTo.value = '';
                     activeAdvantageTab.value = 'advantage_list';
                     showSpinner.value = false;
                 }
@@ -306,6 +301,7 @@ const updateData = (_advantage)=>{
         console.error('Error during form submission:', error);
     }
 };
+
 const fetchAdvantageList = async () => {
     try {
         const response = await new Promise((resolve, reject) => {
@@ -325,70 +321,6 @@ const fetchAdvantageList = async () => {
     }
 };
 
-//     let event = {
-//         "name": eventName.value,
-//         "category": category.value,
-//         "datefrom": moment(dateFrom.value).format('YYYY-MM-DD'),
-//         "dateto":  moment(dateTo.value).format('YYYY-MM-DD'),
-//         "establishment": establishments.value
-//     }
-
-//     try {
-
-//         if(dateFrom.value != null && dateTo.value != null && category.value != '' && establishments.value.length >0 && eventName.value != ''){
-//            showSpinner.value = true;
-//             if(type.value == 'add'){
-//                 const response = await new Promise((resolve, reject) => {
-//                   services.createRecord('events', event, (response) => {
-//                     resolve(response);
-//                   });
-//                 });
-
-//                 if (response.status === 201) {
-//                   loadData(response.data, event);
-//                   ElMessage({
-//                     message: `Event added successfully.`,
-//                     type: 'success',
-//                   });
-//                   dateFrom.value = '';
-//                   dateTo.value = '';
-//                   category.value = '';
-//                   establishments.value = [];
-//                   eventName.value = '';
-//                   showSpinner.value = false;
-//                 }
-//             }else{
-//                 const response = await new Promise((resolve, reject) => {
-//                   services.putRecord('events', event_to_update.value['id'], event, (response) => {
-//                     resolve(response);
-//                   });
-//                 });
-
-//                 if (response.status == 200) {
-//                   updateData(response.data);
-//                   ElMessage({
-//                     message: `Event updated successfully.`,
-//                     type: 'success',
-//                   });
-//                   activeEventTab.value= 'event_list';
-
-//                   dateFrom.value = '';
-//                   dateTo.value = '';
-//                   category.value = '';
-//                   establishments.value = [];
-//                   eventName.value = '';
-//                   showSpinner.value = false;
-//                   type.value= 'add'
-//                 }
-//             }
-//         }else{
-//             ElMessage.error(`Please, provide all needed information to ${type.value} an event`);
-//             showSpinner.value = false;
-//         }  
-//     } catch (error) {
-//         console.log(error);
-//     }
-// };
 </script>
 <style scoped>
 form{

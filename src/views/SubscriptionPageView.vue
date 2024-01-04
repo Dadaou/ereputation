@@ -106,8 +106,7 @@
             <!-- <span v-for="error in v$User.$errors" :key="error.uid">{{ error.$property }} - {{ error.$message }}</span> -->
           </div>
           <div class="navigation-container">
-            <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-              @click="activeName = 'plan'">Previous</button> -->
+            <button type="button" class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;" @click="activeName = 'plan'">Previous</button>
             <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
               @click="activeName = 'company-info'">Next</button> -->
             <button type="submit" class="btn btn-primary btn-navigation"
@@ -135,7 +134,7 @@
               </span> -->
             </div>
             <div class="w-full">
-              <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adress
+              <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address
                 <span>*</span></label>
               <input v-model="planInfo.cAdress" type="text" id="last_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
@@ -190,8 +189,8 @@
             </div>
           </div>
           <div class="navigation-container">
-            <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-              @click="activeName = 'user-info'">Previous</button> -->
+            <button type="button" class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+              @click="activeName = 'user-info'">Previous</button>
             <button type="submit" v-if="planInfo.acceptConditions" class="btn btn-primary-2 btn-navigation"
               style="margin-top: 12px; border-radius: 2px;">Sign In</button>
           </div>
@@ -697,7 +696,7 @@ const countries = ref([
   { name: 'Yemen', code: 'YE' },
   { name: 'Zambia', code: 'ZM' },
   { name: 'Zimbabwe', code: 'ZW' }
-])
+]);
 
 </script>
 <style>
@@ -840,6 +839,11 @@ const countries = ref([
 .subscription__container button[type=submit] {
   background-color: var(--color-danger) !important;
   color: var(--color-white) !important;
+}
+
+button[type=button]{
+  color: var(--color-danger) !important;
+  border: solid 1px var(--color-danger) !important;
 }
 
 .subscription__container .field-msg {
