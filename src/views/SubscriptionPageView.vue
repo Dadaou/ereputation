@@ -284,6 +284,7 @@ const submitCompanyForm = async () => {
 
 let stripe = null;
 let stripeElements = null;
+let paymentElements = null;
 
 const plans = ref([]);
 
@@ -386,6 +387,8 @@ onBeforeMount(async () => {
   }
 })
 
+const loading = ref(true);
+
 onMounted(async () => {
   stripe = await loadStripe(import.meta.env.VITE_PUBLIC_STRIPE_KEY);
 
@@ -395,9 +398,60 @@ onMounted(async () => {
     currency: "usd"
   })
 
-  const paymentElement = stripeElements.create("payment");
-  paymentElement.mount("#payment-element");
+  paymentElements = stripeElements.create("payment");
+  paymentElements.mount("#payment-element");
+  loading.value = false;
 })
+
+const handlePayment = async () => {
+  if (loading.value || !stripe || !stripeElements) {
+    return;
+  }
+  loading.value = true;
+  try {
+    const response = await API.post("StripeAPI", "/stripePurchase", {
+      body: { productID: "prod_SSdsgsddfsfs" }
+    });
+    console.log("response: ", response);
+    const { secret } = response;
+    const { submitError } = await paymentElements.submit();
+    if (submitError) {
+      console.log("error submit");
+      loading.value = false;
+      return;
+    }
+
+    const { error } = await stripe.confirmPayment({
+      paymentElements,
+      secret,
+      confirmParams: {
+        receipt_email: "",
+        shipping: {
+          address: {
+            city: "",
+            line1: "",
+            state: "",
+            postal_code: "",
+            country: "",
+          },
+          name: ""
+        },
+        return_url: "http://localhost:5173/success"
+      }
+    });
+    loading.value = false;
+    if (error.type === "card_error" || error.type === "validation_error") {
+      router.push("/error");
+    } else {
+      console.log("great");
+    }
+
+  } catch (error) {
+    console.log("error: ", error);
+    router.push("/error");
+    loading.value = false;
+  }
+}
 
 const countries = ref([
   { name: 'Afghanistan', code: 'AF' },
