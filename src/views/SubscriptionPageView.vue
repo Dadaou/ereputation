@@ -62,7 +62,7 @@
               <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First
                 name <span>*</span></label>
               <input v-model="planInfo.uFName" type="text" id="first_name"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
               <!-- <span v-for="error in v$User.uFName.$errors" :key="error.$uid" class="field-msg">
                 {{ error.$message }}
               </span> -->
@@ -71,7 +71,7 @@
               <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last
                 name <span>*</span></label>
               <input v-model="planInfo.uLName" type="text" id="last_name"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
               <!-- <span v-for="error in v$User.uLName.$errors" :key="error.$uid" class="field-msg">
                 {{ error.$message }}
               </span> -->
@@ -80,7 +80,7 @@
               <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
                 <span>*</span></label>
               <input v-model="planInfo.uEmail" type="email" id="email"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
               <!-- <span v-for="error in v$User.uEmail.$errors" :key="error.$uid" class="field-msg">
                 {{ error.$message }}
               </span> -->
@@ -89,7 +89,7 @@
               <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password
                 <span>*</span></label>
               <input v-model="planInfo.uPassword" type="password" id="password"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
               <!-- <span v-for="error in v$User.uPassword.$errors" :key="error.$uid" class="field-msg">
                 {{ error.$message }}
               </span> -->
@@ -98,7 +98,7 @@
               <label for="cpassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password
                 <span>*</span></label>
               <input v-model="planInfo.uCPassword" type="password" id="cpassword"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
               <!-- <span v-for="error in v$User.uCPassword.$errors" :key="error.$uid" class="field-msg">
                 {{ error.$message }}
               </span> -->
@@ -106,7 +106,8 @@
             <!-- <span v-for="error in v$User.$errors" :key="error.uid">{{ error.$property }} - {{ error.$message }}</span> -->
           </div>
           <div class="navigation-container">
-            <button type="button" class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;" @click="activeName = 'plan'">Previous</button>
+            <button type="button" class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+              @click="activeName = 'plan'">Previous</button>
             <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
               @click="activeName = 'company-info'">Next</button> -->
             <button type="submit" class="btn btn-primary btn-navigation"
@@ -128,7 +129,7 @@
               <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
                 name <span>*</span></label>
               <input v-model="planInfo.cName" type="text" id="first_name"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
               <!-- <span v-for="error in v$Company.cName.$errors" :key="error.$uid" class="field-msg">
                 {{ error.$message }}
               </span> -->
@@ -137,7 +138,7 @@
               <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address
                 <span>*</span></label>
               <input v-model="planInfo.cAdress" type="text" id="last_name"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
               <!-- <span v-for="error in v$Company.cAdress.$errors" :key="error.$uid" class="field-msg">
                 {{ error.$message }}
               </span> -->
@@ -154,7 +155,7 @@
                   <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ZIP Code
                     <span>*</span></label>
                   <input v-model="planInfo.cZip" type="text" id="first_name"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                   <!-- <span v-for="error in v$Company.cZip.$errors" :key="error.$uid" class="field-msg">
                     {{ error.$message }}
                   </span> -->
@@ -163,7 +164,7 @@
                   <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City
                     <span>*</span></label>
                   <input v-model="planInfo.cCity" type="text" id="first_name"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                   <!-- <span v-for="error in v$Company.cCity.$errors" :key="error.$uid" class="field-msg">
                     {{ error.$message }}
                   </span> -->
@@ -172,7 +173,7 @@
                   <label for="last_name"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country</label>
                   <select v-model="planInfo.cCountry" id="last_name"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                     <option v-for="(country, index) in countries" :key="index">{{ country.name }}</option>
                   </select>
                   <!-- <span v-for="error in v$Company.cCountry.$errors" :key="error.$uid" class="field-msg">
@@ -181,11 +182,11 @@
                 </div>
               </div>
               <div class="w-full inline-flex items-center gap-2 mt-5">
-                <input v-model="planInfo.acceptConditions" type="checkbox" id="coding" name="interest" value="coding" />
+                <input v-model="planInfo.acceptConditions" type="checkbox" id="coding" name="interest" value="coding"
+                  required />
                 <label for="coding">I read and accept <a href="" class="terms-conditions-link">Terms and Conditions</a> of
                   service.</label>
               </div>
-
             </div>
           </div>
           <div class="navigation-container">
@@ -267,6 +268,8 @@ import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { loadStripe } from '@stripe/stripe-js';
 import { useRouter } from 'vue-router';
+import { h } from 'vue'
+import { ElMessage } from 'element-plus'
 
 const planInfo = ref({});
 
@@ -275,10 +278,26 @@ const submitUserForm = async () => {
 }
 
 const submitCompanyForm = async () => {
+  console.log("submit form");
   createAccount().then((response) => {
-    planInfo.value.customer = response.customer.tag;
-    activeName.value = 'checkout';
+    if (response.status == 200) {
+      planInfo.value.customer = response.customer.tag;
+      activeName.value = 'checkout';
+    } else {
+      postErrorMsg.value = response.data;
+      showPostErrorMsg();
+    }
+
   }).catch((error) => { console.log(error); })
+}
+
+const showPostErrorMsg = () => {
+  ElMessage({
+    message: h('p', null, [
+      h('h4', { style: "color: #f75842; font-weight: bold;" }, 'Saving error(s):'),
+      h('span', { style: "font-size: 13px;" }, postErrorMsg.value),
+    ]),
+  })
 }
 
 let stripe = null;
@@ -294,6 +313,8 @@ const activeStaffTab = ref('plan_list')
 const plan_to_update = ref(null);
 provide('plan_to_update', plan_to_update);
 provide('plan_activeTab', activeStaffTab);
+
+const postErrorMsg = ref(null);
 
 const activeEventTab = ref('account_list')
 // const selectedPlan = ref('');
@@ -322,7 +343,7 @@ const setPlan = (data, eNumber, total) => {
 }
 
 const createAccount = async () => {
-  const response = await new Promise((resolve) => {
+  const response = await new Promise((resolve,) => {
     services.post_Record('/account/create', {
       name: planInfo.value.cName,
       firstname: planInfo.value.uFName,
@@ -342,6 +363,8 @@ const createAccount = async () => {
 
   if (response.status == 200 && response.data) {
     return response.data;
+  } else {
+    return response;
   }
 }
 
@@ -841,7 +864,7 @@ const countries = ref([
   color: var(--color-white) !important;
 }
 
-button[type=button]{
+button[type=button] {
   color: var(--color-danger) !important;
   border: solid 1px var(--color-danger) !important;
 }
