@@ -287,9 +287,7 @@ const submitUserForm = async () => {
 }
 
 const submitCompanyForm = async () => {
-  console.log("submit form");
   createAccount().then((response) => {
-    console.log(response)
     if (response.status == 200) {
       planInfo.value.customer = response.data.customer.tag;
       activeName.value = 'checkout';
@@ -401,34 +399,52 @@ const subscribe = async () => {
       displayError.textContent = result.error.message;
     } else {
       if (result.paymentIntent.status === 'succeeded') {
-        displaySuccess.textContent = 'Payment accepted.';
+        displaySuccess.textContent = 'Payment send with success.';
         card.clear();
+        activateAccount();
+
+        displaySuccess.textContent = '';
       }
     }
 
     processPaymentBtn.removeAttribute('disabled');
   }
+}
 
-  // const response = await new Promise((resolve) => {
-  //   services.post_Record('/subscription/create', {
-  //     customer: planInfo.value.customer,
-  //     plan: planInfo.value.plan.tag,
-  //     amount: planInfo.value.total,
-  //     email: planInfo.value.uEmail,
-  //     updated_at: moment().format('YYYY-MM-DD'),
-  //     expired_at: moment().add(366, 'days').format('YYYY-MM-DD')
-  //   }, (response) => {
-  //     resolve(response)
-  //   }, true);
-  // });
+const activateAccount = async () => {
+  const response = await new Promise((resolve) => {
+    services.post_Record('/subscription/create', {
+      customer: planInfo.value.customer,
+      plan: planInfo.value.plan.tag,
+      amount: planInfo.value.total,
+      email: planInfo.value.uEmail,
+      updated_at: moment().format('YYYY-MM-DD'),
+      expired_at: moment().add(366, 'days').format('YYYY-MM-DD')
+    }, (response) => {
+      resolve(response)
+    }, true);
+  });
 
-  // if (response.status == 200 && response.data) {
-  //   if (response.data != "ok") {
-  //     alert("An error was occured!");
-  //   } else {
-  //     router.push(`/`);
-  //   }
-  // }
+  if (response.status == 200 && response.data) {
+    if (response.data != "ok") {
+      ElMessage({
+        message: h('p', null, [
+          h('h4', { style: "color: #f75842; font-weight: bold;" }, 'Information:'),
+          h('span', { style: "font-size: 13px;" }, "An error was occured!"),
+        ]),
+      })
+    } else {
+      ElMessage({
+        message: h('p', null, [
+          h('h4', { style: "color: #f75842; font-weight: bold;" }, 'Information:'),
+          h('span', { style: "font-size: 13px;" }, "Your account has been successfully created! You will be redirected to the login page in 3s..."),
+        ]),
+      })
+      setTimeout(() => {
+        router.push(`/`);
+      }, 5000);
+    }
+  }
 }
 
 const appStore = useAppStore();
@@ -460,7 +476,6 @@ const generatePaymentIntention = async () => {
         product_uuid: "prod_PJ8c4FT7hctl4S"
       }
     })
-    console.log(paymentIntent);
   } catch (e) {
     console.log(e);
   }
@@ -469,18 +484,11 @@ const generatePaymentIntention = async () => {
 const loadPaymentForm = async () => {
   stripeClient = await loadStripe(import.meta.env.VITE_PUBLIC_STRIPE_KEY);
 
-  //   stripeElements = stripe.elements({
-  //     mode: "payment",
-  //     amount: 1999,
-  //     currency: "usd"
-  //   })
   stripeElements = stripeClient.elements();
   card = stripeElements.create('card');
   displayError = document.querySelector('#card-errors');
   displaySuccess = document.querySelector('#card-success');
   card.mount('#card-element');
-
-  console.log(stripeClient);
 
   card.addEventListener('change', ({ error }) => {
     if (error) {
@@ -917,6 +925,18 @@ button[type=button] {
 .summary-card__content table td {
   padding-block: 4px;
   font-size: .85rem;
+}
+
+#card-success {
+  color: var(--color-success);
+  font-size: .85rem;
+  font-weight: bold;
+}
+
+#card-errors {
+  color: var(--color-danger3);
+  font-size: .85rem;
+  font-weight: bold;
 }
 
 @media (max-width: 768px) {
