@@ -31,36 +31,27 @@
           </div>
           <ul class="py-2" aria-labelledby="user-menu-button">
 
-            <li @click="closeDropdown">
+            <li @click="closeDropdown" v-if="userStore.user.customer">
               <RouterLink :to="`/customer/${userStore.user.customer.tag}/account`"
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                 <i class="uil uil-user-square"></i>
                 Profile
               </RouterLink>
             </li>
-            <li @click="closeDropdown">
+            <li @click="closeDropdown" v-if="userStore.user.customer">
               <RouterLink :to="`/customer/${userStore.user.customer.tag}/account/contact`"
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                 <i class="uil uil-envelope"></i>
                 Contacts
               </RouterLink>
             </li>
-            <li @click="closeDropdown">
+            <li @click="closeDropdown" v-if="userStore.user.customer">
               <RouterLink :to="`/customer/${userStore.user.customer.tag}/account/parameters`"
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                 <i class="uil uil-setting"></i>
                 Parameters
               </RouterLink>
             </li>
-            <!--  <li @click="closeDropdown">
-              <RouterLink 
-                :to="`/customer/${userStore.user.customer.tag}/account/security`"
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              >
-                       <i class="uil uil-setting"></i>
-                     Settings
-              </RouterLink>
-            </li> -->
             <li @click="closeDropdown">
               <RouterLink to="/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" @click="signOut">
                 <i class="uil uil-signout"></i>

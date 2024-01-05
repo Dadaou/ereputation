@@ -12,7 +12,11 @@
 		                    Internal use only, your comment will not be posted on the public platforms.
 		                    </li>
 		                </ul>
+                        <button class="btn mt-2  btn-primary staffs__btn" @click="showModal=true">Staffs list <i class="uil uil-users-alt"></i></button>
 		            </div>
+                    <!-- <div>
+                        <button class="btn mr-2 btn-primary staffs__btn" @click="showModal=true">staffs <i class="uil uil-users-alt"></i></button>
+                    </div> -->
 		        </div>
 		     </div>
             <div class="feedback">
@@ -85,10 +89,35 @@
     </div>
 </div>
 <EstablishmentNotFound v-else/>
+<ModalComponent 
+        :showModal="showModal" 
+        @close="showModal=false" 
+        :width="modalWidth"
+    >
+        <template #content>
+            <div class="modal__header">
+                <div class="modal__title">
+                    <h3 class="font-semibold text-gray-900 dark:text-white">
+                        <i class="uil uil-users-alt"></i> Staff's links for feedback
+                    </h3>
+                </div>
+                <div class="modal__close">
+                    <i class="uil uil-times-circle"  @click="showModal = false"></i>
+                </div>
+            </div>
+            <div class="modal__container">
+                <a class="staff__card mb-1" v-if="staffs.length>0" :href="`/customer/${route.tag}/establishment/${staff.establishment_competitor_tag}/staffs/${staff.tag}/feedback`" v-for="staff in staffs">
+                        <div class="staff__qrcode">    
+                            {{staff.firstname}} {{staff.lastname}}
+                        </div>
+                </a>
+            </div>
+        </template>
+    </ModalComponent>
 </template>
 
 <script setup>
-import { ref, onBeforeMount, provide, defineAsyncComponent } from 'vue';
+import { ref, onBeforeMount, provide, defineAsyncComponent, computed } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useUserStore } from "@Stores/user.js";
@@ -100,6 +129,7 @@ import { useStaffStore } from '@Stores/staff.js';
 import { ElMessage } from 'element-plus';
 import moment from 'moment';
 import { ElDatePicker } from 'element-plus';
+import { useWindowSize } from '@vueuse/core';
 import 'element-plus/es/components/date-picker/style/css';
 
 const SpinnerComponent = defineAsyncComponent(()=>
@@ -111,6 +141,10 @@ const EstablishmentNotFound = defineAsyncComponent(()=>
     import("@Views/EstablishmentNotFound.vue")
 )
 
+const ModalComponent = defineAsyncComponent(()=>
+    import('@Components/utils/ModalComponent.vue')
+)
+
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
@@ -118,7 +152,17 @@ const companyStore = useCompanyStore();
 const staffStore = useStaffStore();
 const feedbackStore = useFeedbackStore();
 const staff = ref(null);
+const staffs = ref([]);
 let media = [];
+const showModal = ref(false);
+const companyId = route.params.etab;
+let randomAdvantage = ref(null);
+const { width, height } = useWindowSize()
+const modalWidth= computed(()=>{
+    let windowSize = 1500;
+    let gap = (windowSize - width.value)/19;
+    return gap + 45;
+})
 
 const page=ref({
     title1: "Leave",
@@ -128,6 +172,10 @@ const page=ref({
 
 const showSpinner = ref(false);
 const allAdvantages = ref(null)
+
+function getRandomValue(n) {
+    return Math.floor(Math.random() * (n + 1));
+}
 
 onBeforeMount(async ()=>{
     if(userStore.authenticated==null) services.setToken(import.meta.env.VITE_APP_TOKEN);
@@ -161,7 +209,20 @@ onBeforeMount(async ()=>{
     } catch (error) {
         console.error('Error in onBeforeMount:', error);
     }
-    
+
+    try{
+         const responseEstablishment = await new Promise((resolve, reject) => {
+            services.get_Record(`/establishment/${companyId}/detail`, (response) => {
+                resolve(response)
+            });
+        });
+
+        if (responseEstablishment.status == 200) {
+            staffs.value = responseEstablishment.data['staffs']
+        }
+    }catch{
+
+    } 
 })
 
 const format = (date) => {
@@ -234,6 +295,62 @@ const submit = async ()=>{
 </script>
 
 <style scoped>
+
+/*************
+    Modal CSS
+**************/
+.modal__header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal__header div{
+    align-self: center;
+}
+
+.modal__close i{
+   float: right;
+   font-size: 25px;
+   color: red;
+   cursor: pointer;
+   transition: var(--transition);
+}
+
+.qr__code{
+    width: 35% !important;
+    padding: 50px auto !important;
+    margin: auto;
+}
+
+.modal__close i:hover{
+    transform: rotate(360deg);
+}
+
+.staff__qrcode{
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--color-primary);
+}
+
+.modal__container .staff__card:hover{
+    background: var(--color-primary);
+}
+
+.modal__container .staff__card:hover .staff__qrcode{
+    color: white;
+}
+
+.staffs__btn{
+    border-radius: 5px !important;
+    color: white !important;
+    padding: 1px 10px !important;
+    background-color: var(--color-primary) !important;
+    font-size: 13px;
+}
+
+.staffs__btn i{
+    color: white !important;
+}
 
 .email{
     display: flex;

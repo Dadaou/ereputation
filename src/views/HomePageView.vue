@@ -104,7 +104,7 @@ onBeforeMount(async () => {
 
         // companiesStore.fetchCustomerEstablishments(userStore.user.customer.tag);
         // setTimeout(() => { companiesStore.getEstablishment('645de52f135e8') }, 2000);
-    }
+    }else appStore.isLoading = false;
 });
 </script>
 

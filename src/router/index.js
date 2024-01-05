@@ -163,10 +163,15 @@ const router = createRouter({
           name: 'Contact',
           component: () => import('@Components/users/ContactComponent.vue')
         },
-        {
-          path: 'security',
-          name: 'Account_security',
-          component: () => import('@Components/users/SecurityComponent.vue')
+        // {
+        //   path: 'security',
+        //   name: 'Account_security',
+        //   component: () => import('@Components/users/SecurityComponent.vue')
+        // },
+         {
+          path: 'subscription_list',
+          name: 'Subscription_list',
+          component: () => import('@Views/SubscriptionsListPageView.vue')
         },
         {
           path: 'parameters',

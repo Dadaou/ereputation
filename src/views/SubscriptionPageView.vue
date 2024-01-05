@@ -144,7 +144,7 @@
             </div>
             <div class="w-full">
               <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Secondary
-                adress</label>
+                address</label>
               <input v-model="planInfo.cSAdress" type="text" id="last_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
             </div>

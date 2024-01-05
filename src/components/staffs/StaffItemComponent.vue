@@ -212,44 +212,6 @@ const staffPeriod = ref({
     }
 })
 
-// const staffRatingDataset = (eventRating)=> {
-//       return {
-//         labels: [
-//           "0 star",
-//           "1 star",
-//           "2 stars",
-//           "3 stars",
-//           "4 stars",
-//           "5 stars",
-//         ],
-//         datasets: [
-//           {
-//             backgroundColor: [
-//             '#6c63ff',
-//             // '#00bf8e',
-//             // '#fd1f1f',
-//             // '#2e3267',
-//             // '#424890',
-//             // '#aca8fd',
-//              '#FF0000',
-//             '#FFA500',
-//             '#FFFF00',
-//             '#00FF00',
-//             '#008000',
-//             ],
-//             data: [
-//               eventRating["0"],
-//               eventRating["1"],
-//               eventRating["2"],
-//               eventRating["3"],
-//               eventRating["4"],
-//               eventRating["5"],
-//             ],
-//           },
-//         ],
-//       };
-// };
-
 const staffRatingDataset = (periods, type)=> {
       return {
         labels: periods.labels,

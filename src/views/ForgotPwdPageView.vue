@@ -5,7 +5,7 @@
             v-on:close="isError = false" />
         <div class="login__container" ref="form__ref">
             <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="login__form">
-                <span>Enter your email and we will send you a link to reset your password.</span>
+                <span>To reset your password, please enter your email address.</span>
                 <div class="relative">
 				  <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
 				    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
@@ -72,8 +72,9 @@ const submit = async () =>{
 	services.setURL(import.meta.env.VITE_APP_URL)
 	await userStore.verifyPassword(form.value.email, (response)=>{
 		isError.value = true;
-		notification.value.message = response.data;
+		notification.value.message = (response.status == 202)?"Thank you, an email containing the reset link has been sent to you.":response.data;
 		notification.value.type = (response.status == 202)?"success":(response.status==404)?"warning":"error"
+
 		showSpinner.value = false
 		services.setURL(import.meta.env.VITE_APP_API_URL)
 	})

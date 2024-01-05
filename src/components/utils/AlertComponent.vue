@@ -51,7 +51,7 @@ const emit = defineEmits(['close']);
 
 @media screen and (max-width:1024px) {
     #alert-1{
-        margin-top: 13em !important;
+        margin-top: 3em !important;
     }
 }
 

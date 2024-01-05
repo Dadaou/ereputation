@@ -13,15 +13,15 @@
             </router-link>
           </li>
           <li>
+              <router-link :to="{ name: 'Subscription_list' }">
+                  <i class="uil uil-book"></i> <span>Subscription</span>
+              </router-link>
+          </li>
+          <li>
             <router-link :to="{ name: 'Contact' }">
               <i class="uil uil-envelope"></i> <span>Contacts</span>
             </router-link>
           </li>
-          <!--  <li>
-                        <router-link :to="{ name: 'Account_security' }">
-                            <i class="uil uil-lock"></i> <span>Security</span>
-                        </router-link>
-                    </li> -->
           <li>
             <router-link :to="{ name: 'Parameters' }">
               <i class="uil uil-setting"></i> <span>Parameters</span>

@@ -183,8 +183,7 @@
                         <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" /> -->
                     </div>
                 </div>
-                <div
-                    class="stat__cards bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 py-4">
+                <div class="stat__cards bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 py-4">
                     <div class="stat__cards_default" v-if="establishment && socials">
                         <StatComponent v-for="(slide, index) in trends" :key="index" :color="slide.color"
                             :bgColor="slide.bgColor" :value="slide.value" :description="slide.description"
@@ -600,7 +599,8 @@ watch([trendsByEstablishment, calculType], () => {
                     break;
             };
         });
-        trends.value = tmp;
+        trends.value = tmp.filter(slide=>slide.value>0);
+
     } else {
         trends.value = [];
     }
@@ -1095,6 +1095,7 @@ li {
     justify-content: center;
     align-items: flex-start;
     gap: 8px;
+    flex-grow: 1;
 }
 
 @media screen and (max-width:1400px) {
