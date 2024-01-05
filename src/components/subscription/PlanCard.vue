@@ -5,7 +5,7 @@
         <h2 v-else>{{ data.currency }}{{ fprice }}<span>/{{ data.periodicity }}</span></h2>
         <ul class="grid">
             <li v-if="data.additional_establishment != '0'">
-                <input v-model="enumber" type="number" name="enumber" min="0"> establishment(s)
+                <input v-model="enumber" type="number" name="enumber" min="1"> establishment(s)
             </li>
             <li v-if="data.additional_establishment != '0'">+ {{ data.additional_establishment }} {{ data.currency }} per
                 additionnal establishment</li>
@@ -40,7 +40,7 @@ const props = defineProps({
 
 const emits = defineEmits(['selected']);
 const fprice = ref(parseFloat(props.data.amount));
-const enumber = ref(0);
+const enumber = ref(1);
 
 const emitEvent = (data, eNumber) => {
     if (props.hasinput && eNumber == 0) {
@@ -51,7 +51,7 @@ const emitEvent = (data, eNumber) => {
 }
 
 watch(enumber, () => {
-    fprice.value = Math.round((((enumber.value * parseFloat(props.data.additional_establishment)) + parseFloat(props.data.amount)) + Number.EPSILON) * 100) / 100;
+    fprice.value = Math.round(((((enumber.value - 1) * parseFloat(props.data.additional_establishment)) + parseFloat(props.data.amount)) + Number.EPSILON) * 100) / 100;
 })
 </script>
 <style>
