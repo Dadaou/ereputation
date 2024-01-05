@@ -237,8 +237,10 @@
                   <div class="app__title">
                     <h1>Payment information</h1>
                   </div>
-                  <div class="w-full my-8" id="payment-element"></div>
-                  <div style="text-align: right"><button class="btn btn-primary-2"
+                  <div class="w-full my-8" id="card-element"></div>
+                  <div id="card-errors" role="alert"></div>
+                  <div id="card-success" role="alert"></div>
+                  <div style="text-align: right"><button id="processPaymentBtn" class="btn btn-primary-2"
                       style="margin-top: 12px; border-radius: 2px;" @click="() => subscribe()">Process to
                       payment</button></div>
                 </div>
@@ -257,7 +259,7 @@
 </template>
 
 <script setup>
-import { ref, provide, onBeforeMount, onMounted } from 'vue';
+import { ref, provide, onBeforeMount } from 'vue';
 import { ElTabs, ElTabPane } from 'element-plus';
 import PlanCard from '@Components/subscription/PlanCard.vue';
 import SubscriptionSummary from '@Components/subscription/SubscriptionSummary.vue';
@@ -267,6 +269,7 @@ import moment from 'moment';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { loadStripe } from '@stripe/stripe-js';
+import { Stripe } from 'stripe';
 import { useRouter } from 'vue-router';
 import { h } from 'vue'
 import { ElMessage } from 'element-plus'
@@ -274,20 +277,26 @@ import { ElMessage } from 'element-plus'
 const planInfo = ref({});
 
 const submitUserForm = async () => {
-  activeName.value = 'company-info';
+  if (planInfo.value.uPassword && planInfo.value.uCPassword && planInfo.value.uPassword != planInfo.value.uCPassword) {
+    postErrorMsg.value = "Passwords don't match!";
+    showPostErrorMsg();
+  } else {
+    activeName.value = 'company-info';
+  }
+
 }
 
 const submitCompanyForm = async () => {
   console.log("submit form");
   createAccount().then((response) => {
+    console.log(response)
     if (response.status == 200) {
-      planInfo.value.customer = response.customer.tag;
+      planInfo.value.customer = response.data.customer.tag;
       activeName.value = 'checkout';
     } else {
       postErrorMsg.value = response.data;
       showPostErrorMsg();
     }
-
   }).catch((error) => { console.log(error); })
 }
 
@@ -300,9 +309,14 @@ const showPostErrorMsg = () => {
   })
 }
 
-let stripe = null;
+let stripeClient = null;
+let stripeServer = null;
 let stripeElements = null;
 let paymentElements = null;
+let paymentIntent = null;
+let card = null;
+let displayError = null;
+let displaySuccess = null;
 
 const plans = ref([]);
 
@@ -340,6 +354,8 @@ const setPlan = (data, eNumber, total) => {
   planInfo.value['total'] = total;
   planInfo.value['establishmentNumber'] = eNumber;
   activeName.value = 'user-info';
+  generatePaymentIntention();
+  loadPaymentForm();
 }
 
 const createAccount = async () => {
@@ -361,35 +377,58 @@ const createAccount = async () => {
     }, true);
   });
 
-  if (response.status == 200 && response.data) {
-    return response.data;
-  } else {
+  if (response) {
     return response;
   }
 }
 
 const subscribe = async () => {
-  const response = await new Promise((resolve) => {
-    services.post_Record('/subscription/create', {
-      customer: planInfo.value.customer,
-      plan: planInfo.value.plan.tag,
-      amount: planInfo.value.total,
-      email: planInfo.value.uEmail,
-      updated_at: moment().format('YYYY-MM-DD'),
-      expired_at: moment().add(366, 'days').format('YYYY-MM-DD')
-    }, (response) => {
-      resolve(response)
-    }, true);
-  });
 
-  if (response.status == 200 && response.data) {
-    console.log(response.data);
-    if (response.data != "ok") {
-      alert("An error was occured!");
+  const processPaymentBtn = document.querySelector("#processPaymentBtn");
+  if (!processPaymentBtn.hasAttribute('disabled')) {
+    processPaymentBtn.setAttribute('disabled', 'true');
+
+    const result = await stripeClient.confirmCardPayment(paymentIntent.client_secret, {
+      payment_method: {
+        card,
+        billing_details: {
+          email: planInfo.value.uEmail
+        }
+      }
+    })
+
+    if (result.error) {
+      displayError.textContent = result.error.message;
     } else {
-      router.push(`/`);
+      if (result.paymentIntent.status === 'succeeded') {
+        displaySuccess.textContent = 'Payment accepted.';
+        card.clear();
+      }
     }
+
+    processPaymentBtn.removeAttribute('disabled');
   }
+
+  // const response = await new Promise((resolve) => {
+  //   services.post_Record('/subscription/create', {
+  //     customer: planInfo.value.customer,
+  //     plan: planInfo.value.plan.tag,
+  //     amount: planInfo.value.total,
+  //     email: planInfo.value.uEmail,
+  //     updated_at: moment().format('YYYY-MM-DD'),
+  //     expired_at: moment().add(366, 'days').format('YYYY-MM-DD')
+  //   }, (response) => {
+  //     resolve(response)
+  //   }, true);
+  // });
+
+  // if (response.status == 200 && response.data) {
+  //   if (response.data != "ok") {
+  //     alert("An error was occured!");
+  //   } else {
+  //     router.push(`/`);
+  //   }
+  // }
 }
 
 const appStore = useAppStore();
@@ -409,70 +448,47 @@ onBeforeMount(async () => {
   }
 })
 
-const loading = ref(true);
-
-onMounted(async () => {
-  stripe = await loadStripe(import.meta.env.VITE_PUBLIC_STRIPE_KEY);
-
-  stripeElements = stripe.elements({
-    mode: "payment",
-    amount: 1999,
-    currency: "usd"
-  })
-
-  paymentElements = stripeElements.create("payment");
-  paymentElements.mount("#payment-element");
-  loading.value = false;
-})
-
-const handlePayment = async () => {
-  if (loading.value || !stripe || !stripeElements) {
-    return;
-  }
-  loading.value = true;
+const generatePaymentIntention = async () => {
   try {
-    const response = await API.post("StripeAPI", "/stripePurchase", {
-      body: { productID: "prod_SSdsgsddfsfs" }
-    });
-    console.log("response: ", response);
-    const { secret } = response;
-    const { submitError } = await paymentElements.submit();
-    if (submitError) {
-      console.log("error submit");
-      loading.value = false;
-      return;
-    }
-
-    const { error } = await stripe.confirmPayment({
-      paymentElements,
-      secret,
-      confirmParams: {
-        receipt_email: "",
-        shipping: {
-          address: {
-            city: "",
-            line1: "",
-            state: "",
-            postal_code: "",
-            country: "",
-          },
-          name: ""
-        },
-        return_url: "http://localhost:5173/success"
+    stripeServer = Stripe(import.meta.env.VITE_SECRET_STRIPE_KEY);
+    paymentIntent = await stripeServer.paymentIntents.create({
+      amount: planInfo.value.total * 100,
+      currency: 'usd',
+      description: `Payment for ${planInfo.value.establishmentNumber && planInfo.value.establishmentNumber > 0 ? planInfo.value.establishmentNumber : 1} establishment(s) with the plan ${planInfo.value.plan.name}.`,
+      statement_descriptor: 'Payment plan e-rep.',
+      metadata: {
+        product_uuid: "prod_PJ8c4FT7hctl4S"
       }
-    });
-    loading.value = false;
-    if (error.type === "card_error" || error.type === "validation_error") {
-      router.push("/error");
-    } else {
-      console.log("great");
-    }
-
-  } catch (error) {
-    console.log("error: ", error);
-    router.push("/error");
-    loading.value = false;
+    })
+    console.log(paymentIntent);
+  } catch (e) {
+    console.log(e);
   }
+}
+
+const loadPaymentForm = async () => {
+  stripeClient = await loadStripe(import.meta.env.VITE_PUBLIC_STRIPE_KEY);
+
+  //   stripeElements = stripe.elements({
+  //     mode: "payment",
+  //     amount: 1999,
+  //     currency: "usd"
+  //   })
+  stripeElements = stripeClient.elements();
+  card = stripeElements.create('card');
+  displayError = document.querySelector('#card-errors');
+  displaySuccess = document.querySelector('#card-success');
+  card.mount('#card-element');
+
+  console.log(stripeClient);
+
+  card.addEventListener('change', ({ error }) => {
+    if (error) {
+      displayError.textContent = error.message;
+    } else {
+      displayError.textContent = '';
+    }
+  })
 }
 
 const countries = ref([
