@@ -237,6 +237,10 @@
                   <div class="app__title">
                     <h1>Payment information</h1>
                   </div>
+                  <label for="cardName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name on card
+                    <span>*</span></label>
+                  <input v-model="planInfo.cardName" type="text" id="cardName"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                   <div class="w-full my-8" id="card-element"></div>
                   <div id="card-errors" role="alert"></div>
                   <div id="card-success" role="alert"></div>
@@ -419,7 +423,8 @@ const activateAccount = async () => {
       amount: planInfo.value.total,
       email: planInfo.value.uEmail,
       updated_at: moment().format('YYYY-MM-DD'),
-      expired_at: moment().add(366, 'days').format('YYYY-MM-DD')
+      expired_at: moment().add(366, 'days').format('YYYY-MM-DD'),
+      card_name: planInfo.value.cardName
     }, (response) => {
       resolve(response)
     }, true);
