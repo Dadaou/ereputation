@@ -68,9 +68,9 @@
               </span> -->
             </div>
             <div class="w-full">
-              <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last
+              <label for="ulast_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last
                 name <span>*</span></label>
-              <input v-model="planInfo.uLName" type="text" id="last_name"
+              <input v-model="planInfo.uLName" type="text" id="ulast_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
               <!-- <span v-for="error in v$User.uLName.$errors" :key="error.$uid" class="field-msg">
                 {{ error.$message }}
@@ -126,53 +126,53 @@
           <div class="form-group">
             <p class="mb-5">Company informations</p>
             <div class="w-full">
-              <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
+              <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
                 name <span>*</span></label>
-              <input v-model="planInfo.cName" type="text" id="first_name"
+              <input v-model="planInfo.cName" type="text" id="company_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
               <!-- <span v-for="error in v$Company.cName.$errors" :key="error.$uid" class="field-msg">
                 {{ error.$message }}
               </span> -->
             </div>
             <div class="w-full">
-              <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address
+              <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address
                 <span>*</span></label>
-              <input v-model="planInfo.cAdress" type="text" id="last_name"
+              <input v-model="planInfo.cAdress" type="text" id="address"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
               <!-- <span v-for="error in v$Company.cAdress.$errors" :key="error.$uid" class="field-msg">
                 {{ error.$message }}
               </span> -->
             </div>
             <div class="w-full">
-              <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Secondary
+              <label for="saddress" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Secondary
                 address</label>
-              <input v-model="planInfo.cSAdress" type="text" id="last_name"
+              <input v-model="planInfo.cSAdress" type="text" id="saddress"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
             </div>
             <div class="w-full">
               <div class="grid gap-6 md:grid-cols-4">
                 <div>
-                  <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ZIP Code
+                  <label for="zip" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ZIP Code
                     <span>*</span></label>
-                  <input v-model="planInfo.cZip" type="text" id="first_name"
+                  <input v-model="planInfo.cZip" type="text" id="zip"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                   <!-- <span v-for="error in v$Company.cZip.$errors" :key="error.$uid" class="field-msg">
                     {{ error.$message }}
                   </span> -->
                 </div>
                 <div>
-                  <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City
+                  <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City
                     <span>*</span></label>
-                  <input v-model="planInfo.cCity" type="text" id="first_name"
+                  <input v-model="planInfo.cCity" type="text" id="city"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                   <!-- <span v-for="error in v$Company.cCity.$errors" :key="error.$uid" class="field-msg">
                     {{ error.$message }}
                   </span> -->
                 </div>
                 <div class="md:col-span-2 mb-4">
-                  <label for="last_name"
+                  <label for="country"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country</label>
-                  <select v-model="planInfo.cCountry" id="last_name"
+                  <select v-model="planInfo.cCountry" id="country"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                     <option v-for="(country, index) in countries" :key="index">{{ country.name }}</option>
                   </select>
