@@ -13,7 +13,7 @@ import router from './router'
 const app = createApp(App)
 app.provide('tag', '');
 services.setURL(import.meta.env.VITE_APP_API_URL)
-const pinia = createPinia()
+export const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
 app.use(router)

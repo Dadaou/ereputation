@@ -609,7 +609,7 @@ const formatStarsData = (data) => {
         tmp.push({
             label: k,
             value: data[k],
-            percentage: data[k] * 100 / total,
+            percentage: (data[k]==0)?0:(data[k] * 100 / total),
             intVal: k.split()[0]
         })
     })
@@ -726,6 +726,7 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     if (response.status == 200) {
         reviewsLoading.value = false;
         visibleData.value = response.data['data'];
+        console.log(response.data)
 
         if (response.data['count'] <= 100) options.value.max = response.data['count'];
         else options.value.max = 100;

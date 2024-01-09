@@ -1,6 +1,26 @@
 import axios from 'axios'
+import { pinia } from '@/main';
+// import { useUserStore } from "@Stores/user.js";
+// import { useCompanyStore } from "@Stores/company.js";
+// import { useChartsStore } from "@Stores/charts.js";
+// import { useSocialStore } from "@Stores/social.js";
+// import { useStaffStore } from '@Stores/staff.js';
+
 var axiosInstance = null
 var publicAxiosInstance = null
+
+// const userStore = useUserStore();
+// const companiesStore = useCompanyStore();
+// const chartsStore = useChartsStore();
+// const socialStore = useSocialStore();
+// const staffStore = useStaffStore();
+
+const resetAllStores = () => {
+  Object.keys(pinia.state.value).forEach((storeId) => {
+    const store = pinia.store(storeId);
+    store.$reset();
+  });
+}
 
 const setToken = (token) => {
   localStorage.setItem('access', token)
@@ -30,6 +50,7 @@ const logout = () => {
   localStorage.removeItem('user')
   localStorage.removeItem('user_authenticated')
   delete axiosInstance.defaults.headers['Authorization']
+  resetAllStores();
 }
 
 const checkConnexionInfo = () => {
@@ -223,6 +244,7 @@ const login = async (email, password) => {
     const response = await axiosInstance.post('/login', { email: email, password: password })
     if (response.status == 200) {
       setToken(response.data['token'])
+	    console.log(response.data)
     }
     return response
   } catch (error) {

@@ -13,8 +13,8 @@
 	            </div>
 	            <div class="content">
 	                <h2 class="plan-name mb-2">{{ subscription.plan_name }}</h2>
-	               <p><strong>Payment Date:</strong> {{ formatDate(subscription.payement_date) }}</p>
-		            <p><strong>Expires On:</strong> {{ formatDate(subscription.expired_at) }}</p>
+	               <p><strong>Payment Date:</strong> {{ moment(subscription.payement_date).format('YYYY-MM-DD') }}</p>
+		            <p><strong>Expires On:</strong> {{ moment(subscription.expired_at).format('YYYY-MM-DD') }}</p>
 		            <p v-if="subscription.discount > 0"><strong>Discount:</strong> {{ subscription.discount }}%</p>
 		            <p><strong>Periodicity:</strong> {{ subscription.periodicity }} months</p>
 		            <p><strong>Event Limit:</strong> {{ subscription.event_limit }}</p>
@@ -31,50 +31,52 @@
 
 <script setup>
 import { ref, onBeforeMount, defineAsyncComponent } from 'vue';
-import { useUserStore } from "@Stores/user.js";
-import services from '@Services/services.js';
-import { useRoute } from "vue-router";
+import { useUserStore } from "@Stores/user.js"
+import services from '@Services/services.js'
+import { useRoute } from "vue-router"
+import moment from 'moment'
 
 const route = useRoute();
 const userStore = useUserStore();
-const subscriptions = ref([
- {
- 	"expired_at": "2023-01-05T00:00:00+01:00",
- 	"payement_date": "2022-01-05T00:00:00+01:00",
- 	"amount": 9,
- 	"discount": 0,
- 	"plan_name": "Basic 1 Year",
- 	"periodicity": "12",
- 	"vat_rate": 0,
- 	"event_limit": "Illimited event",
- 	"contact_limit": null,
- 	"establishment_limit": "1 establishement (1 QR code by establishement)", 
- 	"pointofsale_limit": "3 monitored points of sale (1 QR code by point of sale)",
- 	"user_limit": null,
- 	"crm": false,
- 	"api": false,
- 	"currency": "$",
- 	"tag": "tag"
- },
- {
- 	"expired_at": "2025-01-05T00:00:00+01:00",
- 	"payement_date": "2024-01-05T00:00:00+01:00",
- 	"amount": 9,
- 	"discount": 0,
- 	"plan_name": "Basic 1 Year",
- 	"periodicity": "12",
- 	"vat_rate": 0,
- 	"event_limit": "Illimited event",
- 	"contact_limit": null,
- 	"establishment_limit": "1 establishement (1 QR code by establishement)", 
- 	"pointofsale_limit": "3 monitored points of sale (1 QR code by point of sale)",
- 	"user_limit": null,
- 	"crm": false,
- 	"api": false,
- 	"currency": "$",
- 	"tag": "tag"
- },
-])
+// const subscriptions = ref([
+//  {
+//  	"expired_at": "2023-01-05T00:00:00+01:00",
+//  	"payement_date": "2022-01-05T00:00:00+01:00",
+//  	"amount": 9,
+//  	"discount": 0,
+//  	"plan_name": "Basic 1 Year",
+//  	"periodicity": "12",
+//  	"vat_rate": 0,
+//  	"event_limit": "Illimited event",
+//  	"contact_limit": null,
+//  	"establishment_limit": "1 establishement (1 QR code by establishement)", 
+//  	"pointofsale_limit": "3 monitored points of sale (1 QR code by point of sale)",
+//  	"user_limit": null,
+//  	"crm": false,
+//  	"api": false,
+//  	"currency": "$",
+//  	"tag": "tag"
+//  },
+//  {
+//  	"expired_at": "2025-01-05T00:00:00+01:00",
+//  	"payement_date": "2024-01-05T00:00:00+01:00",
+//  	"amount": 9,
+//  	"discount": 0,
+//  	"plan_name": "Basic 1 Year",
+//  	"periodicity": "12",
+//  	"vat_rate": 0,
+//  	"event_limit": "Illimited event",
+//  	"contact_limit": null,
+//  	"establishment_limit": "1 establishement (1 QR code by establishement)", 
+//  	"pointofsale_limit": "3 monitored points of sale (1 QR code by point of sale)",
+//  	"user_limit": null,
+//  	"crm": false,
+//  	"api": false,
+//  	"currency": "$",
+//  	"tag": "tag"
+//  },
+// ])
+const subscriptions = ref([])
 
 const formatDate= (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -88,23 +90,24 @@ const isExpired = (expiredDate) => {
 }
 
 onBeforeMount(async() => {
-   // let promises = [];
-   //  try {
-   //      const response = await new Promise((resolve, reject) => {
-   //          services.get_Record(`customer/${route.params.tag}/subscriptions`, (response) => {
-   //              resolve(response);
-   //              console.log(response)
-   //          });
-   //      });
+   let promises = [];
+    try {
+        const response = await new Promise((resolve, reject) => {
+            services.get_Record(`customer/${route.params.tag}/subscriptions`, (response) => {
+                resolve(response);
+                console.log(response)
+            });
+        });
        
-   //      if (response.status === 200) {
-   //         subscriptions.value = response.data;
-   //      } else {
-   //          console.error('Error fetching subscriptions:', response);
-   //      }
-   //  } catch (error) {
-   //      console.error('Error in onBeforeMount:', error);
-   //  }
+        if (response.status === 200) {
+           subscriptions.value = response.data;
+           console.log(response.data)
+        } else {
+            console.error('Error fetching subscriptions:', response);
+        }
+    } catch (error) {
+        console.error('Error in onBeforeMount:', error);
+    }
 });
 
 </script>
