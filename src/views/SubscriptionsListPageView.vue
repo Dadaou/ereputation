@@ -15,10 +15,8 @@
 	                <h2 class="plan-name mb-2">{{ subscription.plan_name }}</h2>
 	               <p><strong>Payment Date:</strong> {{ formatDate(subscription.payement_date) }}</p>
 		            <p><strong>Expires On:</strong> {{ formatDate(subscription.expired_at) }}</p>
-		            <p><strong>Amount:</strong> {{ subscription.currency + subscription.amount }}</p>
 		            <p v-if="subscription.discount > 0"><strong>Discount:</strong> {{ subscription.discount }}%</p>
 		            <p><strong>Periodicity:</strong> {{ subscription.periodicity }} months</p>
-		            <p><strong>VAT Rate:</strong> {{ subscription.vat_rate }}%</p>
 		            <p><strong>Event Limit:</strong> {{ subscription.event_limit }}</p>
 		            <p><strong>Establishment Limit:</strong> {{ subscription.establishment_limit }}</p>
 		            <p><strong>Point of Sale Limit:</strong> {{ subscription.pointofsale_limit }}</p>

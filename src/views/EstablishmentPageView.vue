@@ -210,11 +210,11 @@
                         <span v-if="!establishmentLoading">{{ all_items.reviews.value }}</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                     </div>
-                    <div class="society__location">
+                    <!-- <div class="society__location">
                         <i class="uil uil-building"></i>
                         <span v-if="!establishmentLoading">{{ all_items.competitors.value }} competitors</span>
                         <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                    </div>
+                    </div> -->
                     <div class="mobile__filter__btn">
                         <button :class="['btn', (currentFilter == 'feedback') ? 'isactive' : '']"
                             @click="currentFilter = 'feedback'">
@@ -472,7 +472,7 @@ const all_items = ref({
     global: { title: "Global", value: 0, icon: "uil-star" },
     index: { title: "Index", value: 0, icon: "uil-analysis", description: "Index is an indicator betwenn 0 and 1 built on algorithms with differents metrics such as scores, AI reviews analysis, social media trends… The closer the indicator is to 1, the better your reputation." },
     reviews: { title: "Reviews", value: 0, icon: "uil-comment" },
-    competitors: { title: "Competitors", value: 0, icon: "uil-building" }
+    // competitors: { title: "Competitors", value: 0, icon: "uil-building" }
 });
 let currentFilter = ref('filter');
 
@@ -878,7 +878,7 @@ onBeforeMount(async () => {
             appStore.isLoading = false;
             establishment.value['tag'] = companyId.value;
             page.value.title2 = establishment.value.name;
-            all_items.value.competitors.value = establishment.value.competitors.length;
+            // all_items.value.competitors.value = establishment.value.competitors.length;
 
             establishmentLoading.value = false
             globalComparison();
