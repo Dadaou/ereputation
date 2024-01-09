@@ -51,9 +51,10 @@ export const useCompanyStore = defineStore('company', () => {
   }
 
   const getEstablishments = async () => {
-    if (!establishments.value) {
-      await fetchCustomerEstablishments()
-    }
+    // if (!establishments.value) {
+    //   await fetchCustomerEstablishments()
+    // }
+    await fetchCustomerEstablishments()
     appStore.isLoading = false
     return Object.values(establishments.value)
   }

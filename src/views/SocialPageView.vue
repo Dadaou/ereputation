@@ -762,7 +762,7 @@ li:nth-child(odd) {
 }
 
 .left__side {
-    width: 1300px;
+    width: 1100px;
     padding: 50px 5px;
 }
 

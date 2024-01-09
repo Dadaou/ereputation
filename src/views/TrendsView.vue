@@ -488,7 +488,7 @@ function transformData(inputData) {
   labels.forEach(date => {
     Object.keys(inputData.data[date]).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())).forEach(key => {
         if (!datasets[key]) {
-            const colorIndex = Object.keys(datasets).length % colors.length; 
+            // const colorIndex = Object.keys(datasets).length % colors.length; 
 
             if(key=='global'){
                 datasets[key] = {

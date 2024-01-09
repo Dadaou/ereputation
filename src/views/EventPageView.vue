@@ -421,7 +421,7 @@ useResizeObserver(el, (entries) => {
 .app__container {
     margin-top: 5rem;
     min-height: 30rem;
-    max-width: 1200px; 
+    width: var(--container-width-lg);
     margin: 0 auto;
     padding: 0;
     display: flex;
@@ -506,7 +506,7 @@ useResizeObserver(el, (entries) => {
 }
 
 .left__side {
-    width: 1000px;
+    width: 1100px;
     padding: 50px 5px;
 }
 
