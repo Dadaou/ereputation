@@ -8,13 +8,16 @@
       <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
           <th scope="col" class="px-6 py-3">
-            Advantage
+            Establishment
           </th>
           <th scope="col" class="px-6 py-3">
-            Contact
+            Advantage name
           </th>
           <th scope="col" class="px-6 py-3">
             Code
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Amount
           </th>
           <th scope="col" class="px-6 py-3">
             Validated at
@@ -27,13 +30,16 @@
       <tbody v-if="discountData.length > 0">
         <tr v-for="discount in discountData" :key="discount.id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
           <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-            {{ discount.advantage }}
+            {{ discount.establishment_name }}
           </td>
           <td class="px-6 py-4">
-            {{ discount.contact }}
+            {{ discount.adv_name }}
           </td>
           <td class="px-6 py-4">
-            {{ contact.code }}
+            {{ discount.code }}
+          </td>
+           <td class="px-6 py-4">
+            {{ discount.adv_amount }}
           </td>
           <td class="px-6 py-4">
             {{ moment(discount.validated_at).format('YYYY-MM-DD') }}
@@ -119,6 +125,7 @@ onBeforeMount(async () => {
 
     if (response.status === 200) {
       discountData.value = response.data;
+      console.log(response.data)
     
     } else {
       console.error('Error fetching contacts:', response);

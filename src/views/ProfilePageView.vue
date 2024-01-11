@@ -24,7 +24,7 @@
           </li>
            <li>
             <router-link :to="{ name: 'Discount_coupons' }">
-              <i class="uil uil-envelope"></i> <span>Discount coupons</span>
+              <i class="uil uil-bill"></i> <span>Discount coupons</span>
             </router-link>
           </li>
           <li>
