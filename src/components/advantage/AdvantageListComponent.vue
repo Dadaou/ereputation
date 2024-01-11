@@ -16,11 +16,17 @@
       <el-table-column label="Expired At" prop="expired_at" width="100" />
 
       <el-table-column label="Operations" width="200">
-        
+
         <template #header>
           <el-input v-model="search" size="small" placeholder="Type to search" />
         </template>
         <template #default="scope">
+          <el-button v-if="scope.row.enable" size="small" @click="handleDisable(scope.$index, scope.row)"><i
+              class="uil uil-check-square"></i></el-button>
+
+          <el-button v-else size="small" @click="handleEnable(scope.$index, scope.row)"><i class="uil uil-square"
+              style="color: #777; font-size: 20px;"></i></el-button>
+
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
             <template #reference>
               <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
@@ -28,6 +34,7 @@
           </el-popconfirm>
 
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
+
         </template>
       </el-table-column>
     </el-table>
@@ -43,7 +50,7 @@ import { useCompanyStore } from "@Stores/company.js";
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 import services from '@Services/services.js';
 
-const emit = defineEmits(['edit']);
+const emit = defineEmits(['edit', 'setEnable', 'setDisable']);
 const advantages = inject('advantages');
 const { width, height } = useWindowSize();
 
@@ -64,6 +71,14 @@ const reloadData = (advantageToRemove) => {
 
 const handleEdit = (index, advantages) => {
   emit('edit', advantages);
+};
+
+const handleEnable = (index, advantages) => {
+  emit('setEnable', advantages.id);
+};
+
+const handleDisable = (index, advantages) => {
+  emit('setDisable', advantages.id);
 };
 
 const handleDelete = async (index, advantages) => {
@@ -93,33 +108,34 @@ const handleDelete = async (index, advantages) => {
 
 
 <style scoped>
-button{
+button {
   border: none;
   cursor: pointer;
   font-size: 15px;
 }
 
-button i.uil-trash-alt{
+button i.uil-trash-alt {
   color: var(--color-danger) !important;
 }
 
-button i.uil-edit{
+button i.uil-edit {
   color: var(--color-primary) !important;
 }
+
 .security__header {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .security__header h4 {
-    color: var(--color-bg2);
-    font-size: 19px;
-    font-weight: bold;
+  color: var(--color-bg2);
+  font-size: 19px;
+  font-weight: bold;
 }
 
 .security__header p {
-    font-size: 15px;
-    margin: 8px 0;
+  font-size: 15px;
+  margin: 8px 0;
 }
-  </style>
+</style>
   
