@@ -432,7 +432,7 @@ const transformSalesData = (salesData) =>{
 
 	const ttvData = labels.map(date => salesData[date].TTV);
 	const reviewsData = labels.map(date => salesData[date].reviews);
-	const totalData = labels.map(date => salesData[date].total);
+	const totalData = labels.map(date => salesData[date].global);
 
 	const chartData = {
 	    labels: labels,
@@ -448,7 +448,7 @@ const transformSalesData = (salesData) =>{
 	            stack: 'combined',
 	        },
 	         {
-	            label: 'Total',
+	            label: 'Global',
 	            yAxisID: 'y-axis-1',
 	            data: totalData,
 	            backgroundColor: '#9c9aff',
@@ -474,7 +474,7 @@ const transformBookingData = (salesData) =>{
 
 	const bookingData = labels.map(date => salesData[date].Bookings);
 	const reviewsData = labels.map(date => salesData[date].reviews);
-	const totalData = labels.map(date => salesData[date].total);
+	const totalData = labels.map(date => salesData[date].global);
 
 	const chartData = {
 	    labels: labels,
@@ -490,7 +490,7 @@ const transformBookingData = (salesData) =>{
 	            stack: 'combined',
 	        },
 	         {
-	            label: 'Total',
+	            label: 'Global',
 	            yAxisID: 'y-axis-1',
 	            data: totalData,
 	            backgroundColor: '#9c9aff',
