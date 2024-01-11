@@ -1,19 +1,8 @@
 import axios from 'axios'
 import { pinia } from '@/main';
-// import { useUserStore } from "@Stores/user.js";
-// import { useCompanyStore } from "@Stores/company.js";
-// import { useChartsStore } from "@Stores/charts.js";
-// import { useSocialStore } from "@Stores/social.js";
-// import { useStaffStore } from '@Stores/staff.js';
 
 var axiosInstance = null
 var publicAxiosInstance = null
-
-// const userStore = useUserStore();
-// const companiesStore = useCompanyStore();
-// const chartsStore = useChartsStore();
-// const socialStore = useSocialStore();
-// const staffStore = useStaffStore();
 
 const resetAllStores = () => {
   Object.keys(pinia.state.value).forEach((storeId) => {

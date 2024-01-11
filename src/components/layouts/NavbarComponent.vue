@@ -96,9 +96,9 @@
               <span>Reviews</span>
             </RouterLink>
           </li>
-          <li @click="showModal = true">
-            <a>
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24">
+          <li @click="closeDropdownMenu">
+            <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/sales`">
+             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24">
                 <g transform="scale(0.8 1)">
                   <g transform="scale(0.4 0.35) translate(52 -9)">
                     <path fill="currentColor" fill-rule="evenodd"
@@ -112,7 +112,7 @@
                 </g>
               </svg>
               <span>Sales</span>
-            </a>
+            </RouterLink>
           </li>
         </ul>
       </div>

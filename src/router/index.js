@@ -114,6 +114,12 @@ const router = createRouter({
       beforeEnter: [CheckAccess],
       component: () => import('@Views/TrendsView.vue')
     },
+     {
+      path: '/customer/:tag/establishment/:id/sales',
+      name: 'Sales',
+      beforeEnter: [CheckAccess],
+      component: () => import('@Views/SalesPageView.vue')
+    },
     {
       path: '/customer/:tag/establishment/:id/staffs',
       name: 'Staff',
@@ -163,11 +169,6 @@ const router = createRouter({
           name: 'Contact',
           component: () => import('@Components/users/ContactComponent.vue')
         },
-        // {
-        //   path: 'security',
-        //   name: 'Account_security',
-        //   component: () => import('@Components/users/SecurityComponent.vue')
-        // },
          {
           path: 'subscription_list',
           name: 'Subscription_list',

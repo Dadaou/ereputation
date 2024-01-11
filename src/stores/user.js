@@ -35,7 +35,6 @@ export const useUserStore = defineStore(
 
     const signOut = () => {
       services.logout();
-      // user.value = null;
     }
 
     const verifyPassword = async (email, next) =>{
