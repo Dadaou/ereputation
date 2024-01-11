@@ -51,10 +51,10 @@
             {{ moment(discount.expired_at).format('YYYY-MM-DD') }}
           </td>
           <td class="px-6 py-4">
-            <span v-if="discount.enable" @click="handleDisable(discount.id)" class="has-hover"><i
+            <span v-if="discount.confirm" @click="handleCancel(discount.id)" class="has-hover"><i
                 class="uil uil-check-square"></i></span>
 
-            <span v-else @click="handleEnable(discount.id)" class="has-hover"><i class="uil uil-square"
+            <span v-else @click="handleConfirm(discount.id)" class="has-hover"><i class="uil uil-square"
                 style="color: #777; font-size: 20px;"></i></span>
           </td>
         </tr>
@@ -121,7 +121,7 @@ const customer = route.params.tag;
 
 const discountData = ref([])
 
-const handleEnable = async (value) => {
+const handleConfirm = async (value) => {
   const response = await new Promise((resolve) => {
     services.post_Record(`/customer/establishments/advantagecontacts/${value}/enable`, {}, (response) => {
       resolve(response)
@@ -130,14 +130,14 @@ const handleEnable = async (value) => {
   if (response.status == 200) {
     discountData.value = discountData.value.map((adv) => {
       if (adv.id == value) {
-        adv.enable = true;
+        adv.confirm = true;
       }
       return adv;
     })
   }
 };
 
-const handleDisable = async (value) => {
+const handleCancel = async (value) => {
   const response = await new Promise((resolve) => {
     services.post_Record(`/customer/establishments/advantagecontacts/${value}/disable`, {}, (response) => {
       resolve(response)
@@ -146,7 +146,7 @@ const handleDisable = async (value) => {
   if (response.status == 200) {
     discountData.value = discountData.value.map((adv) => {
       if (adv.id == value) {
-        adv.enable = false;
+        adv.confirm = false;
       }
       return adv;
     })
