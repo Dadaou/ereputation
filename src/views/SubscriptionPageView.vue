@@ -944,6 +944,10 @@ button[type=button] {
   font-weight: bold;
 }
 
+input {
+    caret-color: var(--color-primary) !important;
+}
+
 @media (max-width: 768px) {
   .summary-card__content {
     width: 100%;
