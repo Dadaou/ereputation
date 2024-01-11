@@ -67,6 +67,7 @@
                                 :size="'large'"
                               />
                         </div>
+
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
                         <div class="author__email">
@@ -78,6 +79,10 @@
                             </p>
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                        </div>
+                         <div>
+                             <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Language<!--  <span>*</span> --></label>
+                             <LanguageOption/>
                         </div>
                     </div>
                    
@@ -128,6 +133,10 @@ import 'element-plus/es/components/date-picker/style/css'
 const SpinnerComponent = defineAsyncComponent(()=>
     import('@Components/utils/SpinnerComponent.vue')
 );
+
+const LanguageOption = defineAsyncComponent(()=>
+    import('@Components/utils/LanguageOptionComponent.vue')
+)
 
 let exist = ref(true);
 const EstablishmentNotFound = defineAsyncComponent(()=>

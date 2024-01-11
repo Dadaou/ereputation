@@ -37,19 +37,13 @@
                             <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last name</label>
                             <input type="text" id="last_name" v-model="lastname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
-                    </div>
-                    <div class="grid gap-6 mb-6 md:grid-cols-2 email">
-                        <div class="author__email">
-                            <span>
-                               <i class="uil uil-info-circle"></i> If you wish to obtain discounts or benefits, please provide your email address below.
-                            </span>
-                            <p v-if="randomAdvantage">
-                                <b>Promotion of the day:</b>  {{randomAdvantage.name}}
-                            </p>
-                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address <!-- <span>*</span> --></label>
-                            <input type="email" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                         <div>
+                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender <span>*</span></label>
+                            <el-select v-model="gender" placeholder="Choose gender" size="large">
+                                <el-option v-for="item in genders" :key="item.value" :label="item.label" :value="item.value"/>
+                            </el-select>
                         </div>
-                        <div>
+                         <div>
                             <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date visit<!--  <span>*</span> --></label>
                              <!-- <el-date-picker
                                 v-model="dateVisit"
@@ -63,6 +57,23 @@
                               />
                         </div>
                     </div>
+                    <div class="grid gap-6 mb-6 md:grid-cols-2 email">
+                        <div class="author__email">
+                            <span>
+                               <i class="uil uil-info-circle"></i> If you wish to obtain discounts or benefits, please provide your email address below.
+                            </span>
+                            <p v-if="randomAdvantage">
+                                <b>Promotion of the day:</b>  {{randomAdvantage.name}}
+                            </p>
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address <!-- <span>*</span> --></label>
+                            <input type="email" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                        </div>
+                        <div>
+                             <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Language<!--  <span>*</span> --></label>
+                             <LanguageOption/>
+                        </div>
+                    </div>
+
                    
                     <div class="feedback__text w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
                         <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
@@ -126,11 +137,13 @@ import services from '@Services/services.js';
 import { useFeedbackStore } from '@Stores/feedback.js';
 import { useCompanyStore } from '@Stores/company.js';
 import { useStaffStore } from '@Stores/staff.js';
-import { ElMessage } from 'element-plus';
 import moment from 'moment';
-import { ElDatePicker } from 'element-plus';
+import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus';
 import { useWindowSize } from '@vueuse/core';
-import 'element-plus/es/components/date-picker/style/css';
+import 'element-plus/es/components/message/style/css'
+import 'element-plus/es/components/option/style/css'
+import 'element-plus/es/components/select/style/css'
+import 'element-plus/es/components/date-picker/style/css'
 
 const SpinnerComponent = defineAsyncComponent(()=>
     import('@Components/utils/SpinnerComponent.vue')
@@ -143,6 +156,10 @@ const EstablishmentNotFound = defineAsyncComponent(()=>
 
 const ModalComponent = defineAsyncComponent(()=>
     import('@Components/utils/ModalComponent.vue')
+)
+
+const LanguageOption = defineAsyncComponent(()=>
+    import('@Components/utils/LanguageOptionComponent.vue')
 )
 
 const route = useRoute();
@@ -163,6 +180,7 @@ const modalWidth= computed(()=>{
     let gap = (windowSize - width.value)/19;
     return gap + 45;
 })
+const establishment = ref({});
 
 const page=ref({
     title1: "Leave",
@@ -179,6 +197,17 @@ function getRandomValue(n) {
 
 onBeforeMount(async ()=>{
     if(userStore.authenticated==null) services.setToken(import.meta.env.VITE_APP_TOKEN);
+
+    await services.get_Record(`establishment/${route.params.etab}/media`, (response)=>{
+        console.log(response)
+            if(response!== undefined &&response.status == 200){ 
+                establishment.value = response['data'];
+            }
+
+            if(response!== undefined && response.status == 404) {
+                    exist.value = false;
+            }
+      });
   
     await services.get_Record(`staffs/${route.params.id}/descriptions`, (response)=>{
         console.log(response)
@@ -238,6 +267,21 @@ const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
 const dateVisit = ref('');
+const gender = ref('');
+const genders = [
+  {
+    value: 'M',
+    label: 'Male',
+  },
+  {
+    value: 'F',
+    label: 'Female',
+  },
+  {
+    value: 'O',
+    label: 'Other',
+  }
+]
 
 const submit = async ()=>{
     let date_review = new Date();
@@ -261,29 +305,42 @@ const submit = async ()=>{
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
         "dateReview": moment(date_review, 'DD/MM/YYYY')
     }
+    let contactData = {
+        gender: gender.value, 
+        firstname: firstname.value,
+        lastname: lastname.value,
+        email: email.value,
+        establishment: `/api/establishments/${establishment.value.id}`
+    };
 
     try{
         if(firstname.value !== '' && ratingCustomer.value !== null){
             showSpinner.value = true;
-            await feedbackStore.createReview(review, (response)=>{
+            await feedbackStore.createReview(review, async(response)=>{
                 if(response.status == 201){
-                    ElMessage({
-                        message: `Thanks for your feedback!`,
-                        type: 'success',
-                    })
-                    firstname.value = '';
-                    lastname.value = '';
-                    comment.value = '';
-                    email.value = '';
-                    dateVisit.value = null;
-                    showSpinner.value = false;
-                    router.push({
-                        name: 'SuccessFeedback',
-                        params: {
-                            etab: route.params.etab,
-                            tag: route.params.tag
+                    await services.createRecord('contacts', contactData, (contactResponse) => {
+                        console.log(contactResponse);
+                        if (contactResponse.status == 201) {
+                           ElMessage({
+                                    message: `Thanks for your feedback!`,
+                                    type: 'success',
+                                })
+                                firstname.value = '';
+                                lastname.value = '';
+                                comment.value = '';
+                                email.value = '';
+                                dateVisit.value = null;
+                                showSpinner.value = false;
+                                router.push({
+                                    name: 'SuccessFeedback',
+                                    params: {
+                                        etab: route.params.etab,
+                                        tag: route.params.tag
+                                    }
+                                })
                         }
-                    })
+                    });
+                    
                 }
             })
         }else ElMessage.error(`Please, provide all needed information`);
