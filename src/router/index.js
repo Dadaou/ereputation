@@ -114,7 +114,7 @@ const router = createRouter({
       beforeEnter: [CheckAccess],
       component: () => import('@Views/TrendsView.vue')
     },
-     {
+    {
       path: '/customer/:tag/establishment/:id/sales',
       name: 'Sales',
       beforeEnter: [CheckAccess],
@@ -169,10 +169,15 @@ const router = createRouter({
           name: 'Contact',
           component: () => import('@Components/users/ContactComponent.vue')
         },
-         {
+        {
           path: 'subscription_list',
           name: 'Subscription_list',
           component: () => import('@Views/SubscriptionsListPageView.vue')
+        },
+        {
+          path: 'discount_coupons',
+          name: 'Discount_coupons',
+          component: () => import('@Views/DiscountCouponsPageView.vue')
         },
         {
           path: 'parameters',

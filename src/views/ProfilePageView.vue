@@ -22,6 +22,11 @@
               <i class="uil uil-envelope"></i> <span>Contacts</span>
             </router-link>
           </li>
+           <li>
+            <router-link :to="{ name: 'Discount_coupons' }">
+              <i class="uil uil-envelope"></i> <span>Discount coupons</span>
+            </router-link>
+          </li>
           <li>
             <router-link :to="{ name: 'Parameters' }">
               <i class="uil uil-setting"></i> <span>Parameters</span>
@@ -86,7 +91,7 @@ const breadcrumbData = [
 }
 
 .admin__menu li a {
-  padding: 10px 75px;
+  padding: 10px 15px;
   transition: var(--transition);
   cursor: pointer;
   display: flex;
@@ -94,6 +99,10 @@ const breadcrumbData = [
   font-weight: 600;
   font-size: 14px;
   color: rgb(101, 101, 101);
+}
+
+.admin__menu span {
+  width: 200px;
 }
 
 .router-link-exact-active {
