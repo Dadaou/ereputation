@@ -1,10 +1,10 @@
 <template>
- <!--  <button class="btn" @click="showExport = true">
+  <!--  <button class="btn" @click="showExport = true">
           <i class="uil uil-file-download"></i>
           Export
     </button> -->
-    <div class="overflow-x-auto">
-      <table class="w-full table-auto text-sm text-left text-gray-500 dark:text-gray-400">
+  <div class="overflow-x-auto">
+    <table class="w-full table-auto text-sm text-left text-gray-500 dark:text-gray-400">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
           <th scope="col" class="px-6 py-3">
@@ -25,10 +25,13 @@
           <th scope="col" class="px-6 py-3">
             Expired at
           </th>
+          <th scope="col" class="px-6 py-3">
+          </th>
         </tr>
       </thead>
       <tbody v-if="discountData.length > 0">
-        <tr v-for="discount in discountData" :key="discount.id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+        <tr v-for="discount in discountData" :key="discount.id"
+          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
           <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
             {{ discount.establishment_name }}
           </td>
@@ -38,15 +41,22 @@
           <td class="px-6 py-4">
             {{ discount.code }}
           </td>
-           <td class="px-6 py-4">
+          <td class="px-6 py-4">
             {{ discount.adv_amount }}
           </td>
           <td class="px-6 py-4">
             {{ moment(discount.validated_at).format('YYYY-MM-DD') }}
           </td>
           <td class="px-6 py-4">
-              {{ moment(discount.expired_at).format('YYYY-MM-DD') }}           
-           </td>
+            {{ moment(discount.expired_at).format('YYYY-MM-DD') }}
+          </td>
+          <td class="px-6 py-4">
+            <span v-if="discount.confirm" @click="handleCancel(discount.id)" class="has-hover"><i
+                class="uil uil-check-square"></i></span>
+
+            <span v-else @click="handleConfirm(discount.id)" class="has-hover"><i class="uil uil-square"
+                style="color: #777; font-size: 20px;"></i></span>
+          </td>
         </tr>
       </tbody>
       <tbody v-else>
@@ -59,8 +69,8 @@
         </tr>
       </tbody>
     </table>
-    </div>
-    <!-- <ExportcsvexcelComponent :showModal="showExport" :downloaded="downloaded"
+  </div>
+  <!-- <ExportcsvexcelComponent :showModal="showExport" :downloaded="downloaded"
     @close="showExport = false, downloaded = false"  @submit="(data) => exportData(data.type, 'contacts')"/> -->
 </template>
 
@@ -78,14 +88,14 @@ import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import StaffItemComponent from '@Components/staffs/StaffItemComponent.vue';
 import { useWindowSize } from '@vueuse/core';
 import {
-    ref, 
-    reactive, 
-    watch, 
-    onBeforeMount, 
-    computed, 
-    provide, 
-    onUpdated,
-    defineAsyncComponent
+  ref,
+  reactive,
+  watch,
+  onBeforeMount,
+  computed,
+  provide,
+  onUpdated,
+  defineAsyncComponent
 } from 'vue';
 
 const ExportcsvexcelComponent = defineAsyncComponent(() =>
@@ -111,6 +121,38 @@ const customer = route.params.tag;
 
 const discountData = ref([])
 
+const handleConfirm = async (value) => {
+  const response = await new Promise((resolve) => {
+    services.post_Record(`/customer/establishments/advantagecontacts/${value}/enable`, {}, (response) => {
+      resolve(response)
+    }, false);
+  });
+  if (response.status == 200) {
+    discountData.value = discountData.value.map((adv) => {
+      if (adv.id == value) {
+        adv.confirm = true;
+      }
+      return adv;
+    })
+  }
+};
+
+const handleCancel = async (value) => {
+  const response = await new Promise((resolve) => {
+    services.post_Record(`/customer/establishments/advantagecontacts/${value}/disable`, {}, (response) => {
+      resolve(response)
+    }, false);
+  });
+  if (response.status == 200) {
+    discountData.value = discountData.value.map((adv) => {
+      if (adv.id == value) {
+        adv.confirm = false;
+      }
+      return adv;
+    })
+  }
+};
+
 
 onBeforeMount(async () => {
   try {
@@ -126,7 +168,7 @@ onBeforeMount(async () => {
     if (response.status === 200) {
       discountData.value = response.data;
       console.log(response.data)
-    
+
     } else {
       console.error('Error fetching contacts:', response);
     }
@@ -136,8 +178,7 @@ onBeforeMount(async () => {
 });
 </script>
 <style scoped>
-
-button i{
+button i {
   color: var(--color-danger);
 }
 
@@ -151,8 +192,12 @@ button {
   margin-bottom: 10px;
 }
 
-button:hover{
+button:hover {
   background-color: var(--color-primary);
   color: white;
+}
+
+.has-hover:hover {
+  cursor: pointer;
 }
 </style>
