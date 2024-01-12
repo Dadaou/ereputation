@@ -30,7 +30,7 @@
     </div>
 </template>
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 const props = defineProps({
     data: {
         type: Object,
@@ -40,7 +40,7 @@ const props = defineProps({
 
 const emits = defineEmits(['selected']);
 const fprice = ref(parseFloat(props.data.amount));
-const enumber = ref(2);
+const enumber = ref(1);
 
 const emitEvent = (data, eNumber) => {
     if (props.hasinput && eNumber == 0) {
@@ -49,6 +49,10 @@ const emitEvent = (data, eNumber) => {
         emits('selected', data, eNumber, fprice.value);
     }
 }
+
+onMounted(() => {
+    setTimeout(() => { enumber.value = 2; }, 500);
+})
 
 watch(enumber, () => {
     fprice.value = Math.round(((((enumber.value - 1) * parseFloat(props.data.additional_establishment)) + parseFloat(props.data.amount)) + Number.EPSILON) * 100) / 100;

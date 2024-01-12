@@ -24,7 +24,7 @@
 
                 <ComparisonChartComponent :data="plotdata" :width="chart__width" :chartheight="chart__height"
                     :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors"
-                    :timePeriod="selectedTimePeriod" />
+                    :timePeriod="selectedTimePeriod" :colors="colors" />
                 <BaseLegend v-if="chartLoading == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
                 </BaseLegend>
                 <div class="head">
@@ -508,7 +508,7 @@ let reviewFeedbackData = ref({
     feeling: 0
 });
 
-let colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff'];
+const colors = ref(['#f75842', '#337ecc', '#4682B4', '#6495ED', '#1E90FF', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']);
 
 let chartConfig = reactive({
     data: {
@@ -555,7 +555,7 @@ const formatSixMonthsChartData = (datas) => {
         chartdata.datasets.push({
             data: tmp2,
             label: k,
-            backgroundColor: colors[index]
+            backgroundColor: colors.value[index]
         })
         index++
     })
@@ -595,7 +595,7 @@ const viewData = async () => {
         const tags = competitorInfo ? [companyId.value, competitorInfo.tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.tag)]
         const website = (selectedWebsites.value == 'App (Private)') ? selectedWebsites.value : selectedWebsites.value.toLowerCase()
         plotdata.value = await chartsStore.loadData(tags, selectedTimePeriod.value, startDate, endDate, website)
-        legendData.value = companiesStore.generateLegend(plotdata.value, colors);
+        legendData.value = companiesStore.generateLegend(plotdata.value, colors.value);
     }
     chartLoading.value = false;
     // loadDatasets();
@@ -1453,4 +1453,5 @@ onBeforeMount(async () => {
 
 .establishment__info_tablet {
     margin-top: 0px;
-}</style>
+}
+</style>
