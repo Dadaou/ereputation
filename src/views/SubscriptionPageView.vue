@@ -110,8 +110,10 @@
               @click="activeName = 'plan'">Previous</button>
             <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
               @click="activeName = 'company-info'">Next</button> -->
-            <button type="submit" class="btn btn-primary btn-navigation"
-              style="margin-top: 12px; border-radius: 2px;">Next</button>
+            <button type="submit" class="btn btn-primary btn-navigation" :class="showSpinner == true ? 'isLoaded' : ''"
+              style="margin-top: 12px; border-radius: 2px;">
+              <SpinnerComponent v-if="showSpinner == true" :color="'red'" /> <span v-else>Next</span>
+            </button>
           </div>
         </form>
       </el-tab-pane>
@@ -193,7 +195,9 @@
             <button type="button" class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
               @click="activeName = 'user-info'">Previous</button>
             <button type="submit" v-if="planInfo.acceptConditions" class="btn btn-primary-2 btn-navigation"
-              style="margin-top: 12px; border-radius: 2px;">Sign In</button>
+              :class="showSpinner == true ? 'isLoaded' : ''" style="margin-top: 12px; border-radius: 2px;">
+              <SpinnerComponent v-if="showSpinner == true" :color="'red'" /> <span v-else>Sign In</span>
+            </button>
           </div>
         </form>
       </el-tab-pane>
@@ -244,9 +248,12 @@
                   <div class="w-full my-8" id="card-element"></div>
                   <div id="card-errors" role="alert"></div>
                   <div id="card-success" role="alert"></div>
-                  <div style="text-align: right"><button id="processPaymentBtn" class="btn btn-primary-2"
-                      style="margin-top: 12px; border-radius: 2px;" @click="() => subscribe()">Process to
-                      payment</button></div>
+                  <div class="flex items-center justify-end" style="text-align: right;"><button id="processPaymentBtn"
+                      class="btn btn-primary-2" :class="showSpinner == true ? 'isLoaded' : ''"
+                      style="margin-top: 12px; border-radius: 2px; width: 208px;" @click="() => subscribe()">
+                      <SpinnerComponent v-if="showSpinner == true" :color="'red'" /> <span v-else>Process to
+                        payment</span>
+                    </button></div>
                 </div>
               </div>
             </div>
@@ -263,7 +270,7 @@
 </template>
 
 <script setup>
-import { ref, provide, onBeforeMount } from 'vue';
+import { ref, provide, onBeforeMount, defineAsyncComponent } from 'vue';
 import { ElTabs, ElTabPane } from 'element-plus';
 import PlanCard from '@Components/subscription/PlanCard.vue';
 import SubscriptionSummary from '@Components/subscription/SubscriptionSummary.vue';
@@ -276,30 +283,40 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Stripe } from 'stripe';
 import { useRouter } from 'vue-router';
 import { h } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus';
+
+const SpinnerComponent = defineAsyncComponent(() =>
+  import('@Components/utils/SpinnerComponent.vue')
+)
 
 const planInfo = ref({});
+const showSpinner = ref(false)
 
 const submitUserForm = async () => {
+  showSpinner.value = true;
   if (planInfo.value.uPassword && planInfo.value.uCPassword && planInfo.value.uPassword != planInfo.value.uCPassword) {
     postErrorMsg.value = "Passwords don't match!";
     showPostErrorMsg();
   } else {
     activeName.value = 'company-info';
   }
+  showSpinner.value = false;
 
 }
 
 const submitCompanyForm = async () => {
+  showSpinner.value = true;
   createAccount().then((response) => {
     if (response.status == 200) {
       planInfo.value.customer = response.data.customer.tag;
+      showSpinner.value = false;
       activeName.value = 'checkout';
     } else {
+      showSpinner.value = false;
       postErrorMsg.value = response.data;
       showPostErrorMsg();
     }
-  }).catch((error) => { console.log(error); })
+  }).catch((error) => { console.log(error); showSpinner.value = false; })
 }
 
 const showPostErrorMsg = () => {
@@ -385,6 +402,7 @@ const createAccount = async () => {
 }
 
 const subscribe = async () => {
+  showSpinner.value = true;
 
   const processPaymentBtn = document.querySelector("#processPaymentBtn");
   if (!processPaymentBtn.hasAttribute('disabled')) {
@@ -410,6 +428,8 @@ const subscribe = async () => {
         displaySuccess.textContent = '';
       }
     }
+
+    showSpinner.value = false;
 
     processPaymentBtn.removeAttribute('disabled');
   }
@@ -752,6 +772,12 @@ const countries = ref([
 
 </script>
 <style>
+button.isLoaded {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .terms-conditions-link {
   color: var(--color-bg2);
   font-weight: 600;
@@ -945,7 +971,11 @@ button[type=button] {
 }
 
 input {
-    caret-color: var(--color-primary) !important;
+  caret-color: var(--color-primary) !important;
+}
+
+.subscription__container button {
+  min-height: 46px;
 }
 
 @media (max-width: 768px) {
