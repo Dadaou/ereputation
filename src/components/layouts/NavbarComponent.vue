@@ -304,6 +304,7 @@ const selectCurrentLanguage = (language)=>{
      code: language.code,
      svg: svgString
   }
+  showLang.value = false
 };
 </script>
 <style scoped>
