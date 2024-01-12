@@ -26,6 +26,7 @@
             Expired at
           </th>
           <th scope="col" class="px-6 py-3">
+            Confirm
           </th>
         </tr>
       </thead>
@@ -50,7 +51,7 @@
           <td class="px-6 py-4">
             {{ moment(discount.expired_at).format('YYYY-MM-DD') }}
           </td>
-          <td class="px-6 py-4">
+          <td class="px-6 py-4 text-center">
             <span v-if="discount.confirm" @click="handleCancel(discount.id)" class="has-hover"><i
                 class="uil uil-check-square"></i></span>
 

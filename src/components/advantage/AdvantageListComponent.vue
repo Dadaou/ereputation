@@ -8,25 +8,28 @@
     <el-table :data="filterTableData">
       <el-table-column label="Name" prop="name" width="150" />
       <el-table-column label="Establishment" prop="establishment_name" width="200" />
-      <el-table-column label="Amount" prop="amount" width="100" />
+      <el-table-column label="Amount" prop="amount" width="100" align="center" />
       <el-table-column label="Category" prop="category" width="150" />
       <el-table-column label="Metric" prop="metric" width="100" />
       <el-table-column label="Scope" prop="scope" width="150" />
-      <el-table-column label="Validity" prop="validity" width="100" />
-      <el-table-column label="Expired At" prop="expired_at" width="100" />
-
-      <el-table-column label="Operations" width="200">
-
-        <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" />
-        </template>
+      <el-table-column label="Validity" prop="validity" width="100" align="center" />
+      <el-table-column label="Expired At" prop="expired_at" width="120" />
+      <el-table-column label="Enable" width="100" align="center">
         <template #default="scope">
           <el-button v-if="scope.row.enable" size="small" @click="handleDisable(scope.$index, scope.row)"><i
               class="uil uil-check-square"></i></el-button>
 
           <el-button v-else size="small" @click="handleEnable(scope.$index, scope.row)"><i class="uil uil-square"
               style="color: #777; font-size: 20px;"></i></el-button>
+        </template>
+      </el-table-column>
 
+      <el-table-column label="Operations" width="200" align="center">
+
+        <template #header>
+          <el-input v-model="search" size="small" placeholder="Type to search" />
+        </template>
+        <template #default="scope">
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
             <template #reference>
               <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>

@@ -40,7 +40,7 @@ const props = defineProps({
 
 const emits = defineEmits(['selected']);
 const fprice = ref(parseFloat(props.data.amount));
-const enumber = ref(1);
+const enumber = ref(2);
 
 const emitEvent = (data, eNumber) => {
     if (props.hasinput && eNumber == 0) {

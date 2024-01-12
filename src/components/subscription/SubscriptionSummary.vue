@@ -1,85 +1,91 @@
 <template>
     <div v-if="data && data.plan" class="account-summary">
-        <div class="summary-card__content">
-            <div class="app__title">
-                <h1>Plan Details</h1>
+        <div class="summary-card">
+            <div class="summary-card__content">
+                <div class="app__title">
+                    <h1>Plan Details</h1>
+                </div>
+                <table>
+                    <tr>
+                        <td>Plan</td>
+                        <td>: <span class="plan-name">{{ data.planName || '' }}</span></td>
+                    </tr>
+                    <tr>
+                        <td>Establishment(s)</td>
+                        <td>: {{ data.establishmentNumber || 'Illimited' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Intern reviews</td>
+                        <td>: Illimited</td>
+                    </tr>
+                    <tr>
+                        <td>Leads</td>
+                        <td>: Illimited</td>
+                    </tr>
+                    <tr>
+                        <td>Events</td>
+                        <td>: {{ data.plan.event_limit || 'Illimited' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Monitored points of sale</td>
+                        <td>: {{ data.plan.pointofsale_limit || 'Illimited' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Leads integration in your CRM</td>
+                        <td>: <i class="uil" :class="data.plan.crm ? 'uil-check-square' : 'uil-times-square'"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Sales integration (API)</td>
+                        <td>: <i class="uil" :class="data.plan.sale ? 'uil-check-square' : 'uil-times-square'"></i></td>
+                    </tr>
+                </table>
             </div>
-            <table>
-                <tr>
-                    <td>Plan</td>
-                    <td>: <span class="plan-name">{{ data.planName || '' }}</span></td>
-                </tr>
-                <tr>
-                    <td>Establishment(s)</td>
-                    <td>: {{ data.establishmentNumber || 'Illimited' }}</td>
-                </tr>
-                <tr>
-                    <td>Intern reviews</td>
-                    <td>: Illimited</td>
-                </tr>
-                <tr>
-                    <td>Leads</td>
-                    <td>: Illimited</td>
-                </tr>
-                <tr>
-                    <td>Events</td>
-                    <td>: {{ data.plan.event_limit || 'Illimited' }}</td>
-                </tr>
-                <tr>
-                    <td>Monitored points of sale</td>
-                    <td>: {{ data.plan.pointofsale_limit || 'Illimited' }}</td>
-                </tr>
-                <tr>
-                    <td>Leads integration in your CRM</td>
-                    <td>: <i class="uil" :class="data.plan.crm ? 'uil-check-square' : 'uil-times-square'"></i></td>
-                </tr>
-                <tr>
-                    <td>Sales integration (API)</td>
-                    <td>: <i class="uil" :class="data.plan.sale ? 'uil-check-square' : 'uil-times-square'"></i></td>
-                </tr>
-            </table>
         </div>
-        <div class="summary-card__content">
-            <div class="app__title">
-                <h1>User Information</h1>
+        <div class="summary-card">
+            <div class="summary-card__content">
+                <div class="app__title">
+                    <h1>User Information</h1>
+                </div>
+                <table>
+                    <tr>
+                        <td>First Name</td>
+                        <td>: {{ data.uFName || '──' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Last Name</td>
+                        <td>: {{ data.uLName || '──' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>: <strong>{{ data.uEmail || '──' }}</strong></td>
+                    </tr>
+                </table>
             </div>
-            <table>
-                <tr>
-                    <td>First Name</td>
-                    <td>: {{ data.uFName || '──' }}</td>
-                </tr>
-                <tr>
-                    <td>Last Name</td>
-                    <td>: {{ data.uLName || '──' }}</td>
-                </tr>
-                <tr>
-                    <td>Email</td>
-                    <td>: <strong>{{ data.uEmail || '──' }}</strong></td>
-                </tr>
-            </table>
         </div>
-        <div class="summary-card__content">
-            <div class="app__title">
-                <h1>Company Information</h1>
+        <div class="summary-card">
+            <div class="summary-card__content">
+                <div class="app__title">
+                    <h1>Company Information</h1>
+                </div>
+                <table>
+                    <tr>
+                        <td>Name</td>
+                        <td>: <strong>{{ data.cName || '──' }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Adress</td>
+                        <td>: {{ data.cAdress || '──' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Second Adress</td>
+                        <td>: {{ data.cSAdress || '──' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Location</td>
+                        <td>: {{ data.cZip }} {{ data.cCity }}, {{ data.cCountry }}</td>
+                    </tr>
+                </table>
             </div>
-            <table>
-                <tr>
-                    <td>Name</td>
-                    <td>: <strong>{{ data.cName || '──' }}</strong></td>
-                </tr>
-                <tr>
-                    <td>Adress</td>
-                    <td>: {{ data.cAdress || '──' }}</td>
-                </tr>
-                <tr>
-                    <td>Second Adress</td>
-                    <td>: {{ data.cSAdress || '──' }}</td>
-                </tr>
-                <tr>
-                    <td>Location</td>
-                    <td>: {{ data.cZip }} {{ data.cCity }}, {{ data.cCountry }}</td>
-                </tr>
-            </table>
         </div>
     </div>
 </template>
@@ -140,7 +146,7 @@ const props = defineProps({
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 28px 24px 0 0;
+    padding: 0 24px 0 0;
 }
 
 .account-summary .summary-card__content {
