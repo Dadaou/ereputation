@@ -458,20 +458,24 @@ const hashString = (inputString) => {
     return hash;
 }
 
-const generateColor = (text) => {
-    const inputString = text;
-    const hash = hashString(inputString);
+const generateColor = (text, index) => {
+    const colors = ['#f75842', '#337ecc', '#4682B4', '#6495ED', '#1E90FF', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1'];
 
-    const red = (hash & 0xFF0000) >> 16;
-    const green = (hash & 0x00FF00) >> 8;
-    const blue = hash & 0x0000FF;
+    return colors[index];
+    // const inputString = text;
+    // const hash = hashString(inputString);
 
-    return `rgb(${red}, ${green}, ${blue})`;
+    // const red = (hash & 0xFF0000) >> 16;
+    // const green = (hash & 0x00FF00) >> 8;
+    // const blue = hash & 0x0000FF;
+
+    // return `rgb(${red}, ${green}, ${blue})`;
 }
 
 function transformData(inputData) {
     const labels = Object.keys(inputData.data);
-    const datasets = {};
+    let datasets = {};
+    let index = 1;
 
     labels.forEach(date => {
         Object.keys(inputData.data[date]).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())).forEach(key => {
@@ -481,9 +485,9 @@ function transformData(inputData) {
                 if (key == 'global') {
                     datasets[key] = {
                         label: key,
-                        borderColor: generateColor(key),
-                        borderWidth: 5,
-                        backgroundColor: generateColor(key),
+                        borderColor: generateColor(key, 0),
+                        borderWidth: 3,
+                        backgroundColor: generateColor(key, 0),
                         data: Array(labels.length).fill(0),
                         pointRadius: 0,
                         fill: false,
@@ -492,18 +496,24 @@ function transformData(inputData) {
                 } else {
                     datasets[key] = {
                         label: key,
-                        backgroundColor: generateColor(key),
+                        backgroundColor: generateColor(key, index),
                         data: Array(labels.length).fill(0)
                     };
+                    index++;
                 }
             }
             datasets[key].data[labels.indexOf(date)] = inputData.data[date][key];
         });
     });
 
+    let global = Object.values(datasets).find(x => x.label == 'global');
+
+    datasets = Object.values(datasets).filter(x => x.label != 'global' && x.label != 'events');
+    datasets.unshift(global)
+
     const result = {
         labels: labels,
-        datasets: Object.values(datasets)
+        datasets: datasets
     };
 
     return result;

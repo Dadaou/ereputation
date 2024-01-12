@@ -7,9 +7,8 @@
         'overflowX': 'auto'
     }">
         <GroupedBarChart class="chart" :plot-data="props.data" x-key="name" :width="custom_width"
-            :height="chartheight - 100" :margin="margin"
-            :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
-            :x-axis-label="_timePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+            :height="chartheight - 100" :margin="margin" :colors="colors" :x-axis-label="_timePeriod"
+            :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
         </GroupedBarChart>
     </div>
     <ModalComponent :showModal="showModal" @close="showModal = false">
@@ -59,9 +58,8 @@
                 'overflowX': 'auto'
             }">
                 <GroupedBarChart class="chart" :plot-data="plotData" x-key="name" :width="custom_width2"
-                    :height="chart_Height" :margin="margin"
-                    :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
-                    :x-axis-label="selectedTimePeriod" :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+                    :height="chart_Height" :margin="margin" :colors="colors" :x-axis-label="selectedTimePeriod"
+                    :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
                 </GroupedBarChart>
             </div>
             <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
@@ -83,7 +81,7 @@ import { useChartsStore } from "@Stores/charts.js"
 const props = defineProps({
     data: {
         type: Array,
-        default: [],
+        default: () => [],
         required: true
     },
     width: {
@@ -96,15 +94,15 @@ const props = defineProps({
     },
     margin: {
         type: Object,
-        default: { top: 20, bottom: 35, left: 55, right: 20 }
+        default: () => ({ top: 20, bottom: 35, left: 55, right: 20 })
     },
     colors: {
         type: Array,
-        default: ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
+        default: () => ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
     },
     labels: {
         type: Object,
-        default: { x: "Months", y: "Rating" }
+        default: () => ({ x: "Months", y: "Rating" })
     },
     establishment: Object,
     companies: Array, // (customer's establishment + its competitors)
@@ -141,8 +139,6 @@ const custom_width = computed(() => {
     return width;
 })
 
-let colors2 = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff'];
-
 const viewData = async () => {
     // date2, comparisonByEstablishments, selectedCompany, selectedTimePeriod
 
@@ -163,16 +159,16 @@ const viewData = async () => {
         if (selectedCompany.value.name != 'Global') {
             const tags = [props.establishment.tag, selectedCompany.value.tag]
             plotData.value = await chartsStore.loadData(tags, selectedTimePeriod.value, sDate, eDate, 'global')
-            legendData.value = companiesStore.generateLegend(plotData.value, colors2);
+            legendData.value = companiesStore.generateLegend(plotData.value, props.colors);
         } else {
             const tags = [props.establishment.tag, ...props.establishment.competitors.map(c => c.tag)]
             plotData.value = await chartsStore.loadData(tags, selectedTimePeriod.value, sDate, eDate, 'global')
-            legendData.value = companiesStore.generateLegend(plotData.value, colors2);
+            legendData.value = companiesStore.generateLegend(plotData.value, props.colors);
         }
     } else {
         const tags = [props.establishment.tag, ...props.establishment.competitors.map(c => c.tag)]
         plotData.value = await chartsStore.loadData(tags, selectedTimePeriod.value, sDate, eDate, selectedCompany.value.name)
-        legendData.value = companiesStore.generateLegend(plotData.value, colors2);
+        legendData.value = companiesStore.generateLegend(plotData.value, props.colors);
     }
 
 
@@ -225,16 +221,16 @@ watch([start_date, end_date], () => {
     }
 })
 
-const viewDataByEstablishment = (establishments, timePeriod, startDate, endDate, colors) => {
-    plotData.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, establishments);
-    legendData.value = companiesStore.generateLegend(establishments, colors);
-}
+// const viewDataByEstablishment = (establishments, timePeriod, startDate, endDate, colors) => {
+//     plotData.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, establishments);
+//     legendData.value = companiesStore.generateLegend(establishments, colors);
+// }
 
-const viewDataBySource = (websites, establishment, timePeriod, startDate, endDate, colors) => {
-    websites = companiesStore.getWebsites(websites);
-    plotData.value = companiesStore.calculateReviewsBySources(establishment, websites, timePeriod, startDate, endDate);
-    legendData.value = companiesStore.generateLegendV2(websites, colors);
-}
+// const viewDataBySource = (websites, establishment, timePeriod, startDate, endDate, colors) => {
+//     websites = companiesStore.getWebsites(websites);
+//     plotData.value = companiesStore.calculateReviewsBySources(establishment, websites, timePeriod, startDate, endDate);
+//     legendData.value = companiesStore.generateLegendV2(websites, colors);
+// }
 
 watch([start_date, end_date, comparisonByEstablishments, selectedCompany, selectedTimePeriod], () => {
     // startDate = moment().startOf('year').format('YYYY-M-DD');
