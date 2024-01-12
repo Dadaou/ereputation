@@ -496,6 +496,8 @@ function transformData(inputData) {
                 } else {
                     datasets[key] = {
                         label: key,
+                        borderColor: generateColor(key, index),
+                        borderWidth: 3,
                         backgroundColor: generateColor(key, index),
                         data: Array(labels.length).fill(0)
                     };
