@@ -506,7 +506,7 @@ useResizeObserver(el, (entries) => {
 }
 
 .left__side {
-    width: 1100px;
+    width: 100%;
     padding: 50px 5px;
 }
 
@@ -553,7 +553,7 @@ useResizeObserver(el, (entries) => {
 }
 
 .right__side {
-    width: 400px !important;
+    width: 500px !important;
     padding: 50px 0px;
 }
 
@@ -593,12 +593,9 @@ useResizeObserver(el, (entries) => {
 }
 
 @media screen and (max-width:1287px) {
-    .left__side {
-        width: 1000px !important;
-    }
 
     .right__side {
-        width: 300px !important;
+        width: 400px !important;
     }
 }
 

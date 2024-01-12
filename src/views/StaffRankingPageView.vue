@@ -650,7 +650,7 @@ img {
 }
 
 .left__side {
-    width: 1100px;
+    width: 100%;
     padding: 50px 5px;
 }
 
@@ -793,10 +793,6 @@ img {
 @media screen and (max-width:1287px) {
     .counter {
         gap: 2rem !important;
-    }
-
-    .left__side {
-        width: 1000px !important;
     }
 
     .right__side {
