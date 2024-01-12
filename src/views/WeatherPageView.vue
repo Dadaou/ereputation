@@ -56,7 +56,7 @@
                                         'color': conditionData.color,
                                         'fontWeight': 'bold',
                                     }">
-                                       {{ conditionData.note != 0 ? conditionData.note : '' }}
+                                        {{ conditionData.note != 0 ? conditionData.note : '' }}
                                     </td>
                                 </tr>
                             </tbody>
@@ -917,7 +917,7 @@ onBeforeMount(async () => {
 }
 
 .left__side {
-    width: 1100px;
+    width: 100%;
     padding: 50px 5px;
 }
 
@@ -1027,10 +1027,6 @@ onBeforeMount(async () => {
 @media screen and (max-width:1287px) {
     .counter {
         gap: 2rem !important;
-    }
-
-    .left__side {
-        width: 1000px !important;
     }
 
     .right__side {

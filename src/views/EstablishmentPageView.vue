@@ -100,13 +100,14 @@
                         <span class="text-xs font-medium">{{ star.value }}</span>
                     </div>
                 </div> -->
-                 <div class="reviews__star">
+                <div class="reviews__star">
                     <div v-for="star in starsData" :key="star.label" class="flex items-center mt-1">
                         <a href="#" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
                             {{ star.label }}
                         </a>
                         <div class="star__bar h-3 bg-gray-200 rounded mx-2 flex-grow">
-                            <div class="star__bar-fill h-3 bg-yellow-300 rounded" :style="{ 'width': `${star.percentage}%` }">
+                            <div class="star__bar-fill h-3 bg-yellow-300 rounded"
+                                :style="{ 'width': `${star.percentage}%` }">
                             </div>
                         </div>
                         <span class="text-xs font-medium">{{ star.value }}</span>
@@ -162,13 +163,14 @@
                         <span class="text-xs font-medium">{{ star.value }}</span>
                     </div>
                 </div> -->
-                 <div class="reviews__star">
+                <div class="reviews__star">
                     <div v-for="star in starsData" :key="star.label" class="flex items-center mt-1">
                         <a href="#" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
                             {{ star.label }}
                         </a>
                         <div class="star__bar h-3 bg-gray-200 rounded mx-2 flex-grow">
-                            <div class="star__bar-fill h-3 bg-yellow-300 rounded" :style="{ 'width': `${star.percentage}%` }">
+                            <div class="star__bar-fill h-3 bg-yellow-300 rounded"
+                                :style="{ 'width': `${star.percentage}%` }">
                             </div>
                         </div>
                         <span class="text-xs font-medium">{{ star.value }}</span>
@@ -349,7 +351,8 @@
                             {{ star.label }}
                         </a>
                         <div class="star__bar h-3 bg-gray-200 rounded mx-2 flex-grow">
-                            <div class="star__bar-fill h-3 bg-yellow-300 rounded" :style="{ 'width': `${star.percentage}%` }">
+                            <div class="star__bar-fill h-3 bg-yellow-300 rounded"
+                                :style="{ 'width': `${star.percentage}%` }">
                             </div>
                         </div>
                         <span class="text-xs font-medium">{{ star.value }}</span>
@@ -609,7 +612,7 @@ const formatStarsData = (data) => {
         tmp.push({
             label: k,
             value: data[k],
-            percentage: (data[k]==0)?0:(data[k] * 100 / total),
+            percentage: (data[k] == 0) ? 0 : (data[k] * 100 / total),
             intVal: k.split()[0]
         })
     })
@@ -1129,7 +1132,7 @@ onBeforeMount(async () => {
 }
 
 .left__side {
-    width: 1300px;
+    width: 100%;
     padding: 50px 5px;
 }
 
@@ -1269,10 +1272,6 @@ onBeforeMount(async () => {
 @media screen and (max-width:1287px) {
     .counter {
         gap: 2rem !important;
-    }
-
-    .left__side {
-        width: 1000px !important;
     }
 
     .right__side {
@@ -1454,5 +1453,4 @@ onBeforeMount(async () => {
 
 .establishment__info_tablet {
     margin-top: 0px;
-}
-</style>
+}</style>
