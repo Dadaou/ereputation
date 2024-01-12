@@ -201,7 +201,7 @@ const showMenu = computed(() => {
 })
 
 const isFeedback = computed(()=>{
-   let routeName = ['FeedBack', 'StaffFeedBack'];
+   let routeName = ['FeedBack', 'StaffFeedBack', undefined];
   return routeName.includes(route.name)
 })
 
@@ -243,11 +243,11 @@ const show = () => {
 watch(y, () => {
   if (y.value > 0) {
     nav__ref.value.classList.add('nav__onScroll');
-    if(showLang) btn__ref.value.classList.add('btn__lang');
+    if(isFeedback.value) btn__ref.value.classList.add('btn__lang');
     isScrolling.value = true;
   } else if (y.value <= 1) {
     nav__ref.value.classList.remove('nav__onScroll');
-     if(showLang) btn__ref.value.classList.remove('btn__lang');
+     if(isFeedback.value) btn__ref.value.classList.remove('btn__lang');
     isScrolling.value = false;
   }
 });
