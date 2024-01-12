@@ -187,7 +187,7 @@ const checkData = (data) => {
 }
 
 const updateData = async () => {
-
+    console.log(filter.value)
     const yearValue = year.value ? year.value.value : new Date().getFullYear()
     const filterValue = filter.value ? filter.value.value : 'followers'
     const typeValue = type.value ? type.value.value : 'yearly'
@@ -223,6 +223,7 @@ const updateData = async () => {
         data.labels = datas.labels;
 
         for (const [key, value] of Object.entries(datas.data)) {
+            console.log(value[filterValue])
             if(!checkData(value[filterValue])){
                 data.datasets.push({
                     label: key,
@@ -230,10 +231,6 @@ const updateData = async () => {
                     data: value[filterValue]
                 })
             }
-            // lineLegend.value.push({
-            //     name: key,
-            //     color: colors[key]
-            // })
         }
         lineData.value = data;
     }
@@ -248,13 +245,25 @@ const updateData = async () => {
         ArcElement,
         Legend
     )
- 
+const setCurrentDate = ()=>{
+      const currentDate = new Date();
+      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+     
+      period.value = { 
+        label: monthNames[currentDate.getMonth()], 
+        value: (currentDate.getMonth() + 1).toString().padStart(2, '0') 
+      }
+
+      year.value =  { 
+        label: currentDate.getFullYear().toString(), 
+        value: currentDate.getFullYear() 
+      }
+}
 onMounted(async () => {
     type.value = { label: "Month", value: "monthly" }
-    period.value = { label: 'November', value: '11' }
-    year.value =  { label: "2023", value: 2023 }
+    setCurrentDate();
     filter.value = { label: "Followers", value: "followers" }
-    const datas = await socialStore.getGlobalStats(companyId, 'monthly', `11-2023`)
+    const datas = await socialStore.getGlobalStats(companyId, 'monthly', `${period.value.value}-${year.value.value}`)
 
     let data = {
         labels: [],
@@ -272,15 +281,13 @@ onMounted(async () => {
     data.labels = datas.labels;
 
     for (const [key, value] of Object.entries(datas.data)) {
-        data.datasets.push({
-            label: key,
-            backgroundColor: colors[key],
-            data: value['followers']
-        })
-        // lineLegend.value.push({
-        //     name: key,
-        //     color: colors[key]
-        // })
+         if(!checkData(value[filter.value.value])){
+                data.datasets.push({
+                    label: key,
+                    backgroundColor: colors[key],
+                    data: value[filter.value.value]
+                })
+        }
     }
 
     lineData.value = data;
