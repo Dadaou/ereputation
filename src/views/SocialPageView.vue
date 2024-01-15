@@ -31,8 +31,9 @@
                 </div>
                 <div class="reviews__content">
                     <div class="social-list" v-if="!dataLoading">
-                        <ul v-if="socialPages.length > 0">
-                            <li v-for="socialItem in getLastSocialPages(socialPages)" :key="socialItem.source">
+                        <ul v-if="socialPages.length > 0" class="social-list__content">
+                            <li v-for="socialItem in getLastSocialPages(socialPages)" :key="socialItem.source"
+                                class="social-item" :class="socialItem.socialPosts.length > 0 && 'posts'">
                                 <div class="social-details">
                                     <h3><i :class="`uil uil-${socialItem.source}`"></i>
                                         <a :href="socials[socialItem.source]" target="_blank"><span>{{
@@ -59,8 +60,25 @@
                         </ul>
                         <p v-else>no social data</p>
                     </div>
-                    <div v-else>
-                        Loading...
+                    <div v-else role="status"
+                        class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
+                        v-for="index in 5" :key="index">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                </div>
+                                <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
+                            </div>
+                            <div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
+                            </div>
+                        </div>
+                        <span class="sr-only">Loading...</span>
                     </div>
                 </div>
             </div>
@@ -410,6 +428,7 @@ onBeforeMount(async () => {
     const companyId = route.params.id;
     let company = null;
     appStore.isLoading = true;
+    dataLoading.value = true
 
     companiesStore.getEstablishment(companyId).then((data) => {
 
@@ -423,7 +442,6 @@ onBeforeMount(async () => {
             all_items.value[1].value = establishment.value.totalReviews;
             page.value.title2 = establishment.value.name;
             appStore.isLoading = false;
-            dataLoading.value = false;
 
         }
     })
@@ -463,6 +481,7 @@ onBeforeMount(async () => {
         console.log(transformToSourceURL(socialResponse.data))
         establishment.value['socials'] = transformToSourceURL(socialResponse.data);
         socials.value = transformToSourceURL(socialResponse.data);
+        dataLoading.value = false;
     }
     if (!socialStore.trendsByEstablishment[`${companyId}`]) {
         await socialStore.fetchEstablishmentTrends(companyId);
@@ -954,13 +973,23 @@ li:nth-child(odd) {
     cursor: pointer;
 }
 
-.social-list {
-    max-width: 800px;
+.social-list .social-list__content {
     margin: 0 auto;
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.social-item {
+    width: 50%;
+}
+
+.social-item.posts {
+    width: 100%;
 }
 
 ul {
@@ -1195,7 +1224,7 @@ li {
         display: none;
     }
 
-    .social-list ul li {
+    .social-item {
         display: flex;
         flex-direction: column;
     }
