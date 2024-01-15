@@ -33,6 +33,19 @@
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
+            <el-tab-pane label="Links" name="links">
+                <LinksConfComponent/>
+            </el-tab-pane>
+             <el-tab-pane label="Establishments" name="establishments">
+                <el-tabs v-model="activeEstablishmentTab" class="demo-tabs">
+                    <el-tab-pane label="Establishment list" name="establishment_list">
+                        <EstablishmentListComponent />
+                    </el-tab-pane>
+                    <el-tab-pane label="Add a new establishment" name="establishment_form">
+                        <EstablishmentFormComponent />
+                    </el-tab-pane>
+                </el-tabs>
+            </el-tab-pane>
         </el-tabs>
     </div>
 </template>
@@ -77,6 +90,19 @@ const AdvantageFormComponent = defineAsyncComponent(() =>
 const AdvantageListComponent = defineAsyncComponent(() =>
     import("@Components/advantage/AdvantageListComponent.vue")
 )
+
+const LinksConfComponent = defineAsyncComponent(() =>
+    import("@Components/links/LinksConfComponent.vue")
+)
+
+const EstablishmentListComponent = defineAsyncComponent(() =>
+    import("@Components/establishments/EstablishmentListComponent.vue")
+)
+
+const EstablishmentFormComponent = defineAsyncComponent(() =>
+    import("@Components/establishments/EstablishmentFormComponent.vue")
+)
+
 const position = ref('top')
 watch(width, () => {
     if (width.value < 800) {
@@ -92,6 +118,7 @@ const userStore = useUserStore();
 const companyStore = useCompanyStore();
 const activeName = ref('staff');
 const activeStaffTab = ref('staff_list')
+const activeEstablishmentTab = ref('establishment_list')
 const staff_to_update = ref(null);
 provide('staff_to_update', staff_to_update);
 provide('staff_activeTab', activeStaffTab);

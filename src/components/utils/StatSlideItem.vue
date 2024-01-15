@@ -1,7 +1,7 @@
 <template>
     <Transition name="slide-in">
         <div class="carousel__item" v-show="currentSlide == index">
-            <StatComponent v-if="slide.value>0" :color="slide.color" :bgColor="slide.bgColor" :value="slide.value"
+            <StatComponent :color="slide.color" :bgColor="slide.bgColor" :value="slide.value"
                 :description="slide.description" :icon="slide.icon" :iconStyle="slide.iconStyle"
                 :percentage="slide.percentage" :trend="slide.trend" :websites="websites" :site="slide.site">
             </StatComponent>
