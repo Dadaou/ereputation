@@ -201,7 +201,7 @@
                         <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" /> -->
                     </div>
                 </div>
-                <div
+                <div v-if="establishment && socials && trends && trends.length > 0"
                     class="stat__cards bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 py-4">
                     <div class="stat__cards_default" v-if="establishment && socials">
                         <StatComponent v-for="(slide, index) in trends" :key="index" :color="slide.color"
