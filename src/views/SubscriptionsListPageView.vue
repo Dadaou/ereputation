@@ -6,26 +6,33 @@
             </div>
         </div>
         <div class="subscription-container">
-	        <div class="subscription-card" v-for="(subscription, index) in subscriptions" :key="index">
-	            <div class="status-container">
-	                <button v-if="isExpired(subscription.expired_at)" class="btn expired">Expired 🗓️</button>
-	                <button v-else class="btn active">Active 🌟</button>
-	            </div>
-	            <div class="content">
-	                <h2 class="plan-name mb-2">{{ subscription.plan_name }}</h2>
-	               <p><strong>Payment Date:</strong> {{ moment(subscription.payement_date).format('YYYY-MM-DD') }}</p>
-		            <p><strong>Expires On:</strong> {{ moment(subscription.expired_at).format('YYYY-MM-DD') }}</p>
-		            <p v-if="subscription.discount > 0"><strong>Discount:</strong> {{ subscription.discount }}%</p>
-		            <p><strong>Periodicity:</strong> {{ subscription.periodicity }} months</p>
-		            <p><strong>Event Limit:</strong> {{ subscription.event_limit }}</p>
-		            <p><strong>Establishment Limit:</strong> {{ subscription.establishment_limit }}</p>
-		            <p><strong>Point of Sale Limit:</strong> {{ subscription.pointofsale_limit }}</p>
-		            <p v-if="subscription.crm"><strong>CRM:</strong> Included</p>
-		            <p v-if="subscription.api"><strong>API Access:</strong> Included</p>
-	            </div>
-	            <button v-if="isExpired(subscription.expired_at)" class="btn renew">Renew Subscription</button>
-	        </div>
-	    </div>
+            <div class="subscription-card" v-for="(subscription, index) in subscriptions" :key="index">
+                <div class="status-container">
+                    <button v-if="isExpired(subscription.expired_at)" class="btn expired">Expired 🗓️</button>
+                    <button v-else class="btn active">Active 🌟</button>
+                </div>
+                <div class="content">
+                    <h2 class="plan-name mb-2">{{ subscription.plan_name }}</h2>
+                    <p><strong>Payment Date:</strong> {{ moment(subscription.payement_date).format('YYYY-MM-DD') }}</p>
+                    <p><strong>Expires On:</strong> {{ moment(subscription.expired_at).format('YYYY-MM-DD') }}</p>
+                    <p v-if="subscription.discount > 0"><strong>Discount:</strong> {{ subscription.discount }}%</p>
+                    <p><strong>Periodicity:</strong> {{ subscription.periodicity }} months</p>
+                    <p><strong>Event Limit:</strong> {{ subscription.event_limit }}</p>
+                    <p><strong>Establishment Limit:</strong> {{ subscription.establishment_limit }}</p>
+                    <p><strong>Point of Sale Limit:</strong> {{ subscription.pointofsale_limit }}</p>
+                    <p v-if="subscription.crm"><strong>CRM:</strong> Included</p>
+                    <p v-if="subscription.api"><strong>API Access:</strong> Included</p>
+                </div>
+                <button v-if="isExpired(subscription.expired_at)" class="btn renew">Renew Subscription</button>
+            </div>
+            <RouterLink :to="`/customer/${userStore.user.customer.tag}/account/new_subscription`"
+                class="subscription-card new">
+                <div class="text-center">
+                    <i class="uil uil-plus-circle" style="font-size: 64px;"></i>
+                    <p>New subscription</p>
+                </div>
+            </RouterLink>
+        </div>
     </div>
 </template>
 
@@ -78,7 +85,7 @@ const userStore = useUserStore();
 // ])
 const subscriptions = ref([])
 
-const formatDate= (dateString) => {
+const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
 }
@@ -89,8 +96,8 @@ const isExpired = (expiredDate) => {
     return now > expiryDate;
 }
 
-onBeforeMount(async() => {
-   let promises = [];
+onBeforeMount(async () => {
+    let promises = [];
     try {
         const response = await new Promise((resolve, reject) => {
             services.get_Record(`customer/${route.params.tag}/subscriptions`, (response) => {
@@ -98,10 +105,10 @@ onBeforeMount(async() => {
                 console.log(response)
             });
         });
-       
+
         if (response.status === 200) {
-           subscriptions.value = response.data;
-           console.log(response.data)
+            subscriptions.value = response.data;
+            console.log(response.data)
         } else {
             console.error('Error fetching subscriptions:', response);
         }
@@ -113,12 +120,11 @@ onBeforeMount(async() => {
 </script>
 
 <style scoped>
-
-.profile__header h1{
-	font-size: 18px;
-	font-weight: 600;
-	margin-bottom: 15px;
-	color: var(--color-primary);
+.profile__header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--color-primary);
 }
 
 .btn.renew {
@@ -140,6 +146,15 @@ onBeforeMount(async() => {
     max-width: 400px;
 }
 
+.subscription-card.new {
+    cursor: pointer;
+}
+
+.subscription-card.new:hover {
+    background-color: rgb(252, 253, 255);
+    transition: ease .5s background-color;
+}
+
 .subscription-card h2 {
     color: #333;
     margin-top: 0;
@@ -155,7 +170,7 @@ onBeforeMount(async() => {
     flex-direction: row;
     flex-grow: 1;
     gap: 20px;
-    flex-shrink: 
+    flex-shrink:
 }
 
 .subscription-card {
