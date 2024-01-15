@@ -235,7 +235,7 @@ const subscribe = async () => {
 const activateAccount = async () => {
   const response = await new Promise((resolve) => {
     services.post_Record('/subscription/create', {
-      customer: planInfo.value.customer,
+      customer: userStore.user.customer.tag,
       plan: planInfo.value.plan.tag,
       amount: planInfo.value.total,
       email: planInfo.value.uEmail,
@@ -259,12 +259,12 @@ const activateAccount = async () => {
       ElMessage({
         message: h('p', null, [
           h('h4', { style: "color: #f75842; font-weight: bold;" }, 'Information:'),
-          h('span', { style: "font-size: 13px;" }, "Your account has been successfully created! You will be redirected to the login page in 3s..."),
+          h('span', { style: "font-size: 13px;" }, "Your subscription has been successfully updated!"),
         ]),
       })
       setTimeout(() => {
-        router.push(`/`);
-      }, 5000);
+        router.push(`/customer/${userStore.user.customer.tag}/account/subscription_list`);
+      }, 2000);
     }
   }
 }

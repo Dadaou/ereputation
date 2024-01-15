@@ -5,31 +5,42 @@
                 <h1>Subscription</h1>
             </div>
         </div>
-        <div class="subscription-container">
-            <div class="subscription-card" v-for="(subscription, index) in subscriptions" :key="index">
-                <div class="status-container">
-                    <button v-if="isExpired(subscription.expired_at)" class="btn expired">Expired 🗓️</button>
-                    <button v-else class="btn active">Active 🌟</button>
+        <div class="subscription-container pb-5">
+            <div v-for="(subscription, index) in subscriptions" :key="index" class="subscription-item">
+                <div class="subscription-header flex flex-row">
+                    <h2>{{ subscription.plan_name }}</h2>
+                    <div class="subscription-status" :class="isExpired(subscription.expired_at) ? 'expired' : 'active'"
+                        :title="isExpired(subscription.expired_at) ? 'Expired subscription' : 'Active subscription'">
+                    </div>
+                    <!-- <div class="status-container">
+                        <button v-if="isExpired(subscription.expired_at)" class="btn expired">Expired 🗓️</button>
+                        <button v-else class="btn active">Active 🌟</button>
+                    </div> -->
                 </div>
-                <div class="content">
-                    <h2 class="plan-name mb-2">{{ subscription.plan_name }}</h2>
-                    <p><strong>Payment Date:</strong> {{ moment(subscription.payement_date).format('YYYY-MM-DD') }}</p>
-                    <p><strong>Expires On:</strong> {{ moment(subscription.expired_at).format('YYYY-MM-DD') }}</p>
-                    <p v-if="subscription.discount > 0"><strong>Discount:</strong> {{ subscription.discount }}%</p>
-                    <p><strong>Periodicity:</strong> {{ subscription.periodicity }} months</p>
-                    <p><strong>Event Limit:</strong> {{ subscription.event_limit }}</p>
-                    <p><strong>Establishment Limit:</strong> {{ subscription.establishment_limit }}</p>
-                    <p><strong>Point of Sale Limit:</strong> {{ subscription.pointofsale_limit }}</p>
-                    <p v-if="subscription.crm"><strong>CRM:</strong> Included</p>
-                    <p v-if="subscription.api"><strong>API Access:</strong> Included</p>
+                <div class="subscription-content">
+                    <div class="content">
+                        <p><strong>Payment Date:</strong> {{ moment(subscription.payement_date).format('YYYY-MM-DD') }}</p>
+                        <p><strong>Expires On:</strong> {{ moment(subscription.expired_at).format('YYYY-MM-DD') }}</p>
+                        <p v-if="subscription.discount > 0"><strong>Discount:</strong> {{ subscription.discount }}%</p>
+                        <p><strong>Periodicity:</strong> {{ subscription.periodicity }} months</p>
+                        <p><strong>Event Limit:</strong> {{ subscription.event_limit }}</p>
+                        <p><strong>Establishment Limit:</strong> {{ subscription.establishment_limit }}</p>
+                        <p><strong>Point of Sale Limit:</strong> {{ subscription.pointofsale_limit }}</p>
+                        <p v-if="subscription.crm"><strong>CRM:</strong> Included</p>
+                        <p v-if="subscription.api"><strong>API Access:</strong> Included</p>
+                    </div>
+                    <div class="text-center">
+                        <button v-if="isExpired(subscription.expired_at)" class="btn btn-primary-2 btn-navigation">Renew
+                            Subscription</button>
+                    </div>
+
                 </div>
-                <button v-if="isExpired(subscription.expired_at)" class="btn renew">Renew Subscription</button>
             </div>
             <RouterLink :to="`/customer/${userStore.user.customer.tag}/account/new_subscription`"
-                class="subscription-card new">
+                class="subscription-item new">
                 <div class="text-center">
                     <i class="uil uil-plus-circle" style="font-size: 64px;"></i>
-                    <p>New subscription</p>
+                    <p style="font-size: 14px;">New subscription</p>
                 </div>
             </RouterLink>
         </div>
@@ -94,6 +105,7 @@ const isExpired = (expiredDate) => {
     const now = new Date();
     const expiryDate = new Date(expiredDate);
     return now > expiryDate;
+    // return true;
 }
 
 onBeforeMount(async () => {
@@ -120,6 +132,13 @@ onBeforeMount(async () => {
 </script>
 
 <style scoped>
+.subscription-header {
+    background-color: color-mix(in srgb, var(--color-primary) 25%, white);
+    color: var(--color-danger);
+    padding: 16px 12px;
+    gap: 8px;
+}
+
 .profile__header h1 {
     font-size: 18px;
     font-weight: 600;
@@ -137,30 +156,46 @@ onBeforeMount(async () => {
     margin-top: 20px;
 }
 
+.btn-navigation {
+    margin: 20px 8px 0 8px;
+}
 
-.subscription-card {
+.subscription-item {
     background-color: #fff;
-    padding: 20px;
+    padding: 0 !important;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 400px;
+    border-radius: 8px;
 }
 
-.subscription-card.new {
+.subscription-content {
+    padding: 20px;
+}
+
+.subscription-content * {
+    font-size: 14px;
+}
+
+.subscription-item.new {
     cursor: pointer;
+    padding: 24px !important;
+    height: 180px;
+    width: 200px;
+
 }
 
-.subscription-card.new:hover {
+.subscription-item.new:hover {
     background-color: rgb(252, 253, 255);
     transition: ease .5s background-color;
 }
 
-.subscription-card h2 {
+.subscription-item h2 {
     color: #333;
     margin-top: 0;
 }
 
-.subscription-card p {
+.subscription-item p {
     color: #666;
     line-height: 1.6;
 }
@@ -170,21 +205,28 @@ onBeforeMount(async () => {
     flex-direction: row;
     flex-grow: 1;
     gap: 20px;
-    flex-shrink:
 }
 
-.subscription-card {
+.subscription-item {
     background-color: #fff;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 400px;
     position: relative;
 }
 
-.status-container {
-    text-align: center;
-    margin-bottom: 20px;
+.subscription-status {
+    width: 12px;
+    height: 12px;
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+.subscription-status.active {
+    background-color: var(--color-danger2);
+}
+
+.subscription-status.expired {
+    background-color: #555;
 }
 
 .btn {
