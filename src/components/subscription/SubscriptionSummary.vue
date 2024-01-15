@@ -98,7 +98,7 @@ const props = defineProps({
     }
 })
 </script>
-<style>
+<style scoped>
 .app__title {
     font-weight: 800;
     color: var(--color-bg);
