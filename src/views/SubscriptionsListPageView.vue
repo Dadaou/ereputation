@@ -7,7 +7,7 @@
         </div>
         <div class="subscription-container pb-5">
             <div v-for="(subscription, index) in subscriptions" :key="index" class="subscription-item">
-                <div class="subscription-header flex flex-row">
+                <div class="w-full subscription-header flex flex-row justify-between">
                     <h2>{{ subscription.plan_name }}</h2>
                     <div class="subscription-status" :class="isExpired(subscription.expired_at) ? 'expired' : 'active'"
                         :title="isExpired(subscription.expired_at) ? 'Expired subscription' : 'Active subscription'">
