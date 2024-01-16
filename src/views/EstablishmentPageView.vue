@@ -986,7 +986,7 @@ onBeforeMount(async () => {
     padding: 0;
     display: flex;
     flex-direction: row-reverse;
-    gap: 1rem;
+    gap: 1rem; 
 }
 
 .reviews__content p {
@@ -1132,7 +1132,7 @@ onBeforeMount(async () => {
 }
 
 .left__side {
-    width: 100%;
+    width: 80%;
     padding: 50px 5px;
 }
 
@@ -1215,7 +1215,7 @@ onBeforeMount(async () => {
 }
 
 .right__side {
-    width: 500px;
+    width: 400px;
     padding: 50px 0px;
 }
 
@@ -1259,7 +1259,209 @@ onBeforeMount(async () => {
     margin: 0px 2px !important;
 }
 
-@media screen and (max-width:1400px) {
+/* Css correction */
+
+@media screen and (min-width: 1439px) and (max-width: 2559px) {
+    .left__side {
+        width: 73.5%;
+    }
+}
+
+
+
+@media screen and (max-width:1440px) {
+   .left__side {
+        width: 70%;
+    }
+
+    .right__side {
+        width: 325px;
+    }
+
+    .dashboard__content
+    {
+        margin-top: 15px;
+    }
+}
+
+
+@media screen and (max-width:1024px) {
+    .app__container {
+        width: var(--container-width-md);
+    }
+
+    .breadcrumb__container {
+        width: var(--container-width-md);
+    }
+
+    .right__side {
+        width: 275px;
+    }
+
+    .dashboard__content
+    {
+        gap:0.5rem;
+    }
+}
+
+@media screen and (max-width: 975px) {
+    .app__container {
+        flex-direction: column-reverse;
+        width: 95% !important;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .left__side {
+        width: inherit !important;
+    }
+
+    .photo {
+        flex-basis: 250px;
+    }
+
+    .photo div {
+        height: 100%;
+    }
+
+    .photo img {
+        height: 150px;
+        width: 100%;
+    }
+
+    .dashboard__content,
+    .dashboard,
+    .right__side {
+        display: none !important;
+    }
+
+    .tablet_mobile__head {
+        display: flex;
+        justify-content: space-between;
+        margin: auto;
+        margin-top: 50px;
+        width: inherit;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        border: 1px solid var(--light-color-bg2);
+        border-radius: 5px;
+        padding: 15px;
+        font-size: 14px;
+    }
+
+    .tablet_mobile__head label {
+        font-size: 17px !important;
+    }
+
+    .tablet_mobile__head span {
+        font-weight: 500;
+        color: var(--color-bg2);
+    }
+
+    .tablet_mobile__filter {
+        display: flex;
+        width: inherit;
+        align-items: center;
+        gap: 1rem;
+        padding: 5px 15px;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        border-radius: 5px;
+    }
+
+    .tablet_mobile__filter * {
+        flex-basis: 200px;
+    }
+}
+
+@media screen and (max-width:800px) {
+    .tablet_mobile__head {
+        font-size: 13px !important;
+    }
+
+    .tablet_mobile__head label {
+        font-size: 15px !important;
+    }
+
+    .tablet_mobile__filter {
+        gap: 0.25rem;
+    }
+}
+
+@media screen and (max-width:800px) {
+    .photo {
+        flex-basis: 225px !important;
+    }
+}
+
+@media screen and (max-width:675px) {
+    .tablet_mobile__head {
+        font-size: 12px !important;
+        padding: 10px;
+    }
+
+    .tablet {
+        display: none !important;
+    }
+
+    .mobile__filter__btn {
+        display: flex !important;
+        gap: 0.5rem;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .photo {
+        flex-basis: 210px !important;
+    }
+
+    .tablet_mobile__head label {
+        font-size: 14px !important;
+    }
+}
+
+@media screen and (max-width:625px) {
+    .tablet_mobile__filter {
+        flex-direction: column;
+        padding: 5px 0px !important;
+    }
+
+    .tablet_mobile__filter * {
+        flex-basis: inherit !important;
+        width: inherit !important;
+        justify-content: center !important;
+    }
+
+    .date__picker {
+        margin: 5px 0 10px !important;
+    }
+}
+
+@media screen and (max-width:500px) {
+    .tablet_mobile__head {
+        flex-direction: column-reverse;
+        gap: 1rem;
+    }
+
+    .photo {
+        flex-basis: 150px !important;
+        height: 100px !important;
+    }
+}
+
+@media screen and (max-width:475px) {
+    .app__container {
+        overflow-x: hidden;
+    }
+}
+
+.establishment__info_tablet {
+    margin-top: 0px;
+}
+
+
+
+/* end css correction */
+
+/*@media screen and (max-width:1400px) {
     .app__container {
         width: var(--container-width-md);
     }
@@ -1453,5 +1655,5 @@ onBeforeMount(async () => {
 
 .establishment__info_tablet {
     margin-top: 0px;
-}
+}*/
 </style>
