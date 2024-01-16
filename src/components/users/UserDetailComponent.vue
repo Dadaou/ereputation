@@ -2,7 +2,7 @@
     <div class="user__main__container">
         <div class="profile__header border__bottom">
             <div class="profile__edit">
-                <h4>Personal details</h4>
+                <h2>Personal details</h2>
                 <p>Update your information and find out how it's used.</p>
             </div>
             <div class="profile__image">
@@ -69,7 +69,8 @@
                         <i class="uil uil-edit"></i>
                         Edit
                     </span>
-                </div>
+        </div>
+       
     </div>
 </template>
 
@@ -134,6 +135,11 @@ function toggleEdit() {
 </script>
 
 <style scoped>
+.profile__edit h2{
+    font-weight: 600;
+    font-size: 18px;
+}
+
 .dp__theme_light {
     --dp-border-color-hover: var(--color-primary);
 }
@@ -148,12 +154,14 @@ function toggleEdit() {
 }
 
 
-.profile__header h4 {
+.profile__header h2 {
     color: var(--color-bg2);
 }
 
 .profile__header p {
-    font-size: 15px;
+    font-size: 14px;
+    color: grey;
+    font-weight: 500;
 }
 
 .user__main__avatar {
@@ -189,17 +197,13 @@ function toggleEdit() {
     width: 100%;
 }
 
-.info__title {
+.info__title, .info__edit span {
     width: 20%;
+    font-weight: 500;
+    color: grey;
+    font-size: 14px;
 }
 
-@media screen and (max-width: 800px) {
-  .user__main__container {
-    width: 120%;  }
-    .personal__info {
-        align-items: flex-start; /* Aligner les éléments en haut de la colonne */
-    }
-}
 input, select{
     border-radius: 4px !important;
     background-color: white;
@@ -230,13 +234,15 @@ input{
     display: flex;
     align-items: baseline; /* Aligner les éléments verticalement au centre */
     gap: 10px; /* Espacement entre les éléments */
+    font-size: 14px;
+    font-weight: 500;
 }
 
 .edit__actions .edit {
     color: var(--color-primary);
     cursor: pointer;
     transition: var(--transition);
-    padding: 5px;
+    padding: 2px 6px;
     border-radius: 5px;
 }
 
@@ -249,6 +255,14 @@ input{
 .edit__actions .edit:hover {
     background-color: var(--color-primary);
     color: var(--color-white);
+}
+
+@media screen and (max-width: 800px) {
+  .user__main__container {
+    width: 120%;  }
+    .personal__info {
+        align-items: flex-start; /* Aligner les éléments en haut de la colonne */
+    }
 }
 
 </style>
