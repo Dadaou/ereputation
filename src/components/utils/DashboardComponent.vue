@@ -58,10 +58,6 @@ const props = defineProps({
     border-radius: 10px;
 }
 
-/* .item__left{
-    width: 100px;
-} */
-
 .item__title {
     color: var(--color-bg2);
     font-size: 15px;
@@ -80,6 +76,22 @@ const props = defineProps({
     font-size: 25px;
     transition: var(--transition);
 }
+
+/* CSS correction */
+@media screen and (max-width:1440px) {
+  .item {
+        flex-basis: 187px;
+        padding: 20px;
+    }
+}
+
+@media screen and (max-width:1024px) {
+  .item {
+        flex-basis: 150px;
+        gap: 1rem;
+    }
+}
+/* end css */
 
 @media screen and (max-width:1287px) {
     .item__value {
