@@ -917,7 +917,7 @@ onBeforeMount(async () => {
 }
 
 .left__side {
-    width: 100%;
+    width: 75%;
     padding: 50px 5px;
 }
 

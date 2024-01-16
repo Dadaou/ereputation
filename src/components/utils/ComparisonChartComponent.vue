@@ -3,7 +3,6 @@
         <li @click="viewFullscreen()"> <i class="uil uil-expand-arrows-alt"></i> Expand</li>
     </ul>
     <div class="establishments__comparison" ref="el" :style="{
-        'width': `${getWidth()}`,
         'overflowX': 'auto'
     }">
         <GroupedBarChart class="chart" :plot-data="props.data" x-key="name" :width="custom_width"
