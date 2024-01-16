@@ -222,11 +222,11 @@ onBeforeMount(async () => {
 }
 
 .subscription-status.active {
-    background-color: var(--color-danger2);
+    background-color: #52c41a;
 }
 
 .subscription-status.expired {
-    background-color: #555;
+    background-color: #ff4d4f;
 }
 
 .btn {
