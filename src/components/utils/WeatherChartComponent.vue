@@ -1,6 +1,5 @@
 <template>
   <div class="reviews__content weather__chart" ref="el" :style="{
-    'width': `${getWidth()}`,
     'overflowX': 'auto'
   }
     ">

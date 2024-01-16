@@ -391,6 +391,10 @@ useResizeObserver(el, (entries) => {
 </script>
 
 <style scoped>
+.left__side {
+    width: 75% !important;
+}
+
 .btn {
     width: 100%;
     background-color: var(--color-primary);
