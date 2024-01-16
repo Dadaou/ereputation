@@ -1,6 +1,6 @@
 <template>
     <div class="user__main__container">
-        <el-tabs v-model="activeName" type="card" class="demo-tabs" style="width:80%;" @tab-click="handleClick">
+        <el-tabs v-model="activeName" type="card" class="demo-tabs" @tab-click="handleClick">
             <el-tab-pane label="Staff" name="staff">
                 <el-tabs v-model="activeStaffTab" class="demo-tabs">
                     <el-tab-pane label="Staff list" name="staff_list">
@@ -34,9 +34,9 @@
                 </el-tabs>
             </el-tab-pane>
             <el-tab-pane label="Links" name="links">
-                <LinksConfComponent/>
+                <LinksConfComponent />
             </el-tab-pane>
-             <el-tab-pane label="Establishments" name="establishments">
+            <el-tab-pane label="Establishments" name="establishments">
                 <el-tabs v-model="activeEstablishmentTab" class="demo-tabs">
                     <el-tab-pane label="Establishment list" name="establishment_list">
                         <EstablishmentListComponent />

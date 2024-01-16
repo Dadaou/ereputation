@@ -6,15 +6,15 @@
   </div>
   <div class="mt-5 erep_table">
     <el-table :data="filterTableData">
-      <el-table-column label="Name" prop="name" width="150" />
-      <el-table-column label="Establishment" prop="establishment_name" width="200" />
-      <el-table-column label="Amount" prop="amount" width="100" align="center" />
-      <el-table-column label="Category" prop="category" width="150" />
-      <el-table-column label="Metric" prop="metric" width="100" />
-      <el-table-column label="Scope" prop="scope" width="150" />
-      <el-table-column label="Validity" prop="validity" width="100" align="center" />
-      <el-table-column label="Expired At" prop="expired_at" width="120" />
-      <el-table-column label="Enable" width="100" align="center">
+      <el-table-column label="Name" prop="name" style="width: 10%; min-width: 200px;" />
+      <el-table-column label="Establishment" prop="establishment_name" style="width: 15%; min-width: 200px;" />
+      <el-table-column label="Amount" prop="amount" style="width: 10%; min-width: 200px;" align="center" />
+      <el-table-column label="Category" prop="category" style="width: 15%; min-width: 200px;" />
+      <el-table-column label="Metric" prop="metric" style="width: 10%; min-width: 200px;" />
+      <el-table-column label="Scope" prop="scope" style="width: 10%; min-width: 200px;" />
+      <el-table-column label="Validity" prop="validity" style="width: 10%; min-width: 200px;" align="center" />
+      <el-table-column label="Expired At" prop="expired_at" style="width: 10%; min-width: 200px;" />
+      <el-table-column label="Enable" style="width: 10%; min-width: 200px;" align="center">
         <template #default="scope">
           <el-button v-if="scope.row.enable" size="small" @click="handleDisable(scope.$index, scope.row)"><i
               class="uil uil-check-square"></i></el-button>
@@ -24,7 +24,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="Operations" width="200" align="center">
+      <el-table-column label="Operations" style="width: 15%; min-width: 200px;" align="right">
 
         <template #header>
           <el-input v-model="search" size="small" placeholder="Type to search" />
