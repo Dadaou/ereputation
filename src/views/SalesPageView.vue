@@ -12,18 +12,31 @@
                     </div>
                 </div>
 
-                <div style="margin-top: 25px; height: 400px; width: 100%;">
+                <div id="ttv__container" style="margin-top: 25px;">
                     <div class="app__title" style="margin-bottom: 25px;">
                         <h2>TTV</h2>
                     </div>
-                    <Bar :data="data" :options="options" />
+                    <div class="chartBox">
+                        <div class="containerChart">
+                            <div class="containerBody">
+                                <Bar :data="data" :options="options" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div style="margin-top: 25px;">
                     <div class="app__title" style="margin-bottom: 25px;">
                         <h2>Booking's number</h2>
                     </div>
-                    <Bar :data="dataBooking" :options="options" />
+                    <div class="chartBox">
+                        <div class="containerChart">
+                            <div class="containerBody2">
+                                <Bar :data="dataBooking" :options="options" />
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
 
 
@@ -290,8 +303,29 @@ const loadFromServer = async (company, datefrom, dateto, type) => {
     });
 
     if (response.status == 200) {
-        if (type == 'sales') data.value = transformSalesData(response.data.data);
-        else dataBooking.value = transformBookingData(response.data.data)
+        const containerBody = document.querySelector('.containerBody');
+        const _containerBody = document.querySelector('.containerBody2');
+        const right__side = document.querySelector('.right__side');
+        let totalLabels = 0
+        if (type == 'sales'){
+          data.value = transformSalesData(response.data.data)
+          totalLabels = data.value['labels'].length 
+        } 
+        else{
+          dataBooking.value = transformBookingData(response.data.data)  
+          totalLabels = dataBooking.value['labels'].length 
+        } 
+
+        if(totalLabels > 11){
+            let new_width = totalLabels * 150
+            containerBody.style.width = `${new_width}px`
+            _containerBody.style.width = `${new_width}px`
+            right__side.style.width = `${500}px`
+        }else {
+            containerBody.style.width = '';
+            _containerBody.style.width = '';
+            right__side.style.width = `${500}px`
+        }
     }
 }
 
@@ -307,9 +341,9 @@ watch(date, () => {
 })
 
 const options = {
-    responsive: true,
-    maintainAspectRatio: true,
-    aspectRatio: 2,
+    // responsive: false,
+    maintainAspectRatio: false,
+    // aspectRatio: 2,
     plugins: {
         legend: {
             display: true,
@@ -501,6 +535,27 @@ const transformBookingData = (salesData) => {
 </script>
 
 <style scoped>
+
+.containerChart{
+    /*width: 700px;
+    max-width: 700px;*/
+   /* width: 1000px;
+    overflow-x: scroll;*/
+    width: 100%;
+    overflow-x: auto;
+}
+
+/*.chartBox{
+    width: 700px;
+    padding: 20px;
+    border-radius: 20px;
+    border: solid 3px red;
+}*/
+
+.containerBody, .containerBody2{
+    height: 350px;
+}
+
 .no__staff {
     display: flex !important;
     align-items: center !important;
@@ -705,7 +760,7 @@ img {
 }
 
 .left__side {
-    width: 100%;
+    width: 75%;
     padding: 50px 5px;
 }
 
@@ -845,13 +900,19 @@ img {
     }
 }
 
-@media screen and (max-width:1287px) {
+/*@media screen and (max-width:1287px) {
     .counter {
         gap: 2rem !important;
     }
 
     .right__side {
         width: 300px !important;
+    }
+}*/
+
+@media screen and (min-width: 1439px) and (max-width: 2559px) {
+    .right__side {
+        width: 450px;
     }
 }
 

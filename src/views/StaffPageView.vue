@@ -392,7 +392,7 @@ useResizeObserver(el, (entries) => {
 
 <style scoped>
 .left__side {
-    width: 75% !important;
+    width: 80% !important;
 }
 
 .btn {
@@ -593,7 +593,7 @@ img {
 }
 
 .right__side {
-    width: 500px;
+    width: 400px;
     padding: 50px 0px;
 }
 

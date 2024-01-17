@@ -65,7 +65,8 @@ import { useAppStore } from "@Stores/app.js";
 const appStore = useAppStore();
 appStore.isLoading = false;
 const barWidth = inject('barWidth');
-const chartLoading = inject('chartLoading');
+// const chartLoading = inject('chartLoading');
+const chartLoading = false;
 const staffLoading = inject('staffLoading');
 
 const SpinnerComponent = defineAsyncComponent(() =>

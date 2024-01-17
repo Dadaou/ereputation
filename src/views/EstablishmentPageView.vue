@@ -894,7 +894,7 @@ onBeforeMount(async () => {
 
 <style scoped>
 .left__side {
-    width: 75% !important;
+    width: 80%;
 }
 
 .btn {
@@ -1265,12 +1265,15 @@ onBeforeMount(async () => {
 
 /* Css correction */
 
+img {
+    height: 200px !important;
+}
+
 @media screen and (min-width: 1439px) and (max-width: 2559px) {
     .left__side {
         width: 73.5%;
     }
 }
-
 
 
 @media screen and (max-width:1440px) {
@@ -1329,7 +1332,7 @@ onBeforeMount(async () => {
     }
 
     .photo img {
-        height: 150px;
+        height: 75px;
         width: 100%;
     }
 

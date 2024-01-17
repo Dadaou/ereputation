@@ -207,7 +207,6 @@ const submit = async ()=>{
                   });
                 });
 
-                console.log(response);
                  if(response.status == 201){
                         loadData(response.data, staff);
                         ElMessage({
