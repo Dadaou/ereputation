@@ -4,13 +4,13 @@
       <h4><i class="uil uil-users-alt"></i> Staff List</h4>
     </div>
   </div>
-  <div class="mt-5">
+  <div class="mt-5 table__container">
     <el-table :data="filterTableData">
-      <el-table-column label="Period" prop="period" style="width: 25%; min-width: 200px;" />
-      <el-table-column label="Name" prop="name" style="width: 25%; min-width: 200px;" />
-      <el-table-column label="Gender" prop="gender" style="width: 10%; min-width: 200px;" />
-      <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" />
-      <el-table-column label="Department" prop="department" style="width: 25%; min-width: 200px;" />
+      <el-table-column label="Period" prop="period" style="width: 15%; min-width: 300px;" />
+      <el-table-column label="Name" prop="name" style="width: 20%; min-width: 300px;" />
+      <el-table-column label="Gender" prop="gender" style="width: 10%; min-width: 300px;" />
+      <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;" />
+      <el-table-column label="Department" prop="department" style="width: 20%; min-width: 300px;" />
 
       <el-table-column style="width: 15%; min-width: 200px;" align="right">
         <template #header>
@@ -245,17 +245,21 @@ button i.uil-edit {
   width: 100%;
 }
 
+.table__container {
+  overflow-x: scroll;
+  width: 85%;
+}
+
 /* Définissez une largeur maximale pour l'en-tête sur les grands écrans */
 @media screen and (min-width: 800px) {
   .security__header {
     max-width: 1000px;
     /* Largeur maximale pour les grands écrans */
   }
-}
 
-/* La classe mt-5 appliquera une marge, mais elle occupera toute la largeur */
-.mt-5 {
-  width: 100%;
+  .table__container {
+    width: 100%;
+  }
 }
 </style>
   

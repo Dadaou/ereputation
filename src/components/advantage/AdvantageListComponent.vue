@@ -4,7 +4,7 @@
       <h4><i class="uil uil-calender"></i> Advantage List</h4>
     </div>
   </div>
-  <div class="mt-5 erep_table">
+  <div class="mt-5 erep_table table__container">
     <el-table :data="filterTableData">
       <el-table-column label="Name" prop="name" style="width: 10%; min-width: 200px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 15%; min-width: 200px;" />
@@ -139,6 +139,18 @@ button i.uil-edit {
 .security__header p {
   font-size: 15px;
   margin: 8px 0;
+}
+
+.table__container {
+  overflow-x: scroll;
+  width: 85%;
+}
+
+@media screen and (min-width: 800px) {
+
+  .table__container {
+    width: 100%;
+  }
 }
 </style>
   

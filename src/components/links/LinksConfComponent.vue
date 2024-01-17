@@ -5,7 +5,7 @@
             <p>Configure all links related to your establishments</p>
         </div>
     </div>
-    <div class="mt-5">
+    <div class="mt-5 table__container">
         <el-table :data="establishments">
             <el-table-column width="200">
                 <template #default="scope">
@@ -454,5 +454,17 @@ img {
 
 .modal__close i:hover {
     transform: rotate(360deg);
+}
+
+.table__container {
+    overflow-x: scroll;
+    width: 85%;
+}
+
+@media screen and (min-width: 800px) {
+
+    .table__container {
+        width: 100%;
+    }
 }
 </style>
