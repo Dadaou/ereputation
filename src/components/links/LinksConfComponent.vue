@@ -456,6 +456,11 @@ img {
     transform: rotate(360deg);
 }
 
+.link-list li {
+    max-width: 100%;
+    overflow: auto hidden;
+}
+
 .table__container {
     overflow-x: scroll;
     width: 85%;
