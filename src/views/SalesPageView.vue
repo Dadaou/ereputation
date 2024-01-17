@@ -22,12 +22,24 @@
                                 <Bar :data="data" :options="options" />
                             </div>
                         </div>
+                        <div class="legend-container">
+                            <span
+                              v-for="(legendValue, index) in legendValues"
+                              :key="`legend-badge-${index}`"
+                            >
+                              <span
+                                :style="{ 'background-color': legendValue.color }"
+                                class="badge"
+                              ></span>
+                              <span class="title">{{ legendValue.label }}</span>
+                            </span>
+                          </div>
                     </div>
                 </div>
 
                 <div style="margin-top: 25px;">
                     <div class="app__title" style="margin-bottom: 25px;">
-                        <h2>Booking's number</h2>
+                        <h2>Number of booking</h2>
                     </div>
                     <div class="chartBox">
                         <div class="containerChart">
@@ -35,6 +47,18 @@
                                 <Bar :data="dataBooking" :options="options" />
                             </div>
                         </div>
+                        <div class="legend-container">
+                            <span
+                              v-for="(legendValue, index) in legendValuesBooking"
+                              :key="`legend-badge-${index}`"
+                            >
+                              <span
+                                :style="{ 'background-color': legendValue.color }"
+                                class="badge"
+                              ></span>
+                              <span class="title">{{ legendValue.label }}</span>
+                            </span>
+                          </div>
                     </div>
                     
                 </div>
@@ -211,7 +235,7 @@ import {
 } from 'chart.js'
 import { Bar } from 'vue-chartjs'
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, PointElement, PointElement,
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Legend, Tooltip, PointElement, PointElement,
     LineElement)
 
 let exist = ref(true);
@@ -242,6 +266,7 @@ const breadcrumbData = [
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
+const colors = ref(['#f75842', '#337ecc', '#4682B4', '#6495ED', '#1E90FF', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']);
 
 const dataLoading = ref(true)
 let establishment = ref({});
@@ -324,7 +349,7 @@ const loadFromServer = async (company, datefrom, dateto, type) => {
         }else {
             containerBody.style.width = '';
             _containerBody.style.width = '';
-            right__side.style.width = `${500}px`
+            right__side.style.width = `${325}px`
         }
     }
 }
@@ -346,8 +371,8 @@ const options = {
     // aspectRatio: 2,
     plugins: {
         legend: {
-            display: true,
-            position: 'bottom'
+            display: false,
+            // position: 'bottom'
         },
         zoom: {
             pan: {
@@ -420,6 +445,36 @@ const barWidth = computed(() => {
     return result;
 })
 
+const legendValues = ref([
+    {
+      label: "TTV",
+      color: "#FFC04C",
+    },
+    {
+      label: "Global",
+      color: "#f75842",
+    },
+    {
+      label: "Reviews",
+      color: "#337ecc",
+    },
+])
+
+const legendValuesBooking = ref([
+    {
+      label: "Bookings",
+      color: "#FFC04C",
+    },
+    {
+      label: "Global",
+      color: "#f75842",
+    },
+    {
+      label: "Reviews",
+      color: "#337ecc",
+    },
+])
+
 onUpdated(() => {
     chartWidth.value = (el.value != null && el.value != undefined) ? Math.abs(el.value.offsetWidth) : chartWidth.value;
 })
@@ -464,8 +519,8 @@ const transformSalesData = (salesData) => {
                 type: 'line',
                 yAxisID: 'y-axis-2',
                 data: ttvData,
-                backgroundColor: 'grey',
-                borderColor: 'grey',
+                backgroundColor: '#FFC04C',
+                borderColor: '#FFC04C',
                 fill: true,
                 stack: 'combined',
             },
@@ -473,7 +528,7 @@ const transformSalesData = (salesData) => {
                 label: 'Global',
                 yAxisID: 'y-axis-1',
                 data: totalData,
-                backgroundColor: '#9c9aff',
+                backgroundColor: '#f75842',
                 // borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1
             },
@@ -481,7 +536,7 @@ const transformSalesData = (salesData) => {
                 label: 'Reviews',
                 yAxisID: 'y-axis-1',
                 data: reviewsData,
-                backgroundColor: '#ff977a',
+                backgroundColor: '#337ecc',
                 // borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
 
@@ -506,8 +561,8 @@ const transformBookingData = (salesData) => {
                 type: 'line',
                 yAxisID: 'y-axis-2',
                 data: bookingData,
-                backgroundColor: 'grey',
-                borderColor: 'grey',
+                backgroundColor: '#FFC04C',
+                borderColor: '#FFC04C',
                 fill: true,
                 stack: 'combined',
             },
@@ -515,7 +570,7 @@ const transformBookingData = (salesData) => {
                 label: 'Global',
                 yAxisID: 'y-axis-1',
                 data: totalData,
-                backgroundColor: '#9c9aff',
+                backgroundColor: '#f75842',
                 // borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1
             },
@@ -523,7 +578,7 @@ const transformBookingData = (salesData) => {
                 label: 'Reviews',
                 yAxisID: 'y-axis-1',
                 data: reviewsData,
-                backgroundColor: '#ff977a',
+                backgroundColor: '#337ecc',
                 // borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
 
@@ -537,23 +592,34 @@ const transformBookingData = (salesData) => {
 <style scoped>
 
 .containerChart{
-    /*width: 700px;
-    max-width: 700px;*/
-   /* width: 1000px;
-    overflow-x: scroll;*/
     width: 100%;
     overflow-x: auto;
 }
 
-/*.chartBox{
-    width: 700px;
-    padding: 20px;
-    border-radius: 20px;
-    border: solid 3px red;
-}*/
+.legend-container .title{
+    font-size: 13px;
+    font-weight: 500;
+}
 
 .containerBody, .containerBody2{
-    height: 350px;
+    height: 225px;
+}
+
+.legend-container {
+  padding: 1em;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 14px;
+  justify-content: center;
+}
+.badge {
+ /* border-radius: 4.5px;*/
+  padding: 0;
+  width: 25px;
+  height: 10px;
+  display: inline-block;
+  margin-right: 3px;
 }
 
 .no__staff {
