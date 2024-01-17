@@ -392,7 +392,7 @@ useResizeObserver(el, (entries) => {
 
 <style scoped>
 .left__side {
-    width: 80% !important;
+    width: 75% !important;
 }
 
 .btn {
