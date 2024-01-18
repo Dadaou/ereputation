@@ -17,7 +17,7 @@
       <!-- Language dropdown  --> 
       <div class="flex items-center md:order-2" v-if="isFeedback">
         <button ref="btn__ref" id="lang-btn" type="button" data-dropdown-toggle="language-dropdown-menu" class="inline-flex items-center font-medium justify-center px-4 py-2 text-sm text-gray-900 dark:text-white rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white" @click="showLang=!showLang">
-          <span v-html="currentLanguage.svg"></span> {{currentLanguage.name}} ({{currentLanguage.code}})
+          <span v-html="currentLanguage.svg"></span> {{currentLanguage.name}} <!--({{currentLanguage.code}})-->
         </button>
         <!-- Dropdown -->
         <div class="z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700" id="language-dropdown" v-if="showLang">
@@ -25,7 +25,7 @@
             <li v-for="language in languages" @click="selectCurrentLanguage(language)" >
               <a href="#" :class="[(currentLanguage.code==language.code)?'bg-gray-100':'', 'block px-6 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white']" role="menuitem">
                 <div class="inline-flex items-center language__item">
-                  <span v-html="language.svg"></span> {{language.name}} ({{language.code}})
+                  <span v-html="language.svg"></span> {{language.name}} <!--({{language.code}})-->
                 </div>
               </a>
             </li>
