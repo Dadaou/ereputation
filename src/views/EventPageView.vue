@@ -324,7 +324,7 @@ onBeforeMount(async () => {
     })
 
     const response = await new Promise((resolve, reject) => {
-        services.get_Record(`/establishment/${companyId}/detail`, (response) => {
+        services.get_Record(`/establishment/${companyId}/event`, (response) => {
             resolve(response)
             if (response.status == 404) {
                 exist.value = false;
@@ -334,9 +334,7 @@ onBeforeMount(async () => {
     });
 
     if (response.status == 200) {
-        establishment.value['events'] = response.data['events'];
-        establishment.value['reviews'] = response.data['reviews'];
-        events.value = establishment.value.events;
+        events.value = response.data;
         chartLoading.value = false;
         eventLoading.value = false;
     }
@@ -395,6 +393,10 @@ useResizeObserver(el, (entries) => {
 
 .include span {
     color: var(--color-bg2);
+}
+
+img {
+    height: 200px !important;
 }
 
 .not__include span {

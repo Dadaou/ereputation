@@ -6,7 +6,7 @@
     </div>
     <div class="reviews__content" ref="el">
         <div v-if="chartLoading == true" :style="{
-            'width': `100%`,
+            'width': `inherit`,
             'height': `200px`,
             'display': 'flex',
             'alignItems': 'center',

@@ -14,9 +14,6 @@
 		                </ul>
                         <button class="btn mt-2  btn-primary staffs__btn" @click="showModal=true">Staffs list <i class="uil uil-users-alt"></i></button>
 		            </div>
-                    <!-- <div>
-                        <button class="btn mr-2 btn-primary staffs__btn" @click="showModal=true">staffs <i class="uil uil-users-alt"></i></button>
-                    </div> -->
 		        </div>
 		     </div>
             <div class="feedback">
@@ -68,10 +65,6 @@
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
                         </div>
-                        <!-- <div>
-                             <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Language</label>
-                             <LanguageOption/>
-                        </div> -->
                     </div>
 
                    
@@ -158,10 +151,6 @@ const ModalComponent = defineAsyncComponent(()=>
     import('@Components/utils/ModalComponent.vue')
 )
 
-// const LanguageOption = defineAsyncComponent(()=>
-//     import('@Components/utils/LanguageOptionComponent.vue')
-// )
-
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
@@ -241,13 +230,13 @@ onBeforeMount(async ()=>{
 
     try{
          const responseEstablishment = await new Promise((resolve, reject) => {
-            services.get_Record(`/establishment/${companyId}/detail`, (response) => {
+            services.get_Record(`/establishment/${companyId}/staffs`, (response) => {
                 resolve(response)
             });
         });
 
         if (responseEstablishment.status == 200) {
-            staffs.value = responseEstablishment.data['staffs']
+            staffs.value = responseEstablishment.data
         }
     }catch{
 

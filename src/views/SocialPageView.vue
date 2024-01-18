@@ -14,16 +14,6 @@
                 <div class="reviews__content">
                     <social-statistics></social-statistics>
                 </div>
-                <!--  <div class="head">
-                    <div class="app__title" style="margin-top: 50px;">
-                        <h2>Daily Histogram</h2>
-                    </div>
-                </div>
-
-                <div class="reviews__content" ref="socialHistogramContainer">
-                    <social-histogram :width="lineChartWidth"></social-histogram>
-                </div> -->
-
                 <div class="head">
                     <div class="app__title" style="margin-top: 50px;">
                         <h2>Social List</h2>
@@ -446,30 +436,28 @@ onBeforeMount(async () => {
         }
     })
 
-    const response = await new Promise((resolve, reject) => {
-        services.get_Record(`/establishment/${companyId}/detail`, (response) => {
-            resolve(response)
-        });
-    });
+    // const response = await new Promise((resolve, reject) => {
+    //     services.get_Record(`/establishment/${companyId}/detail`, (response) => {
+    //         resolve(response)
+    //     });
+    // });
 
-    if (response.status == 200) {
-        // establishment.value['socials'] = response.data['socials'];
-        establishment.value['socialPages'] = response.data['socialPages'];
-        console.log(establishment.value)
-        // socials.value = [" ", ...getSocials(establishment.value.socials)];
-        let data = [];
-        let promises = [];
-        establishment.value.socialPages.forEach((social) => {
-            let promise = services.get_Record(`/social_pages/${social.id}`, (response) => {
-                data.push(response.data);
-            });
-            promises.push(promise);
-        })
-        Promise.all(promises).then(() => {
-            socialPages.value = data;
-            data.value = getFollowers(socialPages.value, calculType.value);
-        });
-    }
+    // if (response.status == 200) {
+    //     establishment.value['socialPages'] = response.data['socialPages'];
+        
+    //     let data = [];
+    //     let promises = [];
+    //     establishment.value.socialPages.forEach((social) => {
+    //         let promise = services.get_Record(`/social_pages/${social.id}`, (response) => {
+    //             data.push(response.data);
+    //         });
+    //         promises.push(promise);
+    //     })
+    //     Promise.all(promises).then(() => {
+    //         socialPages.value = data;
+    //         data.value = getFollowers(socialPages.value, calculType.value);
+    //     });
+    // }
 
     const socialResponse = await new Promise((resolve, reject) => {
         services.get_Record(`/establishment/settings?tag=${companyId}&type=Social`, (response) => {
@@ -648,6 +636,10 @@ li:nth-child(odd) {
 
 * {
     transition: var(--transition);
+}
+
+img {
+    height: 200px !important;
 }
 
 .app__container {
@@ -1167,6 +1159,10 @@ li {
     .photo img {
         height: 100%;
         width: 100%;
+    }
+
+    img {
+        height: 150px !important;
     }
 
     .dashboard__content,
