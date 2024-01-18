@@ -4,7 +4,7 @@
         <!-- <h2 v-if="reviewFeedbackData.feeling > 0">Mostly Positive (+{{ reviewFeedbackData.score }})</h2>
         <h2 v-else>Mostly Negative (-{{ reviewFeedbackData.score }})</h2> -->
         <h2 v-if="reviewFeedbackData.feeling > 0">Mostly Positive </h2>
-        <h2 v-else>Mostly Negative </h2>
+        <h2 v-if="reviewFeedbackData.feeling < 0">Mostly Negative </h2>
         <div class="reviews__content1">
             <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700" style="position: relative">
                 <div v-if="reviewFeedbackData.feeling > 0" class="h-2 rounded review-feedback__positive"

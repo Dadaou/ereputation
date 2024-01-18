@@ -697,27 +697,28 @@ onBeforeMount(async () => {
             all_items.value[1].value = establishment.value.totalReviews;
             appStore.isLoading = false;
             dataLoading.value = false;
+             chartLoading.value = false;
 
         }
     })
 
-    const response = await new Promise((resolve, reject) => {
-        services.get_Record(`/establishment/${companyId}/detail`, (response) => {
-            resolve(response)
-            if (response.status == 404) {
-                exist.value = false;
-                appStore.isLoading = false;
-            }
-        });
-    });
+    // const response = await new Promise((resolve, reject) => {
+    //     services.get_Record(`/establishment/${companyId}/detail`, (response) => {
+    //         resolve(response)
+    //         if (response.status == 404) {
+    //             exist.value = false;
+    //             appStore.isLoading = false;
+    //         }
+    //     });
+    // });
 
-    if (response.status == 200) {
-        establishment.value['reviews'] = response.data['reviews'];
-        establishment.value['weather'] = response.data['weather'];
-        weather.value = establishment.value.weather;
-        reviews.value = establishment.value.reviews;
-        chartLoading.value = false;
-    }
+    // if (response.status == 200) {
+    //     establishment.value['reviews'] = response.data['reviews'];
+    //     establishment.value['weather'] = response.data['weather'];
+    //     weather.value = establishment.value.weather;
+    //     reviews.value = establishment.value.reviews;
+    //     chartLoading.value = false;
+    // }
 });
 </script>
 
@@ -1014,6 +1015,12 @@ onBeforeMount(async () => {
     line-height: 1.2;
 }
 
+@media screen and (min-width: 1439px) and (max-width: 2559px) {
+    .left__side {
+        width: 70%;
+    }
+}
+
 @media screen and (max-width:1400px) {
     .app__container {
         width: var(--container-width-md);
@@ -1042,6 +1049,10 @@ onBeforeMount(async () => {
     }
 }
 
+img{
+    height: 200px !important;
+}
+
 @media screen and (max-width: 975px) {
     .app__container {
         flex-direction: column-reverse;
@@ -1065,6 +1076,10 @@ onBeforeMount(async () => {
     .photo img {
         height: 150px;
         width: 100%;
+    }
+
+    img{
+        height: 150px !important;
     }
 
     .dashboard__content,
@@ -1170,9 +1185,9 @@ onBeforeMount(async () => {
     }
 }
 
-.establishment__info_tablet {
+/*.establishment__info_tablet {
     margin-top: 50px;
-}
+}*/
 
 .head {
     margin-top: 50px;

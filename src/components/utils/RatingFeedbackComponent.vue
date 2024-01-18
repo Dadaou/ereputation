@@ -2,27 +2,27 @@
     <div class="rating__feedback">
         <div :class="[ratingCustomer.terrible.clicked?'clicked':'']" @click="selectRating('terrible')">
             <i class="uil uil-angry"></i>
-            <span>Terrible</span>
+            <span>{{ $t("feedback.rating.evaluate.terrible") }}</span>
         </div>
 
         <div :class="[ratingCustomer.bad.clicked?'clicked':'']" @click="selectRating('bad')">
             <i class="uil uil-sad"></i>
-            <span>Bad</span>
+            <span>{{ $t("feedback.rating.evaluate.bad") }}</span>
         </div>
 
         <div :class="[ratingCustomer.okay.clicked?'clicked':'']" @click="selectRating('okay')">
             <i class="uil uil-smile"></i>
-            <span>Okay</span>
+            <span>{{ $t("feedback.rating.evaluate.okay") }}</span>
         </div>
 
         <div :class="[ratingCustomer.good.clicked?'clicked':'']" @click="selectRating('good')">
             <i class="uil uil-laughing"></i>
-            <span>Good</span>
+            <span>{{ $t("feedback.rating.evaluate.good") }}</span>
         </div>
 
         <div :class="[ratingCustomer.amazing.clicked?'clicked':'']" @click="selectRating('amazing')">
             <i class="uil uil-grin"></i>
-            <span>Amazing</span>
+            <span>{{ $t("feedback.rating.evaluate.amazing") }}</span>
         </div>
           
     </div>

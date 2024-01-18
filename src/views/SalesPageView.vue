@@ -349,7 +349,7 @@ const loadFromServer = async (company, datefrom, dateto, type) => {
         }else {
             containerBody.style.width = '';
             _containerBody.style.width = '';
-            right__side.style.width = `${325}px`
+            right__side.style.width = `${350}px`
         }
     }
 }
@@ -602,7 +602,7 @@ const transformBookingData = (salesData) => {
 }
 
 .containerBody, .containerBody2{
-    height: 225px;
+    height: 200px;
 }
 
 .legend-container {
@@ -826,7 +826,7 @@ img {
 }
 
 .left__side {
-    width: 75%;
+    width: 82%;
     padding: 50px 5px;
 }
 
@@ -966,19 +966,9 @@ img {
     }
 }
 
-/*@media screen and (max-width:1287px) {
-    .counter {
-        gap: 2rem !important;
-    }
-
-    .right__side {
-        width: 300px !important;
-    }
-}*/
-
 @media screen and (min-width: 1439px) and (max-width: 2559px) {
-    .right__side {
-        width: 450px;
+    .left__side {
+        width: 70%;
     }
 }
 

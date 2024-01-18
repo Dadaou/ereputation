@@ -672,6 +672,10 @@ onBeforeMount(async () => {
     transition: var(--transition);
 }
 
+img{
+    height: 200px !important;
+}
+
 .tablet,
 .mobile__filter__btn {
     display: none !important;

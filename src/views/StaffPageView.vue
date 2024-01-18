@@ -304,8 +304,8 @@ onBeforeMount(async () => {
     const companyId = route.params.id;
     let company = null;
     appStore.isLoading = true;
-    chartLoading.value = true;
     staffLoading.value = true;
+    chartLoading.value = true;
 
     if (route_name.value == 'StaffReview') {
         breadcrumbData.value[1].isCurrent = false;
@@ -345,12 +345,11 @@ onBeforeMount(async () => {
             all_items.value[1].value = establishment.value.totalReviews;
             appStore.isLoading = false;
             dataLoading.value = false;
-
         }
     })
 
     const response = await new Promise((resolve, reject) => {
-        services.get_Record(`/establishment/${companyId}/detail`, (response) => {
+        services.get_Record(`/establishment/${companyId}/staffs`, (response) => {
             resolve(response)
             if (response.status == 404) {
                 exist.value = false;
@@ -360,11 +359,7 @@ onBeforeMount(async () => {
     });
 
     if (response.status == 200) {
-        establishment.value['reviews'] = response.data['reviews'];
-        establishment.value['staffs'] = response.data['staffs'];
-        reviews.value = establishment.value.reviews;
-        staffs.value = establishment.value.staffs;
-        chartLoading.value = false;
+        staffs.value = response.data;
         staffLoading.value = false;
     }
 })
@@ -631,6 +626,12 @@ img {
 .date__picker {
     width: 100% !important;
     margin: 0px 2px !important;
+}
+
+@media screen and (min-width: 1439px) and (max-width: 2559px) {
+    .left__side {
+        width: 70% !important;
+    }
 }
 
 @media screen and (max-width:1400px) {
