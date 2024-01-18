@@ -9,6 +9,11 @@ import services from '@Services/services.js'
 
 import App from './App.vue'
 import router from './router'
+import {i18n} from './i18n'
+
+var lg = localStorage.getItem("langue")
+if(lg ==null)
+    localStorage.setItem("langue","EN")
 
 const app = createApp(App)
 app.provide('tag', '');
@@ -18,5 +23,6 @@ pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
 app.use(router)
 app.use(Vuesalize)
+app.use(i18n)
 
 app.mount('#app')

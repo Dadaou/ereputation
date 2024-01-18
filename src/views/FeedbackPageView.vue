@@ -30,32 +30,32 @@
                 </div>
             </div>
             <div class="feedback">
-                <h3>Customer experiences feedback</h3>
+                <h3>{{ $t("feedback.soustitle") }}</h3>
                 <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4">
                      <div class="mb-6 feedback__rating">
-                       <label>Rating <span>*</span></label>
+                       <label>{{ $t("feedback.rating.title") }} <span>*</span></label>
                        <RatingFeedbackComponent @updateValue="(rating)=>{
                         ratingCustomer = rating
                        }"/>
                     </div> 
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                         <div>
-                            <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First name <span>*</span></label>
+                            <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t("feedback.firstname") }} <span>*</span></label>
                             <input type="text" id="first_name" v-model="firstname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                         </div>
                         <div>
-                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last name</label>
+                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t("feedback.lastname") }}</label>
                             <input type="text" id="last_name" v-model="lastname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
                         <div>
-                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender<!--  <span>*</span> --></label>
-                            <el-select v-model="gender" placeholder="Choose gender" size="large">
+                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t("feedback.gender") }} <span>*</span></label>
+                            <el-select v-model="gender"  :placeholder="$t('feedback.placeholder_gender')" size="large">
                                 <el-option v-for="item in genders" :key="item.value" :label="item.label" :value="item.value"/>
                             </el-select>
                         </div>
                          <div>
                             
-                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date visit<!-- <span>*</span> --></label>
+                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t("feedback.datevisit") }}<!-- <span>*</span> --></label>
                             <!--  <el-date-picker
                                 v-model="dateVisit"
                                 :size="'large'"
@@ -63,7 +63,7 @@
                                <el-date-picker
                                 v-model="dateVisit"
                                 type="datetime"
-                                placeholder="Select date and time"
+                                :placeholder="$t('feedback.placeholder_datevisit')"
                                 :size="'large'"
                               />
                         </div>
@@ -72,12 +72,12 @@
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
                         <div class="author__email">
                             <span>
-                               <i class="uil uil-info-circle"></i> If you wish to obtain discounts or benefits, please provide your email address below.
+                               <i class="uil uil-info-circle"></i>{{$t("feedback.indice1")}} 
                             </span>
                             <p v-if="randomAdvantage">
-                                <b>Promotion of the day:</b>  {{randomAdvantage.name}}
+                                <b>{{$t("feedback.promotion_day")}} </b>  {{randomAdvantage.name}}
                             </p>
-                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address <!-- <span>*</span> --></label>
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{$t("feedback.email")}} <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
                         </div>
                          <!-- <div>
@@ -88,21 +88,21 @@
                    
                     <div class="feedback__text w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
                         <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
-                            <label for="comment" class="text-sm comment__label">Please leave a comment</label>
+                            <label for="comment" class="text-sm comment__label">{{$t("feedback.comment")}} </label>
                             <textarea id="comment" v-model="comment" rows="4" class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"></textarea>
                         </div>
                         <div>
                             <div class="checkbox-container">
                               <label>
                                 <input type="checkbox" id="agreeCheckbox" required>
-                                By using our services and checking the box above, you agree to the terms outlined in this Privacy Policy
+                                {{$t("feedback.indice2")}} 
                               </label>
                             </div>
                         </div>
                         <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
                             <button type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                                 <SpinnerComponent :show-spinner="showSpinner" :color="'gray'"/> <span v-if="showSpinner">Loading ...</span>
-                                <span v-show="!showSpinner">Post comment</span>
+                                <span v-show="!showSpinner">{{$t("feedback.post")}}</span>
                             </button>
                         </div>
                     </div>
@@ -114,7 +114,7 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, provide, defineAsyncComponent } from 'vue';
+import { ref, onBeforeMount, provide, defineAsyncComponent ,onMounted, watch} from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useUserStore } from "@Stores/user.js";
@@ -123,6 +123,8 @@ import services from '@Services/services.js';
 import { useCompanyStore } from '@Stores/company.js';
 import { useFeedbackStore } from '@Stores/feedback.js';
 import moment from 'moment';
+import { useI18n } from "vue-i18n";
+import {i18n} from '@/i18n';
 import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
@@ -143,6 +145,7 @@ const EstablishmentNotFound = defineAsyncComponent(()=>
     import("@Views/EstablishmentNotFound.vue")
 )
 
+const { t,locale } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
@@ -151,11 +154,10 @@ const feedbackStore = useFeedbackStore();
 const establishment = ref({});
 let media = [];
 
-const page=ref({
-    title1: "Leave",
-    title2: "your feedback",
-    icon: "uil-comment-alt",
-});
+console.log(t("feedback.title1"))
+const page = ref({})
+
+
 
 let allAdvantages = ref([])
 let randomAdvantage = ref(null);
@@ -199,6 +201,24 @@ onBeforeMount(async ()=>{
     } catch (error) {
         console.error('Error in onBeforeMount:', error);
     }
+})
+
+onMounted(()=>{
+    /** Charger le titre par defaut */
+     page.value ={
+        title1:  t("feedback.title1") ,
+        title2: t("feedback.title2") ,
+        icon: "uil-comment-alt",
+    };
+})
+
+watch(()=>{
+    /** Mettre le titre en watch */
+    page.value ={
+        title1:  t("feedback.title1") ,
+        title2: t("feedback.title2") ,
+        icon: "uil-comment-alt",
+    };
 })
 
 const firstname = ref('');
