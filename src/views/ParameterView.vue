@@ -37,7 +37,7 @@
                 <LinksConfComponent />
             </el-tab-pane>
             <el-tab-pane label="Establishments" name="establishments">
-                <el-tabs v-model="activeEstablishmentTab" class="demo-tabs">
+                <el-tabs v-model="activeEstablishmentTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
                     <el-tab-pane label="Establishment list" name="establishment_list">
                         <EstablishmentListComponent @edit="(establishment) => handleEdit(establishment, 'establishment')" />
                     </el-tab-pane>
@@ -112,6 +112,10 @@ watch(width, () => {
     }
 });
 
+const clearEstablishmentForm = () => {
+    cleanEstablishmentForm.value = !cleanEstablishmentForm.value;
+}
+
 const appStore = useAppStore();
 const userStore = useUserStore();
 const companyStore = useCompanyStore();
@@ -121,6 +125,9 @@ const activeStaffTab = ref('staff_list')
 const establishment_to_update = ref(null);
 const activeEstablishmentTab = ref('establishment_list')
 provide('establishment_to_update', establishment_to_update);
+provide('establishment_activeTab', activeEstablishmentTab);
+const cleanEstablishmentForm = ref(false);
+provide('clearEstablishmentForm', cleanEstablishmentForm);
 
 const staff_to_update = ref(null);
 provide('staff_to_update', staff_to_update);

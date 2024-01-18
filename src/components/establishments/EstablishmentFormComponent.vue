@@ -6,7 +6,7 @@
         </div>
     </div>
     <div class="table__container">
-        <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
+        <form id="establishmentForm" @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div class="md:order-2">
                     <div class="image-selector border-gray-300" :class="!previewImage && 'hover'" @click="selectImg"
@@ -18,25 +18,25 @@
                         </div>
                     </div>
 
-                    <input id="imgInput" type="file" accept="image/jpeg" @change=updateImage style="display:none">
+                    <input id="imgInput" name="file" type="file" @change=updateImage style="display:none">
                 </div>
                 <div class="md:order-1">
                     <div class="mb-6">
                         <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name
                             <span>*</span></label>
-                        <input type="text" id="company_name" v-model="data.name" required
+                        <input type="text" id="company_name" name="name" v-model="data.name" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                     </div>
                     <div class="mb-6">
                         <label for="address1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address 1
                             <span>*</span></label>
-                        <input type="text" id="address1" v-model="data.address1" required
+                        <input type="text" id="address1" name="address1" v-model="data.address1" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                     </div>
                     <div>
                         <label for="address2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address
                             2</label>
-                        <input type="text" id="address2" v-model="data.address2"
+                        <input type="text" id="address2" name="address2" v-model="data.address2"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                 <div>
                     <label for="zipcode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Zipcode
                         <span>*</span></label>
-                    <input type="text" id="zipcode" v-model="data.zipcode" required
+                    <input type="text" id="zipcode" name="zipcode" v-model="data.zipcode" required
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
                 <div>
@@ -55,7 +55,7 @@
                         <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
                             :value="`/api/establishments/${item.id}`" />
                     </el-select> -->
-                    <input type="text" id="city" v-model="data.city" required
+                    <input type="text" id="city" name="city" v-model="data.city" required
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
                 <div class="col-span-2">
@@ -75,7 +75,7 @@
                         <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
                             :value="`/api/establishments/${item.id}`" />
                     </el-select> -->
-                    <input type="text" id="region" v-model="data.region"
+                    <input type="text" id="region" name="region" v-model="data.region"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
                 <div>
@@ -84,7 +84,7 @@
                     <!-- <el-select v-model="department" placeholder="Choose department" size="large">
                         <el-option v-for="item in departments" :key="item" :label="item" :value="item" />
                     </el-select> -->
-                    <input type="text" id="gps" v-model="data.gps"
+                    <input type="text" id="gps" name="gps" v-model="data.gps"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
             </div>
@@ -105,7 +105,7 @@
                     <!-- <el-select v-model="department" placeholder="Choose department" size="large">
                         <el-option v-for="item in departments" :key="item" :label="item" :value="item" />
                     </el-select> -->
-                    <input type="text" id="rank" v-model="data.rank"
+                    <input type="text" id="rank" name="rank" v-model="data.rank"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
                 <div>
@@ -116,16 +116,20 @@
                         <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
                             :value="`/api/establishments/${item.id}`" />
                     </el-select> -->
-                    <input type="text" id="positionning" v-model="data.positionning"
+                    <input type="text" id="positionning" name="positionning" v-model="data.positionning"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
             </div>
-            <div class="flex items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
+            <div class="flex flex-wrap gap-3 items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
                 <button type="submit"
-                    class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                    class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                     <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
                         ...</span>
                     <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} establishment</span>
+                </button>
+                <button @click="resetForm"
+                    class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-gray-700 rounded-lg focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-900 hover:bg-gray-800">
+                    <span><i class="uil uil-times"></i> Clear </span>
                 </button>
             </div>
         </form>
@@ -155,6 +159,19 @@ const showSpinner = ref(false);
 const type = ref('Add');
 const userStore = useUserStore();
 const establishment_to_update = inject('establishment_to_update');
+const imgHasChanged = ref(false);
+const activeEstablishmentTab = inject('establishment_activeTab');
+
+const cleanEstablishmentForm = inject('clearEstablishmentForm');
+
+const resetForm = () => {
+    data.value = {};
+    previewImage.value = null;
+}
+
+watch(cleanEstablishmentForm, () => {
+    resetForm();
+})
 
 const updateImage = (e) => {
     const image = e.target.files[0];
@@ -163,6 +180,7 @@ const updateImage = (e) => {
     reader.onload = e => {
         previewImage.value = e.target.result;
     };
+    imgHasChanged.value = true;
 };
 
 const selectImg = () => {
@@ -170,96 +188,80 @@ const selectImg = () => {
 }
 
 const submit = async () => {
-    // "name": "string",
-    //   "address1": "string",
-    //   "address2": "string",
-    //   "zipcode": "string",
-    //   "city": "string",
-    //   "country": "string",
-    //   "region": "string",
-    //   "gps": "string",
-    //   "customer": "string",
-    //   "category": "string",
-    //   "rank": "string"
 
-    const establishmentData = { ...data.value, customer: `${userStore.user.customer.id}` };
+    const form = document.querySelector('#establishmentForm');
+
+    const formData = new FormData(form);
+
+    const establishmentData = { ...data.value, customer: `${userStore.user.customer.tag}` };
     console.log(establishmentData);
 
-    try {
-        if (data.value.category) {
-            showSpinner.value = true;
+    if (establishmentData.category && establishmentData.country) {
 
-            if (type.value === 'Add') {
-                const response = await new Promise((resolve, reject) => {
-                    services.createRecord('establishments', establishmentData, (response) => {
-                        resolve(response);
-                        console.log(response)
-                    });
-                });
-                console.log(response)
+        formData.append('category', establishmentData.category);
+        formData.append('country', establishmentData.country);
+        formData.append('customer', `${userStore.user.customer.tag}`)
+        showSpinner.value = true;
 
-                if (response.status === 201) {
-                    loadData(response.data);
-                    ElMessage({
-                        message: `Advantage added successfully.`,
-                        type: 'success',
-                    });
-                    data.value = {}
-                }
+        if (!imgHasChanged.value) formData.delete('file');
+
+        if (type.value === 'Edit') {
+
+            if (establishmentData.uri) {
+                formData.append('id', establishmentData.uri.split('/').pop());
             }
-            // } else if (type.value === 'edit' && advantage_to_update.value !== null) {
-            //     const advantageId = advantage_to_update.value.id;
-            //     const response = await new Promise((resolve, reject) => {
-            //         services.putRecord('advantages', advantageId, advantageData, (response) => {
-            //             resolve(response);
-            //         });
-            //     });
 
-            //     if (response.status === 200) {
-            //         ElMessage({
-            //             message: `Advantage updated successfully.`,
-            //             type: 'success',
-            //         });
-            //         updateData(response.data, establishment.value.split(",")[1]);
-            //         category.value = '';
-            //         code.value = '';
-            //         advantageName.value = '';
-            //         amount.value = '';
-            //         metric.value = '';
-            //         scope.value = '';
-            //         validity.value = '';
-            //         establishment.value = "";
-            //         dateTo.value = '';
-            //         activeAdvantageTab.value = 'advantage_list';
-            //         showSpinner.value = false;
-            //     }
-            // }
-        } else {
-            ElMessage.error(`Please, provide all needed information to add/update an advantage`);
+        }
+
+        formData.delete('media');
+
+        const response = await new Promise((resolve, reject) => {
+            services.postFormData('establishments/front_post', formData, (response) => {
+                resolve(response);
+            });
+        });
+
+        if (response.status == 201) {
+            loadData(response.data, 'new')
+            ElMessage({
+                message: `Establishment added successfully.`,
+                type: 'success',
+            });
+            data.value = {}
             showSpinner.value = false;
         }
-    } catch (error) {
-        console.error('Error during form submission:', error);
-    }
+
+        if (response.status == 200) {
+            loadData(response.data, 'edit')
+            ElMessage({
+                message: `Establishment updated successfully.`,
+                type: 'success',
+            });
+            data.value = {}
+            showSpinner.value = false;
+        }
+    };
+
 };
 
-const loadData = (_advantage) => {
-    console.log(_advantage)
-    //   const new_advantage = {
-    //           id: _advantage.id,
-    //           name: _advantage.name,
-    //           category: _advantage.category,
-    //           code: _advantage.code,     
-    //           amount: _advantage.amount,
-    //           validity: _advantage.validity,
-    //           metric: _advantage.metric,           
-    //           scope: _advantage.scope,                           
-    //           expired_at: moment(_advantage.expiredAt).format('YYYY-MM-DD'),
-    //           establishment_name : establishment_name, 
-    //   }
-    //   advantages.value.push(new_advantage);
-    // userStore.user.customer.establishments.push()
-    //   activeAdvantageTab.value = 'advantage_list'
+const loadData = (establishment, type) => {
+
+    establishment.media = [{ url_source: establishment.media }]
+
+    if (type == 'new') {
+        userStore.user.customer.establishments.push(establishment);
+    }
+    if (type == 'edit') {
+        userStore.user.customer.establishments = userStore.user.customer.establishments.map((x) => {
+            if (x.id == establishment.id) {
+                return establishment;
+            } else {
+                return x;
+            }
+        });
+    }
+
+    activeEstablishmentTab.value = 'establishment_list';
 }
 
 watch(establishment_to_update, () => {
@@ -279,7 +281,7 @@ form {
 }
 
 form button {
-    width: 8rem !important;
+    min-width: 8rem !important;
 }
 
 button.isLoaded {
@@ -368,10 +370,27 @@ input {
     width: 85%;
 }
 
-@media screen and (min-width: 800px) {
+form button {
+    width: 100%;
+}
+
+@media screen and (min-width: 480px) {
 
     .table__container {
         width: 100%;
+    }
+
+    form button {
+        width: 12rem !important;
+    }
+}
+
+@media screen and (max-width: 800px) {
+
+    .table__container,
+    .security__header {
+        width: 84%;
+        /* Occuper toute la largeur sur les petits écrans */
     }
 }
 </style>

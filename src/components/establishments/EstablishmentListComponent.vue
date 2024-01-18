@@ -106,7 +106,11 @@ const establishments = computed(() => {
                 country: establishment.country,
                 city: establishment.city,
                 category: establishment.category,
-                address: establishment.address1
+                address: establishment.address1,
+                rank: establishment.rank,
+                region: establishment.region,
+                zipcode: establishment.zipcode,
+                positionning: establishment.positionning
             })
         });
     }
