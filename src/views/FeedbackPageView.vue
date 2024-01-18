@@ -48,7 +48,7 @@
                             <input type="text" id="last_name" v-model="lastname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
                         <div>
-                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t("feedback.gender") }} <span>*</span></label>
+                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t("feedback.gender") }} </label>
                             <el-select v-model="gender"  :placeholder="$t('feedback.placeholder_gender')" size="large">
                                 <el-option v-for="item in genders" :key="item.value" :label="item.label" :value="item.value"/>
                             </el-select>
