@@ -167,6 +167,7 @@ const cleanEstablishmentForm = inject('clearEstablishmentForm');
 const resetForm = () => {
     data.value = {};
     previewImage.value = null;
+    type.value = 'Add';
 }
 
 watch(cleanEstablishmentForm, () => {
