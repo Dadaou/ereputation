@@ -5,7 +5,7 @@
         <div class="tablet_mobile__head">
             <div class="staff__card" v-if="staff !== null">
 		            <div>
-		                <h5>{{ staff.firstname }} <!-- <span v-if="staff.lastname != null">{{ staff.lastname }}</span> --></h5>
+		                <h5>{{ staff.firstname }}</h5>
 		                <ul>
                             <li><span class="label">Department: </span> <span>{{ staff.department }}</span></li>
 		                    <li class="Gender">
