@@ -16,7 +16,7 @@
 
       <!-- Language dropdown  --> 
       <div class="flex items-center md:order-2" v-if="isFeedback">
-        <button ref="btn__ref" id="lang-btn" type="button" data-dropdown-toggle="language-dropdown-menu" class="inline-flex items-center font-medium justify-center px-4 py-2 text-sm text-gray-900 dark:text-white rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white" @click="showLang=!showLang">
+        <button ref="btn__ref" id="lang-btn" type="button" class="inline-flex items-center font-medium justify-center px-4 py-2 text-sm text-gray-900 dark:text-white rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white" @click="showLang=!showLang">
           <span v-html="currentLanguage.svg"></span> {{currentLanguage.name}} ({{currentLanguage.code}})
         </button>
         <!-- Dropdown -->

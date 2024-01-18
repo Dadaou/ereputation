@@ -304,8 +304,8 @@ onBeforeMount(async () => {
     const companyId = route.params.id;
     let company = null;
     appStore.isLoading = true;
-    chartLoading.value = true;
     staffLoading.value = true;
+    chartLoading.value = true;
 
     if (route_name.value == 'StaffReview') {
         breadcrumbData.value[1].isCurrent = false;
@@ -360,7 +360,6 @@ onBeforeMount(async () => {
 
     if (response.status == 200) {
         staffs.value = response.data;
-        chartLoading.value = false;
         staffLoading.value = false;
     }
 })
