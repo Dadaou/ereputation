@@ -36,5 +36,15 @@
         "indice2":"En utilisant nos services et en cochant la case ci-dessus, vous acceptez les conditions décrites dans cette politique de confidentialité.",
         "post":"Poster un commentaire"
 
-    }
+    },
+    "staffFeedback":{
+        "interne":"Usage interne uniquement, votre commentaire ne sera pas diffusé sur les plateformes publiques.",
+        "departement":"Department",
+        "staffs_list":"Liste du personnel",
+        "staffs_link":"Liens du personnel pour commentaires"
+        
+    },
+    "success":"Merci pour vos précieux commentaires. Nous espérons vous revoir bientôt et vous souhaitons une agréable journée.",
+    "thanks_title1":"Merci ",
+    "thanks_title2":" pour vos commentaires"
 }

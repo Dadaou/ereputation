@@ -2,15 +2,14 @@
 <div class="main__container" v-if="exist">
     <HeadComponent :page="page"></HeadComponent> 
     <div class="feedback__form">
-        Thank you for your valuable feedback.
-        If you have provided your email, you will soon receive a benefit to use at our establishment. We look forward to seeing you again soon and wish you a pleasant day.
+        {{$t("success")}}
     </div>
 </div>
 <EstablishmentNotFound v-else/>
 </template>
 
 <script setup>
-import { ref, onBeforeMount, provide, defineAsyncComponent } from 'vue';
+import { ref, onBeforeMount, provide, defineAsyncComponent,onMounted, watch } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useUserStore } from "@Stores/user.js";
@@ -19,6 +18,8 @@ import services from '@Services/services.js';
 import { useFeedbackStore } from '@Stores/feedback.js';
 import { useCompanyStore } from '@Stores/company.js';
 import { useStaffStore } from '@Stores/staff.js';
+import { useI18n } from "vue-i18n";
+import {i18n} from '@/i18n';
 import { ElMessage } from 'element-plus';
 import moment from 'moment';
 import { ElDatePicker } from 'element-plus';
@@ -33,6 +34,7 @@ const EstablishmentNotFound = defineAsyncComponent(()=>
     import("@Views/EstablishmentNotFound.vue")
 )
 
+const { t,locale } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
@@ -43,10 +45,27 @@ const staff = ref(null);
 let media = [];
 
 const page=ref({
-    title1: "Thanks",
-    title2: "for your feedback",
-    icon: "uil-feedback",
+
 });
+
+onMounted(()=>{
+    /** Charger le titre par defaut */
+     page.value ={
+        title1:  t("thanks_title1") ,
+        title2: t("thanks_title2") ,
+        icon: "uil-comment-alt",
+    };
+})
+
+watch(()=>{
+    /** Mettre le titre en watch */
+    page.value ={
+        title1:  t("thanks_title1") ,
+        title2: t("thanks_title2") ,
+        icon: "uil-comment-alt",
+    };
+})
+
 </script>
 
 <style scoped>
