@@ -192,11 +192,6 @@ const router = createRouter({
             }
           ]
         },
-        // {
-        //   path: 'new_subscription',
-        //   name: 'new_subscription',
-        //   component: () => import('@Views/NewSubscriptionPageView.vue')
-        // },
         {
           path: 'discount_coupons',
           name: 'Discount_coupons',

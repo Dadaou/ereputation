@@ -139,11 +139,12 @@
                             :size="'large'" />
                         <el-date-picker class="mt-2" v-model="end_date" type="date" placeholder="Select the end date"
                             :size="'large'" />
-                        <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
+                        <DropdownComponent v-if="route.name !== 'StaffReview'" :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
                             selectedTimePeriod = timePeriod
                         }" :default="timePeriods[0]" />
                     </div>
                     <RouterLink
+                        v-if="route.name !== 'StaffReview'"
                         :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffsranking`">
                         <button class="btn">
                             <i class="uil uil-trophy"></i>
