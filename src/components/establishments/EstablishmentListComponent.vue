@@ -16,7 +16,7 @@
             <el-table-column label="Address" prop="address" style="width: 25%; min-width: 200px;" />
             <el-table-column label="Country" prop="country" style="width: 15%; min-width: 200px;" />
             <el-table-column label="GPS" prop="gps" style="width: 20%; min-width: 200px;" />
-            <el-table-column style="width: 15%; min-width: 200px;" align="right">
+            <el-table-column style="width: 25%; min-width: 200px;" align="right">
                 <template #header>
                     <el-input v-model="search" size="small" placeholder="Type to search" />
                 </template>
@@ -28,7 +28,8 @@
                         </template>
                     </el-popconfirm>
 
-                    <el-button size="small"><i class="uil uil-edit"></i></el-button>
+                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
+                            class="uil uil-edit"></i></el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -63,6 +64,8 @@ const ModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/ModalComponent.vue')
 )
 
+const emit = defineEmits(['edit']);
+
 const userStore = useUserStore();
 const { width, height } = useWindowSize();
 const modalWidth = computed(() => {
@@ -83,6 +86,10 @@ const isValidLink = ref('true')
 const establishment = ref('')
 const links = ref([])
 
+const handleEdit = (index, establishment) => {
+    emit('edit', establishment);
+}
+
 const establishments = computed(() => {
     let data = [];
     let filteredData = [];
@@ -99,7 +106,11 @@ const establishments = computed(() => {
                 country: establishment.country,
                 city: establishment.city,
                 category: establishment.category,
-                address: establishment.address1
+                address: establishment.address1,
+                rank: establishment.rank,
+                region: establishment.region,
+                zipcode: establishment.zipcode,
+                positionning: establishment.positionning
             })
         });
     }
@@ -242,8 +253,6 @@ onBeforeMount(async () => {
             });
         });
 
-        console.log(response.data);
-
         if (response.status === 200) {
             const data = response.data;
 
@@ -266,6 +275,20 @@ onBeforeMount(async () => {
 });
 </script>
 <style scoped>
+button {
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+button i.uil-trash-alt {
+    color: var(--color-danger) !important;
+}
+
+button i.uil-edit {
+    color: var(--color-primary) !important;
+}
+
 .link-list {
     list-style: none;
     padding: 0;

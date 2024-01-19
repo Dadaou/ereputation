@@ -1,14 +1,14 @@
 import axios from 'axios'
-import { pinia } from '@/main';
+import { pinia } from '@/main'
 
 var axiosInstance = null
 var publicAxiosInstance = null
 
 const resetAllStores = () => {
   Object.keys(pinia.state.value).forEach((storeId) => {
-    const store = pinia.store(storeId);
-    store.$reset();
-  });
+    const store = pinia.store(storeId)
+    store.$reset()
+  })
 }
 
 const setToken = (token) => {
@@ -39,7 +39,7 @@ const logout = () => {
   localStorage.removeItem('user')
   localStorage.removeItem('user_authenticated')
   delete axiosInstance.defaults.headers['Authorization']
-  resetAllStores();
+  resetAllStores()
 }
 
 const checkConnexionInfo = () => {
@@ -228,12 +228,29 @@ const putRecord = async (entity, recordId, value, next) => {
   }
 }
 
+const postFormData = async (entity, value, next) => {
+  const headers = {
+    'Content-Type': 'multipart/form-data',
+    Authorization: `Bearer ${localStorage.getItem('access')}`
+  }
+  if (checkConnexionInfo()) {
+    try {
+      let url = `/${entity}`
+      await axiosInstance.post(`${url}`, value, { headers }).then((response) => {
+        return next(response)
+      })
+    } catch (error) {
+      return next(error.response)
+    }
+  }
+}
+
 const login = async (email, password) => {
   try {
     const response = await axiosInstance.post('/login', { email: email, password: password })
     if (response.status == 200) {
       setToken(response.data['token'])
-	    console.log(response.data)
+      console.log(response.data)
     }
     return response
   } catch (error) {
@@ -286,5 +303,6 @@ export default {
   setUser,
   getRecordsByParams,
   reviewAnalysis,
-  post_Record
+  post_Record,
+  postFormData
 }

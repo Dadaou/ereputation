@@ -37,9 +37,9 @@
                 <LinksConfComponent />
             </el-tab-pane>
             <el-tab-pane label="Establishments" name="establishments">
-                <el-tabs v-model="activeEstablishmentTab" class="demo-tabs">
+                <el-tabs v-model="activeEstablishmentTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
                     <el-tab-pane label="Establishment list" name="establishment_list">
-                        <EstablishmentListComponent />
+                        <EstablishmentListComponent @edit="(establishment) => handleEdit(establishment, 'establishment')" />
                     </el-tab-pane>
                     <el-tab-pane label="Add a new establishment" name="establishment_form">
                         <EstablishmentFormComponent />
@@ -110,15 +110,25 @@ watch(width, () => {
     } else {
         position.value = 'right'
     }
-    console.log(position);
 });
+
+const clearEstablishmentForm = () => {
+    cleanEstablishmentForm.value = !cleanEstablishmentForm.value;
+}
 
 const appStore = useAppStore();
 const userStore = useUserStore();
 const companyStore = useCompanyStore();
 const activeName = ref('staff');
 const activeStaffTab = ref('staff_list')
+
+const establishment_to_update = ref(null);
 const activeEstablishmentTab = ref('establishment_list')
+provide('establishment_to_update', establishment_to_update);
+provide('establishment_activeTab', activeEstablishmentTab);
+const cleanEstablishmentForm = ref(false);
+provide('clearEstablishmentForm', cleanEstablishmentForm);
+
 const staff_to_update = ref(null);
 provide('staff_to_update', staff_to_update);
 provide('staff_activeTab', activeStaffTab);
@@ -155,6 +165,10 @@ const handleEdit = (value, type) => {
     if (type == 'advantage') {
         activeAdvantageTab.value = 'advantage_form';
         advantage_to_update.value = value;
+    }
+    if (type == 'establishment') {
+        activeEstablishmentTab.value = 'establishment_form';
+        establishment_to_update.value = value;
     }
     else {
         activeEventTab.value = 'event_form';
@@ -251,7 +265,6 @@ onBeforeMount(async () => {
                     }
                 })
             })
-            console.log(allEvents.value)
         });
     }
 
@@ -261,10 +274,8 @@ onBeforeMount(async () => {
                 resolve(response);
             });
         });
-        console.log('Raw Advantage Data:', response.data);
         if (response.status === 200) {
             allAdvantages.value = response.data;
-            console.log('Processed Advantage Data:', allAdvantages.value);
         } else {
             console.error('Error fetching advantages:', response);
         }
