@@ -10,12 +10,12 @@
                         </div>
 		                <h1 class="society__name">{{ staff.firstname }}</h1>
 		                <ul>
-                            <li><span class="label">Department: </span> <span>{{ staff.department }}</span></li>
+                            <li><span class="label">{{ $t("staffFeedback.departement") }}: </span> <span>{{ staff.department }}</span></li>
 		                    <li class="Gender">
-		                    Internal use only, your comment will not be posted on the public platforms.
+                                {{ $t("staffFeedback.interne") }}
 		                    </li>
 		                </ul>
-                        <button class="btn mt-2  btn-primary staffs__btn" @click="showModal=true">Staffs list <i class="uil uil-users-alt"></i></button>
+                        <button class="btn mt-2  btn-primary staffs__btn" @click="showModal=true">{{ $t("staffFeedback.staffs_list") }} <i class="uil uil-users-alt"></i></button>
 		            </div>
 		        </div>
                  <div class="photo">
