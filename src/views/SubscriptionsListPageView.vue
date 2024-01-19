@@ -36,7 +36,7 @@
 
                 </div>
             </div>
-            <RouterLink :to="`/customer/${userStore.user.customer.tag}/account/new_subscription`"
+            <RouterLink :to="`/customer/${userStore.user.customer.tag}/account/subscriptions/new`"
                 class="subscription-item new">
                 <div class="text-center">
                     <i class="uil uil-plus-circle" style="font-size: 64px;"></i>

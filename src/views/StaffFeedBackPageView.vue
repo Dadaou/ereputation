@@ -3,9 +3,12 @@
     <HeadComponent :page="page"></HeadComponent> 
     <div class="feedback__form">
         <div class="tablet_mobile__head">
-            <div class="staff__card" v-if="staff !== null">
+                <div class="staff__card" v-if="staff !== null">
 		            <div>
-		                <h5>{{ staff.firstname }}</h5>
+                         <div class="establishment__info">
+                            <h1 class="society__name">{{ establishment.name }}</h1>
+                        </div>
+		                <h1 class="society__name">{{ staff.firstname }}</h1>
 		                <ul>
                             <li><span class="label">Department: </span> <span>{{ staff.department }}</span></li>
 		                    <li class="Gender">
@@ -15,6 +18,16 @@
                         <button class="btn mt-2  btn-primary staffs__btn" @click="showModal=true">Staffs list <i class="uil uil-users-alt"></i></button>
 		            </div>
 		        </div>
+                 <div class="photo">
+                        <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
+                        <div v-else role="status" class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                                <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
+                                <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z"/>
+                            </svg>
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                </div>
 		     </div>
             <div class="feedback">
                 <h3>Customer experiences feedback</h3>
@@ -60,13 +73,12 @@
                                <i class="uil uil-info-circle"></i> If you wish to obtain discounts or benefits, please provide your email address below.
                             </span>
                             <p v-if="randomAdvantage">
-                                <b>Promotion of the day:</b>  {{randomAdvantage.name}}
+                                <b>Promotion of the day:</b>  {{randomAdvantage.adv_name}} expired at   {{ moment(randomAdvantage.expired_at).format('YYYY-MM-DD') }}
                             </p>
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
                         </div>
                     </div>
-
                    
                     <div class="feedback__text w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
                         <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
@@ -181,7 +193,7 @@ const showSpinner = ref(false);
 const allAdvantages = ref(null)
 
 function getRandomValue(n) {
-    return Math.floor(Math.random() * (n + 1));
+    return Math.floor(Math.random() * n);
 }
 
 onBeforeMount(async ()=>{
@@ -211,16 +223,13 @@ onBeforeMount(async ()=>{
     let advantage_promises = [];
     try {
         const response = await new Promise((resolve, reject) => {
-            services.get_Record(`advantage/list`, (response) => {
+            services.get_Record(`customer/establishments/advantagecontacts?tag=${route.params.tag}`, (response) => {
                 resolve(response);
             });
         });
-        console.log('Raw Advantage Data:', response.data);
         if (response.status === 200) {
             allAdvantages.value = response.data;
             if(allAdvantages.value.length > 0) randomAdvantage.value = allAdvantages.value[getRandomValue(allAdvantages.value.length)];
-
-            console.log('Processed Advantage Data:', allAdvantages.value);
         } else {
             console.error('Error fetching advantages:', response);
         }
@@ -362,6 +371,10 @@ const submit = async ()=>{
    transition: var(--transition);
 }
 
+img{
+    height: 100%;
+}
+
 .qr__code{
     width: 35% !important;
     padding: 50px auto !important;
@@ -472,6 +485,8 @@ input, textarea{
     width: 100%;
     border-radius: 5px;
     font-size: 14px;
+    border: 1px solid var(--light-color-bg2);
+    padding: 5px;
 }
 
 .feedback__form h1{
@@ -519,12 +534,12 @@ input:focus {
 }
 
 .staff__card{
-    border: 1px solid var(--light-color-bg2);
+   /* border: 1px solid var(--light-color-bg2);*/
     padding: 5px;
     flex-basis: 500px;
     flex-grow: 1;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    border-radius: 5px;
+   /* border-radius: 5px;*/
     display: flex;
     justify-content: space-between;
 }

@@ -176,15 +176,27 @@ const router = createRouter({
           component: () => import('@Components/users/ContactComponent.vue')
         },
         {
-          path: 'subscription_list',
-          name: 'Subscription_list',
-          component: () => import('@Views/SubscriptionsListPageView.vue')
+          path: 'subscriptions',
+          name: 'Subscription',
+          redirect: { name: 'Subscription_list' },
+          children: [
+            {
+              path: 'list',
+              name: 'Subscription_list',
+              component: () => import('@Views/SubscriptionsListPageView.vue')
+            },
+            {
+              path: 'new',
+              name: 'new_subscription',
+              component: () => import('@Views/NewSubscriptionPageView.vue')
+            }
+          ]
         },
-        {
-          path: 'new_subscription',
-          name: 'new_subscription',
-          component: () => import('@Views/NewSubscriptionPageView.vue')
-        },
+        // {
+        //   path: 'new_subscription',
+        //   name: 'new_subscription',
+        //   component: () => import('@Views/NewSubscriptionPageView.vue')
+        // },
         {
           path: 'discount_coupons',
           name: 'Discount_coupons',

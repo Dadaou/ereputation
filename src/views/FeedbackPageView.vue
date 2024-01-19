@@ -75,7 +75,7 @@
                                <i class="uil uil-info-circle"></i>{{$t("feedback.indice1")}} 
                             </span>
                             <p v-if="randomAdvantage">
-                                <b>{{$t("feedback.promotion_day")}} </b>  {{randomAdvantage.name}}
+                                <b>{{$t("feedback.promotion_day")}} </b>  {{randomAdvantage.adv_name}} expired at   {{ moment(randomAdvantage.expired_at).format('YYYY-MM-DD') }}
                             </p>
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{$t("feedback.email")}} <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
@@ -165,7 +165,7 @@ let randomAdvantage = ref(null);
 const showSpinner = ref(false);
 
 function getRandomValue(n) {
-    return Math.floor(Math.random() * (n + 1));
+    return Math.floor(Math.random() * n);
 }
 
 onBeforeMount(async ()=>{
@@ -185,16 +185,15 @@ onBeforeMount(async ()=>{
     let advantage_promises = [];
     try {
         const response = await new Promise((resolve, reject) => {
-            services.get_Record(`advantage/list`, (response) => {
+            services.get_Record(`customer/establishments/advantagecontacts?tag=${route.params.tag}`, (response) => {
                 resolve(response);
             });
         });
-        console.log('Raw Advantage Data:', response.data);
+       
         if (response.status === 200) {
             allAdvantages.value = response.data;
+            console.log(response.data)
             if(allAdvantages.value.length > 0) randomAdvantage.value = allAdvantages.value[getRandomValue(allAdvantages.value.length)];
-
-            console.log('Processed Advantage Data:', allAdvantages.value);
         } else {
             console.error('Error fetching advantages:', response);
         }
@@ -389,6 +388,12 @@ input, textarea{
     width: 100%;
     border-radius: 5px;
     font-size: 14px;
+    border: 1px solid var(--light-color-bg2);
+    padding: 5px;
+}
+
+.tablet_mobile__head img{
+   height: 125px !important;
 }
 
 .feedback__form h1{
@@ -434,6 +439,10 @@ input:focus {
 .photo img{
     height: 100%;
     width: 100%;
+}
+
+img{
+    height: 100%;
 }
 
 @media screen and (max-width:1075px) {

@@ -13,7 +13,7 @@
             </router-link>
           </li>
           <li>
-              <router-link :to="{ name: 'Subscription_list' }">
+              <router-link :to="{ name: 'Subscription' }" active-class="active">
                   <i class="uil uil-book"></i> <span>Subscription</span>
               </router-link>
           </li>
@@ -105,12 +105,12 @@ const breadcrumbData = [
   width: 200px;
 }
 
-.router-link-exact-active {
+.router-link-exact-active, .active {
   background-color: var(--color-danger);
   color: var(--color-white) !important;
 }
 
-.admin__menu li .router-link-exact-active:hover {
+.admin__menu li .router-link-exact-active:hover, .admin__menu li .active:hover {
   background-color: var(--color-danger);
   color: var(--color-white);
 }

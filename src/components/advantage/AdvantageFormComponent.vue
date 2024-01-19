@@ -58,7 +58,17 @@
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                        
                         <div>
-                            <label for="validity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Validity <span></span></label>
+                            <label for="validity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Validity 
+                              <i class="uil uil-question-circle"
+                                  style="color: var(--color-warning); font-size: 18px; cursor: pointer"
+                                  @mouseover="(e) => (buttonRef = e.currentTarget)" @click="visible = !visible">
+                              </i>
+                              <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
+                                popper-class="singleton-tooltip" placement="top">
+                                <template #content>
+                                    <span>Validity period after the création of the benefit (in number of days) </span>
+                                </template>
+                            </el-tooltip></label>
                             <input type="number" id="validity" v-model="validity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
                         </div>
                         <div>
@@ -89,7 +99,7 @@ import { useEventStore } from "@Stores/event.js";
 import { useCompanyStore } from "@Stores/company.js";
 import { useAppStore } from "@Stores/app.js";
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
-import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus';
+import { ElMessage, ElOption, ElSelect, ElDatePicker, ElTooltip } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
@@ -127,6 +137,10 @@ const showSpinner = ref(false);
  const metric = ref('');
  const scope = ref(null);
  const validity = ref('');
+
+const buttonRef = ref()
+const tooltipRef = ref()
+const visible = ref(false)
 
 const type = ref('add');
 const advantage_to_update = inject('advantage_to_update');

@@ -263,7 +263,7 @@ const activateAccount = async () => {
         ]),
       })
       setTimeout(() => {
-        router.push(`/customer/${userStore.user.customer.tag}/account/subscription_list`);
+        router.push(`/customer/${userStore.user.customer.tag}/account/subscriptions/list`);
       }, 2000);
     }
   }
@@ -283,6 +283,7 @@ onBeforeMount(async () => {
 
   if (response.status == 200 && response.data) {
     plans.value = response.data;
+    console.log(plans.value)
   }
 })
 
@@ -319,7 +320,7 @@ const loadPaymentForm = async () => {
       displayError.textContent = '';
     }
   })
-}
+};
 
 </script>
 <style>

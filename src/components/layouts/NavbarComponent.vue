@@ -198,9 +198,26 @@ const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 const showDropdown = ref(false)
+// const showMenu = computed(() => {
+//   let routeName = ['Login', 'FeedBack', 'StaffFeedBack', 'Home', 'Personal_details', 'Contact', 'Account_security', 'Parameters', 'ErepHome', 'NotFound', 'EstablishmentNotFound', 'SuccessFeedback', undefined, 'Subscription_list', 'Discount_coupons'];
+//   return !routeName.includes(route.name)
+// })
+
 const showMenu = computed(() => {
-  let routeName = ['Login', 'FeedBack', 'StaffFeedBack', 'Home', 'Personal_details', 'Contact', 'Account_security', 'Parameters', 'ErepHome', 'NotFound', 'EstablishmentNotFound', 'SuccessFeedback', undefined, 'Subscription_list', 'Discount_coupons'];
-  return !routeName.includes(route.name)
+  let routeName = [
+  'Establishment', 
+  'StaffRanking', 
+  'Review', 
+  'Event',
+  'Social', 
+  'Weather',
+  'Trends',
+  'Sales',
+  'Staff',
+  'StaffComparison',
+  'StaffReview',
+  ];
+  return routeName.includes(route.name)
 })
 
 const isFeedback = computed(()=>{
