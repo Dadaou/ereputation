@@ -39,7 +39,8 @@
     "staffFeedback":{
         "interne":"Internal use only, your comment will not be posted on the public platforms.",
         "departement":"Department",
-        "staffs_list":"Staffs list"
+        "staffs_list":"Staffs list",
+        "staffs_link":" Staff's links for feedback"
     },
     "success":"Thank you for your valuable feedback. We look forward to seeing you again soon and wish you a pleasant day.",
     "thanks_title1":"Thanks ",

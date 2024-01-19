@@ -45,7 +45,8 @@
     "staffFeedback":{
         "interne":"Solo para uso interno, su comentario no se publicará en las plataformas públicas.",
         "departement":"Departamento",
-        "staffs_list":"Lista de personal"
+        "staffs_list":"Lista de personal",
+        "staffs_link":"Enlaces del personal para comentarios"
     },
     "success":"Gracias por sus valiosos comentarios. Esperamos volver a verle pronto y le deseamos un agradable día.",
     "thanks_title1":"Gracias ",

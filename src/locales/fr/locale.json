@@ -40,7 +40,8 @@
     "staffFeedback":{
         "interne":"Usage interne uniquement, votre commentaire ne sera pas diffusé sur les plateformes publiques.",
         "departement":"Department",
-        "staffs_list":"Liste du personnel"
+        "staffs_list":"Liste du personnel",
+        "staffs_link":"Liens du personnel pour commentaires"
         
     },
     "success":"Merci pour vos précieux commentaires. Nous espérons vous revoir bientôt et vous souhaitons une agréable journée.",
