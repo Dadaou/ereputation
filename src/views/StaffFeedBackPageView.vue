@@ -114,7 +114,7 @@
             <div class="modal__header">
                 <div class="modal__title">
                     <h3 class="font-semibold text-gray-900 dark:text-white">
-                        <i class="uil uil-users-alt"></i> Staff's links for feedback
+                        <i class="uil uil-users-alt"></i>{{ $t("staffFeedback.staffs_link") }}
                     </h3>
                 </div>
                 <div class="modal__close">
