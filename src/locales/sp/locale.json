@@ -10,31 +10,44 @@
     },
     "feedback":{
         
-        "title1":"Leave ",
-        "title2":" your feedback",
-        "soustitle":"Customer experiences feedback",
+        "title1":"Deja ",
+        "title2":" tu retroalimentación",
+        "soustitle":"Retroalimentación de experiencias de clientes",
         "rating":{
-            "title":"Rating",
+            "title":"Calificación",
             "evaluate":{
                 "terrible":"Terrible",
-                "bad":"Bad",
+                "bad":"Mal",
                 "okay":"Okay",
-                "good":"Good",
-                "amazing":"Amazing"
+                "good":"Bueno",
+                "amazing":"Maravilloso"
             }
         },
-        "firstname":"First name",
-        "lastname":"Last name",
-        "gender":"Gender",
-        "placeholder_gender":"Choose gender",
-        "datevisit":"Date visit",
-        "placeholder_datevisit":"Select date and time",
-        "indice1":" If you wish to obtain discounts or benefits, please provide your email address below.",
-        "email":"Email adress",
-        "promotion_day":"Promotion of the day",
-        "comment":"Please leave a comment",
-        "indice2":"By using our services and checking the box above, you agree to the terms outlined in this Privacy Policy",
-        "post":"Post comment"
-
-    }
+        "firstname":"Primer nombre",
+        "lastname":"Apellido",
+        "gender":"Género",
+        "placeholder_gender":"Seleccionar género",
+        "datevisit":"Fecha de visita",
+        "placeholder_datevisit":"Seleccionar fecha y hora",
+        "indice1":" Si deseas obtener descuentos o beneficios, por favor proporciona tu dirección de correo electrónico a continuación.",
+        "email":"Correo electrónico",
+        "promotion_day":"Promoción del día",
+        "comment":"Por favor, deja un comentario",
+        "indice2":"Al utilizar nuestros servicios y marcar la casilla anterior, aceptas los términos descritos en esta Política de Privacidad",
+        "post":"Publicar comentario",
+        "thanks":{
+            "title1":"Gracias ",
+            "title2":" por tus comentarios",
+            "message":"Gracias por sus valiosos comentarios. Si has facilitado tu correo electrónico, pronto recibirás un beneficio para utilizar en nuestro establecimiento. Esperamos volver a verle pronto y le deseamos un agradable día."
+        }
+        
+    },
+    "staffFeedback":{
+        "interne":"Solo para uso interno, su comentario no se publicará en las plataformas públicas.",
+        "departement":"Departamento",
+        "staffs_list":"Lista de personal"
+    },
+    "success":"Gracias por sus valiosos comentarios. Esperamos volver a verle pronto y le deseamos un agradable día.",
+    "thanks_title1":"Gracias ",
+    "thanks_title2":" por tus comentarios"
 }
