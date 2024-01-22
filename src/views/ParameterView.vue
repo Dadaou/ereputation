@@ -46,6 +46,16 @@
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
+             <el-tab-pane label="Competitors" name="Competitors">
+                <el-tabs v-model="activeEstablishmentTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
+                    <el-tab-pane label="Establishment list" name="establishment_list">
+                        <EstablishmentListComponent @edit="(establishment) => handleEdit(establishment, 'establishment')" />
+                    </el-tab-pane>
+                    <el-tab-pane label="Add a new establishment" name="establishment_form">
+                        <EstablishmentFormComponent />
+                    </el-tab-pane>
+                </el-tabs>
+            </el-tab-pane>
         </el-tabs>
     </div>
 </template>
@@ -289,7 +299,11 @@ onBeforeMount(async () => {
 @media screen and (max-width: 800px) {
     .user__main__container {
         width: 120%;
-        /* Occuper toute la largeur sur les petits écrans */
     }
 }
+
+*{
+    overflow: hidden;
+}
+
 </style>

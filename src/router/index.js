@@ -44,14 +44,9 @@ const router = createRouter({
     },
     {
       path: '/sign-up',
-      name: 'Subscription',
+      name: 'Signup',
       component: SubscriptionPageView
     },
-    // {
-    //   path: '/congratulations',
-    //   name: 'Congratulations',
-    //   component: CongratulationView
-    // },
     {
       path: '/forgot-pwd',
       name: 'ForgotPwd',

@@ -17,12 +17,12 @@ if(lg ==null)
 
 const app = createApp(App)
 app.provide('tag', '');
-services.setURL(import.meta.env.VITE_APP_API_URL)
 export const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
 app.use(router)
 app.use(Vuesalize)
 app.use(i18n)
+services.setURL(import.meta.env.VITE_APP_API_URL)
 
 app.mount('#app')

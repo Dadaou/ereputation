@@ -335,6 +335,7 @@ onBeforeMount(async () => {
 
     if (response.status == 200) {
         events.value = response.data;
+        console.log(events.value)
         chartLoading.value = false;
         eventLoading.value = false;
     }

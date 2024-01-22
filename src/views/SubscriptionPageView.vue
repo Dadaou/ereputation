@@ -486,7 +486,8 @@ onBeforeMount(async () => {
   });
 
   if (response.status == 200 && response.data) {
-    plans.value = response.data;
+    const data = response.data
+    plans.value = data.sort((a,b)=>a.id - b.id);
   }
 })
 

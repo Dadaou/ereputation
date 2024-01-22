@@ -9,13 +9,36 @@
                 <li class="event_category"><span class="label">Category: </span> <span>{{ event.category }}</span></li>
                 <li class="period"><i class="uil uil-calender"></i> <span>{{ moment(event.datefrom).format('DD MMMM YYYY') }}</span> <span v-if="event.dateto != null">{{ `to ${moment(event.dateto).format('DD MMMM YYYY')}` }}</span></li>
             </ul>
-            <div class="list__actions">
+             <div class="pie__chart">
+                            <div>
+                                <h3 class="mb-2">-90 days to event (<span class="rating">{{calculateAverageRating(eventRatingDataset(event.data, 'beforeData'))}}</span>)</h3>
+                                <Pie 
+                                    :data="eventRatingDataset(event.data, 'beforeData')" 
+                                    :options="options" 
+                                />
+                            </div>
+                            <div>
+                                <h3 class="mb-2">During event (<span class="rating">{{calculateAverageRating(eventRatingDataset(event.data, 'duringData'))}}</span>)</h3>
+                                <Pie 
+                                    :data="eventRatingDataset(event.data, 'duringData')" 
+                                    :options="options" 
+                                />
+                            </div>
+                            <div>
+                                <h3 class="mb-2">Event +90 days  (<span class="rating">{{calculateAverageRating(eventRatingDataset(event.data, 'afterData'))}}</span>)</h3>
+                                <Pie 
+                                    :data="eventRatingDataset(event.data, 'afterData')" 
+                                    :options="options" 
+                                />
+                            </div>
+                        </div>
+            <!-- <div class="list__actions">
                     <button 
                         class="btn chart" 
                         @click="showEventChart(event)">
                         <i class="uil uil-chart-pie-alt"></i> View Chart
                     </button>
-            </div>
+            </div> -->
         </div>
     </div>
     <div v-if="events.length==0">No Event</div>

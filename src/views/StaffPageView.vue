@@ -361,6 +361,7 @@ onBeforeMount(async () => {
 
     if (response.status == 200) {
         staffs.value = response.data;
+        console.log(staffs.value)
         staffLoading.value = false;
     }
 })

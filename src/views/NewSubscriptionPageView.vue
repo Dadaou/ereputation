@@ -282,8 +282,8 @@ onBeforeMount(async () => {
   });
 
   if (response.status == 200 && response.data) {
-    plans.value = response.data;
-    console.log(plans.value)
+    const data = response.data
+    plans.value = data.sort((a,b)=>a.id - b.id);
   }
 })
 

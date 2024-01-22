@@ -28,16 +28,41 @@
                     </div>   
                 </div>
             </div>
+             <div class="pie__chart">
+                            <div>
+                                <h3 class="mb-2">Before (<span class="rating">{{calculateAverageRating(staffRatingDataset(staff.data, 'beforeData'))}}</span>)</h3>
+                                <Pie 
+                                    :data="staffRatingDataset(staff.data, 'beforeData')" 
+                                    :options="options" 
+                                />
+                            </div>
+                            <div>
+                                <h3 class="mb-2">During (<span class="rating">{{calculateAverageRating(staffRatingDataset(staff.data, 'duringData'))}}</span>)</h3>
+                                <Pie 
+                                    :data="staffRatingDataset(staff.data, 'duringData')" 
+                                    :options="options" 
+                                />
+                            </div>
+                            <div>
+                                <h3 class="mb-2">After (<span class="rating">{{calculateAverageRating(staffRatingDataset(staff.data, 'afterData'))}}</span>)</h3>
+                                <Pie 
+                                    :data="staffRatingDataset(staff.data, 'afterData')" 
+                                    :options="options" 
+                                />
+                            </div>
+                        </div>
+                         <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
+                        </BaseLegend>
              <div class="list__actions">
                      <button class="btn mr-2 reviews" @click="showReview(tag, staff.tag, $route.params.id, staff)">
                         <i class="uil uil-comment-alt-lines"></i> Reviews
                     </button>
                    
-                    <button 
+                  <!--   <button 
                         class="btn chart" 
                         @click="showStaffChart(staff)">
                         <i class="uil uil-chart-pie-alt"></i> View Chart
-                    </button>
+                    </button> -->
             </div>
     </div>
 </div>
