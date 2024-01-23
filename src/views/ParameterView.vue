@@ -46,8 +46,15 @@
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
-               <el-tab-pane label="Competitors" name="competitors">
-                <CompetitorConfComponent />
+              <el-tab-pane label="competitors" name="competitors">
+                <el-tabs v-model="activeCompetitorsTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
+                    <el-tab-pane label="Competitors list" name="competitor_list">
+                        <CompetitorListComponent @edit="(establishment) => handleEdit(establishment, 'establishment')" />
+                    </el-tab-pane>
+                    <el-tab-pane label="Add a new competitor" name="competitor_form">
+                        <CompetitorFormComponent />
+                    </el-tab-pane>
+                </el-tabs>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -106,8 +113,12 @@ const EstablishmentFormComponent = defineAsyncComponent(() =>
     import("@Components/establishments/EstablishmentFormComponent.vue")
 )
 
-const CompetitorConfComponent = defineAsyncComponent(() =>
-    import("@Components/competitor/CompetitorConfComponent.vue")
+const CompetitorListComponent = defineAsyncComponent(() =>
+    import("@Components/competitor/CompetitorListComponent.vue")
+)
+
+const CompetitorFormComponent = defineAsyncComponent(() =>
+    import("@Components/competitor/CompetitorFormComponent.vue")
 )
 
 const position = ref('top')
@@ -136,6 +147,9 @@ provide('establishment_activeTab', activeEstablishmentTab);
 const cleanEstablishmentForm = ref(false);
 provide('clearEstablishmentForm', cleanEstablishmentForm);
 
+const activeCompetitorsTab = ref('competitor_form')
+provide('activeCompetitorsTab', activeCompetitorsTab);
+
 const staff_to_update = ref(null);
 provide('staff_to_update', staff_to_update);
 provide('staff_activeTab', activeStaffTab);
@@ -144,21 +158,21 @@ const allEvents = ref([]);
 const allStaffs = ref([]);
 const allAdvantages = ref([]);
 const activeEventTab = ref('event_list')
-provide('event_activeTab', activeEventTab);
+provide('event_activeTab', activeEventTab)
 
 const activeAdvantageTab = ref('advantage_list')
-provide('advantage_activeTab', activeAdvantageTab);
+provide('advantage_activeTab', activeAdvantageTab)
 
 
-const event_to_update = ref(null);
-provide('event_to_update', event_to_update);
+const event_to_update = ref(null)
+provide('event_to_update', event_to_update)
 
-const advantage_to_update = ref(null);
-provide('advantage_to_update', advantage_to_update);
+const advantage_to_update = ref(null)
+provide('advantage_to_update', advantage_to_update)
 
-provide('staffs', allStaffs);
-provide('events', allEvents);
-provide('advantages', allAdvantages);
+provide('staffs', allStaffs)
+provide('events', allEvents)
+provide('advantages', allAdvantages)
 
 const handleClick = (tab, event) => {
     // console.log(tab, event)

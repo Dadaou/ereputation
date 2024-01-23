@@ -1,12 +1,12 @@
 <template>
     <div class="security__header border__bottom mt-10">
         <div class="security__edit">
-            <h4><i class="uil uil-company"></i> Establishment</h4>
-            <p>Please provide the necessary information to add a new establishment.</p>
+            <h4><i class="uil uil-company"></i> Competitor</h4>
+            <p>{{informationText}}</p>
         </div>
     </div>
     <div class="table__container">
-        <form id="establishmentForm" @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
+        <form id="establishmentForm" @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2" v-if="!showSencondStep">
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div class="md:order-2">
                     <div class="image-selector border-gray-300" :class="!previewImage && 'hover'" @click="selectImg"
@@ -51,10 +51,6 @@
                 <div>
                     <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City
                         <span>*</span></label>
-                    <!-- <el-select v-model="establishment" placeholder="Choose establishment" size="large">
-                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
-                            :value="`/api/establishments/${item.id}`" />
-                    </el-select> -->
                     <input type="text" id="city" name="city" v-model="data.city" required
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
@@ -71,19 +67,12 @@
                 <div>
                     <label for="region" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Region
                         <span>*</span></label>
-                    <!-- <el-select v-model="establishment" placeholder="Choose establishment" size="large">
-                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
-                            :value="`/api/establishments/${item.id}`" />
-                    </el-select> -->
                     <input type="text" id="region" name="region" v-model="data.region"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
                 <div>
                     <label for="gps" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gps
                     </label>
-                    <!-- <el-select v-model="department" placeholder="Choose department" size="large">
-                        <el-option v-for="item in departments" :key="item" :label="item" :value="item" />
-                    </el-select> -->
                     <input type="text" id="gps" name="gps" v-model="data.gps"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
@@ -96,15 +85,10 @@
                     <el-select v-model="data.category" placeholder="" size="large">
                         <el-option v-for="item in categories" :key="item" :label="item" :value="item" />
                     </el-select>
-                    <!-- <input type="text" id="category" v-model="data.category"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2"> -->
                 </div>
                 <div>
                     <label for="rank" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rank
                     </label>
-                    <!-- <el-select v-model="department" placeholder="Choose department" size="large">
-                        <el-option v-for="item in departments" :key="item" :label="item" :value="item" />
-                    </el-select> -->
                     <input type="text" id="rank" name="rank" v-model="data.rank"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
@@ -112,10 +96,6 @@
                     <label for="positionning"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">positionning
                     </label>
-                    <!-- <el-select v-model="establishment" placeholder="Choose establishment" size="large">
-                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
-                            :value="`/api/establishments/${item.id}`" />
-                    </el-select> -->
                     <input type="text" id="positionning" name="positionning" v-model="data.positionning"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
@@ -125,7 +105,7 @@
                     class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                     <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
                         ...</span>
-                    <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} establishment</span>
+                    <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} Competitor</span>
                 </button>
                 <button @click="resetForm"
                     class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-gray-700 rounded-lg focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-900 hover:bg-gray-800">
@@ -133,6 +113,7 @@
                 </button>
             </div>
         </form>
+        <div></div>
     </div>
 </template>
 <script setup>
@@ -160,9 +141,11 @@ const type = ref('Add');
 const userStore = useUserStore();
 const establishment_to_update = inject('establishment_to_update');
 const imgHasChanged = ref(false);
-const activeEstablishmentTab = inject('establishment_activeTab');
+const activeCompetitorsTab = inject('activeCompetitorsTab');
 
 const cleanEstablishmentForm = inject('clearEstablishmentForm');
+const informationText = ref('Please provide the necessary information to add a new competitor.')
+const showSencondStep = ref(false)
 
 const resetForm = () => {
     data.value = {};
@@ -194,8 +177,7 @@ const submit = async () => {
 
     const formData = new FormData(form);
 
-    const establishmentData = { ...data.value, customer: `${userStore.user.customer.tag}` };
-    console.log(establishmentData);
+    const establishmentData = { ...data.value, customer: null };
 
     if (establishmentData.category && establishmentData.country) {
 
@@ -225,7 +207,7 @@ const submit = async () => {
         if (response.status == 201) {
             loadData(response.data, 'new')
             ElMessage({
-                message: `Establishment added successfully.`,
+                message: `Competitor added successfully.`,
                 type: 'success',
             });
             data.value = {}
@@ -235,7 +217,7 @@ const submit = async () => {
         if (response.status == 200) {
             loadData(response.data, 'edit')
             ElMessage({
-                message: `Establishment updated successfully.`,
+                message: `Competitor updated successfully.`,
                 type: 'success',
             });
             data.value = {}
@@ -247,22 +229,22 @@ const submit = async () => {
 
 const loadData = (establishment, type) => {
 
-    establishment.media = [{ url_source: establishment.media }]
+    // establishment.media = [{ url_source: establishment.media }]
 
-    if (type == 'new') {
-        userStore.user.customer.establishments.push(establishment);
-    }
-    if (type == 'edit') {
-        userStore.user.customer.establishments = userStore.user.customer.establishments.map((x) => {
-            if (x.id == establishment.id) {
-                return establishment;
-            } else {
-                return x;
-            }
-        });
-    }
+    // if (type == 'new') {
+    //     userStore.user.customer.establishments.push(establishment);
+    // }
+    // if (type == 'edit') {
+    //     userStore.user.customer.establishments = userStore.user.customer.establishments.map((x) => {
+    //         if (x.id == establishment.id) {
+    //             return establishment;
+    //         } else {
+    //             return x;
+    //         }
+    //     });
+    // }
 
-    activeEstablishmentTab.value = 'establishment_list';
+    activeCompetitorTab.value = 'competitor_list';
 }
 
 watch(establishment_to_update, () => {
@@ -272,7 +254,7 @@ watch(establishment_to_update, () => {
         previewImage.value = establishment_to_update.value.media || "";
         type.value = 'Edit';
     }
-})
+});
 
 
 </script>
