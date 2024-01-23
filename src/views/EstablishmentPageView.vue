@@ -572,7 +572,8 @@ const loadDatasets = async () => {
     let eDate = new Date();
     let sDate = new Date();
     sDate.setMonth(sDate.getMonth() - 5);
-
+    eDate.setMonth(eDate.getMonth() - 1);
+    
     if (establishment && establishment.value['competitors']) {
         let competitorInfo = establishment.value['competitors'].find(c => c.name === selectedCompetitors.value)
         const tags = competitorInfo ? [companyId.value, competitorInfo.tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.tag)]

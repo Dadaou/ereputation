@@ -27,7 +27,7 @@
           }">
             <GroupedBarChart :plot-data="plotdata" x-key="date" :width="custom_width" :height="200"
               :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Rating"
-              :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
+              :colors="['#f75842', '#337ecc', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
               :y-tick-format="d => `${d}`" />
           </div>
           <div>
@@ -141,7 +141,7 @@ const legendData = computed(() => {
   let dates = plotdata.value;
   let nameSet = new Set();
 
-  let n = 1;
+  let n = 0;
   dates.forEach((date) => {
     for (const key in date) {
       if (key != "date" && key != "Score") {
