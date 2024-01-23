@@ -391,7 +391,7 @@ img {
 }
 
 .table__container {
-    overflow-x: scroll;
+    /* overflow-x: scroll; */
     width: 85%;
 }
 

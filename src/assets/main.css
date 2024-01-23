@@ -566,7 +566,7 @@ textarea {
 }
 
 .el-tabs__header {
-  overflow-x: scroll;
+  /* overflow-x: scroll; */
   width: 85%;
   overflow-y: hidden;
 }

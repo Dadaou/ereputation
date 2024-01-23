@@ -366,7 +366,7 @@ input {
 }
 
 .table__container {
-    overflow-x: scroll;
+    /* overflow-x: scroll; */
     overflow-y: auto;
     width: 85%;
 }
