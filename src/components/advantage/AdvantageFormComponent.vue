@@ -133,10 +133,10 @@ const showSpinner = ref(false);
  const eventName = ref('');
  const establishment = ref("");
  const code = ref('');
- const amount = ref('');
+ const amount = ref(null);
  const metric = ref('');
  const scope = ref(null);
- const validity = ref('');
+ const validity = ref(null);
 
 const buttonRef = ref()
 const tooltipRef = ref()
