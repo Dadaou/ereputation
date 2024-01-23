@@ -84,10 +84,6 @@ const SpinnerComponent = defineAsyncComponent(() =>
     import('@Components/utils/SpinnerComponent.vue')
 );
 
-const StaffChartComponent = defineAsyncComponent(() =>
-    import('@Components/utils/StaffChartComponent.vue')
-);
-
 const route = useRoute();
 
 const type = inject('type');

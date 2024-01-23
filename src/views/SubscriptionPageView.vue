@@ -198,6 +198,9 @@
               :class="showSpinner == true ? 'isLoaded' : ''" style="margin-top: 12px; border-radius: 2px;">
               <SpinnerComponent v-if="showSpinner == true" :color="'red'" /> <span v-else>Sign In</span>
             </button>
+            <button v-if="userCreated && planInfo.acceptConditions" type="button" class="btn btn-primary-2 btn-navigation" style="margin-top: 12px; border-radius: 2px;"  @click="activeName = 'checkout'">
+              Back
+            </button>
           </div>
         </form>
       </el-tab-pane>
@@ -260,8 +263,8 @@
           </div>
         </div>
         <!-- <div class="navigation-container"> -->
-        <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-            @click="activeName = 'company-info'">Previous</button> -->
+        <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+            @click="activeName = 'company-info'">Previous</button>
         <!-- </div> -->
       </el-tab-pane>
     </el-tabs>
@@ -292,6 +295,7 @@ const SpinnerComponent = defineAsyncComponent(() =>
 
 const planInfo = ref({});
 const showSpinner = ref(false)
+const userCreated = ref(false)
 
 const submitUserForm = async () => {
   showSpinner.value = true;
@@ -312,6 +316,7 @@ const submitCompanyForm = async () => {
       planInfo.value.customer = response.data.customer.tag;
       showSpinner.value = false;
       activeName.value = 'checkout';
+      userCreated.value = true
     } else {
       showSpinner.value = false;
       postErrorMsg.value = response.data;

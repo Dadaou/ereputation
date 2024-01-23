@@ -46,15 +46,8 @@
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
-             <el-tab-pane label="Competitors" name="Competitors">
-                <el-tabs v-model="activeEstablishmentTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
-                    <el-tab-pane label="Establishment list" name="establishment_list">
-                        <EstablishmentListComponent @edit="(establishment) => handleEdit(establishment, 'establishment')" />
-                    </el-tab-pane>
-                    <el-tab-pane label="Add a new establishment" name="establishment_form">
-                        <EstablishmentFormComponent />
-                    </el-tab-pane>
-                </el-tabs>
+               <el-tab-pane label="Competitors" name="competitors">
+                <CompetitorConfComponent />
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -111,6 +104,10 @@ const EstablishmentListComponent = defineAsyncComponent(() =>
 
 const EstablishmentFormComponent = defineAsyncComponent(() =>
     import("@Components/establishments/EstablishmentFormComponent.vue")
+)
+
+const CompetitorConfComponent = defineAsyncComponent(() =>
+    import("@Components/competitor/CompetitorConfComponent.vue")
 )
 
 const position = ref('top')
@@ -277,7 +274,7 @@ onBeforeMount(async () => {
             })
         });
     }
-
+    
     try {
         const response = await new Promise((resolve, reject) => {
             services.get_Record(`advantage/list`, (response) => {
@@ -305,5 +302,4 @@ onBeforeMount(async () => {
 *{
     overflow: hidden;
 }
-
 </style>
