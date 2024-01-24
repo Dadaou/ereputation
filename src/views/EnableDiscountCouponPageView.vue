@@ -2,7 +2,8 @@
 <div class="main__container" v-if="exist">
     <HeadComponent :page="page"></HeadComponent> 
     <div class="feedback__form">
-        {{$t("success")}}
+    	{{$t("discount.title")}}
+        {{$t("discount.content")}}
     </div>
 </div>
 <EstablishmentNotFound v-else/>
@@ -45,26 +46,28 @@ const staff = ref(null);
 let media = [];
 
 const page=ref({
-
+	title1: "",
+    title2: "Discount",
+    icon: "uil-comment-alt",
 });
 
-onMounted(()=>{
-    /** Charger le titre par defaut */
-     page.value ={
-        title1:  t("thanks_title1") ,
-        title2: t("thanks_title2") ,
-        icon: "uil-comment-alt",
-    };
-})
+// onMounted(()=>{
+//     /** Charger le titre par defaut */
+//      page.value ={
+//         title1:  t("thanks_title1") ,
+//         title2: t("thanks_title2") ,
+//         icon: "uil-comment-alt",
+//     };
+// })
 
-watch(()=>{
-    /** Mettre le titre en watch */
-    page.value ={
-        title1:  t("thanks_title1") ,
-        title2: t("thanks_title2") ,
-        icon: "uil-comment-alt",
-    };
-});
+// watch(()=>{
+//     /** Mettre le titre en watch */
+//     page.value ={
+//         title1:  t("thanks_title1") ,
+//         title2: t("thanks_title2") ,
+//         icon: "uil-comment-alt",
+//     };
+// });
 
 </script>
 

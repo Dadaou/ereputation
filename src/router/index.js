@@ -150,9 +150,14 @@ const router = createRouter({
       component: () => import('@Views/StaffFeedBackPageView.vue')
     },
     {
-      path: '/customer/:tag/establishment/:etab/feedback-success',
+      path: '/customer/:tag/establishment/:etab/feedback-success/:email_sent',
       name: 'SuccessFeedback',
       component: () => import('@Views/SuccessMessageFeedback.vue')
+    },
+     {
+      path: '/customer/:tag/establishment/:etab/advantagecontact/:advTag',
+      name: 'EnableAdvContact',
+      component: () => import('@Views/EnableDiscountCouponPageView.vue')
     },
     {
       path: '/customer/:tag/account',

@@ -46,5 +46,9 @@
     },
     "success":"Merci pour vos précieux commentaires. Nous espérons vous revoir bientôt et vous souhaitons une agréable journée.",
     "thanks_title1":"Merci ",
-    "thanks_title2":" pour vos commentaires"
+    "thanks_title2":" pour vos commentaires",
+    "discount":{
+        "title": "Coupon de Réduction Activé !",
+        "content": "Félicitations ! Votre coupon de réduction a été activé avec succès. Utilisez le code de réduction lors du paiement pour économiser sur votre commande."
+    }
 }

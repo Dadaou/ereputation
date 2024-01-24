@@ -44,5 +44,9 @@
     },
     "success":"Thank you for your valuable feedback. We look forward to seeing you again soon and wish you a pleasant day.",
     "thanks_title1":"Thanks ",
-    "thanks_title2":"for your feedback"
+    "thanks_title2":"for your feedback",
+    "discount":{
+        "title": "Discount Coupon Activated!",
+        "content": "Congratulations! Your discount coupon has been successfully activated. Enjoy exclusive discounts on your next purchase. Use the discount code during checkout to save on your order."
+    }
 }

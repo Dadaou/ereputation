@@ -215,13 +215,13 @@ const showMenu = computed(() => {
   'Sales',
   'Staff',
   'StaffComparison',
-  'StaffReview',
+  'StaffReview'
   ];
   return routeName.includes(route.name)
 })
 
 const isFeedback = computed(()=>{
-   let routeName = ['FeedBack', 'StaffFeedBack', undefined];
+   let routeName = ['FeedBack', 'StaffFeedBack', 'SuccessFeedback', 'EnableAdvContact', undefined];
   return routeName.includes(route.name)
 })
 

@@ -75,7 +75,7 @@
                                <i class="uil uil-info-circle"></i>{{$t("feedback.indice1")}} 
                             </span>
                             <p v-if="randomAdvantage">
-                                <b>{{$t("feedback.promotion_day")}} </b>  {{randomAdvantage.adv_name}} expired at   {{ moment(randomAdvantage.expired_at).format('YYYY-MM-DD') }}
+                                <b>{{$t("feedback.promotion_day")}} </b>  {{randomAdvantage.name}} expired at   {{ moment(randomAdvantage.expired_at).format('YYYY-MM-DD') }}
                             </p>
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{$t("feedback.email")}} <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
@@ -136,10 +136,6 @@ const SpinnerComponent = defineAsyncComponent(()=>
     import('@Components/utils/SpinnerComponent.vue')
 );
 
-// const LanguageOption = defineAsyncComponent(()=>
-//     import('@Components/utils/LanguageOptionComponent.vue')
-// )
-
 let exist = ref(true);
 const EstablishmentNotFound = defineAsyncComponent(()=>
     import("@Views/EstablishmentNotFound.vue")
@@ -185,15 +181,19 @@ onBeforeMount(async ()=>{
     let advantage_promises = [];
     try {
         const response = await new Promise((resolve, reject) => {
-            services.get_Record(`customer/establishments/advantagecontacts?tag=${route.params.tag}`, (response) => {
+            services.get_Record(`customer/establishments/advantages?tag=${route.params.tag}`, (response) => {
                 resolve(response);
             });
         });
        
         if (response.status === 200) {
             allAdvantages.value = response.data;
-            console.log(response.data)
-            if(allAdvantages.value.length > 0) randomAdvantage.value = allAdvantages.value[getRandomValue(allAdvantages.value.length)];
+
+            if(allAdvantages.value.length > 0){
+                allAdvantages.value = allAdvantages.value.filter(adv=>adv.establishment_tag == route.
+                    params.id);
+                randomAdvantage.value = allAdvantages.value[getRandomValue(allAdvantages.value.length)];
+            } 
         } else {
             console.error('Error fetching advantages:', response);
         }
@@ -242,6 +242,16 @@ const genders = [
   }
 ]
 
+const resetForm = ()=>{
+    firstname.value = '';
+    lastname.value = '';
+    gender.value = '';
+    comment.value = '';
+    email.value = '';
+    dateVisit.value = null;
+    showSpinner.value = false;
+}
+
 const submit = async ()=>{
     let date_review = new Date();
     let review = {
@@ -264,6 +274,7 @@ const submit = async ()=>{
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
         "dateReview": moment(date_review, 'DD/MM/YYYY')
     };
+
     let contactData = {
         gender: gender.value, 
         firstname: firstname.value,
@@ -272,6 +283,15 @@ const submit = async ()=>{
         establishment: `/api/establishments/${establishment.value.id}`
     };
 
+    let coupons = {
+        advantage: randomAdvantage.value.id,
+        establishment: route.params.id,
+        gender: gender.value, 
+        firstname: firstname.value,
+        lastname: lastname.value,
+        email: email.value,
+    }
+
     try {
         if (firstname.value !== '' && ratingCustomer.value !== null) {
             showSpinner.value = true;
@@ -279,21 +299,24 @@ const submit = async ()=>{
             await feedbackStore.createReview(review, async (response) => {
                 console.log(response);
                 if (response.status == 201) {
-                    await services.createRecord('contacts', contactData, (contactResponse) => {
+                    await services.createRecord('contacts', contactData, async (contactResponse) => {
                         console.log(contactResponse);
                         if (contactResponse.status == 201) {
-                            firstname.value = '';
-                            lastname.value = '';
-                            gender.value = '';
-                            comment.value = '';
-                            email.value = '';
-                            dateVisit.value = null;
-                            showSpinner.value = false;
+                            let email_sent = false
+                            if(randomAdvantage.value && email.value !== null || email.value !== ''){
+                                email_sent = true
+                                await services.createRecord('workflow', coupons, (workflowResponse) => {
+                                    console.log(workflowResponse)
+                                });
+                            }
+                            resetForm()
+
                             router.push({
                                 name: 'SuccessFeedback',
                                 params: {
                                     etab: route.params.id,
                                     tag: route.params.tag,
+                                    email_sent: email_sent
                                 },
                             });
                         }
