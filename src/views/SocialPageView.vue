@@ -21,7 +21,7 @@
                 </div>
                 <div class="reviews__content">
                     <div class="social-list" v-if="!dataLoading">
-                        <ul v-if="socialPages.length > 0" class="social-list__content">
+                        <!-- <ul v-if="socialPages.length > 0" class="social-list__content">
                             <li v-for="socialItem in getLastSocialPages(socialPages)" :key="socialItem.source"
                                 class="social-item" :class="socialItem.socialPosts.length > 0 && 'posts'">
                                 <div class="social-details">
@@ -47,9 +47,20 @@
                                     </ul>
                                 </div>
                             </li>
-                        </ul>
+                        </ul> -->
+                        
+                        <div class="social-media-container" v-if="Object.keys(postData.data).length > 0">
+                            <div v-for="(values, platform) in postData.data" :key="platform" class="platform">
+                              <h3>{{ platform.charAt(0).toUpperCase() + platform.slice(1) }} <i :class="`uil uil-${platform}`"></i></h3>
+                              <div v-if="values.comments !== undefined"><i class="uil uil-comment"></i>: {{ values.comments }}</div>
+                              <div v-if="values.likes !== undefined"><i class="uil uil-thumbs-up"></i>: {{ values.likes }}</div>
+                              <div v-if="values.share !== undefined"><i class="uil uil-share"></i>: {{ values.share }}</div>
+                            </div>
+                        </div>
                         <p v-else>no social data</p>
                     </div>
+                    
+
                     <div v-else role="status"
                         class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
                         v-for="index in 5" :key="index">
@@ -281,10 +292,31 @@ const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 const socialStore = useSocialStore();
 const calculType = ref('Followers')
-let selectedSocials = ref('');
-let establishment = ref({});
-let socialPages = ref([]);
-let socials = ref(['']);
+const selectedSocials = ref('');
+const establishment = ref({});
+const socialPages = ref([]);
+const socials = ref(['']);
+const postData = ref({
+    data:{
+        facebook:{
+            comments: 6,
+            likes:  10,
+            share: 0
+        },
+        youtube: {
+            comments: 10,
+            likes:  5,
+            share: 0
+        },
+        instagram: {
+            comments: 8,
+            likes:  10,
+            share: 0
+        }
+    }, 
+    totalPages: 1,
+    length: 3 
+})
 
 // let followersType = ref(true);
 // const maxPostsToShow = ref(2)
@@ -436,28 +468,30 @@ onBeforeMount(async () => {
         }
     })
 
-    // const response = await new Promise((resolve, reject) => {
-    //     services.get_Record(`/establishment/${companyId}/detail`, (response) => {
-    //         resolve(response)
-    //     });
-    // });
+    const response = await new Promise((resolve, reject) => {
+        services.get_Record(`/establishment/socials/posts?tag=${companyId}`, (response) => {
+            resolve(response)
+        });
+    });
 
-    // if (response.status == 200) {
-    //     establishment.value['socialPages'] = response.data['socialPages'];
+    if (response.status == 200) {
+        console.log(response.data)
+        postData.value = response.data
+        // establishment.value['socialPages'] = response.data['socialPages'];
         
-    //     let data = [];
-    //     let promises = [];
-    //     establishment.value.socialPages.forEach((social) => {
-    //         let promise = services.get_Record(`/social_pages/${social.id}`, (response) => {
-    //             data.push(response.data);
-    //         });
-    //         promises.push(promise);
-    //     })
-    //     Promise.all(promises).then(() => {
-    //         socialPages.value = data;
-    //         data.value = getFollowers(socialPages.value, calculType.value);
-    //     });
-    // }
+        // let data = [];
+        // let promises = [];
+        // establishment.value.socialPages.forEach((social) => {
+        //     let promise = services.get_Record(`/social_pages/${social.id}`, (response) => {
+        //         data.push(response.data);
+        //     });
+        //     promises.push(promise);
+        // })
+        // Promise.all(promises).then(() => {
+        //     socialPages.value = data;
+        //     data.value = getFollowers(socialPages.value, calculType.value);
+        // });
+    }
 
     const socialResponse = await new Promise((resolve, reject) => {
         services.get_Record(`/establishment/settings?tag=${companyId}&type=Social`, (response) => {
@@ -616,6 +650,42 @@ watch([trendsByEstablishment, calculType], () => {
 </script>
 
 <style scoped>
+.social-media-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Alignement à gauche */
+    gap: 20px;
+    padding: 0px;
+  }
+
+  .platform {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .platform:hover {
+    transform: translateY(-5px);
+  }
+
+  h3 {
+    color: #333;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  @media (max-width: 768px) {
+    .social-media-container {
+      flex-direction: column;
+    }
+  }
+
 a {
     cursor: pointer;
 }

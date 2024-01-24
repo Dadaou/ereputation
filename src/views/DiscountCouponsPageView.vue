@@ -45,8 +45,11 @@
           <td class="px-6 py-4">
             {{ discount.adv_amount }}
           </td>
-          <td class="px-6 py-4">
+          <td class="px-6 py-4" v-if="discount.validated_at">
             {{ moment(discount.validated_at).format('YYYY-MM-DD') }}
+          </td>
+           <td class="px-6 py-4" v-else>
+            -
           </td>
           <td class="px-6 py-4">
             {{ moment(discount.expired_at).format('YYYY-MM-DD') }}
