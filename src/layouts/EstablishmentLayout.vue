@@ -63,6 +63,11 @@ const appStore = useAppStore();
     padding: 50px 0px;
 }
 
+.main__container,
+.left__side {
+    overflow-x: hidden;
+}
+
 .establishment {
     margin-bottom: 15px;
     padding: 15px;

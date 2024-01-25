@@ -91,6 +91,12 @@ const router = createRouter({
           component: () => import('@Views/StaffRankingPageView.vue')
         },
         {
+          path: '/customer/:tag/establishment/:id/events',
+          name: 'Event',
+          beforeEnter: [CheckAccess],
+          component: () => import('@Views/EventPageView.vue')
+        },
+        {
           path: '/customer/:tag/establishment/:id/staffs',
           name: 'Staff',
           beforeEnter: [CheckAccess],
@@ -127,12 +133,6 @@ const router = createRouter({
       name: 'Review',
       beforeEnter: [CheckAccess],
       component: () => import('@Views/ReviewPageView.vue')
-    },
-    {
-      path: '/customer/:tag/establishment/:id/events',
-      name: 'Event',
-      beforeEnter: [CheckAccess],
-      component: () => import('@Views/EventPageView.vue')
     },
     {
       path: '/customer/:tag/establishment/:id/socials',
