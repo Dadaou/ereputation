@@ -7,6 +7,7 @@ import ResetPwdPageView from '@Views/ResetPwdPageView.vue'
 import ExpiredTokenPageView from '@Views/ExpiredTokenPageView.vue'
 import DefaultLayout from '@Layouts/DefaultLayout.vue'
 import EstablishmentLayout from '@Layouts/EstablishmentLayout.vue'
+import ProfileLayout from '@Layouts/ProfileLayout.vue'
 
 import { useUserStore } from '@Stores/user.js'
 
@@ -179,47 +180,55 @@ const router = createRouter({
       component: () => import('@Views/EnableDiscountCouponPageView.vue')
     },
     {
-      path: '/customer/:tag/account',
-      name: 'UserProfile',
-      component: () => import('@Views/ProfilePageView.vue'),
-      beforeEnter: [CheckAccess],
+      path: '/',
+      name: 'profileLayout',
+      component: ProfileLayout,
+      redirect: '/',
       children: [
         {
-          path: '',
-          name: 'Personal_details',
-          component: () => import('@Components/users/UserDetailComponent.vue')
-        },
-        {
-          path: 'contact',
-          name: 'Contact',
-          component: () => import('@Components/users/ContactComponent.vue')
-        },
-        {
-          path: 'subscriptions',
-          name: 'Subscription',
-          redirect: { name: 'Subscription_list' },
+          path: '/customer/:tag/account',
+          name: 'UserProfile',
+          component: () => import('@Views/ProfilePageView.vue'),
+          beforeEnter: [CheckAccess],
           children: [
             {
-              path: 'list',
-              name: 'Subscription_list',
-              component: () => import('@Views/SubscriptionsListPageView.vue')
+              path: '',
+              name: 'Personal_details',
+              component: () => import('@Components/users/UserDetailComponent.vue')
             },
             {
-              path: 'new',
-              name: 'new_subscription',
-              component: () => import('@Views/NewSubscriptionPageView.vue')
+              path: 'contact',
+              name: 'Contact',
+              component: () => import('@Components/users/ContactComponent.vue')
+            },
+            {
+              path: 'subscriptions',
+              name: 'Subscription',
+              redirect: { name: 'Subscription_list' },
+              children: [
+                {
+                  path: 'list',
+                  name: 'Subscription_list',
+                  component: () => import('@Views/SubscriptionsListPageView.vue')
+                },
+                {
+                  path: 'new',
+                  name: 'new_subscription',
+                  component: () => import('@Views/NewSubscriptionPageView.vue')
+                }
+              ]
+            },
+            {
+              path: 'discount_coupons',
+              name: 'Discount_coupons',
+              component: () => import('@Views/DiscountCouponsPageView.vue')
+            },
+            {
+              path: 'parameters',
+              name: 'Parameters',
+              component: () => import('@Views/ParameterView.vue')
             }
           ]
-        },
-        {
-          path: 'discount_coupons',
-          name: 'Discount_coupons',
-          component: () => import('@Views/DiscountCouponsPageView.vue')
-        },
-        {
-          path: 'parameters',
-          name: 'Parameters',
-          component: () => import('@Views/ParameterView.vue')
         }
       ]
     },
