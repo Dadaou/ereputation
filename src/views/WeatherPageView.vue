@@ -270,7 +270,7 @@ const router = useRouter();
 
 appStore.setBreadcrumbs([
     {
-        title: "Back",
+        title: "Establishment",
         path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
         isCurrent: false,
     },
