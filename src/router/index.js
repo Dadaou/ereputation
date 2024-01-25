@@ -97,6 +97,18 @@ const router = createRouter({
           component: () => import('@Views/EventPageView.vue')
         },
         {
+          path: '/customer/:tag/establishment/:id/socials',
+          name: 'Social',
+          beforeEnter: [CheckAccess],
+          component: () => import('@Views/SocialPageView.vue')
+        },
+        {
+          path: '/customer/:tag/establishment/:id/weathers',
+          name: 'Weather',
+          beforeEnter: [CheckAccess],
+          component: () => import('@Views/WeatherPageView.vue')
+        },
+        {
           path: '/customer/:tag/establishment/:id/staffs',
           name: 'Staff',
           beforeEnter: [CheckAccess],
@@ -133,18 +145,6 @@ const router = createRouter({
       name: 'Review',
       beforeEnter: [CheckAccess],
       component: () => import('@Views/ReviewPageView.vue')
-    },
-    {
-      path: '/customer/:tag/establishment/:id/socials',
-      name: 'Social',
-      beforeEnter: [CheckAccess],
-      component: () => import('@Views/SocialPageView.vue')
-    },
-    {
-      path: '/customer/:tag/establishment/:id/weathers',
-      name: 'Weather',
-      beforeEnter: [CheckAccess],
-      component: () => import('@Views/WeatherPageView.vue')
     },
     {
       path: '/customer/:tag/establishment/:id/trends',
