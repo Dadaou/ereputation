@@ -1,12 +1,12 @@
 <template>
-  <NavbarComponent></NavbarComponent>
+  <!-- <NavbarComponent></NavbarComponent> -->
   <div class="app__loader" :style="loaderStyle" v-if="appStore.isLoading">
     <SpinnerComponent :size="'large'" />
   </div>
   <div class="erep__app">
     <RouterView />
   </div>
-  <FooterComponent></FooterComponent>
+  <!-- <FooterComponent></FooterComponent> -->
 </template>
 
 <script setup>
@@ -21,13 +21,13 @@ const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
 )
 
-const NavbarComponent = defineAsyncComponent(() =>
-  import('@Components/layouts/NavbarComponent.vue')
-)
+// const NavbarComponent = defineAsyncComponent(() =>
+//   import('@Components/layouts/NavbarComponent.vue')
+// )
 
-const FooterComponent = defineAsyncComponent(() =>
-  import('@Components/layouts/FooterComponent.vue')
-)
+// const FooterComponent = defineAsyncComponent(() =>
+//   import('@Components/layouts/FooterComponent.vue')
+// )
 
 const appStore = useAppStore()
 const userStore = useUserStore()
@@ -89,11 +89,11 @@ watch(width, () => {
 
 .extern_erep_app {
   position: relative;
-  top:-2em;
+  top: -2em;
 }
 
 .other_erep_app {
   position: relative;
-  top:-5em;
+  top: -5em;
 }
 </style>

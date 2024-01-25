@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex" aria-label="Breadcrumb">
+  <nav v-if="data" class="flex" aria-label="Breadcrumb">
     <ol class="inline-flex items-center space-x-1 md:space-x-3">
       <li class="inline-flex items-center" @click="$router.push('/home')">
         <a class="inline-flex items-center text-sm font-medium text-gray-700 dark:text-gray-400">
@@ -13,7 +13,8 @@
         </a>
       </li>
       <li v-for="item in _data" :key="item.title">
-        <div v-if="item.isCurrent==false" class="flex items-center" :class="item.isCurrent ? 'current__url' : ''" @click="goback(item.path)">
+        <div v-if="item.isCurrent == false" class="flex items-center" :class="item.isCurrent ? 'current__url' : ''"
+          @click="goback(item.path)">
           <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd"
@@ -43,7 +44,7 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { useAppStore } from '@Stores/app.js';
-import {computed} from 'vue';
+import { computed } from 'vue';
 
 const router = useRouter();
 const appStore = useAppStore();
@@ -51,17 +52,11 @@ const props = defineProps({
   data: {
     type: Array,
     required: false,
-    default: [
-      {
-        title: "Home",
-        path: "/home",
-        isCurrent: true,
-      },
-    ]
+    default: null
   }
 })
 
-const _data = computed(()=>{
+const _data = computed(() => {
   return props.data;
 })
 
@@ -89,4 +84,5 @@ a {
 a:hover {
   color: var(--color-danger);
   cursor: pointer;
-}</style>
+}
+</style>

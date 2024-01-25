@@ -5,6 +5,9 @@ import SubscriptionPageView from '@Views/SubscriptionPageView.vue'
 import ForgotPwdPageView from '@Views/ForgotPwdPageView.vue'
 import ResetPwdPageView from '@Views/ResetPwdPageView.vue'
 import ExpiredTokenPageView from '@Views/ExpiredTokenPageView.vue'
+import DefaultLayout from '@Layouts/DefaultLayout.vue'
+import EstablishmentLayout from '@Layouts/EstablishmentLayout.vue'
+
 import { useUserStore } from '@Stores/user.js'
 
 const CheckAuthentication = (to, from, next) => {
@@ -43,9 +46,17 @@ const router = createRouter({
       beforeEnter: [CheckAuthentication, removeAccess]
     },
     {
-      path: '/sign-up',
-      name: 'Signup',
-      component: SubscriptionPageView
+      path: '/',
+      name: 'default',
+      component: DefaultLayout,
+      redirect: '/',
+      children: [
+        {
+          path: '/sign-up',
+          name: 'Signup',
+          component: SubscriptionPageView
+        }
+      ]
     },
     {
       path: '/forgot-pwd',
@@ -63,6 +74,43 @@ const router = createRouter({
       component: ExpiredTokenPageView
     },
     {
+      path: '/',
+      name: 'establishmentLayout',
+      component: EstablishmentLayout,
+      redirect: '/',
+      children: [
+        {
+          path: '/customer/:tag/establishment/:id',
+          name: 'Establishment',
+          beforeEnter: [CheckAccess],
+          component: () => import('@Views/EstablishmentPageView.vue')
+        },
+        {
+          path: '/customer/:tag/establishment/:id/staffsranking',
+          name: 'StaffRanking',
+          component: () => import('@Views/StaffRankingPageView.vue')
+        },
+        {
+          path: '/customer/:tag/establishment/:id/staffs',
+          name: 'Staff',
+          beforeEnter: [CheckAccess],
+          component: () => import('@Views/StaffPageView.vue'),
+          children: [
+            {
+              path: '',
+              name: 'StaffComparison',
+              component: () => import('@Views/StaffComparisonView.vue')
+            },
+            {
+              path: 'list/:staff_tag/reviews',
+              name: 'StaffReview',
+              component: () => import('@Views/StaffReviewsView.vue')
+            }
+          ]
+        }
+      ]
+    },
+    {
       path: '/home/establishments',
       name: 'Home',
       beforeEnter: [CheckAccess],
@@ -73,17 +121,6 @@ const router = createRouter({
       name: 'ErepHome',
       beforeEnter: [CheckAccess],
       component: () => import('@Views/HomePageView.vue')
-    },
-    {
-      path: '/customer/:tag/establishment/:id',
-      name: 'Establishment',
-      beforeEnter: [CheckAccess],
-      component: () => import('@Views/EstablishmentPageView.vue')
-    },
-    {
-      path: '/customer/:tag/establishment/:id/staffsranking',
-      name: 'StaffRanking',
-      component: () => import('@Views/StaffRankingPageView.vue')
     },
     {
       path: '/customer/:tag/establishment/:id/reviews',
@@ -122,24 +159,6 @@ const router = createRouter({
       component: () => import('@Views/SalesPageView.vue')
     },
     {
-      path: '/customer/:tag/establishment/:id/staffs',
-      name: 'Staff',
-      beforeEnter: [CheckAccess],
-      component: () => import('@Views/StaffPageView.vue'),
-      children: [
-        {
-          path: '',
-          name: 'StaffComparison',
-          component: () => import('@Views/StaffComparisonView.vue')
-        },
-        {
-          path: 'list/:staff_tag/reviews',
-          name: 'StaffReview',
-          component: () => import('@Views/StaffReviewsView.vue')
-        }
-      ]
-    },
-    {
       path: '/customer/:tag/establishment/:id/feedback',
       name: 'FeedBack',
       component: () => import('@Views/FeedbackPageView.vue')
@@ -154,7 +173,7 @@ const router = createRouter({
       name: 'SuccessFeedback',
       component: () => import('@Views/SuccessMessageFeedback.vue')
     },
-     {
+    {
       path: '/customer/:tag/establishment/:etab/advantagecontact/:advTag',
       name: 'EnableAdvContact',
       component: () => import('@Views/EnableDiscountCouponPageView.vue')

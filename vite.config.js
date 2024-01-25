@@ -5,9 +5,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    vue(),
-  ],
+  plugins: [vue()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -16,6 +14,7 @@ export default defineConfig({
       '@Views': path.resolve(__dirname, './src/views'),
       '@Stores': path.resolve(__dirname, './src/stores'),
       '@Assets': path.resolve(__dirname, './src/assets'),
+      '@Layouts': path.resolve(__dirname, './src/layouts')
     }
   }
 })
