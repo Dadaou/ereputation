@@ -28,10 +28,10 @@ const removeAccess = (to, from, next) => {
 const CheckAccess = (to, from, next) => {
   const userStore = useUserStore()
   if (localStorage.getItem('access') == null) {
-    next('/')
+    next('/sign-in')
   } else {
     if (userStore.user == null) {
-      next('/')
+      next('/sign-in')
       userStore.signOut()
     } else next()
   }
@@ -42,37 +42,26 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'Login',
-      component: LoginView,
-      beforeEnter: [CheckAuthentication, removeAccess]
-    },
-    {
-      path: '/',
       name: 'default',
       component: DefaultLayout,
-      redirect: '/',
+      redirect: '/sign-in',
       children: [
         {
           path: '/sign-up',
           name: 'Signup',
           component: SubscriptionPageView
+        },
+        {
+          path: '/:catchAll(.*)',
+          name: 'NotFound',
+          component: () => import('@Views/NotFoundPageView.vue')
+        },
+        {
+          path: '/customer/:tag/establishment/notFound',
+          name: 'EstablishmentNotFound',
+          component: () => import('@Views/EstablishmentNotFound.vue')
         }
       ]
-    },
-    {
-      path: '/forgot-pwd',
-      name: 'ForgotPwd',
-      component: ForgotPwdPageView
-    },
-    {
-      path: '/password/reset/:token',
-      name: 'ResetPwd',
-      component: ResetPwdPageView
-    },
-    {
-      path: '/expired/email',
-      name: 'LinkExpired',
-      component: ExpiredTokenPageView
     },
     {
       path: '/',
@@ -142,42 +131,10 @@ const router = createRouter({
       ]
     },
     {
-      path: '/home/establishments',
-      name: 'Home',
-      beforeEnter: [CheckAccess],
-      component: () => import('@Views/HomePageView.vue')
-    },
-    {
-      path: '/home',
-      name: 'ErepHome',
-      beforeEnter: [CheckAccess],
-      component: () => import('@Views/HomePageView.vue')
-    },
-    {
       path: '/customer/:tag/establishment/:id/trends',
       name: 'Trends',
       beforeEnter: [CheckAccess],
       component: () => import('@Views/TrendsView.vue')
-    },
-    {
-      path: '/customer/:tag/establishment/:id/feedback',
-      name: 'FeedBack',
-      component: () => import('@Views/FeedbackPageView.vue')
-    },
-    {
-      path: '/customer/:tag/establishment/:etab/staffs/:id/feedback',
-      name: 'StaffFeedBack',
-      component: () => import('@Views/StaffFeedBackPageView.vue')
-    },
-    {
-      path: '/customer/:tag/establishment/:etab/feedback-success/:email_sent',
-      name: 'SuccessFeedback',
-      component: () => import('@Views/SuccessMessageFeedback.vue')
-    },
-    {
-      path: '/customer/:tag/establishment/:etab/advantagecontact/:advTag',
-      name: 'EnableAdvContact',
-      component: () => import('@Views/EnableDiscountCouponPageView.vue')
     },
     {
       path: '/',
@@ -185,6 +142,59 @@ const router = createRouter({
       component: ProfileLayout,
       redirect: '/',
       children: [
+        {
+          path: '/customer/:tag/establishment/:id/feedback',
+          name: 'FeedBack',
+          component: () => import('@Views/FeedbackPageView.vue')
+        },
+        {
+          path: '/customer/:tag/establishment/:etab/staffs/:id/feedback',
+          name: 'StaffFeedBack',
+          component: () => import('@Views/StaffFeedBackPageView.vue')
+        },
+        {
+          path: '/customer/:tag/establishment/:etab/feedback-success/:email_sent',
+          name: 'SuccessFeedback',
+          component: () => import('@Views/SuccessMessageFeedback.vue')
+        },
+        {
+          path: '/customer/:tag/establishment/:etab/advantagecontact/:advTag',
+          name: 'EnableAdvContact',
+          component: () => import('@Views/EnableDiscountCouponPageView.vue')
+        },
+        {
+          path: '/forgot-pwd',
+          name: 'ForgotPwd',
+          component: ForgotPwdPageView
+        },
+        {
+          path: '/password/reset/:token',
+          name: 'ResetPwd',
+          component: ResetPwdPageView
+        },
+        {
+          path: '/expired/email',
+          name: 'LinkExpired',
+          component: ExpiredTokenPageView
+        },
+        {
+          path: '/sign-in',
+          name: 'Login',
+          component: LoginView,
+          beforeEnter: [CheckAuthentication, removeAccess]
+        },
+        {
+          path: '/home/establishments',
+          name: 'Home',
+          beforeEnter: [CheckAccess],
+          component: () => import('@Views/HomePageView.vue')
+        },
+        {
+          path: '/home',
+          name: 'ErepHome',
+          beforeEnter: [CheckAccess],
+          component: () => import('@Views/HomePageView.vue')
+        },
         {
           path: '/customer/:tag/account',
           name: 'UserProfile',
@@ -231,16 +241,6 @@ const router = createRouter({
           ]
         }
       ]
-    },
-    {
-      path: '/:catchAll(.*)',
-      name: 'NotFound',
-      component: () => import('@Views/NotFoundPageView.vue')
-    },
-    {
-      path: '/customer/:tag/establishment/notFound',
-      name: 'EstablishmentNotFound',
-      component: () => import('@Views/EstablishmentNotFound.vue')
     }
   ]
 })
