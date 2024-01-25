@@ -67,7 +67,7 @@ import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
 import { useWindowSize } from '@vueuse/core';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { useCompanyStore } from "@Stores/company.js";
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
@@ -75,6 +75,7 @@ import 'element-plus/es/components/tab-pane/style/css';
 
 const { width, height } = useWindowSize();
 const router = useRouter();
+const route = useRoute();
 
 
 const StaffFormComponent = defineAsyncComponent(() =>
@@ -174,6 +175,11 @@ provide('staffs', allStaffs)
 provide('events', allEvents)
 provide('advantages', allAdvantages)
 
+const reloadCompetitor = ref(false)
+provide('reloadCompetitor', reloadCompetitor)
+const competitorsData = ref([])
+provide('competitorsData', competitorsData)
+
 const handleClick = (tab, event) => {
     // console.log(tab, event)
 };
@@ -228,6 +234,61 @@ const handleDisable = async (value, type) => {
         })
     }
 };
+
+const transformData = (data) =>{
+    const establishmentMap = new Map();
+
+    // Parcourir chaque concurrent et ses établissements
+    for (const [competitorName, establishments] of Object.entries(data)) {
+        establishments.forEach(establishment => {
+            const { competitor_id, establishment_competitor_tag, establishment_category, id } = establishment;
+
+            // Vérifie si cet établissement a déjà été traité
+            if (!establishmentMap.has(id)) {
+                establishmentMap.set(id, {
+                    name: establishment.establishment_name,
+                    id: id,
+                    uri: `/api/establishments/${id}`,
+                    tag: establishment_competitor_tag,
+                    category: establishment_category,
+                    media: null, // À remplir selon la disponibilité
+                    establishments: [competitorName] 
+                });
+            } else {
+                // Ajoute le nom du concurrent à la liste des établissements existants
+                if(!establishmentMap.get(id).establishments.includes(competitorName)) establishmentMap.get(id).establishments.push(competitorName);
+            }
+        });
+    }
+
+    // Convertir la Map en tableau
+    return Array.from(establishmentMap.values());
+}
+
+
+const reloadCompetitorList = async()=>{
+    try {
+        const response = await new Promise((resolve, reject) => {
+            services.get_Record(`customer/establishment/competitors?tag=${route.params.tag}`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            competitorsData.value = transformData(response.data);
+            console.log(competitorsData.value)
+        } 
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+watch(reloadCompetitor, async() => {
+    if(reloadCompetitor.value == true) {
+         await reloadCompetitorList();
+         activeCompetitorsTab.value = 'competitor_list';
+    }
+});
 
 onBeforeMount(async () => {
     let staffs = [];
@@ -288,6 +349,8 @@ onBeforeMount(async () => {
             })
         });
     }
+
+    await reloadCompetitorList();
     
     try {
         const response = await new Promise((resolve, reject) => {
