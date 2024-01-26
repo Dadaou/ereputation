@@ -497,6 +497,14 @@ const appStore = useAppStore();
     text-align: justify;
 }
 
+#competitors__dropdown {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
 #website__dropdown {
     display: flex;
     align-items: center;
@@ -532,6 +540,8 @@ const appStore = useAppStore();
     flex-grow: 1;
 }
 
+.dashboard__content,
+.chart__content,
 .reviews__content {
     margin-top: 20px;
 }
@@ -636,5 +646,13 @@ const appStore = useAppStore();
     .counter {
         gap: 2rem !important;
     }
+}
+
+.head {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
 }
 </style>
