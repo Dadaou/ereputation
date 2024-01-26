@@ -1,7 +1,7 @@
 <template>
     <NavbarComponent></NavbarComponent>
     <div class="main__container" v-if="appStore.isExist">
-        <HeadComponent class="head" :page="appStore.currentPage"></HeadComponent>
+        <HeadComponent :page="appStore.currentPage"></HeadComponent>
         <div class="breadcrumb__container">
             <BreadcrumbComponent :data="appStore.breadcrumbs" />
         </div>
@@ -163,6 +163,13 @@ const appStore = useAppStore();
     width: 100%;
     height: auto !important;
     max-height: 100%;
+}
+
+
+.isactive,
+.mobile__filter__btn button:hover {
+    background-color: var(--color-primary);
+    color: white !important;
 }
 
 @media screen and (min-width: 1439px) and (max-width: 2559px) {
@@ -598,6 +605,11 @@ const appStore = useAppStore();
 
 .ptable td:nth-child(5) {
     color: #df6145;
+}
+
+.date__picker {
+    width: 100% !important;
+    margin: 0px 2px !important;
 }
 
 @media screen and (max-width: 975px) {
