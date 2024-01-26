@@ -624,4 +624,17 @@ const appStore = useAppStore();
         font-size: 12px;
     }
 }
+
+@media screen and (max-width:625px) {
+
+    .date__picker {
+        margin: 5px 0 10px !important;
+    }
+}
+
+@media screen and (max-width:1287px) {
+    .counter {
+        gap: 2rem !important;
+    }
+}
 </style>
