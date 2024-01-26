@@ -49,10 +49,10 @@
               <el-tab-pane label="competitors" name="competitors">
                 <el-tabs v-model="activeCompetitorsTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
                     <el-tab-pane label="Competitors list" name="competitor_list">
-                        <CompetitorListComponent @edit="(establishment) => handleEdit(establishment, 'establishment')" />
+                        <CompetitorListComponent @edit="(establishment) => handleEdit(establishment, 'establishment')"  @reload="reloadCompetitorList('list')"/>
                     </el-tab-pane>
                     <el-tab-pane label="Add a new competitor" name="competitor_form">
-                        <CompetitorFormComponent />
+                        <CompetitorFormComponent @reload="reloadCompetitorList('form')" />
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
@@ -266,7 +266,7 @@ const transformData = (data) =>{
 }
 
 
-const reloadCompetitorList = async()=>{
+const reloadCompetitorList = async(type)=>{
     try {
         const response = await new Promise((resolve, reject) => {
             services.get_Record(`customer/establishment/competitors?tag=${route.params.tag}`, (response) => {
@@ -277,18 +277,19 @@ const reloadCompetitorList = async()=>{
             competitorsData.value = transformData(response.data);
             console.log(competitorsData.value)
         } 
+
+        if(type=='form') activeCompetitorsTab.value = 'competitor_list';
     } catch (error) {
         console.error(error);
     }
 }
 
-
-watch(reloadCompetitor, async() => {
-    if(reloadCompetitor.value == true) {
-         await reloadCompetitorList();
-         activeCompetitorsTab.value = 'competitor_list';
-    }
-});
+// watch(reloadCompetitor, async() => {
+//     if(reloadCompetitor.value == true) {
+//          await reloadCompetitorList();
+         
+//     }
+// });
 
 onBeforeMount(async () => {
     let staffs = [];

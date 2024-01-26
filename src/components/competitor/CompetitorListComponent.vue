@@ -26,7 +26,7 @@
 
                     <el-button size="small" @click="showLinkModal = !showLinkModal, establishment = scope.row.uri"><i
                             class="uil uil-file-alt"></i></el-button>
-                    <el-popconfirm title="Are you sure to delete this?">
+                    <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
                         <template #reference>
                             <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
                         </template>
@@ -150,7 +150,7 @@ const ModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/ModalComponent.vue')
 )
 
-const emit = defineEmits(['edit']);
+const emit = defineEmits(['edit', 'reload']);
 
 const userStore = useUserStore();
 const { width, height } = useWindowSize();
@@ -172,6 +172,7 @@ const isValidLink = ref('true')
 const establishment = ref('')
 const links = ref([])
 const competitorsData = inject('competitorsData')
+const reloadCompetitor = inject('reloadCompetitor')
 
 const handleEdit = (index, establishment) => {
     emit('edit', establishment);
@@ -235,6 +236,27 @@ const splitUriAndUrl = (combinedString) => {
     return { uri: combinedString, url: null };
 }
 
+const handleDelete = async(index, competitor)=>{
+    console.log(competitor)
+    try {
+        const response = await new Promise((resolve, reject) => {
+            services.deleteRecord('establishments', competitor.id, (response) => {
+                resolve(response);
+            });
+        });
+        console.log(response)
+        if (response.status == 204) {
+            ElMessage({
+                message: `Competitor deleted successfully`,
+                type: 'success',
+            })
+            emit('reload')
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 const isValidUrl = (url, urlTemplate) => {
     const pattern = urlPattern(urlTemplate);
     let isValid = false
@@ -262,7 +284,7 @@ const submit = async () => {
         value1: getValueUrl(link.value, urlObject.url),
         establishment: establishment.value,
         provider: urlObject.uri,
-        enable: false
+        enable: true
     }
 
     try {

@@ -117,7 +117,7 @@
             <form @submit.prevent="submitCompetitor" @keydown.enter.prevent="submitCompetitor" class="mt-4 px-2 h-full">
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                         <div>
-                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span>*</span></label>
+                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishments <span>*</span></label>
                             <el-select v-model="establishments" placeholder="Choose establishment" size="large" multiple collapse-tags collapse-tags-tooltip>
                                 <el-option
                                 v-for="item in userStore.user.customer.establishments"
@@ -168,13 +168,14 @@ const activeCompetitorsTab = inject('activeCompetitorsTab');
 const cleanEstablishmentForm = inject('clearEstablishmentForm');
 const showSecondStep = ref(false)
 const informationText = computed(()=>{
-    if(showSecondStep.value) return 'Select establishments associated with the competitor.'
+    if(showSecondStep.value) return 'Select your establishment related to the competitor.'
     return 'Please provide the necessary information to add a new competitor.' 
 }) 
 
 const reloadCompetitor = inject('reloadCompetitor')
 const establishments = ref([])
 const competitor = ref(null)
+const emit = defineEmits(['reload']);
 
 const resetForm = () => {
     data.value = {};
@@ -282,7 +283,8 @@ const submitCompetitor = ()=>{
 
         if(created.length == establishments.value.length){
              showSpinner.value = false;
-             reloadCompetitor.value = true;
+             emit('reload')
+             // reloadCompetitor.value = true;
         }
     })
 }
