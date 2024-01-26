@@ -62,6 +62,11 @@ const router = createRouter({
       name: 'LinkExpired',
       component: ExpiredTokenPageView
     },
+     {
+      path: '/contact',
+      name: 'ContactForm',
+      component: () => import('@Views/ContactFormPageView.vue')
+    },
     {
       path: '/home/establishments',
       name: 'Home',

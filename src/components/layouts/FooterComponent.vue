@@ -5,7 +5,11 @@
                 <ul>
                     <li><i class="uil uil-copyright"></i> eReputation, allright reserved</li>
                     <li>Legal Notice</li>
-                    <li>Contact</li>
+                    <li>
+                        <RouterLink to="/contact">
+                             Contact
+                        </RouterLink>
+                    </li>
                     <li>
                          <RouterLink to="/sign-up">
                             Pricing
