@@ -162,6 +162,7 @@ const appStore = useAppStore();
 .right__side .establishment__img img {
     width: 100%;
     height: auto !important;
+    max-height: 100%;
 }
 
 @media screen and (min-width: 1439px) and (max-width: 2559px) {
