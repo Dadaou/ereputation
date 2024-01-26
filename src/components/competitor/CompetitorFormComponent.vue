@@ -6,7 +6,7 @@
         </div>
     </div>
     <div class="table__container">
-        <form id="establishmentForm" @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2" v-if="!showSencondStep">
+        <form id="competitorForm" @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2" v-if="!showSecondStep">
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div class="md:order-2">
                     <div class="image-selector border-gray-300" :class="!previewImage && 'hover'" @click="selectImg"
@@ -18,7 +18,7 @@
                         </div>
                     </div>
 
-                    <input id="imgInput" name="file" type="file" @change=updateImage style="display:none">
+                    <input id="imgInputCompetitor" name="file" type="file" @change=updateImage style="display:none">
                 </div>
                 <div class="md:order-1">
                     <div class="mb-6">
@@ -113,12 +113,34 @@
                 </button>
             </div>
         </form>
-        <div></div>
+        <div v-else>
+            <form @submit.prevent="submitCompetitor" @keydown.enter.prevent="submitCompetitor" class="mt-4 px-2 h-full">
+                    <div class="grid gap-6 mb-6 md:grid-cols-2">
+                        <div>
+                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span>*</span></label>
+                            <el-select v-model="establishments" placeholder="Choose establishment" size="large" multiple collapse-tags collapse-tags-tooltip>
+                                <el-option
+                                v-for="item in userStore.user.customer.establishments"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.competitor_tag"
+                                />
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
+                       <button type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                                <SpinnerComponent :show-spinner="showSpinner" :color="'gray'"/> <span v-if="showSpinner">Loading ...</span>
+                               <span v-show="!showSpinner"><i class="uil uil-save"></i> save competitor</span>
+                 </button>
+                        </div>
+                </form>
+        </div>
     </div>
 </template>
 <script setup>
 import moment from 'moment';
-import { ref, inject, watch } from 'vue';
+import { ref, inject, watch, computed } from 'vue';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import { useStaffStore } from "@Stores/staff.js";
@@ -144,8 +166,15 @@ const imgHasChanged = ref(false);
 const activeCompetitorsTab = inject('activeCompetitorsTab');
 
 const cleanEstablishmentForm = inject('clearEstablishmentForm');
-const informationText = ref('Please provide the necessary information to add a new competitor.')
-const showSencondStep = ref(false)
+const showSecondStep = ref(false)
+const informationText = computed(()=>{
+    if(showSecondStep.value) return 'Select establishments associated with the competitor.'
+    return 'Please provide the necessary information to add a new competitor.' 
+}) 
+
+const reloadCompetitor = inject('reloadCompetitor')
+const establishments = ref([])
+const competitor = ref(null)
 
 const resetForm = () => {
     data.value = {};
@@ -156,6 +185,8 @@ const resetForm = () => {
 watch(cleanEstablishmentForm, () => {
     resetForm();
 })
+
+
 
 const updateImage = (e) => {
     const image = e.target.files[0];
@@ -168,22 +199,23 @@ const updateImage = (e) => {
 };
 
 const selectImg = () => {
-    document.getElementById('imgInput').click();
+    document.getElementById('imgInputCompetitor').click();
 }
 
 const submit = async () => {
 
-    const form = document.querySelector('#establishmentForm');
+    const form = document.querySelector('#competitorForm');
 
     const formData = new FormData(form);
 
-    const establishmentData = { ...data.value, customer: null };
+    const establishmentData = { ...data.value };
+    console.log(establishmentData)
 
     if (establishmentData.category && establishmentData.country) {
 
         formData.append('category', establishmentData.category);
         formData.append('country', establishmentData.country);
-        formData.append('customer', `${userStore.user.customer.tag}`)
+        formData.append('customer', null)
         showSpinner.value = true;
 
         if (!imgHasChanged.value) formData.delete('file');
@@ -203,8 +235,10 @@ const submit = async () => {
                 resolve(response);
             });
         });
+        console.log(response)
 
         if (response.status == 201) {
+            competitor.value = response.data
             loadData(response.data, 'new')
             ElMessage({
                 message: `Competitor added successfully.`,
@@ -212,6 +246,7 @@ const submit = async () => {
             });
             data.value = {}
             showSpinner.value = false;
+            showSecondStep.value = true
         }
 
         if (response.status == 200) {
@@ -226,6 +261,31 @@ const submit = async () => {
     };
 
 };
+
+const submitCompetitor = ()=>{
+
+    showSpinner.value = true;
+    let created = []
+
+    establishments.value.forEach(async tag=>{
+         const data =  {
+            establishment: `/api/establishments/${competitor.value.id}`,
+            competitorTag: tag
+        }
+        const response = await new Promise((resolve, reject) => {
+                services.createRecord('competitors', data, (response) => {
+                    resolve(response);
+                });
+        });
+        console.log(response)
+        if(response.status == 201) created.push(1)
+
+        if(created.length == establishments.value.length){
+             showSpinner.value = false;
+             reloadCompetitor.value = true;
+        }
+    })
+}
 
 const loadData = (establishment, type) => {
 
@@ -244,7 +304,7 @@ const loadData = (establishment, type) => {
     //     });
     // }
 
-    activeCompetitorTab.value = 'competitor_list';
+    // activeCompetitorsTab.value = 'competitor_list';
 }
 
 watch(establishment_to_update, () => {
