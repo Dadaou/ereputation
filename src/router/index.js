@@ -60,6 +60,11 @@ const router = createRouter({
           path: '/customer/:tag/establishment/notFound',
           name: 'EstablishmentNotFound',
           component: () => import('@Views/EstablishmentNotFound.vue')
+        },
+        {
+          path: '/contact',
+          name: 'ContactForm',
+          component: () => import('@Views/ContactFormPageView.vue')
         }
       ]
     },
