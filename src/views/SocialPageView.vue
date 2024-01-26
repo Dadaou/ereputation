@@ -1,27 +1,21 @@
 <template>
-    <div class="main__container" v-if="exist">
-        <HeadComponent class="head" :page="page"></HeadComponent>
-        <div class="breadcrumb__container">
-            <BreadcrumbComponent :data="breadcrumbData" />
+    <div class="left__side">
+        <div class="head">
+            <div class="app__title">
+                <h2>Social</h2>
+            </div>
         </div>
-        <div class="app__container">
-            <div class="left__side">
-                <div class="head">
-                    <div class="app__title">
-                        <h2>Social</h2>
-                    </div>
-                </div>
-                <div class="reviews__content">
-                    <social-statistics></social-statistics>
-                </div>
-                <div class="head">
-                    <div class="app__title" style="margin-top: 50px;">
-                        <h2>Social List</h2>
-                    </div>
-                </div>
-                <div class="reviews__content">
-                    <div class="social-list" v-if="!dataLoading">
-                        <!-- <ul v-if="socialPages.length > 0" class="social-list__content">
+        <div class="reviews__content">
+            <social-statistics></social-statistics>
+        </div>
+        <div class="head">
+            <div class="app__title" style="margin-top: 50px;">
+                <h2>Social List</h2>
+            </div>
+        </div>
+        <div class="reviews__content">
+            <div class="social-list" v-if="!dataLoading">
+                <!-- <ul v-if="socialPages.length > 0" class="social-list__content">
                             <li v-for="socialItem in getLastSocialPages(socialPages)" :key="socialItem.source"
                                 class="social-item" :class="socialItem.socialPosts.length > 0 && 'posts'">
                                 <div class="social-details">
@@ -48,174 +42,173 @@
                                 </div>
                             </li>
                         </ul> -->
-                        
-                        <div class="social-media-container" v-if="Object.keys(postData.data).length > 0">
-                            <div v-for="(values, platform) in postData.data" :key="platform" class="platform">
-                              <h3>{{ platform.charAt(0).toUpperCase() + platform.slice(1) }} <i :class="`uil uil-${platform}`"></i></h3>
-                              <div v-if="values.comments !== undefined"><i class="uil uil-comment"></i>: {{ values.comments }}</div>
-                              <div v-if="values.likes !== undefined"><i class="uil uil-thumbs-up"></i>: {{ values.likes }}</div>
-                              <div v-if="values.share !== undefined"><i class="uil uil-share"></i>: {{ values.share }}</div>
-                            </div>
-                        </div>
-                        <p v-else>no social data</p>
-                    </div>
-                    
 
-                    <div v-else role="status"
-                        class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
-                        v-for="index in 5" :key="index">
+                <div class="social-media-container" v-if="Object.keys(postData.data).length > 0">
+                    <div v-for="(values, platform) in postData.data" :key="platform" class="platform">
+                        <h3>{{ platform.charAt(0).toUpperCase() + platform.slice(1) }} <i
+                                :class="`uil uil-${platform}`"></i></h3>
+                        <div v-if="values.comments !== undefined"><i class="uil uil-comment"></i>: {{
+                            values.comments }}</div>
+                        <div v-if="values.likes !== undefined"><i class="uil uil-thumbs-up"></i>: {{ values.likes }}
+                        </div>
+                        <div v-if="values.share !== undefined"><i class="uil uil-share"></i>: {{ values.share }}
+                        </div>
+                    </div>
+                </div>
+                <p v-else>no social data</p>
+            </div>
+
+
+            <div v-else role="status"
+                class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
+                v-for="index in 5" :key="index">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
                         <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <div>
-                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                                    <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
-                                    <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-                                </div>
-                                <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
-                            </div>
-                            <div>
-                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
-                            </div>
+                            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                            <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                            <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
                         </div>
-                        <span class="sr-only">Loading...</span>
+                        <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
                     </div>
-                </div>
-            </div>
-
-            <StatSlider v-if="establishment && establishment.socials" class="stat__cards_mobile" :items="trends"
-                :websites="establishment.socials[0]"></StatSlider>
-            <div class="tablet_mobile__filter">
-                <!--  <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
-                <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" /> -->
-            </div>
-            <div class="tablet_mobile__head">
-                <div class="establishment__info_tablet">
-                    <label v-if="!dataLoading">{{ establishment.name }}</label>
-                    <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
                     <div>
-                        <i
-                            :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
-                        <span v-if="!dataLoading">{{ establishment.category }}</span>
-                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
-                    </div>
-                    <div class="society__location" v-if="establishment.country != null">
-                        <i class="uil uil-map"></i>
-                        <span v-if="!dataLoading">{{ establishment.country }}</span>
-                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                    </div>
-                    <div class="society__location">
-                        <i class="uil uil-location-point"></i>
-                        <span v-if="!dataLoading">{{ establishment.city }}</span>
-                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                    </div>
-                    <div class="society__location">
-                        <i class="uil uil-favorite"></i>
-                        <span v-if="!dataLoading" class="society__location">{{ all_items[0].value }}</span>
-                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                    </div>
-                    <div class="society__location">
-                        <i class="uil uil-comment-alt"></i>
-                        <span v-if="!dataLoading">{{ all_items[1].value }}</span>
-                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                    </div>
-                    <div class="society__location">
-                        <i class="uil uil-building"></i>
-                        <span v-if="!dataLoading">{{ all_items[2].value }} competitors</span>
-                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
                     </div>
                 </div>
-                <div class="photo" v-if="!dataLoading">
-                    <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
-                    <div v-else role="status"
-                        class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                        <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
-                            <path
-                                d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
-                        </svg>
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-                <div class="photo" v-else>
-                    <div role="status"
-                        class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                        <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
-                            <path
-                                d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
-                        </svg>
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
-            <div class="right__side">
-                <div
-                    class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#" v-if="!dataLoading">
-                        <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
-                        <div v-else role="status"
-                            class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
-                                <path
-                                    d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
-                            </svg>
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </a>
-                    <a href="#" v-else>
-                        <div role="status"
-                            class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
-                                <path
-                                    d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
-                            </svg>
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </a>
-                    <div class="establishment__info">
-                        <label class="society__name" v-if="!dataLoading">{{ establishment.name }}</label>
-                        <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
-                        <div class="society__location">
-                            <i
-                                :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
-                            <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
-                            <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                        </div>
-                        <div class="society__location">
-                            <i class="uil uil-location-point"></i>
-                            <span v-if="!dataLoading" class="society__location">{{
-                                establishment.city }}</span>
-                            <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                        </div>
-                    </div>
-                    <div class="date__filter">
-                        <!--  <div class="text-sm title">Select a date range</div>
-                        <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
-                        <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" /> -->
-                    </div>
-                </div>
-                <div v-if="establishment && socials && trends && trends.length > 0"
-                    class="stat__cards bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 py-4">
-                    <div class="stat__cards_default" v-if="establishment && socials">
-                        <StatComponent v-for="(slide, index) in trends" :key="index" :color="slide.color"
-                            :bgColor="slide.bgColor" :value="slide.value" :description="slide.description"
-                            :icon="slide.icon" :iconStyle="slide.iconStyle" :percentage="slide.percentage"
-                            :trend="slide.trend" :websites="socials" :site="slide.site">
-                        </StatComponent>
-                    </div>
-                </div>
+                <span class="sr-only">Loading...</span>
             </div>
         </div>
     </div>
-    <EstablishmentNotFound v-else />
+
+    <StatSlider v-if="establishment && establishment.socials" class="stat__cards_mobile" :items="trends"
+        :websites="establishment.socials[0]"></StatSlider>
+    <div class="tablet_mobile__filter">
+        <!--  <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+                <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" /> -->
+    </div>
+    <div class="tablet_mobile__head">
+        <div class="establishment__info_tablet">
+            <label v-if="!dataLoading">{{ establishment.name }}</label>
+            <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
+            <div>
+                <i
+                    :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
+                <span v-if="!dataLoading">{{ establishment.category }}</span>
+                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
+            </div>
+            <div class="society__location" v-if="establishment.country != null">
+                <i class="uil uil-map"></i>
+                <span v-if="!dataLoading">{{ establishment.country }}</span>
+                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+            </div>
+            <div class="society__location">
+                <i class="uil uil-location-point"></i>
+                <span v-if="!dataLoading">{{ establishment.city }}</span>
+                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+            </div>
+            <div class="society__location">
+                <i class="uil uil-favorite"></i>
+                <span v-if="!dataLoading" class="society__location">{{ all_items[0].value }}</span>
+                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+            </div>
+            <div class="society__location">
+                <i class="uil uil-comment-alt"></i>
+                <span v-if="!dataLoading">{{ all_items[1].value }}</span>
+                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+            </div>
+            <div class="society__location">
+                <i class="uil uil-building"></i>
+                <span v-if="!dataLoading">{{ all_items[2].value }} competitors</span>
+                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+            </div>
+        </div>
+        <div class="photo" v-if="!dataLoading">
+            <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
+            <div v-else role="status"
+                class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                    <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                    <path
+                        d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
+                </svg>
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <div class="photo" v-else>
+            <div role="status"
+                class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                    <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                    <path
+                        d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
+                </svg>
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+    <div class="right__side">
+        <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <a href="#" v-if="!dataLoading">
+                <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
+                <div v-else role="status"
+                    class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                    <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                        <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                        <path
+                            d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
+                    </svg>
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </a>
+            <a href="#" v-else>
+                <div role="status"
+                    class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                    <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                        <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                        <path
+                            d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
+                    </svg>
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </a>
+            <div class="establishment__info">
+                <label class="society__name" v-if="!dataLoading">{{ establishment.name }}</label>
+                <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
+                <div class="society__location">
+                    <i
+                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
+                    <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
+                    <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                </div>
+                <div class="society__location">
+                    <i class="uil uil-location-point"></i>
+                    <span v-if="!dataLoading" class="society__location">{{
+                        establishment.city }}</span>
+                    <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                </div>
+            </div>
+            <div class="date__filter">
+                <!--  <div class="text-sm title">Select a date range</div>
+                        <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+                        <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" /> -->
+            </div>
+        </div>
+        <div v-if="establishment && socials && trends && trends.length > 0"
+            class="stat__cards bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 py-4">
+            <div class="stat__cards_default" v-if="establishment && socials">
+                <StatComponent v-for="(slide, index) in trends" :key="index" :color="slide.color" :bgColor="slide.bgColor"
+                    :value="slide.value" :description="slide.description" :icon="slide.icon" :iconStyle="slide.iconStyle"
+                    :percentage="slide.percentage" :trend="slide.trend" :websites="socials" :site="slide.site">
+                </StatComponent>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup>
@@ -226,9 +219,7 @@ import { useUserStore } from "@Stores/user.js";
 import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import { useSocialStore } from "@Stores/social.js";
-import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
-import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import { ref, watch, onBeforeMount, onMounted, defineAsyncComponent } from 'vue';
 import { storeToRefs } from 'pinia';
 import { ElDatePicker } from 'element-plus';
@@ -249,16 +240,18 @@ import SocialStatistics from '@Components/utils/SocialStatistics.vue';
 import StatSlider from '@Components/utils/StatSlider.vue';
 import StatComponent from '@Components/utils/StatComponent.vue';
 
-const page = ref({
+const userStore = useUserStore();
+const companiesStore = useCompanyStore();
+const appStore = useAppStore();
+const socialStore = useSocialStore();
+
+appStore.setCurrentPage({
     title1: "",
     title2: "Socials",
     icon: "uil-users-alt",
 });
 
-let exist = ref(true);
-const EstablishmentNotFound = defineAsyncComponent(() =>
-    import("@Views/EstablishmentNotFound.vue")
-)
+appStore.setIsExist(true);
 
 const socialHistogramContainer = ref(null);
 let lineChartWidth = ref(620)
@@ -275,9 +268,10 @@ const route = useRoute();
 const companyId = route.params.id;
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 
-const breadcrumbData = [
+
+appStore.setBreadcrumbs([
     {
-        title: "Back",
+        title: "Establishment",
         path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
         isCurrent: false,
     },
@@ -286,36 +280,33 @@ const breadcrumbData = [
         path: `${route.path}`,
         isCurrent: true
     }
-]
-const userStore = useUserStore();
-const companiesStore = useCompanyStore();
-const appStore = useAppStore();
-const socialStore = useSocialStore();
+])
+
 const calculType = ref('Followers')
 const selectedSocials = ref('');
 const establishment = ref({});
 const socialPages = ref([]);
 const socials = ref(['']);
 const postData = ref({
-    data:{
-        facebook:{
+    data: {
+        facebook: {
             comments: 6,
-            likes:  10,
+            likes: 10,
             share: 0
         },
         youtube: {
             comments: 10,
-            likes:  5,
+            likes: 5,
             share: 0
         },
         instagram: {
             comments: 8,
-            likes:  10,
+            likes: 10,
             share: 0
         }
-    }, 
+    },
     totalPages: 1,
-    length: 3 
+    length: 3
 })
 
 // let followersType = ref(true);
@@ -455,14 +446,18 @@ onBeforeMount(async () => {
     companiesStore.getEstablishment(companyId).then((data) => {
 
         if (data == false) {
-            exist.value = false;
+            appStore.setIsExist(false);
             appStore.isLoading = false;
         }
         else {
             establishment.value = data;
             all_items.value[0].value = establishment.value.rating;
             all_items.value[1].value = establishment.value.totalReviews;
-            page.value.title2 = establishment.value.name;
+            appStore.setCurrentPage({
+                title1: "",
+                title2: establishment.value.name,
+                icon: "uil-users-alt",
+            });
             appStore.isLoading = false;
 
         }
@@ -478,7 +473,7 @@ onBeforeMount(async () => {
         console.log(response.data)
         postData.value = response.data
         // establishment.value['socialPages'] = response.data['socialPages'];
-        
+
         // let data = [];
         // let promises = [];
         // establishment.value.socialPages.forEach((social) => {
@@ -653,12 +648,13 @@ watch([trendsByEstablishment, calculType], () => {
 .social-media-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start; /* Alignement à gauche */
+    justify-content: flex-start;
+    /* Alignement à gauche */
     gap: 20px;
     padding: 0px;
-  }
+}
 
-  .platform {
+.platform {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
@@ -666,25 +662,25 @@ watch([trendsByEstablishment, calculType], () => {
     transition: transform 0.3s ease;
     width: 100%;
     max-width: 200px;
-  }
+}
 
-  .platform:hover {
+.platform:hover {
     transform: translateY(-5px);
-  }
+}
 
-  h3 {
+h3 {
     color: #333;
     font-size: 1.2rem;
     display: flex;
     align-items: center;
     gap: 10px;
-  }
+}
 
-  @media (max-width: 768px) {
+@media (max-width: 768px) {
     .social-media-container {
-      flex-direction: column;
+        flex-direction: column;
     }
-  }
+}
 
 a {
     cursor: pointer;
@@ -708,20 +704,6 @@ li:nth-child(odd) {
     transition: var(--transition);
 }
 
-img {
-    height: 200px !important;
-}
-
-.app__container {
-    margin-top: 5rem;
-    min-height: 30rem;
-    width: var(--container-width-lg);
-    margin: 0 auto;
-    padding: 0;
-    display: flex;
-    flex-direction: row-reverse;
-    gap: 1rem;
-}
 
 .reviews__content1 {
     display: flex;
@@ -750,30 +732,6 @@ img {
     padding: 15px;
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
-}
-
-.establishment {
-    margin-bottom: 15px;
-    padding: 15px;
-    border: 1px solid var(--light-color-bg2);
-}
-
-.establishment__info i,
-.establishment__info_tablet i {
-    color: var(--color-danger);
-    margin-right: 5px;
-}
-
-.establishment__info label,
-.establishment__info_tablet label {
-    font-size: 14px;
-    font-weight: bold;
-    color: var(--color-primary)
-}
-
-.establishment div {
-    font-size: 13px;
-    font-weight: 500;
 }
 
 .date__filter .title {
@@ -809,16 +767,6 @@ img {
     display: flex;
 }
 
-.community__feedback .title {
-    font-size: 15px;
-    font-weight: 600;
-}
-
-.community__feedback h2 {
-    font-size: 14px;
-    font-weight: 500;
-}
-
 .legend {
     margin: 15px auto;
 }
@@ -826,34 +774,6 @@ img {
 .comment {
     overflow: hidden;
     text-align: justify;
-}
-
-.app__title {
-    font-weight: 800;
-    color: var(--color-danger);
-}
-
-.app__title h1 {
-    font-size: 20px;
-    transition: var(--transition);
-}
-
-.app__title h2 {
-    font-size: 18px;
-    transition: var(--transition);
-}
-
-.left__side {
-    width: 100%;
-    padding: 50px 5px;
-}
-
-.left__side .head {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
 }
 
 #competitors__dropdown {
@@ -926,11 +846,6 @@ img {
     color: var(--color-warning);
 }
 
-.right__side {
-    width: 500px;
-    padding: 50px 0px;
-}
-
 .rating__statistics {
     display: none;
     margin-bottom: 15px;
@@ -944,25 +859,6 @@ img {
 
 .see__more {
     cursor: pointer;
-}
-
-.society__name {
-    margin: 5px 0;
-}
-
-.tablet_mobile__head,
-.tablet_mobile__filter {
-    display: none;
-}
-
-.society__location {
-    display: flex;
-}
-
-.society__location span {
-    display: block;
-    flex-basis: 225px;
-    line-height: 1.2;
 }
 
 .modal__header {
@@ -982,11 +878,6 @@ img {
     transition: var(--transition);
 }
 
-.establishment__review__qrcode p {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--color-bg2);
-}
 
 .download__qr_btn {
     display: flex;
@@ -1190,16 +1081,6 @@ li {
     flex-grow: 1;
 }
 
-@media screen and (max-width:1400px) {
-    .app__container {
-        width: var(--container-width-md);
-    }
-
-    .breadcrumb__container {
-        width: var(--container-width-md);
-    }
-}
-
 @media screen and (max-width:1287px) {
     .counter {
         gap: 2rem !important;
@@ -1207,74 +1088,10 @@ li {
 }
 
 @media screen and (max-width: 975px) {
-    .app__container {
-        flex-direction: column-reverse;
-        width: 95% !important;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .left__side {
-        width: inherit !important;
-    }
-
-    .photo {
-        flex-basis: 250px;
-    }
-
-    .photo div {
-        height: 100%;
-    }
-
-    .photo img {
-        height: 100%;
-        width: 100%;
-    }
-
-    img {
-        height: 150px !important;
-    }
 
     .dashboard__content,
-    .dashboard,
-    .right__side {
+    .dashboard {
         display: none !important;
-    }
-
-    .tablet_mobile__head {
-        display: flex;
-        justify-content: space-between;
-        margin: auto;
-        margin-top: 50px;
-        width: inherit;
-        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-        border: 1px solid var(--light-color-bg2);
-        border-radius: 5px;
-        padding: 15px;
-        font-size: 14px;
-    }
-
-    .tablet_mobile__head label {
-        font-size: 17px !important;
-    }
-
-    .tablet_mobile__head span {
-        font-weight: 500;
-        color: var(--color-bg2);
-    }
-
-    .tablet_mobile__filter {
-        display: flex;
-        width: inherit;
-        align-items: center;
-        gap: 1rem;
-        padding: 5px 15px;
-        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-        border-radius: 5px;
-    }
-
-    .tablet_mobile__filter>* {
-        width: 250px !important;
     }
 
     .reviews__content_linechart {
@@ -1309,66 +1126,6 @@ li {
         max-height: 250px;
         overflow: auto;
         width: 100%;
-    }
-}
-
-@media screen and (max-width:800px) {
-    .tablet_mobile__head {
-        font-size: 13px !important;
-    }
-
-    .tablet_mobile__head label {
-        font-size: 15px !important;
-    }
-
-    .tablet_mobile__filter {
-        gap: 0.25rem;
-    }
-}
-
-@media screen and (max-width:800px) {
-    .photo {
-        flex-basis: 225px !important;
-    }
-}
-
-@media screen and (max-width:675px) {
-    .tablet_mobile__head {
-        font-size: 12px !important;
-        padding: 10px;
-    }
-
-    .photo {
-        flex-basis: 210px !important;
-    }
-
-    .tablet_mobile__head label {
-        font-size: 14px !important;
-    }
-}
-
-@media screen and (max-width:625px) {
-    .tablet_mobile__filter {
-        flex-direction: column;
-        padding: 5px 0px !important;
-    }
-
-    .tablet_mobile__filter * {
-        flex-basis: inherit !important;
-        width: inherit !important;
-        justify-content: center !important;
-    }
-}
-
-@media screen and (max-width:500px) {
-    .tablet_mobile__head {
-        flex-direction: column-reverse;
-        gap: 1rem;
-    }
-
-    .photo {
-        flex-basis: 150px !important;
-        height: 100px !important;
     }
 }
 </style>

@@ -1,193 +1,183 @@
 <template>
-    <div class="main__container" v-if="exist">
-        <HeadComponent class="head" :page="page"></HeadComponent>
-        <div class="breadcrumb__container">
-            <BreadcrumbComponent :data="breadcrumbData" />
+    <div class="left__side">
+        <div class="head">
+            <div class="app__title">
+                <h2>Weather</h2>
+            </div>
+            <el-dropdown split-button type="primary">
+                {{ calculType }}
+                <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item @click="calculType = 'Fahrenheit °F'">Fahrenheit °F</el-dropdown-item>
+                        <el-dropdown-item @click="calculType = 'Celcius °C'">Celcius °C</el-dropdown-item>
+                    </el-dropdown-menu>
+                </template>
+            </el-dropdown>
         </div>
-        <div class="app__container">
-            <div class="left__side">
-                <div class="head">
-                    <div class="app__title">
-                        <h2>Weather</h2>
-                    </div>
-                    <el-dropdown split-button type="primary">
-                        {{ calculType }}
-                        <template #dropdown>
-                            <el-dropdown-menu>
-                                <el-dropdown-item @click="calculType = 'Fahrenheit °F'">Fahrenheit °F</el-dropdown-item>
-                                <el-dropdown-item @click="calculType = 'Celcius °C'">Celcius °C</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </template>
-                    </el-dropdown>
-                </div>
-                <WeatherChartComponent />
-                <div class="head">
-                    <div class="app__title">
-                        <h2>Weather's global impact</h2>
-                    </div>
-                </div>
-                <div class="review__content">
-                    <div v-if="load == true" :style="{
-                        'width': '100%',
-                        'height': `350px`,
-                        'display': 'flex',
-                        'alignItems': 'center',
-                        'background': 'rgba(0, 0, 0, 0.1)',
-                        'opacity': 0.9,
-                        'justifyContent': 'center',
-                        'alignItems': 'center',
-                        'zIndex': 1,
-                        'marginTop': '10px',
-                        'marginBottom': '10px'
-                    }">
-                        <SpinnerComponent />
-                    </div>
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5" v-else>
-                        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <tbody>
-                                <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
-                                    v-for="conditionData in formattedWeatherRating" :key="conditionData.condition">
-                                    <td class="px-6 py-4" :style="{
-                                        'fontWeight': 'bold',
-                                    }">
-                                        {{ conditionData.condition }}
-                                    </td>
-                                    <td class="px-6 py-4" :style="{
-                                        'color': conditionData.color,
-                                        'fontWeight': 'bold',
-                                    }">
-                                        {{ conditionData.note != 0 ? conditionData.note : '' }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+        <WeatherChartComponent />
+        <div class="head">
+            <div class="app__title">
+                <h2>Weather's global impact</h2>
             </div>
-            <div class="tablet_mobile__filter">
-                <div class="date__picker">
-                    <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
-                </div>
-                <div class="date__picker">
-                    <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
-                </div>
+        </div>
+        <div class="review__content">
+            <div v-if="load == true" :style="{
+                'width': '100%',
+                'height': `350px`,
+                'display': 'flex',
+                'alignItems': 'center',
+                'background': 'rgba(0, 0, 0, 0.1)',
+                'opacity': 0.9,
+                'justifyContent': 'center',
+                'alignItems': 'center',
+                'zIndex': 1,
+                'marginTop': '10px',
+                'marginBottom': '10px'
+            }">
+                <SpinnerComponent />
             </div>
-            <div class="tablet_mobile__head">
-                <div class="establishment__info_tablet">
-                    <label v-if="!dataLoading">{{ establishment.name }}</label>
-                    <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
-                    <div>
-                        <i
-                            :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
-                        <span v-if="!dataLoading">{{ establishment.category }}</span>
-                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
-                    </div>
-                    <div class="society__location" v-if="establishment.country != null">
-                        <i class="uil uil-map"></i>
-                        <span v-if="!dataLoading">{{ establishment.country }}</span>
-                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                    </div>
-                    <div class="society__location">
-                        <i class="uil uil-location-point"></i>
-                        <span v-if="!dataLoading">{{ establishment.city }}</span>
-                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                    </div>
-                    <div class="society__location">
-                        <i class="uil uil-favorite"></i>
-                        <span v-if="!dataLoading" class="society__location">{{ all_items[0].value }}</span>
-                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                    </div>
-                    <div class="society__location">
-                        <i class="uil uil-comment-alt"></i>
-                        <span v-if="!dataLoading">{{ all_items[1].value }}</span>
-                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                    </div>
-                    <div class="society__location">
-                        <i class="uil uil-building"></i>
-                        <span v-if="!dataLoading">{{ all_items[2].value }} competitors</span>
-                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                    </div>
-                </div>
-                <div class="photo" v-if="!dataLoading">
-                    <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
-                    <div v-else role="status"
-                        class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                        <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
-                            <path
-                                d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
-                        </svg>
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-                <div class="photo" v-else>
-                    <div role="status"
-                        class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                        <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
-                            <path
-                                d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
-                        </svg>
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
-            <div class="right__side">
-                <div
-                    class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#" v-if="!dataLoading">
-                        <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
-                        <div v-else role="status"
-                            class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
-                                <path
-                                    d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
-                            </svg>
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </a>
-                    <a href="#" v-else>
-                        <div role="status"
-                            class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
-                                <path
-                                    d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
-                            </svg>
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </a>
-                    <div class="establishment__info">
-                        <label class="society__name" v-if="!dataLoading">{{ establishment.name }}</label>
-                        <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
-                        <div class="society__location">
-                            <i
-                                :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
-                            <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
-                            <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                        </div>
-                        <div class="society__location">
-                            <i class="uil uil-location-point"></i>
-                            <span v-if="!dataLoading" class="society__location">{{
-                                establishment.city }}</span>
-                            <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                        </div>
-                    </div>
-                    <div class="date__filter">
-                        <div class="text-sm title">Select a date range</div>
-                        <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
-                        <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" />
-                    </div>
-                </div>
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5" v-else>
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <tbody>
+                        <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
+                            v-for="conditionData in formattedWeatherRating" :key="conditionData.condition">
+                            <td class="px-6 py-4" :style="{
+                                'fontWeight': 'bold',
+                            }">
+                                {{ conditionData.condition }}
+                            </td>
+                            <td class="px-6 py-4" :style="{
+                                'color': conditionData.color,
+                                'fontWeight': 'bold',
+                            }">
+                                {{ conditionData.note != 0 ? conditionData.note : '' }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <EstablishmentNotFound v-else />
+    <div class="tablet_mobile__filter">
+        <div class="date__picker">
+            <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+        </div>
+        <div class="date__picker">
+            <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
+        </div>
+    </div>
+    <div class="tablet_mobile__head">
+        <div class="establishment__info_tablet">
+            <label v-if="!dataLoading">{{ establishment.name }}</label>
+            <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
+            <div>
+                <i
+                    :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
+                <span v-if="!dataLoading">{{ establishment.category }}</span>
+                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
+            </div>
+            <div class="society__location" v-if="establishment.country != null">
+                <i class="uil uil-map"></i>
+                <span v-if="!dataLoading">{{ establishment.country }}</span>
+                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+            </div>
+            <div class="society__location">
+                <i class="uil uil-location-point"></i>
+                <span v-if="!dataLoading">{{ establishment.city }}</span>
+                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+            </div>
+            <div class="society__location">
+                <i class="uil uil-favorite"></i>
+                <span v-if="!dataLoading" class="society__location">{{ all_items[0].value }}</span>
+                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+            </div>
+            <div class="society__location">
+                <i class="uil uil-comment-alt"></i>
+                <span v-if="!dataLoading">{{ all_items[1].value }}</span>
+                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+            </div>
+            <div class="society__location">
+                <i class="uil uil-building"></i>
+                <span v-if="!dataLoading">{{ all_items[2].value }} competitors</span>
+                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+            </div>
+        </div>
+        <div class="photo" v-if="!dataLoading">
+            <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
+            <div v-else role="status"
+                class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                    <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                    <path
+                        d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
+                </svg>
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <div class="photo" v-else>
+            <div role="status"
+                class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                    <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                    <path
+                        d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
+                </svg>
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+    <div class="right__side">
+        <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <a href="#" v-if="!dataLoading">
+                <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
+                <div v-else role="status"
+                    class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                    <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                        <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                        <path
+                            d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
+                    </svg>
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </a>
+            <a href="#" v-else>
+                <div role="status"
+                    class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                    <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                        <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                        <path
+                            d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
+                    </svg>
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </a>
+            <div class="establishment__info">
+                <label class="society__name" v-if="!dataLoading">{{ establishment.name }}</label>
+                <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
+                <div class="society__location">
+                    <i
+                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
+                    <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
+                    <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                </div>
+                <div class="society__location">
+                    <i class="uil uil-location-point"></i>
+                    <span v-if="!dataLoading" class="society__location">{{
+                        establishment.city }}</span>
+                    <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                </div>
+            </div>
+            <div class="date__filter">
+                <div class="text-sm title">Select a date range</div>
+                <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+                <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" />
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup>
@@ -197,9 +187,6 @@ import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
 import { useRoute, useRouter } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
-import HeadComponent from '@Components/layouts/HeadComponent.vue';
-import DropdownComponent from '@Components/utils/DropdownComponent.vue';
-import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import {
     ref,
     reactive,
@@ -225,6 +212,9 @@ import 'element-plus/es/components/dropdown-menu/style/css'
 import 'element-plus/es/components/dropdown-item/style/css'
 ChartJS.register(RadialLinearScale, ArcElement, Tooltip)
 
+const userStore = useUserStore();
+const companiesStore = useCompanyStore();
+const appStore = useAppStore();
 
 const data_test = {
     labels: [
@@ -257,16 +247,14 @@ const data_test = {
         }
     ]
 }
-const page = ref({
+
+appStore.setCurrentPage({
     title1: "",
     title2: "Weather",
     icon: "uil-cloud-sun",
-});
+})
 
-let exist = ref(true);
-const EstablishmentNotFound = defineAsyncComponent(() =>
-    import("@Views/EstablishmentNotFound.vue")
-)
+appStore.setIsExist(true);
 
 const WeatherChartComponent = defineAsyncComponent(() =>
     import('@Components/utils/WeatherChartComponent.vue')
@@ -279,9 +267,10 @@ const SpinnerComponent = defineAsyncComponent(() =>
 const route = useRoute();
 const companyId = route.params.id;
 const router = useRouter();
-const breadcrumbData = [
+
+appStore.setBreadcrumbs([
     {
-        title: "Back",
+        title: "Establishment",
         path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
         isCurrent: false,
     },
@@ -290,7 +279,7 @@ const breadcrumbData = [
         path: `${route.path}`,
         isCurrent: true
     }
-]
+])
 
 let data = ref([]);
 let weatherIcons = ref([]);
@@ -298,9 +287,7 @@ let weatherIcons = ref([]);
 provide('data', data);
 provide('icons', weatherIcons);
 let calculType = ref('Celcius °C');
-const userStore = useUserStore();
-const companiesStore = useCompanyStore();
-const appStore = useAppStore();
+
 const dataLoading = ref(true);
 const chartLoading = ref(false);
 provide('chartLoading', chartLoading);
@@ -687,17 +674,21 @@ onBeforeMount(async () => {
     companiesStore.getEstablishment(companyId).then((data) => {
 
         if (data == false) {
-            exist.value = false;
+            appStore.setIsExist(false);
             appStore.isLoading = false;
         }
         else {
             establishment.value = data;
-            page.value.title2 = establishment.value.name;
+            appStore.setCurrentPage({
+                title1: "",
+                title2: establishment.value.name,
+                icon: "uil-cloud-sun",
+            })
             all_items.value[0].value = establishment.value.rating;
             all_items.value[1].value = establishment.value.totalReviews;
             appStore.isLoading = false;
             dataLoading.value = false;
-             chartLoading.value = false;
+            chartLoading.value = false;
 
         }
     })
@@ -772,88 +763,6 @@ onBeforeMount(async () => {
     cursor: pointer;
 }
 
-.app__container {
-    margin-top: 5rem;
-    min-height: 30rem;
-    width: var(--container-width-lg);
-    margin: 0 auto;
-    padding: 0;
-    display: flex;
-    flex-direction: row-reverse;
-    gap: 1rem;
-}
-
-.reviews__content p {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--color-bg1);
-}
-
-.reviews__content a {
-    color: var(--color-danger);
-    border-bottom: 1px solid var(--color-danger);
-    cursor: pointer;
-    font-size: inherit;
-}
-
-.reviews__content a:hover {
-    background-color: var(--color-danger);
-    color: white;
-}
-
-.reviews__pagination {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.rating__customers {
-    border: 1px solid var(--light-color-bg2);
-    border-radius: 10px;
-    margin: 15px auto;
-}
-
-.reviews__star {
-    margin-bottom: 15px;
-    padding: 15px;
-    border: 1px solid var(--light-color-bg2);
-    border-radius: 10px;
-}
-
-.establishment {
-    margin-bottom: 15px;
-    padding: 15px;
-    border: 1px solid var(--light-color-bg2);
-}
-
-.establishment__info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-top: 5px;
-}
-
-.establishment__info i,
-.establishment__info_tablet i {
-    color: var(--color-danger);
-    margin-right: 5px;
-}
-
-.establishment__info label,
-.establishment__info_tablet label {
-    font-size: 14px;
-    font-weight: bold;
-    color: var(--color-primary)
-}
-
-.establishment div {
-    font-size: 13px;
-    font-weight: 500;
-}
-
-.establishment__info_tablet div {
-    display: flex;
-}
-
 .date__filter .title {
     font-weight: 600;
 }
@@ -883,15 +792,6 @@ onBeforeMount(async () => {
     margin: auto;
 }
 
-.community__feedback .title {
-    font-size: 15px;
-    font-weight: 600;
-}
-
-.community__feedback h2 {
-    font-size: 14px;
-    font-weight: 500;
-}
 
 .legend {
     margin: 15px auto;
@@ -900,34 +800,6 @@ onBeforeMount(async () => {
 .comment {
     overflow: hidden;
     text-align: justify;
-}
-
-.app__title {
-    font-weight: 800;
-    color: var(--color-danger);
-}
-
-.app__title h1 {
-    font-size: 20px;
-    transition: var(--transition);
-}
-
-.app__title h2 {
-    font-size: 18px;
-    transition: var(--transition);
-}
-
-.left__side {
-    width: 75%;
-    padding: 50px 5px;
-}
-
-.left__side .head {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
 }
 
 #website__dropdown {
@@ -975,11 +847,6 @@ onBeforeMount(async () => {
     color: var(--color-warning);
 }
 
-.right__side {
-    width: 500px;
-    padding: 50px 0px;
-}
-
 .rating__statistics {
     display: none;
     margin-bottom: 15px;
@@ -995,201 +862,11 @@ onBeforeMount(async () => {
     cursor: pointer;
 }
 
-.society__name {
-    margin: 5px 0;
-    display: flex;
-}
-
-.tablet_mobile__head,
-.tablet_mobile__filter {
-    display: none;
-}
-
-.society__location {
-    display: flex;
-}
-
-.society__location span {
-    display: block;
-    flex-basis: 225px;
-    line-height: 1.2;
-}
-
-@media screen and (min-width: 1439px) and (max-width: 2559px) {
-    .left__side {
-        width: 70%;
-    }
-}
-
-@media screen and (max-width:1400px) {
-    .app__container {
-        width: var(--container-width-md);
-    }
-
-    .breadcrumb__container {
-        width: var(--container-width-md);
-    }
-}
-
-@media screen and (max-width:1287px) {
-    .counter {
-        gap: 2rem !important;
-    }
-
-    .right__side {
-        width: 300px !important;
-    }
-}
-
-
-@media screen and (max-width:1024px) {
-
-    .right__side {
-        width: 250px !important;
-    }
-}
-
-img{
-    height: 200px !important;
-}
-
 @media screen and (max-width: 975px) {
-    .app__container {
-        flex-direction: column-reverse;
-        width: 95% !important;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .left__side {
-        width: inherit !important;
-    }
-
-    .photo {
-        flex-basis: 250px;
-    }
-
-    .photo div {
-        height: 100%;
-    }
-
-    .photo img {
-        height: 150px;
-        width: 100%;
-    }
-
-    img{
-        height: 150px !important;
-    }
 
     .dashboard__content,
-    .dashboard,
-    .right__side {
+    .dashboard {
         display: none !important;
     }
-
-    .tablet_mobile__head {
-        display: flex;
-        justify-content: space-between;
-        margin: auto;
-        margin-top: 50px;
-        width: inherit;
-        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-        border: 1px solid var(--light-color-bg2);
-        border-radius: 5px;
-        padding: 15px;
-        font-size: 14px;
-    }
-
-    .tablet_mobile__head label {
-        font-size: 17px !important;
-    }
-
-    .tablet_mobile__head span {
-        font-weight: 500;
-        color: var(--color-bg2);
-    }
-
-    .tablet_mobile__filter {
-        display: flex;
-        width: inherit;
-        align-items: center;
-        gap: 1rem;
-        padding: 5px 15px;
-        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-        border-radius: 5px;
-    }
-
-    .tablet_mobile__filter>* {
-        flex-basis: 95%;
-    }
-}
-
-@media screen and (max-width:800px) {
-    .tablet_mobile__head {
-        font-size: 13px !important;
-    }
-
-    .tablet_mobile__head label {
-        font-size: 15px !important;
-    }
-
-    .tablet_mobile__filter {
-        gap: 0.25rem;
-    }
-}
-
-@media screen and (max-width:800px) {
-    .photo {
-        flex-basis: 225px !important;
-    }
-}
-
-@media screen and (max-width:675px) {
-    .tablet_mobile__head {
-        font-size: 12px !important;
-        padding: 10px;
-    }
-
-    .photo {
-        flex-basis: 210px !important;
-    }
-
-    .tablet_mobile__head label {
-        font-size: 14px !important;
-    }
-}
-
-@media screen and (max-width:625px) {
-    .tablet_mobile__filter {
-        flex-direction: column;
-        padding: 5px 0px !important;
-    }
-
-    .tablet_mobile__filter * {
-        flex-basis: inherit !important;
-        width: inherit !important;
-        justify-content: center !important;
-    }
-}
-
-@media screen and (max-width:500px) {
-    .tablet_mobile__head {
-        flex-direction: column-reverse;
-        gap: 1rem;
-    }
-
-    .photo {
-        flex-basis: 150px !important;
-        height: 100px !important;
-    }
-}
-
-/*.establishment__info_tablet {
-    margin-top: 50px;
-}*/
-
-.head {
-    margin-top: 50px;
 }
 </style>
