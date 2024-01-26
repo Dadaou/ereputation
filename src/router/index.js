@@ -111,6 +111,12 @@ const router = createRouter({
           component: () => import('@Views/SalesPageView.vue')
         },
         {
+          path: '/customer/:tag/establishment/:id/trends',
+          name: 'Trends',
+          beforeEnter: [CheckAccess],
+          component: () => import('@Views/TrendsView.vue')
+        },
+        {
           path: '/customer/:tag/establishment/:id/staffs',
           name: 'Staff',
           beforeEnter: [CheckAccess],
@@ -129,12 +135,6 @@ const router = createRouter({
           ]
         }
       ]
-    },
-    {
-      path: '/customer/:tag/establishment/:id/trends',
-      name: 'Trends',
-      beforeEnter: [CheckAccess],
-      component: () => import('@Views/TrendsView.vue')
     },
     {
       path: '/',
