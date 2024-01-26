@@ -234,7 +234,7 @@ const submit = async () => {
         value1: getValueUrl(link.value, urlObject.url),
         establishment: establishment.value,
         provider: urlObject.uri,
-        enable: false
+        enable: true
     }
 
     try {
