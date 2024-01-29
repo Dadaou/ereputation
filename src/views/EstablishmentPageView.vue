@@ -84,15 +84,6 @@
                 <Line :data="chartData" :options="chartConfig.options" />
             </div>
         </div>
-        <!-- <div class="reviews__star">
-                    <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
-                        @click="starFilter(star.intVal)">
-                        <a href="#" class="text-xs font-medium hover:underline">{{ star.label }}</a>
-                        <div class="star__barre h-3 rounded mx-2" :style="{ 'width': `${star.percentage}%` }">
-                        </div>
-                        <span class="text-xs font-medium">{{ star.value }}</span>
-                    </div>
-                </div> -->
         <div class="reviews__star">
             <div v-for="star in starsData" :key="star.label" class="flex items-center mt-1">
                 <a href="#" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
@@ -111,20 +102,10 @@
         <DropdownComponent class="dropdown" :showTitle="false" title="Compare to" placeholder="Select a competitor"
             :data="computedCompetitors" @submit="(competitor) => {
                 selectedCompetitors = competitor.name
-                /*if (competitor.name == computedCompetitors[0].name) {
-                    globalComparison();
-                } else {
-                    reloadComparison(competitor);
-                }*/
             }" :defaultObj="computedCompetitors[0]" :isDataObject="true" />
         <DropdownComponent :showTitle="false" class="dropdown" title="Filter by plateform" placeholder="Select a website"
             :data="websites" @submit="(website) => {
                 selectedWebsites = website
-                /*if (website == websites[0]) {
-                    globalComparison();
-                } else {
-                    reloadComparisonByWebsite(website);
-                }*/
             }" :default="websites[0]" />
         <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
             selectedTimePeriod = timePeriod
@@ -146,15 +127,6 @@
         <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
     </div>
     <div class="tablet_mobile__filter" v-if="currentFilter == 'star'">
-        <!-- <div class="reviews__star">
-                    <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
-                        @click="starFilter(star.intVal)">
-                        <a href="#" class="text-xs font-medium hover:underline">{{ star.label }}</a>
-                        <div class="star__barre h-3 rounded mx-2" :style="{ 'width': `${star.percentage}%` }">
-                        </div>
-                        <span class="text-xs font-medium">{{ star.value }}</span>
-                    </div>
-                </div> -->
         <div class="reviews__star">
             <div v-for="star in starsData" :key="star.label" class="flex items-center mt-1">
                 <a href="#" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
@@ -203,16 +175,10 @@
                 <span v-if="!establishmentLoading">{{ all_items.reviews.value }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
             </div>
-            <!-- <div class="society__location">
-                        <i class="uil uil-building"></i>
-                        <span v-if="!establishmentLoading">{{ all_items.competitors.value }} competitors</span>
-                        <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                    </div> -->
             <div class="mobile__filter__btn">
                 <button :class="['btn', (currentFilter == 'feedback') ? 'isactive' : '']"
                     @click="currentFilter = 'feedback'">
                     <i class="uil uil-arrow-growth"></i>
-                    <!--  <i class="uil uil-chart-down"></i> -->
                     Stat
                 </button>
                 <button :class="['btn', (currentFilter == 'star') ? 'isactive' : '']" @click="currentFilter = 'star'">
@@ -224,7 +190,9 @@
             </div>
         </div>
         <div class="photo" v-if="!establishmentLoading">
-            <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
+            <div v-if="establishment.url_source !== null" class="establishment__img">
+                <img :src="establishment.url_source" alt="" />
+            </div>
             <div v-else role="status"
                 class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                 <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
@@ -297,20 +265,10 @@
             <DropdownComponent class="dropdown" title="Compare to" placeholder="Select a competitor"
                 :data="computedCompetitors" @submit="(competitor) => {
                     selectedCompetitors = competitor.name
-                    /*if (competitor.name == computedCompetitors[0].name) {
-                        globalComparison();
-                    } else {
-                        reloadComparison(competitor);
-                    }*/
                 }" :defaultObj="computedCompetitors[0]" :isDataObject="true" />
             <DropdownComponent class="dropdown" title="Filter by plateform" placeholder="Select a website" :data="websites"
                 @submit="(website) => {
                     selectedWebsites = website
-                    /*if (website == websites[0]) {
-                        globalComparison();
-                    } else {
-                        reloadComparisonByWebsite(website);
-                    }*/
                 }" :default="websites[0]" />
             <div class="date__filter">
                 <div class="text-sm title">Select a date range</div>
@@ -353,7 +311,6 @@
 <script setup>
 import moment from 'moment';
 import services from '@Services/services.js';
-// import { useWindowSize } from '@vueuse/core';
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
 import { useRoute, useRouter } from "vue-router";
@@ -364,7 +321,7 @@ import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import ComparisonChartComponent from '@Components/utils/ComparisonChartComponent.vue';
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
-import { ref, reactive, watch, onBeforeMount, computed, provide, defineAsyncComponent } from 'vue';
+import { ref, reactive, watch, onBeforeMount, computed, provide } from 'vue';
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css'
 import { useChartsStore } from "@Stores/charts.js"
@@ -387,23 +344,11 @@ const options = ref({
     page: 1,
 })
 
-const SpinnerComponent = defineAsyncComponent(() =>
-    import('@Components/utils/SpinnerComponent.vue')
-)
-
 const weatherModal = ref(false);
 provide('showModal', weatherModal);
 const route = useRoute();
 const companyId = ref(route.params.id);
 const router = useRouter();
-// const breadcrumbData = [
-//     {
-//         title: "Establishment",
-//         path: `${route.path}`,
-//         isCurrent: true,
-//     },
-// ]
-
 const appStore = useAppStore();
 
 appStore.setBreadcrumbs([
@@ -416,22 +361,13 @@ appStore.setBreadcrumbs([
 
 const chartsStore = useChartsStore();
 
-// const date = ref(moment(new Date(), 'YYYY-MM-DD'));
-
-// let selected_date = reactive(moment());
-
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
-// let showWebsites = ref(false);
 let selectedCompetitors = ref('Global');
 let selectedWebsites = ref('Global');
 let websites = ref(['Global']);
 
 let establishment = ref({ reviews: [] });
-// let reviews = ref([]);
-// let _reviews = computed(() => {
-//     return reviews.value;
-// })
 let competitors = ref([]);
 let computedCompetitors = computed(() => {
     let data = [{ name: 'Global' }];
@@ -443,12 +379,6 @@ let computedCompetitors = computed(() => {
 
 let visibleData = ref([])
 const starsData = ref([])
-// let paginationConfig = ref({
-//     current: 0,
-//     size: 20,
-//     data: [],
-//     _data: []
-// })
 
 let comparisonData = ref([establishment.value, ...competitors.value]);
 const all_items = ref({
@@ -465,12 +395,10 @@ let legendData = ref([]);
 const establishmentLoading = ref(true)
 const reviewsLoading = ref(false)
 const feedbackLoading = ref(false)
-// const starsLoading = ref(false)
 const semesterChartLoading = ref(false)
 const chartLoading = ref(false)
 let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
 let endDate = moment().format('YYYY-M-DD');
-// const date2 = ref([startDate, endDate]);
 
 let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
 let end_date = ref(moment().format('YYYY-M-DD'));
@@ -479,9 +407,6 @@ let selectedTimePeriod = ref('');
 let timePeriods = ref(['Days', 'Weeks', 'Months', 'Quarters', 'Semesters']);
 
 let lastReviews = ref([]);
-// let media = [];
-
-// let reviewsConfidence = ref(0);
 let reviewFeedbackData = ref({
     width: 0,
     red: 0,
@@ -849,6 +774,14 @@ onBeforeMount(async () => {
                 title2: establishment.value.name,
                 icon: "uil-estate"
             });
+
+            appStore.setBreadcrumbs([
+                {
+                    title: establishment.value.name,
+                    path: `${route.path}`,
+                    isCurrent: true,
+                },
+            ]);
 
             establishmentLoading.value = false
             globalComparison();

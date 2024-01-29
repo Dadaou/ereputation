@@ -29,7 +29,6 @@ import HeadComponent from '@Components/layouts/HeadComponent.vue'
 import { useUserStore } from "@Stores/user.js"
 import { useRouter, useRoute } from "vue-router"
 import { useWindowSize } from '@vueuse/core'
-import { ElMessage } from 'element-plus'
 import services from '@Services/services.js'
 import 'element-plus/es/components/message/style/css'
 
@@ -88,38 +87,12 @@ const submit = async () => {
 	)
 }
 
-const submitTest = async () => {
-    showSpinner.value = true;
-    await userStore.signIn(form.value.email, form.value.password, (response) => {
-        if (response.authenticated) {
-            router.push({ name: "Home" });
-            showSpinner.value = false;
-            // ElMessage({
-            //    message: 'Congrats, you are authenticated!',
-            //    type: 'success',
-            // })
-        } else {
-            isError.value = true;
-            if (response.status == 401) {
-                notification.value.message = "We can not find your email!";
-                notification.value.type = "warning";
-            }
-
-            if (response.status == 500) {
-                notification.value.message = "Oops! Something unexpected happened. A server connection issue";
-                notification.value.type = "error";
-            }
-            showSpinner.value = false;
-        }
-    })
-}
-
 /**
  * Navbar Handler
  * useWindowScroll allows us to detect the scroll event on 
  * the browser
  */
-const { width, height } = useWindowSize();
+const { width } = useWindowSize();
 const form__ref = ref(null)
 
 onMounted(() => {

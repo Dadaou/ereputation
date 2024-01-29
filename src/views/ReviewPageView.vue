@@ -17,7 +17,7 @@
                 @reloadData="(review) => reloadData(review)" />
             <div v-else role="status"
                 class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
-                v-for="index in 5">
+                v-for="index in 5" :key="index">
                 <div>
                     <div class="flex items-center justify-between mb-4">
                         <div>
@@ -48,15 +48,6 @@
         </div>
     </div>
     <div class="tablet_mobile__filter tablet">
-        <!--  <div class="reviews__star">
-                    <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
-                        @click="starFilter(star.intVal)">
-                        <a href="#" class="text-xs font-medium hover:underline">{{ star.label }}</a>
-                        <div class="star__barre h-3 rounded mx-2" :style="{ 'width': `${star.percentage}%` }">
-                        </div>
-                        <span class="text-xs font-medium">{{ star.value }}</span>
-                    </div>
-                </div> -->
         <div class="reviews__star">
             <div v-for="star in starsData" :key="star.label" class="flex items-center mt-1">
                 <a href="#" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
@@ -87,15 +78,6 @@
         <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
     </div>
     <div class="tablet_mobile__filter" v-if="currentFilter == 'star'">
-        <!-- <div class="reviews__star">
-                    <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
-                        @click="starFilter(star.intVal)">
-                        <a href="#" class="text-xs font-medium hover:underline">{{ star.label }}</a>
-                        <div class="star__barre h-3 rounded mx-2" :style="{ 'width': `${star.percentage}%` }">
-                        </div>
-                        <span class="text-xs font-medium">{{ star.value }}</span>
-                    </div>
-                </div> -->
         <div class="reviews__star">
             <div v-for="star in starsData" :key="star.label" class="flex items-center mt-1">
                 <a href="#" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
@@ -160,7 +142,9 @@
             </div>
         </div>
         <div class="photo" v-if="!dataLoading">
-            <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
+            <div v-if="establishment.url_source !== null" class="establishment__img">
+                <img :src="establishment.url_source" alt="" />
+            </div>
             <div v-else role="status"
                 class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                 <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
@@ -188,7 +172,9 @@
     <div class="right__side">
         <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" v-if="!dataLoading">
-                <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
+                <div v-if="establishment.url_source !== null" class="establishment__img">
+                    <img :src="establishment.url_source" alt="" />
+                </div>
                 <div v-else role="status"
                     class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                     <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
@@ -238,15 +224,6 @@
                 <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" />
             </div>
         </div>
-        <!--  <div class="reviews__star">
-                    <div v-for="star in starsData" :key="star.label" :class="['flex items-center mt-1', 'include']"
-                        @click="starFilter(star.intVal)">
-                        <a href="#" class="text-xs font-medium hover:underline">{{ star.label }}</a>
-                        <div class="star__barre h-3 rounded mx-2" :style="{ 'width': `${star.percentage}%` }">
-                        </div>
-                        <span class="text-xs font-medium">{{ star.value }}</span>
-                    </div>
-                </div> -->
         <div class="reviews__star">
             <div v-for="star in starsData" :key="star.label" class="flex items-center mt-1">
                 <a href="#" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
@@ -266,19 +243,16 @@
 <script setup>
 import moment from 'moment';
 import services from '@Services/services.js';
-import { useWindowSize } from '@vueuse/core';
 import { useAppStore } from "@Stores/app.js";
-import { useUserStore } from "@Stores/user.js";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import CommentComponent from '@Components/utils/CommentComponent.vue';
 import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
-import { ref, reactive, watch, onBeforeMount, computed, provide, defineAsyncComponent } from 'vue';
+import { ref, watch, onBeforeMount } from 'vue';
 import { ElDatePicker } from 'element-plus';
 
-const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 
@@ -291,7 +265,6 @@ appStore.setCurrentPage({
 appStore.setIsExist(true)
 
 const route = useRoute();
-const router = useRouter();
 appStore.setBreadcrumbs([
     {
         title: "Establishment",
@@ -309,7 +282,6 @@ const companyId = route.params.id;
 
 
 let establishment = ref({});
-let reviews = ref([]);
 let _reviews = ref([]);
 let dataReviews = ref([]);
 let reviews_loader = ref(true);
@@ -324,10 +296,8 @@ let dataLoading = ref(true);
 let currentFilter = ref('filter');
 
 let checkedFeeling = ref(['positive', 'neutre', 'negative']);
-const showModal = ref(false);
 let selectedWebsites = ref('Global');
 let websites = ref(['Global']);
-let media = [];
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
     { title: "Reviews", value: 0, icon: "uil-comment" },
@@ -354,8 +324,6 @@ let updateVisibleData = function (_data, isStarFilter = false) {
 
 const dateStart = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
 const dateEnd = ref(moment().format('YYYY-M-DD'));
-const enableDateEnd = ref(false);
-const downloaded = ref(false);
 let reviewFeedbackData = ref({
     width: 0,
     red: 0,
@@ -370,19 +338,6 @@ const options = ref({
     page: 1,
 })
 
-const format2 = (date) => {
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-
-    return `${day}/${month}/${year}`;
-}
-
-const handleDate = (modelData) => {
-    enableDateEnd.value = (modelData != null) ? true : false;
-    dateEnd.value = null;
-}
-
 watch([dateStart, dateEnd, selectedWebsites, checkedFeeling], () => {
     loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
 })
@@ -391,26 +346,6 @@ let selectedStars = ref('0');
 const starFilter = (star) => {
     selectedStars.value = star;
 };
-
-const filterReviewsByStar = (star, data) => {
-    let result = [];
-    data.forEach(review => {
-        let rating = companiesStore.formatRating(review.rating);
-        rating = rating > 5 ? rating / 2 : rating;
-        if (Math.abs(rating) == star) result.push(review);
-    })
-    return result;
-}
-
-const reloadStarData = () => {
-    let scores = [1, 2, 3, 4, 5];
-    let filteredReviews = _reviews.value;
-    let rating = scores.filter((element) => !selectedStars.value.includes(element));
-    if (selectedStars.value.length > 0) {
-        let result = filterReviewsByStar(rating, filteredReviews);
-        filteredReviews = result;
-    }
-}
 
 const reloadData = (reviewUpdated) => {
     visibleData.value.forEach((review, index) => {
@@ -448,7 +383,7 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
 
     await loadFeelingData(tag, dateStart, dateEnd, source);
     await loadStarData(tag, dateStart, dateEnd, source);
-    const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
@@ -466,7 +401,6 @@ watch(selectedStars, () => {
 });
 
 const starsData = ref([]);
-const starsLoading = ref(false);
 const feedbackLoading = ref(false)
 
 const formatStarsData = (data) => {
@@ -495,8 +429,8 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source) => {
         dateStart = moment(dateStart).format('YYYY-MM-DD');
         dateEnd = moment(dateEnd).format('YYYY-MM-DD');
     } else {
-        startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-        endDate = moment().format('YYYY-M-DD');
+        dateStart = moment().subtract(30, 'days').format('YYYY-M-DD');
+        dateEnd = moment().format('YYYY-M-DD');
     }
     apiParams += `&fromDate=${dateStart}&toDate=${dateEnd}`;
 
@@ -508,7 +442,7 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source) => {
     const api = apiBase + '?' + apiParams;
     console.log(api)
 
-    const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
@@ -550,8 +484,8 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
         dateStart = moment(dateStart).format('YYYY-MM-DD');
         dateEnd = moment(dateEnd).format('YYYY-MM-DD');
     } else {
-        startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-        endDate = moment().format('YYYY-M-DD');
+        dateStart = moment().subtract(30, 'days').format('YYYY-M-DD');
+        dateEnd = moment().format('YYYY-M-DD');
     }
     apiParams += `&fromDate=${dateStart}&toDate=${dateEnd}`;
 
@@ -563,7 +497,7 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
     const api = apiBase + '?' + apiParams;
     console.log(api)
 
-    const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
@@ -577,7 +511,6 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
 }
 
 onBeforeMount(async () => {
-    let company = null;
     appStore.isLoading = true;
 
     companiesStore.getEstablishment(companyId).then((data) => {
@@ -595,6 +528,19 @@ onBeforeMount(async () => {
                 icon: "uil-estate",
             });
 
+            appStore.setBreadcrumbs([
+                {
+                    title: establishment.value.name,
+                    path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                    isCurrent: false,
+                },
+                {
+                    title: "Reviews",
+                    path: `${route.path}`,
+                    isCurrent: true
+                }
+            ])
+
             all_items.value[0].value = establishment.value.rating;
             all_items.value[1].value = establishment.value.totalReviews;
             appStore.isLoading = false;
@@ -605,275 +551,15 @@ onBeforeMount(async () => {
     })
 
     await loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
-
-    // const response3 = await new Promise((resolve, reject) => {
-    //     services.get_Record(`charts/stars?tag=${companyId}`, (response) => {
-    //         resolve(response)
-    //     });
-    // });
-
-    // if (response3.status == 200) {
-    //     if (response3.data && response3.data.data) {
-    //         starsData.value = formatStarsData(response3.data.data)
-    //         starsLoading.value = false
-    //     }
-    // }
-
-    // const response4 = await new Promise((resolve, reject) => {
-    //     services.get_Record(`charts/feeling?tag=${companyId}`, (response) => {
-    //         resolve(response)
-    //     });
-    // });
-
-    // if (response4.status == 200) {
-    //     const score = response4.data[companyId]
-    //     let rawWidth = score * 100 / 2
-    //     let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
-    //     let feeling = rawWidth > 0 ? 1 : -1
-    //     let red = 255
-    //     let green = 255
-    //     if (feeling == -1) {
-    //         red = 255
-    //         green = 0
-    //     } else {
-    //         green = 255
-    //         red = 0
-    //     }
-
-    //     reviewFeedbackData.value = {
-    //         width: width,
-    //         red: red,
-    //         green: green,
-    //         feeling: feeling,
-    //         score: score
-    //     }
-
-    //     feedbackLoading.value = false
-
-    // }
 });
 </script>
 
 <style scoped>
-* {
-    transition: var(--transition);
-}
-
-
-.isactive,
-.mobile__filter__btn button:hover {
-    background-color: var(--color-primary);
-    color: white !important;
-}
-
-.isactive i,
-.mobile__filter__btn button:hover i {
-    color: white !important;
-}
-
-.include {
-    cursor: pointer;
-}
-
-.include a {
-    color: var(--color-primary);
-}
-
-.not__include a {
-    color: var(--light-color-bg2);
-}
-
-.include .star__barre {
-    background: var(--color-warning);
-}
-
-.not__include .star__barre {
-    background: var(--color-warning2);
-}
-
-.include span {
-    color: var(--color-bg2);
-}
-
-.not__include span {
-    color: rgb(165, 165, 165);
-}
-
-.temp__p {
-    font-size: 14px;
-    color: var(--color-bg1);
-    font-weight: 500;
-}
-
-.temp__p a:hover {
-    background-color: var(--color-danger);
-    color: white;
-}
-
-.temp__p a {
-    color: var(--color-danger);
-    border-bottom: 1px solid var(--color-danger);
-    cursor: pointer;
-}
-
-.reviews__content p {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--color-bg1);
-}
-
-.reviews__content a {
-    color: var(--color-danger);
-    border-bottom: 1px solid var(--color-danger);
-    cursor: pointer;
-    font-size: inherit;
-}
-
-.reviews__content a:hover {
-    background-color: var(--color-danger);
-    color: white;
-}
-
-.reviews__pagination {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.rating__customers {
-    border: 1px solid var(--light-color-bg2);
-    border-radius: 10px;
-    margin: 15px auto;
-}
-
-.reviews__star {
-    margin-bottom: 15px;
-    padding: 15px;
-    border: 1px solid var(--light-color-bg2);
-    border-radius: 10px;
-}
-
-.date__filter .title {
-    font-weight: 600;
-}
-
-.filter__content .title {
-    font-weight: 500;
-}
-
-.filter__content {
-    border: 1px solid var(--light-color-bg2);
-    border-radius: 10px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.rating__customers .title {
-    font-size: 15px;
-    font-weight: 600;
-    margin-left: 15px;
-    margin-top: 15px;
-}
-
-.reviews__content1 .review span {
-    font-size: 12px;
-    margin: auto;
-}
-
-.legend {
-    margin: 15px auto;
-}
-
-.comment {
-    overflow: hidden;
-    text-align: justify;
-}
-
-#website__dropdown {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-#dropdownDivider {
-    position: absolute;
-}
-
-#dropdownDivider li {
-    cursor: pointer;
-    padding: 5px 10px;
-    margin: auto;
-    transform: var(--transition);
-}
-
-#dropdownDivider li:hover {
-    background-color: var(--color-danger);
-    color: var(--color-white);
-}
-
-.dashboard__content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin: 50px auto;
-}
-
-.counter {
-    flex-grow: 1;
-}
-
-.reviews__content {
-    margin-top: 20px;
-}
-
-.rating {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--color-warning);
-}
-
-.rating__statistics {
-    display: none;
-    margin-bottom: 15px;
-    transition: var(--transition);
-}
-
-.filter__container {
-    display: none;
-    transition: var(--transition);
-}
-
-.see__more {
-    cursor: pointer;
-}
-
-.date__picker {
-    width: 100% !important;
-    margin: 0px 2px !important;
-}
-
 @media screen and (max-width:1024px) {
-
     .tablet>div {
         height: 200px;
         margin: 0 !important;
         flex-basis: 30%
     }
 }
-
-@media screen and (max-width: 975px) {
-
-    .dashboard__content,
-    .dashboard {
-        display: none !important;
-    }
-}
-
-@media screen and (max-width:625px) {
-    .date__picker {
-        margin: 5px 0 10px !important;
-    }
-}</style>
+</style>

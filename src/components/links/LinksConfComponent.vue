@@ -96,7 +96,7 @@
                 </div>
             </div>
             <ul class="link-list">
-                <li v-for="link in filteredLinks">
+                <li v-for="link in filteredLinks" :key="link.url">
                     <div class="link-text">
                         {{ link.url }}
                     </div>
@@ -117,9 +117,8 @@ import {
     ElMessage,
     ElTable,
     ElTableColumn,
-    ElPopconfirm,
     ElButton,
-    ElInput, ElOption, ElSelect, ElDatePicker
+    ElInput, ElOption, ElSelect
 } from 'element-plus'
 import { useWindowSize } from '@vueuse/core';
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
@@ -140,7 +139,7 @@ const ModalComponent = defineAsyncComponent(() =>
 )
 
 const userStore = useUserStore();
-const { width, height } = useWindowSize();
+const { width } = useWindowSize();
 const modalWidth = computed(() => {
     let windowSize = 1500;
     let gap = (windowSize - width.value) / 19;
@@ -238,7 +237,7 @@ const submit = async () => {
     }
 
     try {
-        const response = await new Promise((resolve, reject) => {
+        const response = await new Promise((resolve) => {
             services.createRecord('settings', data, (response) => {
                 resolve(response);
             });
@@ -280,7 +279,7 @@ watch([provider, link], () => {
 
 onBeforeMount(async () => {
     try {
-        const response = await new Promise((resolve, reject) => {
+        const response = await new Promise((resolve) => {
             services.get_Record(`providers`, (response) => {
                 resolve(response);
             });
@@ -306,7 +305,7 @@ onBeforeMount(async () => {
     }
 
     try {
-        const response = await new Promise((resolve, reject) => {
+        const response = await new Promise((resolve) => {
             services.get_Record(`setting/list`, (response) => {
                 resolve(response);
             });

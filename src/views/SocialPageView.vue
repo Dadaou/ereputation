@@ -97,7 +97,9 @@
             </div>
         </div>
         <div class="photo" v-if="!dataLoading">
-            <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
+            <div v-if="establishment.url_source !== null" class="establishment__img">
+                <img :src="establishment.url_source" alt="" />
+            </div>
             <div v-else role="status"
                 class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                 <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
@@ -125,7 +127,9 @@
     <div class="right__side">
         <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" v-if="!dataLoading">
-                <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
+                <div v-if="establishment.url_source !== null" class="establishment__img">
+                    <img :src="establishment.url_source" alt="" />
+                </div>
                 <div v-else role="status"
                     class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                     <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
@@ -184,17 +188,13 @@
 </template>
 
 <script setup>
-import moment from 'moment';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
-import { useUserStore } from "@Stores/user.js";
 import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import { useSocialStore } from "@Stores/social.js";
-import DropdownComponent from '@Components/utils/DropdownComponent.vue';
-import { ref, watch, onBeforeMount, onMounted, defineAsyncComponent } from 'vue';
+import { ref, watch, onBeforeMount, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
-import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css';
 import {
     Chart as ChartJS,
@@ -207,12 +207,10 @@ import {
     Legend,
     ArcElement,
 } from 'chart.js';
-import SocialHistogram from '@Components/utils/SocialHistogram.vue';
 import SocialStatistics from '@Components/utils/SocialStatistics.vue';
 import StatSlider from '@Components/utils/StatSlider.vue';
 import StatComponent from '@Components/utils/StatComponent.vue';
 
-const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 const socialStore = useSocialStore();
@@ -238,8 +236,6 @@ window.onresize = () => {
 
 const route = useRoute();
 const companyId = route.params.id;
-const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
-
 
 appStore.setBreadcrumbs([
     {
@@ -255,7 +251,6 @@ appStore.setBreadcrumbs([
 ])
 
 const calculType = ref('Followers')
-const selectedSocials = ref('');
 const establishment = ref({});
 const socialPages = ref([]);
 const socials = ref(['']);
@@ -281,9 +276,6 @@ const postData = ref({
     length: 3
 })
 
-// let followersType = ref(true);
-// const maxPostsToShow = ref(2)
-
 const data = ref({
     labels: [],
     datasets: [
@@ -297,66 +289,13 @@ const legendData = ref([]);
 
 const { trendsByEstablishment } = storeToRefs(socialStore);
 const trends = ref([]);
-
-let media = [];
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
     { title: "Reviews", value: 0, icon: "uil-comment" },
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
 
-const dateStart = ref(new Date());
-const dateEnd = ref();
 const dataLoading = ref(true);
-
-const getLastSocialPages = (socialPages) => {
-    const pages = []
-    const sites = []
-
-    socialPages.forEach(socialPage => {
-        if (sites.includes(socialPage.source)) {
-            for (let i = 0; i < pages.length; i++) {
-                if (pages[i].source == socialPage.source && new Date(socialPage.created_at) >= new Date(pages[i].created_at)) {
-                    pages[i] = socialPage
-                }
-            }
-        } else {
-            sites.push(socialPage.source)
-            pages.push(socialPage)
-        }
-    })
-
-    return pages
-}
-
-const capitalizeString = (str) => {
-    if (typeof str !== 'string') {
-        throw new Error('Input must be a string');
-    }
-
-    if (str.length === 0) {
-        return str;
-    }
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-const isURL = (string) => {
-    const urlPattern = /^(?:https?:\/\/)?(?:www\.)?[^\s.]+\.[^\s]{2,}$/i;
-    return urlPattern.test(string);
-}
-
-const getSocials = (socials) => {
-    socials = (socials.length > 0) ? Object.entries(socials[0]) : socials;
-    let data = [];
-    socials.forEach(([key, value]) => {
-        if (typeof (value) == 'string') {
-            if (isURL(value) && key !== 'url') {
-                data.push(capitalizeString(key));
-            }
-        }
-    });
-    return data;
-}
 
 const generatedLegend = (colors, dataType) => {
     let legends = [];
@@ -411,7 +350,6 @@ function transformToSourceURL(obj) {
 
 onBeforeMount(async () => {
     const companyId = route.params.id;
-    let company = null;
     appStore.isLoading = true;
     dataLoading.value = true
 
@@ -430,12 +368,26 @@ onBeforeMount(async () => {
                 title2: establishment.value.name,
                 icon: "uil-users-alt",
             });
+
+            appStore.setBreadcrumbs([
+                {
+                    title: establishment.value.name,
+                    path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                    isCurrent: false,
+                },
+                {
+                    title: "Socials",
+                    path: `${route.path}`,
+                    isCurrent: true
+                }
+            ])
+
             appStore.isLoading = false;
 
         }
     })
 
-    const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve) => {
         services.get_Record(`/establishment/socials/posts?tag=${companyId}`, (response) => {
             resolve(response)
         });
@@ -443,23 +395,9 @@ onBeforeMount(async () => {
 
     if (response.status == 200) {
         postData.value = response.data
-        // establishment.value['socialPages'] = response.data['socialPages'];
-
-        // let data = [];
-        // let promises = [];
-        // establishment.value.socialPages.forEach((social) => {
-        //     let promise = services.get_Record(`/social_pages/${social.id}`, (response) => {
-        //         data.push(response.data);
-        //     });
-        //     promises.push(promise);
-        // })
-        // Promise.all(promises).then(() => {
-        //     socialPages.value = data;
-        //     data.value = getFollowers(socialPages.value, calculType.value);
-        // });
     }
 
-    const socialResponse = await new Promise((resolve, reject) => {
+    const socialResponse = await new Promise((resolve) => {
         services.get_Record(`/establishment/settings?tag=${companyId}&type=Social`, (response) => {
             resolve(response)
         });
@@ -488,13 +426,6 @@ onMounted(async () => {
         ArcElement,
         Legend
     )
-
-    // if (socialHistogramContainer.value.clientWidth > 400) {
-    //     lineChartWidth.value = socialHistogramContainer.value.clientWidth;
-    // } else {
-    //     lineChartWidth.value = 400;
-    // }
-
 });
 
 watch([socialPages, calculType], () => {
@@ -670,230 +601,10 @@ li:nth-child(odd) {
     background-color: #f9f9f9;
 }
 
-* {
-    transition: var(--transition);
-}
-
-
-.reviews__content1 {
-    display: flex;
-    flex-wrap: wrap;
-    justify-items: center;
-    margin-top: 15px;
-}
-
-.reviews__content1 .review {
-    flex-grow: 1;
-}
-
-.reviews__pagination {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.rating__customers {
-    border: 1px solid var(--light-color-bg2);
-    border-radius: 10px;
-    margin: 15px auto;
-}
-
-.reviews__star {
-    margin-bottom: 15px;
-    padding: 15px;
-    border: 1px solid var(--light-color-bg2);
-    border-radius: 10px;
-}
-
-.date__filter .title {
-    font-weight: 600;
-}
-
-.filter__content .title {
-    font-weight: 500;
-}
-
-.filter__content {
-    border: 1px solid var(--light-color-bg2);
-    border-radius: 10px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.rating__customers .title {
-    font-size: 15px;
-    font-weight: 600;
-    margin-left: 15px;
-    margin-top: 15px;
-}
-
-.reviews__content1 .review span {
-    font-size: 12px;
-    margin: auto;
-}
-
-.chart__rating {
-    display: flex;
-}
-
-.legend {
-    margin: 15px auto;
-}
-
-.comment {
-    overflow: hidden;
-    text-align: justify;
-}
-
-#competitors__dropdown {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-#website__dropdown {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-#dropdownDivider {
-    position: absolute;
-}
-
-#dropdownDivider li {
-    cursor: pointer;
-    padding: 5px 10px;
-    margin: auto;
-    transform: var(--transition);
-}
-
-#dropdownDivider li:hover {
-    background-color: var(--color-danger);
-    color: var(--color-white);
-}
-
-.dashboard__content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin: 50px auto;
-}
-
-.counter {
-    flex-grow: 1;
-}
-
-.dashboard__content,
-.chart__content,
-.reviews__content {
-    margin-top: 20px;
-}
-
-.chart__content {
-    display: flex;
-    justify-content: center;
-}
-
 .head .competitors {
     display: flex;
     align-items: center;
     gap: 1rem;
-}
-
-.competitors .select__title {
-    font-weight: 500;
-}
-
-.rating {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--color-warning);
-}
-
-.rating__statistics {
-    display: none;
-    margin-bottom: 15px;
-    transition: var(--transition);
-}
-
-.filter__container {
-    display: none;
-    transition: var(--transition);
-}
-
-.see__more {
-    cursor: pointer;
-}
-
-.modal__header {
-    display: flex;
-    justify-content: space-between;
-}
-
-.modal__header div {
-    align-self: center;
-}
-
-.modal__close i {
-    float: right;
-    font-size: 25px;
-    color: red;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-
-.download__qr_btn {
-    display: flex;
-    justify-content: center;
-}
-
-.download__qr_btn button {
-    flex-basis: 50%;
-}
-
-.qr__code {
-    width: 35% !important;
-    padding: 50px auto !important;
-    margin: auto;
-}
-
-.modal__close i:hover {
-    transform: rotate(360deg);
-}
-
-.include a {
-    color: var(--color-primary);
-}
-
-.not__include a {
-    color: var(--light-color-bg2);
-}
-
-.include .star__barre {
-    background: var(--color-warning);
-}
-
-.not__include .star__barre {
-    background: var(--color-warning2);
-}
-
-.include span {
-    color: var(--color-bg2);
-}
-
-.not__include span {
-    color: rgb(165, 165, 165);
-}
-
-.star__barre {
-    cursor: pointer;
 }
 
 .social-list .social-list__content {
@@ -1016,17 +727,6 @@ li {
     color: #1DA1F2;
 }
 
-.uil-calender {
-    color: var(--color-primary)
-}
-
-.reviews__content_linechart {
-    width: 100%;
-    overflow: auto;
-    min-width: 300px;
-    padding: 16px;
-}
-
 .stat__cards {
     display: flex;
     flex-direction: row;
@@ -1051,23 +751,7 @@ li {
     flex-grow: 1;
 }
 
-@media screen and (max-width:1287px) {
-    .counter {
-        gap: 2rem !important;
-    }
-}
-
 @media screen and (max-width: 975px) {
-
-    .dashboard__content,
-    .dashboard {
-        display: none !important;
-    }
-
-    .reviews__content_linechart {
-        min-width: 300px;
-        padding: 8px;
-    }
 
     .stat__cards_mobile {
         display: flex;

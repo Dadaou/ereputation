@@ -1,6 +1,6 @@
 <template>
-    <div class="staff__list">
-        <div class="staff__card" v-if="staffs.length>0" v-for="staff in staffs">
+    <div class="staff__list" v-if="staffs.length>0">
+        <div class="staff__card" v-for="staff in staffs" :key="staff.id">
             <div class="staff__qrcode">    
                 <div>
                     <RouterLink :to="`/customer/${tag}/establishment/${$route.params.id}/staffs/list/${staff.tag}/reviews`" @Click="()=>{ selectedStaff = staff }">
@@ -57,12 +57,6 @@
                      <button class="btn mr-2 reviews" @click="showReview(tag, staff.tag, $route.params.id, staff)">
                         <i class="uil uil-comment-alt-lines"></i> Reviews
                     </button>
-                   
-                  <!--   <button 
-                        class="btn chart" 
-                        @click="showStaffChart(staff)">
-                        <i class="uil uil-chart-pie-alt"></i> View Chart
-                    </button> -->
             </div>
     </div>
 </div>
@@ -154,14 +148,11 @@
 import {ref, inject, computed, defineAsyncComponent} from 'vue';
 import moment from 'moment';
 import VueQrious from 'vue-qrious';
-import * as htmlToImage from 'html-to-image';
 import { useWindowSize } from '@vueuse/core';
 import { ElTooltip  } from 'element-plus';
 import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js'
 import { Pie } from 'vue-chartjs';
-import { useCompanyStore } from "@Stores/company.js";
 import {useRouter} from 'vue-router';
-import services from '@Services/services.js';
 
 const ModalComponent = defineAsyncComponent(()=>
     import('@Components/utils/ModalComponent.vue')
@@ -177,12 +168,10 @@ const qrcode = ref(null);
 const onDataUrlChange = (dataUrl) =>{
       base64Image.value = dataUrl;
 }
-const { width, height } = useWindowSize()
+const { width } = useWindowSize()
 const showModal = ref(false);
 const showChart = ref(false);
 const downloaded = ref(false);
-const companiesStore = useCompanyStore();
-const establishment = inject('establishment')
 const tag = inject('tag')
 
 const legendData = ref([
@@ -207,12 +196,6 @@ const modalWidth= computed(()=>{
     return gap + 45;
 })
 
-const props = defineProps({
-    staf: {
-        type: Object,
-    }, 
-});
-
 const staffComparison = ref({})
 
 const options = {
@@ -228,14 +211,8 @@ const options = {
 
 const close = ()=>{
     showModal.value = false; 
-    downloaded.value = false; 
-    staf=null;
+    downloaded.value = false;
 }
-const staffPeriod = ref({
-    before: {
-
-    }
-})
 
 const staffRatingDataset = (periods, type)=> {
       return {
@@ -254,20 +231,6 @@ const staffRatingDataset = (periods, type)=> {
         ],
       };
 };
-
-const loadDataFromServer = async(tag)=>{
-    const response = await new Promise((resolve, reject) => {
-        services.get_Record(`/staffs/periods?tag=${tag}`, (response) => {
-            resolve(response)
-        });
-    });
-
-    if (response.status == 200) {
-       console.log(response)
-       staffComparison.value = response.data['data'];
-       showChart.value = true;
-    }
-}
 
 const calculateAverageRating = (data) =>  {
   const starRatings = [1, 2, 3, 4, 5];
@@ -289,11 +252,6 @@ const calculateAverageRating = (data) =>  {
 const showReview = (customer_tag, staff_tag, establishment_tag, staff)=>{
     selectedStaff.value = staff;
     router.push(`/customer/${customer_tag}/establishment/${establishment_tag}/staffs/list/${staff_tag}/reviews`);
-};
-
-const showStaffChart = (staff)=>{
-    selectedStaff.value = staff;
-    loadDataFromServer(staff.tag)
 };
 </script>
 <style scoped>

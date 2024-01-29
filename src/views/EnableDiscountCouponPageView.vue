@@ -10,65 +10,20 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, provide, defineAsyncComponent,onMounted, watch } from 'vue';
+import { ref, defineAsyncComponent } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
-import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
-import { useUserStore } from "@Stores/user.js";
-import { useRoute, useRouter } from "vue-router";
-import services from '@Services/services.js';
-import { useFeedbackStore } from '@Stores/feedback.js';
-import { useCompanyStore } from '@Stores/company.js';
-import { useStaffStore } from '@Stores/staff.js';
-import { useI18n } from "vue-i18n";
-import {i18n} from '@/i18n';
-import { ElMessage } from 'element-plus';
-import moment from 'moment';
-import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css';
-
-const SpinnerComponent = defineAsyncComponent(()=>
-    import('@Components/utils/SpinnerComponent.vue')
-)
 
 let exist = ref(true);
 const EstablishmentNotFound = defineAsyncComponent(()=>
     import("@Views/EstablishmentNotFound.vue")
 )
 
-const { t,locale } = useI18n();
-const route = useRoute();
-const router = useRouter();
-const userStore = useUserStore();
-const companyStore = useCompanyStore();
-const staffStore = useStaffStore();
-const feedbackStore = useFeedbackStore();
-const staff = ref(null);
-let media = [];
-
 const page=ref({
 	title1: "",
     title2: "Discount",
     icon: "uil-comment-alt",
 });
-
-// onMounted(()=>{
-//     /** Charger le titre par defaut */
-//      page.value ={
-//         title1:  t("thanks_title1") ,
-//         title2: t("thanks_title2") ,
-//         icon: "uil-comment-alt",
-//     };
-// })
-
-// watch(()=>{
-//     /** Mettre le titre en watch */
-//     page.value ={
-//         title1:  t("thanks_title1") ,
-//         title2: t("thanks_title2") ,
-//         icon: "uil-comment-alt",
-//     };
-// });
-
 </script>
 
 <style scoped>

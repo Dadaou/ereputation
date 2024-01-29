@@ -72,13 +72,10 @@
   
 <script setup>
 import { computed, ref, inject } from 'vue';
-import { useUserStore } from "@Stores/user.js";
 import { useWindowSize } from '@vueuse/core';
 import moment from 'moment';
 import { useStaffStore } from "@Stores/staff.js";
-import { useCompanyStore } from "@Stores/company.js";
 import VueQrious from 'vue-qrious';
-import * as htmlToImage from 'html-to-image';
 import ModalComponent from '@Components/utils/ModalComponent.vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
@@ -89,14 +86,12 @@ import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
 
 const emit = defineEmits(['edit']);
-const userStore = useUserStore();
 const staffStore = useStaffStore();
-const companiesStore = useCompanyStore();
 const baseurl = window.location.origin;
 const showModal = ref(false);
 const downloaded = ref(false);
 const staff = ref(null);
-const { width, height } = useWindowSize()
+const { width } = useWindowSize()
 const modalWidth = computed(() => {
   let windowSize = 1500;
   let gap = (windowSize - width.value) / 19;
@@ -106,7 +101,6 @@ const staffs = inject('staffs')
 const tag = inject('tag');
 
 let tableData = computed(() => {
-  let establishments = userStore.user.customer != null ? companiesStore.establishments : [];
   let data = [];
   staffs.value.forEach(staff_item => {
     staff_item['period'] = staff_item.dateto != null ? `${moment(staff_item.datefrom).format('YYYY MMM DD')} to ${moment(staff_item.dateto).format('YYYY MMM DD')}` : `${moment(staff_item.datefrom).format('YYYY MMM DD')} to -`;
@@ -240,7 +234,7 @@ button i.uil-edit {
   transform: rotate(360deg);
 }
 
-/* Appliquez une largeur de 100% aux éléments parents */
+/* Appliquez une largeur de 100% aux éléments parents */c
 .security__header {
   width: 100%;
 }

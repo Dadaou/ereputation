@@ -12,10 +12,6 @@
                     <div class="subscription-status" :class="isExpired(subscription.expired_at) ? 'expired' : 'active'"
                         :title="isExpired(subscription.expired_at) ? 'Expired subscription' : 'Active subscription'">
                     </div>
-                    <!-- <div class="status-container">
-                        <button v-if="isExpired(subscription.expired_at)" class="btn expired">Expired 🗓️</button>
-                        <button v-else class="btn active">Active 🌟</button>
-                    </div> -->
                 </div>
                 <div class="subscription-content">
                     <div class="content">
@@ -48,7 +44,7 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, defineAsyncComponent } from 'vue';
+import { ref, onBeforeMount } from 'vue';
 import { useUserStore } from "@Stores/user.js"
 import services from '@Services/services.js'
 import { useRoute } from "vue-router"
@@ -56,50 +52,8 @@ import moment from 'moment'
 
 const route = useRoute();
 const userStore = useUserStore();
-// const subscriptions = ref([
-//  {
-//  	"expired_at": "2023-01-05T00:00:00+01:00",
-//  	"payement_date": "2022-01-05T00:00:00+01:00",
-//  	"amount": 9,
-//  	"discount": 0,
-//  	"plan_name": "Basic 1 Year",
-//  	"periodicity": "12",
-//  	"vat_rate": 0,
-//  	"event_limit": "Illimited event",
-//  	"contact_limit": null,
-//  	"establishment_limit": "1 establishement (1 QR code by establishement)", 
-//  	"pointofsale_limit": "3 monitored points of sale (1 QR code by point of sale)",
-//  	"user_limit": null,
-//  	"crm": false,
-//  	"api": false,
-//  	"currency": "$",
-//  	"tag": "tag"
-//  },
-//  {
-//  	"expired_at": "2025-01-05T00:00:00+01:00",
-//  	"payement_date": "2024-01-05T00:00:00+01:00",
-//  	"amount": 9,
-//  	"discount": 0,
-//  	"plan_name": "Basic 1 Year",
-//  	"periodicity": "12",
-//  	"vat_rate": 0,
-//  	"event_limit": "Illimited event",
-//  	"contact_limit": null,
-//  	"establishment_limit": "1 establishement (1 QR code by establishement)", 
-//  	"pointofsale_limit": "3 monitored points of sale (1 QR code by point of sale)",
-//  	"user_limit": null,
-//  	"crm": false,
-//  	"api": false,
-//  	"currency": "$",
-//  	"tag": "tag"
-//  },
-// ])
 const subscriptions = ref([])
 
-const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-}
 
 const isExpired = (expiredDate) => {
     const now = new Date();
@@ -109,9 +63,9 @@ const isExpired = (expiredDate) => {
 }
 
 onBeforeMount(async () => {
-    let promises = [];
+
     try {
-        const response = await new Promise((resolve, reject) => {
+        const response = await new Promise((resolve) => {
             services.get_Record(`customer/${route.params.tag}/subscriptions`, (response) => {
                 resolve(response);
                 console.log(response)

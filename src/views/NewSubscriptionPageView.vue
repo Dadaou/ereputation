@@ -101,19 +101,19 @@ const SpinnerComponent = defineAsyncComponent(() =>
 const planInfo = ref({});
 const showSpinner = ref(false)
 
-const showPostErrorMsg = () => {
-  ElMessage({
-    message: h('p', null, [
-      h('h4', { style: "color: #f75842; font-weight: bold;" }, 'Saving error(s):'),
-      h('span', { style: "font-size: 13px;" }, postErrorMsg.value),
-    ]),
-  })
-}
+// const showPostErrorMsg = () => {
+//   ElMessage({
+//     message: h('p', null, [
+//       h('h4', { style: "color: #f75842; font-weight: bold;" }, 'Saving error(s):'),
+//       h('span', { style: "font-size: 13px;" }, postErrorMsg.value),
+//     ]),
+//   })
+// }
 
 let stripeClient = null;
 let stripeServer = null;
 let stripeElements = null;
-let paymentElements = null;
+// let paymentElements = null;
 let paymentIntent = null;
 let card = null;
 let displayError = null;
@@ -129,7 +129,7 @@ const plan_to_update = ref(null);
 provide('plan_to_update', plan_to_update);
 provide('plan_activeTab', activeStaffTab);
 
-const postErrorMsg = ref(null);
+// const postErrorMsg = ref(null);
 
 const activeEventTab = ref('account_list')
 // const selectedPlan = ref('');
@@ -174,29 +174,29 @@ const loadCustomerInfo = () => {
   planInfo.value['cCountry'] = userStore.user.customer.country;
 }
 
-const createAccount = async () => {
-  const response = await new Promise((resolve,) => {
-    services.post_Record('/account/create', {
-      name: planInfo.value.cName,
-      firstname: planInfo.value.uFName,
-      lastname: planInfo.value.uLName,
-      password: planInfo.value.uPassword,
-      email: planInfo.value.uEmail,
-      city: planInfo.value.cCity,
-      zipcode: planInfo.value.cZip,
-      country: planInfo.value.cCountry,
-      address1: planInfo.value.cAdress,
-      address2: planInfo.value.cSAdress,
-      plan: planInfo.value.plan.tag
-    }, (response) => {
-      resolve(response)
-    }, true);
-  });
+// const createAccount = async () => {
+//   const response = await new Promise((resolve,) => {
+//     services.post_Record('/account/create', {
+//       name: planInfo.value.cName,
+//       firstname: planInfo.value.uFName,
+//       lastname: planInfo.value.uLName,
+//       password: planInfo.value.uPassword,
+//       email: planInfo.value.uEmail,
+//       city: planInfo.value.cCity,
+//       zipcode: planInfo.value.cZip,
+//       country: planInfo.value.cCountry,
+//       address1: planInfo.value.cAdress,
+//       address2: planInfo.value.cSAdress,
+//       plan: planInfo.value.plan.tag
+//     }, (response) => {
+//       resolve(response)
+//     }, true);
+//   });
 
-  if (response) {
-    return response;
-  }
-}
+//   if (response) {
+//     return response;
+//   }
+// }
 
 const subscribe = async () => {
   showSpinner.value = true;

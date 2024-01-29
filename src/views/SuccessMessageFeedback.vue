@@ -9,40 +9,16 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, provide, defineAsyncComponent,onMounted, watch } from 'vue';
+import { ref, defineAsyncComponent,onMounted, watch } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
-import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
-import { useUserStore } from "@Stores/user.js";
-import { useRoute, useRouter } from "vue-router";
-import services from '@Services/services.js';
-import { useFeedbackStore } from '@Stores/feedback.js';
-import { useCompanyStore } from '@Stores/company.js';
-import { useStaffStore } from '@Stores/staff.js';
 import { useI18n } from "vue-i18n";
-import {i18n} from '@/i18n';
-import { ElMessage } from 'element-plus';
-import moment from 'moment';
-import { ElDatePicker } from 'element-plus';
-import 'element-plus/es/components/date-picker/style/css';
-
-const SpinnerComponent = defineAsyncComponent(()=>
-    import('@Components/utils/SpinnerComponent.vue')
-)
 
 let exist = ref(true);
 const EstablishmentNotFound = defineAsyncComponent(()=>
     import("@Views/EstablishmentNotFound.vue")
 )
 
-const { t,locale } = useI18n();
-const route = useRoute();
-const router = useRouter();
-const userStore = useUserStore();
-const companyStore = useCompanyStore();
-const staffStore = useStaffStore();
-const feedbackStore = useFeedbackStore();
-const staff = ref(null);
-let media = [];
+const { t } = useI18n();
 
 const page=ref({
 

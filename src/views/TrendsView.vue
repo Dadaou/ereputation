@@ -58,7 +58,9 @@
             </div>
         </div>
         <div class="photo" v-if="!dataLoading">
-            <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
+            <div v-if="establishment.url_source !== null" class="establishment__img">
+                <img :src="establishment.url_source" alt="" />
+            </div>
             <div v-else role="status"
                 class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                 <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
@@ -86,7 +88,9 @@
     <div class="right__side">
         <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" v-if="!dataLoading">
-                <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
+                <div v-if="establishment.url_source !== null" class="establishment__img">
+                    <img :src="establishment.url_source" alt="" />
+                </div>
                 <div v-else role="status"
                     class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                     <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
@@ -142,25 +146,15 @@
 import moment from 'moment';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
-import { useUserStore } from "@Stores/user.js";
-import { useRoute, useRouter } from "vue-router";
-import { useCompanyStore } from "@Stores/company.js";
-import HeadComponent from '@Components/layouts/HeadComponent.vue';
-import DropdownComponent from '@Components/utils/DropdownComponent.vue';
-import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
-import StaffItemComponent from '@Components/staffs/StaffItemComponent.vue';
-import { useWindowSize } from '@vueuse/core';
+import { useRoute } from "vue-router";
 import {
     ref,
-    reactive,
     watch,
     onBeforeMount,
-    computed,
     provide,
-    onUpdated,
-    defineAsyncComponent
+    onUpdated
 } from 'vue';
-import { ElDatePicker, ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus';
+import { ElDatePicker } from 'element-plus';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -183,8 +177,6 @@ ChartJS.register(
     Legend
 )
 
-const userStore = useUserStore();
-const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 const route = useRoute();
 
@@ -212,20 +204,11 @@ appStore.setBreadcrumbs([
 const dataLoading = ref(true)
 let establishment = ref({});
 provide('establishment', establishment)
-let visibleData = ref([]);
-let paginationConfig = ref({
-    current: 0,
-    size: 5,
-    data: [],
-    _data: []
-});
 const companyId = route.params.id;
 
-const showModal = ref(false);
 let timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
 let selectedTimePeriod = ref(timePeriods.value[0]);
 const date = ref([]);
-const currentDate = new Date();
 let start_date = ref(moment().subtract(10, 'days').format('YYYY-M-DD'));
 let end_date = ref(moment().format('YYYY-M-DD'));
 let data = ref({
@@ -258,13 +241,11 @@ const options = ref({
 
 provide('date', date);
 provide('type', selectedTimePeriod);
-let media = [];
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
     { title: "Reviews", value: 0, icon: "uil-comment" },
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
-const { width, height } = useWindowSize();
 
 const IsValueOkay = (value) => (value == '' || value == null || value == undefined) ? false : true;
 watch([start_date, end_date], () => {
@@ -277,7 +258,7 @@ watch([start_date, end_date], () => {
 
 const loadFromServer = async (type, company, datefrom, dateto) => {
 
-    const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve) => {
         services.get_Record(`establishment/trends?tag=${company}&dateFrom=${datefrom}&dateTo=${dateto}`, (response) => {
             resolve(response)
         });
@@ -288,23 +269,6 @@ const loadFromServer = async (type, company, datefrom, dateto) => {
         data.value = transformData({ ...response.data })
         console.log('data value', data.value)
         console.log('response data', response.data)
-
-        // options.value = {
-        //       responsive: true,
-        //       aspectRatio: 2,
-        //       maintainAspectRatio: false,
-        //       scales: {
-        //         y: {
-        //           min: 0,
-        //           max: 5,
-        //           ticks: {
-        //             stepSize: 1,
-        //             precision: 0,
-        //             beginAtZero: true
-        //           }
-        //         }
-        //       }
-        //     };
     }
 }
 
@@ -320,12 +284,11 @@ watch([date, selectedTimePeriod], () => {
 })
 
 onBeforeMount(async () => {
-    let company = null;
     appStore.isLoading = true;
     console.log(companyId)
     await loadFromServer('daily', companyId, start_date.value, end_date.value)
 
-    const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve) => {
         services.get_Record(`establishment/${companyId}/rating`, (response) => {
             resolve(response)
             if (response.status == 404) {
@@ -342,6 +305,19 @@ onBeforeMount(async () => {
             title2: establishment.value.name,
             icon: "uil-users-alt",
         })
+
+        appStore.setBreadcrumbs([
+            {
+                title: establishment.value.name,
+                path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                isCurrent: false,
+            },
+            {
+                title: "Trends",
+                path: `${route.path}`,
+                isCurrent: true,
+            },
+        ]);
         all_items.value[0].value = establishment.value.rating;
         all_items.value[1].value = establishment.value.totalReviews;
         appStore.isLoading = false;
@@ -353,12 +329,6 @@ onBeforeMount(async () => {
 
 const el = ref(null);
 const chartWidth = ref(0);
-const barWidth = computed(() => {
-    let result = 0;
-    if (width.value >= 800) result = Math.abs(Number(chartWidth.value - 100));
-    else result = 800;
-    return result;
-})
 
 onUpdated(() => {
     chartWidth.value = (el.value != null && el.value != undefined) ? Math.abs(el.value.offsetWidth) : chartWidth.value;
@@ -370,26 +340,10 @@ useResizeObserver(el, (entries) => {
     chartWidth.value = Math.abs(width);
 });
 
-const hashString = (inputString) => {
-    let hash = 0;
-    for (let i = 0; i < inputString.length; i++) {
-        hash = (hash << 5) - hash + inputString.charCodeAt(i);
-    }
-    return hash;
-}
-
 const generateColor = (text, index) => {
     const colors = ['#f75842', '#337ecc', '#1E90FF', '#87CEFA', '#B0C4DE', '#4169E1', '#231db8'];
 
     return colors[index];
-    // const inputString = text;
-    // const hash = hashString(inputString);
-
-    // const red = (hash & 0xFF0000) >> 16;
-    // const green = (hash & 0x00FF00) >> 8;
-    // const blue = hash & 0x0000FF;
-
-    // return `rgb(${red}, ${green}, ${blue})`;
 }
 
 function transformData(inputData) {
@@ -400,7 +354,6 @@ function transformData(inputData) {
     labels.forEach(date => {
         Object.keys(inputData.data[date]).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())).forEach(key => {
             if (!datasets[key]) {
-                // const colorIndex = Object.keys(datasets).length % colors.length; 
 
                 if (key == 'global') {
                     datasets[key] = {
@@ -440,260 +393,4 @@ function transformData(inputData) {
 
     return result;
 }
-
-
 </script>
-
-<style scoped>
-.no__staff {
-    display: flex !important;
-    align-items: center !important;
-}
-
-* {
-    transition: var(--transition);
-}
-
-.include {
-    cursor: pointer;
-}
-
-.include a {
-    color: var(--color-primary);
-}
-
-.not__include a {
-    color: var(--light-color-bg2);
-}
-
-.include .star__barre {
-    background: var(--color-warning);
-}
-
-.not__include .star__barre {
-    background: var(--color-warning2);
-}
-
-.include span {
-    color: var(--color-bg2);
-}
-
-.not__include span {
-    color: rgb(165, 165, 165);
-}
-
-.temp__p {
-    font-size: 14px;
-    color: var(--color-bg1);
-    font-weight: 500;
-}
-
-.temp__p a:hover {
-    background-color: var(--color-danger);
-    color: white;
-}
-
-.temp__p a {
-    color: var(--color-danger);
-    border-bottom: 1px solid var(--color-danger);
-    cursor: pointer;
-}
-
-.reviews__content p {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--color-bg1);
-}
-
-.reviews__content a {
-    color: var(--color-danger);
-    border-bottom: 1px solid var(--color-danger);
-    cursor: pointer;
-    font-size: inherit;
-}
-
-.reviews__content a:hover {
-    background-color: var(--color-danger);
-    color: white;
-}
-
-.reviews__pagination {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.rating__customers {
-    border: 1px solid var(--light-color-bg2);
-    border-radius: 10px;
-    margin: 15px auto;
-}
-
-.reviews__star {
-    margin-bottom: 15px;
-    padding: 15px;
-    border: 1px solid var(--light-color-bg2);
-    border-radius: 10px;
-}
-
-.date__filter .title {
-    font-weight: 600;
-}
-
-.filter__content .title {
-    font-weight: 500;
-}
-
-.filter__content {
-    border: 1px solid var(--light-color-bg2);
-    border-radius: 10px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.rating__customers .title {
-    font-size: 15px;
-    font-weight: 600;
-    margin-left: 15px;
-    margin-top: 15px;
-}
-
-.reviews__content1 .review span {
-    font-size: 12px;
-    margin: auto;
-}
-
-.legend {
-    margin: 15px auto;
-}
-
-.comment {
-    overflow: hidden;
-    text-align: justify;
-}
-
-#website__dropdown {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-#dropdownDivider {
-    position: absolute;
-}
-
-#dropdownDivider li {
-    cursor: pointer;
-    padding: 5px 10px;
-    margin: auto;
-    transform: var(--transition);
-}
-
-#dropdownDivider li:hover {
-    background-color: var(--color-danger);
-    color: var(--color-white);
-}
-
-.dashboard__content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin: 50px auto;
-}
-
-.counter {
-    flex-grow: 1;
-}
-
-.reviews__content {
-    margin-top: 20px;
-}
-
-.rating {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--color-warning);
-}
-
-.rating__statistics {
-    display: none;
-    margin-bottom: 15px;
-    transition: var(--transition);
-}
-
-.filter__container {
-    display: none;
-    transition: var(--transition);
-}
-
-.see__more {
-    cursor: pointer;
-}
-
-.ptable {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-.ptable th {
-    background-color: #678bb1;
-    color: white;
-}
-
-.ptable th,
-.ptable td {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-.ptable tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-.ptable tr:hover {
-    background-color: #ddd;
-}
-
-.ptable td:nth-child(3) {
-    font-weight: bold;
-}
-
-.ptable td:nth-child(5) {
-    color: #df6145;
-}
-
-@media screen and (max-width: 975px) {
-
-    .dashboard__content,
-    .dashboard {
-        display: none !important;
-    }
-}
-
-@media screen and (max-width:800px) {
-
-    .ptable th,
-    .ptable td {
-        padding: 4px;
-    }
-
-    .ptable th {
-        font-size: 12px;
-    }
-
-    .ptable td {
-        font-size: 14px;
-    }
-}
-
-@media screen and (max-width:625px) {
-
-    .date__picker {
-        margin: 5px 0 10px !important;
-    }
-}
-</style>

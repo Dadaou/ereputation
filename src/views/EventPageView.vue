@@ -32,7 +32,7 @@
             <EventItemComponent v-if="eventLoading == false" />
             <div v-else role="status"
                 class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
-                v-for="index in 2">
+                v-for="index in 2" :key="index">
                 <div>
                     <div class="flex items-center justify-between mb-4">
                         <div>
@@ -102,7 +102,9 @@
             </div>
         </div>
         <div class="photo" v-if="!dataLoading">
-            <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
+            <div v-if="establishment.url_source !== null" class="establishment__img">
+                <img :src="establishment.url_source" alt="" />
+            </div>
             <div v-else role="status"
                 class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                 <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
@@ -130,7 +132,9 @@
     <div class="right__side">
         <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" v-if="!dataLoading">
-                <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
+                <div v-if="establishment.url_source !== null" class="establishment__img">
+                    <img :src="establishment.url_source" alt="" />
+                </div>
                 <div v-else role="status"
                     class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                     <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
@@ -186,19 +190,15 @@
 <script setup>
 import moment from 'moment';
 import services from '@Services/services.js';
-import { useWindowSize } from '@vueuse/core';
 import { useAppStore } from "@Stores/app.js";
-import { useUserStore } from "@Stores/user.js";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import EventItemComponent from '@Components/events/EventItemComponent.vue';
 import {
     ref,
-    reactive,
     watch,
     onBeforeMount,
-    computed,
     onUpdated,
     provide,
     defineAsyncComponent
@@ -211,14 +211,10 @@ const EventChartComponent = defineAsyncComponent(() =>
     import('@Components/utils/EventChartComponent.vue')
 )
 
-let exist = ref(true);
-
-
 const SpinnerComponent = defineAsyncComponent(() =>
     import('@Components/utils/SpinnerComponent.vue')
 )
 
-const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 
@@ -230,7 +226,6 @@ appStore.setCurrentPage({
 })
 
 const route = useRoute();
-const router = useRouter();
 
 appStore.setBreadcrumbs([
     {
@@ -254,15 +249,6 @@ let establishment = ref({});
 provide('establishment', establishment)
 let events = ref([]);
 provide('events', events);
-let visibleData = ref([])
-let paginationConfig = ref({
-    current: 0,
-    size: 5,
-    data: [],
-    _data: []
-});
-
-const showModal = ref(false);
 const timePeriods = ref(['Daily', 'Weekly', 'Monthly', 'Yearly']);
 const selectedTimePeriod = ref(timePeriods.value[1]);
 let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
@@ -271,13 +257,11 @@ const date = ref([moment().subtract(30, 'days').format('YYYY-M-DD'), moment().fo
 provide('date', date);
 provide('type', selectedTimePeriod);
 
-let media = [];
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
     { title: "Reviews", value: 0, icon: "uil-comment" },
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
-const { width, height } = useWindowSize();
 
 watch([start_date, end_date], () => {
     if (start_date.value !== '' && end_date.value !== '') {
@@ -289,7 +273,6 @@ watch([start_date, end_date], () => {
 
 onBeforeMount(async () => {
     const companyId = route.params.id;
-    let company = null;
     appStore.isLoading = true;
     chartLoading.value = true;
     eventLoading.value = true;
@@ -307,6 +290,20 @@ onBeforeMount(async () => {
                 title2: establishment.value.name,
                 icon: "uil-calender",
             })
+
+            appStore.setBreadcrumbs([
+                {
+                    title: establishment.value.name,
+                    path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                    isCurrent: false,
+                },
+                {
+                    title: "Events",
+                    path: `${route.path}`,
+                    isCurrent: true
+                }
+            ])
+
             all_items.value[0].value = establishment.value.rating;
             all_items.value[1].value = establishment.value.totalReviews;
             appStore.isLoading = false;
@@ -315,7 +312,7 @@ onBeforeMount(async () => {
         }
     })
 
-    const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve) => {
         services.get_Record(`/establishment/${companyId}/event`, (response) => {
             resolve(response)
             if (response.status == 404) {
@@ -335,13 +332,6 @@ onBeforeMount(async () => {
 
 const el = ref(null);
 const chartWidth = ref(0);
-const barWidth = computed(() => {
-    let result = 0;
-    if (width.value >= 800) result = Math.abs(Number(chartWidth.value));
-    else result = 800;
-    console.log(chartWidth.value);
-    return result;
-})
 
 onUpdated(() => {
     chartWidth.value = (el.value != null && el.value != undefined) ? Math.abs(el.value.offsetWidth) : chartWidth.value;
@@ -353,127 +343,3 @@ useResizeObserver(el, (entries) => {
     chartWidth.value = Math.abs(width);
 });
 </script>
-
-<style scoped>
-* {
-    transition: var(--transition);
-}
-
-.include {
-    cursor: pointer;
-}
-
-.include a {
-    color: var(--color-primary);
-}
-
-.not__include a {
-    color: var(--light-color-bg2);
-}
-
-.include .star__barre {
-    background: var(--color-warning);
-}
-
-.not__include .star__barre {
-    background: var(--color-warning2);
-}
-
-.include span {
-    color: var(--color-bg2);
-}
-
-.not__include span {
-    color: rgb(165, 165, 165);
-}
-
-.temp__p {
-    font-size: 14px;
-    color: var(--color-bg1);
-    font-weight: 500;
-}
-
-.temp__p a:hover {
-    background-color: var(--color-danger);
-    color: white;
-}
-
-.temp__p a {
-    color: var(--color-danger);
-    border-bottom: 1px solid var(--color-danger);
-    cursor: pointer;
-}
-
-.date__filter .title {
-    font-weight: 600;
-}
-
-.filter__content .title {
-    font-weight: 500;
-}
-
-.filter__content {
-    border: 1px solid var(--light-color-bg2);
-    border-radius: 10px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.legend {
-    margin: 15px auto;
-}
-
-.comment {
-    overflow: hidden;
-    text-align: justify;
-}
-
-#website__dropdown {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-#dropdownDivider {
-    position: absolute;
-}
-
-#dropdownDivider li {
-    cursor: pointer;
-    padding: 5px 10px;
-    margin: auto;
-    transform: var(--transition);
-}
-
-#dropdownDivider li:hover {
-    background-color: var(--color-danger);
-    color: var(--color-white);
-}
-
-.reviews__content {
-    margin-top: 20px;
-}
-
-.rating {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--color-warning);
-}
-
-.filter__container {
-    display: none;
-    transition: var(--transition);
-}
-
-@media screen and (max-width: 1000px) {
-
-    .dashboard__content,
-    .dashboard {
-        display: none !important;
-    }
-}
-</style>

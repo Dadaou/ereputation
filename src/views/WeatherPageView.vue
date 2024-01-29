@@ -103,7 +103,9 @@
             </div>
         </div>
         <div class="photo" v-if="!dataLoading">
-            <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
+            <div v-if="establishment.url_source !== null" class="establishment__img">
+                <img :src="establishment.url_source" alt="" />
+            </div>
             <div v-else role="status"
                 class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                 <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
@@ -131,7 +133,9 @@
     <div class="right__side">
         <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" v-if="!dataLoading">
-                <img v-if="establishment.url_source !== null" :src="establishment.url_source" alt="" />
+                <div v-if="establishment.url_source !== null" class="establishment__img">
+                    <img :src="establishment.url_source" alt="" />
+                </div>
                 <div v-else role="status"
                     class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                     <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
@@ -184,12 +188,10 @@
 import moment from 'moment';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
-import { useUserStore } from "@Stores/user.js";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import {
     ref,
-    reactive,
     watch,
     onBeforeMount,
     computed,
@@ -205,48 +207,14 @@ import {
     Tooltip,
     Legend
 } from 'chart.js';
-import { PolarArea, Pie } from 'vue-chartjs';
-import { useResizeObserver, useWindowSize } from '@vueuse/core';
+import { useResizeObserver } from '@vueuse/core';
 import 'element-plus/es/components/dropdown/style/css'
 import 'element-plus/es/components/dropdown-menu/style/css'
 import 'element-plus/es/components/dropdown-item/style/css'
-ChartJS.register(RadialLinearScale, ArcElement, Tooltip)
+ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend)
 
-const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
-
-const data_test = {
-    labels: [
-        'Eating',
-        'Drinking',
-        'Sleeping',
-        'Designing',
-        'Coding',
-        'Cycling',
-        'Running'
-    ],
-    datasets: [
-        {
-            label: 'My First dataset',
-            backgroundColor: 'rgba(179,181,198,0.2)',
-            pointBackgroundColor: 'rgba(179,181,198,1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(179,181,198,1)',
-            data: [65, 59, 90, 81, 56, 55, 40]
-        },
-        {
-            label: 'My Second dataset',
-            backgroundColor: 'rgba(255,99,132,0.2)',
-            pointBackgroundColor: 'rgba(255,99,132,1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(255,99,132,1)',
-            data: [28, 48, 40, 19, 96, 27, 100]
-        }
-    ]
-}
 
 appStore.setCurrentPage({
     title1: "",
@@ -266,7 +234,6 @@ const SpinnerComponent = defineAsyncComponent(() =>
 
 const route = useRoute();
 const companyId = route.params.id;
-const router = useRouter();
 
 appStore.setBreadcrumbs([
     {
@@ -291,16 +258,11 @@ let calculType = ref('Celcius °C');
 const dataLoading = ref(true);
 const chartLoading = ref(false);
 provide('chartLoading', chartLoading);
-const { width, height } = useWindowSize();
 let load = ref(true);
 
 let establishment = ref({});
-let weather = ref([]);
-let reviews = ref([]);
 const legendData = ref([]);
-const legendGlobalData = ref([]);
 provide('legendData', legendData);
-let media = [];
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
     { title: "Reviews", value: 0, icon: "uil-comment" },
@@ -308,10 +270,8 @@ const all_items = ref([
 ]);
 
 const dateEnd = ref(new Date());
-const dateto = moment(dateEnd.value).format('YYYY-MM-DD');
 const datefrom = moment().subtract(30, 'days').format('YYYY-MM-DD')
 const dateStart = ref(new Date(datefrom));
-const enableDateEnd = ref(false);
 const colors = ref(['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']);
 const chartWidth = ref(0);
 provide('chartWidth', chartWidth);
@@ -320,141 +280,11 @@ onUpdated(() => {
     chartWidth.value = (el.value != null && el.value != undefined) ? Math.abs(el.value.offsetWidth - 50) : chartWidth.value;
 })
 
-const format2 = (date) => {
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-
-    return `${year}/${month}/${day}`;
-}
-
-
-
-const handleDate = (modelData) => {
-    enableDateEnd.value = (modelData != null) ? true : false;
-    dateEnd.value = null;
-}
-
 watch([dateStart, dateEnd], async () => {
     load.value = true
     await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, calculType.value);
     await loadConditionFromServer(companyId, dateStart.value, dateEnd.value);
 })
-
-const comparerDates = (a, b) =>{
-    var dateA = a.date.split(' ')[1];
-    var dateB = b.date.split(' ')[1];
-
-    var dateObjA = new Date(dateA.split('-').reverse().join('-'));
-    var dateObjB = new Date(dateB.split('-').reverse().join('-'));
-
-    // Compare les dates
-    return dateObjA - dateObjB;
-}
-
-const getDatesBetween = (startDate, endDate) => {
-    const dates = [];
-    let currentDate = new Date(startDate);
-
-    while (currentDate <= endDate) {
-        dates.push(new Date(currentDate));
-        currentDate.setDate(currentDate.getDate() + 1);
-    }
-    return dates;
-}
-
-const weaherImpact = (startDate, endDate) => {
-    let reviewData = reviews.value;
-    let weatherData = weather.value;
-
-    const impactByDay = {};
-
-    weatherData.forEach((weather) => {
-        const date = moment(weather.date_weather);
-
-        if (date.isSameOrAfter(startDate) && date.isSameOrBefore(endDate) || date.isSame(endDate)) {
-            if (!impactByDay[date.format('YYYY-MM-DD')]) {
-                impactByDay[date.format('YYYY-MM-DD')] = {};
-                impactByDay[date.format('YYYY-MM-DD')]['reviews'] = []
-                impactByDay[date.format('YYYY-MM-DD')]['note'] = 0;
-            }
-            if (calculType.value == 'Celcius °C') {
-                impactByDay[date.format('YYYY-MM-DD')]['temp'] = ((weather.tempmax + weather.tempmin - 64) / 3.6).toFixed(1);
-            } else {
-                impactByDay[date.format('YYYY-MM-DD')]['temp'] = ((weather.tempmax + weather.tempmin) / 2).toFixed(1);
-            }
-            impactByDay[date.format('YYYY-MM-DD')]['max'] = ((weather.tempmax - 32) / 1.8).toFixed(1);
-            impactByDay[date.format('YYYY-MM-DD')]['min'] = ((weather.tempmin - 32) / 1.8).toFixed(1);
-            impactByDay[date.format('YYYY-MM-DD')]['condition'] = weather.conditions;
-        }
-    });
-
-    reviewData.forEach((review) => {
-        const date = moment(review.date_review);
-
-        if (date.isSameOrAfter(startDate) && date.isSameOrBefore(endDate)) {
-            let rating = parseInt(review.rating, 10);
-
-            if (rating > 5) {
-                rating /= 2;
-            }
-            if (!impactByDay[date.format('YYYY-MM-DD')]) {
-                impactByDay[date.format('YYYY-MM-DD')] = {};
-                impactByDay[date.format('YYYY-MM-DD')]['reviews'] = [];
-                impactByDay[date.format('YYYY-MM-DD')]['temp'] = 25;
-                impactByDay[date.format('YYYY-MM-DD')]['max'] = 30;
-                impactByDay[date.format('YYYY-MM-DD')]['min'] = 20;
-                impactByDay[date.format('YYYY-MM-DD')]['note'] = 0;
-            }
-            impactByDay[date.format('YYYY-MM-DD')]['reviews'].push(review);
-            let nb = impactByDay[date.format('YYYY-MM-DD')]['reviews'].length;
-            let sum = (impactByDay[date.format('YYYY-MM-DD')]['note'] + Number(rating))
-            impactByDay[date.format('YYYY-MM-DD')]['note'] = nb >= 2 ? sum / 2 : sum;
-        }
-    });
-
-    let data = [];
-    for (const key in impactByDay) {
-        let icon = generateWeatherIcon(key)
-        let item = {
-            "date": `${icon}\n ${moment(key).format('DD-MM-YYYY')}`,
-            "reviews": impactByDay[key]['note'],
-            "temperature": impactByDay[key]['temp'],
-        }
-
-        data.push(item);
-    }
-
-    let dataType = ['reviews']
-    legendData.value = generatedLegend(colors.value, dataType);
-    data.sort(comparerDates);
-    return data;
-}
-
-const generateWeatherIcon = (day) => {
-    const weatherClassification = {
-        'Rain, Overcast': "🌧",
-        'Rain, Partially cloudy': "🌦",
-        'Partially cloudy': "⛅",
-        'Clear': "🌞",
-        'Rain': "☔",
-        'Rain Overcast': "🌧",
-        'Overcast': "☁",
-        'Rain Partially cloudy': "🌦"
-    }
-
-    const weatherData = weather.value;
-    const dayWeather = weatherData.find(weather => {
-        return moment(weather.date_weather).isSame(day, 'day')
-    })
-
-    if (dayWeather && weatherClassification[dayWeather.conditions]) {
-        return weatherClassification[dayWeather.conditions]
-    }
-
-    return "🌞"
-
-}
 
 const generatedLegend = (colors, dataType) => {
     let legends = [];
@@ -466,105 +296,6 @@ const generatedLegend = (colors, dataType) => {
         legends.push(legend);
     })
     return legends;
-}
-
-const globalData = ref({
-    labels: [],
-    datasets: []
-})
-
-const options = {
-    responsive: true,
-    maintainAspectRatio: false
-}
-const generatedLabel = (weatherData) => {
-    let labels = [];
-    let data = {};
-    weatherData.forEach(weather => {
-        let conditions = weather.conditions.split(',');
-        if (!labels.includes(conditions[0].trim())) labels.push(conditions[0].trim());
-    })
-
-    labels.forEach(label => {
-        data[label] = {};
-        data[label]['notes'] = [];
-    })
-    return [labels, data];
-}
-
-const groupedReview = (weatherData, reviews) => {
-    let data = generatedLabel(weatherData)[1];
-    let labels = generatedLabel(weatherData)[0];
-
-    reviews.forEach(review => {
-        const date_review = moment(review.date_review).format('YYYY-MM-DD');
-        let exist = false;
-        let rating = parseInt(review.rating, 10);
-
-        if (rating > 5) {
-            rating /= 2;
-        }
-
-        weatherData.forEach(weather => {
-            const date_weather = moment(weather.date_weather).format('YYYY-MM-DD');
-            if (date_review === date_weather) {
-                exist = true;
-                let conditions = weather.conditions.split(',');
-                if (!data[conditions[0].trim()]['notes'].includes(rating)) data[conditions[0].trim()]['notes'].push(rating)
-            }
-        })
-    })
-
-    return data;
-}
-
-function hexToRgb(hex) {
-    hex = hex.replace(/^#/, '');
-    const bigint = parseInt(hex, 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-    return `rgba(${r},${g},${b},0.2)`;
-}
-
-const getGlobalData = (data, colors) => {
-    let globalData = [];
-    let index = 0;
-    let allColors = [];
-
-    for (const key in data) {
-        let value = {
-            label: `${key} global rating`,
-            backgroundColor: hexToRgb(colors[index]),
-            pointBackgroundColor: 'rgba(255,99,132,1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(255,99,132,1)',
-            data: data[key]['notes']
-        }
-        globalData.push(value)
-        allColors.push(hexToRgb(colors[index]));
-        index++;
-    }
-    return [globalData, allColors];
-}
-
-const groupReviewByCondition = () => {
-    let reviewData = reviews.value;
-    let weatherData = weather.value;
-    let _colors = colors.value;
-    let labels = generatedLabel(weatherData)[0];
-    let data = groupedReview(weatherData, reviewData);
-    let datasets = getGlobalData(data, _colors)[0];
-    legendGlobalData.value = generatedLegend(getGlobalData(data, _colors)[1], labels);
-    let global_data = {
-        labels: [],
-        datasets: []
-    }
-
-    global_data['labels'] = labels;
-    global_data['datasets'] = datasets;
-    return global_data;
 }
 
 watch(calculType, async () => {
@@ -597,7 +328,7 @@ const loadWeatherFromServer = async (tag, dateStart, dateEnd, unit) => {
 
     const api = apiBase + '?' + apiParams;
 
-    const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
@@ -662,7 +393,7 @@ const loadConditionFromServer = async (tag, dateStart, dateEnd) => {
 
     const api = apiBase + '?' + apiParams;
 
-    const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
@@ -675,7 +406,6 @@ const loadConditionFromServer = async (tag, dateStart, dateEnd) => {
 }
 
 onBeforeMount(async () => {
-    let company = null;
     appStore.isLoading = true;
     chartLoading.value = true;
     await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, 'C');
@@ -694,6 +424,20 @@ onBeforeMount(async () => {
                 title2: establishment.value.name,
                 icon: "uil-cloud-sun",
             })
+
+            appStore.setBreadcrumbs([
+                {
+                    title: establishment.value.name,
+                    path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                    isCurrent: false,
+                },
+                {
+                    title: "Weather",
+                    path: `${route.path}`,
+                    isCurrent: true
+                }
+            ])
+
             all_items.value[0].value = establishment.value.rating;
             all_items.value[1].value = establishment.value.totalReviews;
             appStore.isLoading = false;
@@ -702,183 +446,5 @@ onBeforeMount(async () => {
 
         }
     })
-
-    // const response = await new Promise((resolve, reject) => {
-    //     services.get_Record(`/establishment/${companyId}/detail`, (response) => {
-    //         resolve(response)
-    //         if (response.status == 404) {
-    //             exist.value = false;
-    //             appStore.isLoading = false;
-    //         }
-    //     });
-    // });
-
-    // if (response.status == 200) {
-    //     establishment.value['reviews'] = response.data['reviews'];
-    //     establishment.value['weather'] = response.data['weather'];
-    //     weather.value = establishment.value.weather;
-    //     reviews.value = establishment.value.reviews;
-    //     chartLoading.value = false;
-    // }
 });
 </script>
-
-<style scoped>
-
-
-* {
-    transition: var(--transition);
-}
-
-.include {
-    cursor: pointer;
-}
-
-.include a {
-    color: var(--color-primary);
-}
-
-.not__include a {
-    color: var(--light-color-bg2);
-}
-
-.include .star__barre {
-    background: var(--color-warning);
-}
-
-.not__include .star__barre {
-    background: var(--color-warning2);
-}
-
-.include span {
-    color: var(--color-bg2);
-}
-
-.not__include span {
-    color: rgb(165, 165, 165);
-}
-
-.temp__p {
-    font-size: 14px;
-    color: var(--color-bg1);
-    font-weight: 500;
-}
-
-.temp__p a:hover {
-    background-color: var(--color-danger);
-    color: white;
-}
-
-.temp__p a {
-    color: var(--color-danger);
-    border-bottom: 1px solid var(--color-danger);
-    cursor: pointer;
-}
-
-.date__filter .title {
-    font-weight: 600;
-}
-
-.filter__content .title {
-    font-weight: 500;
-}
-
-.filter__content {
-    border: 1px solid var(--light-color-bg2);
-    border-radius: 10px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.rating__customers .title {
-    font-size: 15px;
-    font-weight: 600;
-    margin-left: 15px;
-    margin-top: 15px;
-}
-
-.reviews__content1 .review span {
-    font-size: 12px;
-    margin: auto;
-}
-
-
-.legend {
-    margin: 15px auto;
-}
-
-.comment {
-    overflow: hidden;
-    text-align: justify;
-}
-
-#website__dropdown {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-#dropdownDivider {
-    position: absolute;
-}
-
-#dropdownDivider li {
-    cursor: pointer;
-    padding: 5px 10px;
-    margin: auto;
-    transform: var(--transition);
-}
-
-#dropdownDivider li:hover {
-    background-color: var(--color-danger);
-    color: var(--color-white);
-}
-
-.dashboard__content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin: 50px auto;
-}
-
-.counter {
-    flex-grow: 1;
-}
-
-.reviews__content {
-    margin-top: 20px;
-}
-
-.rating {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--color-warning);
-}
-
-.rating__statistics {
-    display: none;
-    margin-bottom: 15px;
-    transition: var(--transition);
-}
-
-.filter__container {
-    display: none;
-    transition: var(--transition);
-}
-
-.see__more {
-    cursor: pointer;
-}
-
-@media screen and (max-width: 975px) {
-
-    .dashboard__content,
-    .dashboard {
-        display: none !important;
-    }
-}
-</style>

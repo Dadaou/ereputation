@@ -69,33 +69,16 @@ import moment from 'moment';
 import { ref, inject, watch } from 'vue';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
-import { useStaffStore } from "@Stores/staff.js";
-import { useCompanyStore } from "@Stores/company.js";
-import { useAppStore } from "@Stores/app.js";
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
-import { useRouter } from 'vue-router';
 
-const router = useRouter();
-const companiesStore = useCompanyStore();
 const userStore = useUserStore();
-const staffStore = useStaffStore();
-const appStore = useAppStore();
-const format = (date) => {
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-
-  return `${year}/${month}/${day}`;
-}
 const staffs = inject('staffs');
 const activeStaffTab = inject('staff_activeTab');
-const events = inject('events');
-const activeEventTab = inject('event_activeTab');
 
 const showSpinner = ref(false);
 
@@ -144,6 +127,7 @@ watch(staff_to_update, ()=>{
 })
 
 const loadData = (_staff, staff)=>{
+    console.log(staff)
     let new_staff = {
         id: _staff.id,
         datefrom : _staff.datefrom,
@@ -201,7 +185,7 @@ const submit = async ()=>{
         if(gender.value != '' && department.value != '' && startDate.value != null && establishment.value != '' && firstname.value != ''){
              showSpinner.value = true;
             if(type.value == 'add'){
-                const response = await new Promise((resolve, reject) => {
+                const response = await new Promise((resolve) => {
                   services.createRecord('staff', staff, (response) => {
                     resolve(response);
                   });
@@ -223,7 +207,7 @@ const submit = async ()=>{
                         showSpinner.value = false;
                     }
             }else{
-                 const response = await new Promise((resolve, reject) => {
+                 const response = await new Promise((resolve) => {
                   services.putRecord('staff', staff_to_update.value['id'], staff, (response) => {
                     resolve(response);
                   });

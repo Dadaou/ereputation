@@ -30,9 +30,7 @@
 import { ref, watch, onMounted, defineAsyncComponent } from 'vue'
 import HeadComponent from '@Components/layouts/HeadComponent.vue'
 import { useUserStore } from "@Stores/user.js"
-import { useRouter } from "vue-router"
 import { useWindowSize } from '@vueuse/core'
-import { ElMessage } from 'element-plus'
 import services from '@Services/services.js'
 import 'element-plus/es/components/message/style/css'
 
@@ -44,7 +42,6 @@ const SpinnerComponent = defineAsyncComponent(() =>
 const AlertComponent = defineAsyncComponent(() =>
     import('@Components/utils/AlertComponent.vue')
 )
-const router = useRouter();
 const userStore = useUserStore();
 
 const page = ref({
@@ -85,7 +82,7 @@ const submit = async () =>{
  * useWindowScroll allows us to detect the scroll event on 
  * the browser
  */
-const { width, height } = useWindowSize();
+const { width } = useWindowSize();
 const form__ref = ref(null)
 
 onMounted(() => {

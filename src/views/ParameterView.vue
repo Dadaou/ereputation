@@ -67,14 +67,12 @@ import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
 import { useWindowSize } from '@vueuse/core';
-import { useRouter, useRoute } from 'vue-router';
-import { useCompanyStore } from "@Stores/company.js";
+import { useRoute } from 'vue-router';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
 
 
-const { width, height } = useWindowSize();
-const router = useRouter();
+const { width } = useWindowSize();
 const route = useRoute();
 
 
@@ -137,8 +135,7 @@ const clearEstablishmentForm = () => {
 
 const appStore = useAppStore();
 const userStore = useUserStore();
-const companyStore = useCompanyStore();
-const activeName = ref('staff');
+const activeName = ref('establishments');
 const activeStaffTab = ref('staff_list')
 
 const establishment_to_update = ref(null);
@@ -180,12 +177,6 @@ provide('reloadCompetitor', reloadCompetitor)
 const competitorsData = ref([])
 provide('competitorsData', competitorsData)
 
-const handleClick = (tab, event) => {
-    // console.log(tab, event)
-};
-
-
-
 const handleEdit = (value, type) => {
     if (type == 'staff') {
         activeStaffTab.value = 'staff_form';
@@ -214,6 +205,7 @@ const handleEdit = (value, type) => {
 };
 
 const handleEnable = async (value, type) => {
+    console.log(type)
     const response = await new Promise((resolve) => {
         services.post_Record(`/customer/establishments/advantage/${value}/enable`, {}, (response) => {
             resolve(response)
@@ -230,6 +222,7 @@ const handleEnable = async (value, type) => {
 };
 
 const handleDisable = async (value, type) => {
+    console.log(type)
     const response = await new Promise((resolve) => {
         services.post_Record(`/customer/establishments/advantage/${value}/disable`, {}, (response) => {
             resolve(response)
@@ -249,11 +242,9 @@ const transformData = (data) =>{
     const establishmentMap = new Map();
     let tag = ''
 
-    // Parcourir chaque concurrent et ses établissements
     for (const [competitorName, establishments] of Object.entries(data)) {
         establishments.forEach(establishment => {
             const { 
-                competitor_id, 
                 establishment_competitor_tag, 
                 establishment_category, 
                 id, 
@@ -265,8 +256,6 @@ const transformData = (data) =>{
                 establishment_country,
                 establishment_region,
                 establishment_gps,
-                establishment_station_key,
-                establishment_station_name,
                 establishment_rank, 
                 competitor_competitor_tag
                 } = establishment;
@@ -307,7 +296,7 @@ const transformData = (data) =>{
 
 const reloadCompetitorList = async(type)=>{
     try {
-        const response = await new Promise((resolve, reject) => {
+        const response = await new Promise((resolve) => {
             services.get_Record(`customer/establishment/competitors?tag=${route.params.tag}`, (response) => {
                 resolve(response);
             });
@@ -323,21 +312,12 @@ const reloadCompetitorList = async(type)=>{
     }
 }
 
-// watch(reloadCompetitor, async() => {
-//     if(reloadCompetitor.value == true) {
-//          await reloadCompetitorList();
-         
-//     }
-// });
-
 onBeforeMount(async () => {
     let staffs = [];
     let events = [];
-    let advantages = [];
 
     let promises = [];
     let event_promises = [];
-    let advantage_promises = [];
 
     appStore.isLoading = true;
 
@@ -349,7 +329,7 @@ onBeforeMount(async () => {
 
     if (userStore.user.customer !== null) {
 
-        userStore.user.customer.establishments.forEach((establishment, index) => {
+        userStore.user.customer.establishments.forEach((establishment) => {
             let promise = services.get_Record(`/establishment/${establishment.competitor_tag}/staffs`, (response) => {
                 staffs.push(response.data);
             });
@@ -393,7 +373,7 @@ onBeforeMount(async () => {
     await reloadCompetitorList();
     
     try {
-        const response = await new Promise((resolve, reject) => {
+        const response = await new Promise((resolve) => {
             services.get_Record(`advantage/list`, (response) => {
                 resolve(response);
             });

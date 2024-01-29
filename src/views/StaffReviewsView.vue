@@ -10,7 +10,7 @@
         <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="false" />
         <div v-else role="status"
             class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
-            v-for="index in 5">
+            v-for="index in 5" :key="index">
             <div>
                 <div class="flex items-center justify-between mb-4">
                     <div>
@@ -33,18 +33,17 @@
 </template>
 <script setup>
 import {
-    ref, reactive, watch, onMounted, computed, inject,
-    defineAsyncComponent, onUnmounted
-} from 'vue';
-import CommentComponent from '@Components/utils/CommentComponent.vue';
-import CommentPagination from '@Components/utils/CommentPagination.vue';
-import { useRoute } from "vue-router";
-import services from '@Services/services.js';
-import moment from 'moment';
+    ref, watch, onMounted, inject,
+    onUnmounted
+} from 'vue'
+import CommentComponent from '@Components/utils/CommentComponent.vue'
+import CommentPagination from '@Components/utils/CommentPagination.vue'
+import { useRoute } from "vue-router"
+import services from '@Services/services.js'
+import moment from 'moment'
 
 const route = useRoute()
 const visibleData = ref([])
-const dataReviews = ref([])
 const selectedStaff = inject('selectedStaff')
 const date = inject('date')
 const _reviews = ref([])
@@ -55,7 +54,6 @@ const paginationConfig = ref({
     _data: []
 })
 const reviews_loader = ref(false)
-const exist = ref(true)
 
 const updatePage = (pageNumber) => {
     paginationConfig.value.current = pageNumber;
@@ -85,7 +83,7 @@ const loadReviews = async (staffTag, dateStart, dateEnd) => {
     }
 
     const api = (apiParams !== '') ? apiBase + '?' + apiParams : apiBase;
-    const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
@@ -116,46 +114,3 @@ onUnmounted(() => {
     console.log("Component unmounted");
 });
 </script>
-<style setup>
-.app__title {
-    font-weight: 800;
-    color: var(--color-danger);
-}
-
-.app__title h1 {
-    font-size: 20px;
-    transition: var(--transition);
-}
-
-.app__title h2 {
-    font-size: 18px;
-    transition: var(--transition);
-}
-
-.reviews__content p {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--color-bg1);
-}
-
-.reviews__content a {
-    color: var(--color-danger);
-    border-bottom: 1px solid var(--color-danger);
-    cursor: pointer;
-    font-size: inherit;
-}
-
-.reviews__content a:hover {
-    background-color: var(--color-danger);
-    color: white;
-}
-
-.reviews__content {
-    margin-top: 20px;
-}
-
-.reviews__pagination {
-    display: flex;
-    justify-content: flex-end;
-}
-</style>

@@ -54,7 +54,6 @@ import { useCompanyStore } from "@Stores/company.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import EstablishmentListLoadedComponent from '@Components/utils/EstablishmentListLoadedComponent.vue';
 import { useRouter } from "vue-router";
-// import services from '@Services/services.js';
 
 
 const EstablishmentsListComponent = defineAsyncComponent(() =>
@@ -88,22 +87,6 @@ onBeforeMount(async () => {
             establishments.value = data;
             dataLoading.value = false
         })
-
-        // const response = await new Promise((resolve, reject) => {
-        //     services.get_Record(`/customer/${userStore.user.customer.tag}/establishments/all`, (response) => {
-        //         resolve(response)
-        //         appStore.isLoading = false;
-        //     });
-        // });
-        // // console.log(response)
-
-        // if (response.status == 200) {
-        //     establishments.value = response.data;
-        //     dataLoading.value = false
-        // }
-
-        // companiesStore.fetchCustomerEstablishments(userStore.user.customer.tag);
-        // setTimeout(() => { companiesStore.getEstablishment('645de52f135e8') }, 2000);
     } else appStore.isLoading = false;
 });
 </script>
