@@ -187,7 +187,8 @@ const checkData = (data) => {
 }
 
 const updateData = async () => {
-    console.log(filter.value)
+    const today = new Date().getDate();
+
     const yearValue = year.value ? year.value.value : new Date().getFullYear()
     const filterValue = filter.value ? filter.value.value : 'followers'
     const typeValue = type.value ? type.value.value : 'yearly'
@@ -220,10 +221,11 @@ const updateData = async () => {
         'youtube': '#FF0000'
     };
     if (datas) {
-        data.labels = datas.labels;
+        console.log(today)
+        data.labels = datas.labels.filter(label=> label<=today);
 
         for (const [key, value] of Object.entries(datas.data)) {
-            console.log(value[filterValue])
+            
             if(!checkData(value[filterValue])){
                 data.datasets.push({
                     label: key,
@@ -233,6 +235,7 @@ const updateData = async () => {
             }
         }
         lineData.value = data;
+        console.log(lineData.value)
     }
 }
  ChartJS.register(

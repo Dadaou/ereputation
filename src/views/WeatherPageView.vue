@@ -328,19 +328,20 @@ const format2 = (date) => {
     return `${year}/${month}/${day}`;
 }
 
+
+
 const handleDate = (modelData) => {
     enableDateEnd.value = (modelData != null) ? true : false;
     dateEnd.value = null;
 }
 
 watch([dateStart, dateEnd], async () => {
-    console.log(dateStart.value, dateEnd.value)
     load.value = true
     await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, calculType.value);
     await loadConditionFromServer(companyId, dateStart.value, dateEnd.value);
 })
 
-function comparerDates(a, b) {
+const comparerDates = (a, b) =>{
     var dateA = a.date.split(' ')[1];
     var dateB = b.date.split(' ')[1];
 
@@ -351,7 +352,7 @@ function comparerDates(a, b) {
     return dateObjA - dateObjB;
 }
 
-function getDatesBetween(startDate, endDate) {
+const getDatesBetween = (startDate, endDate) => {
     const dates = [];
     let currentDate = new Date(startDate);
 
@@ -417,14 +418,14 @@ const weaherImpact = (startDate, endDate) => {
         let icon = generateWeatherIcon(key)
         let item = {
             "date": `${icon}\n ${moment(key).format('DD-MM-YYYY')}`,
-            "rating": impactByDay[key]['note'],
+            "reviews": impactByDay[key]['note'],
             "temperature": impactByDay[key]['temp'],
         }
 
         data.push(item);
     }
 
-    let dataType = ['rating']
+    let dataType = ['reviews']
     legendData.value = generatedLegend(colors.value, dataType);
     data.sort(comparerDates);
     return data;
@@ -585,7 +586,7 @@ const loadWeatherFromServer = async (tag, dateStart, dateEnd, unit) => {
     if (unit == 'Fahrenheit °F') unit = "F"
     else unit = "C"
     let apiParams = `tag=${tag}&unit=${unit}`;
-    let dataType = ['rating']
+    let dataType = ['reviews']
     legendData.value = generatedLegend(colors.value, dataType);
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
@@ -595,7 +596,6 @@ const loadWeatherFromServer = async (tag, dateStart, dateEnd, unit) => {
     }
 
     const api = apiBase + '?' + apiParams;
-    console.log(api)
 
     const response = await new Promise((resolve, reject) => {
         services.get_Record(api, (response) => {
@@ -608,7 +608,7 @@ const loadWeatherFromServer = async (tag, dateStart, dateEnd, unit) => {
         data.value = results.map(r =>
         ({
             name: r['name'],
-            rating: r['rating'],
+            reviews: r['rating'],
             // temperature: r['temperature']
         }));
         weatherIcons.value = results.map(r =>
@@ -623,8 +623,11 @@ const loadWeatherFromServer = async (tag, dateStart, dateEnd, unit) => {
     }
 }
 const weatherRating = ref(null);
+const nbDays = computed(()=>{
+    console.log(getNbDays(dateEnd.value, dateStart.value))
+    return getNbDays(dateEnd.value, dateStart.value)
+})
 const formattedWeatherRating = computed(() => {
-    console.log(weatherRating.value)
     if (weatherRating.value == null) return [];
     else {
 
@@ -633,11 +636,19 @@ const formattedWeatherRating = computed(() => {
             note: weatherRating.value[condition].note,
             color: weatherRating.value[condition].color
         }));
-        data.unshift({ condition: 'Global rating', note: weatherRating.value['rating'], color: 'green' })
+        data.unshift({ condition: 'Global rating', note: `${weatherRating.value['rating']} (${nbDays.value} days)`, color: 'green' })
 
         return data;
     }
 })
+
+const getNbDays = (date1, date2)=>{
+    date1 = new Date(date1);
+    date2 = new Date(date2);
+    const differenceInTime = date1.getTime() - date2.getTime();
+
+    return Math.round(differenceInTime / (1000 * 3600 * 24));
+}
 
 const loadConditionFromServer = async (tag, dateStart, dateEnd) => {
     let apiBase = '/etablissement/conditions';
@@ -658,7 +669,6 @@ const loadConditionFromServer = async (tag, dateStart, dateEnd) => {
     });
 
     if (response.status == 200) {
-        console.log(response.data['data']);
         weatherRating.value = response.data['data']
         load.value = false;
     }
@@ -714,6 +724,8 @@ onBeforeMount(async () => {
 </script>
 
 <style scoped>
+
+
 * {
     transition: var(--transition);
 }

@@ -55,13 +55,8 @@
                         </div>
                          <div>
                             <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t("feedback.datevisit") }}<!--  <span>*</span> --></label>
-                             <!-- <el-date-picker
-                                v-model="dateVisit"
-                                :size="'large'"
-                              /> -->
                               <el-date-picker
                                 v-model="dateVisit"
-                                type="datetime"
                                 :placeholder="$t('feedback.placeholder_datevisit')"
                                 :size="'large'"
                               />

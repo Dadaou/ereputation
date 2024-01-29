@@ -15,34 +15,6 @@
         </div>
         <div class="reviews__content">
             <div class="social-list" v-if="!dataLoading">
-                <!-- <ul v-if="socialPages.length > 0" class="social-list__content">
-                            <li v-for="socialItem in getLastSocialPages(socialPages)" :key="socialItem.source"
-                                class="social-item" :class="socialItem.socialPosts.length > 0 && 'posts'">
-                                <div class="social-details">
-                                    <h3><i :class="`uil uil-${socialItem.source}`"></i>
-                                        <a :href="socials[socialItem.source]" target="_blank"><span>{{
-                                            socialItem.source }}</span></a>
-                                    </h3>
-                                    <p><span>Followers:</span> {{ socialItem.followers }}</p>
-                                    <p><span>Likes:</span> {{ socialItem.likes }}</p>
-                                    <p><span>Posts:</span> {{ socialItem.posts }}</p>
-                                </div>
-                                <div class="social-posts" v-if="socialItem.socialPosts.length > 0">
-                                    <h4>Social Posts</h4>
-                                    <ul>
-                                        <li v-for="(post, index) in socialItem.socialPosts" :key="index">
-                                            <p><i class="uil uil-comment"></i>: <span>{{ post.comments }}</span> </p>
-                                            <p><i class="uil uil-thumbs-up"></i>: <span>{{ post.likes }}</span> </p>
-                                            <p><i class="uil uil-share"></i>: <span>{{ post.share }}</span></p>
-                                            <p class="date"><i class="uil uil-calender"></i>: <span
-                                                    v-if="post.published_at !== null">{{ moment(post.published_at)
-                                                        .format('DD MMM YYYY') }}</span></p>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul> -->
-
                 <div class="social-media-container" v-if="Object.keys(postData.data).length > 0">
                     <div v-for="(values, platform) in postData.data" :key="platform" class="platform">
                         <h3>{{ platform.charAt(0).toUpperCase() + platform.slice(1) }} <i
@@ -470,7 +442,6 @@ onBeforeMount(async () => {
     });
 
     if (response.status == 200) {
-        console.log(response.data)
         postData.value = response.data
         // establishment.value['socialPages'] = response.data['socialPages'];
 
@@ -495,7 +466,6 @@ onBeforeMount(async () => {
     });
 
     if (socialResponse.status == 200) {
-        console.log(transformToSourceURL(socialResponse.data))
         establishment.value['socials'] = transformToSourceURL(socialResponse.data);
         socials.value = transformToSourceURL(socialResponse.data);
         dataLoading.value = false;

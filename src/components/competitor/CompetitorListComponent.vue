@@ -12,7 +12,11 @@
                 </template>
             </el-table-column> -->
             <el-table-column label="Competitors" prop="name" style="width: 25%; min-width: 200px;" />
-            <el-table-column label="Establishments" prop="establishments" style="width: 15%; min-width: 200px;" />
+            <el-table-column label="Establishments" style="width: 15%; min-width: 200px;" >
+                <template #default="scope">
+                   {{scope.row.establishments.join(', ')}}
+                </template>
+            </el-table-column>
             <!-- <el-table-column label="Category" prop="category" style="width: 15%; min-width: 200px;" />
             <el-table-column label="Address" prop="address" style="width: 25%; min-width: 200px;" />
             <el-table-column label="Country" prop="country" style="width: 15%; min-width: 200px;" /> -->
@@ -31,6 +35,8 @@
                             <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
                         </template>
                     </el-popconfirm>
+                     <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
+                            class="uil uil-edit"></i></el-button>
 
                     <!-- <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
                             class="uil uil-edit"></i></el-button> -->
@@ -132,9 +138,9 @@ import {
     ElButton,
     ElInput, ElOption, ElSelect, ElDatePicker
 } from 'element-plus'
-import { useWindowSize } from '@vueuse/core';
-import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
-import services from '@Services/services.js';
+import { useWindowSize } from '@vueuse/core'
+import SpinnerComponent from '@Components/utils/SpinnerComponent.vue'
+import services from '@Services/services.js'
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
 import 'element-plus/es/components/table-column/style/css'
@@ -519,9 +525,16 @@ img {
 }
 
 .table__container {
-    /* overflow-x: scroll; */
+    overflow-x: scroll; 
     width: 85%;
 }
+
+/*@media screen and (min-width: 1260px){
+    .table__container{
+        overflow-x: scroll;
+        width: 70%
+    }
+}*/
 
 @media screen and (min-width: 800px) {
 

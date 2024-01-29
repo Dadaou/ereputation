@@ -76,7 +76,6 @@ const positionIcons = () => {
   let positions = [];
 
   const elements = document.querySelectorAll(".weather__chart .xaxis g.tick");
-  console.log(elements)
 
 
   elements.forEach(e => {
@@ -90,8 +89,8 @@ const positionIcons = () => {
     let tempTextNode = document.createElement("span");
     textNode.innerHTML = icons.value[i]['code'];
     tempTextNode.innerHTML = `${icons.value[i]['temperature'].toFixed(0)} ${icons.value[i]['unit']}`;
-    textNode.setAttribute("style", `left: calc(${positions[i]}px - 12px); opacity: 1; top: -4px; position: absolute; font-size: 28px; cursor: pointer; color: ${icons.value[i]['color']};`);
-    tempTextNode.setAttribute("style", `left: calc(${positions[i]}px - 15px); opacity: 1; top: 28px; position: absolute; font-size: 14px; font-weight:500; cursor: pointer; color: ${icons.value[i]['color']}; width: 40px;`);
+    textNode.setAttribute("style", `left: calc(${positions[i]}px - 12px); opacity: 1; top: -4px; position: absolute; font-size: 28px; cursor: pointer;`);
+    tempTextNode.setAttribute("style", `left: calc(${positions[i]}px - 15px); opacity: 1; top: 28px; position: absolute; font-size: 14px; font-weight:500; cursor: pointer; width: 40px;`);
     textNode.setAttribute("title", icons.value[i]['title']);
     weathers.appendChild(textNode);
     weathers.appendChild(tempTextNode);

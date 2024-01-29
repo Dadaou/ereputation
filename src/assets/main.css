@@ -576,3 +576,7 @@ textarea {
     width: 100%;
   }
 }
+
+.app__title{
+  margin-top: 15px;
+}

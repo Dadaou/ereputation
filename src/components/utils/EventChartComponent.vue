@@ -29,8 +29,8 @@
             :width="custom_width.chart"
             :height="250"
             :margin="{ top: 20, bottom: 35, left: 55, right: 20 }"
-            y-axis-label="Rating"
-            :colors="['#f75842', '#337ecc', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
+            y-axis-label="Reviews"
+            :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
             :y-tick-format="d => `${d}`" />
        <div id="chartEvents" style="min-height: 60px; width: 100%; position: relative;"></div>
 	</div>

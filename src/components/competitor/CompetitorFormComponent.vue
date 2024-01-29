@@ -257,6 +257,7 @@ const submit = async () => {
                 type: 'success',
             });
             data.value = {}
+            emit('reload')
             showSpinner.value = false;
         }
     };
@@ -284,6 +285,7 @@ const submitCompetitor = ()=>{
         if(created.length == establishments.value.length){
              showSpinner.value = false;
              emit('reload')
+             showSecondStep.value = false;
              // reloadCompetitor.value = true;
         }
     })

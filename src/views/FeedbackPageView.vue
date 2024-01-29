@@ -62,7 +62,6 @@
                               /> -->
                                <el-date-picker
                                 v-model="dateVisit"
-                                type="datetime"
                                 :placeholder="$t('feedback.placeholder_datevisit')"
                                 :size="'large'"
                               />

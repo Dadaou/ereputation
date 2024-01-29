@@ -697,7 +697,6 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     if (response.status == 200) {
         reviewsLoading.value = false;
         visibleData.value = response.data['data'];
-        console.log(response.data)
 
         if (response.data['count'] <= 100) options.value.max = response.data['count'];
         else options.value.max = 100;
@@ -726,7 +725,6 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source) => {
     }
 
     const api = apiBase + '?' + apiParams;
-    console.log(api)
 
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
@@ -781,7 +779,6 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
     }
 
     const api = apiBase + '?' + apiParams;
-    console.log(api)
 
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
@@ -791,9 +788,7 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
 
     if (response.status == 200) {
         if (response.data && response.data.data) {
-            console.log(response.data.data)
             starsData.value = formatStarsData(response.data.data)
-            console.log(starsData.value)
         }
     }
 }
@@ -812,7 +807,6 @@ const loadIndiceData = async (tag, dateStart, dateEnd) => {
     apiParams += `&from=${dateStart}&to=${dateEnd}`;
 
     const api = apiBase + '?' + apiParams;
-    console.log(api)
 
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {

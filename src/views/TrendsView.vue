@@ -8,66 +8,6 @@
         <div style="margin-top: 15px;">
             <Line :data="data" :options="options" />
         </div>
-        <!--
-                <div class="relative overflow-x-auto" style="margin-top: 15px;">
-                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">
-                                    Staff Name
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Number of Evaluations 
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Average grades                
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    last 5 grades             
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody v-if="staffs.length>0">
-                            <tr v-for="staff in staffs" :key="staff.id"
-                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{ staff.name }}
-                                </th>
-                                <td class="px-6 py-4">
-                                    {{ staff.nb_eval }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ staff.note_moyenne }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center">
-                                        <div v-for="(note, index) in staff.last_notes" :key="index" class="rounded-full w-6 h-6 mx-1" :class="{
-                                            'bg-red-600': Math.round(note.rating) == 0,
-                                            'bg-red-500': Math.round(note.rating) == 1,
-                                            'bg-orange-400': Math.round(note.rating) == 2,
-                                            'bg-yellow-200': Math.round(note.rating) == 3,
-                                            'bg-green-400': Math.round(note.rating) == 4,
-                                            'bg-green-600': Math.round(note.rating) == 5
-                                        }">
-                                            <span class="text-white flex items-center justify-center h-full">
-                                                {{ Math.round(note.rating) }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                         </tbody>
-                        <tbody v-else>
-                            <tr class="no__staff">
-                                <td colspan="4">
-                                    <div style="text-align: center;">
-                                        <span>no staff</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>-->
 
     </div>
 
@@ -79,9 +19,6 @@
         <div class="date__picker">
             <el-date-picker v-model="end_date" type="date" placeholder="Select the end date" :size="'large'" />
         </div>
-        <!--  <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod)=>{
-                    selectedTimePeriod = timePeriod
-                }" :default="timePeriods[0]"/> -->
     </div>
 
     <div class="tablet_mobile__head">
@@ -196,13 +133,6 @@
                 <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
                 <el-date-picker class="mt-2" v-model="end_date" type="date" placeholder="Select the end date"
                     :size="'large'" />
-                <!--   <DropdownComponent 
-                            :showTitle="false" placeholder="" 
-                            :data="timePeriods" 
-                            @submit="(timePeriod)=>{
-                                selectedTimePeriod = timePeriod
-                            }" 
-                            :default="timePeriods[1]"/> -->
             </div>
         </div>
     </div>

@@ -1,6 +1,29 @@
 <template>
     <div class="user__main__container">
-        <el-tabs v-model="activeName" type="card" class="demo-tabs" @tab-click="handleClick">
+        <el-tabs v-model="activeName" type="card" class="demo-tabs" @tab-click="handleClick">    
+            <el-tab-pane label="Establishments" name="establishments">
+                <el-tabs v-model="activeEstablishmentTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
+                    <el-tab-pane label="Establishment list" name="establishment_list">
+                        <EstablishmentListComponent @edit="(establishment) => handleEdit(establishment, 'establishment')" />
+                    </el-tab-pane>
+                    <el-tab-pane label="Add a new establishment" name="establishment_form">
+                        <EstablishmentFormComponent />
+                    </el-tab-pane>
+                </el-tabs>
+            </el-tab-pane>
+            <el-tab-pane label="Links" name="links">
+                <LinksConfComponent />
+            </el-tab-pane>
+              <el-tab-pane label="competitors" name="competitors">
+                <el-tabs v-model="activeCompetitorsTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
+                    <el-tab-pane label="Competitors list" name="competitor_list">
+                        <CompetitorListComponent @edit="(establishment) => handleEdit(establishment, 'competitor')"  @reload="reloadCompetitorList('list')"/>
+                    </el-tab-pane>
+                    <el-tab-pane label="Add a new competitor" name="competitor_form">
+                        <CompetitorFormComponent @reload="reloadCompetitorList('form')" />
+                    </el-tab-pane>
+                </el-tabs>
+            </el-tab-pane>
             <el-tab-pane label="Staff" name="staff">
                 <el-tabs v-model="activeStaffTab" class="demo-tabs">
                     <el-tab-pane label="Staff list" name="staff_list">
@@ -30,29 +53,6 @@
                     </el-tab-pane>
                     <el-tab-pane label="Add a new advantage" name="advantage_form">
                         <AdvantageFormComponent />
-                    </el-tab-pane>
-                </el-tabs>
-            </el-tab-pane>
-            <el-tab-pane label="Links" name="links">
-                <LinksConfComponent />
-            </el-tab-pane>
-            <el-tab-pane label="Establishments" name="establishments">
-                <el-tabs v-model="activeEstablishmentTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
-                    <el-tab-pane label="Establishment list" name="establishment_list">
-                        <EstablishmentListComponent @edit="(establishment) => handleEdit(establishment, 'establishment')" />
-                    </el-tab-pane>
-                    <el-tab-pane label="Add a new establishment" name="establishment_form">
-                        <EstablishmentFormComponent />
-                    </el-tab-pane>
-                </el-tabs>
-            </el-tab-pane>
-              <el-tab-pane label="competitors" name="competitors">
-                <el-tabs v-model="activeCompetitorsTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
-                    <el-tab-pane label="Competitors list" name="competitor_list">
-                        <CompetitorListComponent @edit="(establishment) => handleEdit(establishment, 'establishment')"  @reload="reloadCompetitorList('list')"/>
-                    </el-tab-pane>
-                    <el-tab-pane label="Add a new competitor" name="competitor_form">
-                        <CompetitorFormComponent @reload="reloadCompetitorList('form')" />
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
@@ -184,6 +184,8 @@ const handleClick = (tab, event) => {
     // console.log(tab, event)
 };
 
+
+
 const handleEdit = (value, type) => {
     if (type == 'staff') {
         activeStaffTab.value = 'staff_form';
@@ -193,11 +195,19 @@ const handleEdit = (value, type) => {
         activeAdvantageTab.value = 'advantage_form';
         advantage_to_update.value = value;
     }
+
     if (type == 'establishment') {
         activeEstablishmentTab.value = 'establishment_form';
         establishment_to_update.value = value;
+    } 
+
+    if (type == 'competitor') {
+        activeCompetitorsTab.value = 'competitor_form';
+        establishment_to_update.value = value;
+        console.log(value)
     }
-    else {
+
+    if(type == 'event') {
         activeEventTab.value = 'event_form';
         event_to_update.value = value;
     }
@@ -237,11 +247,31 @@ const handleDisable = async (value, type) => {
 
 const transformData = (data) =>{
     const establishmentMap = new Map();
+    let tag = ''
 
     // Parcourir chaque concurrent et ses établissements
     for (const [competitorName, establishments] of Object.entries(data)) {
         establishments.forEach(establishment => {
-            const { competitor_id, establishment_competitor_tag, establishment_category, id } = establishment;
+            const { 
+                competitor_id, 
+                establishment_competitor_tag, 
+                establishment_category, 
+                id, 
+                url_source,
+                establishment_address1,
+                establishment_address2,
+                establishment_zipcode,
+                establishment_city,
+                establishment_country,
+                establishment_region,
+                establishment_gps,
+                establishment_station_key,
+                establishment_station_name,
+                establishment_rank, 
+                competitor_competitor_tag
+                } = establishment;
+
+            tag  =  (tag !== competitor_competitor_tag)? competitor_competitor_tag: tag;
 
             // Vérifie si cet établissement a déjà été traité
             if (!establishmentMap.has(id)) {
@@ -251,8 +281,17 @@ const transformData = (data) =>{
                     uri: `/api/establishments/${id}`,
                     tag: establishment_competitor_tag,
                     category: establishment_category,
-                    media: null, // À remplir selon la disponibilité
-                    establishments: [competitorName] 
+                    address1: establishment_address1,
+                    address2: establishment_address2,
+                    city: establishment_city,
+                    country: establishment_country,
+                    zipcode: establishment_zipcode,
+                    region: establishment_region,
+                    rank: establishment_rank,
+                    gps: establishment_gps,
+                    media: url_source, 
+                    establishments: [competitorName],
+                    establishmentsTag: [{name: competitorName, tag: tag}] 
                 });
             } else {
                 // Ajoute le nom du concurrent à la liste des établissements existants
