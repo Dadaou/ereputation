@@ -462,6 +462,20 @@ onBeforeMount(async () => {
                 title2: establishment.value.name,
                 icon: "uil-users-alt",
             });
+
+            appStore.setBreadcrumbs([
+                {
+                    title: establishment.value.name,
+                    path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                    isCurrent: false,
+                },
+                {
+                    title: "Socials",
+                    path: `${route.path}`,
+                    isCurrent: true
+                }
+            ])
+
             appStore.isLoading = false;
 
         }

@@ -245,8 +245,6 @@ appStore.setBreadcrumbs([
     },
 ]);
 
-
-
 const colors = ref(['#f75842', '#337ecc', '#4682B4', '#6495ED', '#1E90FF', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']);
 
 const dataLoading = ref(true)
@@ -412,6 +410,20 @@ onBeforeMount(async () => {
             title2: establishment.value.name,
             icon: "uil-users-alt",
         })
+
+        appStore.setBreadcrumbs([
+            {
+                title: establishment.value.name,
+                path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                isCurrent: false,
+            },
+            {
+                title: "Sales",
+                path: `${route.path}`,
+                isCurrent: true,
+            },
+        ]);
+
         all_items.value[0].value = establishment.value.rating;
         all_items.value[1].value = establishment.value.totalReviews;
         appStore.isLoading = false;

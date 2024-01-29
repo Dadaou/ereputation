@@ -858,6 +858,14 @@ onBeforeMount(async () => {
                 icon: "uil-estate"
             });
 
+            appStore.setBreadcrumbs([
+                {
+                    title: establishment.value.name,
+                    path: `${route.path}`,
+                    isCurrent: true,
+                },
+            ]);
+
             establishmentLoading.value = false
             globalComparison();
             websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];

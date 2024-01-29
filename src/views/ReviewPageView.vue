@@ -599,6 +599,19 @@ onBeforeMount(async () => {
                 icon: "uil-estate",
             });
 
+            appStore.setBreadcrumbs([
+                {
+                    title: establishment.value.name,
+                    path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                    isCurrent: false,
+                },
+                {
+                    title: "Reviews",
+                    path: `${route.path}`,
+                    isCurrent: true
+                }
+            ])
+
             all_items.value[0].value = establishment.value.rating;
             all_items.value[1].value = establishment.value.totalReviews;
             appStore.isLoading = false;

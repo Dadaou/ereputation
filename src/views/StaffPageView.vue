@@ -214,7 +214,7 @@ appStore.setIsExist(true);
 
 appStore.setBreadcrumbs([
     {
-        title: "Back",
+        title: "Establishment",
         path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
         isCurrent: false,
     },
@@ -282,10 +282,13 @@ watch([start_date, end_date], () => {
 })
 
 watch(route_name, () => {
+
+    const establishment_name = establishment.value ? establishment.value.name : "Establishment";
+
     if (route_name.value == 'StaffReview') {
         appStore.setBreadcrumbs([
             {
-                title: "Establishment",
+                title: establishment_name,
                 path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
                 isCurrent: false,
             },
@@ -305,7 +308,7 @@ watch(route_name, () => {
     if (route_name.value == 'StaffComparison') {
         appStore.setBreadcrumbs([
             {
-                title: "Establishment",
+                title: establishment_name,
                 path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
                 isCurrent: false,
             },
@@ -316,6 +319,7 @@ watch(route_name, () => {
             }
         ]);
     }
+
 })
 onBeforeMount(async () => {
     const companyId = route.params.id;
@@ -323,41 +327,6 @@ onBeforeMount(async () => {
     appStore.isLoading = true;
     staffLoading.value = true;
     chartLoading.value = true;
-
-    if (route_name.value == 'StaffReview') {
-        appStore.setBreadcrumbs([
-            {
-                title: "Establishment",
-                path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
-                isCurrent: false,
-            },
-            {
-                title: "Staffs",
-                path: `/customer/${route.params.tag}/establishment/${route.params.id}/staffs`,
-                isCurrent: false
-            },
-            {
-                title: "Reviews",
-                path: `${route.path}`,
-                isCurrent: true,
-            }
-        ]);
-    }
-
-    if (route_name.value == 'StaffComparison') {
-        appStore.setBreadcrumbs([
-            {
-                title: "Establishment",
-                path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
-                isCurrent: false,
-            },
-            {
-                title: "Staffs",
-                path: `${route.path}`,
-                isCurrent: true
-            }
-        ]);
-    }
 
     companiesStore.getEstablishment(companyId).then((data) => {
 
@@ -372,6 +341,44 @@ onBeforeMount(async () => {
                 title2: establishment.value.name,
                 icon: "uil-users-alt"
             });
+
+            const establishment_name = establishment.value ? establishment.value.name : "Establishment";
+
+            if (route_name.value == 'StaffReview') {
+                appStore.setBreadcrumbs([
+                    {
+                        title: establishment_name,
+                        path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                        isCurrent: false,
+                    },
+                    {
+                        title: "Staffs",
+                        path: `/customer/${route.params.tag}/establishment/${route.params.id}/staffs`,
+                        isCurrent: false
+                    },
+                    {
+                        title: "Reviews",
+                        path: `${route.path}`,
+                        isCurrent: true,
+                    }
+                ]);
+            }
+
+            if (route_name.value == 'StaffComparison') {
+                appStore.setBreadcrumbs([
+                    {
+                        title: establishment_name,
+                        path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                        isCurrent: false,
+                    },
+                    {
+                        title: "Staffs",
+                        path: `${route.path}`,
+                        isCurrent: true
+                    }
+                ]);
+            }
+
             all_items.value[0].value = establishment.value.rating;
             all_items.value[1].value = establishment.value.totalReviews;
             appStore.isLoading = false;
