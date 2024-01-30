@@ -200,7 +200,7 @@ const appStore = useAppStore();
 @media screen and (max-width: 975px) {
     .app__container {
         flex-direction: column-reverse;
-        width: 95% !important;
+        width: 97% !important;
         justify-content: center;
         align-items: center;
     }
