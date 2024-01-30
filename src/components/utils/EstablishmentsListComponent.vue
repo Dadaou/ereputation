@@ -31,7 +31,7 @@
                                     </a>
                                     <div class="society__category">
                                         <i
-                                            :class="['uil', company.category == 'Restaurant' ? 'uil-restaurant' : '', company.category == 'Hotel' ? 'uil-bed-double' : '', company.category == 'Residence' ? 'uil-home' : '']">
+                                            :class="['uil', company.category == 'Restaurant' ? 'uil-restaurant' : '', company.category == 'Hotel' ? 'uil-bed-double' : '', company.category == 'Residence' ? 'uil-home' : '',company.category == 'Other' ? 'uil-home ': '']">
                                         </i>
                                         <span>{{ company.category }}</span>
                                     </div>
