@@ -412,11 +412,11 @@ const formattedWeatherRating = computed(() => {
     let conditions = []
     if (weatherRating.value == null) return [];
     else {
-
+        console.log(weatherRating.value)
         let data = weatherRating.value.conditions.map(condition => ({
             condition,
             icon: getIcon(condition),
-            note: `${weatherRating.value[condition].note} (${nbDays.value} ${unit})`,
+            note: `${weatherRating.value[condition].note} (${weatherRating.value[condition].days} ${unit})`,
             color: weatherRating.value[condition].color
         }));
 
