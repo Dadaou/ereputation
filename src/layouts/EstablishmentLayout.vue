@@ -200,7 +200,7 @@ const appStore = useAppStore();
 @media screen and (max-width: 975px) {
     .app__container {
         flex-direction: column-reverse;
-        width: 97% !important;
+        width: 96% !important;
         justify-content: center;
         align-items: center;
     }
@@ -315,8 +315,9 @@ const appStore = useAppStore();
 
     .tablet_mobile__filter * {
         flex-basis: inherit !important;
-        width: inherit !important;
+        width: 100% !important;
         justify-content: center !important;
+        /*padding: 0px 2px;*/
     }
 
     .date__picker {

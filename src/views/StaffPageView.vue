@@ -6,10 +6,12 @@
         <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
             selectedTimePeriod = timePeriod
         }" :default="timePeriods[0]" />
-        <div class="date__picker">
+        <div class="date__picker px-2">
+            <span class="block">Start date {{startDate}}</span>
             <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
         </div>
-        <div class="date__picker">
+        <div class="date__picker px-2">
+            <span class="block">End date {{endDate}}</span>
             <el-date-picker v-model="end_date" type="date" placeholder="Select the end date" :size="'large'" />
         </div>
     </div>
@@ -231,8 +233,8 @@ let staffs = ref([]);
 provide('staffs', staffs);
 const timePeriods = ref(['Daily', 'Weekly', 'Monthly', 'Yearly']);
 const selectedTimePeriod = ref(timePeriods.value[0]);
-const startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-const endDate = moment().format('YYYY-M-DD');
+let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+let endDate = moment().format('YYYY-M-DD');
 let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
 let end_date = ref(moment().format('YYYY-M-DD'));
 const date = ref([startDate, endDate]);
@@ -248,11 +250,22 @@ const { width } = useWindowSize();
 
 watch([start_date, end_date], () => {
     if (start_date.value !== '' && end_date.value !== '') {
+        console.log(start_date.value)
         date.value = [start_date.value, end_date.value]
+        viewData()
     } else {
         date.value = [startDate, endDate];
+       
     }
+
 })
+
+const viewData = async () => {
+   
+    startDate = moment(start_date.value).format('YYYY-MM-DD');
+    endDate = moment(end_date.value).format('YYYY-MM-DD');
+   
+}
 
 watch(route_name, () => {
 
