@@ -110,10 +110,12 @@
         <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
             selectedTimePeriod = timePeriod
         }" :default="timePeriods[0]" />
-        <div class="date__picker">
+        <div class="date__picker px-2">
+            <span class="block">Start date {{startDate}}</span>
             <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
         </div>
-        <div class="date__picker">
+        <div class="date__picker px-2">
+            <span class="block">End date {{endDate}}</span>
             <el-date-picker v-model="end_date" type="date" placeholder="Select the end date" :size="'large'" />
         </div>
     </div>

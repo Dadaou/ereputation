@@ -2,9 +2,9 @@
 <div :class="['mt-2 mb-2', props.showTitle==true?'':'']" ref=target>
   <div class="mx-auto">
     <label for="select" class="font-semibold block" v-if="props.showTitle==true">{{ title }}</label>
-    <div class="relative" v-if="isDataObject">
+    <div class="relative padlist" v-if="isDataObject">
       <div class="h-10 bg-white flex border border-gray-200 rounded items-center">
-        <input readonly v-model="selectedValueObject.name" name="select" id="select" class="px-5 appearance-none outline-none text-gray-800 w-full text-sm" checked @keyup.enter="setShowData(true, selectedValue, $event)" @click="setShowData(true, selectedValueObject, $event)" :placeholder="placeholder"/>
+        <input readonly v-model="selectedValueObject.name" name="select" id="select" class="px-3 appearance-none outline-none text-gray-800 w-full text-sm" checked @keyup.enter="setShowData(true, selectedValue, $event)" @click="setShowData(true, selectedValueObject, $event)" :placeholder="placeholder"/>
 
         <button v-if="selectedValueObject && props.default == ''" class="cursor-pointer outline-none focus:outline-none transition-all text-gray-300 hover:text-gray-600"  @click="setShowData(true, props.default, $event)">
           <svg class="w-4 h-4 mx-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -15,13 +15,13 @@
       </div>
       <div :class="['list absolute rounded shadow bg-white overflow-hidden peer-checked:flex flex-col w-full mt-1 border border-gray-200', showData == false?'hidden':'']">
         <div :class="['cursor-pointer group', index > 0?'border-t':'', selectedValueObject.name==item.name?'selected':'']" v-for="(item, index) in _data" @click="setShowData(false, item, $event)">
-          <a class="block p-2 border-transparent border-l-4 group-hover:border-blue-600 group-hover:bg-gray-100 text-sm">{{ item.name }}</a>
+          <a class="block p-2 border-transparent border-l-4   group-hover:border-blue-600 group-hover:bg-gray-100 text-sm">{{ item.name }}</a>
         </div>
       </div>
     </div>
-    <div class="relative" v-else>
+    <div class="relative padlist" v-else>
       <div class="h-10 bg-white flex border border-gray-200 rounded items-center">
-        <input readonly v-model="selectedValue" name="select" id="select" class="px-5 appearance-none outline-none text-gray-800 w-full text-sm" checked @keyup.enter="setShowData(true, selectedValue, $event)" @click="setShowData(true, selectedValue, $event)" :placeholder="placeholder"/>
+        <input readonly v-model="selectedValue" name="select" id="select" class="px-3 appearance-none outline-none text-gray-800 w-full text-sm" checked @keyup.enter="setShowData(true, selectedValue, $event)" @click="setShowData(true, selectedValue, $event)" :placeholder="placeholder"/>
         <button v-if="selectedValue && props.default == ''" class="cursor-pointer outline-none focus:outline-none transition-all text-gray-300 hover:text-gray-600"  @click="setShowData(true, props.default, $event)">
           <svg class="w-4 h-4 mx-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -139,6 +139,10 @@ onBeforeMount(()=>{
 
 .list{
     z-index:3;
+}
+
+.padlist{
+  padding:0px;
 }
 
 @media screen and (max-width:1075px) {
