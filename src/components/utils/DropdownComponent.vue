@@ -2,7 +2,7 @@
 <div :class="['mt-2 mb-2', props.showTitle==true?'':'']" ref=target>
   <div class="mx-auto">
     <label for="select" class="font-semibold block" v-if="props.showTitle==true">{{ title }}</label>
-    <div class="relative px-2" v-if="isDataObject">
+    <div class="relative padlist" v-if="isDataObject">
       <div class="h-10 bg-white flex border border-gray-200 rounded items-center">
         <input readonly v-model="selectedValueObject.name" name="select" id="select" class="px-3 appearance-none outline-none text-gray-800 w-full text-sm" checked @keyup.enter="setShowData(true, selectedValue, $event)" @click="setShowData(true, selectedValueObject, $event)" :placeholder="placeholder"/>
 
@@ -19,7 +19,7 @@
         </div>
       </div>
     </div>
-    <div class="relative px-2" v-else>
+    <div class="relative padlist" v-else>
       <div class="h-10 bg-white flex border border-gray-200 rounded items-center">
         <input readonly v-model="selectedValue" name="select" id="select" class="px-3 appearance-none outline-none text-gray-800 w-full text-sm" checked @keyup.enter="setShowData(true, selectedValue, $event)" @click="setShowData(true, selectedValue, $event)" :placeholder="placeholder"/>
         <button v-if="selectedValue && props.default == ''" class="cursor-pointer outline-none focus:outline-none transition-all text-gray-300 hover:text-gray-600"  @click="setShowData(true, props.default, $event)">
@@ -139,6 +139,10 @@ onBeforeMount(()=>{
 
 .list{
     z-index:3;
+}
+
+.padlist{
+  padding:0px;
 }
 
 @media screen and (max-width:1075px) {

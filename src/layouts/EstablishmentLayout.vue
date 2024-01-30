@@ -323,6 +323,9 @@ const appStore = useAppStore();
     .date__picker {
         margin: 5px 0 10px !important;
     }
+    .padlist{
+        padding:0 7px !important;
+    }
 }
 
 @media screen and (max-width:500px) {
