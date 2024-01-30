@@ -79,7 +79,7 @@ body {
 
 .main__container {
   margin-top: 5rem;
-  min-height: 30rem;
+  min-height: calc(100dvh - 280px);
   
 }
 

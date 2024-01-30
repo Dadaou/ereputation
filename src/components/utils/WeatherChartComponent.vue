@@ -1,5 +1,5 @@
 <template>
-  <div class="reviews__content weather__chart" ref="el" :style="{
+  <div class="reviews__content weather__chart mb-10" ref="el" :style="{
     'overflowX': 'auto'
   }
     ">

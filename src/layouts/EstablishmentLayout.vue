@@ -34,9 +34,10 @@ const appStore = useAppStore();
 </script>
 
 <style>
+
 .app__container {
     margin-top: 5rem;
-    min-height: 30rem;
+    min-height:calc(90dvh - 140px);
     width: var(--container-width-lg);
     margin: 0 auto;
     padding: 0;
@@ -46,7 +47,7 @@ const appStore = useAppStore();
 }
 
 .left__side {
-    width: 80%;
+    width: calc(100% - 400px);
     padding: 50px 5px;
 }
 
@@ -56,6 +57,7 @@ const appStore = useAppStore();
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+    
 }
 
 .right__side {
@@ -82,7 +84,7 @@ const appStore = useAppStore();
 }
 
 .establishment__info_tablet {
-    margin-top: 30px;
+    margin-top: 50px;
 }
 
 .establishment__info i,
@@ -102,9 +104,6 @@ const appStore = useAppStore();
     display: flex;
 }
 
-.establishment__info_tablet {
-    margin-top: 0px;
-}
 
 .society__name {
     margin: 5px 0;
@@ -259,7 +258,7 @@ const appStore = useAppStore();
     }
 
     .photo img {
-        height: 75px;
+        height: 200px;
         width: 100%;
     }
 }
