@@ -1,6 +1,6 @@
 <template>
-    <div class="staff__list">
-        <div class="staff__card" v-if="events.length>0" v-for="event in events">
+    <div v-if="events.length>0" class="staff__list">
+        <div class="staff__card" v-for="event in events" :key="event.name">
             <ul class="mb-5">
                 <li><h5 :style="{
                     color: `${generateColor(event.name)}`,
@@ -62,19 +62,14 @@
     </ModalComponent>
 </template>
 <script setup>
-import {ref, inject, onBeforeMount, computed, defineAsyncComponent} from 'vue';
+import {ref, inject, defineAsyncComponent} from 'vue';
 import moment from 'moment';
 import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js'
 import { Pie } from 'vue-chartjs';
-import { useCompanyStore } from "@Stores/company.js";
 import services from '@Services/services.js';
 
 ChartJS.register(ArcElement, Tooltip)
-
-const companiesStore = useCompanyStore();
 const events = inject('events');
-const establishment = inject('establishment');
-const showModal = ref(false);
 const showChart = ref(false);
 const selectedEvent = ref({})
 const eventComparison = ref({});
@@ -136,7 +131,7 @@ const calculateAverageRating = (data) =>  {
 };
 
 const loadDataFromServer = async(id)=>{
-    const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve) => {
         services.get_Record(`/event/periods?id=${id}`, (response) => {
             resolve(response)
         });

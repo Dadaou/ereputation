@@ -95,9 +95,6 @@ import moment from 'moment';
 import { ref, inject, watch } from 'vue';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
-import { useEventStore } from "@Stores/event.js";
-import { useCompanyStore } from "@Stores/company.js";
-import { useAppStore } from "@Stores/app.js";
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import { ElMessage, ElOption, ElSelect, ElDatePicker, ElTooltip } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
@@ -105,32 +102,19 @@ import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
 
-const selectedScope = ref(''); // Valeur sélectionnée dans le menu déroulant
 const scopeOptions = ref([
   { label: 'individual', value: 'individual' },
   { label: 'bill', value: 'bill' },
 ]);
 
-const companiesStore = useCompanyStore();
-const eventStore = useEventStore();
 const userStore = useUserStore();
-const appStore = useAppStore();
-const format = (date) => {
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-
-  return `${year}/${month}/${day}`;
-}
 const showSpinner = ref(false);
 /**
  * Event
  */
- const dateFrom = ref(null);
  const dateTo = ref(null);
  const category = ref('');
  const advantageName = ref('');
- const eventName = ref('');
  const establishment = ref("");
  const code = ref('');
  const amount = ref(null);
@@ -162,39 +146,6 @@ watch(advantage_to_update, ()=>{
         type.value = 'edit';
     }
 })
-const getEstablishment = (data)=>{
-  let result = [];
-  console.log(data);
-   data.forEach(item=>{
-     companiesStore.establishments.forEach((element, index) => {
-         if(`/api/establishments/${element.id}` == item){
-                     result.push(element);
-         }         
-    })
-   })
- return result;
-}
-
-const getEstablishmentsName = (data) => {
-    let establishments = userStore.user.customer != null ? userStore.user.customer.establishments : [];
-    let names = '';
-
-    if (Array.isArray(data)) {
-        data.forEach(item => {
-            establishments.forEach(establishment => {
-                if (item == `/api/establishments/${establishment.id}`) {
-                    if (names != '') {
-                        names = `${names}, ${establishment.name}`;
-                    } else {
-                        names = `${names} ${establishment.name}`;
-                    }
-                }
-            })
-        });
-    }
-
-    return names;
-}
 
 const loadData = (_advantage, advantage, establishment_name) => {
   console.log(_advantage)
@@ -234,7 +185,6 @@ const updateData = (_advantage, establishment_name)=>{
      })
   }
 
-
   const submit = async () => {
     const advantageData = {
         "category": category.value,
@@ -254,7 +204,7 @@ const updateData = (_advantage, establishment_name)=>{
             showSpinner.value = true;
 
             if (type.value === 'add') {
-                const response = await new Promise((resolve, reject) => {
+                const response = await new Promise((resolve) => {
                     services.createRecord('advantages', advantageData, (response) => {
                         resolve(response);
                         console.log(response)
@@ -282,7 +232,7 @@ const updateData = (_advantage, establishment_name)=>{
                 }
             } else if (type.value === 'edit' && advantage_to_update.value !== null) {
                 const advantageId = advantage_to_update.value.id;
-                const response = await new Promise((resolve, reject) => {
+                const response = await new Promise((resolve) => {
                     services.putRecord('advantages', advantageId, advantageData, (response) => {
                         resolve(response);
                     });
@@ -313,25 +263,6 @@ const updateData = (_advantage, establishment_name)=>{
         }
     } catch (error) {
         console.error('Error during form submission:', error);
-    }
-};
-
-const fetchAdvantageList = async () => {
-    try {
-        const response = await new Promise((resolve, reject) => {
-            services.get_Record(`advantage/list`, (response) => {
-                resolve(response);
-            });
-        });
-        console.log('Updated Advantage List:', response.data);
-        if (response.status === 200) {
-            allAdvantages.value = response.data;
-            console.log('Processed Advantage Data:', allAdvantages.value);
-        } else {
-            console.error('Error fetching advantages:', response);
-        }
-    } catch (error) {
-        console.error('Error fetching advantages:', error);
     }
 };
 

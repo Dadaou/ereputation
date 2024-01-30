@@ -17,10 +17,10 @@
       <el-table-column label="Enable" style="width: 10%; min-width: 200px;" align="center">
         <template #default="scope">
           <el-button v-if="scope.row.enable" size="small" @click="handleDisable(scope.$index, scope.row)"><i
-              class="uil uil-check-square"></i></el-button>
+              class="uil uil-check-square" style="color: #777; font-size: 15px;"></i></el-button>
 
           <el-button v-else size="small" @click="handleEnable(scope.$index, scope.row)"><i class="uil uil-square"
-              style="color: #777; font-size: 20px;"></i></el-button>
+              style="color: #777; font-size: 15px;"></i></el-button>
         </template>
       </el-table-column>
 
@@ -45,19 +45,14 @@
 </template>
 
 <script setup>
-import { computed, ref, inject, watch } from 'vue';
-import { useUserStore } from "@Stores/user.js";
-import { useWindowSize } from '@vueuse/core';
-import { useEventStore } from "@Stores/event.js";
-import { useCompanyStore } from "@Stores/company.js";
+import { computed, ref, inject} from 'vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 import services from '@Services/services.js';
 
 const emit = defineEmits(['edit', 'setEnable', 'setDisable']);
 const advantages = inject('advantages');
-const { width, height } = useWindowSize();
-
 const search = ref('');
+
 const filterTableData = computed(() =>
   advantages.value?.filter(
     (data) =>
@@ -70,7 +65,6 @@ const reloadData = (advantageToRemove) => {
   // Filtrer la liste d'avantages pour exclure celui qui doit être supprimé
   advantages.value = advantages.value.filter((item) => item.id !== advantageToRemove.id);
 };
-
 
 const handleEdit = (index, advantages) => {
   emit('edit', advantages);
@@ -105,10 +99,7 @@ const handleDelete = async (index, advantages) => {
     });
   }
 };
-
-
 </script>
-
 
 <style scoped>
 button {

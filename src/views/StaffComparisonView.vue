@@ -25,7 +25,7 @@
       'overflowX': isMobile ? 'scroll' : 'auto'
     }">
       <GroupedBarChart :plot-data="plotdata" x-key="date" :width="custom_width" :height="200"
-        :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Rating"
+        :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Reviews"
         :colors="['#f75842', '#337ecc', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
         :y-tick-format="d => `${d}`" />
     </div>

@@ -1,14 +1,13 @@
 <template>
-  <!--  <button class="btn" @click="showExport = true">
-          <i class="uil uil-file-download"></i>
-          Export
-    </button> -->
   <div class="overflow-x-auto">
     <table class="w-full table-auto text-sm text-left text-gray-500 dark:text-gray-400">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
           <th scope="col" class="px-6 py-3">
             Establishment
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Customer email
           </th>
           <th scope="col" class="px-6 py-3">
             Advantage name
@@ -37,6 +36,9 @@
             {{ discount.establishment_name }}
           </td>
           <td class="px-6 py-4">
+            {{ userStore.user.customer.email || '-' }}
+          </td>
+           <td class="px-6 py-4">
             {{ discount.adv_name }}
           </td>
           <td class="px-6 py-4">
@@ -56,10 +58,10 @@
           </td>
           <td class="px-6 py-4 text-center">
             <span v-if="discount.confirm" @click="handleCancel(discount.id)" class="has-hover"><i
-                class="uil uil-check-square"></i></span>
+                class="uil uil-check-square"  style="color: #777; font-size: 15px;"></i></span>
 
             <span v-else @click="handleConfirm(discount.id)" class="has-hover"><i class="uil uil-square"
-                style="color: #777; font-size: 20px;"></i></span>
+                style="color: #777; font-size: 15px;"></i></span>
           </td>
         </tr>
       </tbody>
@@ -74,54 +76,22 @@
       </tbody>
     </table>
   </div>
-  <!-- <ExportcsvexcelComponent :showModal="showExport" :downloaded="downloaded"
-    @close="showExport = false, downloaded = false"  @submit="(data) => exportData(data.type, 'contacts')"/> -->
 </template>
 
 <script setup>
 import moment from 'moment';
 import services from '@Services/services.js';
-import csvXlsx from '@Services/csvXlsx.js';
-import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
-import { useRoute, useRouter } from "vue-router";
-import { useCompanyStore } from "@Stores/company.js";
-import HeadComponent from '@Components/layouts/HeadComponent.vue';
-import DropdownComponent from '@Components/utils/DropdownComponent.vue';
-import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
-import StaffItemComponent from '@Components/staffs/StaffItemComponent.vue';
-import { useWindowSize } from '@vueuse/core';
+import { useRoute } from "vue-router";
 import {
   ref,
-  reactive,
-  watch,
-  onBeforeMount,
-  computed,
-  provide,
-  onUpdated,
-  defineAsyncComponent
+  onBeforeMount
 } from 'vue';
 
-const ExportcsvexcelComponent = defineAsyncComponent(() =>
-  import('@Components/utils/ExportcsvexcelComponent.vue')
-)
 
 const route = useRoute();
 const customer = route.params.tag;
-// const formatCreatedAt = (createdAt) => {
-//   return moment(createdAt).format('YYYY/MM/DD');
-// };
-// const query = ref('');
-
-// const contacts = ref([]);
-
-// const showExport = ref(false);
-// const downloaded = ref(false);
-// const exportData = (type, filename) => {
-//   csvXlsx.exportContact(type, filename, query.value,
-//     ['Id','Name', 'Gender', 'Email', 'Establishment', 'Date']);
-//   downloaded.value = true;
-// }
+const userStore = useUserStore();
 
 const discountData = ref([])
 
@@ -160,7 +130,7 @@ const handleCancel = async (value) => {
 
 onBeforeMount(async () => {
   try {
-    const response = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve) => {
       // query.value = `customer/establishments/advantagecontacts?tag=${customer}`;
 
       services.get_Record(`customer/establishments/advantagecontacts?tag=${customer}`, (response) => {
