@@ -191,7 +191,7 @@ const onDataUrlChange = (dataUrl) => {
     height: 95px;
     z-index: 0;
     transform: var(--transition);
-    margin-inline: 8px !important;
+    /*margin-inline: 8px !important;*/
 }
 
 .society__logo img {
