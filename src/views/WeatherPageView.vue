@@ -37,6 +37,7 @@
                 <SpinnerComponent />
             </div>
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5" v-else>
+
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <tbody>
                         <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
@@ -44,13 +45,13 @@
                             <td class="px-6 py-4" :style="{
                                 'fontWeight': 'bold',
                             }">
-                                {{ conditionData.condition }}
+                              <span v-html="conditionData.icon"></span> {{ conditionData.condition }} 
                             </td>
                             <td class="px-6 py-4" :style="{
                                 'color': conditionData.color,
                                 'fontWeight': 'bold',
                             }">
-                                {{ conditionData.note != 0 ? conditionData.note : '' }}
+                                {{ conditionData.note != 0 ? conditionData.note : '' }} 
                             </td>
                         </tr>
                     </tbody>
@@ -358,18 +359,64 @@ const nbDays = computed(()=>{
     console.log(getNbDays(dateEnd.value, dateStart.value))
     return getNbDays(dateEnd.value, dateStart.value)
 })
+const getIcon = (weatherConditions)=>{
+    switch (weatherConditions) {
+            case 'Rain, Overcast':
+                return '&#x1F327;';
+                break;
+            case 'Rain, Partially cloudy':
+                return '&#x1F326;';
+                break;
+            case 'Partially cloudy':
+                return '&#x1F325;';
+                break;
+            case 'Clear':
+                return '&#x263C;';
+                break;
+            case 'Rain':
+                return '&#x2602;';
+                break;
+            case 'Rain Overcast':
+                return '&#x1F327;';
+                break;
+            case 'Overcast':
+                return'&#x2601;';
+                break;
+            case 'Rain Partially cloudy':
+                return '&#x1F326;';
+                break;
+            case 'Snow Rain Overcast':
+                return '&#x1F327;';
+                break;
+            default:
+                return '&#x1F324;';
+                break;
+    }
+}
+
 const formattedWeatherRating = computed(() => {
+    const unit = nbDays.value>1?'days':'day'
+    const order = ['Clear', 'Partially cloudy', 'Overcast', 'Rain, Partially cloudy', 'Rain, Overcast', 'Rain', 'Snow Rain Overcast']
+    let conditions = []
     if (weatherRating.value == null) return [];
     else {
 
         let data = weatherRating.value.conditions.map(condition => ({
             condition,
-            note: weatherRating.value[condition].note,
+            icon: getIcon(condition),
+            note: `${weatherRating.value[condition].note} (${nbDays.value} ${unit})`,
             color: weatherRating.value[condition].color
         }));
-        data.unshift({ condition: 'Global rating', note: `${weatherRating.value['rating']} (${nbDays.value} days)`, color: 'green' })
 
-        return data;
+        order.forEach(condition =>{
+            for (var i = 0; i < data.length; i++) {
+                if(condition == data[i].condition) conditions.push(data[i])
+            }
+        })
+
+        conditions.unshift({ condition: 'Average rating', note: `${weatherRating.value['rating']} (${nbDays.value} ${unit})`, color: 'green' })
+
+        return conditions;
     }
 })
 
