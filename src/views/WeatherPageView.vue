@@ -60,10 +60,12 @@
         </div>
     </div>
     <div class="tablet_mobile__filter">
-        <div class="date__picker">
+        <div class="date__picker px-2">
+            <span class="block">Start date {{startDate}}</span>
             <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
         </div>
-        <div class="date__picker">
+        <div class="date__picker px-2">
+            <span class="block">End date {{endDate}}</span>
             <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
         </div>
     </div>
@@ -280,11 +282,21 @@ provide('chartWidth', chartWidth);
 onUpdated(() => {
     chartWidth.value = (el.value != null && el.value != undefined) ? Math.abs(el.value.offsetWidth - 50) : chartWidth.value;
 })
+let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+let endDate = moment().format('YYYY-M-DD');
+
+const viewData = async () => {
+   
+   startDate = moment(start_date.value).format('YYYY-MM-DD');
+   endDate = moment(end_date.value).format('YYYY-MM-DD');
+  
+}
 
 watch([dateStart, dateEnd], async () => {
     load.value = true
     await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, calculType.value);
     await loadConditionFromServer(companyId, dateStart.value, dateEnd.value);
+    viewData()
 })
 
 const generatedLegend = (colors, dataType) => {

@@ -67,10 +67,12 @@
             :data="websites" @submit="(website) => {
                 selectedWebsites = website
             }" :default="websites[0]" />
-        <div class="date__picker">
+        <div class="date__picker px-2">
+            <span class="block">Start date {{startDate}}</span>
             <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
         </div>
-        <div class="date__picker">
+        <div class="date__picker px-2">
+            <span class="block">End date {{endDate}}</span>
             <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
         </div>
     </div>
@@ -324,6 +326,8 @@ let updateVisibleData = function (_data, isStarFilter = false) {
 
 const dateStart = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
 const dateEnd = ref(moment().format('YYYY-M-DD'));
+let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+let endDate = moment().format('YYYY-M-DD');
 let reviewFeedbackData = ref({
     width: 0,
     red: 0,
@@ -340,6 +344,7 @@ const options = ref({
 
 watch([dateStart, dateEnd, selectedWebsites, checkedFeeling], () => {
     loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
+    viewData()
 })
 
 let selectedStars = ref('0');
@@ -353,6 +358,12 @@ const reloadData = (reviewUpdated) => {
             visibleData.value[index].feeling = reviewUpdated.feeling;
         }
     })
+}
+const viewData = async () => {
+   
+   startDate = moment(dateStart.value).format('YYYY-MM-DD');
+   endDate = moment(dateEnd.value).format('YYYY-MM-DD');
+  
 }
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;

@@ -53,11 +53,13 @@
         </div>
     </div>
     <div class="tablet_mobile__filter">
-        <div class="date__picker">
+        <div class="date__picker px-2">
+            <span class="block">Start date {{startDate}}</span>
             <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
         </div>
 
-        <div class="date__picker">
+        <div class="date__picker px-2">
+            <span class="block">End date {{endDate}}</span>
             <el-date-picker v-model="end_date" type="date" placeholder="Select the end date" :size="'large'" />
         </div>
         <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
@@ -262,15 +264,24 @@ const all_items = ref([
     { title: "Reviews", value: 0, icon: "uil-comment" },
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
+let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+let endDate = moment().format('YYYY-M-DD');
 
 watch([start_date, end_date], () => {
     if (start_date.value !== '' && end_date.value !== '') {
         date.value = [start_date.value, end_date.value]
+        viewData()
     } else {
         date.value = [moment().subtract(30, 'days').format('YYYY-M-DD'), moment().format('YYYY-M-DD')];
     }
 })
 
+const viewData = async () => {
+   
+   startDate = moment(start_date.value).format('YYYY-MM-DD');
+   endDate = moment(end_date.value).format('YYYY-MM-DD');
+  
+}
 onBeforeMount(async () => {
     const companyId = route.params.id;
     appStore.isLoading = true;
