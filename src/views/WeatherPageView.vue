@@ -46,19 +46,12 @@
                                 'fontWeight': 'bold',
                             }">
                               <span v-html="conditionData.icon"></span> {{ conditionData.condition }} 
-                              
                             </td>
-                            <td class="px-6 py-4 condition" :style="{
+                            <td class="px-6 py-4" :style="{
                                 'color': conditionData.color,
                                 'fontWeight': 'bold',
                             }">
-                                <span> {{ conditionData.note != 0 ? conditionData.note : '' }}</span>
-                                <span class="bg-gray-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-gray-700 dark:text-gray-400">
-                                <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
-                                </svg>
-                                {{conditionData.days}} {{conditionData.days>1?'days':'day'}}
-                                </span>
+                                {{ conditionData.note != 0 ? conditionData.note : '' }} 
                             </td>
                         </tr>
                     </tbody>
@@ -68,11 +61,11 @@
     </div>
     <div class="tablet_mobile__filter">
         <div class="date__picker px-2">
-            <span class="block">Start date {{startDate}}</span>
+            
             <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
         </div>
         <div class="date__picker px-2">
-            <span class="block">End date {{endDate}}</span>
+           
             <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
         </div>
     </div>
@@ -289,21 +282,12 @@ provide('chartWidth', chartWidth);
 onUpdated(() => {
     chartWidth.value = (el.value != null && el.value != undefined) ? Math.abs(el.value.offsetWidth - 50) : chartWidth.value;
 })
-let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-let endDate = moment().format('YYYY-M-DD');
-
-const viewData = async () => {
-   
-   startDate = moment(start_date.value).format('YYYY-MM-DD');
-   endDate = moment(end_date.value).format('YYYY-MM-DD');
-  
-}
 
 watch([dateStart, dateEnd], async () => {
     load.value = true
     await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, calculType.value);
     await loadConditionFromServer(companyId, dateStart.value, dateEnd.value);
-    viewData()
+    
 })
 
 const generatedLegend = (colors, dataType) => {
@@ -415,17 +399,16 @@ const getIcon = (weatherConditions)=>{
 
 const formattedWeatherRating = computed(() => {
     const unit = nbDays.value>1?'days':'day'
-    const order = ['Clear', 'Partially cloudy', 'Overcast', 'Rain, Partially cloudy', 'Rain Partially cloudy', 'Rain, Overcast', 'Rain Overcast', 'Rain', 'Snow Rain Overcast']
+    const order = ['Clear', 'Partially cloudy', 'Overcast', 'Rain, Partially cloudy', 'Rain, Overcast', 'Rain', 'Snow Rain Overcast']
     let conditions = []
     if (weatherRating.value == null) return [];
     else {
-        console.log(weatherRating.value)
+
         let data = weatherRating.value.conditions.map(condition => ({
             condition,
             icon: getIcon(condition),
-            note: weatherRating.value[condition].note,
-            color: weatherRating.value[condition].color,
-            days: weatherRating.value[condition].days
+            note: `${weatherRating.value[condition].note} (${nbDays.value} ${unit})`,
+            color: weatherRating.value[condition].color
         }));
 
         order.forEach(condition =>{
@@ -434,12 +417,7 @@ const formattedWeatherRating = computed(() => {
             }
         })
 
-        conditions.unshift({ 
-            condition: 'Average rating', 
-            note: weatherRating.value['rating'], 
-            color: 'green',
-            days: nbDays.value
-        })
+        conditions.unshift({ condition: 'Average rating', note: `${weatherRating.value['rating']} (${nbDays.value} ${unit})`, color: 'green' })
 
         return conditions;
     }
@@ -520,10 +498,3 @@ onBeforeMount(async () => {
     })
 });
 </script>
-
-<style scoped>
-.condition{
-    display: flex;
-    justify-content: space-between;
-}
-</style>
