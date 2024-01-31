@@ -229,7 +229,7 @@ const showMenu = computed(() => {
 })
 
 const isFeedback = computed(() => {
-  let routeName = ['FeedBack', 'StaffFeedBack', 'SuccessFeedback', 'EnableAdvContact', undefined];
+  let routeName = ['FeedBack', 'StaffFeedBack', 'SuccessFeedback', 'EnableAdvContact', 'QRCodeAdvContact', undefined];
   return routeName.includes(route.name)
 })
 

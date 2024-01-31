@@ -241,7 +241,7 @@ const handleDisable = async (value, type) => {
 const transformData = (data) =>{
     const establishmentMap = new Map();
     let tag = ''
-
+    console.log(data)
     for (const [competitorName, establishments] of Object.entries(data)) {
         establishments.forEach(establishment => {
             const { 

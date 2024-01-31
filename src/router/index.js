@@ -163,9 +163,14 @@ const router = createRouter({
           component: () => import('@Views/SuccessMessageFeedback.vue')
         },
         {
-          path: '/customer/:tag/establishment/:etab/advantagecontact/:advTag',
+          path: '/customer/:tag/establishment/:etab/advantagecontact/:discountTag',
+          name: 'QRCodeAdvContact',
+          component: () => import('@Views/QRCodeAdvantagePageView.vue')
+        },
+         {
+          path: '/customer/:tag/establishment/:etab/advantagecontact/:discountTag/enable',
           name: 'EnableAdvContact',
-          component: () => import('@Views/EnableDiscountCouponPageView.vue')
+          component: () => import('@Views/EnableAdvantagePageView.vue')
         },
         {
           path: '/forgot-pwd',

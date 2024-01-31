@@ -30,11 +30,11 @@
 
                     <el-button size="small" @click="showLinkModal = !showLinkModal, establishment = scope.row.uri"><i
                             class="uil uil-file-alt"></i></el-button>
-                    <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
+                    <!-- <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
                         <template #reference>
                             <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
                         </template>
-                    </el-popconfirm>
+                    </el-popconfirm> -->
                      <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
                             class="uil uil-edit"></i></el-button>
 
@@ -83,14 +83,22 @@
                         </div>
                         <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Paste the
                             link here <span>*</span></label>
-                        <p v-if="!isValidLink && link !== ''" class="text-red-500 text-sm">Invalid URL format</p>
-                        <input type="text" id="link" v-model="link"
-                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']">
+                        <!-- <p v-if="!isValidLink && link !== ''" class="text-red-500 text-sm">Invalid URL format</p> -->
+                        <!-- <input type="text" id="link" v-model="link"
+                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']"> -->
+                            <input type="text" id="link" v-model="link"
+                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
                     </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
-                    <button type="submit" :disabled="!isValidLink"
+                   <!--  <button type="submit" :disabled="!isValidLink"
                         :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                        <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
+                            ...</span>
+                        <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
+                    </button> -->
+                     <button type="submit"
+                        :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800']">
                         <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
                             ...</span>
                         <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
@@ -283,11 +291,40 @@ const getValueUrl = (url, urlTemplate) => {
     return null;
 }
 
+// const submit = async () => {
+//     showSpinner.value = true;
+//     let urlObject = splitUriAndUrl(provider.value)
+//     const data = {
+//         value1: getValueUrl(link.value, urlObject.url),
+//         establishment: establishment.value,
+//         provider: urlObject.uri,
+//         enable: true
+//     }
+
+//     try {
+//         const response = await new Promise((resolve, reject) => {
+//             services.createRecord('settings', data, (response) => {
+//                 resolve(response);
+//             });
+//         });
+//         if (response.status == 201) {
+//             ElMessage({
+//                 message: `link added successfully`,
+//                 type: 'success',
+//             })
+//             showSpinner.value = false;
+//             resetValue()
+//         }
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
+
 const submit = async () => {
     showSpinner.value = true;
     let urlObject = splitUriAndUrl(provider.value)
     const data = {
-        value1: getValueUrl(link.value, urlObject.url),
+        value1: link.value,
         establishment: establishment.value,
         provider: urlObject.uri,
         enable: true
@@ -331,7 +368,6 @@ watch([provider, link], () => {
         urlTemplate = splitUriAndUrl(provider.value).url;
         if (urlTemplate) isValidLink.value = isValidUrl(link.value, urlTemplate)
     }
-
 })
 
 onBeforeMount(async () => {
