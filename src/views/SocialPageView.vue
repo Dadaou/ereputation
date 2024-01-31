@@ -549,9 +549,9 @@ watch([trendsByEstablishment, calculType], () => {
 .social-media-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    
     /* Alignement à gauche */
-    gap: 20px;
+    justify-content: space-between;
     padding: 0px;
 }
 
@@ -562,7 +562,7 @@ watch([trendsByEstablishment, calculType], () => {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
     width: 100%;
-    max-width: 200px;
+    max-width: 32%;
 }
 
 .platform:hover {
@@ -579,7 +579,7 @@ h3 {
 
 
 
-@media screen and (max-width: 975px) {
+@media screen and (max-width: 768px) {
     .social-media-container {
         flex-direction: column;
     }
