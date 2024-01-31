@@ -54,15 +54,15 @@
     </div>
     <div class="tablet_mobile__filter">
         <div class="date__picker px-2">
-            <span class="block">Start date {{startDate}}</span>
+            
             <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
         </div>
 
         <div class="date__picker px-2">
-            <span class="block">End date {{endDate}}</span>
+            
             <el-date-picker v-model="end_date" type="date" placeholder="Select the end date" :size="'large'" />
         </div>
-        <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
+        <DropdownComponent :showTitle="false" class="dorpdown w-full"  placeholder="" :data="timePeriods" @submit="(timePeriod) => {
             selectedTimePeriod = timePeriod
         }" :default="timePeriods[0]" />
 
@@ -73,7 +73,7 @@
             <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
             <div>
                 <i
-                    :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
+                    :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '',establishment.category == 'Other' ? 'uil-home' : '']"></i>
                 <span v-if="!dataLoading">{{ establishment.category }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
             </div>
@@ -165,7 +165,7 @@
                 <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
                 <div class="society__location">
                     <i
-                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
+                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '',establishment.category == 'Other' ? 'uil-home' : '']"></i>
                     <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
                     <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                 </div>
@@ -181,7 +181,7 @@
                 <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
                 <el-date-picker class="mt-2" v-model="end_date" type="date" placeholder="Select the end date"
                     :size="'large'" />
-                <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
+                <DropdownComponent :showTitle="false"   placeholder="" :data="timePeriods" @submit="(timePeriod) => {
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[0]" />
             </div>
@@ -270,18 +270,13 @@ let endDate = moment().format('YYYY-M-DD');
 watch([start_date, end_date], () => {
     if (start_date.value !== '' && end_date.value !== '') {
         date.value = [start_date.value, end_date.value]
-        viewData()
+        
     } else {
         date.value = [moment().subtract(30, 'days').format('YYYY-M-DD'), moment().format('YYYY-M-DD')];
     }
 })
 
-const viewData = async () => {
-   
-   startDate = moment(start_date.value).format('YYYY-MM-DD');
-   endDate = moment(end_date.value).format('YYYY-MM-DD');
-  
-}
+
 onBeforeMount(async () => {
     const companyId = route.params.id;
     appStore.isLoading = true;

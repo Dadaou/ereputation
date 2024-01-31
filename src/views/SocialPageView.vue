@@ -66,7 +66,7 @@
             <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
             <div>
                 <i
-                    :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
+                    :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '',establishment.category == 'Other' ? 'uil-home' : '']"></i>
                 <span v-if="!dataLoading">{{ establishment.category }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
             </div>
@@ -158,7 +158,7 @@
                 <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
                 <div class="society__location">
                     <i
-                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
+                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '',establishment.category == 'Other' ? 'uil-home' : '']"></i>
                     <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
                     <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                 </div>
@@ -549,9 +549,9 @@ watch([trendsByEstablishment, calculType], () => {
 .social-media-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    
     /* Alignement à gauche */
-    gap: 20px;
+    justify-content: space-between;
     padding: 0px;
 }
 
@@ -562,7 +562,7 @@ watch([trendsByEstablishment, calculType], () => {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
     width: 100%;
-    max-width: 200px;
+    max-width: 32%;
 }
 
 .platform:hover {
@@ -577,9 +577,21 @@ h3 {
     gap: 10px;
 }
 
-@media (max-width: 768px) {
+
+
+@media screen and (max-width: 768px) {
     .social-media-container {
         flex-direction: column;
+    }
+
+    .platform {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        width: 100%;
+        max-width: 100% !important;
     }
 }
 

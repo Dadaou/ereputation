@@ -99,23 +99,23 @@
         <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
     </div>
     <div class="tablet_mobile__filter" v-if="currentFilter == 'filter'">
-        <DropdownComponent class="dropdown" :showTitle="false" title="Compare to" placeholder="Select a competitor"
+        <DropdownComponent class="dropdown w-full" :showTitle="false" title="Compare to" placeholder="Select a competitor"
             :data="computedCompetitors" @submit="(competitor) => {
                 selectedCompetitors = competitor.name
             }" :defaultObj="computedCompetitors[0]" :isDataObject="true" />
-        <DropdownComponent :showTitle="false" class="dropdown" title="Filter by plateform" placeholder="Select a website"
+        <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform" placeholder="Select a website"
             :data="websites" @submit="(website) => {
                 selectedWebsites = website
             }" :default="websites[0]" />
-        <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
+        <DropdownComponent :showTitle="false" class="dropdown w-full" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
             selectedTimePeriod = timePeriod
         }" :default="timePeriods[0]" />
         <div class="date__picker px-2">
-            <span class="block">Start date {{startDate}}</span>
+           
             <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
         </div>
         <div class="date__picker px-2">
-            <span class="block">End date {{endDate}}</span>
+            
             <el-date-picker v-model="end_date" type="date" placeholder="Select the end date" :size="'large'" />
         </div>
     </div>

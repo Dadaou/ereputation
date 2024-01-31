@@ -315,7 +315,7 @@ const appStore = useAppStore();
 
     .tablet_mobile__filter * {
         flex-basis: inherit !important;
-        width: 100% !important;
+        /*width: 100% !important;*/
         justify-content: center !important;
         /*padding: 0px 2px;*/
     }

@@ -63,16 +63,16 @@
         <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
     </div>
     <div class="tablet_mobile__filter" v-if="currentFilter == 'filter'">
-        <DropdownComponent :showTitle="false" class="dropdown" title="Filter by plateform" placeholder="Select a website"
+        <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform" placeholder="Select a website"
             :data="websites" @submit="(website) => {
                 selectedWebsites = website
             }" :default="websites[0]" />
         <div class="date__picker px-2">
-            <span class="block">Start date {{startDate}}</span>
+            
             <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
         </div>
         <div class="date__picker px-2">
-            <span class="block">End date {{endDate}}</span>
+            
             <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
         </div>
     </div>
@@ -99,7 +99,7 @@
             <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
             <div>
                 <i
-                    :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
+                    :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '',establishment.category == 'Other' ? 'uil-home' : '']"></i>
                 <span v-if="!dataLoading">{{ establishment.category }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
             </div>
@@ -205,7 +205,7 @@
                 <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
                 <div class="society__location">
                     <i
-                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
+                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '',establishment.category == 'Other' ? 'uil-home' : '']"></i>
                     <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
                     <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                 </div>
@@ -344,7 +344,7 @@ const options = ref({
 
 watch([dateStart, dateEnd, selectedWebsites, checkedFeeling], () => {
     loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
-    viewData()
+   
 })
 
 let selectedStars = ref('0');
@@ -358,12 +358,6 @@ const reloadData = (reviewUpdated) => {
             visibleData.value[index].feeling = reviewUpdated.feeling;
         }
     })
-}
-const viewData = async () => {
-   
-   startDate = moment(dateStart.value).format('YYYY-MM-DD');
-   endDate = moment(dateEnd.value).format('YYYY-MM-DD');
-  
 }
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
