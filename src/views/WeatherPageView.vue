@@ -438,7 +438,7 @@ const formattedWeatherRating = computed(() => {
             condition: 'Average rating', 
             note: weatherRating.value['rating'], 
             color: 'green',
-            days: nbDays.value
+            days: weatherRating.value['global_days']
         })
 
         return conditions;
