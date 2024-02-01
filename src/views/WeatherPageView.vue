@@ -481,7 +481,7 @@ onBeforeMount(async () => {
     appStore.isLoading = true;
     chartLoading.value = true;
     await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, 'C');
-    await loadConditionFromServer(companyId, '', '');
+    await loadConditionFromServer(companyId, dateStart.value, dateEnd.value);
 
     companiesStore.getEstablishment(companyId).then((data) => {
 
