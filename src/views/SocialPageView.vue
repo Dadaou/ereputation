@@ -19,11 +19,11 @@
                     <div v-for="(values, platform) in postData.data" :key="platform" class="platform">
                         <h3>{{ platform.charAt(0).toUpperCase() + platform.slice(1) }} <i
                                 :class="`uil uil-${platform}`"></i></h3>
-                        <div v-if="values.comments !== undefined"><i class="uil uil-comment"></i>: {{
-                            values.comments }}</div>
-                        <div v-if="values.likes !== undefined"><i class="uil uil-thumbs-up"></i>: {{ values.likes }}
+                        <div v-if="values.followers !== undefined"><i class="uil uil-users-alt"></i>: {{
+                           formatNumberWithDots(values.followers) }}</div>
+                        <div v-if="values.likes !== undefined"><i class="uil uil-thumbs-up"></i>: {{ formatNumberWithDots(values.likes) }}
                         </div>
-                        <div v-if="values.share !== undefined"><i class="uil uil-share"></i>: {{ values.share }}
+                        <div v-if="values.share !== undefined"><i class="uil uil-share"></i>: {{ formatNumberWithDots(values.share) }}
                         </div>
                     </div>
                 </div>
@@ -308,6 +308,11 @@ const generatedLegend = (colors, dataType) => {
     })
     return legends;
 }
+
+function formatNumberWithDots(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
 const getFollowers = (datasets, type) => {
     let dataChart = {
         labels: [],
@@ -388,7 +393,7 @@ onBeforeMount(async () => {
     })
 
     const response = await new Promise((resolve) => {
-        services.get_Record(`/establishment/socials/posts?tag=${companyId}`, (response) => {
+        services.get_Record(`/establishment/socials/pages?tag=${companyId}`, (response) => {
             resolve(response)
         });
     });
@@ -563,6 +568,7 @@ watch([trendsByEstablishment, calculType], () => {
     transition: transform 0.3s ease;
     width: 100%;
     max-width: 32%;
+    margin: 15px 0;
 }
 
 .platform:hover {

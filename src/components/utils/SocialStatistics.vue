@@ -206,6 +206,7 @@ const updateData = async () => {
     }
 
     const datas = await socialStore.getGlobalStats(companyId, typeValue, periodValue)
+    console.log(datas)
 
     let data = {
         labels: [],
@@ -221,8 +222,9 @@ const updateData = async () => {
         'youtube': '#FF0000'
     };
     if (datas) {
-        console.log(today)
-        data.labels = datas.labels.filter(label=> label<=today);
+        // console.log(today)
+        // data.labels = datas.labels.filter(label=> label<=today);
+        data.labels = datas.labels
 
         for (const [key, value] of Object.entries(datas.data)) {
             
@@ -266,6 +268,7 @@ onMounted(async () => {
     type.value = { label: "Month", value: "monthly" }
     setCurrentDate();
     filter.value = { label: "Followers", value: "followers" }
+    const today = new Date().getDate();
     const datas = await socialStore.getGlobalStats(companyId, 'monthly', `${period.value.value}-${year.value.value}`)
 
     let data = {
@@ -284,11 +287,12 @@ onMounted(async () => {
     data.labels = datas.labels;
 
     for (const [key, value] of Object.entries(datas.data)) {
-         if(!checkData(value[filter.value.value])){
+        if(!checkData(value["followers"])){
+            
                 data.datasets.push({
-                    label: key,
-                    backgroundColor: colors[key],
-                    data: value[filter.value.value]
+                        label: key,
+                        backgroundColor: colors[key],
+                        data: value["followers"]
                 })
         }
     }

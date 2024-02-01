@@ -4,7 +4,7 @@
         <div class="stat__icon" :class="`stat__icon_${props.iconStyle}`">
             <Icon :icon="icon" width="32" :style="{ color: props.color || 'red', margin: '4px' }"></Icon>
         </div>
-        <div class="stat__value">{{ Number(props.value) }}</div>
+        <div class="stat__value">{{ formatNumberWithDots(props.value) }}</div>
         <p class="stat__description">{{ props.description }}</p>
         <span class="stat__trend">
             <Icon v-if="props.trend && props.trend == 'negative'" icon="uil:arrow-growth" style="display: inline;"
@@ -19,8 +19,11 @@
 <script setup>
 import { Icon } from '@iconify/vue';
 const props = defineProps(["color", "bgColor", "icon", "iconStyle", "value", "description", "percentage", "trend", "websites", "site"]);
-console.log(props.websites)
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
+
+function formatNumberWithDots(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
 </script>
 
 <style scoped>
