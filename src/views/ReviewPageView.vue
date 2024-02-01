@@ -8,9 +8,9 @@
         <div class="reviews__content">
             <div class="reviews__pagination">
                 <PaginationComponent :options="options" v-if="visibleData.length > 0" @next="(option) => {
-                    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+                    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, categoryFilters)
                 }" @prev="(option) => {
-    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, categoryFilters)
 }" />
             </div>
             <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
@@ -40,9 +40,9 @@
             </div>
             <div class="reviews__pagination">
                 <PaginationComponent :options="options" v-if="visibleData.length > 0" @next="(option) => {
-                    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+                    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, categoryFilters)
                 }" @prev="(option) => {
-    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, categoryFilters)
 }" />
             </div>
         </div>
@@ -68,7 +68,21 @@
                 selectedWebsites = website
             }" :default="websites[0]" />
         <div class="date__picker px-2">
-            
+                 <el-select 
+                    v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable :max-collapse-tags="3"
+                    placeholder="select categories" size="large">
+                    <el-option 
+                    :label="'All'" :value="'all'"  
+                    @click="handleCategoryDropdown('all')" 
+                    :disabled="categoryFilters.length>1 && !categoryFilters.includes('all')"/>
+                    <el-option 
+                    v-for="(item, index) in categories" 
+                    :key="index" :label="item.category"
+                    :value="item.category" 
+                    @click="handleCategoryDropdown('other')"/>
+                </el-select>
+        </div>
+        <div class="date__picker px-2">
             <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
         </div>
         <div class="date__picker px-2">
@@ -220,6 +234,23 @@
                 @submit="(website) => {
                     selectedWebsites = website
                 }" :default="websites[0]" />
+           
+            <div class="date__filter">
+                <div class="text-sm title">Filter by categories</div>
+                 <el-select 
+                    v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable :max-collapse-tags="3"
+                    placeholder="select categories" size="large">
+                    <el-option 
+                    :label="'All'" :value="'all'"  
+                    @click="handleCategoryDropdown('all')" 
+                    :disabled="categoryFilters.length>1 && !categoryFilters.includes('all')"/>
+                    <el-option 
+                    v-for="(item, index) in categories" 
+                    :key="index" :label="item.category"
+                    :value="item.category" 
+                    @click="handleCategoryDropdown('other')"/>
+                </el-select>
+            </div>
             <div class="date__filter">
                 <div class="text-sm title">Select a date range</div>
                 <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
@@ -253,7 +284,9 @@ import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
 import { ref, watch, onBeforeMount } from 'vue';
-import { ElDatePicker } from 'element-plus';
+import { ElDatePicker, ElOption, ElSelect } from 'element-plus';
+import 'element-plus/es/components/option/style/css'
+import 'element-plus/es/components/select/style/css'
 
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
@@ -342,8 +375,17 @@ const options = ref({
     page: 1,
 })
 
-watch([dateStart, dateEnd, selectedWebsites, checkedFeeling], () => {
-    loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
+const categories = ref([])
+const categoryFilters = ref(['all'])
+
+const handleCategoryDropdown = (type)=>{
+    const filters = type == 'other'? categoryFilters.value.filter(category=> category != 'all'): ['all']
+    categoryFilters.value = categoryFilters.value.length > 0 ? filters: ['all']
+}
+
+watch([dateStart, dateEnd, selectedWebsites, checkedFeeling, categoryFilters], () => {
+    categoryFilters.value = categoryFilters.value.length>0?categoryFilters.value:['all']
+    loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value, categoryFilters.value);
    
 })
 
@@ -361,7 +403,7 @@ const reloadData = (reviewUpdated) => {
 }
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
-const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source, stars) => {
+const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source, stars, category) => {
     options.value.current = current;
     options.value.page = page;
     reviews_loader.value = true;
@@ -384,6 +426,10 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         apiParams += `&star=${stars}`
     }
 
+    if(category != 'all'){
+        apiParams +=`&category=${category.join(',')}`
+    }
+
     const api = apiBase + '?' + apiParams;
 
     await loadFeelingData(tag, dateStart, dateEnd, source);
@@ -402,7 +448,7 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
 }
 
 watch(selectedStars, () => {
-    loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
+    loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value, categoryFilters.value);
 });
 
 const starsData = ref([]);
@@ -515,6 +561,21 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
     }
 }
 
+const loadCategories = async (tag) =>{
+    const api = `establishment/${tag}/categories`
+     const response = await new Promise((resolve) => {
+        services.get_Record(api, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+        if (response.data && response.data.data) {
+              categories.value = response.data.data
+        }    
+    }
+}
+
 onBeforeMount(async () => {
     appStore.isLoading = true;
 
@@ -555,7 +616,8 @@ onBeforeMount(async () => {
         }
     })
 
-    await loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value);
+    await loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value, categoryFilters.value)
+    await loadCategories(companyId)
 });
 </script>
 

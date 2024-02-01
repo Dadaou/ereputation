@@ -1,7 +1,7 @@
 <template>
 <div :class="['mt-2 mb-2', props.showTitle==true?'':'']" ref=target>
   <div class="mx-auto">
-    <label for="select" class="font-semibold block" v-if="props.showTitle==true">{{ title }}</label>
+    <label for="select" class="font-semibold block text-sm" v-if="props.showTitle==true">{{ title }}</label>
     <div class="relative padlist" v-if="isDataObject">
       <div class="h-10 bg-white flex border border-gray-200 rounded items-center">
         <input readonly v-model="selectedValueObject.name" name="select" id="select" class="px-3 appearance-none outline-none text-gray-800 w-full text-sm" checked @keyup.enter="setShowData(true, selectedValue, $event)" @click="setShowData(true, selectedValueObject, $event)" :placeholder="placeholder"/>

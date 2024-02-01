@@ -303,6 +303,7 @@ span.label{
     padding: 10px auto !important;
     cursor: pointer;
 }
+
 .qr__code_view{
     width: 30% !important;
     padding: 10px auto !important;
