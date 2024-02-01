@@ -1,10 +1,13 @@
 <template>
     <div class="profile__header mt-2">
         <div class="profile__edit">
-            <h2>Competitors</h2>
+             <div class="links__header">
+                 <h2>{{title}}</h2>
+                <button v-if="showLinkModal" @click="showLinkModal = !showLinkModal">Back</button>
+            </div>
         </div>
     </div>
-    <div class="mt-5 table__container">
+    <div class="mt-5 table__container" v-if="!showLinkModal">
         <el-table :data="competitorsData">
             <!-- <el-table-column width="100">
                 <template #default="scope">
@@ -28,7 +31,7 @@
                     <el-button size="small" @click="showModal = !showModal, establishment = scope.row.uri"><i
                             class="uil uil-link-add"></i></el-button>
 
-                    <el-button size="small" @click="showLinkModal = !showLinkModal, establishment = scope.row.uri"><i
+                    <el-button size="small" @click="loadLinksByEstablishment(scope.row.tag)"><i
                             class="uil uil-file-alt"></i></el-button>
                     <!-- <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
                         <template #reference>
@@ -40,6 +43,30 @@
 
                     <!-- <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
                             class="uil uil-edit"></i></el-button> -->
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+    <div class="mt-5 table__container" v-else>
+        <el-table :data="allLinks">
+            <el-table-column label="Establishment" prop="establishment" style="width: 50%; min-width: 200px;" />
+            <el-table-column label="Provider" prop="name" style="width: 50%; min-width: 200px;" />
+            <el-table-column label="Value" prop="settings_value1" style="width: 50%; min-width: 200px;" />
+            <el-table-column style="width: 25%; min-width: 200px;" align="right">
+                <template #header>
+                    <el-input v-model="search" size="small" placeholder="Type to search" />
+                </template>
+                <template #default="scope">
+                    <el-button size="small">
+                         <a :href="scope.row.url" target="_blank" class="external-link"><i
+                                class="uil uil-external-link-alt"></i></a>
+                    </el-button>
+                    
+                    <!-- <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
+                        <template #reference>
+                          <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
+                        </template>
+                    </el-popconfirm> -->
                 </template>
             </el-table-column>
         </el-table>
@@ -108,7 +135,7 @@
 
         </template>
     </ModalComponent>
-    <ModalComponent :showModal="showLinkModal" @close="showLinkModal = !showLinkModal" :width="modalWidth">
+    <!-- <ModalComponent :showModal="showLinkModal" @close="showLinkModal = !showLinkModal" :width="modalWidth">
         <template #content>
             <div class="modal__header">
                 <div class="modal__title">
@@ -133,7 +160,7 @@
                 </li>
             </ul>
         </template>
-    </ModalComponent>
+    </ModalComponent> -->
 </template>
 <script setup>
 import { computed, defineAsyncComponent, ref, onBeforeMount, watch, inject } from 'vue'
@@ -187,6 +214,10 @@ const establishment = ref('')
 const links = ref([])
 const competitorsData = inject('competitorsData')
 const reloadCompetitor = inject('reloadCompetitor')
+const title = computed(()=>{
+    return showLinkModal.value?'Links list': 'Competitor configuration'
+})
+const allLinks = ref([])
 
 const handleEdit = (index, establishment) => {
     emit('edit', establishment);
@@ -228,6 +259,40 @@ const filteredProviders = computed(() => {
     let data = providers.value;
     return data.filter(item => item.category == category.value);
 })
+
+function transformLinksData(inputData) {
+    return inputData.map(item => {
+        return {
+            establishment: item.establishment_name || '',
+            category: item.provider_category || '',
+            name: item.provider_name || '',
+            providerurl: item.provider_url,
+            url: item.provider_url ? item.provider_url.replace('{value1}', item.settings_value1) : '',
+            id: item.settings_id || 0,
+            settings_value1: item.settings_value1 || ''
+        };
+    });
+}
+
+const loadLinksByEstablishment = async (tag) =>{
+     showLinkModal.value = !showLinkModal.value
+    
+     try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`establishment/url?tag=${tag}`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status == 200) {
+           console.log(response.data)
+           allLinks.value = transformLinksData(response.data.data)
+           console.log(allLinks.value)
+           
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 const urlPattern = (urlTemplate) => {
     let regexPattern = urlTemplate.replace(/[\-\[\]\/\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
@@ -426,6 +491,21 @@ onBeforeMount(async () => {
 });
 </script>
 <style scoped>
+
+.links__header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.links__header button{
+    background-color: var(--color-primary);
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 2px 10px;
+    border-radius: 2px;
+}
+
 button {
     border: none;
     cursor: pointer;
