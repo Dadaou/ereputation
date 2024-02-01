@@ -36,7 +36,7 @@
             {{ discount.establishment_name }}
           </td>
           <td class="px-6 py-4">
-            {{ userStore.user.customer.email || '-' }}
+            {{ discount.contact_email || '-' }}
           </td>
            <td class="px-6 py-4">
             {{ discount.adv_name }}
