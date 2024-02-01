@@ -315,6 +315,7 @@ const resetForm = () => {
 }
 
 const submit = async () => {
+    var lg = localStorage.getItem("langue")
     let date_review = new Date();
     let review = {
         "author": `${firstname.value} ${lastname.value}`,
@@ -336,13 +337,14 @@ const submit = async () => {
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
         "dateReview": moment(date_review, 'DD/MM/YYYY')
     }
+    
     let contactData = {
         gender: gender.value,
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,
         establishment: `/api/establishments/${establishment.value.id}`
-    };
+    }
 
     let coupons = {
         advantage: randomAdvantage.value.id,
@@ -351,6 +353,7 @@ const submit = async () => {
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,
+        language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase()
     }
 
     try {

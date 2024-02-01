@@ -256,6 +256,7 @@ const resetForm = () => {
 }
 
 const submit = async () => {
+    var lg = localStorage.getItem("langue")
     let date_review = new Date();
     let review = {
         "author": `${firstname.value} ${lastname.value}`,
@@ -293,8 +294,9 @@ const submit = async () => {
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,
+        language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase()
     }
-
+    console.log(coupons)
     try {
         if (firstname.value !== '' && ratingCustomer.value !== null) {
             showSpinner.value = true;

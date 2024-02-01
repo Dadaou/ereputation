@@ -111,7 +111,7 @@
           <li @click="closeDropdownMenu">
             <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/events`">
               <i class="uil uil-calendar-alt"></i>
-              <span>Event</span>
+              <span>Events</span>
             </RouterLink>
           </li>
           <li @click="closeDropdownMenu">
