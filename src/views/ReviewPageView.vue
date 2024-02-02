@@ -1,8 +1,17 @@
 <template>
     <div class="left__side">
-        <div class="head">
+        <div class="head w-full">
             <div class="app__title">
                 <h2>Reviews</h2>
+            </div>
+            <div class="category-selector">
+                <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
+                    :max-collapse-tags="3" placeholder="select categories" size="">
+                    <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
+                        :disabled="categoryFilters.length > 1 && !categoryFilters.includes('all')" />
+                    <el-option v-for="(item, index) in categories" :key="index" :label="item.category"
+                        :value="item.category" @click="handleCategoryDropdown('other')" />
+                </el-select>
             </div>
         </div>
         <div class="reviews__content">
@@ -63,30 +72,24 @@
         <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
     </div>
     <div class="tablet_mobile__filter" v-if="currentFilter == 'filter'">
-        <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform" placeholder="Select a website"
-            :data="websites" @submit="(website) => {
+        <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform"
+            placeholder="Select a website" :data="websites" @submit="(website) => {
                 selectedWebsites = website
             }" :default="websites[0]" />
         <div class="date__picker px-2">
-                 <el-select 
-                    v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable :max-collapse-tags="3"
-                    placeholder="select categories" size="large">
-                    <el-option 
-                    :label="'All'" :value="'all'"  
-                    @click="handleCategoryDropdown('all')" 
-                    :disabled="categoryFilters.length>1 && !categoryFilters.includes('all')"/>
-                    <el-option 
-                    v-for="(item, index) in categories" 
-                    :key="index" :label="item.category"
-                    :value="item.category" 
-                    @click="handleCategoryDropdown('other')"/>
-                </el-select>
+            <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
+                :max-collapse-tags="3" placeholder="select categories" size="large">
+                <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
+                    :disabled="categoryFilters.length > 1 && !categoryFilters.includes('all')" />
+                <el-option v-for="(item, index) in categories" :key="index" :label="item.category" :value="item.category"
+                    @click="handleCategoryDropdown('other')" />
+            </el-select>
         </div>
         <div class="date__picker px-2">
             <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
         </div>
         <div class="date__picker px-2">
-            
+
             <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
         </div>
     </div>
@@ -113,7 +116,7 @@
             <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
             <div>
                 <i
-                    :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '',establishment.category == 'Other' ? 'uil-home' : '']"></i>
+                    :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '', establishment.category == 'Other' ? 'uil-home' : '']"></i>
                 <span v-if="!dataLoading">{{ establishment.category }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
             </div>
@@ -219,7 +222,7 @@
                 <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
                 <div class="society__location">
                     <i
-                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '',establishment.category == 'Other' ? 'uil-home' : '']"></i>
+                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '', establishment.category == 'Other' ? 'uil-home' : '']"></i>
                     <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
                     <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                 </div>
@@ -234,23 +237,6 @@
                 @submit="(website) => {
                     selectedWebsites = website
                 }" :default="websites[0]" />
-           
-            <div class="date__filter">
-                <div class="text-sm title">Filter by categories</div>
-                 <el-select 
-                    v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable :max-collapse-tags="3"
-                    placeholder="select categories" size="large">
-                    <el-option 
-                    :label="'All'" :value="'all'"  
-                    @click="handleCategoryDropdown('all')" 
-                    :disabled="categoryFilters.length>1 && !categoryFilters.includes('all')"/>
-                    <el-option 
-                    v-for="(item, index) in categories" 
-                    :key="index" :label="item.category"
-                    :value="item.category" 
-                    @click="handleCategoryDropdown('other')"/>
-                </el-select>
-            </div>
             <div class="date__filter">
                 <div class="text-sm title">Select a date range</div>
                 <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
@@ -378,15 +364,15 @@ const options = ref({
 const categories = ref([])
 const categoryFilters = ref(['all'])
 
-const handleCategoryDropdown = (type)=>{
-    const filters = type == 'other'? categoryFilters.value.filter(category=> category != 'all'): ['all']
-    categoryFilters.value = categoryFilters.value.length > 0 ? filters: ['all']
+const handleCategoryDropdown = (type) => {
+    const filters = type == 'other' ? categoryFilters.value.filter(category => category != 'all') : ['all']
+    categoryFilters.value = categoryFilters.value.length > 0 ? filters : ['all']
 }
 
 watch([dateStart, dateEnd, selectedWebsites, checkedFeeling, categoryFilters], () => {
-    categoryFilters.value = categoryFilters.value.length>0?categoryFilters.value:['all']
+    categoryFilters.value = categoryFilters.value.length > 0 ? categoryFilters.value : ['all']
     loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value, categoryFilters.value);
-   
+
 })
 
 let selectedStars = ref('0');
@@ -426,8 +412,8 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         apiParams += `&star=${stars}`
     }
 
-    if(category != 'all'){
-        apiParams +=`&category=${category.join(',')}`
+    if (category != 'all') {
+        apiParams += `&category=${category.join(',')}`
     }
 
     const api = apiBase + '?' + apiParams;
@@ -561,9 +547,9 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
     }
 }
 
-const loadCategories = async (tag) =>{
+const loadCategories = async (tag) => {
     const api = `establishment/${tag}/categories`
-     const response = await new Promise((resolve) => {
+    const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
@@ -571,8 +557,8 @@ const loadCategories = async (tag) =>{
 
     if (response.status == 200) {
         if (response.data && response.data.data) {
-              categories.value = response.data.data
-        }    
+            categories.value = response.data.data
+        }
     }
 }
 
@@ -627,6 +613,17 @@ onBeforeMount(async () => {
         height: 200px;
         margin: 0 !important;
         flex-basis: 30%
+    }
+}
+
+.category-selector {
+    width: 300px;
+}
+
+@media screen and (max-width: 425px) {
+    .category-selector {
+        width: 100%;
+        margin-top: 8px;
     }
 }
 </style>
