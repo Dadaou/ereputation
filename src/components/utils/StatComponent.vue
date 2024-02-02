@@ -22,7 +22,7 @@ const props = defineProps(["color", "bgColor", "icon", "iconStyle", "value", "de
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 
 function formatNumberWithDots(number) {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 </script>
 

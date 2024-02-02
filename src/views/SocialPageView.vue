@@ -15,7 +15,7 @@
         </div>
         <div class="reviews__content">
             <div class="social-list" v-if="!dataLoading">
-                <div class="social-media-container" v-if="Object.keys(postData.data).length > 0">
+                <!-- <div class="social-media-container" v-if="Object.keys(postData.data).length > 0">
                     <div v-for="(values, platform) in postData.data" :key="platform" class="platform">
                         <h3>{{ platform.charAt(0).toUpperCase() + platform.slice(1) }} <i
                                 :class="`uil uil-${platform}`"></i></h3>
@@ -24,6 +24,18 @@
                         <div v-if="values.likes !== undefined"><i class="uil uil-thumbs-up"></i>: {{ formatNumberWithDots(values.likes) }}
                         </div>
                         <div v-if="values.share !== undefined"><i class="uil uil-share"></i>: {{ formatNumberWithDots(values.share) }}
+                        </div>
+                    </div>
+                </div> -->
+                <div class="social-media-container" v-if="Object.keys(socials).length > 0">
+                    <div v-for="(values, platform) in socials" :key="platform" class="platform">
+                        <h3>{{ platform.charAt(0).toUpperCase() + platform.slice(1) }} <i
+                                :class="`uil uil-${platform}`"></i></h3>
+                        <div v-if="postData.data[platform].followers !== undefined"><i class="uil uil-users-alt"></i>: {{
+                           formatNumberWithDots(postData.data[platform].followers) }}</div>
+                        <div v-if="postData.data[platform].likes !== undefined"><i class="uil uil-thumbs-up"></i>: {{ formatNumberWithDots(postData.data[platform].likes) }}
+                        </div>
+                        <div v-if="values.share !== undefined"><i class="uil uil-share"></i>: {{ formatNumberWithDots(postData.data[platform].share) }}
                         </div>
                     </div>
                 </div>
@@ -310,7 +322,7 @@ const generatedLegend = (colors, dataType) => {
 }
 
 function formatNumberWithDots(number) {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
 const getFollowers = (datasets, type) => {
@@ -411,6 +423,7 @@ onBeforeMount(async () => {
     if (socialResponse.status == 200) {
         establishment.value['socials'] = transformToSourceURL(socialResponse.data);
         socials.value = transformToSourceURL(socialResponse.data);
+        console.log(socials.value)
         dataLoading.value = false;
     }
     if (!socialStore.trendsByEstablishment[`${companyId}`]) {
@@ -553,11 +566,9 @@ watch([trendsByEstablishment, calculType], () => {
 <style scoped>
 .social-media-container {
     display: flex;
+    padding: 0;
     flex-wrap: wrap;
-    
-    /* Alignement à gauche */
-    justify-content: space-between;
-    padding: 0px;
+    gap: 1rem;
 }
 
 .platform {
@@ -566,10 +577,12 @@ watch([trendsByEstablishment, calculType], () => {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
-    width: 100%;
-    max-width: 32%;
     margin: 15px 0;
+    flex-grow: 1;
+    width: 40%;
 }
+
+
 
 .platform:hover {
     transform: translateY(-5px);

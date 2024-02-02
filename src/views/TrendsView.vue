@@ -349,22 +349,30 @@ const generateColor = (text, index) => {
 function transformData(inputData) {
     const labels = Object.keys(inputData.data);
     let datasets = {};
-    let index = 1;
+    let index = 3;
 
     labels.forEach(date => {
         Object.keys(inputData.data[date]).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())).forEach(key => {
             if (!datasets[key]) {
-
+                
                 if (key == 'global') {
                     datasets[key] = {
                         label: key,
-                        borderColor: generateColor(key, 0),
+                        borderColor: '#FF0000',
                         borderWidth: 3,
-                        backgroundColor: generateColor(key, 0),
+                        backgroundColor: '#FF0000',
                         data: Array(labels.length).fill(0),
                         pointRadius: 0,
                         fill: false,
                         tension: 0.1
+                    };
+                }else if(key == 'reviews'){
+                    datasets[key] = {
+                        label: key,
+                        borderColor: '#337ecc',
+                        borderWidth: 3,
+                        backgroundColor: '#337ecc',
+                        data: Array(labels.length).fill(0),
                     };
                 } else {
                     datasets[key] = {

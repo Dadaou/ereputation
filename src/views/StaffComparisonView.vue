@@ -26,7 +26,7 @@
     }">
       <GroupedBarChart :plot-data="plotdata" x-key="date" :width="custom_width" :height="200"
         :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Reviews"
-        :colors="['#f75842', '#337ecc', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
+        :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
         :y-tick-format="d => `${d}`" />
     </div>
     <div>
@@ -101,7 +101,7 @@ window.addEventListener('resize', () => {
   isMobile.value = window.innerWidth <= 768;
 });
 
-const colors = ref(['#f75842', '#337ecc', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']);
+const colors = ref(['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']);
 
 const getPlotData = async (period, rangedate, next) => {
   period = period.toLowerCase();
@@ -133,12 +133,26 @@ const getPlotData = async (period, rangedate, next) => {
   next(data);
 }
 
+function reordonnerObjets(listeObjets) {
+  return listeObjets.map(objet => {
+    const {Score, ...autresProprietes} = objet;
+
+    let nouvelObjet = {Score };
+
+    Object.keys(autresProprietes).forEach(propriete => {
+      nouvelObjet[propriete] = autresProprietes[propriete];
+    });
+
+    return nouvelObjet;
+  });
+}
+
 const legendData = computed(() => {
   let data = [];
   let dates = plotdata.value;
   let nameSet = new Set();
 
-  let n = 0;
+  let n = 1;
   dates.forEach((date) => {
     for (const key in date) {
       if (key != "date" && key != "Score") {
@@ -168,7 +182,7 @@ onMounted(async () => {
       resolve(response)
     })
   });
-  plotdata.value = response;
+  plotdata.value = reordonnerObjets(response);
   console.log(plotdata.value)
 });
 
@@ -180,7 +194,8 @@ watch([date, type], async () => {
         resolve(response)
       })
     });
-    plotdata.value = response;
+    plotdata.value = reordonnerObjets(response);
+    
   }
 });
 
