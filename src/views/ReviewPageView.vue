@@ -233,10 +233,12 @@
                     <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                 </div>
             </div>
-            <DropdownComponent class="dropdown" title="Filter by plateform" placeholder="Select a website" :data="websites"
-                @submit="(website) => {
-                    selectedWebsites = website
-                }" :default="websites[0]" />
+            <DropdownComponent class="dropdown" title="Filter by sentiment analysis" placeholder="Select a sentiment"
+                :data="feelings" @submit="(feeling) => {
+                    selectedFeeling = feeling
+                }" :default="feelings[0]" />
+
+
             <div class="date__filter">
                 <div class="text-sm title">Select a date range</div>
                 <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
@@ -316,7 +318,8 @@ let paginationConfig = ref({
 let dataLoading = ref(true);
 let currentFilter = ref('filter');
 
-let checkedFeeling = ref(['positive', 'neutre', 'negative']);
+let feelings = ref(['All', 'Positive', 'Neutre', 'Negative']);
+let selectedFeeling = ref(null);
 let selectedWebsites = ref('Global');
 let websites = ref(['Global']);
 const all_items = ref([
@@ -369,7 +372,7 @@ const handleCategoryDropdown = (type) => {
     categoryFilters.value = categoryFilters.value.length > 0 ? filters : ['all']
 }
 
-watch([dateStart, dateEnd, selectedWebsites, checkedFeeling, categoryFilters], () => {
+watch([dateStart, dateEnd, selectedWebsites, selectedFeeling, categoryFilters], () => {
     categoryFilters.value = categoryFilters.value.length > 0 ? categoryFilters.value : ['all']
     loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value, categoryFilters.value);
 
@@ -414,6 +417,10 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
 
     if (category != 'all') {
         apiParams += `&category=${category.join(',')}`
+    }
+
+    if (selectedFeeling.value && selectedFeeling.value != 'All') {
+        apiParams += `&feeling=${selectedFeeling.value.toLowerCase()}`
     }
 
     const api = apiBase + '?' + apiParams;
