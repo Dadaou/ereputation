@@ -1,45 +1,59 @@
 <template>
-<div class="reviews__content" v-if="reviews.length > 0">
-    <article v-for="review in reviews" :class="[review.source=='App (Private)'?'intern__comment':'']">
-        <div class="flex items-center review__item">
-            <div class="flex items-center mb-1 space-x-4">
-                <div class="review__info space-y-1 dark:text-white info__reviews">
-                    <div class="flex items-center mb-2 space-x-4">
-                        <img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full" :src="review.profile_photo" alt="">
-                        <div v-else class="relative inline-flex items-center justify-center w-8 h-8 p-1 rounded author__initial">
-                            <span class="font-medium dark:text-white">{{ userStore.getInitialsV2(review.author) }} </span>
+    <div class="reviews__content" v-if="reviews.length > 0">
+        <article v-for="review in reviews" :class="[review.source == 'App (Private)' ? 'intern__comment' : '']">
+            <div class="flex items-start review__item">
+                <div class="flex items-center mb-1 space-x-4">
+                    <div class="review__info space-y-1 dark:text-white info__reviews">
+                        <div class="flex items-center mb-2 space-x-4">
+                            <img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full"
+                                :src="review.profile_photo" alt="">
+                            <div v-else
+                                class="relative inline-flex items-center justify-center w-8 h-8 p-1 rounded author__initial">
+                                <span class="font-medium dark:text-white">{{ userStore.getInitialsV2(review.author) }}
+                                </span>
+                            </div>
+                            <div class="font-medium dark:text-white">
+                                <p id="author__name">{{ review.author }}</p>
+                            </div>
                         </div>
-                        <div class="font-medium dark:text-white">
-                            <p id="author__name">{{ review.author }}</p>
+                        <ul class="space-y-1 text-gray-500 dark:text-gray-400">
+                            <li v-if="review.date_review != null" class="flex items-center"><i
+                                    class="uil uil-calender"></i><span>
+                                    {{ moment(review.date_review).format('D MMMM YYYY') }}
+                                </span></li>
+                            <li v-else class="flex items-center"><i class="uil uil-calender"></i><span>
+                                    {{ moment(review.created_at).format('D MMMM YYYY') }}
+                                </span></li>
+                            <li class="flex items-center"><i class="uil uil-map-pin-alt"></i><span>
+                                    {{ review.source }}
+                                </span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="review__right mt-2">
+                    <div style="height: 20px;">
+                        <div v-if="review.category" class="review__category-container">
+                            <span v-for="item in review.category.split(';')" :key="item" class="review__category">{{ item
+                            }}</span>
                         </div>
                     </div>
-                    <ul class="space-y-1 text-gray-500 dark:text-gray-400">
-                        <li v-if="review.date_review != null" class="flex items-center"><i class="uil uil-calender"></i><span>
-                            {{ moment(review.date_review).format('D MMMM YYYY')}}
-                        </span></li>
-                         <li v-else class="flex items-center"><i class="uil uil-calender"></i><span>
-                            {{ moment(review.created_at).format('D MMMM YYYY')}}
-                        </span></li>
-                        <li class="flex items-center"><i class="uil uil-map-pin-alt"></i><span>
-                            {{ review.source }}
-                        </span></li>
-                    </ul>
+                    <div>
+                        <span class="emoji mx-1" v-if="showEmoji" @click="editReview(review)">
+                            <span v-if="review.feeling == 'positive'">😀</span>
+                            <span v-if="review.feeling == 'neutre' || review.feeling == 'neutral'">😐</span>
+                            <span v-if="review.feeling == 'negative'">😕</span>
+                        </span>
+                        <p
+                            class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center px-3 py-1 rounded dark:bg-yellow-200 dark:text-yellow-800">
+                            {{ review.star | review.rating }}</p>
+                    </div>
                 </div>
             </div>
-            <div>
-                <span class="emoji" v-if="showEmoji" @click="editReview(review)">
-                    <span v-if="review.feeling=='positive'">😀</span>
-                    <span v-if="review.feeling=='neutre' || review.feeling=='neutral'">😐</span>
-                    <span v-if="review.feeling=='negative'">😕</span>
-                </span>
-                <p class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center px-3 py-1 rounded dark:bg-yellow-200 dark:text-yellow-800">{{ review.star | review.rating }}</p>
-            </div> 
-        </div>
-        <div class="col-span-2">
-            <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 comment">{{ review.comment }}</p>
-        </div>
-    </article>
-    <ModalComponent :showModal="showModal" @close="showModal=false" :width="modalWidth">
+            <div class="col-span-2">
+                <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 comment">{{ review.comment }}</p>
+            </div>
+        </article>
+        <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
             <template #content>
                 <div class="modal__header">
                     <div class="modal__title">
@@ -48,22 +62,22 @@
                         </h3>
                     </div>
                     <div class="modal__close">
-                        <i class="uil uil-times-circle"  @click="showModal = false"></i>
+                        <i class="uil uil-times-circle" @click="showModal = false"></i>
                     </div>
                 </div>
                 <div class="mb-6 feedback__rating">
-                       <FeelingFeedbackComponent @updateValue="(feeling)=>{
+                    <FeelingFeedbackComponent @updateValue="(feeling) => {
                         feel = feeling
-                       }"/>
+                    }" />
                 </div>
                 <div class="mt-5 download__qr_btn">
-                <button class="btn__light_secondary" @click="updateReview">
-                    <i class="uil uil-save"></i> Save
-                </button>
-            </div> 
+                    <button class="btn__light_secondary" @click="updateReview">
+                        <i class="uil uil-save"></i> Save
+                    </button>
+                </div>
             </template>
         </ModalComponent>
-</div>
+    </div>
 </template>
 <script setup>
 import { ref, provide, computed } from 'vue';
@@ -97,17 +111,17 @@ const { width, height } = useWindowSize();
 const userStore = useUserStore();
 const feedbackStore = useFeedbackStore();
 const companiesStore = useCompanyStore();
-const modalWidth= computed(()=>{
+const modalWidth = computed(() => {
     let windowSize = 1500;
-    let gap = (windowSize - width.value)/19;
+    let gap = (windowSize - width.value) / 19;
     return gap + 35;
 })
 const formatRating = (rating, source) => {
-    if (source == 'tripadvisor' && rating*5 <= 5) {
+    if (source == 'tripadvisor' && rating * 5 <= 5) {
         rating = rating * 5
     }
     rating = parseFloat(rating);
-    if(rating > 5){
+    if (rating > 5) {
         rating = rating / 2;
     }
     return rating.toFixed(0);
@@ -120,17 +134,17 @@ const selectedReview = ref(null);
 provide('feeling', feel);
 
 const editReview = (review) => {
-   feel.value = review.feeling;
-   review.feeling = feel.value;
-   id.value =review.id;
-   selectedReview.value = review; 
+    feel.value = review.feeling;
+    review.feeling = feel.value;
+    id.value = review.id;
+    selectedReview.value = review;
 
-   if(feel.value=='neutre') feel.value = 'neutral';
-   showModal.value = true;
+    if (feel.value == 'neutre') feel.value = 'neutral';
+    showModal.value = true;
 }
 
-const reloadData = (reviewUpdated, feeling)=>{
-   emits('reloadData', reviewUpdated);
+const reloadData = (reviewUpdated, feeling) => {
+    emits('reloadData', reviewUpdated);
 }
 
 const updateReview = async () => {
@@ -144,11 +158,11 @@ const updateReview = async () => {
     try {
         reloadData(selectedReview.value, feel.value)
         showModal.value = false;
-        await feedbackStore.updateReview(id.value, updatedValue, response=>{
-            if(response.status==200){
-    
-            } 
-        })   
+        await feedbackStore.updateReview(id.value, updatedValue, response => {
+            if (response.status == 200) {
+                //
+            }
+        })
     } catch (error) {
         console.log(error);
     }
@@ -156,76 +170,102 @@ const updateReview = async () => {
 
 </script>
 <style scoped>
-.modal__header{
+.modal__header {
     display: flex;
     justify-content: space-between;
 }
 
-.modal__header div{
+.modal__header div {
     align-self: center;
 }
 
-.modal__close i{
-   float: right;
-   font-size: 25px;
-   color: red;
-   cursor: pointer;
-   transition: var(--transition);
+.modal__close i {
+    float: right;
+    font-size: 25px;
+    color: red;
+    cursor: pointer;
+    transition: var(--transition);
 }
 
-.modal__close i:hover{
+.modal__close i:hover {
     transform: rotate(360deg);
 }
 
-.download__qr_btn{
+.download__qr_btn {
     display: flex;
     justify-content: center;
 }
 
-.download__qr_btn button{
+.download__qr_btn button {
     flex-basis: 50%;
 }
 
-.emoji{
+.emoji {
     cursor: pointer;
 }
 
-.author__initial{
+.author__initial {
     border: 2px solid rgb(211, 211, 211);
 }
 
-.intern__comment{
+.intern__comment {
     background-color: rgb(249, 244, 255);
     border: 1px solid var(--color-primary);
 }
 
-.review__info{
+.review__info {
     font-weight: 600;
 }
 
-#author__name{
+#author__name {
     font-size: 16px;
     color: var(--color-primary);
 }
 
-.review__info ul{
+.review__info ul {
     font-size: 13px !important;
     color: var(--color-bg1);
 }
 
-.review__item{
+.review__item {
     justify-content: space-between !important;
 }
 
-.reviews__content article{
-   margin: 10px auto;
-   border-radius: 10px;
-   padding: 20px;
-   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+.reviews__content article {
+    margin: 10px auto;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
-.info__reviews i{
+.info__reviews i {
     margin-right: 5px;
     color: var(--color-danger);
+}
+
+.review__category-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
+    gap: 2px;
+}
+
+.review__category {
+    background: var(--color-danger);
+    color: white;
+    font-size: 13px;
+    border-radius: 8px;
+    padding: 0 8px;
+    font-weight: 400;
+}
+
+.review__right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 16px;
+    height: 100%;
 }
 </style>
