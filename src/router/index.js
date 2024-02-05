@@ -173,6 +173,31 @@ const router = createRouter({
           component: () => import('@Views/EnableAdvantagePageView.vue')
         },
         {
+          path: '/discount',
+          name: 'DiscountValidation',
+          redirect: { name: 'DiscountAuthentication' },
+          children:[
+            {
+              path: '/discount/auth',
+              name: 'DiscountAuthentication',
+              component: ()=> import('@Views/DiscountValidationAuthPageView.vue')
+            },
+            {
+              path: '/establishment/:etab/discount/validation/:discountTag',
+              name: 'DiscountQRCodeValidation',
+              component: () => import('@Views/EnableAdvantagePageView.vue'),
+              meta: {
+                requiresAuth: true
+              }
+            },
+            {
+              path: '/discount/code/validation',
+              name: 'DiscountCodeValidation',
+              component: () => import('@Views/DiscountValidationCodePageView.vue')
+            }
+          ]
+        },
+        {
           path: '/forgot-pwd',
           name: 'ForgotPwd',
           component: ForgotPwdPageView
@@ -254,5 +279,26 @@ const router = createRouter({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    const isAuthenticated = checkAuthentication(); // Votre logique d'authentification
+    if (!isAuthenticated) {
+      next({
+        name: 'DiscountAuthentication',
+        query: { redirect: to.fullPath }
+      });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
+function checkAuthentication() {
+  const isAuthenticated = localStorage.getItem('isSellerAuthenticated');
+  return isAuthenticated === 'true';
+}
 
 export default router
