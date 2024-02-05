@@ -492,11 +492,13 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source) => {
         let green = 255
         if (feeling == -1) {
             red = 255
-            green = 0
+            green = 255 - ((score * 100 * 255) / 100)
         } else {
             green = 255
-            red = 0
+            red = 255 - ((score * 100 * 255) / 100)
         }
+
+
 
         reviewFeedbackData.value = {
             width: width,

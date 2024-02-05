@@ -103,19 +103,19 @@
             :data="computedCompetitors" @submit="(competitor) => {
                 selectedCompetitors = competitor.name
             }" :defaultObj="computedCompetitors[0]" :isDataObject="true" />
-        <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform" placeholder="Select a website"
-            :data="websites" @submit="(website) => {
+        <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform"
+            placeholder="Select a website" :data="websites" @submit="(website) => {
                 selectedWebsites = website
             }" :default="websites[0]" />
         <DropdownComponent :showTitle="false" class="dropdown w-full" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
             selectedTimePeriod = timePeriod
         }" :default="timePeriods[0]" />
         <div class="date__picker px-2">
-           
+
             <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
         </div>
         <div class="date__picker px-2">
-            
+
             <el-date-picker v-model="end_date" type="date" placeholder="Select the end date" :size="'large'" />
         </div>
     </div>
@@ -253,7 +253,7 @@
                 <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
                 <div class="society__location">
                     <i
-                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '', establishment.category == 'Other' ? 'uil-home ': '']"></i>
+                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '', establishment.category == 'Other' ? 'uil-home ' : '']"></i>
                     <span v-if="!establishmentLoading" class="society__location">{{ establishment.category }}</span>
                     <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                 </div>
@@ -668,10 +668,10 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source) => {
         let green = 255
         if (feeling == -1) {
             red = 255
-            green = 0
+            green = 255 - ((score * 100 * 255) / 100)
         } else {
             green = 255
-            red = 0
+            red = 255 - ((score * 100 * 255) / 100)
         }
 
         reviewFeedbackData.value = {
