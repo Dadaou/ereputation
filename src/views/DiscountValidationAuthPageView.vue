@@ -1,23 +1,19 @@
 <template>
     <div class="main__container">
-        <HeadComponent :page="page"></HeadComponent>
+       <!--  <HeadComponent :page="page"></HeadComponent> -->
         <AlertComponent :alertType="notification.type" :message="notification.message" v-if="isError"
             v-on:close="isError = false" />
         <div class="login__container" ref="form__ref">
             <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="login__form">
-                <span>Connect to your account</span>
-                <input type="email" name="Email Address" placeholder="Email address" v-model="form.email" required>
-                <input type="password" name="Password" placeholder="Password" v-model="form.password" required>
-                <a class="register-link forgot__password" href="/forgot-pwd">Forgot Password?</a>
+                <span>Connect to validate a discount</span>
+                <input type="password" name="code" placeholder="code" v-model="code" required>
                 <button type="submit" :class="['btn btn__light2', showSpinner == true ? 'isLoaded' : '']">
                     <SpinnerComponent v-if="showSpinner == true" :color="'red'" />
                     <span v-else>Submit</span>
                 </button>
-                <p><a href="/sign-up" class="register-link">Don't have an account?</a></p>
-                
             </form>
         </div>
-        <call-us-selector phonesystem-url="https://m-unit.on3cx.fr:5001" :party="chatID"></call-us-selector>
+        <!-- <call-us-selector phonesystem-url="https://m-unit.on3cx.fr:5001" :party="chatID"></call-us-selector> -->
     </div>
 </template>
 
@@ -25,7 +21,7 @@
 import { ref, watch, onMounted, defineAsyncComponent } from 'vue'
 import HeadComponent from '@Components/layouts/HeadComponent.vue'
 import { useUserStore } from "@Stores/user.js"
-import { useRouter } from "vue-router"
+import { useRouter, useRoute } from "vue-router"
 import { useWindowSize } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
@@ -38,21 +34,18 @@ const SpinnerComponent = defineAsyncComponent(() =>
 const AlertComponent = defineAsyncComponent(() =>
     import('@Components/utils/AlertComponent.vue')
 )
-const router = useRouter();
-const userStore = useUserStore();
+const router = useRouter()
+const route = useRoute()
+const userStore = useUserStore()
 
-const chatID = ref(import.meta.env.VITE_3CX_CHAT_ID);
-
-const page = ref({
-    title1: "Sign in to",
-    title2: "your Account",
-    icon: "uil-signin",
-});
+// const chatID = ref(import.meta.env.VITE_3CX_CHAT_ID);
 
 const form = ref({
     email: '',
     password: '',
 });
+
+const code = ref('')
 
 const isError = ref(false);
 
@@ -65,42 +58,42 @@ const showSpinner = ref(false)
 
 const submit = async () => {
     showSpinner.value = true;
-    await userStore.signIn(form.value.email, form.value.password, (response) => {
-        if (response.authenticated) {
-            router.push({ name: "Home" });
-            showSpinner.value = false;
-        } else {
-            isError.value = true;
-            if (response.status == 401) {
-                notification.value.message = "Please verify your password or email!";
-                notification.value.type = "warning";
-            }
-
-            if (response.status == 500) {
-                notification.value.message = "Oops! Something unexpected happened. A server connection issue";
-                notification.value.type = "error";
-            }
-            showSpinner.value = false;
-        }
-    })
-}
+    try{
+    	if (code.value === '4321') {
+			console.log('seller authenticate')
+			localStorage.setItem('isSellerAuthenticated', 'true');
+			if(route.query.redirect !== undefined){
+				router.push(route.query.redirect)
+			}
+			else router.push({ name: 'DiscountCodeValidation' })
+	        
+	        showSpinner.value = false;
+	    } else {
+	       notification.value.message = "Please provide the right code";
+	       notification.value.type = "warning";
+	       showSpinner.value = false;
+	    }
+    }catch(error){
+    	console.log(error)
+    }
+};
 
 /**
  * Navbar Handler
  * useWindowScroll allows us to detect the scroll event on 
  * the browser
  */
-const { width, height } = useWindowSize();
-const form__ref = ref(null)
+// const { width, height } = useWindowSize();
+// const form__ref = ref(null)
 
-onMounted(() => {
-    if (width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');
-});
+// onMounted(() => {
+//     if (width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');
+// });
 
-watch([width, isError], () => {
-    if (width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');
-    else if (isError.value == false) form__ref.value.classList.remove('custom__container');
-});
+// watch([width, isError], () => {
+//     if (width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');
+//     else if (isError.value == false) form__ref.value.classList.remove('custom__container');
+// });
 </script>
 
 <style scoped>
