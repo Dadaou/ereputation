@@ -77,15 +77,6 @@
                 selectedWebsites = website
             }" :default="websites[0]" />
         <div class="date__picker px-2">
-            <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
-                :max-collapse-tags="3" placeholder="select categories" size="large">
-                <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
-                    :disabled="categoryFilters.length > 1 && !categoryFilters.includes('all')" />
-                <el-option v-for="(item, index) in categories" :key="index" :label="item.category" :value="item.category"
-                    @click="handleCategoryDropdown('other')" />
-            </el-select>
-        </div>
-        <div class="date__picker px-2">
             <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
         </div>
         <div class="date__picker px-2">
