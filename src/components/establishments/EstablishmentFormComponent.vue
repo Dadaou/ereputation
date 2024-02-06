@@ -58,13 +58,22 @@
                     <input type="text" id="city" name="city" v-model="data.city" required
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
-                <div class="col-span-2">
+                <div>
                     <label for="country" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country
                         <span>*</span></label>
                     <el-select v-model="data.country" placeholder="" size="large">
                         <el-option v-for="(country, index) in countries" :key="index" :label="country.name"
                             :value="country.name" />
                     </el-select>
+                </div>
+                 <div>
+                    <label for="gps" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gps
+                    </label>
+                    <!-- <el-select v-model="department" placeholder="Choose department" size="large">
+                        <el-option v-for="item in departments" :key="item" :label="item" :value="item" />
+                    </el-select> -->
+                    <input type="text" id="gps" name="gps" v-model="data.gps"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
             </div>
             <div class="grid gap-6 mb-6 md:grid-cols-2">
@@ -79,12 +88,12 @@
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
                 <div>
-                    <label for="gps" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gps
+                    <label for="gps" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Website
                     </label>
                     <!-- <el-select v-model="department" placeholder="Choose department" size="large">
                         <el-option v-for="item in departments" :key="item" :label="item" :value="item" />
                     </el-select> -->
-                    <input type="text" id="gps" name="gps" v-model="data.gps"
+                    <input type="text" id="website" name="website" v-model="data.website"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
             </div>
@@ -272,7 +281,7 @@ watch(establishment_to_update, () => {
         previewImage.value = establishment_to_update.value.media || "";
         type.value = 'Edit';
     }
-})
+});
 
 
 </script>

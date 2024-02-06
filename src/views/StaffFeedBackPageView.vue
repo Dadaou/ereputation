@@ -85,8 +85,7 @@
                                 <i class="uil uil-info-circle"></i> {{ $t("feedback.indice1") }}
                             </span>
                             <p v-if="randomAdvantage">
-                                <b>{{ $t("feedback.promotion_day") }}</b> {{ randomAdvantage.name }} expired at {{
-                                    moment(randomAdvantage.expired_at).format('YYYY-MM-DD') }}
+                                <b>{{ $t("feedback.promotion_day") }}</b> {{ randomAdvantage.name }} 
                             </p>
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
                                 address <!-- <span>*</span> --></label>
@@ -288,7 +287,7 @@ const lastname = ref('');
 const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
-const dateVisit = ref('');
+const dateVisit = ref(moment().format('YYYY-MM-DD'));
 const gender = ref('');
 const genders = [
     {

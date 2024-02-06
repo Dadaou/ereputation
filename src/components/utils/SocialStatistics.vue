@@ -1,44 +1,5 @@
 <template>
     <div class="w-full" >
-        <div class="inline-flex justify-end items-center my-3 w-full" style="gap:8px;">
-            <el-dropdown  split-button type="primary">
-                {{ filter != null ? filter.label : 'Filter by' }}
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item v-for="f in filters" :key="f.value" @click="() => change(f, 'filter')">{{
-                            f.label }}</el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
-            <el-dropdown  split-button type="primary">
-                {{ year != null ? year.label : 'Select Year' }}
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item v-for="y in years" :key="y.value" @click="year = y">{{ y.label
-                        }}</el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
-            <el-dropdown  split-button type="primary">
-                {{ type != null ? type.label : 'Interval' }}
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item v-for="t in types" :key="t.value" @click="() => change(t, 'type')">{{ t.label
-                        }}</el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
-
-            <el-dropdown v-if="showPeriod"  split-button type="primary">
-                {{ period != null ? period.label : 'Period' }}
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item v-for="p in periods" :key="p.value" @click="period = p">{{ p.label
-                        }}</el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
-        </div>
         <div v-if="lineData" class="chart__container w-full" ref="lineChartContainer">
             <Line :data="lineData" :options="options" />
         </div>
@@ -59,44 +20,30 @@ import {
     ArcElement,
 } from 'chart.js';
 import { ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus';
-import { ref, watch, onMounted, onBeforeMount, onBeforeUnmount } from 'vue';
+import { ref, watch, onMounted, onBeforeMount, onBeforeUnmount, inject } from 'vue';
 import { useRoute } from "vue-router";
 import { useSocialStore } from "@Stores/social.js";
 import moment from 'moment';
+import services from '@Services/services.js'
+ ChartJS.register(
+        CategoryScale,
+        LinearScale,
+        PointElement,
+        LineElement,
+        Title,
+        Tooltip,
+        ArcElement,
+        Legend
+    )
 
 const route = useRoute();
 const companyId = route.params.id;
 const socialStore = useSocialStore();
-let barChartWidth = ref(620);
+const barChartWidth = ref(620);
 const lineChartContainer = ref(null);
-
-const periods = ref([]);
-const types = ref([
-    { label: "Week", value: "weekly" },
-    { label: "Month", value: "monthly" },
-    { label: "Year", value: "yearly" }
-]);
-
-const filters = ref([
-    { label: "Followers", value: "followers" },
-    { label: "Posts", value: "posts" },
-    { label: "Likes", value: "likes" }
-]);
-
-const years = ref([
-    { label: "2020", value: 2020 },
-    { label: "2021", value: 2021 },
-    { label: "2022", value: 2022 },
-    { label: "2023", value: 2023 },
-    { label: "2024", value: 2024 },
-    { label: "2025", value: 2025 }
-])
-
-const period = ref(null);
-const type = ref(null);
-const filter = ref(null);
-const year = ref(null);
-const showPeriod = ref(false);
+const start_date = inject('start_date');
+const end_date = inject('end_date');
+const socials = inject('socials');
 
 const lineData = ref({
     labels: [],
@@ -133,180 +80,99 @@ const options = ref({
     },
 })
 
-const updatePeriods = () => {
-    periods.value = []
-    showPeriod.value = true;
-    const yearValue = year.value ? year.value.value : new Date().getFullYear()
-    if (type.value.value == 'weekly') {
-        const firstDay = new Date(yearValue, 0, 1)
-        let monday = moment(new Date(firstDay.setDate(firstDay.getDate() - firstDay.getDay() + 1)));
-        for (let i = 1; i <= 53; i++) {
-            periods.value.push({
-                label: monday.format('LL'),
-                value: i
-            })
-            monday = monday.add(1, 'week')
+
+const loadSocialData = async (tag, startDate, endDate)=>{
+    try{
+        const response = await new Promise((resolve) => {
+             services.get_Record(
+                `social/establishment/${companyId}/daily/${startDate}/${endDate}/new_statistique`,
+                (response) => {
+                resolve(response)
+                }
+              )
+        });
+
+        if (response.status == 200) {
+           transformData(response.data, startDate, endDate)
+        }   
+    }catch(error){
+        console.log(error)
+    }
+}
+const getLabels = (data, endDate)=>{
+ let labels = []
+ endDate = new Date(endDate)
+ for(const [key, value] of Object.entries(data)){
+     let date = new Date(key)
+    if(date < endDate) labels.push(key)
+ }
+ const datesObjects = labels.map(dateString => new Date(dateString));
+ datesObjects.sort((a, b) => a - b);
+ labels = datesObjects.map(dateObject => dateObject.toISOString().slice(0, 10));
+ return labels
+}
+
+const getData = (labels, data, social, type)=>{
+ const today = new Date()
+ let values = []
+ for (var i = 0; i < labels.length; i++) {
+    let date = new Date(labels[i])
+  
+    if(date<=today){
+        if(data && data[`${labels[i]}`] && data[`${labels[i]}`][`${social}`] && data[`${labels[i]}`][`${social}`][`${type}`]){
+             values.push(data[`${labels[i]}`][`${social}`][`${type}`])
         }
     }
-    if (type.value.value == 'monthly') {
-        periods.value = [
-            { label: 'January', value: '01' },
-            { label: 'February', value: '02' },
-            { label: 'March', value: '03' },
-            { label: 'April', value: '04' },
-            { label: 'May', value: '05' },
-            { label: 'June', value: '06' },
-            { label: 'July', value: '07' },
-            { label: 'August', value: '08' },
-            { label: 'September', value: '09' },
-            { label: 'October', value: '10' },
-            { label: 'November', value: '11' },
-            { label: 'December', value: '12' }
-        ]
-    }
-    if (type.value.value == 'yearly') {
-        showPeriod.value = false;
-    }
+ }
+ return values
 }
 
-const change = (value, element) => {
-    if (element == 'type') {
-        type.value = value
-    }
-    if (element == 'filter') {
-        filter.value = value;
-    }
-}
+const transformData = (data, start_date, end_date)=>{
+ data = data[`${companyId}`]['daily']
 
-const checkData = (data) => {
-    let allzero = true;
-    data.forEach(value=>{
-        if(value != 0) allzero = false 
-    })
-    return allzero;
-}
+ let labels = getLabels(data, end_date)
+ let datasets = {
+    followers: [],
+    likes: [],
+    shares: [],
+ }
 
-const updateData = async () => {
-    const today = new Date().getDate();
+ let chartDataset = {
+    labels: labels,
+    datasets: []
+ }
 
-    const yearValue = year.value ? year.value.value : new Date().getFullYear()
-    const filterValue = filter.value ? filter.value.value : 'followers'
-    const typeValue = type.value ? type.value.value : 'yearly'
-    let periodValue = period.value ? period.value.value : ''
-
-    if (typeValue == 'weekly' && periodValue != '') {
-        periodValue = periodValue + '-' + yearValue
-    }
-    if (typeValue == 'monthly' && periodValue != '') {
-        periodValue = periodValue + '-' + yearValue
-    }
-    if (typeValue == 'yearly') {
-        periodValue = yearValue
-        showPeriod.value = false
-    }
-
-    const datas = await socialStore.getGlobalStats(companyId, typeValue, periodValue)
-    console.log(datas)
-
-    let data = {
-        labels: [],
-        datasets: []
-    }
-
-    const colors = {
+ let type = "followers"; 
+ const colors = {
         'facebook': '#1877F2',
         'instagram': '#E4405F',
         'linkedin': '#0A66C2',
         'tiktok': '#000000',
         'twitter': '#1DA1F2',
         'youtube': '#FF0000'
-    };
-    if (datas) {
-        // console.log(today)
-        // data.labels = datas.labels.filter(label=> label<=today);
-        data.labels = datas.labels
+ };
 
-        for (const [key, value] of Object.entries(datas.data)) {
-            
-            if(!checkData(value[filterValue])){
-                data.datasets.push({
-                    label: key,
-                    backgroundColor: colors[key],
-                    data: value[filterValue]
-                })
-            }
-        }
-        lineData.value = data;
-        console.log(lineData.value)
-    }
+ let socialsLabels = []
+ for(const key in socials.value) socialsLabels.push(key)
+ for (var i = 0; i < socialsLabels.length; i++) {
+     let social = socialsLabels[i];
+     chartDataset.datasets.push({
+         label: social,
+         backgroundColor: colors[social],
+         data: getData(labels, data, social, "followers")
+     })
+ }
+ 
+ lineData.value = chartDataset
+ console.log(chartDataset)
 }
- ChartJS.register(
-        CategoryScale,
-        LinearScale,
-        PointElement,
-        LineElement,
-        Title,
-        Tooltip,
-        ArcElement,
-        Legend
-    )
-const setCurrentDate = ()=>{
-      const currentDate = new Date();
-      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-     
-      period.value = { 
-        label: monthNames[currentDate.getMonth()], 
-        value: (currentDate.getMonth() + 1).toString().padStart(2, '0') 
-      }
 
-      year.value =  { 
-        label: currentDate.getFullYear().toString(), 
-        value: currentDate.getFullYear() 
-      }
-}
-onMounted(async () => {
-    type.value = { label: "Month", value: "monthly" }
-    setCurrentDate();
-    filter.value = { label: "Followers", value: "followers" }
-    const today = new Date().getDate();
-    const datas = await socialStore.getGlobalStats(companyId, 'monthly', `${period.value.value}-${year.value.value}`)
+watch([start_date, end_date], async()=>{
+ await loadSocialData(companyId, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+})
 
-    let data = {
-        labels: [],
-        datasets: []
-    }
-    const colors = {
-        'facebook': '#1877F2',
-        'instagram': '#E4405F',
-        'linkedin': '#0A66C2',
-        'tiktok': '#000000',
-        'twitter': '#1DA1F2',
-        'youtube': '#FF0000'
-    };
-
-    data.labels = datas.labels;
-
-    for (const [key, value] of Object.entries(datas.data)) {
-        if(!checkData(value["followers"])){
-            
-                data.datasets.push({
-                        label: key,
-                        backgroundColor: colors[key],
-                        data: value["followers"]
-                })
-        }
-    }
-
-    lineData.value = data;
-});
-
-watch([type], () => {
-    updatePeriods();
-});
-
-watch([type, year, period, filter], () => {
-    console.log(type.value)
-    updateData();
+onBeforeMount(async()=>{
+     await loadSocialData(companyId, start_date.value, end_date.value)
 })
 
 window.onresize = () => {
@@ -316,18 +182,6 @@ window.onresize = () => {
         barChartWidth.value = 400;
     }
 };
-
-onBeforeUnmount(()=>{
-    ChartJS.register(
-        CategoryScale,
-        LinearScale,
-        PointElement,
-        LineElement,
-        Title,
-        Tooltip,
-        ArcElement
-    )
-});
 </script>
 <style scoped>
 .chart__container {

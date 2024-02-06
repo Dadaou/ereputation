@@ -4,7 +4,7 @@
             <div class="app__title">
                 <h2>Reviews</h2>
             </div>
-            <div class="category-selector">
+            <!-- <div class="category-selector">
                 <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
                     :max-collapse-tags="3" placeholder="select categories" size="">
                     <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
@@ -12,7 +12,7 @@
                     <el-option v-for="(item, index) in categories" :key="index" :label="item.category"
                         :value="item.category" @click="handleCategoryDropdown('other')" />
                 </el-select>
-            </div>
+            </div> -->
         </div>
         <div class="reviews__content">
             <div class="reviews__pagination">
@@ -229,6 +229,16 @@
                     selectedFeeling = feeling
                 }" :default="feelings[0]" />
 
+            <div class="date__filter">
+                <div class="text-sm title">Filter by category</div>
+                <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
+                    :max-collapse-tags="3" placeholder="select categories" size="large">
+                    <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
+                        :disabled="categoryFilters.length > 1 && !categoryFilters.includes('all')" />
+                    <el-option v-for="(item, index) in categories" :key="index" :label="item.category"
+                        :value="item.category" @click="handleCategoryDropdown('other')" />
+                </el-select>
+            </div>
 
             <div class="date__filter">
                 <div class="text-sm title">Select a date range</div>

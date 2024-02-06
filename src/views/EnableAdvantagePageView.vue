@@ -109,6 +109,7 @@ const valid = ref(true)
 const submit = ()=>{
 	const data = {
 	  "validatedAt": moment().format('YYYY-MM-DD'),
+    "confirm": true,
 	}
 	showSpinner.value = true
 	if(advantages.value){
@@ -126,6 +127,7 @@ const submit = ()=>{
 				}
 		    })
 	}
+  localStorage.setItem('isSellerAuthenticated', 'true');
 }
 
 onBeforeMount(async () => {
@@ -142,7 +144,6 @@ onBeforeMount(async () => {
         if (response.status === 200) {
             advantages.value = response.data[0];
             valid.value = advantages.value.validated_at == null?false:true
-            console.log(advantages.value)
         } else {
             console.error('Error fetching advantages:', response);
         }
