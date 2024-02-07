@@ -97,7 +97,7 @@
                         <label for="countries"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Providers
                             <span>*</span></label>
-                        <el-select v-model="provider" placeholder="Choose provider" size="large">
+                        <el-select v-model="provider" placeholder="Choose provider" size="large" filterable>
                             <el-option v-for="item in filteredProviders" :key="item.uri" :label="item.name"
                                 :value="`${item.uri}${item.url}`" />
                         </el-select>
@@ -257,6 +257,13 @@ const filteredLinks = computed(() => {
 
 const filteredProviders = computed(() => {
     let data = providers.value;
+    data.sort((a, b) => {
+        const nameA = a.name.toLowerCase();
+        const nameB = b.name.toLowerCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+    });
     return data.filter(item => item.category == category.value);
 })
 

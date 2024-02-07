@@ -285,35 +285,34 @@ const submit = async () => {
         establishment: `/api/establishments/${establishment.value.id}`
     };
 
-    let coupons = {
-        advantage: randomAdvantage.value.id,
-        establishment: route.params.id,
-        gender: gender.value,
-        firstname: firstname.value,
-        lastname: lastname.value,
-        email: email.value,
-        language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase()
-    }
-    console.log(coupons)
+    
     try {
         if (firstname.value !== '' && ratingCustomer.value !== null) {
             showSpinner.value = true;
 
             await feedbackStore.createReview(review, async (response) => {
-                console.log(response);
+            
                 if (response.status == 201) {
                     await services.createRecord('contacts', contactData, async (contactResponse) => {
-                        console.log(contactResponse);
+                        
                         if (contactResponse.status == 201) {
                             let email_sent = false
-                            if (randomAdvantage.value && email.value !== null || email.value !== '') {
+                            if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
                                 email_sent = true
+                                let coupons = {
+                                    advantage: randomAdvantage.value.id,
+                                    establishment: route.params.id,
+                                    gender: gender.value,
+                                    firstname: firstname.value,
+                                    lastname: lastname.value,
+                                    email: email.value,
+                                    language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase()
+                                }
                                 await services.createRecord('workflow', coupons, (workflowResponse) => {
                                     console.log(workflowResponse)
+                                    resetForm()
                                 });
                             }
-                            resetForm()
-
                             router.push({
                                 name: 'SuccessFeedback',
                                 params: {

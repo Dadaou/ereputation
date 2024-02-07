@@ -173,6 +173,9 @@
                 <el-date-picker class="mt-2" v-model="end_date" type="date" placeholder="Select the end date"
                     :size="'large'" />
             </div>
+             <DropdownComponent :showTitle="false" placeholder="" :data="types" @submit="(type) => {
+                    selectedType = type
+                }" :default="types[0]" />
         </div>
         <div v-if="establishment && socials && trends && trends.length > 0"
             class="stat__cards bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 py-4">
@@ -211,7 +214,8 @@ import SocialStatistics from '@Components/utils/SocialStatistics.vue';
 import StatSlider from '@Components/utils/StatSlider.vue';
 import StatComponent from '@Components/utils/StatComponent.vue';
 import { ElDatePicker } from 'element-plus';
-import 'element-plus/es/components/date-picker/style/css'
+import 'element-plus/es/components/date-picker/style/css';
+import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
@@ -229,6 +233,9 @@ const socialHistogramContainer = ref(null);
 const lineChartWidth = ref(620);
 let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
 let endDate = moment().format('YYYY-M-DD');
+const selectedType = ref('Followers')
+provide('selectedType', selectedType)
+const types = ref(["Followers", "Shares", "likes"])
 
 let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
 let end_date = ref(moment().format('YYYY-M-DD'));

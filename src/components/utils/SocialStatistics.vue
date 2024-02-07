@@ -44,6 +44,7 @@ const lineChartContainer = ref(null);
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 const socials = inject('socials');
+const type = inject('selectedType');
 
 const lineData = ref({
     labels: [],
@@ -64,14 +65,14 @@ const options = ref({
     scales:
     {
         x: {
-            beginAtZero: true, // You can configure other options for the X-axis here
+            beginAtZero: true,
             title: {
                 display: false,
                 text: '',
             },
         },
         y: {
-            beginAtZero: true, // You can configure other options for the Y-axis here
+            beginAtZero: true,
             title: {
                 display: false,
                 text: '',
@@ -81,11 +82,12 @@ const options = ref({
 })
 
 
-const loadSocialData = async (tag, startDate, endDate)=>{
+const loadSocialData = async (tag, startDate, endDate, type)=>{
     try{
+        type = type.toLowerCase()
         const response = await new Promise((resolve) => {
              services.get_Record(
-                `social/establishment/${companyId}/daily/${startDate}/${endDate}/new_statistique`,
+                `social/establishment/${companyId}/${type}/daily/${startDate}/${endDate}/new_statistique`,
                 (response) => {
                 resolve(response)
                 }
@@ -93,12 +95,13 @@ const loadSocialData = async (tag, startDate, endDate)=>{
         });
 
         if (response.status == 200) {
-           transformData(response.data, startDate, endDate)
+           lineData.value = response.data;
         }   
     }catch(error){
         console.log(error)
     }
 }
+
 const getLabels = (data, endDate)=>{
  let labels = []
  endDate = new Date(endDate)
@@ -167,12 +170,12 @@ const transformData = (data, start_date, end_date)=>{
  console.log(chartDataset)
 }
 
-watch([start_date, end_date], async()=>{
- await loadSocialData(companyId, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+watch([start_date, end_date, type], async()=>{
+ await loadSocialData(companyId, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), type.value)
 })
 
 onBeforeMount(async()=>{
-     await loadSocialData(companyId, start_date.value, end_date.value)
+     await loadSocialData(companyId, start_date.value, end_date.value, type.value)
 })
 
 window.onresize = () => {

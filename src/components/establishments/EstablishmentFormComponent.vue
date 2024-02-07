@@ -51,69 +51,47 @@
                 <div>
                     <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City
                         <span>*</span></label>
-                    <!-- <el-select v-model="establishment" placeholder="Choose establishment" size="large">
-                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
-                            :value="`/api/establishments/${item.id}`" />
-                    </el-select> -->
                     <input type="text" id="city" name="city" v-model="data.city" required
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
                 <div>
                     <label for="country" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country
                         <span>*</span></label>
-                    <el-select v-model="data.country" placeholder="" size="large">
+                    <el-select v-model="data.country" placeholder="" size="large" filterable>
                         <el-option v-for="(country, index) in countries" :key="index" :label="country.name"
                             :value="country.name" />
                     </el-select>
                 </div>
-                 <div>
+               <!--   <div>
                     <label for="gps" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gps
                     </label>
-                    <!-- <el-select v-model="department" placeholder="Choose department" size="large">
-                        <el-option v-for="item in departments" :key="item" :label="item" :value="item" />
-                    </el-select> -->
                     <input type="text" id="gps" name="gps" v-model="data.gps"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                </div>
-            </div>
-            <div class="grid gap-6 mb-6 md:grid-cols-2">
-                <div>
-                    <label for="region" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Region
+                </div> -->
+                 <div>
+                    <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
                         <span>*</span></label>
-                    <!-- <el-select v-model="establishment" placeholder="Choose establishment" size="large">
-                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
-                            :value="`/api/establishments/${item.id}`" />
-                    </el-select> -->
-                    <input type="text" id="region" name="region" v-model="data.region"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                </div>
-                <div>
-                    <label for="gps" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Website
-                    </label>
-                    <!-- <el-select v-model="department" placeholder="Choose department" size="large">
-                        <el-option v-for="item in departments" :key="item" :label="item" :value="item" />
-                    </el-select> -->
-                    <input type="text" id="website" name="website" v-model="data.website"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                    <el-select v-model="data.category" placeholder="" size="large" filterable>
+                        <el-option v-for="item in categories" :key="item" :label="item" :value="item" />
+                    </el-select>
                 </div>
             </div>
             <div class="grid gap-6 mb-6 md:grid-cols-4">
-
-                <div class="col-span-2">
-                    <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
+               <!--  <div>
+                    <label for="region" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Region
                         <span>*</span></label>
-                    <el-select v-model="data.category" placeholder="" size="large">
-                        <el-option v-for="item in categories" :key="item" :label="item" :value="item" />
-                    </el-select>
-                    <!-- <input type="text" id="category" v-model="data.category"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2"> -->
+                    <input type="text" id="region" name="region" v-model="data.region"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                </div> -->
+                <div class="col-span-2">
+                    <label for="gps" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Website
+                    </label>
+                    <input type="text" id="website" name="website" v-model="data.website"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
                 <div>
                     <label for="rank" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rank
                     </label>
-                    <!-- <el-select v-model="department" placeholder="Choose department" size="large">
-                        <el-option v-for="item in departments" :key="item" :label="item" :value="item" />
-                    </el-select> -->
                     <input type="text" id="rank" name="rank" v-model="data.rank"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
@@ -121,13 +99,32 @@
                     <label for="positionning"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">positionning
                     </label>
-                    <!-- <el-select v-model="establishment" placeholder="Choose establishment" size="large">
-                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
-                            :value="`/api/establishments/${item.id}`" />
-                    </el-select> -->
                     <input type="text" id="positionning" name="positionning" v-model="data.positionning"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
+            </div>
+            <div class="grid gap-6 mb-6 md:grid-cols-4">
+
+               <!--  <div class="col-span-2">
+                    <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
+                        <span>*</span></label>
+                    <el-select v-model="data.category" placeholder="" size="large">
+                        <el-option v-for="item in categories" :key="item" :label="item" :value="item" />
+                    </el-select>
+                </div> -->
+                <!-- <div>
+                    <label for="rank" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rank
+                    </label>
+                    <input type="text" id="rank" name="rank" v-model="data.rank"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                </div>
+                <div>
+                    <label for="positionning"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">positionning
+                    </label>
+                    <input type="text" id="positionning" name="positionning" v-model="data.positionning"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                </div> -->
             </div>
             <div class="flex flex-wrap gap-3 items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
                 <button type="submit"
