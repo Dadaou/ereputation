@@ -15,18 +15,6 @@
         </div>
         <div class="reviews__content">
             <div class="social-list" v-if="!dataLoading">
-                <!-- <div class="social-media-container" v-if="Object.keys(postData.data).length > 0">
-                    <div v-for="(values, platform) in postData.data" :key="platform" class="platform">
-                        <h3>{{ platform.charAt(0).toUpperCase() + platform.slice(1) }} <i
-                                :class="`uil uil-${platform}`"></i></h3>
-                        <div v-if="values.followers !== undefined"><i class="uil uil-users-alt"></i>: {{
-                           formatNumberWithDots(values.followers) }}</div>
-                        <div v-if="values.likes !== undefined"><i class="uil uil-thumbs-up"></i>: {{ formatNumberWithDots(values.likes) }}
-                        </div>
-                        <div v-if="values.share !== undefined"><i class="uil uil-share"></i>: {{ formatNumberWithDots(values.share) }}
-                        </div>
-                    </div>
-                </div> -->
                 <div class="social-media-container" v-if="Object.keys(socials).length > 0">
                     <div v-for="(values, platform) in socials" :key="platform" class="platform">
                         <h3>{{ platform.charAt(0).toUpperCase() + platform.slice(1) }} <i
@@ -41,8 +29,6 @@
                 </div>
                 <p v-else>no social data</p>
             </div>
-
-
             <div v-else role="status"
                 class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
                 v-for="index in 5" :key="index">
@@ -69,8 +55,8 @@
     <StatSlider v-if="establishment && establishment.socials" class="stat__cards_mobile" :items="trends"
         :websites="establishment.socials[0]"></StatSlider>
     <div class="tablet_mobile__filter">
-        <!--  <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
-                <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" /> -->
+         <el-date-picker v-model="start_date" placeholder="Start date" :size="'large'" />
+                <el-date-picker v-model="end_date" placeholder="End date" :size="'large'" />
     </div>
     <div class="tablet_mobile__head">
         <div class="establishment__info_tablet">
@@ -182,10 +168,14 @@
                 </div>
             </div>
             <div class="date__filter">
-                <!--  <div class="text-sm title">Select a date range</div>
-                        <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
-                        <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" /> -->
+                <div class="text-sm title">Select a date range</div>
+                <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
+                <el-date-picker class="mt-2" v-model="end_date" type="date" placeholder="Select the end date"
+                    :size="'large'" />
             </div>
+             <DropdownComponent :showTitle="false" placeholder="" :data="types" @submit="(type) => {
+                    selectedType = type
+                }" :default="types[0]" />
         </div>
         <div v-if="establishment && socials && trends && trends.length > 0"
             class="stat__cards bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 py-4">
@@ -205,9 +195,10 @@ import { useAppStore } from "@Stores/app.js";
 import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import { useSocialStore } from "@Stores/social.js";
-import { ref, watch, onBeforeMount, onMounted } from 'vue';
+import { ref, watch, onBeforeMount, onMounted, provide } from 'vue';
 import { storeToRefs } from 'pinia';
 import 'element-plus/es/components/date-picker/style/css';
+import moment from 'moment';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -222,6 +213,9 @@ import {
 import SocialStatistics from '@Components/utils/SocialStatistics.vue';
 import StatSlider from '@Components/utils/StatSlider.vue';
 import StatComponent from '@Components/utils/StatComponent.vue';
+import { ElDatePicker } from 'element-plus';
+import 'element-plus/es/components/date-picker/style/css';
+import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
@@ -236,7 +230,17 @@ appStore.setCurrentPage({
 appStore.setIsExist(true);
 
 const socialHistogramContainer = ref(null);
-let lineChartWidth = ref(620)
+const lineChartWidth = ref(620);
+let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+let endDate = moment().format('YYYY-M-DD');
+const selectedType = ref('Followers')
+provide('selectedType', selectedType)
+const types = ref(["Followers", "Shares", "likes"])
+
+let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
+let end_date = ref(moment().format('YYYY-M-DD'));
+provide('start_date', start_date)
+provide('end_date', end_date)
 
 window.onresize = () => {
     if (socialHistogramContainer.value.clientWidth > 400) {
@@ -266,6 +270,7 @@ const calculType = ref('Followers')
 const establishment = ref({});
 const socialPages = ref([]);
 const socials = ref(['']);
+provide('socials',socials )
 const postData = ref({
     data: {
         facebook: {

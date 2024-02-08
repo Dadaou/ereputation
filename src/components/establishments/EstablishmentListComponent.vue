@@ -20,7 +20,7 @@
                     <el-input v-model="search" size="small" placeholder="Type to search" />
                 </template>
                 <template #default="scope">
-                    <el-button size="small"><i class="uil uil-qrcode-scan"></i></el-button>
+                    <el-button size="small" @click="showModal = true, establishment = scope.row"><i class="uil uil-qrcode-scan"></i></el-button>
                     <!-- <el-popconfirm title="Are you sure to delete this?">
                         <template #reference>
                             <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
@@ -33,6 +33,45 @@
             </el-table-column>
         </el-table>
     </div>
+    <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
+        <template #content>
+            <div class="modal__header">
+                <div class="modal__title">
+                    <h3 class="font-semibold text-gray-900 dark:text-white">
+                        <i class="uil uil-qrcode-scan"></i> QR Code
+                    </h3>
+                </div>
+                <div class="modal__close">
+                    <i class="uil uil-times-circle" @click="showModal = false"></i>
+                </div>
+            </div>
+
+            <div v-if="downloaded == false" class="establishment__review__qrcode">
+                <p class="mb-5">
+                    Download this QR code to link your client to the feedback page
+                </p>
+                <div id="qrcode__container mt-5" ref="qrcode">
+                    <vue-qrious class="qr__code"
+                        :value="`${baseurl}/customer/${route.params.tag}/establishment/${establishment.tag}/feedback`"
+                        @change="onDataUrlChange" />
+                </div>
+            </div>
+            <div v-else class="establishment__review__qrcode">
+                <p class="mb-5">
+                    Your download is successfully complete!
+                </p>
+            </div>
+            <div class="mt-5 download__qr_btn">
+                <button v-if="downloaded == false" class="btn__light_secondary" @click="downloadQrcode">
+                    <i class="uil uil-download-alt"></i> Download
+                </button>
+                <button v-else class="btn__light_secondary" @click="showModal = false, downloaded = false">
+                    close
+                </button>
+            </div>
+
+        </template>
+    </ModalComponent>
 </template>
 <script setup>
 import { computed, defineAsyncComponent, ref, onBeforeMount, watch } from 'vue'
@@ -58,6 +97,8 @@ import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
+import VueQrious from 'vue-qrious';
+import { useRoute } from "vue-router";
 
 const ModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/ModalComponent.vue')
@@ -72,6 +113,7 @@ const modalWidth = computed(() => {
     let gap = (windowSize - width.value) / 19;
     return gap + 45;
 });
+const route = useRoute()
 const showModal = ref(false);
 const showLinkModal = ref(false);
 const providers = ref([]);
@@ -82,8 +124,10 @@ const showSpinner = ref(false)
 const search = ref('')
 const link = ref('')
 const isValidLink = ref('true')
-const establishment = ref('')
+const establishment = ref(null)
 const links = ref([])
+const baseurl = window.location.origin;
+const downloaded = ref(false)
 
 const handleEdit = (index, establishment) => {
     emit('edit', establishment);
@@ -131,6 +175,20 @@ const urlPattern = (urlTemplate) => {
     regexPattern = regexPattern.replace(/{value1}/g, '(.+)');
     return new RegExp('^' + regexPattern);
 }
+
+const base64Image = ref(null);
+const qrcode = ref(null);
+const downloadQrcode = () => {
+    let link = document.createElement('a');
+    link.download = `${establishment.value.name}-feedback-link.jpeg`;
+    link.href = base64Image.value;
+    link.click();
+    downloaded.value = true;
+}
+
+const onDataUrlChange = (dataUrl) => {
+    base64Image.value = dataUrl;
+};
 
 const splitUriAndUrl = (combinedString) => {
     if (combinedString !== '') {
@@ -334,7 +392,6 @@ button i.uil-edit {
     /* Optional: You might want to add some specific style for the delete icon */
 }
 
-
 input {
     caret-color: var(--color-primary) !important;
 }
@@ -364,6 +421,23 @@ img {
     height: 50px;
     object-fit: cover;
     width: 100%;
+}
+
+#qrcode__container{
+    background-color: white;
+    padding: 5px;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+img.qr__code{
+    width: 150px;
+    height: 200px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: white;
+    margin-bottom: 20px;
 }
 
 .modal__header {

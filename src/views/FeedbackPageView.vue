@@ -80,8 +80,7 @@
                                 <i class="uil uil-info-circle"></i>{{ $t("feedback.indice1") }}
                             </span>
                             <p v-if="randomAdvantage">
-                                <b>{{ $t("feedback.promotion_day") }} </b> {{ randomAdvantage.name }} expired at {{
-                                    moment(randomAdvantage.expired_at).format('YYYY-MM-DD') }}
+                                <b>{{ $t("feedback.promotion_day") }} </b> {{ randomAdvantage.name }}
                             </p>
                             <label for="email"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t("feedback.email") }}
@@ -155,7 +154,6 @@ const feedbackStore = useFeedbackStore();
 const establishment = ref({});
 let media = [];
 
-console.log(t("feedback.title1"))
 const page = ref({})
 
 let allAdvantages = ref([])
@@ -229,7 +227,7 @@ const gender = ref('');
 const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
-const dateVisit = ref('');
+const dateVisit = ref(moment().format('YYYY-MM-DD'));
 const genders = [
     {
         value: 'M',
@@ -287,35 +285,34 @@ const submit = async () => {
         establishment: `/api/establishments/${establishment.value.id}`
     };
 
-    let coupons = {
-        advantage: randomAdvantage.value.id,
-        establishment: route.params.id,
-        gender: gender.value,
-        firstname: firstname.value,
-        lastname: lastname.value,
-        email: email.value,
-        language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase()
-    }
-    console.log(coupons)
+    
     try {
         if (firstname.value !== '' && ratingCustomer.value !== null) {
             showSpinner.value = true;
 
             await feedbackStore.createReview(review, async (response) => {
-                console.log(response);
+            
                 if (response.status == 201) {
                     await services.createRecord('contacts', contactData, async (contactResponse) => {
-                        console.log(contactResponse);
+                        
                         if (contactResponse.status == 201) {
                             let email_sent = false
-                            if (randomAdvantage.value && email.value !== null || email.value !== '') {
+                            if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
                                 email_sent = true
+                                let coupons = {
+                                    advantage: randomAdvantage.value.id,
+                                    establishment: route.params.id,
+                                    gender: gender.value,
+                                    firstname: firstname.value,
+                                    lastname: lastname.value,
+                                    email: email.value,
+                                    language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase()
+                                }
                                 await services.createRecord('workflow', coupons, (workflowResponse) => {
                                     console.log(workflowResponse)
+                                    resetForm()
                                 });
                             }
-                            resetForm()
-
                             router.push({
                                 name: 'SuccessFeedback',
                                 params: {
