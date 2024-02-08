@@ -76,6 +76,14 @@
             placeholder="Select a website" :data="websites" @submit="(website) => {
                 selectedWebsites = website
             }" :default="websites[0]" />
+
+        <div class="date__picker px-2">
+            <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+        </div>
+        <div class="date__picker px-2">
+
+            <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
+        </div>
         <div class="px-2 w-full my-2">
             <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
                 :max-collapse-tags="3" placeholder="select categories" size="large">
@@ -84,13 +92,6 @@
                 <el-option v-for="(item, index) in categories" :key="index" :label="item.category" :value="item.category"
                     @click="handleCategoryDropdown('other')" />
             </el-select>
-        </div>
-        <div class="date__picker px-2">
-            <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
-        </div>
-        <div class="date__picker px-2">
-
-            <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
         </div>
     </div>
     <div class="tablet_mobile__filter" v-if="currentFilter == 'feedback'">
