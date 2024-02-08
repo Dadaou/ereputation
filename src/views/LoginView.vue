@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, defineAsyncComponent } from 'vue'
+import { ref, watch, onMounted, defineAsyncComponent, onBeforeMount } from 'vue'
 import HeadComponent from '@Components/layouts/HeadComponent.vue'
 import { useUserStore } from "@Stores/user.js"
 import { useRouter } from "vue-router"
@@ -116,6 +116,26 @@ const form__ref = ref(null)
 onMounted(() => {
     if (width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');
 });
+
+onBeforeMount(async () => {
+    const response = await new Promise((resolve) => {
+        services.get_Record(
+            '/account/info',
+            (response) => {
+                resolve(response)
+                if (response.status == 404) {
+                    appStore.isLoading = false
+                }
+            },
+            true
+        )
+    })
+
+    if (response.status == 200 && response.data) {
+        const data = response.data
+        if (data.length) appStore.setAccount(data[0])
+    }
+})
 
 watch([width, isError], () => {
     if (width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');

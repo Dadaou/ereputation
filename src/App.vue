@@ -42,37 +42,32 @@ provide('tag', tag);
 
 onBeforeMount(async () => {
   appStore.isLoading = true;
-  let isPublicURL = false;
-  let url = "";
 
   if (userStore.user) {
-    isPublicURL = false;
-    url = `/partner/info?tag=${userStore.user.customer.tag}`;
-  } else {
-    isPublicURL = true;
-    url = '/account/info';
-  }
 
-  const response = await new Promise((resolve) => {
-    services.get_Record(url, (response) => {
-      resolve(response)
-      if (response.status == 404) {
-        appStore.isLoading = false;
+    const response = await new Promise((resolve) => {
+      services.get_Record(`/partner/info?tag=${userStore.user.customer.tag}`, (response) => {
+        resolve(response)
+        if (response.status == 404) {
+          appStore.isLoading = false;
+        }
+      });
+    });
+
+    if (response.status == 200 && response.data) {
+      const data = response.data
+
+      if (Array.isArray(data)) {
+        appStore.setAccount(data[0]);
+      } else {
+        appStore.setAccount(data);
       }
-    }, isPublicURL);
-  });
 
-  if (response.status == 200 && response.data) {
-    const data = response.data
+      appStore.isLoading = false;
 
-    if (typeof data == 'object') {
-      appStore.setAccount(data);
-    } else {
-      appStore.setAccount(data[0]);
     }
-
+  } else {
     appStore.isLoading = false;
-
   }
 
   initFlowbite();
@@ -100,6 +95,7 @@ watch(width, () => {
     'width': `${width.value}px`,
   }
 });
+
 </script>
 
 <style scoped>
