@@ -14,7 +14,7 @@
                     <span v-else>Submit</span>
                 </button>
                 <p><a href="/sign-up" class="register-link">Don't have an account?</a></p>
-                
+
             </form>
         </div>
         <call-us-selector phonesystem-url="https://m-unit.on3cx.fr:5001" :party="chatID"></call-us-selector>
@@ -29,6 +29,8 @@ import { useRouter } from "vue-router"
 import { useWindowSize } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
+import { useAppStore } from "@Stores/app.js"
+import services from '@Services/services.js';
 
 
 const SpinnerComponent = defineAsyncComponent(() =>
@@ -40,6 +42,7 @@ const AlertComponent = defineAsyncComponent(() =>
 )
 const router = useRouter();
 const userStore = useUserStore();
+const appStore = useAppStore()
 
 const chatID = ref(import.meta.env.VITE_3CX_CHAT_ID);
 
@@ -65,10 +68,27 @@ const showSpinner = ref(false)
 
 const submit = async () => {
     showSpinner.value = true;
-    await userStore.signIn(form.value.email, form.value.password, (response) => {
+    await userStore.signIn(form.value.email, form.value.password, async (response) => {
         if (response.authenticated) {
+
+            const response = await new Promise((resolve) => {
+                services.get_Record(`/partner/info?tag=${userStore.user.customer.tag}`, (response) => {
+                    resolve(response)
+                    if (response.status == 404) {
+                        appStore.isLoading = false;
+                    }
+                });
+            });
+
+            if (response.status == 200 && response.data) {
+                const data = response.data
+                appStore.setAccount(data);
+                appStore.isLoading = false;
+            }
+
             router.push({ name: "Home" });
             showSpinner.value = false;
+
         } else {
             isError.value = true;
             if (response.status == 401) {

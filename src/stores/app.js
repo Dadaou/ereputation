@@ -6,6 +6,7 @@ export const useAppStore = defineStore('app', () => {
   const breadcrumbs = ref(null)
   const currentPage = ref('')
   const isExist = ref(true)
+  const account = ref(null)
 
   const setBreadcrumbs = (values) => {
     breadcrumbs.value = values
@@ -19,13 +20,19 @@ export const useAppStore = defineStore('app', () => {
     isExist.value = value
   }
 
+  const setAccount = (value) => {
+    account.value = value
+  }
+
   return {
     isLoading,
     breadcrumbs,
     isExist,
     currentPage,
+    account,
     setBreadcrumbs,
     setCurrentPage,
-    setIsExist
+    setIsExist,
+    setAccount
   }
 })
