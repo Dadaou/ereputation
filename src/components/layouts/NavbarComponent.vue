@@ -11,7 +11,13 @@
         </svg>
       </button>
       <a :href="baseurl" class="flex items-center">
-        <span class="self-center text-xl font-bold whitespace-nowrap dark:text-white">eReputation</span>
+        <div v-if="appStore.account.logoUrl" class="nav-logo">
+          <img :src="appStore.account.logoUrl">
+        </div>
+        <div v-else-if="appStore.account.logo" class="nav-logo">
+          <img :src="appStore.account.logo">
+        </div>
+        <span v-else class="self-center text-xl font-bold whitespace-nowrap dark:text-white">eReputation</span>
       </a>
 
       <!-- Language dropdown  -->
@@ -196,6 +202,7 @@ import { ref, watch, computed, onMounted } from 'vue';
 import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import ModalComponent from '@Components/utils/ModalComponent.vue';
 import { useUserStore } from "@Stores/user.js";
+import { useAppStore } from "@Stores/app.js"
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { i18n } from '@/i18n';
@@ -209,6 +216,8 @@ const signOut = () => {
 const baseurl = window.location.origin;
 
 const userStore = useUserStore();
+const appStore = useAppStore()
+
 const router = useRouter();
 const route = useRoute();
 const showDropdown = ref(false)
@@ -372,6 +381,15 @@ const selectCurrentLanguage = (language) => {
 </script>
 <style scoped>
 /* Langue dropdown css*/
+
+.nav-logo {
+  height: 48px;
+}
+
+.nav-logo img {
+  width: auto;
+  height: 100%;
+}
 
 #lang-btn {
   color: white;

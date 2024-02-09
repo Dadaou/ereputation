@@ -16,6 +16,7 @@ import { useWindowSize } from '@vueuse/core'
 import { useAppStore } from "@Stores/app.js"
 import { useUserStore } from "@Stores/user.js"
 import { RouterView, useRoute } from 'vue-router';
+import services from '@Services/services.js';
 
 const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
@@ -39,8 +40,38 @@ const tag = computed(() => {
 })
 provide('tag', tag);
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
+  appStore.isLoading = true;
+
+  if (userStore.user) {
+
+    const response = await new Promise((resolve) => {
+      services.get_Record(`/partner/info?tag=${userStore.user.customer.tag}`, (response) => {
+        resolve(response)
+        if (response.status == 404) {
+          appStore.isLoading = false;
+        }
+      });
+    });
+
+    if (response.status == 200 && response.data) {
+      const data = response.data
+
+      if (Array.isArray(data)) {
+        appStore.setAccount(data[0]);
+      } else {
+        appStore.setAccount(data);
+      }
+
+      appStore.isLoading = false;
+
+    }
+  } else {
+    appStore.isLoading = false;
+  }
+
   initFlowbite();
+
 });
 
 onMounted(() => {
@@ -64,6 +95,7 @@ watch(width, () => {
     'width': `${width.value}px`,
   }
 });
+
 </script>
 
 <style scoped>
