@@ -14,7 +14,31 @@
             </div>
         </div>
         <div class="reviews__content">
-            <div class="social-list" v-if="!dataLoading">
+            <ul class="social-filter">
+                <li><i :class="`uil uil-facebook`"></i></li>
+                <li><i :class="`uil uil-instagram`"></i></li>
+                <li><i :class="`uil uil-twitter`"></i></li>
+                <!-- <li><i :class="`uil uil-tiktok`"></i></li> -->
+                <li><i :class="`uil uil-youtube`"></i></li>
+                <li><i :class="`uil uil-linkedin`"></i></li>
+            </ul>
+            <SocialPostComponent v-for="post in posts" :post="post"/>
+            <!-- <div class="publication" v-for="post in posts" :key="post.id">
+                <h2>{{ post.title }}</h2>
+                <p>Source: {{ post.source }}</p>
+                <p>Comments: {{ post.comments }}</p>
+                <p>Likes: {{ post.likes }}</p>
+                <p>Shares: {{ post.share }}</p>
+                <p>Published at: {{ post.published_at }}</p>
+                <div class="comments">
+                    <h3>Commentaires</h3>
+                    <div v-for="(comment, index) in post.commentsData" :key="index" class="comment">
+                        <p>{{ comment }}</p>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- <div class="social-list" v-if="!dataLoading">
                 <div class="social-media-container" v-if="Object.keys(socials).length > 0">
                     <div v-for="(values, platform) in socials" :key="platform" class="platform">
                         <h3>{{ platform.charAt(0).toUpperCase() + platform.slice(1) }} <i
@@ -28,8 +52,9 @@
                     </div>
                 </div>
                 <p v-else>no social data</p>
-            </div>
-            <div v-else role="status"
+            </div> -->
+
+           <!--  <div v-else role="status"
                 class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
                 v-for="index in 5" :key="index">
                 <div>
@@ -48,7 +73,7 @@
                     </div>
                 </div>
                 <span class="sr-only">Loading...</span>
-            </div>
+            </div> -->
         </div>
     </div>
 
@@ -216,6 +241,7 @@ import StatComponent from '@Components/utils/StatComponent.vue';
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
+import SocialPostComponent from '@Components/utils/SocialPostComponent.vue';
 
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
@@ -241,6 +267,77 @@ let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
 let end_date = ref(moment().format('YYYY-M-DD'));
 provide('start_date', start_date)
 provide('end_date', end_date)
+const posts = ref([
+            {
+                "id": 4,
+                "source": "facebook",
+                "comments": 50,
+                "comment": null,
+                "likes": 60,
+                "share": 29,
+                "title": "Les recrutements sont lancés pour l’hôtel Cote Brune.",
+                "published_at": "2024-01-01 00:00:00",
+                "created_at": null,
+                "commentsData": [
+                    "Commentaire 1",
+                    "Commentaire 2",
+                    "Commentaire 3"
+                ]
+            },
+            {
+                "id": 3,
+                "source": "instagram",
+                "comments": 50,
+                "comment": null,
+                "likes": 60,
+                "share": 29,
+                "title": "Le recrutement est lancé pour l’hôtel Cote Brune**** aux 2 Alpes (38).",
+                "published_at": "2024-01-01 00:00:00",
+                "created_at": null,
+                "commentsData": [
+                    "Commentaire A",
+                    "Commentaire B"
+                ]
+            }
+])
+provide('posts', posts)
+const colors = {
+        'facebook': '#1877F2',
+        'instagram': '#E4405F',
+        'linkedin': '#0A66C2',
+        'tiktok': '#000000',
+        'twitter': '#1DA1F2',
+        'youtube': '#FF0000'
+};
+
+const comments = ref({
+    "data": [
+        {
+        "id": 4,
+        "source": "facebook",
+        "comments": 50,
+        "comment": null,
+        "likes": 60,
+        "share": 29,
+        "title": "Les recrutements sont lancés pour l’hôtel Cote Brune.",
+        "published_at": "2024-01-01 00:00:00",
+        "created_at": null
+        },
+        {
+        "id": 3,
+        "source": "facebook",
+        "comments": 50,
+        "comment": null,
+        "likes": 60,
+        "share": 29,
+        "title": "Le recrutement est lancé pour l’hôtel Cote Brune**** aux 2 Alpes (38).",
+        "published_at": "2024-01-01 00:00:00",
+        "created_at": null
+        }
+    ],
+    "totalPages": 1,
+    "length": 2
+})
 
 window.onresize = () => {
     if (socialHistogramContainer.value.clientWidth > 400) {
@@ -667,11 +764,17 @@ ul {
     padding: 0;
 }
 
-li {
+.social-filter{
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 20px;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+}
+
+.social-filter li{
+    border-bottom: none;
+    padding: 5px 25px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 .social-details {

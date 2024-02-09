@@ -6,6 +6,7 @@ import { createPinia } from 'pinia'
 import Vuesalize from 'vuesalize'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import services from '@Services/services.js'
+import 'animate.css'
 
 import App from './App.vue'
 import router from './router'
