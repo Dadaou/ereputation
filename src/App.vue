@@ -57,11 +57,10 @@ onBeforeMount(async () => {
   if (response.status == 200 && response.data) {
     const data = response.data
 
-    if (Array.isArray(data)) {
-      appStore.setAccount(data[0]);
-    } else {
-      appStore.setAccount(data);
-    }
+    appStore.setAccount(data);
+
+    appStore.setCssVariable('--color-bg2', appStore.account.back_color);
+    appStore.setCssVariable('--color-danger', appStore.account.font_color);
 
     appStore.isLoading = false;
 
