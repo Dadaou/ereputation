@@ -5,7 +5,7 @@
                 <h3 class="text-xl font-semibold mb-4">🎉 Exclusive Offer Just for You! 🎁</h3>
                 <vue-qrious
                     class="qr__code mx-auto"
-                    :value="`${baseurl}/establishment/${route.params.etab}/discount/validation/${route.params.discountTag}`"
+                    :value="`${baseurl}/public/discount/validation/${route.params.discountTag}`"
                     @change="onDataUrlChange"
                 />
                 <h3 class="text-xl font-semibold mb-4" v-if="advantages">{{ advantages.adv_name }} <br>{{ advantages.establishment_name }}</h3>

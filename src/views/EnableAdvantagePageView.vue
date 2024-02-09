@@ -75,11 +75,9 @@
 
 <script setup>
 import { ref, defineAsyncComponent, onBeforeMount } from 'vue'
-import HeadComponent from '@Components/layouts/HeadComponent.vue'
 import { useUserStore } from "@Stores/user.js"
 import { useRoute } from "vue-router"
 import services from '@Services/services.js'
-import VueQrious from 'vue-qrious';
 import moment from 'moment';
 import { ElMessage } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
@@ -88,16 +86,6 @@ let exist = ref(true);
 const EstablishmentNotFound = defineAsyncComponent(()=>
     import("@Views/EstablishmentNotFound.vue")
 )
-
-const SpinnerComponent = defineAsyncComponent(() =>
-    import('@Components/utils/SpinnerComponent.vue')
-)
-
-const page=ref({
-	title1: "",
-    title2: "Discount",
-    icon: "uil uil-bill",
-})
 
 const showSpinner = ref(false)
 const code = ref('')

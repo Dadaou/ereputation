@@ -75,6 +75,12 @@ const router = createRouter({
       redirect: '/',
       children: [
         {
+          path: '/customer/:tag/establishment/:id/analysis',
+          name: 'Analysis',
+          beforeEnter: [CheckAccess],
+          component: () => import('@Views/AnalysisPageView.vue')
+        },
+        {
           path: '/customer/:tag/establishment/:id',
           name: 'Establishment',
           beforeEnter: [CheckAccess],
@@ -163,7 +169,7 @@ const router = createRouter({
           component: () => import('@Views/SuccessMessageFeedback.vue')
         },
         {
-          path: '/customer/:tag/establishment/:etab/advantagecontact/:discountTag',
+          path: '/public/advantagecontact/:discountTag',
           name: 'QRCodeAdvContact',
           component: () => import('@Views/QRCodeAdvantagePageView.vue')
         },
@@ -173,17 +179,17 @@ const router = createRouter({
           component: () => import('@Views/EnableAdvantagePageView.vue')
         },
         {
-          path: '/discount',
+          path: '/',
           name: 'DiscountValidation',
           redirect: { name: 'DiscountAuthentication' },
           children:[
             {
-              path: '/discount/auth',
+              path: '/public/discount/auth',
               name: 'DiscountAuthentication',
               component: ()=> import('@Views/DiscountValidationAuthPageView.vue')
             },
             {
-              path: '/establishment/:etab/discount/validation/:discountTag',
+              path: '/public/discount/validation/:discountTag',
               name: 'DiscountQRCodeValidation',
               component: () => import('@Views/EnableAdvantagePageView.vue'),
               meta: {
@@ -191,7 +197,7 @@ const router = createRouter({
               }
             },
             {
-              path: '/discount/code/validation',
+              path: 'public/discount/code/validation',
               name: 'DiscountCodeValidation',
               component: () => import('@Views/DiscountValidationCodePageView.vue')
             }

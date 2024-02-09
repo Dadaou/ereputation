@@ -132,6 +132,12 @@
               <span>Reviews</span>
             </RouterLink>
           </li>
+           <li @click="closeDropdownMenu">
+            <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/analysis`">
+              <i class="uil uil-analytics"></i>
+              <span>Analysis</span>
+            </RouterLink>
+          </li>
           <li @click="closeDropdownMenu">
             <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/sales`">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24">
