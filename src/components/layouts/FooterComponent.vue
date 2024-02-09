@@ -3,18 +3,29 @@
         <div class="container footer__container">
             <div class="footer__info">
                 <ul>
-                    <li><i class="uil uil-copyright"></i> eReputation, allright reserved</li>
-                    <li>Legal Notice</li>
                     <li>
-                        <RouterLink to="/contact">
-                             Contact
-                        </RouterLink>
+                        <div v-if="appStore.account.logo" class="footer-logo" :title="appStore.account.brand || ''">
+                            <img :src="appStore.account.logo">
+                        </div>
                     </li>
-                    <li>
-                         <RouterLink to="/sign-up">
-                            Pricing
-                          </RouterLink>
+                    <li class="flex items-start justify-center flex-col gap-2">
+                        <ul>
+                            <li>Legal Notice</li>
+                            <li>
+                                <RouterLink to="/contact">
+                                    Contact
+                                </RouterLink>
+                            </li>
+                            <li>
+                                <RouterLink to="/sign-up">
+                                    Pricing
+                                </RouterLink>
+                            </li>
+                        </ul>
+                        <span><i class="uil uil-copyright"></i>2024,
+                            allright reserved</span>
                     </li>
+
                 </ul>
             </div>
             <div class="footer__links">
@@ -28,6 +39,8 @@
 </template>
 
 <script setup>
+import { useAppStore } from "@Stores/app.js"
+const appStore = useAppStore()
 
 </script>
 
@@ -39,6 +52,20 @@ footer {
     color: var(--color-white);
     margin-top: 60px;
     width: 100%;
+}
+
+.footer-logo {
+    height: 80px;
+    width: auto;
+    padding: 12px;
+    background-color: var(--color-white);
+    border-radius: 16px;
+    cursor: pointer;
+}
+
+.footer-logo img {
+    height: 100%;
+    width: auto;
 }
 
 .footer__container {

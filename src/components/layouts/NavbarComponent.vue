@@ -14,8 +14,9 @@
         <div v-if="appStore.account.logo" class="nav-logo">
           <img :src="appStore.account.logo">
         </div>
-        <span v-if="appStore.account.brand" class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
-          appStore.account.brand }}</span>
+        <span v-else-if="appStore.account.brand"
+          class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
+            appStore.account.brand }}</span>
       </a>
 
       <!-- Language dropdown  -->
@@ -136,7 +137,7 @@
               <span>Reviews</span>
             </RouterLink>
           </li>
-           <li @click="closeDropdownMenu">
+          <li @click="closeDropdownMenu">
             <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/analysis`">
               <i class="uil uil-analytics"></i>
               <span>Analysis</span>
@@ -381,8 +382,12 @@ const selectCurrentLanguage = (language) => {
 /* Langue dropdown css*/
 
 .nav-logo {
-  height: 28px;
+  /* height: 28px; */
+  height: 48px;
   margin-right: 24px;
+  padding: 8px;
+  background-color: var(--color-white);
+  border-radius: 24px;
 }
 
 .nav-logo img {
