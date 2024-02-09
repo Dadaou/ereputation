@@ -124,7 +124,14 @@ const appStore = useAppStore();
 .tablet_mobile__filter {
     display: none;
 }
-
+.community__feedback {
+    border: 1px solid var(--light-color-bg2);
+    border-radius: 10px;
+    height: 125px;
+    padding: 15px;
+    margin: 15px auto;
+    width: 100%;
+}
 .community__feedback .title {
     font-size: 15px;
     font-weight: 600;
@@ -467,6 +474,7 @@ const appStore = useAppStore();
     padding: 15px;
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
+    width:100%;
 }
 
 .date__filter .title {
