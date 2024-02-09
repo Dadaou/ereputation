@@ -267,21 +267,41 @@ const all_items = ref([
 let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
 let endDate = moment().format('YYYY-M-DD');
 
-watch([start_date, end_date], () => {
+watch([start_date, end_date], async () => {
     if (start_date.value !== '' && end_date.value !== '') {
         date.value = [start_date.value, end_date.value]
-        
     } else {
         date.value = [moment().subtract(30, 'days').format('YYYY-M-DD'), moment().format('YYYY-M-DD')];
     }
+
+    await loadEvents(route.params.id, start_date.value, end_date.value)
 })
 
+const loadEvents = async (tag, dateStart, dateEnd)=>{
+    eventLoading.value = true;
+    dateStart = moment(dateStart).format('YYYY-MM-DD')
+    dateEnd = moment(dateEnd).format('YYYY-MM-DD')
+
+    const response = await new Promise((resolve) => {
+        services.get_Record(`/establishment/${tag}/event?fromDate=${dateStart}&toDate=${dateEnd}`, (response) => {
+            resolve(response)
+            if (response.status == 404) {
+                appStore.setIsExist(false)
+                appStore.isLoading = false;
+            }
+        });
+    });
+
+    if (response.status == 200) {
+        events.value = response.data;
+        eventLoading.value = false;
+    }
+}
 
 onBeforeMount(async () => {
     const companyId = route.params.id;
     appStore.isLoading = true;
     chartLoading.value = true;
-    eventLoading.value = true;
 
     companiesStore.getEstablishment(companyId).then((data) => {
 
@@ -318,22 +338,8 @@ onBeforeMount(async () => {
         }
     })
 
-    const response = await new Promise((resolve) => {
-        services.get_Record(`/establishment/${companyId}/event`, (response) => {
-            resolve(response)
-            if (response.status == 404) {
-                appStore.setIsExist(false)
-                appStore.isLoading = false;
-            }
-        });
-    });
-
-    if (response.status == 200) {
-        events.value = response.data;
-        console.log(events.value)
-        chartLoading.value = false;
-        eventLoading.value = false;
-    }
+    await loadEvents(companyId, start_date.value, end_date.value)
+    chartLoading.value = false
 })
 
 const el = ref(null);

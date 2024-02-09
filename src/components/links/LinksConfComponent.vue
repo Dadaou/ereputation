@@ -86,7 +86,8 @@
                         </el-select>
                     </div>
                 </div>
-                <div>
+                <div> 
+                     {{isNotFill}} hello
                     <div>
                         <div v-if="provider && !isHashtag" id="url_example">
                             Follow this template: {{ splitUriAndUrl(provider).url }}
@@ -101,13 +102,14 @@
                     </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
-                    <button v-if="!isHashtag" type="submit" :disabled="!isValidLink"
+
+                    <button v-if="!isHashtag" type="submit" :disabled="!isValidLink || isNotFill"
                         :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
                         <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
                             ...</span>
                         <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
                     </button>
-                    <button v-else type="submit"
+                    <button v-else type="submit" :disabled="isNotFill"
                         :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800']">
                         <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
                             ...</span>
@@ -115,7 +117,6 @@
                     </button>
                 </div>
             </form>
-
         </template>
     </ModalComponent>
     <!-- <ModalComponent :showModal="showLinkModal" @close="showLinkModal = !showLinkModal" :width="modalWidth">
@@ -199,6 +200,12 @@ const title = computed(()=>{
 const isHashtag = computed(()=>{
     return category.value == 'Hashtag';
 })
+const isNotFill = computed(()=>{
+    console.log(provider.value)
+    console.log(link.value)
+    console.log((provider.value == null || provider.value == '') && (link.value == null || link.value == ''))
+    return (provider.value == null || provider.value == '') && (link.value == null || link.value == '');
+})
 
 const establishments = computed(() => {
     let data = [];
@@ -231,6 +238,7 @@ const filteredProviders = computed(() => {
         if (nameA > nameB) return 1;
         return 0;
     });
+    provider.value = null
     return data.filter(item => item.category == category.value);
 })
 
@@ -311,36 +319,40 @@ const loadLinksByEstablishment = async (tag) =>{
 
 const submit = async () => {
     showSpinner.value = true;
-    let urlObject = splitUriAndUrl(provider.value)
-    const data = {
-        value1: isHashtag.value?link.value:getValueUrl(link.value, urlObject.url),
-        establishment: establishment.value,
-        provider: urlObject.uri,
-        enable: true
+    if(provider.value){
+        let urlObject = splitUriAndUrl(provider.value)
+        console.log(provider.value)
     }
+    // const data = {
+    //     value1: isHashtag.value?link.value:getValueUrl(link.value, urlObject.url),
+    //     establishment: establishment.value,
+    //     provider: urlObject.uri,
+    //     enable: true
+    // }
 
-    try {
-        const response = await new Promise((resolve) => {
-            services.createRecord('settings', data, (response) => {
-                resolve(response);
-            });
-        });
-        if (response.status == 201) {
-            ElMessage({
-                message: `link added successfully`,
-                type: 'success',
-            })
-            showSpinner.value = false;
-            resetValue()
-        }
-    } catch (error) {
-        console.log(error)
-    }
+    // try {
+    //     const response = await new Promise((resolve) => {
+    //         services.createRecord('settings', data, (response) => {
+    //             resolve(response);
+    //         });
+    //     });
+    //     if (response.status == 201) {
+    //         ElMessage({
+    //             message: `link added successfully`,
+    //             type: 'success',
+    //         })
+    //         showSpinner.value = false;
+    //         resetValue()
+    //     }
+    // } catch (error) {
+    //     console.log(error)
+    // }
 }
 
 const resetValue = () => {
+    console.log('here')
     establishment.value = ''
-    provider.value = ''
+    provider.value = null
     isValidLink.value = false
     link.value = ''
     showModal.value = false
@@ -352,10 +364,12 @@ const remove = (id) => {
 
 watch([provider, link], () => {
     let urlTemplate;
-
+    
     if ((provider.value !== '' || provider.value !== undefined || provider.value !== null) && (link.value !== '' || link.value !== undefined || link.value !== null)) {
-        urlTemplate = splitUriAndUrl(provider.value).url;
-        if (urlTemplate) isValidLink.value = isValidUrl(link.value, urlTemplate)
+        // urlTemplate = splitUriAndUrl(provider.value).url;
+        // if (urlTemplate) isValidLink.value = isValidUrl(link.value, urlTemplate)
+        console.log(provider.value)
+        console.log("ato aii")
     }
 
 })

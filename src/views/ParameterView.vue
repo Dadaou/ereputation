@@ -1,6 +1,6 @@
 <template>
     <div class="user__main__container">
-        <el-tabs v-model="activeName" type="card" class="demo-tabs" @tab-click="handleClick">    
+        <el-tabs v-model="activeName" type="card" class="demo-tabs">    
             <el-tab-pane label="Establishments" name="establishments">
                 <el-tabs v-model="activeEstablishmentTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
                     <el-tab-pane label="Establishment list" name="establishment_list">
@@ -373,13 +373,26 @@ onBeforeMount(async () => {
     await reloadCompetitorList();
     
     try {
+
+        // const response = await new Promise((resolve) => {
+        //     services.get_Record(`advantage/list`, (response) => {
+        //         resolve(response);
+        //     });
+        // });
+        // if (response.status === 200) {
+        //     allAdvantages.value = response.data;
+        // } else {
+        //     console.error('Error fetching advantages:', response);
+        // }
+
         const response = await new Promise((resolve) => {
-            services.get_Record(`advantage/list`, (response) => {
+           services.get_Record(`customer/establishments/advantages?tag=${route.params.tag}`, (response) => {
                 resolve(response);
             });
         });
         if (response.status === 200) {
             allAdvantages.value = response.data;
+            console.log(allAdvantages.value)
         } else {
             console.error('Error fetching advantages:', response);
         }

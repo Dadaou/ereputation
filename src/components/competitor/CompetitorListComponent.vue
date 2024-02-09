@@ -370,7 +370,7 @@ const submit = async () => {
     showSpinner.value = true;
     let urlObject = splitUriAndUrl(provider.value)
     const data = {
-        value1:  value1: isHashtag.value?link.value:getValueUrl(link.value, urlObject.url),
+        value1: isHashtag.value?link.value:getValueUrl(link.value, urlObject.url),
         establishment: establishment.value,
         provider: urlObject.uri,
         enable: true

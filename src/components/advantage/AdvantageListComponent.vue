@@ -7,13 +7,17 @@
   <div class="mt-5 erep_table table__container">
     <el-table :data="filterTableData">
       <el-table-column label="Name" prop="name" style="width: 10%; min-width: 200px;" />
-      <el-table-column label="Establishment" prop="establishment_name" style="width: 15%; min-width: 200px;" />
+      <el-table-column label="Establishment" prop="establishment_name" style="width: 15%; min-width: 250px;" />
       <el-table-column label="Amount" prop="amount" style="width: 10%; min-width: 200px;" align="center" />
       <el-table-column label="Category" prop="category" style="width: 15%; min-width: 200px;" />
       <el-table-column label="Metric" prop="metric" style="width: 10%; min-width: 200px;" />
       <el-table-column label="Scope" prop="scope" style="width: 10%; min-width: 200px;" />
       <el-table-column label="Validity" prop="validity" style="width: 10%; min-width: 200px;" align="center" />
-      <el-table-column label="Expired At" prop="expired_at" style="width: 10%; min-width: 200px;" />
+      <el-table-column label="Expired At" style="width: 10%; min-width: 200px;" >
+         <template #default="scope">
+                  {{moment(scope.row.expiredAt).format('YYYY-MM-DD')}}
+         </template>
+      </el-table-column>
       <el-table-column label="Enable" style="width: 10%; min-width: 200px;" align="center">
         <template #default="scope">
           <el-button v-if="scope.row.enable" size="small" @click="handleDisable(scope.$index, scope.row)"><i
@@ -24,7 +28,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="Operations" style="width: 15%; min-width: 200px;" align="right">
+      <el-table-column label="Operations" style="width: 10%; min-width: 100px;" align="right">
 
         <template #header>
           <el-input v-model="search" size="small" placeholder="Type to search" />
@@ -48,6 +52,7 @@
 import { computed, ref, inject} from 'vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 import services from '@Services/services.js';
+import moment from 'moment';
 
 const emit = defineEmits(['edit', 'setEnable', 'setDisable']);
 const advantages = inject('advantages');
