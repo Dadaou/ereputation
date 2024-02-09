@@ -385,7 +385,7 @@ const selectCurrentLanguage = (language) => {
   /* height: 28px; */
   height: 48px;
   margin-right: 24px;
-  padding: 8px;
+  padding: 8px 16px;
   background-color: var(--color-white);
   border-radius: 24px;
 }
