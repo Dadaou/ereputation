@@ -11,13 +11,11 @@
         </svg>
       </button>
       <a :href="baseurl" class="flex items-center">
-        <div v-if="appStore.account.logoUrl" class="nav-logo">
-          <img :src="appStore.account.logoUrl">
-        </div>
-        <div v-else-if="appStore.account.logo" class="nav-logo">
+        <div v-if="appStore.account.logo" class="nav-logo">
           <img :src="appStore.account.logo">
         </div>
-        <span v-else class="self-center text-xl font-bold whitespace-nowrap dark:text-white">eReputation</span>
+        <span v-if="appStore.account.brand" class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
+          appStore.account.brand }}</span>
       </a>
 
       <!-- Language dropdown  -->
@@ -377,7 +375,8 @@ const selectCurrentLanguage = (language) => {
 /* Langue dropdown css*/
 
 .nav-logo {
-  height: 48px;
+  height: 28px;
+  margin-right: 24px;
 }
 
 .nav-logo img {

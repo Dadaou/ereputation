@@ -43,32 +43,32 @@ provide('tag', tag);
 onBeforeMount(async () => {
   appStore.isLoading = true;
 
-  if (userStore.user) {
+  // if (userStore.user) {
 
-    const response = await new Promise((resolve) => {
-      services.get_Record(`/partner/info?tag=${userStore.user.customer.tag}`, (response) => {
-        resolve(response)
-        if (response.status == 404) {
-          appStore.isLoading = false;
-        }
-      });
-    });
-
-    if (response.status == 200 && response.data) {
-      const data = response.data
-
-      if (Array.isArray(data)) {
-        appStore.setAccount(data[0]);
-      } else {
-        appStore.setAccount(data);
+  const response = await new Promise((resolve) => {
+    services.get_Record(`/partner/info?code=${import.meta.env.VITE_PARTNER_CODE}`, (response) => {
+      resolve(response)
+      if (response.status == 404) {
+        appStore.isLoading = false;
       }
+    }, true);
+  });
 
-      appStore.isLoading = false;
+  if (response.status == 200 && response.data) {
+    const data = response.data
 
+    if (Array.isArray(data)) {
+      appStore.setAccount(data[0]);
+    } else {
+      appStore.setAccount(data);
     }
-  } else {
+
     appStore.isLoading = false;
+
   }
+  // } else {
+  //   appStore.isLoading = false;
+  // }
 
   initFlowbite();
 

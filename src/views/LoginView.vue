@@ -71,21 +71,6 @@ const submit = async () => {
     await userStore.signIn(form.value.email, form.value.password, async (response) => {
         if (response.authenticated) {
 
-            const response = await new Promise((resolve) => {
-                services.get_Record(`/partner/info?tag=${userStore.user.customer.tag}`, (response) => {
-                    resolve(response)
-                    if (response.status == 404) {
-                        appStore.isLoading = false;
-                    }
-                });
-            });
-
-            if (response.status == 200 && response.data) {
-                const data = response.data
-                appStore.setAccount(data);
-                appStore.isLoading = false;
-            }
-
             router.push({ name: "Home" });
             showSpinner.value = false;
 
@@ -117,25 +102,25 @@ onMounted(() => {
     if (width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');
 });
 
-onBeforeMount(async () => {
-    const response = await new Promise((resolve) => {
-        services.get_Record(
-            '/account/info',
-            (response) => {
-                resolve(response)
-                if (response.status == 404) {
-                    appStore.isLoading = false
-                }
-            },
-            true
-        )
-    })
+// onBeforeMount(async () => {
+//     const response = await new Promise((resolve) => {
+//         services.get_Record(
+//             '/account/info',
+//             (response) => {
+//                 resolve(response)
+//                 if (response.status == 404) {
+//                     appStore.isLoading = false
+//                 }
+//             },
+//             true
+//         )
+//     })
 
-    if (response.status == 200 && response.data) {
-        const data = response.data
-        if (data.length) appStore.setAccount(data[0])
-    }
-})
+//     if (response.status == 200 && response.data) {
+//         const data = response.data
+//         if (data.length) appStore.setAccount(data[0])
+//     }
+// })
 
 watch([width, isError], () => {
     if (width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');

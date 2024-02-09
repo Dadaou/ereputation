@@ -120,6 +120,7 @@ const get_Record = async (url, next, isPublic = false) => {
       return next(error.response)
     }
   } else {
+    console.log(url)
     try {
       await publicAxiosInstance.get(`${url}`, { headers }).then((response) => {
         next(response)
