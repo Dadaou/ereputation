@@ -41,8 +41,13 @@ const tag = computed(() => {
 provide('tag', tag);
 
 const initTheme = () => {
-  appStore.setCssVariable('--color-bg2', appStore.account.back_color);
-  appStore.setCssVariable('--color-danger', appStore.account.font_color);
+  appStore.setCssVariable('--color-bgp', appStore.account.back_color);
+  appStore.setCssVariable('--color-danger', appStore.account.title_color);
+  appStore.setCssVariable('--color-bg2', appStore.account.font_color);
+  appStore.setCssVariable('--color-primary', appStore.account.back_color);
+  appStore.setCssVariable('--light-color-bg2', `color-mix(in srgb, ${appStore.account.back_color} 70%, white)`);
+  appStore.setCssVariable('--light-color-danger', `color-mix(in srgb, ${appStore.account.title_color} 25%, white)`);
+  appStore.setCssVariable('--el-color-primary', appStore.account.back_color);
 }
 
 onBeforeMount(async () => {

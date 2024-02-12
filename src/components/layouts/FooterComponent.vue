@@ -48,7 +48,7 @@ const appStore = useAppStore()
 /*Footer*/
 footer {
     padding: 3rem;
-    background-color: var(--color-bg2);
+    background-color: var(--color-bgp);
     color: var(--color-white);
     margin-top: 60px;
     width: 100%;
