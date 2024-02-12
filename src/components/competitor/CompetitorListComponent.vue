@@ -9,20 +9,12 @@
     </div>
     <div class="mt-5 table__container" v-if="!showLinkModal">
         <el-table :data="competitorsData">
-            <!-- <el-table-column width="100">
-                <template #default="scope">
-                    <img :src="scope.row.media">
-                </template>
-            </el-table-column> -->
             <el-table-column label="Competitors" prop="name" style="width: 25%; min-width: 200px;" />
             <el-table-column label="Establishments" style="width: 15%; min-width: 200px;" >
                 <template #default="scope">
                    {{scope.row.establishments.join(', ')}}
                 </template>
             </el-table-column>
-            <!-- <el-table-column label="Category" prop="category" style="width: 15%; min-width: 200px;" />
-            <el-table-column label="Address" prop="address" style="width: 25%; min-width: 200px;" />
-            <el-table-column label="Country" prop="country" style="width: 15%; min-width: 200px;" /> -->
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
                 <template #header>
                     <el-input v-model="search" size="small" placeholder="Type to search" />
@@ -33,16 +25,8 @@
 
                     <el-button size="small" @click="loadLinksByEstablishment(scope.row.tag)"><i
                             class="uil uil-file-alt"></i></el-button>
-                    <!-- <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
-                        <template #reference>
-                            <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
-                        </template>
-                    </el-popconfirm> -->
                      <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
                             class="uil uil-edit"></i></el-button>
-
-                    <!-- <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
-                            class="uil uil-edit"></i></el-button> -->
                 </template>
             </el-table-column>
         </el-table>
@@ -80,7 +64,7 @@
                     </h3>
                 </div>
                 <div class="modal__close">
-                    <i class="uil uil-times-circle" @click="showModal = false"></i>
+                    <i class="uil uil-times-circle" @click="resetValue"></i>
                 </div>
             </div>
 
@@ -103,7 +87,38 @@
                         </el-select>
                     </div>
                 </div>
-                <div>
+                <div> 
+                    <div>
+                        <div id="url_example" v-if="provider || isHashtag">
+                            {{!isHashtag?`Follow this template: ${splitUriAndUrl(provider).url}`:' Follow this example: #hashtag' }}
+                        </div>
+
+                        <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> {{!isHashtag?'Paste the link here':'Hashtag value'}} <span>*</span></label>
+                        <p v-if="!isValidLink && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
+                        <p v-if="!isValidHashtag && isHashtag" class="text-red-500 text-sm">Invalid hashtag format</p>
+                        <input v-if="isHashtag" type="text" id="link" v-model="link"
+                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']" placeholder="#hashtag" required>
+                        <input v-else type="text" id="link" v-model="link"
+                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']" required>
+                       
+                    </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
+
+                    <button v-if="!isHashtag" type="submit" :disabled="!isValidLink || !provider"
+                        :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink || !provider? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                        <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
+                            ...</span>
+                        <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
+                    </button>
+                    <button v-else type="submit" :disabled="!isValidHashtag || !provider"
+                        :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidHashtag || !provider? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                        <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
+                            ...</span>
+                        <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
+                    </button>
+                </div>
+                <!-- <div>
                     <div>
                         <div v-if="provider && !isHashtag" id="url_example">
                             Follow this template: {{ splitUriAndUrl(provider).url }}
@@ -130,7 +145,7 @@
                             ...</span>
                         <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
                     </button>
-                </div>
+                </div> -->
             </form>
 
         </template>
@@ -270,6 +285,18 @@ const filteredProviders = computed(() => {
     return data.filter(item => item.category == category.value);
 })
 
+const isValidHashtag = computed(()=>{
+    console.log(link.value.startsWith("#"))
+    if(link.value != ''){
+        if (link.value.startsWith("#")) {
+            return true;
+        }else{
+            return false
+        }
+    }
+    return true
+})
+
 function transformLinksData(inputData) {
     return inputData.map(item => {
         return {
@@ -366,11 +393,17 @@ const getValueUrl = (url, urlTemplate) => {
     return null;
 }
 
+const getHashtagValue = (value)=>{
+    if (value.startsWith("#")) {
+        return value.slice(1); 
+    }
+}
+
 const submit = async () => {
     showSpinner.value = true;
     let urlObject = splitUriAndUrl(provider.value)
     const data = {
-        value1: isHashtag.value?link.value:getValueUrl(link.value, urlObject.url),
+        value1: isHashtag.value?getHashtagValue(link.value):getValueUrl(link.value, urlObject.url),
         establishment: establishment.value,
         provider: urlObject.uri,
         enable: true
@@ -395,39 +428,10 @@ const submit = async () => {
     }
 }
 
-// const submit = async () => {
-//     showSpinner.value = true;
-//     let urlObject = splitUriAndUrl(provider.value)
-//     const data = {
-//         value1: link.value,
-//         establishment: establishment.value,
-//         provider: urlObject.uri,
-//         enable: true
-//     }
-
-//     try {
-//         const response = await new Promise((resolve, reject) => {
-//             services.createRecord('settings', data, (response) => {
-//                 resolve(response);
-//             });
-//         });
-//         if (response.status == 201) {
-//             ElMessage({
-//                 message: `link added successfully`,
-//                 type: 'success',
-//             })
-//             showSpinner.value = false;
-//             resetValue()
-//         }
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
-
 const resetValue = () => {
     establishment.value = ''
-    provider.value = ''
-    isValidLink.value = false
+    provider.value = null
+    isValidLink.value = true
     link.value = ''
     showModal.value = false
 }
@@ -439,10 +443,15 @@ const remove = (id) => {
 watch([provider, link], () => {
     let urlTemplate;
 
-    if ((provider.value !== '' || provider.value !== undefined || provider.value !== null) && (link.value !== '' || link.value !== undefined || link.value !== null)) {
+    if (provider.value !== null && link.value !== '') {
         urlTemplate = splitUriAndUrl(provider.value).url;
         if (urlTemplate) isValidLink.value = isValidUrl(link.value, urlTemplate)
     }
+})
+
+watch(category, ()=>{
+    isValidLink.value = true
+    link.value = ''
 })
 
 onBeforeMount(async () => {

@@ -138,6 +138,7 @@ const establishments = computed(() => {
     let filteredData = [];
     if (userStore.user && userStore.user.customer) {
         data = userStore.user.customer.establishments;
+        console.log(data)
 
         data.forEach(establishment => {
             filteredData.push({

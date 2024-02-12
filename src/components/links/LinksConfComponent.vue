@@ -24,7 +24,7 @@
                     <el-button size="small" @click="showModal = !showModal, establishment = scope.row.uri"><i
                             class="uil uil-link-add"></i></el-button>
 
-                    <el-button size="small" @click="loadLinksByEstablishment(scope.row.tag)"><i
+                    <el-button size="small" @click="loadLinksByEstablishment(scope.row)"><i
                             class="uil uil-file-alt"></i></el-button>
                 </template>
             </el-table-column>
@@ -40,16 +40,12 @@
                     <el-input v-model="search" size="small" placeholder="Type to search" />
                 </template>
                 <template #default="scope">
+                    <el-button size="small" @click="handleEdit(scope.row)"><i
+                            class="uil uil-edit"></i></el-button>
                     <el-button size="small">
                          <a :href="scope.row.url" target="_blank" class="external-link"><i
                                 class="uil uil-external-link-alt"></i></a>
                     </el-button>
-                    
-                    <!-- <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
-                        <template #reference>
-                          <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
-                        </template>
-                    </el-popconfirm> -->
                 </template>
             </el-table-column>
         </el-table>
@@ -63,7 +59,7 @@
                     </h3>
                 </div>
                 <div class="modal__close">
-                    <i class="uil uil-times-circle" @click="showModal = false"></i>
+                    <i class="uil uil-times-circle" @click="resetValue"></i>
                 </div>
             </div>
 
@@ -87,30 +83,31 @@
                     </div>
                 </div>
                 <div> 
-                     {{isNotFill}} hello
                     <div>
-                        <div v-if="provider && !isHashtag" id="url_example">
-                            Follow this template: {{ splitUriAndUrl(provider).url }}
+                        <div id="url_example" v-if="provider || isHashtag">
+                            {{!isHashtag?`Follow this template: ${splitUriAndUrl(provider).url}`:' Follow this example: #hashtag' }}
                         </div>
-                        <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> {{!isHashtag?'Paste the link here':'Hastag value'}} <span>*</span></label>
-                        <p v-if="!isValidLink && link !== '' && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
+
+                        <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> {{!isHashtag?'Paste the link here':'Hashtag value'}} <span>*</span></label>
+                        <p v-if="!isValidLink && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
+                        <p v-if="!isValidHashtag && isHashtag" class="text-red-500 text-sm">Invalid hashtag format</p>
                         <input v-if="isHashtag" type="text" id="link" v-model="link"
-                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']" placeholder="hashtag">
+                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']" placeholder="#hashtag" required>
                         <input v-else type="text" id="link" v-model="link"
-                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']">
+                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']" required>
                        
                     </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
 
-                    <button v-if="!isHashtag" type="submit" :disabled="!isValidLink || isNotFill"
-                        :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                    <button v-if="!isHashtag" type="submit" :disabled="!isValidLink || !provider"
+                        :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink || !provider? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
                         <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
                             ...</span>
                         <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
                     </button>
-                    <button v-else type="submit" :disabled="isNotFill"
-                        :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800']">
+                    <button v-else type="submit" :disabled="!isValidHashtag || !provider"
+                        :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidHashtag || !provider? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
                         <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
                             ...</span>
                         <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
@@ -119,32 +116,6 @@
             </form>
         </template>
     </ModalComponent>
-    <!-- <ModalComponent :showModal="showLinkModal" @close="showLinkModal = !showLinkModal" :width="modalWidth">
-        <template #content>
-            <div class="modal__header">
-                <div class="modal__title">
-                    <h3 class="font-semibold text-gray-900 dark:text-white">
-                        <i class="uil uil-link"></i> All links
-                    </h3>
-                </div>
-                <div class="modal__close">
-                    <i class="uil uil-times-circle" @click="showLinkModal = !showLinkModal"></i>
-                </div>
-            </div>
-            <ul class="link-list">
-                <li v-for="link in filteredLinks" :key="link.url">
-                    <div class="link-text">
-                        {{ link.url }}
-                    </div>
-                    <div class="actions">
-                        <a :href="link.url" target="_blank" class="external-link"><i
-                                class="uil uil-external-link-alt"></i></a>
-                        <i @click="remove(link.id)" class="delete-icon uil uil-multiply"></i>
-                    </div>
-                </li>
-            </ul>
-        </template>
-    </ModalComponent> -->
 </template>
 <script setup>
 import { computed, defineAsyncComponent, ref, onBeforeMount, watch } from 'vue'
@@ -197,15 +168,13 @@ const isLoading = ref(false)
 const title = computed(()=>{
     return showLinkModal.value?'Links list': 'Links configuration'
 })
+
 const isHashtag = computed(()=>{
     return category.value == 'Hashtag';
 })
-const isNotFill = computed(()=>{
-    console.log(provider.value)
-    console.log(link.value)
-    console.log((provider.value == null || provider.value == '') && (link.value == null || link.value == ''))
-    return (provider.value == null || provider.value == '') && (link.value == null || link.value == '');
-})
+
+const isEdit = ref(false)
+const id= ref('')
 
 const establishments = computed(() => {
     let data = [];
@@ -240,6 +209,18 @@ const filteredProviders = computed(() => {
     });
     provider.value = null
     return data.filter(item => item.category == category.value);
+})
+
+const isValidHashtag = computed(()=>{
+    console.log(link.value.startsWith("#"))
+    if(link.value != ''){
+        if (link.value.startsWith("#")) {
+            return true;
+        }else{
+            return false
+        }
+    }
+    return true
 })
 
 const urlPattern = (urlTemplate) => {
@@ -283,10 +264,11 @@ const getValueUrl = (url, urlTemplate) => {
     return null;
 }
 
-function transformLinksData(inputData) {
+const transformLinksData = (inputData, tag)=> {
     return inputData.map(item => {
         return {
             establishment: item.establishment_name || '',
+            establishmentTag: tag,
             category: item.provider_category || '',
             name: item.provider_name || '',
             providerurl: item.provider_url,
@@ -297,18 +279,20 @@ function transformLinksData(inputData) {
     });
 }
 
-const loadLinksByEstablishment = async (tag) =>{
+const loadLinksByEstablishment = async (etab) =>{
      showLinkModal.value = !showLinkModal.value
      isLoading.value = true
+     establishment.value = etab.uri
+
      try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`establishment/url?tag=${tag}`, (response) => {
+            services.get_Record(`establishment/url?tag=${etab.tag}`, (response) => {
                 resolve(response);
             });
         });
         if (response.status == 200) {
            console.log(response.data)
-           allLinks.value = transformLinksData(response.data.data)
+           allLinks.value = transformLinksData(response.data.data, etab.tag)
            console.log(allLinks.value)
            isLoading.value = false
         }
@@ -317,61 +301,105 @@ const loadLinksByEstablishment = async (tag) =>{
     }
 }
 
+const getHashtagValue = (value)=>{
+    if (value.startsWith("#")) {
+        return value.slice(1); 
+    }
+}
+
 const submit = async () => {
     showSpinner.value = true;
-    if(provider.value){
-        let urlObject = splitUriAndUrl(provider.value)
-        console.log(provider.value)
-    }
-    // const data = {
-    //     value1: isHashtag.value?link.value:getValueUrl(link.value, urlObject.url),
-    //     establishment: establishment.value,
-    //     provider: urlObject.uri,
-    //     enable: true
-    // }
+    let urlObject = splitUriAndUrl(provider.value)
 
-    // try {
-    //     const response = await new Promise((resolve) => {
-    //         services.createRecord('settings', data, (response) => {
-    //             resolve(response);
-    //         });
-    //     });
-    //     if (response.status == 201) {
-    //         ElMessage({
-    //             message: `link added successfully`,
-    //             type: 'success',
-    //         })
-    //         showSpinner.value = false;
-    //         resetValue()
-    //     }
-    // } catch (error) {
-    //     console.log(error)
-    // }
+    const data = {
+        value1: isHashtag.value?getHashtagValue(link.value):getValueUrl(link.value, urlObject.url),
+        establishment: establishment.value,
+        provider: urlObject.uri,
+        enable: true
+    }
+    if(isEdit.value){
+        try {
+            const response = await new Promise((resolve) => {
+                    services.putRecord('settings', id.value, data, (response) => {
+                        resolve(response);
+                    });
+            });
+            console.log(response)
+            if (response.status == 200) {
+                ElMessage({
+                    message: `link updated successfully`,
+                    type: 'success',
+                })
+                loadLinksByEstablishment(establishment.value)
+                showSpinner.value = false;
+                isEdit.value = false
+                resetValue()
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }else{
+        try {
+            const response = await new Promise((resolve) => {
+                    services.createRecord('settings', data, (response) => {
+                        resolve(response);
+                    });
+            });
+            if (response.status == 201) {
+                ElMessage({
+                    message: `link added successfully`,
+                    type: 'success',
+                })
+                showSpinner.value = false;
+                resetValue()
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
 
 const resetValue = () => {
-    console.log('here')
     establishment.value = ''
     provider.value = null
-    isValidLink.value = false
+    isValidLink.value = true
     link.value = ''
     showModal.value = false
 }
 
-const remove = (id) => {
-    console.log(id)
+const getURIbyName = (name)=>{
+    let data = filteredProviders.value
+    console.log(data)
+    data = data.filter(item=> item.name == name)
+    console.log(data)
+    if(data.length>0) return `${data[0].uri}${data[0].url}`
+    return ''
+}
+
+const handleEdit = (data) => {
+    showModal.value = true
+    category.value = data.category
+    setTimeout(function() {
+      link.value = data.category=='Hashtag'?`#${data.settings_value1}`:data.url
+    }, 250);
+    id.value = data.id
+    isEdit.value = true
+    provider.value = getURIbyName(data.name)
 }
 
 watch([provider, link], () => {
     let urlTemplate;
     
-    if ((provider.value !== '' || provider.value !== undefined || provider.value !== null) && (link.value !== '' || link.value !== undefined || link.value !== null)) {
-        // urlTemplate = splitUriAndUrl(provider.value).url;
-        // if (urlTemplate) isValidLink.value = isValidUrl(link.value, urlTemplate)
-        console.log(provider.value)
-        console.log("ato aii")
+    if (provider.value !== null && link.value !== '') {
+        urlTemplate = splitUriAndUrl(provider.value).url;
+        if (urlTemplate) isValidLink.value = isValidUrl(link.value, urlTemplate)
     }
 
+})
+
+watch(category, ()=>{
+    isValidLink.value = true
+    link.value = ''
 })
 
 onBeforeMount(async () => {
