@@ -402,11 +402,11 @@ const selectCurrentLanguage = (language) => {
 }
 
 #lang-btn.btn__lang {
-  color: var(--color-bg2);
+  color: var(--color-bgp);
 }
 
 #lang-btn:hover {
-  color: var(--color-bg2);
+  color: var(--color-bgp);
 }
 
 #language-dropdown .language__item {
@@ -448,7 +448,7 @@ nav {
   position: fixed;
   top: 0;
   z-index: 11;
-  background-color: var(--color-bg2);
+  background-color: var(--color-bgp);
   color: var(--color-white);
 }
 
@@ -485,17 +485,17 @@ ul.menu li a {
 
 ul.menu li a:hover,
 ul.menu .router-link-exact-active:hover {
-  color: var(--color-danger);
+  color: var(--light-color-danger);
 }
 
 ul.menu .router-link-exact-active {
   border-bottom: 2px solid var(--color-danger);
-  color: var(--color-danger);
+  color: var(--light-color-danger);
 }
 
 .nav__onScroll ul li a,
 #user-dropdown ul a {
-  color: var(--color-bg2)
+  color: var(--color-bgp)
 }
 
 a {
@@ -527,17 +527,17 @@ h4 {
 .nav__onScroll h4,
 .nav__onScroll .nav__avatar,
 .menu {
-  color: var(--color-bg2);
+  color: var(--color-bgp);
 }
 
 .nav__onScroll a,
 .nav__onScroll span {
-  color: var(--color-bg2);
+  color: var(--color-bgp);
   border-color: var(--color-white);
 }
 
 .nav__onScroll .avatar__container {
-  color: var(--color-bg2);
+  color: var(--color-bgp);
 }
 
 .nav__onScroll a.btn:hover {
@@ -559,12 +559,12 @@ h4 {
 
 @media screen and (max-width:765px) {
   ul.menu {
-    color: var(--color-bg2) !important;
+    color: var(--color-bgp) !important;
     background: white;
   }
 
   ul.menu a {
-    color: var(--color-bg2)
+    color: var(--color-bgp)
   }
 
 }
