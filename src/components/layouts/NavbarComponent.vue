@@ -11,10 +11,10 @@
         </svg>
       </button>
       <a :href="baseurl" class="flex items-center">
-        <div v-if="appStore.account.logo" class="nav-logo">
+        <div v-if="appStore.account && appStore.account.logo" class="nav-logo">
           <img :src="appStore.account.logo">
         </div>
-        <span v-else-if="appStore.account.brand"
+        <span v-else-if="appStore.account && appStore.account.brand"
           class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
             appStore.account.brand }}</span>
       </a>

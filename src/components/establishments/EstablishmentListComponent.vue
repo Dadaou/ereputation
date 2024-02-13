@@ -15,6 +15,15 @@
             <el-table-column label="Category" prop="category" style="width: 15%; min-width: 200px;" />
             <el-table-column label="Address" prop="address" style="width: 25%; min-width: 200px;" />
             <el-table-column label="Country" prop="country" style="width: 15%; min-width: 200px;" />
+            <el-table-column label="Disable" style="width: 10%; min-width: 200px;" align="center">
+                <template #default="scope">
+                  <el-button v-if="scope.row.disable || scope.row.disable == true" size="small" @click="handleEnable(scope.$index, scope.row)"><i
+                      class="uil uil-check-square" style="color: #777; font-size: 15px;"></i></el-button>
+
+                  <el-button v-else size="small" @click="handleDisable(scope.$index, scope.row)"><i class="uil uil-square"
+                      style="color: #777; font-size: 15px;"></i></el-button>
+                </template>
+            </el-table-column>
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
                 <template #header>
                     <el-input v-model="search" size="small" placeholder="Type to search" />
@@ -104,7 +113,7 @@ const ModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/ModalComponent.vue')
 )
 
-const emit = defineEmits(['edit']);
+const emit = defineEmits(['edit', 'setEnable', 'setDisable']);
 
 const userStore = useUserStore();
 const { width, height } = useWindowSize();
@@ -136,17 +145,17 @@ const handleEdit = (index, establishment) => {
 const establishments = computed(() => {
     let data = [];
     let filteredData = [];
-    if (userStore.user && userStore.user.customer) {
+    if (userStore.user && userStore.user.customer && userStore.user.customer.establishments) {
         data = userStore.user.customer.establishments;
         console.log(data)
 
         data.forEach(establishment => {
             filteredData.push({
                 name: establishment.name,
-                media: (establishment.media.length > 0) ? establishment.media[0].url_source : '',
+                media: (establishment.url_source) ? establishment.url_source : '',
                 tag: establishment.competitor_tag,
                 uri: `/api/establishments/${establishment.id}`,
-                gps: establishment.gps,
+                gps: establishment.locality_gps,
                 country: establishment.country,
                 city: establishment.city,
                 category: establishment.category,
@@ -154,7 +163,9 @@ const establishments = computed(() => {
                 rank: establishment.rank,
                 region: establishment.region,
                 zipcode: establishment.zipcode,
-                positionning: establishment.positionning
+                positionning: establishment.positionning,
+                id:establishment.id,
+                disable: establishment.disable
             })
         });
     }
@@ -266,6 +277,15 @@ const resetValue = () => {
 const remove = (id) => {
     console.log(id)
 }
+
+const handleEnable = (index, establishment) => {
+    console.log(establishment)
+  emit('setEnable', establishment.id);
+};
+
+const handleDisable = (index, establishment) => {
+  emit('setDisable', establishment.id);
+};
 
 watch([provider, link], () => {
     let urlTemplate;

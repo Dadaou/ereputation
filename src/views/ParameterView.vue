@@ -4,7 +4,9 @@
             <el-tab-pane label="Establishments" name="establishments">
                 <el-tabs v-model="activeEstablishmentTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
                     <el-tab-pane label="Establishment list" name="establishment_list">
-                        <EstablishmentListComponent @edit="(establishment) => handleEdit(establishment, 'establishment')" />
+                        <EstablishmentListComponent @edit="(establishment) => handleEdit(establishment, 'establishment')" 
+                            @setEnable="(id) => setStatus(id, 'enable')"
+                            @setDisable="(id) => setStatus(id, 'disable')"/>
                     </el-tab-pane>
                     <el-tab-pane label="Add a new establishment" name="establishment_form">
                         <EstablishmentFormComponent />
@@ -181,7 +183,9 @@ const handleEdit = (value, type) => {
     if (type == 'staff') {
         activeStaffTab.value = 'staff_form';
         staff_to_update.value = value;
+        staff_to_update.value['establishment'] = `/api/establishments/${value.establishment}`
     }
+
     if (type == 'advantage') {
         activeAdvantageTab.value = 'advantage_form';
         advantage_to_update.value = value;
@@ -204,6 +208,8 @@ const handleEdit = (value, type) => {
     }
 };
 
+
+
 const handleEnable = async (value, type) => {
     console.log(type)
     const response = await new Promise((resolve) => {
@@ -222,7 +228,6 @@ const handleEnable = async (value, type) => {
 };
 
 const handleDisable = async (value, type) => {
-    console.log(type)
     const response = await new Promise((resolve) => {
         services.post_Record(`/customer/establishments/advantage/${value}/disable`, {}, (response) => {
             resolve(response)
@@ -237,6 +242,23 @@ const handleDisable = async (value, type) => {
         })
     }
 };
+
+const setStatus = async(id, status)=>{
+     userStore.user.customer.establishments = userStore.user.customer.establishments.map((x) => {
+            if (x.id == id) {
+                x.disable = status=='disable'?true:false
+                return x;
+            } else {
+                return x;
+            }
+    });
+     const response = await new Promise((resolve) => {
+        services.post_Record(`/customer/establishment/${id}/${status}`, {}, (response) => {
+            resolve(response)
+        }, false);
+    });
+    console.log(response)
+}
 
 const transformData = (data) =>{
     const establishmentMap = new Map();
@@ -289,7 +311,6 @@ const transformData = (data) =>{
         });
     }
 
-    // Convertir la Map en tableau
     return Array.from(establishmentMap.values());
 }
 
@@ -312,6 +333,55 @@ const reloadCompetitorList = async(type)=>{
     }
 }
 
+const reloadEventsList = async(type)=>{
+     try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`customer/establishment/event/list?customer=${route.params.tag}`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+           const events = response.data;
+           events.forEach(event => {
+                    let event_found = allEvents.value.find(obj => obj.id === event.id);
+                    if (event_found) {
+                        event_found.establishment_name = `${event_found.establishment_name}, ${event.establishment_name}`;
+                        event_found.establishment.push(event.establishment);
+
+                    } else {
+                        event['date'] = `${moment(event.datefrom).format('YYYY-MM-DD')} to ${moment(event.dateto).format('YYYY-MM-DD')}`
+                        const uri = `/api/establishments/${event['establishment']}`;
+                        event['establishment'] = [];
+                        event['establishment'].push(uri)
+                        allEvents.value.push(event);
+                    }
+            })
+        } 
+
+        if(type=='form') activeEventTab.value = 'event_list';
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const reloadStaffsList = async(type)=>{
+     try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`customer/establishment/staff/list?customer=${route.params.tag}`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            console.log(response.data)
+            allStaffs.value = response.data
+        } 
+
+        if(type=='form') activeStaffTab.value = 'staff_list';
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 onBeforeMount(async () => {
     let staffs = [];
     let events = [];
@@ -329,26 +399,26 @@ onBeforeMount(async () => {
 
     if (userStore.user.customer !== null) {
 
-        userStore.user.customer.establishments.forEach((establishment) => {
-            let promise = services.get_Record(`/establishment/${establishment.competitor_tag}/staffs`, (response) => {
-                staffs.push(response.data);
-            });
-            promises.push(promise);
+        // userStore.user.customer.establishments.forEach((establishment) => {
+        //     let promise = services.get_Record(`/establishment/${establishment.competitor_tag}/staffs`, (response) => {
+        //         staffs.push(response.data);
+        //     });
+        //     promises.push(promise);
 
 
-            let promise_event = services.get_Record(`/establishment/${establishment.competitor_tag}/event`, (response) => {
-                events.push(response.data);
-            });
-            event_promises.push(promise_event);
-        })
-        Promise.all(promises).then(() => {
-            staffs.forEach(staffs_per_establisment => {
-                staffs_per_establisment.forEach(staff => {
-                    allStaffs.value.push(staff);
-                })
-            })
-            appStore.isLoading = false;
-        });
+        //     let promise_event = services.get_Record(`/establishment/${establishment.competitor_tag}/event`, (response) => {
+        //         events.push(response.data);
+        //     });
+        //     event_promises.push(promise_event);
+        // })
+        // Promise.all(promises).then(() => {
+        //     staffs.forEach(staffs_per_establisment => {
+        //         staffs_per_establisment.forEach(staff => {
+        //             allStaffs.value.push(staff);
+        //         })
+        //     })
+        //     appStore.isLoading = false;
+        // });
 
         Promise.all(event_promises).then(() => {
             events.forEach(events_per_establisment => {
@@ -371,6 +441,8 @@ onBeforeMount(async () => {
     }
 
     await reloadCompetitorList();
+    await reloadStaffsList();
+    await reloadEventsList();
     
     try {
 

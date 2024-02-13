@@ -85,6 +85,7 @@ onBeforeMount(async () => {
     if (userStore.user.customer !== null) {
         companiesStore.getEstablishments().then((data) => {
             establishments.value = data;
+            userStore.user.customer['establishments'] = establishments.value
             dataLoading.value = false
         })
     } else appStore.isLoading = false;

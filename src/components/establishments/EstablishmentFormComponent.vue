@@ -253,7 +253,8 @@ const submit = async () => {
 
 const loadData = (establishment, type) => {
 
-    establishment.media = [{ url_source: establishment.media }]
+    // establishment.media = [{ url_source: establishment.media }]
+    establishment.url_source = establishment.media 
 
     if (type == 'new') {
         userStore.user.customer.establishments.push(establishment);

@@ -34,7 +34,7 @@
                 </div>
                 <div>
                     <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span>*</span></label>
-                    <el-select v-model="establishment" placeholder="Choose establishment" size="large">
+                    <el-select v-model="establishment" placeholder="Choose establishment" size="large" filterable>
                         <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name" :value="`/api/establishments/${item.id}`"/>
                     </el-select>
                 </div>
@@ -138,7 +138,6 @@ const loadData = (_staff, staff)=>{
         establishment_id: _staff.establishment.id,
         establishment_tag: _staff.establishment.competitor_tag,
         tag: _staff.tag,
-        name: `${_staff.firstname} ${_staff.lastname}`,
         gender: _staff.gender,
         firstname: _staff.firstname,
         lastname: _staff.lastname,
@@ -158,7 +157,6 @@ const updateData = (_staff)=>{
         establishment_id: _staff.establishment.id,
         establishment_tag: _staff.establishment.competitor_tag,
         tag: _staff.tag,
-        name: `${_staff.firstname} ${_staff.lastname}`,
         gender: _staff.gender,
         firstname: _staff.firstname,
         lastname: _staff.lastname,

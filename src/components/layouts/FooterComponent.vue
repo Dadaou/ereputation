@@ -4,7 +4,7 @@
             <div class="footer__info">
                 <ul>
                     <li>
-                        <div v-if="appStore.account.logo" class="footer-logo" :title="appStore.account.brand || ''">
+                        <div v-if="appStore.account && appStore.account.logo" class="footer-logo" :title="appStore.account.brand || ''">
                             <img :src="appStore.account.logo">
                         </div>
                     </li>

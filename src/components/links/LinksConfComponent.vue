@@ -184,7 +184,7 @@ const establishments = computed(() => {
         data.forEach(establishment => {
             filteredData.push({
                 name: establishment.name,
-                media: (establishment.media.length > 0) ? establishment.media[0].url_source : '',
+                media: (establishment.url_source) ? establishment.url_source : '',
                 tag: establishment.competitor_tag,
                 uri: `/api/establishments/${establishment.id}`,
             })

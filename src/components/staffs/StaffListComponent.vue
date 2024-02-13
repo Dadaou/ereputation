@@ -7,7 +7,11 @@
   <div class="mt-5 table__container">
     <el-table :data="filterTableData">
       <el-table-column label="Period" prop="period" style="width: 15%; min-width: 300px;" />
-      <el-table-column label="Name" prop="name" style="width: 20%; min-width: 300px;" />
+      <el-table-column label="Name" style="width: 20%; min-width: 300px;">
+         <template #default="scope">
+          {{`${scope.row.firstname} ${scope.row.lastname}`}}
+         </template>
+      </el-table-column>
       <el-table-column label="Gender" prop="gender" style="width: 10%; min-width: 300px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;" />
       <el-table-column label="Department" prop="department" style="width: 20%; min-width: 300px;" />
@@ -142,15 +146,17 @@ const handleDelete = async (index, staff) => {
     }
   })
 }
+
 const showQRCode = (value) => {
   staff.value = value;
   showModal.value = true;
 }
+
 const base64Image = ref(null);
 const qrcode = ref(null);
 const downloadQrcode = () => {
   let link = document.createElement('a');
-  link.download = `${staff.value.name}-feedback-link.jpeg`;
+  link.download = `${staff.value.firstname} ${staff.value.lastname}-feedback-link.jpeg`;
   link.href = base64Image.value;
   link.click();
   downloaded.value = true;
