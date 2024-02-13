@@ -12,10 +12,21 @@
                             <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Event name <span>*</span></label>
                             <input type="text" id="first_name" v-model="eventName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
-                        <div>
+                        <!-- <div>
                             <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category <span>*</span></label>
                             <input type="text" id="last_name" v-model="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                        </div>
+                        </div> -->
+                          <div>
+                              <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category <span>*</span></label>
+                              <el-select v-model="category" placeholder="Choose category" size="large">
+                                  <el-option
+                                  v-for="item in categories"
+                                  :key="item"
+                                  :label="item"
+                                  :value="item"
+                                  />
+                              </el-select>
+                          </div>
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                         <div>
@@ -94,6 +105,7 @@ const showSpinner = ref(false);
  const event_to_update = inject('event_to_update');
  const events = inject('events');
 const activeEventTab = inject('event_activeTab');
+const categories = ['Breakdown', 'Happening', 'Incident', 'Misc']
 
 watch(event_to_update, ()=>{
     if(event_to_update.value != null){  

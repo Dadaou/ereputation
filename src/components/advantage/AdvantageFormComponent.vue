@@ -273,7 +273,7 @@ form{
 }
 
 form button{
-    width: 8rem !important;
+    width: 9rem !important;
 }
 .security__header {
     display: flex;

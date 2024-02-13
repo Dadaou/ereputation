@@ -140,7 +140,7 @@
                     :href="`/customer/${route.tag}/establishment/${staff.establishment_competitor_tag}/staffs/${staff.tag}/feedback`"
                     v-for="staff in staffs" :key="staff.id">
                     <div class="staff__qrcode">
-                        {{ staff.firstname }} {{ staff.lastname }}
+                        {{ staff.firstname }} <!-- {{ staff.lastname }} -->
                     </div>
                 </a>
             </div>

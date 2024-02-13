@@ -2,9 +2,17 @@
   <div class="subscription__container">
     <div class="subscription-page-header">
       <div class="container" style="padding-inline: 16px;">
-        <a :href="'/'" class="flex items-center">
+        <!-- <a :href="'/'" class="flex items-center">
           <span class="self-center text-xl font-bold whitespace-nowrap dark:text-white"
             style="color: var(--color-danger)">eReputation</span>
+        </a> -->
+        <a :href="baseurl" class="flex items-center">
+          <div v-if="appStore.account && appStore.account.logo" class="nav-logo">
+            <img :src="appStore.account.logo">
+          </div>
+          <span v-else-if="appStore.account && appStore.account.brand"
+            class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
+              appStore.account.brand }}</span>
         </a>
         <RouterLink :to="`/`" class="relative p-2 login-link">
           <span class="font-bolder"> Sign In</span>
@@ -529,12 +537,26 @@ const loadPaymentForm = async () => {
       displayError.textContent = '';
     }
   })
-}
+};
 
 
 
 </script>
 <style>
+.nav-logo {
+  /* height: 28px; */
+  height: 48px;
+  margin-right: 24px;
+  padding: 8px 16px;
+  background-color: var(--color-white);
+  border-radius: 24px;
+}
+
+.nav-logo img {
+  width: auto;
+  height: 100%;
+}
+
 button.isLoaded {
   display: flex;
   justify-content: center;
@@ -635,119 +657,5 @@ button.isLoaded {
 
 .subscription__container .el-tab-pane {
   padding-bottom: 100px;
-}
-</style>
-<style scoped>
-.app__title {
-  font-weight: 800;
-  color: var(--color-bg);
-}
-
-.btn-navigation {
-  width: 140px;
-  margin: 24px 8px;
-}
-
-.btn-navigation.absolute {
-  position: absolute;
-}
-
-.navigation-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 4px 8px;
-  margin-top: 12px;
-}
-
-.subscription__container .form-group {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  margin-inline: auto;
-  max-width: 600px;
-  width: 100%;
-}
-
-.subscription__container .form-group label {
-  margin-top: 16px;
-}
-
-.subscription__container button[type=submit] {
-  background-color: var(--color-danger) !important;
-  color: var(--color-white) !important;
-}
-
-button[type=button] {
-  color: var(--color-danger) !important;
-  border: solid 1px var(--color-danger) !important;
-}
-
-.subscription__container .field-msg {
-  font-size: 14px;
-  color: var(--color-danger);
-}
-
-.summary-card {
-  display: flex;
-  /* flex-direction: column;
-  justify-content: flex-start;
-  text-align: center; */
-  box-shadow: rgba(149, 157, 165, 0.2) 2px 4px 16px;
-  flex-basis: 150px;
-  padding: 28px 38px;
-  border-radius: 10px;
-  border-radius: 12px;
-  border: 1px outset rgba(149, 157, 165, 0.1);
-  cursor: pointer;
-}
-
-.summary-card__content {
-  width: 360px;
-}
-
-.summary-card__content h1 {
-  border-bottom: rgba(116, 116, 116, .4) 1px solid;
-  width: 100%;
-  margin-block: 12px 8px;
-}
-
-.summary-card__content table td {
-  padding-block: 4px;
-  font-size: .85rem;
-}
-
-#card-success {
-  color: var(--color-success);
-  font-size: .85rem;
-  font-weight: bold;
-}
-
-#card-errors {
-  color: var(--color-danger3);
-  font-size: .85rem;
-  font-weight: bold;
-}
-
-input {
-  caret-color: var(--color-primary) !important;
-}
-
-.subscription__container button {
-  min-height: 46px;
-}
-
-@media (max-width: 768px) {
-  .summary-card__content {
-    width: 100%;
-  }
-
-  .summary-card {
-    width: 100%;
-  }
 }
 </style>
