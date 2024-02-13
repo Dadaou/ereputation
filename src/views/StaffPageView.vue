@@ -218,6 +218,8 @@ const route_name = computed(() => {
     return route.name;
 })
 
+const companyId = route.params.id;
+
 const selectedStaff = ref(null);
 provide('selectedStaff', selectedStaff);
 
@@ -248,7 +250,7 @@ const all_items = ref([
 const { width } = useWindowSize();
 
 
-watch([start_date, end_date], () => {
+watch([start_date, end_date], async() => {
     if (start_date.value !== '' && end_date.value !== '') {
         console.log(start_date.value)
         date.value = [start_date.value, end_date.value]
@@ -257,7 +259,7 @@ watch([start_date, end_date], () => {
         date.value = [startDate, endDate];
        
     }
-
+    await loadStaffs(companyId, start_date.value, end_date.value)
 })
 
 watch(route_name, () => {
@@ -300,10 +302,32 @@ watch(route_name, () => {
     }
 
 })
-onBeforeMount(async () => {
-    const companyId = route.params.id;
-    appStore.isLoading = true;
+
+const loadStaffs = async (tag, dateStart, dateEnd)=>{
     staffLoading.value = true;
+    dateStart = moment(dateStart).format('YYYY-MM-DD')
+    dateEnd = moment(dateEnd).format('YYYY-MM-DD')
+
+    const response = await new Promise((resolve) => {
+        services.get_Record(`/establishment/${companyId}/staffs?dateFrom=${dateStart}&dateTo=${dateEnd}`, (response) => {
+            resolve(response)
+            if (response.status == 404) {
+                appStore.setIsExist(false);
+                appStore.isLoading = false;
+            }
+        });
+    });
+
+    if (response.status == 200) {
+        staffs.value = response.data;
+        console.log(staffs.value)
+        staffLoading.value = false;
+    }
+}
+
+onBeforeMount(async () => {
+    appStore.isLoading = true;
+    // staffLoading.value = true;
     chartLoading.value = true;
 
     companiesStore.getEstablishment(companyId).then((data) => {
@@ -364,21 +388,24 @@ onBeforeMount(async () => {
         }
     })
 
-    const response = await new Promise((resolve) => {
-        services.get_Record(`/establishment/${companyId}/staffs`, (response) => {
-            resolve(response)
-            if (response.status == 404) {
-                appStore.setIsExist(false);
-                appStore.isLoading = false;
-            }
-        });
-    });
+    await loadStaffs(companyId, start_date.value, end_date.value)
+    
 
-    if (response.status == 200) {
-        staffs.value = response.data;
-        console.log(staffs.value)
-        staffLoading.value = false;
-    }
+    // const response = await new Promise((resolve) => {
+    //     services.get_Record(`/establishment/${companyId}/staffs`, (response) => {
+    //         resolve(response)
+    //         if (response.status == 404) {
+    //             appStore.setIsExist(false);
+    //             appStore.isLoading = false;
+    //         }
+    //     });
+    // });
+
+    // if (response.status == 200) {
+    //     staffs.value = response.data;
+    //     console.log(staffs.value)
+    //     staffLoading.value = false;
+    // }
 })
 
 const el = ref(null);
