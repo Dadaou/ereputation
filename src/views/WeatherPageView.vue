@@ -417,16 +417,19 @@ const formattedWeatherRating = computed(() => {
     const unit = nbDays.value>1?'days':'day'
     const order = ['Clear', 'Partially cloudy', 'Overcast', 'Rain, Partially cloudy', 'Rain Partially cloudy', 'Rain, Overcast', 'Rain Overcast', 'Rain', 'Snow Rain Overcast']
     let conditions = []
-    if (weatherRating.value == null) return [];
+    if (weatherRating.value) return [];
     else {
-        console.log(weatherRating.value)
-        let data = weatherRating.value.conditions.map(condition => ({
-            condition,
-            icon: getIcon(condition),
-            note: weatherRating.value[condition].note,
-            color: weatherRating.value[condition].color,
-            days: weatherRating.value[condition].days
-        }));
+        let data = []
+        if(weatherRating.value.conditions){
+            console.log(weatherRating.value)
+            data = weatherRating.value.conditions.map(condition => ({
+                condition,
+                icon: getIcon(condition),
+                note: weatherRating.value[condition].note,
+                color: weatherRating.value[condition].color,
+                days: weatherRating.value[condition].days
+            }));
+        }
 
         order.forEach(condition =>{
             for (var i = 0; i < data.length; i++) {
@@ -473,6 +476,7 @@ const loadConditionFromServer = async (tag, dateStart, dateEnd) => {
 
     if (response.status == 200) {
         weatherRating.value = response.data['data']
+        console.log(weatherRating.value)
         load.value = false;
     }
 }
