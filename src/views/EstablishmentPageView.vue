@@ -30,11 +30,15 @@
                     @click="gotoReviewPage(establishment.competitor_tag, $route.params.tag)">here</a> to access all
                 reviews.</p>
             <div class="reviews__pagination">
-                <PaginationComponent v-if="visibleData.length > 0" :options="options" @next="(option) => {
+                <PaginationComponent 
+                v-if="visibleData.length > 0" 
+                :options="options" 
+                @next="(option) => {
                     loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars)
-                }" @prev="(option) => {
-    loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars)
-}" />
+                }" 
+                @prev="(option) => {
+                    loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars)
+                }" />
             </div>
             <CommentComponent v-if="reviewsLoading == false" :reviews="visibleData" :allReviews="establishment.reviews"
                 :showEmoji="false" />
@@ -610,6 +614,7 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     }
 
     const api = apiBase + '?' + apiParams;
+    console.log(api)
 
     loadDatasets();
     await loadFeelingData(tag, dateStart, dateEnd, source);

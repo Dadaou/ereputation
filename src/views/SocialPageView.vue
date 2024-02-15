@@ -14,66 +14,14 @@
             </div>
         </div>
         <div class="reviews__content">
-            <ul class="social-filter">
-                <li><i :class="`uil uil-facebook`"></i></li>
-                <li><i :class="`uil uil-instagram`"></i></li>
-                <li><i :class="`uil uil-twitter`"></i></li>
-                <!-- <li><i :class="`uil uil-tiktok`"></i></li> -->
-                <li><i :class="`uil uil-youtube`"></i></li>
-                <li><i :class="`uil uil-linkedin`"></i></li>
-            </ul>
+            <socialPostFilterComponent
+                :current="currentSocial"
+                @update="(value)=> currentSocial = value"
+            />
             <SocialPostComponent v-for="post in posts" :post="post"/>
-            <!-- <div class="publication" v-for="post in posts" :key="post.id">
-                <h2>{{ post.title }}</h2>
-                <p>Source: {{ post.source }}</p>
-                <p>Comments: {{ post.comments }}</p>
-                <p>Likes: {{ post.likes }}</p>
-                <p>Shares: {{ post.share }}</p>
-                <p>Published at: {{ post.published_at }}</p>
-                <div class="comments">
-                    <h3>Commentaires</h3>
-                    <div v-for="(comment, index) in post.commentsData" :key="index" class="comment">
-                        <p>{{ comment }}</p>
-                    </div>
-                </div>
-            </div> -->
-
-            <!-- <div class="social-list" v-if="!dataLoading">
-                <div class="social-media-container" v-if="Object.keys(socials).length > 0">
-                    <div v-for="(values, platform) in socials" :key="platform" class="platform">
-                        <h3>{{ platform.charAt(0).toUpperCase() + platform.slice(1) }} <i
-                                :class="`uil uil-${platform}`"></i></h3>
-                        <div v-if="postData.data[platform].followers !== undefined"><i class="uil uil-users-alt"></i>: {{
-                           formatNumberWithDots(postData.data[platform].followers) }}</div>
-                        <div v-if="postData.data[platform].likes !== undefined"><i class="uil uil-thumbs-up"></i>: {{ formatNumberWithDots(postData.data[platform].likes) }}
-                        </div>
-                        <div v-if="values.share !== undefined"><i class="uil uil-share"></i>: {{ formatNumberWithDots(postData.data[platform].share) }}
-                        </div>
-                    </div>
-                </div>
-                <p v-else>no social data</p>
-            </div> -->
-
-           <!--  <div v-else role="status"
-                class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
-                v-for="index in 5" :key="index">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                            <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
-                            <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-                        </div>
-                        <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
-                    </div>
-                    <div>
-                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
-                    </div>
-                </div>
-                <span class="sr-only">Loading...</span>
-            </div> -->
+            <div v-if="posts.length==0">
+                no social post available
+            </div>
         </div>
     </div>
 
@@ -242,10 +190,23 @@ import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import SocialPostComponent from '@Components/utils/SocialPostComponent.vue';
+import SocialPostFilterComponent from '@Components/utils/SocialPostFilterComponent.vue';
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    ArcElement,
+    Legend
+)
 
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 const socialStore = useSocialStore();
+const currentSocial = ref('facebook');
 
 appStore.setCurrentPage({
     title1: "",
@@ -267,39 +228,7 @@ let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
 let end_date = ref(moment().format('YYYY-M-DD'));
 provide('start_date', start_date)
 provide('end_date', end_date)
-const posts = ref([
-            {
-                "id": 4,
-                "source": "facebook",
-                "comments": 50,
-                "comment": null,
-                "likes": 60,
-                "share": 29,
-                "title": "Les recrutements sont lancés pour l’hôtel Cote Brune.",
-                "published_at": "2024-01-01 00:00:00",
-                "created_at": null,
-                "commentsData": [
-                    "Commentaire 1",
-                    "Commentaire 2",
-                    "Commentaire 3"
-                ]
-            },
-            {
-                "id": 3,
-                "source": "instagram",
-                "comments": 50,
-                "comment": null,
-                "likes": 60,
-                "share": 29,
-                "title": "Le recrutement est lancé pour l’hôtel Cote Brune**** aux 2 Alpes (38).",
-                "published_at": "2024-01-01 00:00:00",
-                "created_at": null,
-                "commentsData": [
-                    "Commentaire A",
-                    "Commentaire B"
-                ]
-            }
-])
+const posts = ref([])
 provide('posts', posts)
 const colors = {
         'facebook': '#1877F2',
@@ -309,35 +238,6 @@ const colors = {
         'twitter': '#1DA1F2',
         'youtube': '#FF0000'
 };
-
-const comments = ref({
-    "data": [
-        {
-        "id": 4,
-        "source": "facebook",
-        "comments": 50,
-        "comment": null,
-        "likes": 60,
-        "share": 29,
-        "title": "Les recrutements sont lancés pour l’hôtel Cote Brune.",
-        "published_at": "2024-01-01 00:00:00",
-        "created_at": null
-        },
-        {
-        "id": 3,
-        "source": "facebook",
-        "comments": 50,
-        "comment": null,
-        "likes": 60,
-        "share": 29,
-        "title": "Le recrutement est lancé pour l’hôtel Cote Brune**** aux 2 Alpes (38).",
-        "published_at": "2024-01-01 00:00:00",
-        "created_at": null
-        }
-    ],
-    "totalPages": 1,
-    "length": 2
-})
 
 window.onresize = () => {
     if (socialHistogramContainer.value.clientWidth > 400) {
@@ -456,7 +356,7 @@ const getFollowers = (datasets, type) => {
     return dataChart;
 }
 
-function transformToSourceURL(obj) {
+const transformToSourceURL = (obj) =>{
     const result = {};
     for (const key in obj) {
         const arr = obj[key];
@@ -466,9 +366,35 @@ function transformToSourceURL(obj) {
     }
     return result;
 }
+const IsValueOkay = (value) => (value == ''|| value == 0 || value == null || value == undefined) ? false : true;
+const loadPostData = async(tag, source)=>{
+    let apiBase = 'establishment/socials/posts';
+    let apiParams = `tag=${tag}`;
+
+    if (IsValueOkay(source)) {
+        apiParams += `&source=${source}`;
+    }
+
+    const api = apiBase + '?' + apiParams;
+    console.log(api)
+
+    const response = await new Promise((resolve) => {
+        services.get_Record(api, (response) => {
+            resolve(response)
+        });
+    });
+    console.log(response)
+    if (response.status == 200) {
+       posts.value = response.data.data
+    }
+
+}
+
+watch(currentSocial, async()=>{
+  await loadPostData(companyId, currentSocial.value)  
+})
 
 onBeforeMount(async () => {
-    const companyId = route.params.id;
     appStore.isLoading = true;
     dataLoading.value = true
 
@@ -506,6 +432,8 @@ onBeforeMount(async () => {
         }
     })
 
+    await loadPostData(companyId)
+
     const response = await new Promise((resolve) => {
         services.get_Record(`/establishment/socials/pages?tag=${companyId}`, (response) => {
             resolve(response)
@@ -534,23 +462,9 @@ onBeforeMount(async () => {
 
 });
 
-onMounted(async () => {
-
-    ChartJS.register(
-        CategoryScale,
-        LinearScale,
-        PointElement,
-        LineElement,
-        Title,
-        Tooltip,
-        ArcElement,
-        Legend
-    )
-});
 
 watch([socialPages, calculType], () => {
     data.value = getFollowers(socialPages.value, calculType.value);
-
 });
 
 watch([trendsByEstablishment, calculType], () => {
@@ -757,24 +671,6 @@ li:nth-child(odd) {
 
 .social-item.posts {
     width: 100%;
-}
-
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-.social-filter{
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 15px;
-}
-
-.social-filter li{
-    border-bottom: none;
-    padding: 5px 25px;
-    font-size: 16px;
-    cursor: pointer;
 }
 
 .social-details {

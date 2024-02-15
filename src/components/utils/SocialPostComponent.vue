@@ -19,7 +19,7 @@
 					</ul>
 				</div>
 			 </div>
-			<transition
+			<!-- <transition
 			    name="fade"
 			    enter-active-class="animate__animated animate__fadeInDown"
 			    leave-active-class="animate__animated animate__fadeOutUp">
@@ -28,7 +28,7 @@
 			            <p>{{ comment }}</p>
 			        </div>
 			    </div>
-			</transition>
+			</transition> -->
 	    </div>
 	</div>
 </template>
