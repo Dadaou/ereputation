@@ -168,7 +168,7 @@ import { useAppStore } from "@Stores/app.js";
 import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import { useSocialStore } from "@Stores/social.js";
-import { ref, watch, onBeforeMount, onMounted, provide } from 'vue';
+import { ref, watch, onBeforeMount, onMounted, provide, inject } from 'vue';
 import { storeToRefs } from 'pinia';
 import 'element-plus/es/components/date-picker/style/css';
 import moment from 'moment';
@@ -223,6 +223,7 @@ let endDate = moment().format('YYYY-M-DD');
 const selectedType = ref('Followers')
 provide('selectedType', selectedType)
 const types = ref(["Followers", "Shares", "likes"])
+const customerTag = inject('tag')
 
 let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
 let end_date = ref(moment().format('YYYY-M-DD'));
@@ -398,7 +399,7 @@ onBeforeMount(async () => {
     appStore.isLoading = true;
     dataLoading.value = true
 
-    companiesStore.getEstablishment(companyId).then((data) => {
+    companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
 
         if (data == false) {
             appStore.setIsExist(false);

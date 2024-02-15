@@ -203,7 +203,8 @@ import {
     onBeforeMount,
     onUpdated,
     provide,
-    defineAsyncComponent
+    defineAsyncComponent,
+    inject
 } from 'vue';
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css'
@@ -246,6 +247,7 @@ const dataLoading = ref(true);
 const chartLoading = ref(false);
 provide('chartLoading', chartLoading);
 const eventLoading = ref(false);
+const customerTag = inject('tag');
 
 let establishment = ref({});
 provide('establishment', establishment)
@@ -303,7 +305,7 @@ onBeforeMount(async () => {
     appStore.isLoading = true;
     chartLoading.value = true;
 
-    companiesStore.getEstablishment(companyId).then((data) => {
+    companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
 
         if (data == false) {
             appStore.setIsExist(false);

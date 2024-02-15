@@ -51,7 +51,7 @@
                 <span v-if="!dataLoading">{{ all_items[2].value }} competitors</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
             </div>
-            <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffsranking`">
+            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/staffsranking`">
                 <button class="btn">
                     <i class="uil uil-trophy" :style="{ 'color': 'white' }"></i>
                     <span class="ml-2" :style="{ 'color': 'white' }">Staff Ranking</span>
@@ -142,7 +142,7 @@
                     }" :default="timePeriods[0]" />
             </div>
             <RouterLink v-if="route.name !== 'StaffReview'"
-                :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffsranking`">
+                :to="`/customer/${customeTag}/establishment/${$route.params.id}/staffsranking`">
                 <button class="btn">
                     <i class="uil uil-trophy"></i>
                     <span class="ml-2">Staff Ranking</span>
@@ -169,6 +169,7 @@ import {
     computed,
     provide,
     onUpdated,
+    inject
 } from 'vue';
 import { ElDatePicker } from 'element-plus';
 import {
@@ -183,6 +184,7 @@ import { useResizeObserver } from '@vueuse/core';
 const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
+const customerTag = inject('tag');
 
 const route = useRoute();
 const breadcrumbData = ref([
@@ -330,7 +332,7 @@ onBeforeMount(async () => {
     // staffLoading.value = true;
     chartLoading.value = true;
 
-    companiesStore.getEstablishment(companyId).then((data) => {
+    companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
 
         if (data == false) {
             appStore.setIsExist(false);

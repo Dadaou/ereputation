@@ -1,7 +1,7 @@
 <template>
   <nav v-if="data" class="flex" aria-label="Breadcrumb">
     <ol class="inline-flex items-center space-x-1 md:space-x-3">
-      <li class="inline-flex items-center" @click="$router.push('/home')">
+      <li class="inline-flex items-center" @click="backToList">
         <a class="inline-flex items-center text-sm font-medium text-gray-700 dark:text-gray-400">
           <svg aria-hidden="true" class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg">
@@ -53,6 +53,10 @@ const props = defineProps({
     type: Array,
     required: false,
     default: null
+  },
+  tag: {
+    type: String,
+    required: true
   }
 })
 
@@ -65,6 +69,10 @@ const goback = (path) => {
   setTimeout(() => {
     router.push(path);
   }, 100)
+};
+
+const backToList = ()=>{
+  router.push({name: 'EstablishmentList', params:{tag: props.tag}})
 };
 </script>
 

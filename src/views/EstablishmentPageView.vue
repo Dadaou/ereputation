@@ -766,7 +766,7 @@ onBeforeMount(async () => {
 
     appStore.isLoading = true;
 
-    companiesStore.getEstablishment(customerTag, companyId.value).then((data) => {
+    companiesStore.getEstablishment(customerTag.value, companyId.value).then((data) => {
 
         if (data == false) {
             // exist.value = false;

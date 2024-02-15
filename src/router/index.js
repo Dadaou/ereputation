@@ -24,9 +24,32 @@ const CheckAuthentication = (to, from, next) => {
         params: {tag: user.customer.tag}
       });
     }else{
-      next('/home')
+      next({name:'HomeViewForUserConnected'})
     }
   } 
+}
+
+const checkPartner = (to, from, next)=>{
+   const user = useUserStore().user
+   if(to.name == 'CustomersList'){
+    if(user.customer){
+       next({
+        name: 'EstablishmentList',
+        params: {tag: user.customer.tag}
+      });
+     }else if(user.partner){
+       next()
+     }else next({name:'HomeViewForUserConnected'});
+   }
+}
+
+const checkUser = (to, from, next)=>{
+  const user = useUserStore().user
+   if(to.name == 'EstablishmentList'){
+    if(user.customer || user.partner){
+       next()
+     }else next({name:'HomeViewForUserConnected'});
+   }
 }
 
 const removeAccess = (to, from, next) => {
@@ -246,11 +269,13 @@ const router = createRouter({
             {
               path: 'customer/:tag',
               name: 'EstablishmentList',
+              beforeEnter: [checkUser],
               component: ()=> import('@Views/EstablishmentsListView.vue')
             },
             {
               path: 'customers',
               name: 'CustomersList',
+              beforeEnter: [checkPartner],
               component: ()=> import('@Views/CustomerListView.vue')
             },
             {
@@ -260,12 +285,6 @@ const router = createRouter({
             }
           ]
         },
-        // {
-        //   path: '/home',
-        //   name: 'ErepHome',
-        //   beforeEnter: [CheckAccess],
-        //   component: () => import('@Views/HomePageView.vue')
-        // },
         {
           path: '/customer/:tag/account',
           name: 'UserProfile',

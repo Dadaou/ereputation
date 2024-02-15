@@ -3,7 +3,7 @@
     <div class="main__container" v-if="appStore.isExist">
         <HeadComponent :page="appStore.currentPage"></HeadComponent>
         <div class="breadcrumb__container">
-            <BreadcrumbComponent :data="appStore.breadcrumbs" />
+            <BreadcrumbComponent :data="appStore.breadcrumbs" :tag="customerTag"/>
         </div>
         <div class="app__container">
             <router-view></router-view>
@@ -14,7 +14,7 @@
 </template>
 <script setup>
 import { useAppStore } from "@Stores/app.js";
-import { defineAsyncComponent } from 'vue'
+import { defineAsyncComponent, inject } from 'vue'
 
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
@@ -30,6 +30,7 @@ const EstablishmentNotFound = defineAsyncComponent(() =>
 )
 
 const appStore = useAppStore();
+const customerTag = inject('tag');
 
 </script>
 

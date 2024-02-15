@@ -25,20 +25,44 @@
 <script setup>
 import { ref, onBeforeMount, defineAsyncComponent } from 'vue';
 import { useUserStore } from "@Stores/user.js";
+import services from '@Services/services.js';
+import { useAppStore } from "@Stores/app.js";
 
 const customerComponent = defineAsyncComponent(() =>
     import('@Components/utils/CustomerComponent.vue')
 )
 const userStore = useUserStore();
-const customers = ref([
-  {
-  	name: "Madame Vacances",
-  	address: "472 rue de la Leysse: 73000 Chambéry",
-  	country: "France",
-  	tag: "652f8b33787bd"
-  }
-]);
+const appStore = useAppStore();
+const customers = ref([]);
 const dataLoading = ref(false);
+
+const loadCustomer = async(partner)=>{
+	appStore.isLoading = true
+	const response = await new Promise((resolve) => {
+        services.get_Record(`partner/customer?id=${partner}`, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+    	response.data.forEach(item=>{
+    		customers.value.push({
+    			name: item.name,
+			  	address: `${item.zipcode} ${item.city}`,
+			  	country: item.country,
+			  	tag: item.tag
+    		})
+    	})
+        appStore.isLoading = false
+    }
+};
+
+onBeforeMount(async()=>{
+	const partner= userStore.user.partner
+	if(partner){
+		await loadCustomer(partner.id);
+	}
+});
 
 </script>
 <style scoped>

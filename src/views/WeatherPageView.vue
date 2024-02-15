@@ -207,7 +207,8 @@ import {
     computed,
     provide,
     onUpdated,
-    defineAsyncComponent
+    defineAsyncComponent,
+    inject
 } from 'vue';
 import { ElDatePicker, ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus';
 import {
@@ -225,6 +226,7 @@ ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend)
 
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
+const customerTag = inject('tag')
 
 appStore.setCurrentPage({
     title1: "",
@@ -487,7 +489,7 @@ onBeforeMount(async () => {
     await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, 'C');
     await loadConditionFromServer(companyId, dateStart.value, dateEnd.value);
 
-    companiesStore.getEstablishment(companyId).then((data) => {
+    companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
 
         if (data == false) {
             appStore.setIsExist(false);

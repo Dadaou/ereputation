@@ -282,7 +282,7 @@ import CommentComponent from '@Components/utils/CommentComponent.vue';
 import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
-import { ref, watch, onBeforeMount } from 'vue';
+import { ref, watch, onBeforeMount, inject } from 'vue';
 import { ElDatePicker, ElOption, ElSelect } from 'element-plus';
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
@@ -297,6 +297,7 @@ appStore.setCurrentPage({
 });
 
 appStore.setIsExist(true)
+const customerTag = inject('tag')
 
 const route = useRoute();
 appStore.setBreadcrumbs([
@@ -585,7 +586,7 @@ const loadCategories = async (tag) => {
 onBeforeMount(async () => {
     appStore.isLoading = true;
 
-    companiesStore.getEstablishment(companyId).then((data) => {
+    companiesStore.getEstablishment(customerTag.value,companyId).then((data) => {
 
         if (data == false) {
             appStore.setIsExist(false);

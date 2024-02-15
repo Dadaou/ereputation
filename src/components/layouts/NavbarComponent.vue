@@ -234,7 +234,8 @@ const showMenu = computed(() => {
     'Sales',
     'Staff',
     'StaffComparison',
-    'StaffReview'
+    'StaffReview',
+    'Analysis'
   ];
   return routeName.includes(route.name)
 })
