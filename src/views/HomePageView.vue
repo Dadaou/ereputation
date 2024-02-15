@@ -1,7 +1,17 @@
 <template>
     <div class="main__container">
         <HeadComponent :page="page"></HeadComponent>
-        <div class="container client__container" v-if="userStore.user.customer !== null">
+        <div class="container client__container">
+            <div class="header">
+                <div class="search__icon">
+                    <i class="uil uil-building"></i>
+                    <div class="line"></div>
+                </div>
+                <button v-if="userStore.user.partner && route.name !== 'CustomersList'" @click="backToCustomer">Back</button>
+            </div>
+            <RouterView/>
+        </div>
+        <!-- <div class="container client__container">
             <div class="search__icon">
                 <i class="uil uil-building"></i>
                 <div class="line"></div>
@@ -42,30 +52,32 @@
                     They will assist you in finalizing your registration and become a valued customer.</p>
                 <button class="btn" @click="signOut">Disconnect</button>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 
 <script setup>
-import { ref, onBeforeMount, defineAsyncComponent } from 'vue'
-import { useAppStore } from "@Stores/app.js";
+import { ref, inject } from 'vue'
+// import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
-import { useCompanyStore } from "@Stores/company.js";
+// import { useCompanyStore } from "@Stores/company.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
-import EstablishmentListLoadedComponent from '@Components/utils/EstablishmentListLoadedComponent.vue';
-import { useRouter } from "vue-router";
+// import EstablishmentListLoadedComponent from '@Components/utils/EstablishmentListLoadedComponent.vue';
+import { useRouter, useRoute } from "vue-router";
 
 
-const EstablishmentsListComponent = defineAsyncComponent(() =>
-    import('@Components/utils/EstablishmentsListComponent.vue')
-)
+// const EstablishmentsListComponent = defineAsyncComponent(() =>
+//     import('@Components/utils/EstablishmentsListComponent.vue')
+// )
 
 const userStore = useUserStore();
-const appStore = useAppStore();
-const companiesStore = useCompanyStore();
-const establishments = ref([]);
-const dataLoading = ref(true);
+// const appStore = useAppStore();
+// const companiesStore = useCompanyStore();
+// const establishments = ref([]);
+// const dataLoading = ref(true);
 const router = useRouter();
+const route = useRoute();
+// const customerTag = inject('tag')
 
 const page = ref({
     title1: "",
@@ -73,26 +85,47 @@ const page = ref({
     icon: "uil-estate",
 });
 
-const signOut = () => {
-    userStore.signOut();
-    userStore.authenticated = false;
-    if (userStore.authenticated == false) router.push({ name: "Login" });
-}
+const backToCustomer = ()=>{
+    router.push({name: "CustomersList"})
+};
 
-onBeforeMount(async () => {
-    appStore.isLoading = true;
-    dataLoading.value = true;
-    if (userStore.user.customer !== null) {
-        companiesStore.getEstablishments().then((data) => {
-            establishments.value = data;
-            userStore.user.customer['establishments'] = establishments.value
-            dataLoading.value = false
-        })
-    } else appStore.isLoading = false;
-});
+// const signOut = () => {
+//     userStore.signOut();
+//     userStore.authenticated = false;
+//     if (userStore.authenticated == false) router.push({ name: "Login" });
+// }
+
+// onBeforeMount(async () => {
+//     appStore.isLoading = true;
+//     dataLoading.value = true;
+//     if (userStore.user.customer !== null) {
+//         companiesStore.getEstablishments(customerTag).then((data) => {
+//             establishments.value = data;
+//             if(userStore.user.customer){
+//                 userStore.user.customer['establishments'] = establishments.value
+//             }
+//             dataLoading.value = false
+//         })
+//     } else appStore.isLoading = false;
+// });
 </script>
 
 <style scoped>
+
+.header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.header button{
+    background-color: var(--color-primary);
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 2px 10px;
+    border-radius: 2px;
+}
+
 .establishment__link label,
 .establishment__link {
     cursor: pointer !important;

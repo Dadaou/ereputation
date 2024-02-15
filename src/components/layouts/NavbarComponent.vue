@@ -108,37 +108,37 @@
           :class="['menu flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-2 md:mt-0 md:border-0']">
 
           <li @click="closeDropdownMenu">
-            <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/staffs`">
+            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/staffs`">
               <i class="uil uil-users-alt"></i>
               <span>Staff</span>
             </RouterLink>
           </li>
           <li @click="closeDropdownMenu">
-            <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/events`">
+            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/events`">
               <i class="uil uil-calendar-alt"></i>
               <span>Events</span>
             </RouterLink>
           </li>
           <li @click="closeDropdownMenu">
-            <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/socials`">
+            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/socials`">
               <i class="uil uil-users-alt"></i>
               <span>Social</span>
             </RouterLink>
           </li>
           <li @click="closeDropdownMenu">
-            <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/weathers`">
+            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/weathers`">
               <i class="uil uil-cloud-sun"></i>
               <span>Weather</span>
             </RouterLink>
           </li>
           <li @click="closeDropdownMenu">
-            <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/reviews`">
+            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/reviews`">
               <i class="uil uil-comment-alt-dots"></i>
               <span>Reviews</span>
             </RouterLink>
           </li>
           <li @click="closeDropdownMenu">
-            <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/sales`">
+            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/sales`">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24">
                 <g transform="scale(0.8 1)">
                   <g transform="scale(0.4 0.35) translate(52 -9)">
@@ -156,7 +156,7 @@
             </RouterLink>
           </li>
           <li @click="closeDropdownMenu">
-            <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/analysis`">
+            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/analysis`">
               <i class="uil uil-analytics"></i>
               <span>Analysis</span>
             </RouterLink>
@@ -197,7 +197,7 @@
   </nav>
 </template>
 <script setup>
-import { ref, watch, computed, onMounted } from 'vue';
+import { ref, watch, computed, onMounted, inject } from 'vue';
 import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import ModalComponent from '@Components/utils/ModalComponent.vue';
 import { useUserStore } from "@Stores/user.js";
@@ -215,7 +215,8 @@ const signOut = () => {
 const baseurl = window.location.origin;
 
 const userStore = useUserStore();
-const appStore = useAppStore()
+const appStore = useAppStore();
+const customerTag = inject('tag')
 
 const router = useRouter();
 const route = useRoute();

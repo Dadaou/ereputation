@@ -33,10 +33,17 @@ const SpinnerComponent = defineAsyncComponent(() =>
 const appStore = useAppStore()
 const userStore = useUserStore()
 const route = useRoute()
-const tag = computed(() => {
-  let customer_tag = (userStore.user) ? userStore.user.customer.tag : '';
 
-  return customer_tag;
+const tag = computed(() => {
+  if(userStore.user && userStore.user.customer){
+    return userStore.user.customer.tag
+  }
+
+  if(userStore.user && userStore.user.partner && route.params.tag){
+    return route.params.tag
+  }
+  
+  return '';
 })
 provide('tag', tag);
 

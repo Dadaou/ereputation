@@ -10,19 +10,17 @@ export const useCompanyStore = defineStore('company', () => {
   const establishment = ref(null)
   const appStore = useAppStore()
 
-  const fetchCustomerEstablishments = async () => {
+  const fetchCustomerEstablishments = async (tag) => {
     const userStore = useUserStore()
-
-    if (userStore.user.customer !== null) {
-      const response = await new Promise((resolve) => {
-        services.get_Record(
-          `/customer/${userStore.user.customer.tag}/establishments/all`,
+    const response = await new Promise((resolve) => {
+      services.get_Record(
+          `/customer/${tag}/establishments/all`,
           (response) => {
             resolve(response)
           }
         )
       })
-
+      console.log(response)
       if (response.status == 200) {
         establishments.value = {}
         response.data.forEach((item) => {
@@ -32,15 +30,11 @@ export const useCompanyStore = defineStore('company', () => {
       } else {
         return true
       }
-    } else {
-      establishments.value = {}
-      return true
-    }
   }
 
-  const getEstablishment = async (tag) => {
+  const getEstablishment = async (customer, tag) => {
     if (!establishments.value || !(tag in establishments.value)) {
-      await fetchCustomerEstablishments()
+      await fetchCustomerEstablishments(customer)
     }
 
     if (!(tag in establishments.value)) {
@@ -50,11 +44,11 @@ export const useCompanyStore = defineStore('company', () => {
     return establishments.value[tag]
   }
 
-  const getEstablishments = async () => {
+  const getEstablishments = async (tag) => {
     // if (!establishments.value) {
     //   await fetchCustomerEstablishments()
     // }
-    await fetchCustomerEstablishments()
+    await fetchCustomerEstablishments(tag)
     appStore.isLoading = false
     return Object.values(establishments.value)
   }

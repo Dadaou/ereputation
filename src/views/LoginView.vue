@@ -70,10 +70,8 @@ const submit = async () => {
     showSpinner.value = true;
     await userStore.signIn(form.value.email, form.value.password, async (response) => {
         if (response.authenticated) {
-
-            router.push({ name: "Home" });
+            navigateUser(userStore.user)
             showSpinner.value = false;
-
         } else {
             isError.value = true;
             if (response.status == 401) {
@@ -90,6 +88,15 @@ const submit = async () => {
     })
 }
 
+const navigateUser = (user)=>{
+    if(user.partner){
+        router.push({ name: "CustomersList" }).catch((e) => e);
+    }else if(user.customer){
+        router.push({ name: "EstablishmentList", params:{tag: user.customer.tag}}).catch((e) => e);
+    }else{
+        router.push({ name: "Home" }).catch((e) => e);
+    }
+}
 /**
  * Navbar Handler
  * useWindowScroll allows us to detect the scroll event on 

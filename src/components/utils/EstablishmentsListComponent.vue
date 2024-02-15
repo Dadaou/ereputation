@@ -119,6 +119,10 @@ const props = defineProps({
     establishments: {
         type: Array,
         required: true
+    },
+    tag: {
+        type: String,
+        required: true
     }
 });
 
@@ -143,7 +147,7 @@ const goToCompany = (establishment) => {
             name: 'Establishment',
             params: {
                 id: establishment.competitor_tag,
-                tag: userStore.user.customer.tag
+                tag: tag.value
             },
         });
     }, 100);
@@ -162,9 +166,6 @@ const downloadQrcode = () => {
 const onDataUrlChange = (dataUrl) => {
     base64Image.value = dataUrl;
 };
-
-
-
 </script>
 <style scoped>
 .list__item {

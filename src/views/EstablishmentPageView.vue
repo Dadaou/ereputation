@@ -285,7 +285,7 @@
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[0]" />
             </div>
-            <RouterLink :to="`/customer/${userStore.user.customer.tag}/establishment/${$route.params.id}/trends`">
+            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/trends`">
                 <button class="btn">
                     <i class="uil uil-trophy"></i>
                     <span class="ml-2">Trends</span>
@@ -327,7 +327,7 @@ import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import ComparisonChartComponent from '@Components/utils/ComparisonChartComponent.vue';
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
-import { ref, reactive, watch, onBeforeMount, computed, provide } from 'vue';
+import { ref, reactive, watch, onBeforeMount, computed, provide, inject } from 'vue';
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css'
 import { useChartsStore } from "@Stores/charts.js"
@@ -356,6 +356,7 @@ const route = useRoute();
 const companyId = ref(route.params.id);
 const router = useRouter();
 const appStore = useAppStore();
+const customerTag = inject('tag')
 
 appStore.setBreadcrumbs([
     {
@@ -765,7 +766,7 @@ onBeforeMount(async () => {
 
     appStore.isLoading = true;
 
-    companiesStore.getEstablishment(companyId.value).then((data) => {
+    companiesStore.getEstablishment(customerTag, companyId.value).then((data) => {
 
         if (data == false) {
             // exist.value = false;

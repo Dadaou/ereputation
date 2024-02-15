@@ -12,9 +12,21 @@ import ProfileLayout from '@Layouts/ProfileLayout.vue'
 import { useUserStore } from '@Stores/user.js'
 
 const CheckAuthentication = (to, from, next) => {
-  if (to.name == 'Login' && localStorage.getItem('access') == null) {
+  const user = useUserStore().user
+  if (to.name === 'Login' && localStorage.getItem('access') === null) {
     next()
-  } else next('/home')
+  } else{
+    if(user.partner){
+      next({name: 'CustomersList'})
+    }else if(user.customer){
+      next({
+        name: 'EstablishmentList',
+        params: {tag: user.customer.tag}
+      });
+    }else{
+      next('/home')
+    }
+  } 
 }
 
 const removeAccess = (to, from, next) => {
@@ -225,17 +237,35 @@ const router = createRouter({
           beforeEnter: [CheckAuthentication, removeAccess]
         },
         {
-          path: '/home/establishments',
+          path: '/home',
           name: 'Home',
           beforeEnter: [CheckAccess],
-          component: () => import('@Views/HomePageView.vue')
+          component: () => import('@Views/HomePageView.vue'),
+          redirect: {name: 'HomeViewForUserConnected'},
+          children: [
+            {
+              path: 'customer/:tag',
+              name: 'EstablishmentList',
+              component: ()=> import('@Views/EstablishmentsListView.vue')
+            },
+            {
+              path: 'customers',
+              name: 'CustomersList',
+              component: ()=> import('@Views/CustomerListView.vue')
+            },
+            {
+              path: 'user',
+              name: 'HomeViewForUserConnected',
+              component: ()=> import('@Views/HomeViewForUserConnected.vue')
+            }
+          ]
         },
-        {
-          path: '/home',
-          name: 'ErepHome',
-          beforeEnter: [CheckAccess],
-          component: () => import('@Views/HomePageView.vue')
-        },
+        // {
+        //   path: '/home',
+        //   name: 'ErepHome',
+        //   beforeEnter: [CheckAccess],
+        //   component: () => import('@Views/HomePageView.vue')
+        // },
         {
           path: '/customer/:tag/account',
           name: 'UserProfile',
