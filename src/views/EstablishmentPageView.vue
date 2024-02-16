@@ -34,10 +34,10 @@
                 v-if="visibleData.length > 0" 
                 :options="options" 
                 @next="(option) => {
-                    loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars)
+                    loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, language)
                 }" 
                 @prev="(option) => {
-                    loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars)
+                    loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, language)
                 }" />
             </div>
             <CommentComponent v-if="reviewsLoading == false" :reviews="visibleData" :allReviews="establishment.reviews"
@@ -63,12 +63,12 @@
                 <span class="sr-only">Loading...</span>
             </div>
             <div v-if="visibleData.length == 0">
-                No Reviews
+                No reviews meet to the current filters
             </div>
             <PaginationComponent v-if="visibleData.length > 0" :options="options" @next="(option) => {
-                loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+                loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, language)
             }" @prev="(option) => {
-    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars)
+    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, language)
 }" />
             <aside v-if="lastReviews.length > 0">
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ all_items.rating.value - 3 }} reviews
@@ -406,7 +406,7 @@ const semesterChartLoading = ref(false)
 const chartLoading = ref(false)
 let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
 let endDate = moment().format('YYYY-M-DD');
-
+const language = inject('language')
 let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
 let end_date = ref(moment().format('YYYY-M-DD'));
 
@@ -538,7 +538,7 @@ const globalComparison = async () => {
     selectedCompetitors.value = 'Global';
     selectedWebsites.value = 'Global';
     viewData();
-    loadReviews(companyId.value, 1, 20, 1, startDate, endDate, selectedWebsites.value, selectedStars.value);
+    loadReviews(companyId.value, 1, 20, 1, startDate, endDate, selectedWebsites.value, selectedStars.value, language.value);
 };
 
 const gotoReviewPage = (id, tag) => {
@@ -565,7 +565,7 @@ const chart__height = ref(300);
 
 watch([start_date, end_date, selectedWebsites], () => {
     viewData()
-    loadReviews(companyId.value, 1, 20, 1, start_date.value, end_date.value, selectedWebsites.value, '');
+    loadReviews(companyId.value, 1, 20, 1, start_date.value, end_date.value, selectedWebsites.value, '', language.value);
 })
 
 watch(selectedCompetitors, async () => {
@@ -587,11 +587,11 @@ const starFilter = (star) => {
 };
 
 watch(selectedStars, () => {
-    loadReviews(companyId.value, 1, options.value['rowLimit'], 1, '', '', selectedWebsites.value, selectedStars.value);
+    loadReviews(companyId.value, 1, options.value['rowLimit'], 1, '', '', selectedWebsites.value, selectedStars.value, language.value);
 });
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
-const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source, stars) => {
+const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source, stars, language) => {
     options.value.current = current;
     options.value.page = page;
     reviewsLoading.value = true
@@ -612,6 +612,10 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
 
     if (IsValueOkay(stars)) {
         apiParams += `&star=${stars}`
+    }
+
+    if(IsValueOkay(language)){
+        apiParams += `&language=${language}`
     }
 
     const api = apiBase + '?' + apiParams;

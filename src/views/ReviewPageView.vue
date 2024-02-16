@@ -17,9 +17,9 @@
         <div class="reviews__content">
             <div class="reviews__pagination">
                 <PaginationComponent :options="options" v-if="visibleData.length > 0" @next="(option) => {
-                    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, categoryFilters)
+                    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, categoryFilters, language)
                 }" @prev="(option) => {
-    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, categoryFilters)
+    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, categoryFilters, language)
 }" />
             </div>
             <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
@@ -45,13 +45,13 @@
                 <span class="sr-only">Loading...</span>
             </div>
             <div v-if="visibleData.length == 0">
-                No Reviews
+                 No reviews meet to the current filters
             </div>
             <div class="reviews__pagination">
                 <PaginationComponent :options="options" v-if="visibleData.length > 0" @next="(option) => {
-                    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, categoryFilters)
+                    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, categoryFilters, language)
                 }" @prev="(option) => {
-    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, categoryFilters)
+    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, categoryFilters, language)
 }" />
             </div>
         </div>
@@ -329,7 +329,7 @@ let paginationConfig = ref({
 });
 let dataLoading = ref(true);
 let currentFilter = ref('filter');
-
+const language = inject('language')
 let feelings = ref(['All', 'Positive', 'Neutre', 'Negative']);
 let selectedFeeling = ref(null);
 let selectedWebsites = ref('Global');
@@ -386,7 +386,7 @@ const handleCategoryDropdown = (type) => {
 
 watch([dateStart, dateEnd, selectedWebsites, selectedFeeling, categoryFilters], () => {
     categoryFilters.value = categoryFilters.value.length > 0 ? categoryFilters.value : ['all']
-    loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value, categoryFilters.value);
+    loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
 
 })
 
@@ -404,7 +404,7 @@ const reloadData = (reviewUpdated) => {
 }
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
-const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source, stars, category) => {
+const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source, stars, category, language) => {
     options.value.current = current;
     options.value.page = page;
     reviews_loader.value = true;
@@ -435,7 +435,12 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         apiParams += `&feeling=${selectedFeeling.value.toLowerCase()}`
     }
 
+    if(IsValueOkay(language)){
+            apiParams += `&language=${language}`
+    }
+
     const api = apiBase + '?' + apiParams;
+    console.log(api)
 
     await loadFeelingData(tag, dateStart, dateEnd, source);
     await loadStarData(tag, dateStart, dateEnd, source);
@@ -453,7 +458,7 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
 }
 
 watch(selectedStars, () => {
-    loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value, categoryFilters.value);
+    loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
 });
 
 const starsData = ref([]);
@@ -469,7 +474,7 @@ const formatStarsData = (data) => {
         tmp.push({
             label: k,
             value: data[k],
-            percentage: data[k] * 100 / total,
+            percentage: (data[k] == 0) ? 0 : (data[k] * 100 / total),
             intVal: k.split()[0]
         })
     })
@@ -586,7 +591,7 @@ const loadCategories = async (tag) => {
 onBeforeMount(async () => {
     appStore.isLoading = true;
 
-    companiesStore.getEstablishment(customerTag.value,companyId).then((data) => {
+    companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
 
         if (data == false) {
             appStore.setIsExist(false);
@@ -623,7 +628,7 @@ onBeforeMount(async () => {
         }
     })
 
-    await loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value, categoryFilters.value)
+    await loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value)
     await loadCategories(companyId)
 });
 </script>

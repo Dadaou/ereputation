@@ -47,6 +47,23 @@ const tag = computed(() => {
 })
 provide('tag', tag);
 
+const isNotNull = (value)=>{
+  return value !== '' && value !== null && value !== undefined; 
+}
+const language = computed(()=>{
+  if(userStore.user && userStore.user.customer){
+    return isNotNull(userStore.user.customer.language)?userStore.user.customer.language:'fr'
+  }
+
+  if(userStore.user && userStore.user.partner){
+    return isNotNull(userStore.user.partner.language)?userStore.user.partner.language:'fr'
+  }
+
+  return 'fr'
+})
+provide('language', language);
+console.log(language.value)
+
 const initTheme = () => {
   appStore.setCssVariable('--color-bgp', appStore.account.back_color);
   appStore.setCssVariable('--color-danger', appStore.account.title_color);
