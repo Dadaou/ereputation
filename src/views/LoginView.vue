@@ -79,6 +79,11 @@ const submit = async () => {
                 notification.value.type = "warning";
             }
 
+            if (response.status == 403) {
+                notification.value.message = "Insufficient permissions to access the app!";
+                notification.value.type = "warning";
+            }
+
             if (response.status == 500) {
                 notification.value.message = "Oops! Something unexpected happened. A server connection issue";
                 notification.value.type = "error";
@@ -89,13 +94,21 @@ const submit = async () => {
 }
 
 const navigateUser = (user)=>{
-    if(user.partner){
-        router.push({ name: "CustomersList" }).catch((e) => e);
-    }else if(user.customer){
-        router.push({ name: "EstablishmentList", params:{tag: user.customer.tag}}).catch((e) => e);
-    }else{
-        router.push({ name: "Home" }).catch((e) => e);
-    }
+    const roles = user.roles;
+    let defaultRoute = { name: "Home" };
+    router.push(defaultRoute).catch((e) => e);
+
+    // if (roles.includes("ROLE_EREP")) {
+    //     if ((roles.includes("ROLE_PARTNER") && (user.partner !== null || user.customer !== null))) {
+    //         router.push({ name: "CustomersList" }).catch((e) => e);
+    //     } else if (roles.includes("ROLE_CUSTOMER") && user.customer !== null) {
+    //         router.push({ name: "EstablishmentList", params: { tag: user.customer.tag } }).catch((e) => e);
+    //     } else {
+    //         router.push(defaultRoute).catch((e) => e);
+    //     }
+    // } else {
+    //     router.push(defaultRoute).catch((e) => e);
+    // }
 }
 /**
  * Navbar Handler

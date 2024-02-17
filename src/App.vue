@@ -133,7 +133,7 @@ watch(width, () => {
 <style scoped>
 .app__loader {
   background: white;
-  opacity: 0.9;
+  opacity: 1;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -13,42 +13,51 @@ import { useUserStore } from '@Stores/user.js'
 
 const CheckAuthentication = (to, from, next) => {
   const user = useUserStore().user
-  if (to.name === 'Login' && localStorage.getItem('access') === null) {
-    next()
-  } else{
-    if(user.partner){
-      next({name: 'CustomersList'})
-    }else if(user.customer){
-      next({
-        name: 'EstablishmentList',
-        params: {tag: user.customer.tag}
-      });
-    }else{
-      next({name:'HomeViewForUserConnected'})
-    }
-  } 
-}
-
-const checkPartner = (to, from, next)=>{
-   const user = useUserStore().user
-   if(to.name == 'CustomersList'){
-    if(user.customer){
-       next({
-        name: 'EstablishmentList',
-        params: {tag: user.customer.tag}
-      });
-     }else if(user.partner){
-       next()
-     }else next({name:'HomeViewForUserConnected'});
-   }
+  if (to.name == 'Login') {
+      if(localStorage.getItem('access')){
+          const roles = user?user.roles:[];
+          let defaultRoute = {name:'HomeViewForUserConnected'};
+           if ((roles.includes("ROLE_PARTNER") && (user.partner !== null || user.customer !== null))) {
+                  next({ name: "CustomersList" });
+           } else if (roles.includes("ROLE_CUSTOMER") && user.customer !== null) {
+                  next({ name: "EstablishmentList", params: { tag: user.customer.tag } });
+           } else {
+                  next(defaultRoute);
+           }
+      }else next();
+  }
 }
 
 const checkUser = (to, from, next)=>{
   const user = useUserStore().user
+   const roles = user.roles;
    if(to.name == 'EstablishmentList'){
-    if(user.customer || user.partner){
-       next()
-     }else next({name:'HomeViewForUserConnected'});
+     if ((roles.includes("ROLE_PARTNER") && (user.partner !== null || user.customer !== null))) {
+            next();
+     } else if (roles.includes("ROLE_CUSTOMER") && user.customer !== null) {
+            next();
+     } else {
+           next({name:'HomeViewForUserConnected'});
+     }
+   }
+}
+
+const checkNavigation = (to, from, next)=>{
+   const user = useUserStore().user
+   const roles = user.roles;
+   let defaultRoute = {name:'HomeViewForUserConnected'};
+   if(to.name == 'HomeViewForUserConnected'){
+    if (roles.includes("ROLE_EREP")) {
+        if ((roles.includes("ROLE_PARTNER") && user.partner !== null)) {
+            next({ name: "CustomersList" });
+        } else if (roles.includes("ROLE_CUSTOMER") && user.customer !== null) {
+            next({ name: "EstablishmentList", params: { tag: user.customer.tag } });
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
    }
 }
 
@@ -79,7 +88,7 @@ const router = createRouter({
       path: '/',
       name: 'default',
       component: DefaultLayout,
-      redirect: '/sign-in',
+      redirect: {name: 'Login'},
       children: [
         {
           path: '/sign-up',
@@ -264,23 +273,22 @@ const router = createRouter({
           name: 'Home',
           beforeEnter: [CheckAccess],
           component: () => import('@Views/HomePageView.vue'),
-          redirect: {name: 'HomeViewForUserConnected'},
+          redirect: { name: 'HomeViewForUserConnected' },
           children: [
             {
               path: 'customer/:tag',
               name: 'EstablishmentList',
-              beforeEnter: [checkUser],
               component: ()=> import('@Views/EstablishmentsListView.vue')
             },
             {
               path: 'customers',
               name: 'CustomersList',
-              beforeEnter: [checkPartner],
               component: ()=> import('@Views/CustomerListView.vue')
             },
             {
               path: 'user',
               name: 'HomeViewForUserConnected',
+              beforeEnter: [checkNavigation],
               component: ()=> import('@Views/HomeViewForUserConnected.vue')
             }
           ]

@@ -7,7 +7,8 @@
                     <i class="uil uil-building"></i>
                     <div class="line"></div>
                 </div>
-                <button v-if="userStore.user.partner && route.name !== 'CustomersList'" @click="backToCustomer">Back</button>
+                <button v-if="userStore.user.partner && userStore.user.roles.includes('ROLE_PARTNER') && route.name !== 'CustomersList'" @click="backToCustomer">
+                <i class="uil uil-arrow-left"></i>Back</button>
             </div>
             <RouterView/>
         </div>
@@ -118,13 +119,20 @@ const backToCustomer = ()=>{
 }
 
 .header button{
-    background-color: var(--color-primary);
-    color: white;
+   /* background-color: var(--color-primary);
+    color: white;*/
     font-weight: 500;
     font-size: 14px;
-    padding: 2px 10px;
+    padding: 0px 10px;
     border-radius: 2px;
+    transition: var(--transition)
 }
+
+.header button:hover{
+    color: var(--color-secondary);
+}
+
+
 
 .establishment__link label,
 .establishment__link {
@@ -142,7 +150,6 @@ const backToCustomer = ()=>{
     display: flex;
     gap: 1rem;
     width: 50%;
-    display: flex;
     flex-direction: column;
     margin-bottom: 20px;
 }
@@ -190,7 +197,7 @@ const backToCustomer = ()=>{
     border-radius: 5px;
     font-size: 13px;
     font-weight: 500;
-    padding: 2px 6px;
+    padding: 0px 6px;
     color: var(--color-danger);
 }
 

@@ -158,6 +158,12 @@ const customerTag = inject('tag');
     transition: var(--transition);
 }
 
+.no-comment {
+  margin-top: 10px;
+  color: #888; 
+  font-style: italic; 
+}   
+
 .right__side .establishment .establishment__img {
     width: 100%;
     height: 160px;

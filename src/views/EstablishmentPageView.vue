@@ -62,7 +62,7 @@
                 </div>
                 <span class="sr-only">Loading...</span>
             </div>
-            <div v-if="visibleData.length == 0">
+            <div class="no-comment" v-if="visibleData.length == 0">
                 No reviews meet to the current filters
             </div>
             <PaginationComponent v-if="visibleData.length > 0" :options="options" @next="(option) => {
@@ -614,9 +614,9 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         apiParams += `&star=${stars}`
     }
 
-    if(IsValueOkay(language)){
-        apiParams += `&language=${language}`
-    }
+    // if(IsValueOkay(language)){
+    //     apiParams += `&language=${language}`
+    // }
 
     const api = apiBase + '?' + apiParams;
     console.log(api)

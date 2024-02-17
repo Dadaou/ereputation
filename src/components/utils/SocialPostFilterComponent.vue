@@ -22,8 +22,22 @@ const socials = ref(['facebook', 'instagram', 'twitter', 'youtube', 'linkedin'])
 </script>
 <style scoped>
 
+.social-filter li:hover {
+  transform: scale(1.1);
+}
+
+.social-filter li i {
+  font-size:  1.2rem;
+}
+
 .current {
-	border: 1px solid black !important;
+  border-radius:  0.25rem;
+  box-shadow:  1px  2px  4px rgba(0,  0,  0,  0.1);
+  transition: all  0.2s ease-in-out;
+}
+
+.current:hover {
+  transform: scale(1.05);
 }
 
 ul {

@@ -44,7 +44,7 @@
                 </div>
                 <span class="sr-only">Loading...</span>
             </div>
-            <div v-if="visibleData.length == 0">
+            <div class="no-comment" v-if="visibleData.length == 0">
                  No reviews meet to the current filters
             </div>
             <div class="reviews__pagination">
@@ -435,9 +435,9 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         apiParams += `&feeling=${selectedFeeling.value.toLowerCase()}`
     }
 
-    if(IsValueOkay(language)){
-            apiParams += `&language=${language}`
-    }
+    // if(IsValueOkay(language)){
+    //         apiParams += `&language=${language}`
+    // }
 
     const api = apiBase + '?' + apiParams;
     console.log(api)

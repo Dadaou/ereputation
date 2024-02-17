@@ -5,10 +5,10 @@ var axiosInstance = null
 var publicAxiosInstance = null
 
 const resetAllStores = () => {
-  Object.keys(pinia.state.value).forEach((storeId) => {
-    const store = pinia.store(storeId)
-    store.$reset()
-  })
+  // Object.keys(pinia.state.value).forEach((storeId) => {
+  //   const store = pinia.store(storeId)
+  //   store.$reset()
+  // })
 }
 
 const setToken = (token) => {
@@ -39,7 +39,7 @@ const logout = () => {
   localStorage.removeItem('user')
   localStorage.removeItem('user_authenticated')
   delete axiosInstance.defaults.headers['Authorization']
-  resetAllStores()
+  // resetAllStores()
 }
 
 const checkConnexionInfo = () => {

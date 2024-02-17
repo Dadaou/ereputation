@@ -49,6 +49,7 @@ const props = defineProps({
 });
 
 const navigate = (tag)=>{
+    userStore.customer = props.customer;
 	router.push({ name: "EstablishmentList", params:{tag: tag}}).catch((e) => e);
 };
 	

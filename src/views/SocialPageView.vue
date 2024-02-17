@@ -19,7 +19,25 @@
                 @update="(value)=> currentSocial = value"
             />
             <SocialPostComponent v-for="post in posts" :post="post"/>
-            <div v-if="posts.length==0">
+            <div class="publication-container" v-for="index in 5" v-if="postLoaded">
+                <div class="publication bg-gray-200 animate-pulse">
+                    <div class="post-info">
+                        <div class="post-head flex justify-between">
+                            <span class="post-source h-4 bg-gray-300 rounded w-1/4"></span>
+                            <span class="post-date h-4 bg-gray-300 rounded w-1/4"></span>
+                        </div>
+                        <div class="post-title h-4 bg-gray-300 rounded w-full mt-4"></div>
+                        <div class="post-footer flex justify-end text-sm mt-4">
+                            <ul class="flex gap-2">
+                                <li class="h-4 bg-gray-300 rounded w-1/4"></li>
+                                <li class="h-4 bg-gray-300 rounded w-1/4"></li>
+                                <li class="h-4 bg-gray-300 rounded w-1/4"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="no-comment" v-if="posts.length==0 && !postLoaded">
                 no social post available
             </div>
         </div>
@@ -207,7 +225,8 @@ const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 const socialStore = useSocialStore();
 const currentSocial = ref('facebook');
-
+const postLoaded = ref(false);
+provide('postLoaded', postLoaded);
 appStore.setCurrentPage({
     title1: "",
     title2: "Socials",
@@ -371,6 +390,7 @@ const IsValueOkay = (value) => (value == ''|| value == 0 || value == null || val
 const loadPostData = async(tag, source)=>{
     let apiBase = 'establishment/socials/posts';
     let apiParams = `tag=${tag}`;
+    postLoaded.value = true;
 
     if (IsValueOkay(source)) {
         apiParams += `&source=${source}`;
@@ -387,6 +407,9 @@ const loadPostData = async(tag, source)=>{
     console.log(response)
     if (response.status == 200) {
        posts.value = response.data.data
+       setTimeout(()=>{
+         postLoaded.value = false
+       }, 5000)
     }
 
 }
@@ -817,5 +840,69 @@ li:nth-child(odd) {
         overflow: auto;
         width: 100%;
     }
+}
+
+.publication {
+   margin-bottom: 20px;
+   padding: 10px;
+   transition: var(--transition);
+   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+   border-radius: 5px;
+}
+
+.comments {
+  max-height: 500px; 
+  overflow-y: auto; 
+  transition: max-height 0.5s ease; 
+}
+
+.publication-container {
+  max-width:  95%;
+  margin:  0 auto;
+ /* padding:  20px;*/
+}
+
+.publication {
+  display: flex;
+  flex-direction: column;
+  margin-bottom:  20px;
+}
+
+.post-title{
+     background-color: #f7fbff;
+     padding: 15px;
+     margin-top: 10px;
+     font-size: 14px;
+     border-radius: 5px;
+}
+
+.post-head{
+    display: flex;
+    justify-content: space-between;
+}
+
+.post-footer{
+    display: flex;
+    justify-content: flex-end;
+    font-size: 13px;
+}
+
+.post-footer ul{
+    display: flex;
+    gap: 0.5rem;
+}
+
+.post-date{
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-primary)
+}
+
+.post-btn-comment{
+    cursor: pointer;
+}
+
+.post-info{
+    z-index: 1
 }
 </style>

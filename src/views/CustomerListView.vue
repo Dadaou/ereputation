@@ -1,17 +1,22 @@
 <template>
 	 <div v-if="!dataLoading">
         <div class="client__container__head" v-if="customers.length > 0">
-           Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, all customers related to you are listed bellow. <span>({{ customers.length }} found)</span>
+          Welcome, Partner <b>{{ userStore.user.partner.name }}</b>! <br/>
+          We're thrilled to have you on board. Here, you'll find your customer list displayed below.
         </div>
         <div class="client__container__head" v-else>
-           Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, no customer associated with you.
+          	Welcome, Partner <b>{{ userStore.user.partner.name }}</b>! <br/>
+
+			We're thrilled to have you on board. While your customer list is currently empty, it's the perfect opportunity to kickstart your journey towards building a thriving network. Explore the possibilities and lay the groundwork for future connections.
+
+			Your journey with us is just beginning, and we're excited to support you every step of the way. Let's embark on this exciting adventure together!
         </div>
     </div>
-    <div v-else>
+    <!-- <div v-else>
         <div class="client__container__head">
             Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, your establishments are listed bellow.
         </div>
-    </div>
+    </div> -->
     <div class="customer-list" v-if="customers.length > 0">
     	<customerComponent v-for="customer in customers" :key="customer.name" :customer="customer"/>
        <!--  <suspense>

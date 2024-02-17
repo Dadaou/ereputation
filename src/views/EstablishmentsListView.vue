@@ -1,34 +1,40 @@
 <template>
-    <div v-if="!dataLoading">
-        <div class="client__container__head" v-if="establishments.length > 0">
-           Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, your establishments are listed bellow. <span>({{ establishments.length }} found)</span>
-        </div>
-        <div class="client__container__head" v-else>
-           Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, no companies found yet.
-        </div>
-    </div>
-    <div v-else>
-        <div class="client__container__head">
-            Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, your establishments are listed bellow.
-        </div>
-    </div>
-    <div class="society__list" v-if="establishments.length > 0">
-        <suspense>
-            <establishments-list-component :establishments="establishments"/>
-            <template #fallback>
-                <establishment-list-loaded-component :nb="3" />
-            </template>
-        </suspense>
-    </div>
+	<div v-if="userStore.customer">
+		<div v-if="!dataLoading">
+	        <div class="client__container__head" v-if="establishments.length > 0">
+	           Welcome, Customer <b>{{ userStore.customer.name }}</b>! Your establishments are listed below. <span>({{ establishments.length }} found)</span>
+	        </div>
+	        <div class="client__container__head" v-else>
+	           Welcome , Customer <b>{{ userStore.customer.name }}</b>! No companies found yet.
+	        </div>
+	    </div>
+	    <div v-else>
+	        <div class="client__container__head">
+	            Welcome, Customer <b>{{ userStore.customer.name }}</b>! Your establishments are listed below. <span>({{ establishments.length }} found)</span>
+	        </div>
+	    </div>
+	    <div class="society__list" v-if="establishments.length > 0">
+	        <suspense>
+	            <establishments-list-component :establishments="establishments" :tag='customerTag'/>
+	            <template #fallback>
+	                <establishment-list-loaded-component :nb="3" />
+	            </template>
+	        </suspense>
+	    </div>
+	</div>
+	<div v-else>
+		We're sorry, but we couldn't find the customer associated with the provided tag. Please double-check the tag and try again. If you continue to experience issues, please contact our support team for assistance.
+	</div>
 </template>
 <script setup>
-import { ref, onBeforeMount, defineAsyncComponent, inject } from 'vue';
+import { ref, onBeforeMount, onMounted, defineAsyncComponent, inject, computed } from 'vue';
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
 import { useCompanyStore } from "@Stores/company.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import EstablishmentListLoadedComponent from '@Components/utils/EstablishmentListLoadedComponent.vue';
 import { useRouter, useRoute } from "vue-router";
+import services from '@Services/services.js';
 
 
 const EstablishmentsListComponent = defineAsyncComponent(() =>
@@ -41,18 +47,49 @@ const companiesStore = useCompanyStore();
 const establishments = ref([]);
 const dataLoading = ref(true);
 const router = useRouter();
-const customerTag = inject('tag')
-console.log(customerTag.value)
+const customerTag = inject('tag');
+const customer = ref(null)
 
+const loadCustomer = async(partner)=>{
+	appStore.isLoading = true
+	const response = await new Promise((resolve) => {
+        services.get_Record(`partner/customer?id=${partner}`, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+    	response.data.forEach(item=>{
+    		if(item.tag == customerTag.value){
+	    		userStore.customer = {
+	    			name: item.name,
+				  	address: `${item.zipcode} ${item.city}`,
+				  	country: item.country,
+				  	tag: item.tag
+	    		}
+    		}
+    	})
+        appStore.isLoading = false
+    }
+};
 
 onBeforeMount(async () => {
     appStore.isLoading = true;
     dataLoading.value = true;
-    if (userStore.user) {
+
+    if(!(userStore.user.roles.includes("ROLE_PARTNER") && userStore.user.partner && userStore.customer && userStore.customer.tag == customerTag.value)){
+    	userStore.customer = null
+    	await loadCustomer(userStore.user.partner.id)
+    }
+});
+
+onMounted(async()=>{
+	if (userStore.user) {
         companiesStore.getEstablishments(customerTag.value).then((data) => {
             establishments.value = data;
             if(userStore.user.customer){
-                userStore.user.customer['establishments'] = establishments.value
+                userStore.user.customer['establishments'] = establishments.value;
+                userStore.customer = userStore.user.customer
             }
             dataLoading.value = false
         })
