@@ -8,39 +8,71 @@
         <div class="reviews__content">
             <social-statistics></social-statistics>
         </div>
-        <div class="head">
+        <div class="head mb-4">
             <div class="app__title" style="margin-top: 50px;">
                 <h2>Social List</h2>
             </div>
         </div>
-        <div class="reviews__content">
-            <socialPostFilterComponent
-                :current="currentSocial"
-                @update="(value)=> currentSocial = value"
-            />
-            <SocialPostComponent v-for="post in posts" :post="post" v-if="!postLoaded"/>
-            <div class="publication-container" v-for="index in 5" v-if="postLoaded">
-                <div class="publication bg-gray-200 animate-pulse">
-                    <div class="post-info">
-                        <div class="post-head flex justify-between">
-                            <span class="post-source h-4 bg-gray-300 rounded w-1/4"></span>
-                            <span class="post-date h-4 bg-gray-300 rounded w-1/4"></span>
-                        </div>
-                        <div class="post-title h-4 bg-gray-300 rounded w-full mt-4"></div>
-                        <div class="post-footer flex justify-end text-sm mt-4">
-                            <ul class="flex gap-2">
-                                <li class="h-4 bg-gray-300 rounded w-1/4"></li>
-                                <li class="h-4 bg-gray-300 rounded w-1/4"></li>
-                                <li class="h-4 bg-gray-300 rounded w-1/4"></li>
-                            </ul>
+        <el-tabs
+            v-model="activeName"
+            type="card"
+            class="demo-tabs"
+          >
+            <el-tab-pane label="Socials" name="socials">
+                <div class="reviews__content">
+                    <socialPostFilterComponent
+                        :current="currentSocial"
+                        @update="(value)=> currentSocial = value"
+                    />
+                    <SocialPostComponent v-for="post in posts" :post="post" v-if="!postLoaded"/>
+                    <div class="publication-container" v-for="index in 5" v-if="postLoaded">
+                        <div class="publication bg-gray-200 animate-pulse">
+                            <div class="post-info">
+                                <div class="post-head flex justify-between">
+                                    <span class="post-source h-4 bg-gray-300 rounded w-1/4"></span>
+                                    <span class="post-date h-4 bg-gray-300 rounded w-1/4"></span>
+                                </div>
+                                <div class="post-title h-4 bg-gray-300 rounded w-full mt-4"></div>
+                                <div class="post-footer flex justify-end text-sm mt-4">
+                                    <ul class="flex gap-2">
+                                        <li class="h-4 bg-gray-300 rounded w-1/4"></li>
+                                        <li class="h-4 bg-gray-300 rounded w-1/4"></li>
+                                        <li class="h-4 bg-gray-300 rounded w-1/4"></li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <div class="no-comment" v-if="posts.length==0 && !postLoaded">
+                        no social post available
+                    </div>
                 </div>
-            </div>
-            <div class="no-comment" v-if="posts.length==0 && !postLoaded">
-                no social post available
-            </div>
-        </div>
+            </el-tab-pane>
+            <el-tab-pane label="Social Tag" name="social_tag">
+                <SocialPostComponent v-for="post in hashtagData" :post="post" v-if="!postLoaded"/>
+                    <div class="publication-container" v-for="index in 5" v-if="postLoaded">
+                        <div class="publication bg-gray-200 animate-pulse">
+                            <div class="post-info">
+                                <div class="post-head flex justify-between">
+                                    <span class="post-source h-4 bg-gray-300 rounded w-1/4"></span>
+                                    <span class="post-date h-4 bg-gray-300 rounded w-1/4"></span>
+                                </div>
+                                <div class="post-title h-4 bg-gray-300 rounded w-full mt-4"></div>
+                                <div class="post-footer flex justify-end text-sm mt-4">
+                                    <ul class="flex gap-2">
+                                        <li class="h-4 bg-gray-300 rounded w-1/4"></li>
+                                        <li class="h-4 bg-gray-300 rounded w-1/4"></li>
+                                        <li class="h-4 bg-gray-300 rounded w-1/4"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="no-comment" v-if="hashtagData.length==0 && !postLoaded">
+                        no social tag data available
+                    </div>
+            </el-tab-pane>
+          </el-tabs>
     </div>
 
     <StatSlider v-if="establishment && establishment.socials" class="stat__cards_mobile" :items="trends"
@@ -188,7 +220,6 @@ import { useCompanyStore } from "@Stores/company.js";
 import { useSocialStore } from "@Stores/social.js";
 import { ref, watch, onBeforeMount, onMounted, provide, inject } from 'vue';
 import { storeToRefs } from 'pinia';
-import 'element-plus/es/components/date-picker/style/css';
 import moment from 'moment';
 import {
     Chart as ChartJS,
@@ -204,11 +235,14 @@ import {
 import SocialStatistics from '@Components/utils/SocialStatistics.vue';
 import StatSlider from '@Components/utils/StatSlider.vue';
 import StatComponent from '@Components/utils/StatComponent.vue';
-import { ElDatePicker } from 'element-plus';
+import { ElDatePicker, ElTabs, ElTabPane } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import SocialPostComponent from '@Components/utils/SocialPostComponent.vue';
 import SocialPostFilterComponent from '@Components/utils/SocialPostFilterComponent.vue';
+import 'element-plus/es/components/tabs/style/css';
+import 'element-plus/es/components/tab-pane/style/css';
+import 'element-plus/es/components/date-picker/style/css';
 
 ChartJS.register(
     CategoryScale,
@@ -225,6 +259,7 @@ const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 const socialStore = useSocialStore();
 const currentSocial = ref('facebook');
+const activeName = ref('socials'); // ou social tag
 const postLoaded = ref(false);
 provide('postLoaded', postLoaded);
 appStore.setCurrentPage({
@@ -309,7 +344,7 @@ const postData = ref({
     totalPages: 1,
     length: 3
 })
-
+const hashtagData = ref([])
 const data = ref({
     labels: [],
     datasets: [
@@ -330,6 +365,15 @@ const all_items = ref([
 ]);
 
 const dataLoading = ref(true);
+
+watch([start_date, end_date, activeName], async()=>{
+ // await loadSocialData(companyId, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), type.value)
+    if(activeName.value == 'socials'){
+             await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+    }else{
+             await loadPostHashtagData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+    }
+})
 
 const generatedLegend = (colors, dataType) => {
     let legends = [];
@@ -387,13 +431,21 @@ const transformToSourceURL = (obj) =>{
     return result;
 }
 const IsValueOkay = (value) => (value == ''|| value == 0 || value == null || value == undefined) ? false : true;
-const loadPostData = async(tag, source)=>{
+const loadPostData = async(tag, source, dateStart, dateEnd)=>{
     let apiBase = 'establishment/socials/posts';
     let apiParams = `tag=${tag}`;
     postLoaded.value = true;
 
     if (IsValueOkay(source)) {
         apiParams += `&source=${source}`;
+    }
+
+    if (IsValueOkay(dateStart)) {
+        apiParams += `&fromDate=${dateStart}`;
+    }
+
+    if (IsValueOkay(dateEnd)) {
+        apiParams += `&toDate=${dateEnd}`;
     }
 
     const api = apiBase + '?' + apiParams;
@@ -414,8 +466,49 @@ const loadPostData = async(tag, source)=>{
 
 }
 
+const loadPostHashtagData = async(tag, source, dateStart, dateEnd)=>{
+    let apiBase = 'get/social/post/by/hashtag';
+    // let apiParams = `tag=${tag}`;
+     let apiParams = "";
+    postLoaded.value = true;
+
+    if (IsValueOkay(source)) {
+        apiParams += `&provider=${source}`;
+    }
+
+    if (IsValueOkay(dateStart)) {
+        apiParams += `&datefrom=${dateStart}`;
+    }
+
+    if (IsValueOkay(dateEnd)) {
+        apiParams += `&dateto=${dateEnd}`;
+    }
+
+    const api = apiBase + '?' + apiParams;
+    console.log(api)
+
+    const response = await new Promise((resolve) => {
+        services.get_Record(api, (response) => {
+            resolve(response)
+        });
+    });
+    console.log(response)
+    if (response.status == 200) {
+       hashtagData.value = response.data
+       setTimeout(()=>{
+         postLoaded.value = false
+       }, 5000)
+    }
+
+}
+
 watch(currentSocial, async()=>{
-  await loadPostData(companyId, currentSocial.value)  
+  // await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))  
+  if(activeName.value == 'socials'){
+         await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+    }else{
+         await loadPostHashtagData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+    }
 })
 
 onBeforeMount(async () => {
@@ -456,7 +549,11 @@ onBeforeMount(async () => {
         }
     })
 
-    await loadPostData(companyId)
+    if(activeName.value == 'socials'){
+         await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+    }else{
+         await loadPostHashtagData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+    }
 
     const response = await new Promise((resolve) => {
         services.get_Record(`/establishment/socials/pages?tag=${companyId}`, (response) => {
