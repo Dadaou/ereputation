@@ -285,7 +285,7 @@ const chartLoading = ref(false);
 provide('chartLoading', chartLoading);
 const eventLoading = ref(false);
 const customerTag = inject('tag');
-const activeName = ref('event'); // ou public event
+const activeName = ref('events'); // ou public event
 
 let establishment = ref({});
 provide('establishment', establishment)
@@ -331,11 +331,17 @@ const loadEvents = async (tag, dateStart, dateEnd)=>{
             }
         });
     });
+    console.log(`/establishment/${tag}/event?fromDate=${dateStart}&toDate=${dateEnd}`)
 
     if (response.status == 200) {
         events.value = response.data;
         eventLoading.value = false;
     }
+}
+
+const handleClick = ()=>{
+
+
 }
 
 onBeforeMount(async () => {
@@ -351,6 +357,7 @@ onBeforeMount(async () => {
         }
         else {
             establishment.value = data;
+            console.log(establishment.value)
             appStore.setCurrentPage({
                 title1: "",
                 title2: establishment.value.name,
