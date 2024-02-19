@@ -18,7 +18,7 @@
                 :current="currentSocial"
                 @update="(value)=> currentSocial = value"
             />
-            <SocialPostComponent v-for="post in posts" :post="post"/>
+            <SocialPostComponent v-for="post in posts" :post="post" v-if="!postLoaded"/>
             <div class="publication-container" v-for="index in 5" v-if="postLoaded">
                 <div class="publication bg-gray-200 animate-pulse">
                     <div class="post-info">

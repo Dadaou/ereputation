@@ -142,7 +142,7 @@
                     }" :default="timePeriods[0]" />
             </div>
             <RouterLink v-if="route.name !== 'StaffReview'"
-                :to="`/customer/${customeTag}/establishment/${$route.params.id}/staffsranking`">
+                :to="`/customer/${customerTag}/establishment/${$route.params.id}/staffsranking`">
                 <button class="btn">
                     <i class="uil uil-trophy"></i>
                     <span class="ml-2">Staff Ranking</span>

@@ -23,34 +23,68 @@
             </div>
             <EventChartComponent v-else :width="chartWidth" />
         </div>
-        <div class="head">
+        <div class="head mb-4">
             <div class="app__title" style="margin-top: 50px;">
                 <h2>Events List</h2>
             </div>
         </div>
-        <div class="reviews__content">
-            <EventItemComponent v-if="eventLoading == false" />
-            <div v-else role="status"
-                class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
-                v-for="index in 2" :key="index">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
+         <el-tabs
+            v-model="activeName"
+            type="card"
+            class="demo-tabs"
+            @tab-click="handleClick"
+          >
+            <el-tab-pane label="Events" name="events">
+                <div class="reviews__content">
+                    <EventItemComponent v-if="eventLoading == false" />
+                    <div v-else role="status"
+                        class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
+                        v-for="index in 2" :key="index">
                         <div>
-                            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                            <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
-                            <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                </div>
+                                <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
+                            </div>
+                            <div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
+                            </div>
                         </div>
-                        <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
-                    </div>
-                    <div>
-                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-                        <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
+                        <span class="sr-only">Loading...</span>
                     </div>
                 </div>
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
+            </el-tab-pane>
+            <el-tab-pane label="Public Events" name="public_events">
+                <div class="reviews__content">
+                    <EventItemComponent v-if="eventLoading == false" />
+                    <div v-else role="status"
+                        class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
+                        v-for="index in 2" :key="index">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                </div>
+                                <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
+                            </div>
+                            <div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
+                            </div>
+                        </div>
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </el-tab-pane>
+          </el-tabs>
     </div>
     <div class="tablet_mobile__filter">
         <div class="date__picker px-2">
@@ -209,6 +243,9 @@ import {
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css'
 import { useResizeObserver } from '@vueuse/core';
+import { ElTabs, ElTabPane } from 'element-plus';
+import 'element-plus/es/components/tabs/style/css';
+import 'element-plus/es/components/tab-pane/style/css';
 
 const EventChartComponent = defineAsyncComponent(() =>
     import('@Components/utils/EventChartComponent.vue')
@@ -248,6 +285,7 @@ const chartLoading = ref(false);
 provide('chartLoading', chartLoading);
 const eventLoading = ref(false);
 const customerTag = inject('tag');
+const activeName = ref('event'); // ou public event
 
 let establishment = ref({});
 provide('establishment', establishment)

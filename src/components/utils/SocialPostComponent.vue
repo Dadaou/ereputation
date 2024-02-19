@@ -23,7 +23,7 @@
 			    name="fade">
 			     <div class="comments" v-if="showComment">
 			     		<socialComment v-for="(item, index) in comments" :key="index" :comment="item"/>
-			     		<div class="no-comment" v-if="comments.length == 0">No comment available!</div>
+			     		<div class="no-comment" v-if="comments.length == 0 && !commentsLoaded">No comment available!</div>
 			     		
 			            <div v-for="index in 5" :key="index" class="comment bg-gray-200 animate-pulse" v-if="commentsLoaded">
 						    <!-- <span class="comment-date post-date">Loading...</span> -->

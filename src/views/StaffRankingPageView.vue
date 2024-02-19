@@ -219,6 +219,7 @@ import {
     watch,
     onBeforeMount,
     provide,
+    inject,
     onUpdated,
 } from 'vue';
 import { ElDatePicker } from 'element-plus';
@@ -283,6 +284,8 @@ watch([start_date, end_date], () => {
     }
 })
 
+const customerTag = inject('tag')
+
 const loadFromServer = async (type, company, datefrom, dateto) => {
     switch (type) {
         case 'yearly':
@@ -326,7 +329,7 @@ watch([date, selectedTimePeriod], () => {
 onBeforeMount(async () => {
     appStore.isLoading = true;
 
-    companiesStore.getEstablishment(companyId).then((data) => {
+    companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
 
         if (data == false) {
             appStore.setIsExist(false);
