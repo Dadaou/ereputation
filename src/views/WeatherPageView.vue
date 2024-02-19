@@ -36,6 +36,7 @@
             }">
                 <SpinnerComponent />
             </div>
+
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5" v-else>
 
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -419,7 +420,7 @@ const formattedWeatherRating = computed(() => {
     const unit = nbDays.value>1?'days':'day'
     const order = ['Clear', 'Partially cloudy', 'Overcast', 'Rain, Partially cloudy', 'Rain Partially cloudy', 'Rain, Overcast', 'Rain Overcast', 'Rain', 'Snow Rain Overcast']
     let conditions = []
-    if (weatherRating.value) return [];
+    if (!weatherRating.value) return [];
     else {
         let data = []
         if(weatherRating.value.conditions){
@@ -446,6 +447,8 @@ const formattedWeatherRating = computed(() => {
             days: weatherRating.value['global_days']
         })
 
+        console.log(conditions)
+
         return conditions;
     }
 })
@@ -469,6 +472,7 @@ const loadConditionFromServer = async (tag, dateStart, dateEnd) => {
     }
 
     const api = apiBase + '?' + apiParams;
+    console.log(api)
 
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
