@@ -49,6 +49,30 @@
                 </div>
             </el-tab-pane>
             <el-tab-pane label="Social Tag" name="social_tag">
+               <!--  <div class="tag_header">
+                     <el-select v-model="selectedHashtag" placeholder="#hashtag" size="large" filterable>
+                        <el-option v-for="(hashtag, index) in hashtags" :key="index" :label="hashtag.value"
+                            :value="hashtag.id" />
+                    </el-select>
+                     <socialPostFilterComponent
+                        :socials="filteredProviders"
+                        :currentHashtag="currentHashtagSocial"
+                        @updateHashtag="(value)=> currentHashtagSocial = value"
+                     />
+                </div> -->
+                <div class="tag_header">
+                    <div class="select_container">
+                        <el-select v-model="selectedHashtag" placeholder="#hashtag" size="large" filterable>
+                            <el-option v-for="(hashtag, index) in hashtags" :key="index" :label="hashtag.value" :value="hashtag.id" />
+                        </el-select>
+                    </div>
+                    <div class="social_post_filter_container">
+                        <socialPostFilterComponent :socials="filteredProviders" :currentHashtag="currentHashtagSocial"
+                            @updateHashtag="(value)=> currentHashtagSocial = value" />
+                    </div>
+                </div>
+
+               
                 <SocialPostComponent v-for="post in hashtagData" :post="post" v-if="!postLoaded"/>
                     <div class="publication-container" v-for="index in 5" v-if="postLoaded">
                         <div class="publication bg-gray-200 animate-pulse">
@@ -71,6 +95,7 @@
                     <div class="no-comment" v-if="hashtagData.length==0 && !postLoaded">
                         no social tag data available
                     </div>
+                
             </el-tab-pane>
           </el-tabs>
     </div>
@@ -218,7 +243,7 @@ import { useAppStore } from "@Stores/app.js";
 import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import { useSocialStore } from "@Stores/social.js";
-import { ref, watch, onBeforeMount, onMounted, provide, inject } from 'vue';
+import { ref, watch, onBeforeMount, onMounted, provide, inject, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import moment from 'moment';
 import {
@@ -235,7 +260,7 @@ import {
 import SocialStatistics from '@Components/utils/SocialStatistics.vue';
 import StatSlider from '@Components/utils/StatSlider.vue';
 import StatComponent from '@Components/utils/StatComponent.vue';
-import { ElDatePicker, ElTabs, ElTabPane } from 'element-plus';
+import { ElDatePicker, ElTabs, ElTabPane, ElSelect, ElOption } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import SocialPostComponent from '@Components/utils/SocialPostComponent.vue';
@@ -243,6 +268,8 @@ import SocialPostFilterComponent from '@Components/utils/SocialPostFilterCompone
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
 import 'element-plus/es/components/date-picker/style/css';
+import 'element-plus/es/components/select/style/css';
+import 'element-plus/es/components/option/style/css';
 
 ChartJS.register(
     CategoryScale,
@@ -261,6 +288,7 @@ const socialStore = useSocialStore();
 const currentSocial = ref('facebook');
 const activeName = ref('socials'); // ou social tag
 const postLoaded = ref(false);
+const providers = ref([]);
 provide('postLoaded', postLoaded);
 appStore.setCurrentPage({
     title1: "",
@@ -279,6 +307,36 @@ provide('selectedType', selectedType)
 const types = ref(["Followers", "Shares", "likes"])
 const customerTag = inject('tag')
 
+const filteredProviders = computed(() => {
+    let data = providers.value.slice(); 
+    data.sort((a, b) => {
+        const nameA = a.name.toLowerCase();
+        const nameB = b.name.toLowerCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+    });
+    data = data.filter(item => item.category === 'Hashtag'); 
+    return data.map(value => ({
+        name: value.name.split(' ')[0].toLowerCase(),
+        id: value.uri.split('/').slice(-1)[0] 
+    }));
+});
+
+const socialsHashtag = computed(()=>{
+    let data = filteredProviders.value.filter(provider=>provider.name == 'facebook');
+    return data.length>0? data[0]: {id: '', name: ''}
+})
+const currentHashtagSocial = ref({id: '', name: ''})
+const selectedHashtag = ref('')
+const hashtags = ref([])
+
+watch(socialsHashtag, async()=>{
+    currentHashtagSocial.value = socialsHashtag.value
+    await loadHashtags(companyId, currentHashtagSocial.value.id)
+})
+
+
 let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
 let end_date = ref(moment().format('YYYY-M-DD'));
 provide('start_date', start_date)
@@ -286,12 +344,12 @@ provide('end_date', end_date)
 const posts = ref([])
 provide('posts', posts)
 const colors = {
-        'facebook': '#1877F2',
-        'instagram': '#E4405F',
-        'linkedin': '#0A66C2',
-        'tiktok': '#000000',
-        'twitter': '#1DA1F2',
-        'youtube': '#FF0000'
+    'facebook': '#1877F2',
+    'instagram': '#E4405F',
+    'linkedin': '#0A66C2',
+    'tiktok': '#000000',
+    'twitter': '#1DA1F2',
+    'youtube': '#FF0000'
 };
 
 window.onresize = () => {
@@ -366,13 +424,18 @@ const all_items = ref([
 
 const dataLoading = ref(true);
 
-watch([start_date, end_date, activeName], async()=>{
+
+watch([start_date, end_date, selectedHashtag], async()=>{
  // await loadSocialData(companyId, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), type.value)
     if(activeName.value == 'socials'){
-             await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+        await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
     }else{
-             await loadPostHashtagData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+        await loadPostHashtagData(companyId, currentHashtagSocial.value.id, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), selectedHashtag.value)
     }
+})
+
+watch(activeName, async()=>{
+ await loadPostHashtagData(companyId, currentHashtagSocial.value.id, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
 })
 
 const generatedLegend = (colors, dataType) => {
@@ -466,10 +529,10 @@ const loadPostData = async(tag, source, dateStart, dateEnd)=>{
 
 }
 
-const loadPostHashtagData = async(tag, source, dateStart, dateEnd)=>{
+const loadPostHashtagData = async(tag, source, dateStart, dateEnd, hashtag)=>{
     let apiBase = 'get/social/post/by/hashtag';
-    // let apiParams = `tag=${tag}`;
-     let apiParams = "";
+    let apiParams = `establishment=${tag}`;
+   
     postLoaded.value = true;
 
     if (IsValueOkay(source)) {
@@ -484,6 +547,10 @@ const loadPostHashtagData = async(tag, source, dateStart, dateEnd)=>{
         apiParams += `&dateto=${dateEnd}`;
     }
 
+    if (IsValueOkay(hashtag)) {
+        apiParams += `&hashtag=${hashtag}`;
+    }
+
     const api = apiBase + '?' + apiParams;
     console.log(api)
 
@@ -495,25 +562,72 @@ const loadPostHashtagData = async(tag, source, dateStart, dateEnd)=>{
     console.log(response)
     if (response.status == 200) {
        hashtagData.value = response.data
-       setTimeout(()=>{
-         postLoaded.value = false
-       }, 5000)
+       postLoaded.value = false
+    }
+}
+
+const loadHashtags = async(tag, source)=>{
+    let apiBase = '/get/settings/by/provider';
+    let apiParams = `establishment=${tag}`;
+
+    if (IsValueOkay(source)) {
+        apiParams += `&provider=${source}`;
+    }
+
+    const api = apiBase + '?' + apiParams;
+    console.log(api)
+
+    const response = await new Promise((resolve) => {
+        services.get_Record(api, (response) => {
+            resolve(response)
+        });
+    });
+   
+    if (response.status == 200) {
+       hashtags.value = response.data
     }
 
 }
 
-watch(currentSocial, async()=>{
+watch([currentSocial, currentHashtagSocial], async()=>{
   // await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))  
   if(activeName.value == 'socials'){
          await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
     }else{
-         await loadPostHashtagData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+         await loadPostHashtagData(companyId, currentHashtagSocial.value.id, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+         await loadHashtags(companyId, currentHashtagSocial.value.id)
     }
 })
 
 onBeforeMount(async () => {
     appStore.isLoading = true;
     dataLoading.value = true
+
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`providers`, (response) => {
+                resolve(response);
+            });
+        });
+
+        if (response.status === 200) {
+            const data = response.data['hydra:member'];
+
+            data.forEach(item => {
+                providers.value.push({
+                    category: item.category,
+                    name: item.name,
+                    url: item.url,
+                    uri: `/api/providers/${item.id}`
+                })
+            })
+
+        } else {
+            console.error('Error fetching advantages:', response);
+        }
+    } catch (error) {
+        console.error('Error in onBeforeMount:', error);
+    }
 
     companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
 
@@ -552,7 +666,7 @@ onBeforeMount(async () => {
     if(activeName.value == 'socials'){
          await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
     }else{
-         await loadPostHashtagData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+         await loadPostHashtagData(companyId, currentHashtagSocial.value.id, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
     }
 
     const response = await new Promise((resolve) => {
@@ -701,6 +815,38 @@ watch([trendsByEstablishment, calculType], () => {
 </script>
 
 <style scoped>
+
+/*.tag_header{
+    display: flex;
+    justify-content: space-between;
+    gap:20rem;
+}*/
+
+.tag_header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.select_container,
+.social_post_filter_container {
+    flex: 1; 
+    margin-right: 10px; 
+}
+
+@media screen and (max-width: 600px) {
+    .tag_header {
+        flex-direction: column; /* Change la direction du flux pour une disposition en colonne sur les écrans étroits */
+    }
+
+    .select_container,
+    .social_post_filter_container {
+        flex: none; /* Annule la flexibilité pour revenir à la largeur par défaut */
+        width: 100%; /* Les éléments prennent maintenant toute la largeur sur les écrans étroits */
+        margin-bottom: 20px; /* Augmente la marge en bas pour espacer davantage les éléments sur mobile */
+    }
+}
+
+
 .social-media-container {
     display: flex;
     padding: 0;
@@ -758,7 +904,7 @@ a {
 li {
     padding: 10px;
     font-size: 14px;
-    border-bottom: 1px solid #ccc;
+    /*border-bottom: 1px solid #ccc;*/
 }
 
 li:first-child {

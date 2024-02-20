@@ -1,7 +1,7 @@
 <template>
 	<ul class="social-filter">
-       <li v-for="social in socials" :key="social" :class="[current==social?'current':'']"  @click="$emit('update', social)">
-       	<i :class="`uil uil-${social}`"></i>
+       <li v-for="social in socials" :key="social.id" :class="[current==social.name?'current':'', currentHashtag.name==social.name?'current':'',]"  @click="$emit('update', social.id), $emit('updateHashtag', social)">
+       	<i :class="`uil uil-${social.name}`"></i>
        </li>
    </ul>
 </template>
@@ -12,11 +12,38 @@ const props = defineProps({
 	current: {
 		type: String,
 		required: false,
-		default: 'facebook'
-	}
+		default: 'hello'
+	},
+    currentHashtag: {
+        type: Object,
+        required: false,
+        default: {
+            name: 'hello',
+            id: 'hello'
+        }
+    },
+    socials: {
+        type: Array,
+        required: false,
+        default: [{
+            name: 'facebook',
+            id: 'facebook'
+        }, {
+            name: 'instagram',
+            id: 'instagram'
+        }, {
+            name: 'twitter',
+            id: 'twitter'
+        }, {
+            name: 'youtube',
+            id: 'youtube'
+        }, {
+            name: 'linkedin',
+            id: 'linkedin'
+        }]
+    }
 });
-const emits = defineEmits(['update'])
-const socials = ref(['facebook', 'instagram', 'twitter', 'youtube', 'linkedin']);
+const emits = defineEmits(['update', 'updateHashtag']);
 
 	
 </script>
