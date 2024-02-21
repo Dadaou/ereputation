@@ -1,11 +1,14 @@
 <template>
 	<ul class="social-filter">
        <li v-for="social in socials" :key="social.id" :class="[current==social.name?'current':'', currentHashtag.name==social.name?'current':'',]"  @click="$emit('update', social.id), $emit('updateHashtag', social)">
-       	<i :class="`uil uil-${social.name}`"></i>
+       	<i :class="`uil uil-${social.name}`" v-if="social.name !=='twitter' && social.name !=='tiktok'"></i>
+        <Icon :icon="'devicon:twitter'" width="15" v-if="social.name == 'twitter'"></Icon>
+        <Icon :icon="'logos:tiktok-icon'" width="15" v-if="social.name == 'tiktok'"></Icon>
        </li>
    </ul>
 </template>
 <script setup>
+import { Icon } from '@iconify/vue';
 import { ref } from 'vue'
 
 const props = defineProps({
@@ -84,6 +87,9 @@ ul {
     margin: 2px;
     font-size: 16px;
     cursor: pointer;
+    display: flex;
+    align-content: center;
+    align-items: center;
 }
 
 .uil-youtube {

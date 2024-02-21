@@ -95,15 +95,14 @@ const positionEvent = () => {
   setTimeout(() => {
     const elements = document.querySelectorAll(".xaxis g.tick");
     let positions = Array.from(elements).map(e => parseFloat(e.getAttribute("transform").match(/translate\(([^)]+)\)/)[1]));
-    const elementWidth = elements[0].getBoundingClientRect().width; // Supposons que tous les éléments ont la même largeur
+    const elementWidth = elements[0].getBoundingClientRect().width; 
 
     const chartEvents = document.getElementById("chartEvents");
-    let eventGroups = {}; // Stocker les groupes d'événements identiques et leurs positions
+    let eventGroups = {};
 
-    // Créer des groupes d'événements identiques
     plotdata.value.events_per_date.forEach((eventData, index) => {
       eventData.events.forEach(event => {
-        let position = positions[index]; // Ajuster pour prendre en compte la largeur de l'élément
+        let position = positions[index]; 
         if (!eventGroups[event.name]) {
           eventGroups[event.name] = { startPosition: position, endPosition: position };
         } else {
@@ -112,13 +111,12 @@ const positionEvent = () => {
       });
     });
 
-    // Afficher chaque groupe d'événements
     Object.keys(eventGroups).forEach((eventName, idx) => {
       let group = eventGroups[eventName];
-      let topOffset = 5 + (idx * 15); // Positionnement vertical pour chaque groupe
+      let topOffset = 5 + (idx * 15); 
 
       let textNode = document.createElement("span");
-      let width = group.endPosition - group.startPosition + elementWidth; // Ajuster la largeur pour inclure l'élément de fin
+      let width = group.endPosition - group.startPosition + elementWidth; 
       textNode.setAttribute("style", `left: ${group.startPosition - elementWidth / 2}px; width: ${width}px; top: ${topOffset}px; opacity: 1; height: 10px; position: absolute; font-size: 14px; font-weight: 500; cursor: pointer; color: green; background-color: ${generateColor(eventName)};`);
       textNode.setAttribute("title", eventName);
       chartEvents.appendChild(textNode);
@@ -190,7 +188,7 @@ const getPlotData = async(period, rangedate, next)=>{
                   resolve(response)
           });
       });
-       console.log(response)
+      console.log(`/establishment/${companyId}/${period}/${datefrom}/${dateto}/events`)
       if(response.status == 200){
         data = response.data;
       }

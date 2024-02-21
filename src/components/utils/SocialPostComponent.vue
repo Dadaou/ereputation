@@ -5,7 +5,11 @@
 			 	<div class="post-head">
 					<span class="post-source" :style="{
 						color: `${colors[post.source]}`
-					}"><i :class="`uil uil-${post.source}`"></i> {{ post.source }}</span>
+					}">
+          <i :class="`uil uil-${post.source}`" v-if="post.source !=='twitter' && post.source !=='tiktok'"></i>
+        <Icon :icon="'devicon:twitter'" width="15" v-if="post.source == 'twitter'"></Icon>
+        <Icon :icon="'logos:tiktok-icon'" width="15" v-if="post.source == 'tiktok'"></Icon>
+          {{ post.author }}</span>
 					<span class="post-date">{{ moment(post.published_at).format("DD MMM, YYYY") }}</span>
 				</div>
 				<div class="post-title">
@@ -47,6 +51,7 @@
 import { inject, ref, defineAsyncComponent } from 'vue';
 import moment from 'moment';
 import services from '@Services/services.js';
+import { Icon } from '@iconify/vue';
 
 const socialComment = defineAsyncComponent(()=>import('@Components/utils/SocialPostCommentComponent.vue'))
 const posts = inject('posts');
@@ -116,6 +121,7 @@ const loadComments = async(id)=>{
         });
     });
    
+   console.log(api)
     if (response.status == 200) {
        comments.value = response.data.data
        // comments.value = commentsTemp

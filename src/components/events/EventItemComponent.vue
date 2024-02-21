@@ -95,7 +95,9 @@ import services from '@Services/services.js';
 ChartJS.register(ArcElement, Tooltip)
 
 const companiesStore = useCompanyStore();
-const events = inject('events');
+const props = defineProps(['events'])
+// const events = inject('events');
+
 const establishment = inject('establishment');
 const showModal = ref(false);
 const showChart = ref(false);

@@ -36,7 +36,7 @@
           >
             <el-tab-pane label="Events" name="events">
                 <div class="reviews__content">
-                    <EventItemComponent v-if="eventLoading == false" />
+                    <EventItemComponent v-if="eventLoading == false" :events="events"/>
                     <div v-else role="status"
                         class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
                         v-for="index in 2" :key="index">
@@ -61,7 +61,7 @@
             </el-tab-pane>
             <el-tab-pane label="Public Events" name="public_events">
                 <div class="reviews__content">
-                    <EventItemComponent v-if="eventLoading == false" />
+                     <EventItemComponent v-if="eventLoading == false" :events="publics"/> 
                     <div v-else role="status"
                         class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
                         v-for="index in 2" :key="index">
@@ -287,10 +287,12 @@ const eventLoading = ref(false);
 const customerTag = inject('tag');
 const activeName = ref('events'); // ou public event
 
+const companyId = route.params.id;
 let establishment = ref({});
 provide('establishment', establishment)
 let events = ref([]);
 provide('events', events);
+let publics = ref([]);
 const timePeriods = ref(['Daily', 'Weekly', 'Monthly', 'Yearly']);
 const selectedTimePeriod = ref(timePeriods.value[1]);
 let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
@@ -307,23 +309,44 @@ const all_items = ref([
 let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
 let endDate = moment().format('YYYY-M-DD');
 
-watch([start_date, end_date], async () => {
+watch([start_date, end_date, activeName], async () => {
     if (start_date.value !== '' && end_date.value !== '') {
         date.value = [start_date.value, end_date.value]
     } else {
         date.value = [moment().subtract(30, 'days').format('YYYY-M-DD'), moment().format('YYYY-M-DD')];
     }
 
-    await loadEvents(route.params.id, start_date.value, end_date.value)
+    if(activeName.value == 'events'){
+        await loadEvents(companyId, start_date.value, end_date.value)
+    }else{
+        await loadEvents(companyId, start_date.value, end_date.value, establishment.value.locality_id)
+    }
 })
 
-const loadEvents = async (tag, dateStart, dateEnd)=>{
+const IsValueOkay = (value)=> (value == '' || value == null || value == undefined || value == [])?false:true;
+const loadEvents = async (tag, dateStart, dateEnd, locality)=>{
     eventLoading.value = true;
-    dateStart = moment(dateStart).format('YYYY-MM-DD')
-    dateEnd = moment(dateEnd).format('YYYY-MM-DD')
+    let apiBase = `/establishment/${tag}/event`;
+    let apiParams = '';
+
+    if (IsValueOkay(dateStart)) {
+      dateStart = moment(dateStart).format('YYYY-MM-DD')
+      apiParams += `fromDate=${dateStart}`;
+    }
+
+    if (IsValueOkay(dateEnd)) {
+      dateEnd = moment(dateEnd).format('YYYY-MM-DD')
+      apiParams += `&toDate=${dateEnd}`;
+    }
+
+    if (IsValueOkay(locality)) {
+      apiParams += `&locality=${locality}`;
+    }
+
+    const api = `${apiBase}?${apiParams}`;
 
     const response = await new Promise((resolve) => {
-        services.get_Record(`/establishment/${tag}/event?fromDate=${dateStart}&toDate=${dateEnd}`, (response) => {
+        services.get_Record(api, (response) => {
             resolve(response)
             if (response.status == 404) {
                 appStore.setIsExist(false)
@@ -331,10 +354,11 @@ const loadEvents = async (tag, dateStart, dateEnd)=>{
             }
         });
     });
-    console.log(`/establishment/${tag}/event?fromDate=${dateStart}&toDate=${dateEnd}`)
 
     if (response.status == 200) {
-        events.value = response.data;
+        if(IsValueOkay(locality)){
+            publics.value = response.data
+        }else events.value = response.data;
         eventLoading.value = false;
     }
 }
@@ -345,11 +369,10 @@ const handleClick = ()=>{
 }
 
 onBeforeMount(async () => {
-    const companyId = route.params.id;
     appStore.isLoading = true;
     chartLoading.value = true;
 
-    companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
+    companiesStore.getEstablishment(customerTag.value, companyId).then(async(data) => {
 
         if (data == false) {
             appStore.setIsExist(false);
@@ -358,6 +381,13 @@ onBeforeMount(async () => {
         else {
             establishment.value = data;
             console.log(establishment.value)
+
+            if(activeName.value == 'events'){
+                   await loadEvents(companyId, start_date.value, end_date.value)
+            }else{
+                   await loadEvents(companyId, start_date.value, end_date.value, establishment.value.locality_id)
+            }
+
             appStore.setCurrentPage({
                 title1: "",
                 title2: establishment.value.name,
@@ -384,8 +414,6 @@ onBeforeMount(async () => {
 
         }
     })
-
-    await loadEvents(companyId, start_date.value, end_date.value)
     chartLoading.value = false
 })
 

@@ -63,7 +63,7 @@
                 <div class="tag_header">
                     <div class="select_container">
                         <el-select v-model="selectedHashtag" placeholder="#hashtag" size="large" filterable>
-                            <el-option v-for="(hashtag, index) in hashtags" :key="index" :label="hashtag.value" :value="hashtag.id" />
+                            <el-option v-for="(hashtag, index) in hashtags" :key="index" :label="hashtag.value" :value="hashtag.value" />
                         </el-select>
                     </div>
                     <div class="social_post_filter_container">
@@ -430,12 +430,12 @@ watch([start_date, end_date, selectedHashtag], async()=>{
     if(activeName.value == 'socials'){
         await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
     }else{
-        await loadPostHashtagData(companyId, currentHashtagSocial.value.id, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), selectedHashtag.value)
+        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), selectedHashtag.value)
     }
 })
 
 watch(activeName, async()=>{
- await loadPostHashtagData(companyId, currentHashtagSocial.value.id, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+ await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
 })
 
 const generatedLegend = (colors, dataType) => {
@@ -530,21 +530,21 @@ const loadPostData = async(tag, source, dateStart, dateEnd)=>{
 }
 
 const loadPostHashtagData = async(tag, source, dateStart, dateEnd, hashtag)=>{
-    let apiBase = 'get/social/post/by/hashtag';
-    let apiParams = `establishment=${tag}`;
+    let apiBase = 'establishment/socials/posts';
+    let apiParams = `tag=${tag}`;
    
     postLoaded.value = true;
 
     if (IsValueOkay(source)) {
-        apiParams += `&provider=${source}`;
+        apiParams += `&source=${source}`;
     }
 
     if (IsValueOkay(dateStart)) {
-        apiParams += `&datefrom=${dateStart}`;
+        apiParams += `&fromDate=${dateStart}`;
     }
 
     if (IsValueOkay(dateEnd)) {
-        apiParams += `&dateto=${dateEnd}`;
+        apiParams += `&toDate=${dateEnd}`;
     }
 
     if (IsValueOkay(hashtag)) {
@@ -561,7 +561,7 @@ const loadPostHashtagData = async(tag, source, dateStart, dateEnd, hashtag)=>{
     });
     console.log(response)
     if (response.status == 200) {
-       hashtagData.value = response.data
+       hashtagData.value = response.data.data
        postLoaded.value = false
     }
 }
@@ -594,8 +594,9 @@ watch([currentSocial, currentHashtagSocial], async()=>{
   if(activeName.value == 'socials'){
          await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
     }else{
-         await loadPostHashtagData(companyId, currentHashtagSocial.value.id, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
-         await loadHashtags(companyId, currentHashtagSocial.value.id)
+        await loadHashtags(companyId, currentHashtagSocial.value.id)
+        // selectedHashtag.value = ""
+        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
     }
 })
 
@@ -666,7 +667,7 @@ onBeforeMount(async () => {
     if(activeName.value == 'socials'){
          await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
     }else{
-         await loadPostHashtagData(companyId, currentHashtagSocial.value.id, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+         await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
     }
 
     const response = await new Promise((resolve) => {

@@ -5,12 +5,12 @@
 		<div class="comment-text">
 			<p>{{ comment.comment }}</p>
 			<div>
-		       <span class="emoji mx-1">
+		       <span class="emoji mx-1" v-if="comment.feeling">
 		            <span v-if="comment.feeling == 'positive'">😀</span>
 		            <span v-if="comment.feeling == 'neutre' || comment.feeling == 'neutral'">😐</span>
 		            <span v-if="comment.feeling == 'negative'">😕</span>
 		        </span>
-		        <p class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center px-3 py-1 rounded dark:bg-yellow-200 dark:text-yellow-800">{{ comment.score }}</p>
+		        <p class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center px-3 py-1 rounded dark:bg-yellow-200 dark:text-yellow-800" v-if="comment.score">{{ comment.score }}</p>
 		    </div>
 		</div>
 		<div class="comment-meta">
@@ -51,12 +51,6 @@ const customColorMethod = (percentage) => {
 	font-size: 14px;
 	font-weight: 600;
 	color: var(--color-primary)
-}
-	/* Ajoutez ces styles pour ajuster le défilement et l'animation */
-.comments {
-  max-height: 500px; /* Définissez une hauteur maximale pour activer le défilement vertical */
-  overflow-y: auto; /* Activez le défilement vertical si nécessaire */
-  transition: max-height 0.5s ease; /* Ajoutez une transition pour une animation fluide */
 }
 
 .comment {
