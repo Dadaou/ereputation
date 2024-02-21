@@ -26,10 +26,10 @@
 			<transition
 			    name="fade">
 			     <div class="comments" v-if="showComment">
-			     		<socialComment v-for="(item, index) in comments" :key="index" :comment="item"/>
+			     		<socialComment v-for="(item, index) in comments" :key="index" :comment="item" v-if="!commentsLoaded"/>
 			     		<div class="no-comment" v-if="comments.length == 0 && !commentsLoaded">No comment available!</div>
 			     		
-			            <div v-for="index in 5" :key="index" class="comment bg-gray-200 animate-pulse" v-if="commentsLoaded">
+			            <div v-for="index in 2" :key="index" class="comment bg-gray-200 animate-pulse" v-if="commentsLoaded">
 						    <!-- <span class="comment-date post-date">Loading...</span> -->
 						    <div class="comment-text">
 						        <p class="h-4 bg-gray-300 rounded w-3/4"></p>

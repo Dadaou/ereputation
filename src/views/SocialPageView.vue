@@ -435,7 +435,7 @@ watch([start_date, end_date, selectedHashtag], async()=>{
 })
 
 watch(activeName, async()=>{
- await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+ await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), '')
 })
 
 const generatedLegend = (colors, dataType) => {
@@ -595,8 +595,8 @@ watch([currentSocial, currentHashtagSocial], async()=>{
          await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
     }else{
         await loadHashtags(companyId, currentHashtagSocial.value.id)
-        // selectedHashtag.value = ""
-        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+        
+        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), '')
     }
 })
 
@@ -667,7 +667,7 @@ onBeforeMount(async () => {
     if(activeName.value == 'socials'){
          await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
     }else{
-         await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+         await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), '')
     }
 
     const response = await new Promise((resolve) => {
