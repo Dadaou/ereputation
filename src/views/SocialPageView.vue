@@ -24,6 +24,17 @@
                         :current="currentSocial"
                         @update="(value)=> currentSocial = value"
                     />
+                    <div class="reviews__pagination mb-4">
+                            <PaginationComponent 
+                            v-if="posts.length > 0"
+                            :options="options" 
+                            @next="(option) => {
+                            loadPostData(companyId, currentSocial, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), option.page, option.limit, option.current)
+                            }" 
+                            @prev="(option) => {
+                            loadPostData(companyId, currentSocial, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), option.page, option.limit, option.current)
+                            }" />
+                    </div>
                     <SocialPostComponent v-for="post in posts" :post="post" v-if="!postLoaded"/>
                     <div class="publication-container" v-for="index in 5" v-if="postLoaded">
                         <div class="publication bg-gray-200 animate-pulse">
@@ -46,6 +57,15 @@
                     <div class="no-comment" v-if="posts.length==0 && !postLoaded">
                         no social post available
                     </div>
+                    <PaginationComponent 
+                            v-if="posts.length > 0"
+                            :options="options" 
+                            @next="(option) => {
+                            loadPostData(companyId, currentSocial, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), option.page, option.limit, option.current)
+                            }" 
+                            @prev="(option) => {
+                            loadPostData(companyId, currentSocial, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), option.page, option.limit, option.current)
+                            }" />
                 </div>
             </el-tab-pane>
             <el-tab-pane label="Hashtags" name="social_tag">
@@ -71,6 +91,17 @@
                             @updateHashtag="(value)=> currentHashtagSocial = value" />
                     </div>
                 </div>
+                 <div class="reviews__pagination mb-4">
+                            <PaginationComponent 
+                            v-if="posts.length > 0"
+                            :options="options" 
+                            @next="(option) => {
+                            loadPostHashtagData(companyId, currentHashtagSocial.name, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), selectedHashtag, option.page, option.limit, option.current)
+                            }" 
+                            @prev="(option) => {
+                            loadPostHashtagData(companyId, currentHashtagSocial.name, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), selectedHashtag, option.page, option.limit, option.current)
+                            }" />
+                    </div>
 
                
                 <SocialPostComponent v-for="post in hashtagData" :post="post" v-if="!postLoaded"/>
@@ -95,6 +126,15 @@
                     <div class="no-comment" v-if="hashtagData.length==0 && !postLoaded">
                         no social tag data available
                     </div>
+                    <PaginationComponent 
+                            v-if="posts.length > 0"
+                            :options="options" 
+                            @next="(option) => {
+                            loadPostHashtagData(companyId, currentHashtagSocial.name, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), selectedHashtag, option.page, option.limit, option.current)
+                            }" 
+                            @prev="(option) => {
+                            loadPostHashtagData(companyId, currentHashtagSocial.name, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), selectedHashtag, option.page, option.limit, option.current)
+                            }" />
                 
             </el-tab-pane>
           </el-tabs>
@@ -265,6 +305,7 @@ import 'element-plus/es/components/date-picker/style/css';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import SocialPostComponent from '@Components/utils/SocialPostComponent.vue';
 import SocialPostFilterComponent from '@Components/utils/SocialPostFilterComponent.vue';
+import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
 import 'element-plus/es/components/date-picker/style/css';
@@ -285,7 +326,7 @@ ChartJS.register(
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 const socialStore = useSocialStore();
-const currentSocial = ref('facebook');
+const currentSocial = ref('all');
 const activeName = ref('socials'); // ou social tag
 const postLoaded = ref(false);
 const providers = ref([]);
@@ -316,18 +357,20 @@ const filteredProviders = computed(() => {
         if (nameA > nameB) return 1;
         return 0;
     });
-    data = data.filter(item => item.category === 'Hashtag'); 
-    return data.map(value => ({
+    data = data.filter(item => item.category === 'Hashtag');
+    data =  data.map(value => ({
         name: value.name.split(' ')[0].toLowerCase(),
         id: value.uri.split('/').slice(-1)[0] 
     }));
+    data.unshift({name: 'all', id: 'all'})
+    return data
 });
 
 const socialsHashtag = computed(()=>{
-    let data = filteredProviders.value.filter(provider=>provider.name == 'facebook');
+    let data = filteredProviders.value.filter(provider=>provider.name == 'all');
     return data.length>0? data[0]: {id: '', name: ''}
 })
-const currentHashtagSocial = ref({id: '', name: ''})
+const currentHashtagSocial = ref({id: 'all', name: 'all'})
 const selectedHashtag = ref('')
 const hashtags = ref([])
 
@@ -351,6 +394,13 @@ const colors = {
     'twitter': '#1DA1F2',
     'youtube': '#FF0000'
 };
+
+const options = ref({
+    rowLimit: 10,
+    max: 100,
+    current: 1,
+    page: 1,
+})
 
 window.onresize = () => {
     if (socialHistogramContainer.value.clientWidth > 400) {
@@ -428,14 +478,14 @@ const dataLoading = ref(true);
 watch([start_date, end_date, selectedHashtag], async()=>{
  // await loadSocialData(companyId, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), type.value)
     if(activeName.value == 'socials'){
-        await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+        await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
     }else{
-        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), selectedHashtag.value)
+        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
     }
 })
 
 watch(activeName, async()=>{
- await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), '')
+ await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), '', 1, options.value['rowLimit'], 1)
 })
 
 const generatedLegend = (colors, dataType) => {
@@ -494,12 +544,14 @@ const transformToSourceURL = (obj) =>{
     return result;
 }
 const IsValueOkay = (value) => (value == ''|| value == 0 || value == null || value == undefined) ? false : true;
-const loadPostData = async(tag, source, dateStart, dateEnd)=>{
+const loadPostData = async(tag, source, dateStart, dateEnd, page, limit, current)=>{
+    options.value.current = current;
+    options.value.page = page;
     let apiBase = 'establishment/socials/posts';
-    let apiParams = `tag=${tag}`;
+    let apiParams = `tag=${tag}&page=${page}&limit=${limit}`;
     postLoaded.value = true;
 
-    if (IsValueOkay(source)) {
+    if (IsValueOkay(source) && source !== 'all') {
         apiParams += `&source=${source}`;
     }
 
@@ -522,6 +574,7 @@ const loadPostData = async(tag, source, dateStart, dateEnd)=>{
     console.log(response)
     if (response.status == 200) {
        posts.value = response.data.data
+       options.value.max = response.data['length'];
        setTimeout(()=>{
          postLoaded.value = false
        }, 5000)
@@ -529,13 +582,15 @@ const loadPostData = async(tag, source, dateStart, dateEnd)=>{
 
 }
 
-const loadPostHashtagData = async(tag, source, dateStart, dateEnd, hashtag)=>{
+const loadPostHashtagData = async(tag, source, dateStart, dateEnd, hashtag, page, limit, current)=>{
+    options.value.current = current;
+    options.value.page = page;
     let apiBase = 'establishment/socials/posts';
-    let apiParams = `tag=${tag}`;
+    let apiParams = `tag=${tag}&page=${page}&limit=${limit}`;
    
     postLoaded.value = true;
 
-    if (IsValueOkay(source)) {
+    if (IsValueOkay(source) && source !== 'all') {
         apiParams += `&source=${source}`;
     }
 
@@ -562,6 +617,7 @@ const loadPostHashtagData = async(tag, source, dateStart, dateEnd, hashtag)=>{
     console.log(response)
     if (response.status == 200) {
        hashtagData.value = response.data.data
+       options.value.max = response.data['length'];
        postLoaded.value = false
     }
 }
@@ -570,7 +626,7 @@ const loadHashtags = async(tag, source)=>{
     let apiBase = '/get/settings/by/provider';
     let apiParams = `establishment=${tag}`;
 
-    if (IsValueOkay(source)) {
+    if (IsValueOkay(source) && source !== 'all') {
         apiParams += `&provider=${source}`;
     }
 
@@ -592,11 +648,11 @@ const loadHashtags = async(tag, source)=>{
 watch([currentSocial, currentHashtagSocial], async()=>{
   // await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))  
   if(activeName.value == 'socials'){
-         await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+         await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
     }else{
         await loadHashtags(companyId, currentHashtagSocial.value.id)
         
-        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), '')
+        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), '', 1, options.value['rowLimit'], 1)
     }
 })
 
@@ -665,9 +721,9 @@ onBeforeMount(async () => {
     })
 
     if(activeName.value == 'socials'){
-         await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))
+         await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
     }else{
-         await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), '')
+         await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), '', 1, options.value['rowLimit'], 1)
     }
 
     const response = await new Promise((resolve) => {

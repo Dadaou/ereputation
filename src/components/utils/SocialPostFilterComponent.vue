@@ -1,9 +1,10 @@
 <template>
 	<ul class="social-filter">
        <li v-for="social in socials" :key="social.id" :class="[current==social.name?'current':'', currentHashtag.name==social.name?'current':'',]"  @click="$emit('update', social.id), $emit('updateHashtag', social)">
-       	<i :class="`uil uil-${social.name}`" v-if="social.name !=='twitter' && social.name !=='tiktok'"></i>
+       	<i :class="`uil uil-${social.name}`" v-if="social.name !=='twitter' && social.name !=='tiktok' && social.name !=='all'"></i>
         <Icon :icon="'devicon:twitter'" width="15" v-if="social.name == 'twitter'"></Icon>
         <Icon :icon="'logos:tiktok-icon'" width="15" v-if="social.name == 'tiktok'"></Icon>
+        <span v-if="social.name == 'all'">all</span>
        </li>
    </ul>
 </template>
@@ -28,7 +29,12 @@ const props = defineProps({
     socials: {
         type: Array,
         required: false,
-        default: [{
+        default: [
+        {
+            name: 'all',
+            id: 'all'
+        },
+        {
             name: 'facebook',
             id: 'facebook'
         }, {
