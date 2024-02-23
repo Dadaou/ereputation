@@ -4,9 +4,9 @@
     <div class="main__container" v-if="appStore.isExist">
         <HeadComponent class="head" :page="appStore.currentPage"></HeadComponent>
         <router-view></router-view>
-        <FooterComponent></FooterComponent>
     </div>
     <EstablishmentNotFound v-else />
+    <FooterComponent></FooterComponent>
 </template>
 <script setup>
 import { useAppStore } from "@Stores/app.js";

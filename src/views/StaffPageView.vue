@@ -162,15 +162,7 @@ import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import { useWindowSize } from '@vueuse/core';
-import {
-    ref,
-    watch,
-    onBeforeMount,
-    computed,
-    provide,
-    onUpdated,
-    inject
-} from 'vue';
+import { ref, watch, onBeforeMount, computed, provide, onUpdated, inject } from 'vue';
 import { ElDatePicker } from 'element-plus';
 import {
     Chart as ChartJS,
@@ -237,11 +229,15 @@ let staffs = ref([]);
 provide('staffs', staffs);
 const timePeriods = ref(['Daily', 'Weekly', 'Monthly', 'Yearly']);
 const selectedTimePeriod = ref(timePeriods.value[0]);
-let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-let endDate = moment().format('YYYY-M-DD');
-let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
-let end_date = ref(moment().format('YYYY-M-DD'));
-const date = ref([startDate, endDate]);
+// let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+// let endDate = moment().format('YYYY-M-DD');
+// let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
+// let end_date = ref(moment().format('YYYY-M-DD'));
+// const start_date = ref(appStore.start_date);
+// const end_date = ref(appStore.end_date);
+const start_date = inject('start_date');
+const end_date = inject('end_date');
+const date = ref([start_date.value, end_date.value]);
 provide('date', date);
 provide('type', selectedTimePeriod);
 const all_items = ref([
@@ -261,6 +257,7 @@ watch([start_date, end_date], async() => {
         date.value = [startDate, endDate];
        
     }
+    // appStore.setDatesValue(start_date.value, end_date.value);
     await loadStaffs(companyId, start_date.value, end_date.value)
 })
 

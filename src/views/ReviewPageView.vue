@@ -17,9 +17,9 @@
         <div class="reviews__content">
             <div class="reviews__pagination">
                 <PaginationComponent :options="options" v-if="visibleData.length > 0" @next="(option) => {
-                    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, categoryFilters, language)
+                    loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
                 }" @prev="(option) => {
-    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, categoryFilters, language)
+    loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
 }" />
             </div>
             <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
@@ -49,9 +49,9 @@
             </div>
             <div class="reviews__pagination">
                 <PaginationComponent :options="options" v-if="visibleData.length > 0" @next="(option) => {
-                    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, categoryFilters, language)
+                    loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
                 }" @prev="(option) => {
-    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, categoryFilters, language)
+    loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
 }" />
             </div>
         </div>
@@ -78,11 +78,11 @@
             }" :default="websites[0]" />
 
         <div class="date__picker px-2">
-            <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+            <el-date-picker v-model="start_date" placeholder="Start date" :size="'large'" />
         </div>
         <div class="date__picker px-2">
 
-            <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
+            <el-date-picker v-model="end_date" placeholder="End date" :size="'large'" />
         </div>
         <div class="px-2 w-full my-2">
             <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
@@ -252,8 +252,8 @@
 
             <div class="date__filter">
                 <div class="text-sm title">Select a date range</div>
-                <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
-                <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" />
+                <el-date-picker v-model="start_date" placeholder="Start date" :size="'large'" />
+                <el-date-picker class="mt-2" v-model="end_date" placeholder="End date" :size="'large'" />
             </div>
         </div>
         <div class="reviews__star">
@@ -358,10 +358,12 @@ let updateVisibleData = function (_data, isStarFilter = false) {
     reviews_loader.value = false;
 }
 
-const dateStart = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
-const dateEnd = ref(moment().format('YYYY-M-DD'));
-let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-let endDate = moment().format('YYYY-M-DD');
+// const dateStart = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
+// const dateEnd = ref(moment().format('YYYY-M-DD'));
+// let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+// let endDate = moment().format('YYYY-M-DD');
+const start_date = inject('start_date');
+const end_date = inject('end_date');
 let reviewFeedbackData = ref({
     width: 0,
     red: 0,
@@ -384,9 +386,9 @@ const handleCategoryDropdown = (type) => {
     categoryFilters.value = categoryFilters.value.length > 0 ? filters : ['all']
 }
 
-watch([dateStart, dateEnd, selectedWebsites, selectedFeeling, categoryFilters], () => {
+watch([start_date, end_date, selectedWebsites, selectedFeeling, categoryFilters], () => {
     categoryFilters.value = categoryFilters.value.length > 0 ? categoryFilters.value : ['all']
-    loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
+    loadReviews(companyId, 1, options.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
 
 })
 
@@ -458,7 +460,7 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
 }
 
 watch(selectedStars, () => {
-    loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
+    loadReviews(companyId, 1, options.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
 });
 
 const starsData = ref([]);
@@ -628,7 +630,7 @@ onBeforeMount(async () => {
         }
     })
 
-    await loadReviews(companyId, 1, options.value['rowLimit'], 1, dateStart.value, dateEnd.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value)
+    await loadReviews(companyId, 1, options.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value)
     await loadCategories(companyId)
 });
 </script>

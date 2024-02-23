@@ -300,8 +300,8 @@ appStore.setIsExist(true);
 
 const socialHistogramContainer = ref(null);
 const lineChartWidth = ref(620);
-let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-let endDate = moment().format('YYYY-M-DD');
+// let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+// let endDate = moment().format('YYYY-M-DD');
 const selectedType = ref('Followers')
 provide('selectedType', selectedType)
 const types = ref(["Followers", "Shares", "likes"])
@@ -337,10 +337,10 @@ watch(socialsHashtag, async()=>{
 })
 
 
-let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
-let end_date = ref(moment().format('YYYY-M-DD'));
-provide('start_date', start_date)
-provide('end_date', end_date)
+const start_date = inject('start_date');
+const end_date = inject('end_date');
+// provide('start_date', start_date)
+// provide('end_date', end_date)
 const posts = ref([])
 provide('posts', posts)
 const colors = {

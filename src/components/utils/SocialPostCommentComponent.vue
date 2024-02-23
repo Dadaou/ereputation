@@ -1,6 +1,6 @@
 <template>
 	<div :key="index" class="comment">
-	<!-- <el-progress :percentage="percentage(comment.confidence)" :color="customColorMethod" /> -->
+	<el-progress v-if="comment.confidence" :percentage="percentage(comment.confidence)" :color="customColorMethod" />
 		<span class="comment-date post-date">{{ moment(comment.published_at).format("DD MMM, YYYY") }}</span>
 		<div class="comment-text">
 			<p>{{ comment.comment }}</p>

@@ -231,15 +231,7 @@ import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import EventItemComponent from '@Components/events/EventItemComponent.vue';
-import {
-    ref,
-    watch,
-    onBeforeMount,
-    onUpdated,
-    provide,
-    defineAsyncComponent,
-    inject
-} from 'vue';
+import { ref, watch, onBeforeMount, onUpdated, provide, defineAsyncComponent, inject } from 'vue';
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css'
 import { useResizeObserver } from '@vueuse/core';
@@ -295,9 +287,12 @@ provide('events', events);
 let publics = ref([]);
 const timePeriods = ref(['Daily', 'Weekly', 'Monthly', 'Yearly']);
 const selectedTimePeriod = ref(timePeriods.value[1]);
-let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
-let end_date = ref(moment().format('YYYY-M-DD'));
-const date = ref([moment().subtract(30, 'days').format('YYYY-M-DD'), moment().format('YYYY-M-DD')]);
+// let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
+// let end_date = ref(moment().format('YYYY-M-DD'));
+// const date = ref([moment().subtract(30, 'days').format('YYYY-M-DD'), moment().format('YYYY-M-DD')]);
+const start_date = inject('start_date');
+const end_date = inject('end_date');
+const date = ref([start_date.value, end_date.value])
 provide('date', date);
 provide('type', selectedTimePeriod);
 
@@ -310,11 +305,12 @@ let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
 let endDate = moment().format('YYYY-M-DD');
 
 watch([start_date, end_date], async () => {
-    if (start_date.value !== '' && end_date.value !== '') {
-        date.value = [start_date.value, end_date.value]
-    } else {
-        date.value = [moment().subtract(30, 'days').format('YYYY-M-DD'), moment().format('YYYY-M-DD')];
-    }
+    // if (start_date.value !== '' && end_date.value !== '') {
+    //     date.value = [start_date.value, end_date.value]
+    // } else {
+    //     date.value = [moment().subtract(30, 'days').format('YYYY-M-DD'), moment().format('YYYY-M-DD')];
+    // }
+    date.value = [start_date.value, end_date.value]
 
     if(activeName.value == 'events'){
         await loadEvents(companyId, start_date.value, end_date.value)

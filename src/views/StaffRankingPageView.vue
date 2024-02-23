@@ -261,11 +261,15 @@ let timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
 let selectedTimePeriod = ref(timePeriods.value[0]);
 const date = ref([]);
 const currentDate = new Date();
-let firstDateOfPreviousYear = new Date(currentDate.getFullYear() - 1, 0, 1);
-firstDateOfPreviousYear.setHours(0, 0, 0, 0);
-let lastDateOfCurrentYear = new Date(currentDate.getFullYear(), 11, 31, 23, 59, 59);
-let start_date = ref(firstDateOfPreviousYear);
-let end_date = ref(lastDateOfCurrentYear);
+// let firstDateOfPreviousYear = new Date(currentDate.getFullYear() - 1, 0, 1);
+// firstDateOfPreviousYear.setHours(0, 0, 0, 0);
+// let lastDateOfCurrentYear = new Date(currentDate.getFullYear(), 11, 31, 23, 59, 59);
+// let start_date = ref(firstDateOfPreviousYear);
+// let end_date = ref(lastDateOfCurrentYear);
+// const start_date = ref(appStore.start_date);
+// const end_date = ref(appStore.end_date);
+const start_date = inject('start_date');
+const end_date = inject('end_date');
 
 provide('date', date);
 provide('type', selectedTimePeriod);
@@ -282,6 +286,7 @@ watch([start_date, end_date], () => {
     } else {
         date.value = [];
     }
+
 })
 
 const customerTag = inject('tag')
@@ -314,16 +319,8 @@ const loadFromServer = async (type, company, datefrom, dateto) => {
     }
 }
 
-watch([date, selectedTimePeriod], () => {
-    console.log(date.value)
-    if (date.value.length == 0) {
-        firstDateOfPreviousYear = moment(firstDateOfPreviousYear).format('YYYY-MM-DD');
-        lastDateOfCurrentYear = moment(lastDateOfCurrentYear).format('YYYY-MM-DD');
-        date.value = [firstDateOfPreviousYear, lastDateOfCurrentYear];
-    }
-    let datefrom = moment(date.value[0]).format('YYYY-MM-DD');
-    let dateto = moment(date.value[1]).format('YYYY-MM-DD');
-    loadFromServer(selectedTimePeriod.value.toLowerCase(), companyId, datefrom, dateto);
+watch([start_date, end_date, selectedTimePeriod], () => {
+    loadFromServer(selectedTimePeriod.value.toLowerCase(), companyId, start_date.value, end_date.value);
 })
 
 onBeforeMount(async () => {
@@ -368,25 +365,25 @@ onBeforeMount(async () => {
 
         }
     })
+    loadFromServer(selectedTimePeriod.value.toLowerCase(), companyId, start_date.value, end_date.value);
+    // const response = await new Promise((resolve) => {
+    //     firstDateOfPreviousYear = moment(firstDateOfPreviousYear).format('YYYY-MM-DD');
+    //     lastDateOfCurrentYear = moment(lastDateOfCurrentYear).format('YYYY-MM-DD');
+    //     services.get_Record(`establishment/${companyId}/${selectedTimePeriod.value.toLowerCase()}/${firstDateOfPreviousYear}/${lastDateOfCurrentYear}/staffs/notes`, (response) => {
+    //         resolve(response)
+    //         if (response.status == 404) {
+    //             appStore.setIsExist(false);
+    //             appStore.isLoading = false;
+    //         }
+    //     });
 
-    const response = await new Promise((resolve) => {
-        firstDateOfPreviousYear = moment(firstDateOfPreviousYear).format('YYYY-MM-DD');
-        lastDateOfCurrentYear = moment(lastDateOfCurrentYear).format('YYYY-MM-DD');
-        services.get_Record(`establishment/${companyId}/${selectedTimePeriod.value.toLowerCase()}/${firstDateOfPreviousYear}/${lastDateOfCurrentYear}/staffs/notes`, (response) => {
-            resolve(response)
-            if (response.status == 404) {
-                appStore.setIsExist(false);
-                appStore.isLoading = false;
-            }
-        });
+    // });
 
-    });
+    // if (response.status == 200) {
+    //     staffs.value = response.data;
+    //     console.log(staffs.value)
 
-    if (response.status == 200) {
-        staffs.value = response.data;
-        console.log(staffs.value)
-
-    }
+    // }
 
 })
 

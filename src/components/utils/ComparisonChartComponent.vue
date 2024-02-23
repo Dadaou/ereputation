@@ -70,12 +70,13 @@
 import ModalComponent from '@Components/utils/ModalComponent.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import moment from 'moment';
-import { ref, watch, computed, onUpdated } from 'vue';
+import { ref, watch, computed, onUpdated, inject } from 'vue';
 import { useCompanyStore } from "@Stores/company.js";
 import { useResizeObserver } from '@vueuse/core';
 import { useWindowSize } from '@vueuse/core';
 import { ElDatePicker } from 'element-plus';
 import { useChartsStore } from "@Stores/charts.js"
+import { useAppStore } from "@Stores/app.js";
 
 const props = defineProps({
     data: {
@@ -108,7 +109,8 @@ const props = defineProps({
     competitors: Array,
     timePeriod: String
 });
-
+const emits = defineEmits(['update'])
+const appStore = useAppStore();
 const showModal = ref(false);
 const comparisonByEstablishments = ref(true);
 const companiesStore = useCompanyStore();
@@ -120,10 +122,12 @@ let selectedCompany = ref(establishmentDropdown.value[0]);
 
 // console.log(establishmentDropdown.value);
 
-let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-let endDate = moment().format('YYYY-M-DD');
-let start_date = ref();
-let end_date = ref();
+// let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+// let endDate = moment().format('YYYY-M-DD');
+// let start_date = ref(appStore.start_date);
+// let end_date = ref(appStore.end_date);
+const start_date = inject('start_date');
+const end_date = inject('end_date');
 let legendData = ref([]);
 let _timePeriod = computed(() => props.timePeriod);
 const chart2Loading = ref(false)
@@ -213,6 +217,8 @@ const plotData = ref([]);
 
 const IsValueOkay = (value) => (value == '' || value == null || value == undefined) ? false : true;
 watch([start_date, end_date], () => {
+    // appStore.setDatesValue(start_date.value, end_date.value);
+    // emits('update')
     if (IsValueOkay(start_date.value) && IsValueOkay(end_date.value)) {
         date2.value = [start_date.value, end_date.value]
     } else {

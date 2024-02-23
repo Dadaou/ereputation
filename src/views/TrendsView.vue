@@ -147,13 +147,7 @@ import moment from 'moment';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { useRoute } from "vue-router";
-import {
-    ref,
-    watch,
-    onBeforeMount,
-    provide,
-    onUpdated
-} from 'vue';
+import { ref, watch, onBeforeMount, provide, onUpdated, inject } from 'vue';
 import { ElDatePicker } from 'element-plus';
 import {
     Chart as ChartJS,
@@ -209,8 +203,12 @@ const companyId = route.params.id;
 let timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
 let selectedTimePeriod = ref(timePeriods.value[0]);
 const date = ref([]);
-let start_date = ref(moment().subtract(10, 'days').format('YYYY-M-DD'));
-let end_date = ref(moment().format('YYYY-M-DD'));
+// let start_date = ref(moment().subtract(10, 'days').format('YYYY-M-DD'));
+// let end_date = ref(moment().format('YYYY-M-DD'));
+// const start_date = ref(appStore.start_date);
+// const end_date = ref(appStore.end_date);
+const start_date = inject('start_date');
+const end_date = inject('end_date');
 let data = ref({
     labels: [],
     datasets: []
@@ -278,6 +276,7 @@ watch([date, selectedTimePeriod], () => {
 
         date.value = [moment().subtract(10, 'days').format('YYYY-M-DD'), moment().format('YYYY-M-DD')];
     }
+    // appStore.setDatesValue(start_date.value, end_date.value);
     let datefrom = moment(date.value[0]).format('YYYY-MM-DD');
     let dateto = moment(date.value[1]).format('YYYY-MM-DD');
     loadFromServer(selectedTimePeriod.value.toLowerCase(), companyId, datefrom, dateto);

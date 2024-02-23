@@ -17,7 +17,7 @@
 
         <ComparisonChartComponent :data="plotdata" :width="chart__width" :chartheight="chart__height"
             :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors"
-            :timePeriod="selectedTimePeriod" :colors="colors" />
+            :timePeriod="selectedTimePeriod" :colors="colors"/>
         <BaseLegend v-if="chartLoading == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
         </BaseLegend>
         <div class="head">
@@ -404,11 +404,15 @@ const reviewsLoading = ref(false)
 const feedbackLoading = ref(false)
 const semesterChartLoading = ref(false)
 const chartLoading = ref(false)
-let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-let endDate = moment().format('YYYY-M-DD');
 const language = inject('language')
-let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
-let end_date = ref(moment().format('YYYY-M-DD'));
+// let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+// let endDate = moment().format('YYYY-M-DD');
+// let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
+// let end_date = ref(moment().format('YYYY-M-DD'));
+// const start_date = ref(appStore.start_date);
+// const end_date = ref(appStore.end_date);
+const start_date = inject('start_date');
+const end_date = inject('end_date');
 
 let selectedTimePeriod = ref('');
 let timePeriods = ref(['Days', 'Weeks', 'Months', 'Quarters', 'Semesters']);
@@ -497,22 +501,23 @@ const loadDatasets = async () => {
     }
 }
 
-const viewData = async () => {
+const viewData = async (establishment, establishmentTag, dateStart, dateEnd, website, competitors, timePeriods) => {
     chartLoading.value = true
-    if (IsValueOkay(start_date.value) && IsValueOkay(end_date.value)) {
-        startDate = moment(start_date.value).format('YYYY-MM-DD');
-        endDate = moment(end_date.value).format('YYYY-MM-DD');
+    if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
+       dateStart = moment(dateStart).format('YYYY-MM-DD');
+       dateEnd = moment(dateEnd).format('YYYY-MM-DD');
     }
 
-    if (establishment && establishment.value['competitors']) {
-        let competitorInfo = establishment.value['competitors'].find(c => c.name === selectedCompetitors.value)
-        const tags = competitorInfo ? [companyId.value, competitorInfo.tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.tag)]
-        const website = (selectedWebsites.value == 'App (Private)') ? selectedWebsites.value : selectedWebsites.value.toLowerCase()
-        plotdata.value = await chartsStore.loadData(tags, selectedTimePeriod.value, startDate, endDate, website)
+    if (establishment && establishment['competitors']) {
+        let competitorInfo = establishment['competitors'].find(c => c.name === competitors)
+        const tags = competitorInfo ? [establishmentTag, competitorInfo.tag] : [establishmentTag, ...establishment['competitors'].map(c => c.tag)]
+        website = (website == 'App (Private)') ? website : website.toLowerCase()
+       
+        //Global value to change
+        plotdata.value = await chartsStore.loadData(tags, timePeriods, dateStart, dateEnd, website)
         legendData.value = companiesStore.generateLegend(plotdata.value, colors.value);
     }
     chartLoading.value = false;
-    // loadDatasets();
 }
 
 const formatStarsData = (data) => {
@@ -534,11 +539,11 @@ const formatStarsData = (data) => {
 
 }
 
-const globalComparison = async () => {
-    selectedCompetitors.value = 'Global';
-    selectedWebsites.value = 'Global';
-    viewData();
-    loadReviews(companyId.value, 1, 20, 1, startDate, endDate, selectedWebsites.value, selectedStars.value, language.value);
+const globalComparison = async (establishment, establishmentTag, dateStart, dateEnd, website, stars, language, competitors, timePeriods) => {
+    // selectedCompetitors.value = 'Global';
+    // selectedWebsites.value = 'Global';
+    viewData(establishment, establishmentTag, dateStart, dateEnd, website, competitors, timePeriods);
+    loadReviews(establishmentTag, 1, 20, 1, dateStart, dateEnd, website, stars, language);
 };
 
 const gotoReviewPage = (id, tag) => {
@@ -554,6 +559,11 @@ const gotoReviewPage = (id, tag) => {
     }, 100);
 }
 
+// const setdate = ()=>{
+//     start_date.value = appStore.start_date;
+//     end_date.value = appStore.end_date;
+// }
+
 /**
  * Navbar Handler
  * useWindowScroll allows us to detect the scroll event on 
@@ -564,22 +574,24 @@ const chart__height = ref(300);
 
 
 watch([start_date, end_date, selectedWebsites], () => {
-    viewData()
-    loadReviews(companyId.value, 1, 20, 1, start_date.value, end_date.value, selectedWebsites.value, '', language.value);
+    // viewData()
+    // loadReviews(companyId.value, 1, 20, 1, start_date.value, end_date.value, selectedWebsites.value, '', language.value);
+    // appStore.setDatesValue(start_date.value, end_date.value);
+    globalComparison(establishment.value, companyId.value, start_date.value, end_date.value, selectedWebsites.value, '', language.value, selectedCompetitors.value, selectedTimePeriod.value)
 })
 
-watch(selectedCompetitors, async () => {
-    startDate = moment(start_date.value).format('YYYY-M-DD');
-    endDate = moment(end_date.value).format('YYYY-M-DD');
-    viewData()
+watch([selectedCompetitors, selectedTimePeriod], async () => {
+    // startDate = moment(start_date.value).format('YYYY-M-DD');
+    // endDate = moment(end_date.value).format('YYYY-M-DD');
+    viewData(establishment.value, companyId.value, start_date.value, end_date.value, selectedWebsites.value, selectedCompetitors.value, selectedTimePeriod.value)
 })
 
 
-watch(selectedTimePeriod, async () => {
-    startDate = moment(start_date.value).format('YYYY-M-DD');
-    endDate = moment(end_date.value).format('YYYY-M-DD');
-    viewData()
-})
+// watch(selectedTimePeriod, async () => {
+//     startDate = moment(start_date.value).format('YYYY-M-DD');
+//     endDate = moment(end_date.value).format('YYYY-M-DD');
+//     viewData()
+// })
 
 let selectedStars = ref('0');
 const starFilter = (star) => {
@@ -650,10 +662,10 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source) => {
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(dateStart).format('YYYY-MM-DD');
         dateEnd = moment(dateEnd).format('YYYY-MM-DD');
-    } else {
+    } /*else {
         startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
         endDate = moment().format('YYYY-M-DD');
-    }
+    }*/
     apiParams += `&fromDate=${dateStart}&toDate=${dateEnd}`;
 
     if (IsValueOkay(source)) {
@@ -704,10 +716,10 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(dateStart).format('YYYY-MM-DD');
         dateEnd = moment(dateEnd).format('YYYY-MM-DD');
-    } else {
+    } /*else {
         startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
         endDate = moment().format('YYYY-M-DD');
-    }
+    }*/
     apiParams += `&fromDate=${dateStart}&toDate=${dateEnd}`;
 
     if (IsValueOkay(source)) {
@@ -737,10 +749,10 @@ const loadIndiceData = async (tag, dateStart, dateEnd) => {
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(dateStart).format('YYYY-MM-DD');
         dateEnd = moment(dateEnd).format('YYYY-MM-DD');
-    } else {
+    } /*else {
         startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
         endDate = moment().format('YYYY-M-DD');
-    }
+    }*/
     apiParams += `&from=${dateStart}&to=${dateEnd}`;
 
     const api = apiBase + '?' + apiParams;
@@ -796,7 +808,7 @@ onBeforeMount(async () => {
             ]);
 
             establishmentLoading.value = false
-            globalComparison();
+            globalComparison(establishment.value, companyId.value, start_date.value, end_date.value, selectedWebsites.value, '', language.value, selectedCompetitors.value, selectedTimePeriod.value)
             websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
         }
     })

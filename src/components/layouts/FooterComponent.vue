@@ -57,10 +57,13 @@ const isSignUpActive = ref(route.path === '/sign-up');
 }
 
 footer {
-    padding: 3rem;
-    background-color: var(--color-bgp);
-    color: var(--color-white);
-    width: 100%;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--color-bgp);
+  color: #fff;
+  padding: 3rem;
+  margin-top: 60px;
 }
 
 .footer-logo {

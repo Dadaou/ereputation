@@ -69,12 +69,12 @@
     </div>
     <div class="tablet_mobile__filter">
         <div class="date__picker px-2">
-            <span class="block">Start date {{startDate}}</span>
-            <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
+            <!-- <span class="block">Start date {{startDate}}</span> -->
+            <el-date-picker v-model="start_date" placeholder="Start date" :size="'large'" />
         </div>
         <div class="date__picker px-2">
-            <span class="block">End date {{endDate}}</span>
-            <el-date-picker v-model="dateEnd" placeholder="End date" :size="'large'" />
+            <!-- <span class="block">End date {{endDate}}</span> -->
+            <el-date-picker v-model="end_date" placeholder="End date" :size="'large'" />
         </div>
     </div>
     <div class="tablet_mobile__head">
@@ -188,8 +188,8 @@
             </div>
             <div class="date__filter">
                 <div class="text-sm title">Select a date range</div>
-                <el-date-picker v-model="dateStart" placeholder="Start date" :size="'large'" />
-                <el-date-picker class="mt-2" v-model="dateEnd" placeholder="End date" :size="'large'" />
+                <el-date-picker v-model="start_date" placeholder="Start date" :size="'large'" />
+                <el-date-picker class="mt-2" v-model="end_date" placeholder="End date" :size="'large'" />
             </div>
         </div>
     </div>
@@ -282,9 +282,11 @@ const all_items = ref([
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
 
-const dateEnd = ref(new Date());
-const datefrom = moment().subtract(30, 'days').format('YYYY-MM-DD')
-const dateStart = ref(new Date(datefrom));
+// const dateEnd = ref(new Date());
+// const datefrom = moment().subtract(30, 'days').format('YYYY-MM-DD')
+// const dateStart = ref(new Date(datefrom));
+const start_date = inject('start_date');
+const end_date = inject('end_date');
 const colors = ref(['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']);
 const chartWidth = ref(0);
 provide('chartWidth', chartWidth);
@@ -292,21 +294,21 @@ provide('chartWidth', chartWidth);
 onUpdated(() => {
     chartWidth.value = (el.value != null && el.value != undefined) ? Math.abs(el.value.offsetWidth - 50) : chartWidth.value;
 })
-let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-let endDate = moment().format('YYYY-M-DD');
+// let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
+// let endDate = moment().format('YYYY-M-DD');
 
-const viewData = async () => {
+// const viewData = async () => {
    
-   startDate = moment(start_date.value).format('YYYY-MM-DD');
-   endDate = moment(end_date.value).format('YYYY-MM-DD');
+//    startDate = moment(start_date.value).format('YYYY-MM-DD');
+//    endDate = moment(end_date.value).format('YYYY-MM-DD');
   
-}
+// }
 
-watch([dateStart, dateEnd], async () => {
+watch([start_date, end_date], async () => {
     load.value = true
-    await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, calculType.value);
-    await loadConditionFromServer(companyId, dateStart.value, dateEnd.value);
-    viewData()
+    await loadWeatherFromServer(companyId, start_date.value,end_date.value, calculType.value);
+    await loadConditionFromServer(companyId, start_date.value, end_date.value);
+    // viewData()
 })
 
 const generatedLegend = (colors, dataType) => {
@@ -322,7 +324,7 @@ const generatedLegend = (colors, dataType) => {
 }
 
 watch(calculType, async () => {
-    await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, calculType.value);
+    await loadWeatherFromServer(companyId, start_date.value, end_date.value, calculType.value);
 })
 
 const el = ref(null);
@@ -377,10 +379,10 @@ const loadWeatherFromServer = async (tag, dateStart, dateEnd, unit) => {
     }
 }
 const weatherRating = ref(null);
-const nbDays = computed(()=>{
-    console.log(getNbDays(dateEnd.value, dateStart.value))
-    return getNbDays(dateEnd.value, dateStart.value)
-})
+// const nbDays = computed(()=>{
+//     console.log(getNbDays(dateEnd.value, dateStart.value))
+//     return getNbDays(dateEnd.value, dateStart.value)
+// })
 const getIcon = (weatherConditions)=>{
     switch (weatherConditions) {
             case 'Rain, Overcast':
@@ -417,7 +419,7 @@ const getIcon = (weatherConditions)=>{
 }
 
 const formattedWeatherRating = computed(() => {
-    const unit = nbDays.value>1?'days':'day'
+    // const unit = nbDays.value>1?'days':'day'
     const order = ['Clear', 'Partially cloudy', 'Overcast', 'Rain, Partially cloudy', 'Rain Partially cloudy', 'Rain, Overcast', 'Rain Overcast', 'Rain', 'Snow Rain Overcast']
     let conditions = []
     if (!weatherRating.value) return [];
@@ -453,13 +455,13 @@ const formattedWeatherRating = computed(() => {
     }
 })
 
-const getNbDays = (date1, date2)=>{
-    date1 = new Date(date1);
-    date2 = new Date(date2);
-    const differenceInTime = date1.getTime() - date2.getTime();
+// const getNbDays = (date1, date2)=>{
+//     date1 = new Date(date1);
+//     date2 = new Date(date2);
+//     const differenceInTime = date1.getTime() - date2.getTime();
 
-    return Math.round(differenceInTime / (1000 * 3600 * 24));
-}
+//     return Math.round(differenceInTime / (1000 * 3600 * 24));
+// }
 
 const loadConditionFromServer = async (tag, dateStart, dateEnd) => {
     let apiBase = '/etablissement/conditions';
@@ -490,8 +492,8 @@ const loadConditionFromServer = async (tag, dateStart, dateEnd) => {
 onBeforeMount(async () => {
     appStore.isLoading = true;
     chartLoading.value = true;
-    await loadWeatherFromServer(companyId, dateStart.value, dateEnd.value, 'C');
-    await loadConditionFromServer(companyId, dateStart.value, dateEnd.value);
+    await loadWeatherFromServer(companyId, start_date.value, end_date.value, 'C');
+    await loadConditionFromServer(companyId, start_date.value, end_date.value);
 
     companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
 

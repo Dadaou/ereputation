@@ -1,12 +1,10 @@
 <template>
-  <!-- <NavbarComponent></NavbarComponent> -->
   <div class="app__loader" :style="loaderStyle" v-if="appStore.isLoading">
     <SpinnerComponent :size="'large'" />
   </div>
   <div class="erep__app">
     <RouterView />
   </div>
-  <!-- <FooterComponent></FooterComponent> -->
 </template>
 
 <script setup>
@@ -21,14 +19,6 @@ import services from '@Services/services.js';
 const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
 )
-
-// const NavbarComponent = defineAsyncComponent(() =>
-//   import('@Components/layouts/NavbarComponent.vue')
-// )
-
-// const FooterComponent = defineAsyncComponent(() =>
-//   import('@Components/layouts/FooterComponent.vue')
-// )
 
 const appStore = useAppStore()
 const userStore = useUserStore()
@@ -46,6 +36,21 @@ const tag = computed(() => {
   return '';
 })
 provide('tag', tag);
+const start_date = ref(appStore.start_date);
+const end_date = ref(appStore.end_date);
+
+provide('start_date', start_date);
+provide('end_date', end_date);
+
+const setdate = ()=>{
+    appStore.setDatesValue(start_date.value, end_date.value)
+    start_date.value = appStore.start_date;
+    end_date.value = appStore.end_date;
+}
+
+watch([start_date, end_date], () => {
+    setdate()
+})
 
 const isNotNull = (value)=>{
   return value !== '' && value !== null && value !== undefined; 

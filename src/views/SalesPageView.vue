@@ -189,7 +189,8 @@ import {
     watch,
     onBeforeMount,
     provide,
-    onUpdated
+    onUpdated,
+    inject
 } from 'vue';
 import { ElDatePicker } from 'element-plus';
 import { useResizeObserver } from '@vueuse/core';
@@ -240,8 +241,10 @@ const companyId = route.params.id;
 let timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
 let selectedTimePeriod = ref(timePeriods.value[0]);
 const date = ref([]);
-let start_date = ref(moment().subtract(10, 'days').format('YYYY-M-DD'));
-let end_date = ref(moment().format('YYYY-M-DD'));
+// let start_date = ref(moment().subtract(10, 'days').format('YYYY-M-DD'));
+// let end_date = ref(moment().format('YYYY-M-DD'));
+const start_date = inject('start_date');
+const end_date = inject('end_date');
 let data = ref({
     labels: [],
     datasets: []
@@ -308,10 +311,10 @@ const loadFromServer = async (company, datefrom, dateto, type) => {
 }
 
 watch(date, () => {
-    if (date.value.length == 0) {
+    // if (date.value.length == 0) {
 
-        date.value = [moment().subtract(10, 'days').format('YYYY-M-DD'), moment().format('YYYY-M-DD')];
-    }
+    //     date.value = [moment().subtract(10, 'days').format('YYYY-M-DD'), moment().format('YYYY-M-DD')];
+    // }
     let datefrom = moment(date.value[0]).format('YYYY-MM-DD');
     let dateto = moment(date.value[1]).format('YYYY-MM-DD');
     loadFromServer(companyId, datefrom, dateto, 'sales');
