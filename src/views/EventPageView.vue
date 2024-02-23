@@ -21,7 +21,7 @@
             }">
                 <SpinnerComponent />
             </div>
-            <EventChartComponent v-else :width="chartWidth" />
+            <EventChartComponent v-else :establishment="establishment" :width="chartWidth" />
         </div>
         <div class="head mb-4">
             <div class="app__title" style="margin-top: 50px;">
@@ -309,13 +309,21 @@ const all_items = ref([
 let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
 let endDate = moment().format('YYYY-M-DD');
 
-watch([start_date, end_date, activeName], async () => {
+watch([start_date, end_date], async () => {
     if (start_date.value !== '' && end_date.value !== '') {
         date.value = [start_date.value, end_date.value]
     } else {
         date.value = [moment().subtract(30, 'days').format('YYYY-M-DD'), moment().format('YYYY-M-DD')];
     }
 
+    if(activeName.value == 'events'){
+        await loadEvents(companyId, start_date.value, end_date.value)
+    }else{
+        await loadEvents(companyId, start_date.value, end_date.value, establishment.value.locality_id)
+    }
+})
+
+watch(activeName, async()=>{
     if(activeName.value == 'events'){
         await loadEvents(companyId, start_date.value, end_date.value)
     }else{

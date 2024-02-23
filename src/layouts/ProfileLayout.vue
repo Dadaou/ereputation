@@ -1,5 +1,6 @@
 <template>
-    <NavbarComponent></NavbarComponent>
+	<NavbarComponentTemp/>
+    <!-- <NavbarComponent></NavbarComponent> -->
     <router-view></router-view>
     <FooterComponent></FooterComponent>
 </template>
@@ -11,5 +12,8 @@ const FooterComponent = defineAsyncComponent(() =>
 )
 const NavbarComponent = defineAsyncComponent(() =>
     import('@Components/layouts/NavbarComponent.vue')
+)
+const NavbarComponentTemp = defineAsyncComponent(() =>
+    import('@Components/layouts/NavbarTempComponent.vue')
 )
 </script>

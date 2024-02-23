@@ -50,7 +50,11 @@ const props = defineProps({
 	width:{
 		type: Number,
 		default: 800
-	}
+	},
+  establishment: {
+    type: Object,
+    required: true
+  }
 });
 
 const SpinnerComponent = defineAsyncComponent(() =>
@@ -102,11 +106,12 @@ const positionEvent = () => {
 
     plotdata.value.events_per_date.forEach((eventData, index) => {
       eventData.events.forEach(event => {
-        let position = positions[index]; 
-        if (!eventGroups[event.name]) {
-          eventGroups[event.name] = { startPosition: position, endPosition: position };
+        let position = positions[index];
+        let name = event.isPublic?`${props.establishment.locality_name}: ${event.name}`:event.name 
+        if (!eventGroups[name]) {
+          eventGroups[name] = { startPosition: position, endPosition: position };
         } else {
-          eventGroups[event.name].endPosition = position;
+          eventGroups[name].endPosition = position;
         }
       });
     });
@@ -117,7 +122,7 @@ const positionEvent = () => {
 
       let textNode = document.createElement("span");
       let width = group.endPosition - group.startPosition + elementWidth; 
-      textNode.setAttribute("style", `left: ${group.startPosition - elementWidth / 2}px; width: ${width}px; top: ${topOffset}px; opacity: 1; height: 10px; position: absolute; font-size: 14px; font-weight: 500; cursor: pointer; color: green; background-color: ${generateColor(eventName)};`);
+      textNode.setAttribute("style", `left: ${group.startPosition - elementWidth / 2}px; width: ${width}px; top: ${topOffset}px; opacity: 1; height: 10px; position: absolute; font-size: 14px; font-weight: 500; cursor: pointer; color: green; background-color: ${generateColor(eventName.split(': ')[eventName.split(': ').length -1])};`);
       textNode.setAttribute("title", eventName);
       chartEvents.appendChild(textNode);
     });
@@ -135,7 +140,7 @@ const legendData = computed(() => {
         date.events.forEach((event) => {
             if (!nameSet.has(event.name)) {
                 data.push({
-                    name: event.name,
+                    name: event.isPublic?`${props.establishment.locality_name}: ${event.name}`:event.name,
                     color: `${generateColor(event.name)}`
                 });
                 nameSet.add(event.name);

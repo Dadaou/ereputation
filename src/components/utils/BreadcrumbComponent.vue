@@ -56,7 +56,7 @@ const props = defineProps({
   },
   tag: {
     type: String,
-    required: true
+    required: false
   }
 })
 

@@ -1,5 +1,6 @@
 <template>
-    <NavbarComponent></NavbarComponent>
+    <NavbarComponentTemp/>
+   <!--  <NavbarComponent></NavbarComponent> -->
     <div class="main__container" v-if="appStore.isExist">
         <HeadComponent :page="appStore.currentPage"></HeadComponent>
         <div class="breadcrumb__container">
@@ -8,9 +9,9 @@
         <div class="app__container">
             <router-view></router-view>
         </div>
-        <FooterComponent></FooterComponent>
     </div>
     <EstablishmentNotFound v-else />
+    <FooterComponent></FooterComponent>
 </template>
 <script setup>
 import { useAppStore } from "@Stores/app.js";
@@ -24,6 +25,9 @@ const FooterComponent = defineAsyncComponent(() =>
 )
 const NavbarComponent = defineAsyncComponent(() =>
     import('@Components/layouts/NavbarComponent.vue')
+)
+const NavbarComponentTemp = defineAsyncComponent(() =>
+    import('@Components/layouts/NavbarTempComponent.vue')
 )
 const EstablishmentNotFound = defineAsyncComponent(() =>
     import("@Views/EstablishmentNotFound.vue")

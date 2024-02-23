@@ -18,7 +18,7 @@
             type="card"
             class="demo-tabs"
           >
-            <el-tab-pane label="Socials" name="socials">
+            <el-tab-pane label="Posts" name="socials">
                 <div class="reviews__content">
                     <socialPostFilterComponent
                         :current="currentSocial"
@@ -48,7 +48,7 @@
                     </div>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="Social Tag" name="social_tag">
+            <el-tab-pane label="Hashtags" name="social_tag">
                <!--  <div class="tag_header">
                      <el-select v-model="selectedHashtag" placeholder="#hashtag" size="large" filterable>
                         <el-option v-for="(hashtag, index) in hashtags" :key="index" :label="hashtag.value"

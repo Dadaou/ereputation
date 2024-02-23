@@ -382,81 +382,8 @@ const reloadStaffsList = async(type)=>{
     }
 }
 
-onBeforeMount(async () => {
-    let staffs = [];
-    let events = [];
-
-    let promises = [];
-    let event_promises = [];
-
-    appStore.isLoading = true;
-
-    if (width.value < 800) {
-        position.value = 'top'
-    } else {
-        position.value = 'right'
-    }
-
-    if (userStore.user.customer !== null) {
-
-        // userStore.user.customer.establishments.forEach((establishment) => {
-        //     let promise = services.get_Record(`/establishment/${establishment.competitor_tag}/staffs`, (response) => {
-        //         staffs.push(response.data);
-        //     });
-        //     promises.push(promise);
-
-
-        //     let promise_event = services.get_Record(`/establishment/${establishment.competitor_tag}/event`, (response) => {
-        //         events.push(response.data);
-        //     });
-        //     event_promises.push(promise_event);
-        // })
-        // Promise.all(promises).then(() => {
-        //     staffs.forEach(staffs_per_establisment => {
-        //         staffs_per_establisment.forEach(staff => {
-        //             allStaffs.value.push(staff);
-        //         })
-        //     })
-        //     appStore.isLoading = false;
-        // });
-
-        Promise.all(event_promises).then(() => {
-            events.forEach(events_per_establisment => {
-                events_per_establisment.forEach(event => {
-                    let event_found = allEvents.value.find(obj => obj.id === event.id);
-                    if (event_found) {
-                        event_found.establishment_name = `${event_found.establishment_name}, ${event.establishment_name}`;
-                        event_found.establishment.push(event.establishment);
-
-                    } else {
-                        event['date'] = `${moment(event.datefrom).format('YYYY-MM-DD')} to ${moment(event.dateto).format('YYYY-MM-DD')}`
-                        const uri = event['establishment'];
-                        event['establishment'] = [];
-                        event['establishment'].push(uri)
-                        allEvents.value.push(event);
-                    }
-                })
-            })
-        });
-    }
-
-    await reloadCompetitorList();
-    await reloadStaffsList();
-    await reloadEventsList();
-    
+const loadAdvantage = async()=>{
     try {
-
-        // const response = await new Promise((resolve) => {
-        //     services.get_Record(`advantage/list`, (response) => {
-        //         resolve(response);
-        //     });
-        // });
-        // if (response.status === 200) {
-        //     allAdvantages.value = response.data;
-        // } else {
-        //     console.error('Error fetching advantages:', response);
-        // }
-
         const response = await new Promise((resolve) => {
            services.get_Record(`customer/establishments/advantages?tag=${route.params.tag}`, (response) => {
                 resolve(response);
@@ -464,13 +391,26 @@ onBeforeMount(async () => {
         });
         if (response.status === 200) {
             allAdvantages.value = response.data;
-            console.log(allAdvantages.value)
         } else {
             console.error('Error fetching advantages:', response);
         }
     } catch (error) {
         console.error('Error in onBeforeMount:', error);
     }
+}
+
+onBeforeMount(async () => {
+    if (width.value < 800) {
+        position.value = 'top'
+    } else {
+        position.value = 'right'
+    }
+
+    await reloadCompetitorList();
+    await reloadStaffsList();
+    await reloadEventsList();
+    await loadAdvantage();
+
 });
 
 </script>

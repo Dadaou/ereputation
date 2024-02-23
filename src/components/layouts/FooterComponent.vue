@@ -9,23 +9,21 @@
                         </div>
                     </li>
                     <li class="flex items-start justify-center flex-col gap-2">
-                        <ul>
-                            <li>Legal Notice</li>
-                            <li>
-                                <RouterLink to="/contact">
-                                    Contact
-                                </RouterLink>
-                            </li>
-                            <li>
-                                <RouterLink to="/sign-up">
-                                    Pricing
-                                </RouterLink>
-                            </li>
-                        </ul>
-                        <span><i class="uil uil-copyright"></i>2024,
-                            allright reserved</span>
-                    </li>
-
+                    <ul>
+                      <li>Legal Notice</li>
+                      <li>
+                        <RouterLink to="/contact" :class="{ 'active-link': isContactActive }">
+                          Contact
+                        </RouterLink>
+                      </li>
+                      <li>
+                        <RouterLink to="/sign-up" :class="{ 'active-link': isSignUpActive }">
+                          Pricing
+                        </RouterLink>
+                      </li>
+                    </ul>
+                    <span><i class="uil uil-copyright"></i>2024, allright reserved</span>
+                  </li>
                 </ul>
             </div>
             <div class="footer__links">
@@ -39,18 +37,29 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 import { useAppStore } from "@Stores/app.js"
-const appStore = useAppStore()
+const appStore = useAppStore();
+
+
+const route = useRoute();
+const isContactActive = ref(route.path === '/contact');
+const isSignUpActive = ref(route.path === '/sign-up');
 
 </script>
 
 <style scoped>
-/*Footer*/
+
+.active-link {
+  font-weight:  600;
+  color: #007bff;
+}
+
 footer {
     padding: 3rem;
     background-color: var(--color-bgp);
     color: var(--color-white);
-    margin-top: 60px;
     width: 100%;
 }
 
@@ -70,78 +79,45 @@ footer {
 
 .footer__container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 2rem;
     font-size: 0.9rem;
-    gap: 4rem;
-    align-items: center;
 }
 
-.footer__container ul {
+.footer__info {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .footer__info ul {
+    display: flex;
+    flex-direction: column;
     gap: 1rem;
 }
 
 .footer__links ul {
+    display: flex;
     gap: 2rem;
 }
 
 .footer__links li {
     padding: 0.6rem 0.9rem;
     border: 1px solid var(--color-white);
-    border-radius: 80%;
+    border-radius: 50%;
 }
 
-@media screen and (max-width:1200px) {
+/* Media query for smaller screens */
+@media screen and (min-width: 768px) {
     .footer__container {
-        width: 100% !important;
-    }
-}
-
-@media screen and (max-width:1006px) {
-    .footer__container {
-        gap: 1rem;
+        flex-direction: row;
+        justify-content: space-between; 
+        align-items: center;
     }
 
     .footer__info ul {
-        gap: 0.5rem;
-    }
-
-    .footer__links ul {
-        gap: 0.5rem;
-    }
-
-    .footer__links li {
-        padding: 0.1rem 0.5rem;
-    }
-}
-
-@media screen and (max-width:870px) {
-    .footer__container {
-        flex-direction: column;
-        font-size: 0.75rem;
-    }
-
-    .footer__info ul {
-        gap: 0.3rem;
-    }
-
-    .footer__links ul {
-        gap: 0.3rem;
-    }
-
-    footer {
-        margin-top: 60px !important;
-    }
-}
-
-@media screen and (max-width:651px) {
-    .footer__info ul {
-        flex-direction: column;
-        text-align: center;
+        flex-direction: row;
+        gap: 2rem;
     }
 }
 </style>

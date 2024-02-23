@@ -201,7 +201,7 @@ import { ref, watch, computed, onMounted, inject } from 'vue';
 import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import ModalComponent from '@Components/utils/ModalComponent.vue';
 import { useUserStore } from "@Stores/user.js";
-import { useAppStore } from "@Stores/app.js"
+import { useAppStore } from "@Stores/app.js";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { i18n } from '@/i18n';
@@ -314,11 +314,7 @@ onMounted(() => {
       i18n.locale = item.bb
       locale.value = item.bb
     }
-
-
   }
-
-
 })
 
 watch(width, () => {
@@ -377,7 +373,6 @@ const selectCurrentLanguage = (language) => {
   localStorage.setItem("langue", language.code)
 
   locale.value = language.bb;
-
 };
 </script>
 <style scoped>
