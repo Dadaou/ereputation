@@ -1,7 +1,7 @@
 <template>
   <nav ref="nav__ref" class="bg-white border-gray-200 dark:bg-gray-900">
     <div class="h-full max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4" ref="nav__container__ref">
-      <button @click="toggleMobileMenu" type="button"
+      <button v-if="showMenu" @click="toggleMobileMenu" type="button"
         class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
         aria-controls="navbar-user" aria-expanded="false">
         <span class="sr-only">Open main menu</span>
@@ -566,6 +566,7 @@ h4 {
 
   .nav-logo {
     margin-right: 0px;
+   
   }
 
 }

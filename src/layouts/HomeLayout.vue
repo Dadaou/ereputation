@@ -1,6 +1,5 @@
 <template>
-    <NavbarComponentTemp/>
-    <!-- <NavbarComponent></NavbarComponent> -->
+    <NavbarComponent></NavbarComponent>
     <div class="main__container" v-if="appStore.isExist">
         <HeadComponent class="head" :page="appStore.currentPage"></HeadComponent>
         <router-view></router-view>
@@ -23,10 +22,6 @@ const NavbarComponent = defineAsyncComponent(() =>
 const EstablishmentNotFound = defineAsyncComponent(() =>
     import("@Views/EstablishmentNotFound.vue")
 )
-const NavbarComponentTemp = defineAsyncComponent(() =>
-    import('@Components/layouts/NavbarComponent.vue')
-)
-
 const appStore = useAppStore();
 
 </script>

@@ -1,6 +1,5 @@
 <template>
-    <NavbarComponentTemp/>
-   <!--  <NavbarComponent></NavbarComponent> -->
+    <NavbarComponent></NavbarComponent>
     <div class="main__container" v-if="appStore.isExist">
         <HeadComponent :page="appStore.currentPage"></HeadComponent>
         <div class="breadcrumb__container">
@@ -24,9 +23,6 @@ const FooterComponent = defineAsyncComponent(() =>
     import('@Components/layouts/FooterComponent.vue')
 )
 const NavbarComponent = defineAsyncComponent(() =>
-    import('@Components/layouts/NavbarComponent.vue')
-)
-const NavbarComponentTemp = defineAsyncComponent(() =>
     import('@Components/layouts/NavbarComponent.vue')
 )
 const EstablishmentNotFound = defineAsyncComponent(() =>

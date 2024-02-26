@@ -1,6 +1,12 @@
 <template>
 <nav ref="nav__ref">
-  <div ref="nav__container__ref" class="container max-w-screen-xl flex flex-wrap items-center mx-auto p-4">
+  <div ref="nav__container__ref" class="max-w-screen-xl flex flex-wrap items-center mx-auto p-4">
+   <button v-if="showMenu" @click="toggleMobileMenu" class="menu-barre">
+          <span class="sr-only">Open main menu</span>
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+          </svg>
+    </button>
 	  <a :href="baseurl" class="flex items-center space-x-3 rtl:space-x-reverse">
 	      <div v-if="appStore.account && appStore.account.logo" class="nav-logo">
 	          <img :src="appStore.account.logo">
@@ -25,12 +31,12 @@
 		  	:customer="userStore.user.customer"
 		  	@signOut="signOut"
 		  />
-		  <button v-if="showMenu" @click="toggleMobileMenu">
+		 <!--  <button v-if="showMenu" @click="toggleMobileMenu">
 	        <span class="sr-only">Open main menu</span>
 	        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
 	            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
 	        </svg>
-	  </button>
+	  </button> -->
 	  </div>
 	   <transition 
 	        enter-active-class="animate__animated animate__zoomIn"
@@ -242,6 +248,11 @@ onBeforeMount(()=>{
 
 </script>
 <style scoped>
+
+.menu-barre{
+    display: none;
+}
+
 .nav-dropdown button{
 	display: none
 }
@@ -333,6 +344,10 @@ ul.menu .router-link-exact-active {
 
 @media screen and (max-width:1000px) {
 
+  .menu-barre{
+    display: block;
+  }
+
   .navbar-language{
   	z-index: 1;
   }
@@ -380,13 +395,17 @@ ul.menu .router-link-exact-active {
 
 @media screen and (max-width:765px) {
 
+  .nav-logo{
+    margin-right: 0px;
+  }
+
   .nav-dropdown{
 		display: flex;
 		flex-direction: row ;
   }
 
   nav > div.nav__login{
-	justify-content: center;
-}
+  	justify-content: center;
+  }
 }
 </style>

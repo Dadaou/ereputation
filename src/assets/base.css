@@ -407,3 +407,9 @@ img {
   box-shadow: 0px -1px 6px var(--color-primary);
   max-width: 300px;
 }
+
+@media screen and (max-width: 2560px and min-width: 1440px) {
+  .container:{
+    width: 100%;
+  }
+}
