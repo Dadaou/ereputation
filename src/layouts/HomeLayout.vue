@@ -24,7 +24,7 @@ const EstablishmentNotFound = defineAsyncComponent(() =>
     import("@Views/EstablishmentNotFound.vue")
 )
 const NavbarComponentTemp = defineAsyncComponent(() =>
-    import('@Components/layouts/NavbarTempComponent.vue')
+    import('@Components/layouts/NavbarComponent.vue')
 )
 
 const appStore = useAppStore();
