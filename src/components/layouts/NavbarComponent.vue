@@ -93,12 +93,12 @@
                 Parameters
               </RouterLink>
             </li>
-            <li @click="closeDropdown" v-if="checkAccess(userStore.user.roles, 'ROLE_PARTNER')">
+            <!-- <li @click="closeDropdown" v-if="checkAccess(userStore.user.roles, 'ROLE_PARTNER')">
               <RouterLink to="/partner/theme" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                 <i class="uil uil-swatchbook"></i>
                 Custom theme
               </RouterLink>
-            </li>
+            </li> -->
             <li @click="closeDropdown">
               <RouterLink to="/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" @click="signOut">
                 <i class="uil uil-signout"></i>
