@@ -269,6 +269,11 @@ const router = createRouter({
           beforeEnter: [CheckAuthentication, removeAccess]
         },
         {
+          path: '/partner/theme',
+          name: 'Theme',
+          component: () => import('@Views/AppsCustomisationView.vue'),
+        },
+        {
           path: '/home',
           name: 'Home',
           beforeEnter: [CheckAccess],

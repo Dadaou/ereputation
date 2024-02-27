@@ -82,8 +82,6 @@ const initTheme = () => {
 onBeforeMount(async () => {
   appStore.isLoading = true;
 
-  // if (userStore.user) {
-
   const response = await new Promise((resolve) => {
     services.get_Record(`/partner/info?code=${import.meta.env.VITE_PARTNER_CODE}`, (response) => {
       resolve(response)
@@ -103,10 +101,6 @@ onBeforeMount(async () => {
     appStore.isLoading = false;
 
   }
-  // } else {
-  //   appStore.isLoading = false;
-  // }
-
   initFlowbite();
 
 });

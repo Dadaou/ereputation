@@ -363,7 +363,8 @@ const filteredProviders = computed(() => {
         id: value.uri.split('/').slice(-1)[0] 
     }));
     data.unshift({name: 'all', id: 'all'})
-    return data
+   
+    return data;
 });
 
 const socialsHashtag = computed(()=>{
@@ -603,7 +604,7 @@ const loadPostHashtagData = async(tag, source, dateStart, dateEnd, hashtag, page
     }
 
     if (IsValueOkay(hashtag)) {
-        apiParams += `&hashtag=${hashtag}`;
+        apiParams += `&hashtag=${hashtag.split('-')[0]}`;
     }
 
     const api = apiBase + '?' + apiParams;
@@ -622,9 +623,32 @@ const loadPostHashtagData = async(tag, source, dateStart, dateEnd, hashtag, page
     }
 }
 
+function removeDuplicates(array) {
+    let data = [];
+    for (var i = 0; i < array.length; i++) {
+        if(!checkExist(data, array[i].value)){
+            data.push(array[i])
+        }
+    }
+    return data;
+}
+
+function checkExist(array, value){
+    let exist = false;
+    for (var i = 0; i < array.length; i++) {
+        console.log(array[i].value, value)
+        if(array[i].value === value){
+            exist = true;
+            break;
+        }
+
+    }
+    return exist;
+}
+
 const loadHashtags = async(tag, source)=>{
     let apiBase = '/get/settings/by/provider';
-    let apiParams = `establishment=${tag}`;
+    let apiParams = `establishment=${tag}&category=hashtag`;
 
     if (IsValueOkay(source) && source !== 'all') {
         apiParams += `&provider=${source}`;
@@ -640,7 +664,8 @@ const loadHashtags = async(tag, source)=>{
     });
    
     if (response.status == 200) {
-       hashtags.value = response.data
+
+       hashtags.value = removeDuplicates(response.data);
     }
 
 }

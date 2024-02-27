@@ -72,25 +72,31 @@
           </div>
           <ul class="py-2" aria-labelledby="user-menu-button">
 
-            <li @click="closeDropdown" v-if="userStore.user.customer">
+            <li @click="closeDropdown" v-if="checkAccess(userStore.user.roles, 'ROLE_CUSTOMER')">
               <RouterLink :to="`/customer/${userStore.user.customer.tag}/account`"
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                 <i class="uil uil-user-square"></i>
                 Profile
               </RouterLink>
             </li>
-            <li @click="closeDropdown" v-if="userStore.user.customer">
+            <li @click="closeDropdown" v-if="checkAccess(userStore.user.roles, 'ROLE_CUSTOMER')">
               <RouterLink :to="`/customer/${userStore.user.customer.tag}/account/contact`"
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                 <i class="uil uil-envelope"></i>
                 Contacts
               </RouterLink>
             </li>
-            <li @click="closeDropdown" v-if="userStore.user.customer">
+            <li @click="closeDropdown" v-if="checkAccess(userStore.user.roles, 'ROLE_CUSTOMER')">
               <RouterLink :to="`/customer/${userStore.user.customer.tag}/account/parameters`"
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                 <i class="uil uil-setting"></i>
                 Parameters
+              </RouterLink>
+            </li>
+            <li @click="closeDropdown" v-if="checkAccess(userStore.user.roles, 'ROLE_PARTNER')">
+              <RouterLink to="/partner/theme" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <i class="uil uil-swatchbook"></i>
+                Custom theme
               </RouterLink>
             </li>
             <li @click="closeDropdown">
@@ -239,6 +245,10 @@ const showMenu = computed(() => {
   ];
   return routeName.includes(route.name)
 })
+
+const checkAccess = (roles, role)=>{
+  return roles.includes(role)
+}
 
 const isFeedback = computed(() => {
   let routeName = ['FeedBack', 'StaffFeedBack', 'SuccessFeedback', 'EnableAdvContact', 'QRCodeAdvContact', undefined];

@@ -1,6 +1,6 @@
 <template>
     <router-view></router-view>
-     <FooterComponent></FooterComponent>
+     <!-- <FooterComponent></FooterComponent> -->
 </template>
 <script setup>
 import { defineAsyncComponent } from 'vue'
