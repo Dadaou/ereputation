@@ -482,6 +482,8 @@ watch([start_date, end_date, selectedHashtag], async()=>{
     }else{
         if(selectedHashtag.value !== null){
             await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
+        }else{
+            hashtagData.value = []
         }
     }
 })
