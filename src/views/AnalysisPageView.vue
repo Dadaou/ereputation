@@ -12,6 +12,8 @@
                         <Bar :data="data" :options="options" />
                     </div>
                 </div>
+                <BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
+       				</BaseLegend>
                 <!-- <div class="legend-container">
                     <span v-for="(legendValue, index) in legendValues" :key="`legend-badge-${index}`">
                         <span :style="{ 'background-color': legendValue.color }" class="badge"></span>
@@ -185,7 +187,7 @@ import { useAppStore } from "@Stores/app.js";
 import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
-import { ref, watch, onBeforeMount, inject } from 'vue';
+import { ref, watch, onBeforeMount, inject, computed } from 'vue';
 import { ElDatePicker, ElOption, ElSelect } from 'element-plus';
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
@@ -220,6 +222,22 @@ const all_items = ref([
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
 let dataLegends = ref([]);
+const legendData = ref([]);
+
+watch(dataLegends, ()=>{
+	if(dataLegends.value.length>0){
+		dataLegends.value.forEach((category) => {
+	        legendData.value.push({
+	            name: `${category.label}: Average score (${category.avg_score}) / Sentiment analysis: ${category.feeling}`,
+	            color: category.color
+	        });
+	    });
+	}
+
+})
+
+const start_date = inject('start_date');
+const end_date = inject('end_date');
 
 const data = ref({
 	labels:  [
@@ -301,6 +319,42 @@ const loadCategories = async (tag) => {
     }
 }
 
+const loadAnalysisData = async()=>{
+	const data = {
+		labels:  [
+		  '2024-02-15',
+		  '2024-02-16',
+		  '2024-02-17',
+		  '2024-02-18',
+		  '2024-02-19',
+		  '2024-02-20',
+		  '2024-02-21',
+		  '2024-02-22',
+		  '2024-02-23',
+		  '2024-02-24',
+		  '2024-02-25'
+	  ],
+	   datasets: [
+	    {
+	      label: 'Acceuil',
+	      backgroundColor: '#f87979',
+	      data: [4.05, 2.14, 1.20, 3.79, 0.99, 4.32, 3.98, 1.80, 3.46, 2.10, 0.90, 1.11],
+	      avg_score: 4.5, //exemple
+	      feeling: 'positive'
+	    },
+	    {
+	      label: 'Ménage',
+	      backgroundColor: '#587179',
+	      data: [3.45, 1.87, 4.12, 0.93, 2.75, 4.59, 1.23, 3.01, 0.62, 4.38, 2.94, 0.51],
+	      avg_score: 3, //exemple
+	      feeling: 'negative'
+	    }
+	  ],
+	}
+
+	await transformData(data)
+}
+
 const transformData = (data)=>{
 	const {labels, datasets} = data;
 	let plotData = {
@@ -321,9 +375,7 @@ const transformData = (data)=>{
 	})
 
 	data.value = plotData;
-	dataLegends
-
-
+	dataLegends.value = legends
 }
 
 onBeforeMount(async () => {
@@ -363,7 +415,16 @@ onBeforeMount(async () => {
         }
     })
     await loadCategories(companyId)
+    loadAnalysisData()
 });
 
 
 </script>
+<style scoped>
+	.legend{
+		color: black;
+		font-weight: 500;
+		margin-top: 2rem;
+		font-size: 14px;
+	}
+</style>

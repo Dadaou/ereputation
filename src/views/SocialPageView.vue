@@ -488,12 +488,18 @@ watch([start_date, end_date, selectedHashtag], async()=>{
     }
 })
 
+watch(activeName, async()=>{
+selectedHashtag.value = 'All'
+await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
+})
+
 watch([currentSocial, currentHashtagSocial], async()=>{ 
   if(activeName.value == 'socials'){
          await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
     }else{
-        selectedHashtag.value = null
+        selectedHashtag.value = 'All'
         await loadHashtags(companyId, currentHashtagSocial.value.id)
+        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
     }
 })
 
@@ -612,7 +618,7 @@ const loadPostHashtagData = async(tag, source, dateStart, dateEnd, hashtag, page
     }
 
     if (IsValueOkay(hashtag)) {
-        apiParams += `&hashtag=${hashtag.split('-')[0]}`;
+        apiParams += `&hashtag=${hashtag}`;
     }
 
     const api = apiBase + '?' + apiParams;
@@ -674,6 +680,7 @@ const loadHashtags = async(tag, source)=>{
     if (response.status == 200) {
 
        hashtags.value = removeDuplicates(response.data);
+       hashtags.value.unshift({id: 0, value: 'All'})
     }
 
 }
