@@ -477,17 +477,23 @@ const dataLoading = ref(true);
 
 
 watch([start_date, end_date, selectedHashtag], async()=>{
- // await loadSocialData(companyId, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), type.value)
     if(activeName.value == 'socials'){
         await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
     }else{
-        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
+        if(selectedHashtag.value !== null){
+            await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
+        }
     }
 })
 
-// watch(activeName, async()=>{
-//  await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), '', 1, options.value['rowLimit'], 1)
-// })
+watch([currentSocial, currentHashtagSocial], async()=>{ 
+  if(activeName.value == 'socials'){
+         await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
+    }else{
+        selectedHashtag.value = null
+        await loadHashtags(companyId, currentHashtagSocial.value.id)
+    }
+})
 
 const generatedLegend = (colors, dataType) => {
     let legends = [];
@@ -669,17 +675,6 @@ const loadHashtags = async(tag, source)=>{
     }
 
 }
-
-watch([currentSocial, currentHashtagSocial], async()=>{
-  // await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'))  
-  if(activeName.value == 'socials'){
-         await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
-    }else{
-        selectedHashtag.value = null
-        await loadHashtags(companyId, currentHashtagSocial.value.id)
-        // await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), '', 1, options.value['rowLimit'], 1)
-    }
-})
 
 onBeforeMount(async () => {
     appStore.isLoading = true;
