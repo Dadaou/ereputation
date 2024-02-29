@@ -215,6 +215,13 @@ const companyId = route.params.id;
 const dataLoading = ref(true)
 let establishment = ref({});
 const categories = ref([])
+const _categories = computed(()=>{
+	let data= []
+	categories.value.forEach(category=>{
+		data.push(category.category)
+	})
+	return data.join(',')
+})
 const categoryFilters = ref(['all'])
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
@@ -224,23 +231,53 @@ const all_items = ref([
 let dataLegends = ref([]);
 const legendData = ref([]);
 
-watch(dataLegends, ()=>{
-	if(dataLegends.value.length>0){
-		dataLegends.value.forEach((category) => {
-	        legendData.value.push({
-	            name: `${category.label}: Average score (${category.avg_score}) / Sentiment analysis: ${category.feeling}`,
-	            color: category.color
-	        });
-	    });
-	}
-
-})
+// watch(dataLegends, ()=>{
+// 	if(dataLegends.value.length>0){
+// 		dataLegends.value.forEach((category) => {
+// 	        legendData.value.push({
+// 	            name: `${category.label}: Average score (${category.avg_score}) / Sentiment analysis: ${category.feeling}`,
+// 	            color: category.color
+// 	        });
+// 	    });
+// 	}
+// })
 
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 
+// const data = ref({
+// 	labels:  [
+// 	  '2024-02-15',
+// 	  '2024-02-16',
+// 	  '2024-02-17',
+// 	  '2024-02-18',
+// 	  '2024-02-19',
+// 	  '2024-02-20',
+// 	  '2024-02-21',
+// 	  '2024-02-22',
+// 	  '2024-02-23',
+// 	  '2024-02-24',
+// 	  '2024-02-25'
+//   ],
+//    datasets: [
+//     {
+//       label: 'Acceuil',
+//       backgroundColor: '#f87979',
+//       data: [4.05, 2.14, 1.20, 3.79, 0.99, 4.32, 3.98, 1.80, 3.46, 2.10, 0.90, 1.11],
+//       // avg_score: 4.5, //exemple
+//       // feeling: 'positive'
+//     },
+//     {
+//       label: 'Ménage',
+//       backgroundColor: '#587179',
+//       data: [3.45, 1.87, 4.12, 0.93, 2.75, 4.59, 1.23, 3.01, 0.62, 4.38, 2.94, 0.51],
+//       // avg_score: 3, //exemple
+//       // feeling: 'negative'
+//     }
+//   ],
+// })
 const data = ref({
-	labels:  [
+	labels: [
 	  '2024-02-15',
 	  '2024-02-16',
 	  '2024-02-17',
@@ -252,23 +289,8 @@ const data = ref({
 	  '2024-02-23',
 	  '2024-02-24',
 	  '2024-02-25'
-  ],
-   datasets: [
-    {
-      label: 'Acceuil',
-      backgroundColor: '#f87979',
-      data: [4.05, 2.14, 1.20, 3.79, 0.99, 4.32, 3.98, 1.80, 3.46, 2.10, 0.90, 1.11],
-      // avg_score: 4.5, //exemple
-      // feeling: 'positive'
-    },
-    {
-      label: 'Ménage',
-      backgroundColor: '#587179',
-      data: [3.45, 1.87, 4.12, 0.93, 2.75, 4.59, 1.23, 3.01, 0.62, 4.38, 2.94, 0.51],
-      // avg_score: 3, //exemple
-      // feeling: 'negative'
-    }
-  ],
+	],
+	datasets:[]
 })
 
 const options = {
@@ -319,63 +341,109 @@ const loadCategories = async (tag) => {
     }
 }
 
-const loadAnalysisData = async()=>{
-	const data = {
-		labels:  [
-		  '2024-02-15',
-		  '2024-02-16',
-		  '2024-02-17',
-		  '2024-02-18',
-		  '2024-02-19',
-		  '2024-02-20',
-		  '2024-02-21',
-		  '2024-02-22',
-		  '2024-02-23',
-		  '2024-02-24',
-		  '2024-02-25'
-	  ],
-	   datasets: [
-	    {
-	      label: 'Acceuil',
-	      backgroundColor: '#f87979',
-	      data: [4.05, 2.14, 1.20, 3.79, 0.99, 4.32, 3.98, 1.80, 3.46, 2.10, 0.90, 1.11],
-	      avg_score: 4.5, //exemple
-	      feeling: 'positive'
-	    },
-	    {
-	      label: 'Ménage',
-	      backgroundColor: '#587179',
-	      data: [3.45, 1.87, 4.12, 0.93, 2.75, 4.59, 1.23, 3.01, 0.62, 4.38, 2.94, 0.51],
-	      avg_score: 3, //exemple
-	      feeling: 'negative'
-	    }
-	  ],
-	}
+const IsValueOkay = (value)=> (value == '' || value == null || value == undefined || value == [])?false:true;
 
-	await transformData(data)
+const hashString = (inputString) => {
+      let hash = 0;
+      for (let i = 0; i < inputString.length; i++) {
+        hash = (hash << 5) - hash + inputString.charCodeAt(i);
+      }
+      return hash;
 }
 
-const transformData = (data)=>{
-	const {labels, datasets} = data;
+const generateColor = (text) =>{
+      const inputString = text;
+      const hash = hashString(inputString);
+
+      const red = (hash & 0xFF0000) >> 16;
+      const green = (hash & 0x00FF00) >> 8;
+      const blue = hash & 0x0000FF;
+
+      return `rgb(${red}, ${green}, ${blue})`;
+}
+
+const loadAnalysisData = async(tag, dateStart, dateEnd, categories)=>{
+    let apiBase = `get/chart/review/by/etablishment`;
+    let apiParams = `etablishment=${tag}`;
+
+    if (IsValueOkay(dateStart)) {
+      dateStart = moment(dateStart).format('YYYY-MM-DD')
+      apiParams += `&from=${dateStart}`;
+    }
+
+    if (IsValueOkay(dateEnd)) {
+      dateEnd = moment(dateEnd).format('YYYY-MM-DD')
+      apiParams += `&to=${dateEnd}`;
+    }
+
+    if (IsValueOkay(categories) && categories[0] !== 'all') {
+      apiParams += `&category=${categories.join(',')}`;
+    }else{
+       apiParams += `&category=${_categories.value}`;
+    }
+
+    const api = `${apiBase}?${apiParams}`;
+    console.log(api)
+
+    const response = await new Promise((resolve) => {
+        services.get_Record(api, (response) => {
+            resolve(response)
+        });
+    });
+    console.log(response)
+
+    if (response.status == 200) {
+    	console.log(response.data)
+    	const containerBody = document.querySelector('.containerBody');
+        
+        let totalLabels = response.data.lables.length;
+        
+        if (totalLabels > 11) {
+            let new_width = totalLabels * 150
+            containerBody.style.width = `${new_width}px`
+        } else {
+            containerBody.style.width = '';
+        }
+       await transformData(response.data)
+
+    }
+}
+
+watch([categoryFilters, end_date, start_date], async()=>{
+ await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)	
+})
+
+const transformData = (chartData)=>{
+	const {lables, datasets} = chartData;
 	let plotData = {
-		labels: labels,
+		labels: lables,
 		datasets: []
 	}
 	let legends = []
 
 	datasets.forEach(category=>{
 		const {avg_score, feeling, ...dataset} = category 
-		plotData.datasets.push(dataset)
+		plotData.datasets.push({dataset, backgroundColor: generateColor(dataset.label)})
 		legends.push({
 			label: dataset.label,
-			color: dataset.backgroundColor,
+			color: generateColor(dataset.label),
 			avg_score,
 			feeling
 		})
 	})
 
 	data.value = plotData;
-	dataLegends.value = legends
+	console.log(data.value)
+
+	if(legends.length>0){
+		legendData.value = []
+		legends.forEach((category) => {
+	        legendData.value.push({
+	            name: `${category.label}: Average score (${category.avg_score}) / Sentiment analysis: ${category.feeling}`,
+	            color: category.color
+	        });
+	    });
+	}
 }
 
 onBeforeMount(async () => {
@@ -385,7 +453,6 @@ onBeforeMount(async () => {
 
         if (data == false) {
             appStore.setIsExist(false);
-            appStore.isLoading = false;
         }
         else {
             establishment.value = data;
@@ -415,7 +482,8 @@ onBeforeMount(async () => {
         }
     })
     await loadCategories(companyId)
-    loadAnalysisData()
+    await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
+     appStore.isLoading = false;
 });
 
 
