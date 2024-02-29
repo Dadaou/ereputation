@@ -93,7 +93,7 @@
                 </div>
                  <div class="reviews__pagination mb-4">
                             <PaginationComponent 
-                            v-if="posts.length > 0"
+                            v-if="hashtagData.length > 0"
                             :options="options" 
                             @next="(option) => {
                             loadPostHashtagData(companyId, currentHashtagSocial.name, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), selectedHashtag, option.page, option.limit, option.current)
@@ -127,7 +127,7 @@
                         no social tag data available
                     </div>
                     <PaginationComponent 
-                            v-if="posts.length > 0"
+                            v-if="hashtagData.length > 0"
                             :options="options" 
                             @next="(option) => {
                             loadPostHashtagData(companyId, currentHashtagSocial.name, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), selectedHashtag, option.page, option.limit, option.current)
@@ -485,9 +485,9 @@ watch([start_date, end_date, selectedHashtag], async()=>{
     }
 })
 
-watch(activeName, async()=>{
- await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), '', 1, options.value['rowLimit'], 1)
-})
+// watch(activeName, async()=>{
+//  await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), '', 1, options.value['rowLimit'], 1)
+// })
 
 const generatedLegend = (colors, dataType) => {
     let legends = [];
@@ -675,9 +675,9 @@ watch([currentSocial, currentHashtagSocial], async()=>{
   if(activeName.value == 'socials'){
          await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
     }else{
+        selectedHashtag.value = null
         await loadHashtags(companyId, currentHashtagSocial.value.id)
-        
-        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), '', 1, options.value['rowLimit'], 1)
+        // await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), '', 1, options.value['rowLimit'], 1)
     }
 })
 

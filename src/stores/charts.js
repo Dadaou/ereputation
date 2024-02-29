@@ -27,6 +27,7 @@ export const useChartsStore = defineStore(
       }
 
       const api = apiBase + '?' + apiParams
+      console.log(api)
       await services.get_Record(api, (response) => {
         if (response && response.status == 200) {
           next(response)
