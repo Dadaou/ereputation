@@ -11,7 +11,13 @@
                     <img :src="scope.row.media">
                 </template>
             </el-table-column>
-            <el-table-column label="Name" prop="name" style="width: 25%; min-width: 200px;" />
+            <el-table-column label="Name" prop="name" style="width: 25%; min-width: 200px;">
+                <template #default="scope">
+                  <el-tooltip :content="`Click to enter ${scope.row.name}'s page`" placement="top">
+                    <h1 class="establishment_name" @click="goToCompany(route.params.tag, scope.row.tag)">{{scope.row.name}}</h1>
+                  </el-tooltip>
+                </template>
+            </el-table-column>
             <el-table-column label="Category" prop="category" style="width: 15%; min-width: 200px;" />
             <el-table-column label="Address" prop="address" style="width: 25%; min-width: 200px;" />
             <el-table-column label="Country" prop="country" style="width: 15%; min-width: 200px;" />
@@ -85,13 +91,14 @@
 <script setup>
 import { computed, defineAsyncComponent, ref, onBeforeMount, watch } from 'vue'
 import { useUserStore } from "@Stores/user.js"
+import { useAppStore } from "@Stores/app.js";
 import {
     ElMessage,
     ElTable,
     ElTableColumn,
     ElPopconfirm,
     ElButton,
-    ElInput, ElOption, ElSelect, ElDatePicker
+    ElInput, ElOption, ElSelect, ElDatePicker, ElTooltip
 } from 'element-plus'
 import { useWindowSize } from '@vueuse/core';
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
@@ -106,8 +113,9 @@ import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
+import 'element-plus/es/components/tooltip/style/css'
 import VueQrious from 'vue-qrious';
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const ModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/ModalComponent.vue')
@@ -116,6 +124,7 @@ const ModalComponent = defineAsyncComponent(() =>
 const emit = defineEmits(['edit', 'setEnable', 'setDisable']);
 
 const userStore = useUserStore();
+const appStore = useAppStore();
 const { width, height } = useWindowSize();
 const modalWidth = computed(() => {
     let windowSize = 1500;
@@ -123,6 +132,7 @@ const modalWidth = computed(() => {
     return gap + 45;
 });
 const route = useRoute()
+const router = useRouter()
 const showModal = ref(false);
 const showLinkModal = ref(false);
 const providers = ref([]);
@@ -181,6 +191,19 @@ const filteredProviders = computed(() => {
     let data = providers.value;
     return data.filter(item => item.category == category.value);
 })
+
+const goToCompany = (customerTag, establishmentTag) => {
+    appStore.isLoading = true;
+    setTimeout(() => {
+        router.push({
+            name: 'Establishment',
+            params: {
+                id: establishmentTag,
+                tag: customerTag
+            },
+        });
+    }, 100);
+}
 
 const urlPattern = (urlTemplate) => {
     let regexPattern = urlTemplate.replace(/[\-\[\]\/\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
@@ -353,6 +376,12 @@ onBeforeMount(async () => {
 });
 </script>
 <style scoped>
+
+.establishment_name{
+    cursor: pointer;
+    font-weight: 500;
+}
+
 button {
     border: none;
     cursor: pointer;

@@ -81,7 +81,7 @@
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
                         <div class="author__email">
-                            <span>
+                            <span v-if="randomAdvantage">
                                 <i class="uil uil-info-circle"></i> {{ $t("feedback.indice1") }}
                             </span>
                             <p v-if="randomAdvantage">
@@ -228,26 +228,8 @@ onBeforeMount(async () => {
 
         if (response.status == 404) exist.value = false
     });
-
-    try {
-        const response = await new Promise((resolve) => {
-            services.get_Record(`customer/establishments/advantages?tag=${route.params.tag}`, (response) => {
-                resolve(response);
-            });
-        });
-
-        if (response.status === 200) {
-            allAdvantages.value = response.data;
-
-            if (allAdvantages.value.length > 0) {
-                allAdvantages.value = allAdvantages.value.filter(adv => adv.establishment_tag == route.
-                    params.etab);
-                randomAdvantage.value = allAdvantages.value[getRandomValue(allAdvantages.value.length)];
-            }
-        }
-    } catch (error) {
-        console.error(error);
-    }
+    
+    randomAdvantage.value = await feedbackStore.getRandomAdvantage(route.params.tag, route.params.etab)
 
     try {
         const responseEstablishment = await new Promise((resolve) => {

@@ -6,14 +6,18 @@
             </div>
         </div>
        <div id="ttv__container" style="margin-top: 25px;">
+       		<p class="mb-4">
+        		Below are two sets of graphs representing score and rating of all reviews.
+        		The first set illustrates ratings from all reviews, while the second set displays scores from all reviews and comments combined.
+        	</p>
             <div class="chartBox">
                 <div class="containerChart">
                     <div class="containerBody">
                         <Bar :data="data" :options="options" />
                     </div>
                 </div>
-                <BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
-       				</BaseLegend>
+                <!-- <BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
+       				</BaseLegend> -->
                 <!-- <div class="legend-container">
                     <span v-for="(legendValue, index) in legendValues" :key="`legend-badge-${index}`">
                         <span :style="{ 'background-color': legendValue.color }" class="badge"></span>
@@ -21,6 +25,37 @@
                     </span>
                 </div> -->
             </div>
+        </div>
+
+        <div id="ttv__container" style="margin-top: 25px;">
+            <div class="chartBox">
+                <div class="containerChart">
+                    <div class="containerBody2">
+                        <Bar :data="newdata" :options="newOptions" />
+                    </div>
+                </div>
+                <BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
+       				</BaseLegend>
+            </div>
+        </div>
+        <div class="head w-full">
+            <div class="app__title">
+                <h2>Synthesis</h2>
+            </div>
+        </div>
+
+        <div id="ttv__container" style="margin-top: 25px;">
+        	<!-- <p class="mb-4">
+        		In this part, we present the summurization of all graphs presented above. The graph below illustrate the gloabl value of 
+        		scores and the sentiment analysis.
+        	</p> -->
+            <!-- <div class="chartBox">
+                <div class="containerChart">
+                    <div class="containerBody3">
+                        <Pie :options="chartOptions" :data="chartData"/>
+                    </div>
+                </div>
+            </div> -->
         </div>
         
     </div>
@@ -198,10 +233,12 @@ import {
   Legend,
   BarElement,
   CategoryScale,
-  LinearScale
+  LinearScale,
+  ArcElement
 } from 'chart.js'
-import { Bar } from 'vue-chartjs'
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+
+import { Bar, Pie } from 'vue-chartjs'
+ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale, LinearScale, BarElement)
 
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
@@ -245,37 +282,69 @@ const legendData = ref([]);
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 
-// const data = ref({
-// 	labels:  [
-// 	  '2024-02-15',
-// 	  '2024-02-16',
-// 	  '2024-02-17',
-// 	  '2024-02-18',
-// 	  '2024-02-19',
-// 	  '2024-02-20',
-// 	  '2024-02-21',
-// 	  '2024-02-22',
-// 	  '2024-02-23',
-// 	  '2024-02-24',
-// 	  '2024-02-25'
-//   ],
-//    datasets: [
-//     {
-//       label: 'Acceuil',
-//       backgroundColor: '#f87979',
-//       data: [4.05, 2.14, 1.20, 3.79, 0.99, 4.32, 3.98, 1.80, 3.46, 2.10, 0.90, 1.11],
-//       // avg_score: 4.5, //exemple
-//       // feeling: 'positive'
-//     },
-//     {
-//       label: 'Ménage',
-//       backgroundColor: '#587179',
-//       data: [3.45, 1.87, 4.12, 0.93, 2.75, 4.59, 1.23, 3.01, 0.62, 4.38, 2.94, 0.51],
-//       // avg_score: 3, //exemple
-//       // feeling: 'negative'
-//     }
-//   ],
-// })
+const newdataTest = ref({
+	labels:  [
+	  '2024-02-15',
+	  '2024-02-16',
+	  '2024-02-17',
+	  '2024-02-18',
+	  '2024-02-19',
+	  '2024-02-20',
+	  '2024-02-21',
+	  '2024-02-22',
+	  '2024-02-23',
+	  '2024-02-24',
+	  '2024-02-25'
+  ],
+   datasets: [
+    {
+      label: 'Acceuil',
+      backgroundColor: '#f87979',
+      data: [2.34, 4.12, 0.87, 3.45, 1.23, 5.00, 2.76, 0.98, 4.56, 3.21, 1.67, 4.89],
+      scores: [-0.45, 0.88, -0.12, 0.34, -0.76, 0.65, -0.33, 0.91, -0.58, 0.09, -0.97, 0.43],
+      avg_score: 0.5, // Par exemple, score globale
+      feeling: 'positive', //sentiment analysis [negative, neutre, positive]
+
+    },
+    {
+      label: 'Ménage',
+      backgroundColor: '#587179',
+      data: [1.72, 3.25, 4.11, 0.89, 2.45, 0.37, 4.98, 2.10, 3.76, 1.43, 0.56, 5.00],
+      scores: [0.45, 0.87, -0.12, 0.93, 0.75, -0.59, 0.23, 0.01, 0.62, 0.38, 0.94, -0.51],
+      avg_score: 0.75, // Par exemple, score globale
+      feeling: 'positive', //sentiment analysis [negative, neutre, positive]
+    }
+  ],
+})
+
+const newdata = ref({
+	labels:  [
+	  '2024-02-15',
+	  '2024-02-16',
+	  '2024-02-17',
+	  '2024-02-18',
+	  '2024-02-19',
+	  '2024-02-20',
+	  '2024-02-21',
+	  '2024-02-22',
+	  '2024-02-23',
+	  '2024-02-24',
+	  '2024-02-25'
+  ],
+   datasets: [
+    {
+      label: 'Acceuil',
+      backgroundColor: '#f87979',
+      data: [-0.45, 0.88, -0.12, 0.34, -0.76, 0.65, -0.33, 0.91, -0.58, 0.09, -0.97, 0.43],
+    },
+    {
+      label: 'Ménage',
+      backgroundColor: '#587179',
+      data: [0.45, 0.87, -0.12, 0.93, 0.75, -0.59, 0.23, 0.01, 0.62, 0.38, 0.94, -0.51],
+    }
+  ],
+})
+
 const data = ref({
 	labels: [
 	  '2024-02-15',
@@ -290,13 +359,74 @@ const data = ref({
 	  '2024-02-24',
 	  '2024-02-25'
 	],
-	datasets:[]
+	datasets:[
+		{
+	      label: 'Acceuil',
+	      backgroundColor: '#f87979',
+	      data: [2.34, 4.12, 0.87, 3.45, 1.23, 5.00, 2.76, 0.98, 4.56, 3.21, 1.67, 4.89],
+	    },
+	    {
+	      label: 'Ménage',
+	      backgroundColor: '#587179',
+	      data: [1.72, 3.25, 4.11, 0.89, 2.45, 0.37, 4.98, 2.10, 3.76, 1.43, 0.56, 5.00],
+	    }
+	]
 })
+
+const newOptions = {
+    // responsive: false,
+    maintainAspectRatio: false,
+    // aspectRatio: 2,
+    scales: {
+        y: {
+            suggestedMin: -1, // suggère une valeur minimale pour l'axe Y
+            suggestedMax: 1, // suggère une valeur maximale pour l'axe Y
+            // Assure que l'axe Y commence à -1 et se termine à 1
+            ticks: {
+                stepSize: 1, // Définit l'intervalle des graduations sur l'axe Y
+                    callback: function(value, index, values) {
+                        // Affiche uniquement les valeurs 1, 0 et -1
+                        return value === 1 || value === 0 || value === -1 ? value : '';
+                    }
+            }
+        }
+    },
+    plugins: {
+        legend: {
+            display: false,
+            // position: 'bottom'
+        },
+        zoom: {
+            pan: {
+                enabled: true,
+                mode: 'x',
+            },
+            zoom: {
+                wheel: {
+                    enabled: true,
+                },
+                pinch: {
+                    enabled: true,
+                },
+                mode: 'x',
+            }
+        }
+    }
+};
 
 const options = {
     // responsive: false,
     maintainAspectRatio: false,
     // aspectRatio: 2,
+    scales: {
+        y: {
+            suggestedMin: 5,
+            suggestedMax: 0,
+            ticks: {
+                stepSize: 1,
+            }
+        }
+    },
     plugins: {
         legend: {
             display: false,
@@ -482,17 +612,18 @@ onBeforeMount(async () => {
         }
     })
     await loadCategories(companyId)
-    await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
+    // await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
      appStore.isLoading = false;
 });
 
 
 </script>
 <style scoped>
-	.legend{
+	.legend, p{
 		color: black;
 		font-weight: 500;
 		margin-top: 2rem;
 		font-size: 14px;
 	}
+
 </style>

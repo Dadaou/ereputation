@@ -15,6 +15,34 @@ export const useFeedbackStore = defineStore("feedback", {
             await services.patchRecord(this.entity, id, review, (response)=>{
                 next(response);
             });
-        }
-    },
+        },
+        isBeforeTargetDate(expiredDate) {
+            var currentDate = new Date();
+            var targetDate = new Date(expiredDate);
+            return currentDate < targetDate;
+        },
+
+        getRandomValue(n) {
+            return Math.floor(Math.random() * n);
+        },
+
+        async getRandomAdvantage(tag, id){
+            const response = await new Promise((resolve) => {
+                    services.get_Record(`customer/establishments/advantages?tag=${tag}`, (response) => {
+                        resolve(response);
+                    });
+            });
+
+            if (response.status === 200) {
+                let allAdvantages = response.data;
+
+                if (allAdvantages.length > 0) {
+                    allAdvantages = allAdvantages.filter(adv => (adv.establishment_tag == id && adv.enable == true && this.isBeforeTargetDate(adv.expired_at)));
+                    return allAdvantages[this.getRandomValue(allAdvantages.length)];
+                }
+            }
+
+            return null 
+        },
+    }
 })

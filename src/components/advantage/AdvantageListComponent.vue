@@ -15,7 +15,7 @@
       <el-table-column label="Validity" prop="validity" style="width: 10%; min-width: 200px;" align="center" />
       <el-table-column label="Expired At" style="width: 10%; min-width: 200px;" >
          <template #default="scope">
-                  {{moment(scope.row.expiredAt).format('YYYY-MM-DD')}}
+                  {{moment(scope.row.expired_at).format('YYYY-MM-DD')}}
          </template>
       </el-table-column>
       <el-table-column label="Enable" style="width: 10%; min-width: 200px;" align="center">
@@ -72,6 +72,7 @@ const reloadData = (advantageToRemove) => {
 };
 
 const handleEdit = (index, advantages) => {
+  console.log(advantages)
   emit('edit', advantages);
 };
 

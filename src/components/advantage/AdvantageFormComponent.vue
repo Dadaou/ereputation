@@ -142,7 +142,7 @@ watch(advantage_to_update, ()=>{
         validity.value = advantage_to_update.value["validity"];
         amount.value = advantage_to_update.value["amount"];
         advantageName.value = advantage_to_update.value["name"];
-        establishment.value = `${advantage_to_update.value['establishment_iri']},${advantage_to_update.value['establishment_name']}`
+        establishment.value = `/api/establishments/${advantage_to_update.value['establishment_id']},${advantage_to_update.value['establishment_name']}`
         type.value = 'edit';
     }
 })
@@ -159,7 +159,8 @@ const loadData = (_advantage, advantage, establishment_name) => {
           metric: _advantage.metric,           
           scope: _advantage.scope,                           
           expired_at: moment(_advantage.expiredAt).format('YYYY-MM-DD'),
-          establishment_name : establishment_name, 
+          establishment_name : establishment_name,
+          enable: true
   }
   advantages.value.push(new_advantage);
   activeAdvantageTab.value = 'advantage_list'
@@ -176,7 +177,8 @@ const updateData = (_advantage, establishment_name)=>{
           metric: _advantage.metric,           
           scope: _advantage.scope,                           
           expired_at: moment(_advantage.expiredAt).format('YYYY-MM-DD'),
-          establishment_name : establishment_name, 
+          establishment_name : establishment_name,
+          enable: true 
       }
 
       console.log(new_advantage);
@@ -190,7 +192,7 @@ const updateData = (_advantage, establishment_name)=>{
         "category": category.value,
         "code": code.value,
         "name": advantageName.value,
-        "amount": amount.value,
+        "amount": parseFloat(amount.value),
         "metric": metric.value,
         "scope": scope.value,
         "validity": validity.value,
@@ -237,6 +239,7 @@ const updateData = (_advantage, establishment_name)=>{
                         resolve(response);
                     });
                 });
+                console.log(response)
                 
                 if (response.status === 200) {
                     ElMessage({
@@ -244,7 +247,7 @@ const updateData = (_advantage, establishment_name)=>{
                         type: 'success',
                     });
                     updateData(response.data, establishment.value.split(",")[1]);
-                     category.value = '';
+                    category.value = '';
                     code.value = '';
                     advantageName.value = '';
                     amount.value = '';

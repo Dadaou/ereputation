@@ -135,7 +135,6 @@
                             @prev="(option) => {
                             loadPostHashtagData(companyId, currentHashtagSocial.name, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), selectedHashtag, option.page, option.limit, option.current)
                             }" />
-                
             </el-tab-pane>
           </el-tabs>
     </div>
