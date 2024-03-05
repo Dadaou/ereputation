@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, defineAsyncComponent } from 'vue'
+import { ref, watch, onMounted, defineAsyncComponent, inject } from 'vue'
 import HeadComponent from '@Components/layouts/HeadComponent.vue'
 import { useUserStore } from "@Stores/user.js"
 import { useRouter, useRoute } from "vue-router"
@@ -43,6 +43,7 @@ const AlertComponent = defineAsyncComponent(() =>
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
+const app_url = inject('app_url')
 
 const page = ref({
     title1: "",
@@ -72,6 +73,7 @@ const submit = async () => {
 		form.value.password, 
 		form.value.confirmation,
 		route.params.token,
+        app_url.value,
 		(response) => {
 			console.log(response)
 			isError.value = true;

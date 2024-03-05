@@ -34,8 +34,10 @@
             :y-tick-format="d => `${d}`" />
        <div id="chartEvents" style="min-height: 60px; width: 100%; position: relative;"></div>
 	</div>
-	<div>
+	<div class="chartLegend">
 		<BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
+        </BaseLegend>
+    <BaseLegend class="legend" :LegendData="legendDataPublic" :alignment="'vertical'">
         </BaseLegend>
 	</div>
 </template>
@@ -138,9 +140,9 @@ const legendData = computed(() => {
 
     dates.forEach((date) => {
         date.events.forEach((event) => {
-            if (!nameSet.has(event.name)) {
+            if (!nameSet.has(event.name) && !event.isPublic) {
                 data.push({
-                    name: event.isPublic?`${props.establishment.locality_name}: ${event.name}`:event.name,
+                    name: event.name,
                     color: `${generateColor(event.name)}`
                 });
                 nameSet.add(event.name);
@@ -150,6 +152,24 @@ const legendData = computed(() => {
     return data;
 });
 
+const legendDataPublic = computed(() => {
+    let dates = plotdata.value.events_per_date;
+    let nameSet = new Set();
+    let data = [];
+
+    dates.forEach((date) => {
+        date.events.forEach((event) => {
+            if (!nameSet.has(event.name) && event.isPublic) {
+                data.push({
+                    name: `${props.establishment.locality_name}: ${event.name}`,
+                    color: `${generateColor(event.name)}`
+                });
+                nameSet.add(event.name);
+            }
+        });
+    });
+    return data;
+});
 
 const hashString = (inputString) => {
       let hash = 0;
@@ -257,4 +277,9 @@ watch([date, type],async()=>{
 	    height: 10px !important; 
 	    background-color: white;
 	}
+
+  .chartLegend{
+    display: flex;
+    justify-content: space-between;
+  }
 </style>

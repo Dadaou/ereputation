@@ -281,7 +281,7 @@
 </template>
 
 <script setup>
-import { ref, provide, onBeforeMount, defineAsyncComponent } from 'vue';
+import { ref, provide, onBeforeMount, defineAsyncComponent, inject } from 'vue';
 import { ElTabs, ElTabPane } from 'element-plus';
 import PlanCard from '@Components/subscription/PlanCard.vue';
 import SubscriptionSummary from '@Components/subscription/SubscriptionSummary.vue';
@@ -304,6 +304,8 @@ const SpinnerComponent = defineAsyncComponent(() =>
 const planInfo = ref({});
 const showSpinner = ref(false)
 const userCreated = ref(false)
+const app_url = inject('app_url');
+console.log(`app url : ${app_url.value}`)
 
 const submitUserForm = async () => {
   showSpinner.value = true;
@@ -437,7 +439,7 @@ const subscribe = async () => {
       if (result.paymentIntent.status === 'succeeded') {
         displaySuccess.textContent = 'Payment send with success.';
         card.clear();
-        activateAccount();
+        activateAccount(app_url.value);
 
         displaySuccess.textContent = '';
       }
@@ -449,7 +451,7 @@ const subscribe = async () => {
   }
 }
 
-const activateAccount = async () => {
+const activateAccount = async (app_url) => {
   const response = await new Promise((resolve) => {
     services.post_Record('/subscription/create', {
       customer: planInfo.value.customer,
@@ -458,7 +460,8 @@ const activateAccount = async () => {
       email: planInfo.value.uEmail,
       updated_at: moment().format('YYYY-MM-DD'),
       expired_at: moment().add(366, 'days').format('YYYY-MM-DD'),
-      card_name: planInfo.value.cardName
+      card_name: planInfo.value.cardName,
+      app_url: app_url
     }, (response) => {
       resolve(response)
     }, true);

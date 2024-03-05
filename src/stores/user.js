@@ -6,19 +6,9 @@ export const useUserStore = defineStore(
   'user',
   () => {
     const user = ref(null)
-    // const users = ref([])
     const authenticated = ref(localStorage.getItem('user_authenticated'))
     const entity = ref('users')
     const customer = ref(null)
-
-    // const fetchAll = async (next) => {
-    //   await services.getRecords(this.entity, (response) => {
-    //     if (response.status == 200) {
-    //       users.value = response.data['hydra:member']
-    //       next(response)
-    //     }
-    //   })
-    // }
 
     const signIn = async (email, password, next) => {
       const response = await services.login(email, password)
@@ -45,19 +35,20 @@ export const useUserStore = defineStore(
       services.logout()
     }
 
-    const verifyPassword = async (email, next) => {
-      await services.post_Record('password/reset', { email: email }, (response) => {
+    const verifyPassword = async (email, app_url, next) => {
+      await services.post_Record('password/reset', { email: email, app_url: app_url }, (response) => {
         console.log(response)
         next(response)
       })
     }
 
-    const resetPassword = async (password, confirmation, token, next) => {
+    const resetPassword = async (password, confirmation, token, app_url, next) => {
       await services.post_Record(
         `/reinitialiser-mot-de-pass/${token}`,
         {
           password: password,
-          confirmation: confirmation
+          confirmation: confirmation,
+          app_url: app_url 
         },
         (response) => {
           console.log(response)

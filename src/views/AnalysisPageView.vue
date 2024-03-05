@@ -13,51 +13,20 @@
             <div class="chartBox">
                 <div class="containerChart">
                     <div class="containerBody">
-                        <Bar :data="data" :options="options" />
+                        <Bar :data="ratingChart" id="rating" :options="options" />
                     </div>
-                </div>
-                <!-- <BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
-       				</BaseLegend> -->
-                <!-- <div class="legend-container">
-                    <span v-for="(legendValue, index) in legendValues" :key="`legend-badge-${index}`">
-                        <span :style="{ 'background-color': legendValue.color }" class="badge"></span>
-                        <span class="title">{{ legendValue.label }}</span>
-                    </span>
-                </div> -->
-            </div>
-        </div>
 
-        <div id="ttv__container" style="margin-top: 25px;">
-            <div class="chartBox">
-                <div class="containerChart">
                     <div class="containerBody2">
-                        <Bar :data="newdata" :options="newOptions" />
+                        <Bar :data="confidenceChart" id="confidence" :options="newOptions" />
                     </div>
                 </div>
+               <!--  <div class="loaded" v-if="isLoading">
+                	<SpinnerComponent :size="'large'" />
+                </div> -->
                 <BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
-       				</BaseLegend>
+       				</BaseLegend> 
             </div>
         </div>
-        <div class="head w-full">
-            <div class="app__title">
-                <h2>Synthesis</h2>
-            </div>
-        </div>
-
-        <div id="ttv__container" style="margin-top: 25px;">
-        	<!-- <p class="mb-4">
-        		In this part, we present the summurization of all graphs presented above. The graph below illustrate the gloabl value of 
-        		scores and the sentiment analysis.
-        	</p> -->
-            <!-- <div class="chartBox">
-                <div class="containerChart">
-                    <div class="containerBody3">
-                        <Pie :options="chartOptions" :data="chartData"/>
-                    </div>
-                </div>
-            </div> -->
-        </div>
-        
     </div>
     
     <div class="tablet_mobile__filter">
@@ -222,7 +191,7 @@ import { useAppStore } from "@Stores/app.js";
 import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
-import { ref, watch, onBeforeMount, inject, computed } from 'vue';
+import { ref, watch, onBeforeMount, inject, computed, defineAsyncComponent } from 'vue';
 import { ElDatePicker, ElOption, ElSelect } from 'element-plus';
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
@@ -240,6 +209,10 @@ import {
 import { Bar, Pie } from 'vue-chartjs'
 ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale, LinearScale, BarElement)
 
+const SpinnerComponent = defineAsyncComponent(() =>
+  import('@Components/utils/SpinnerComponent.vue')
+)
+
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 
@@ -250,6 +223,7 @@ const route = useRoute();
 
 const companyId = route.params.id;
 const dataLoading = ref(true)
+const isLoading = ref(true)
 let establishment = ref({});
 const categories = ref([])
 const _categories = computed(()=>{
@@ -278,74 +252,9 @@ const legendData = ref([]);
 // 	    });
 // 	}
 // })
-
 const start_date = inject('start_date');
 const end_date = inject('end_date');
-
-const newdataTest = ref({
-	labels:  [
-	  '2024-02-15',
-	  '2024-02-16',
-	  '2024-02-17',
-	  '2024-02-18',
-	  '2024-02-19',
-	  '2024-02-20',
-	  '2024-02-21',
-	  '2024-02-22',
-	  '2024-02-23',
-	  '2024-02-24',
-	  '2024-02-25'
-  ],
-   datasets: [
-    {
-      label: 'Acceuil',
-      backgroundColor: '#f87979',
-      data: [2.34, 4.12, 0.87, 3.45, 1.23, 5.00, 2.76, 0.98, 4.56, 3.21, 1.67, 4.89],
-      scores: [-0.45, 0.88, -0.12, 0.34, -0.76, 0.65, -0.33, 0.91, -0.58, 0.09, -0.97, 0.43],
-      avg_score: 0.5, // Par exemple, score globale
-      feeling: 'positive', //sentiment analysis [negative, neutre, positive]
-
-    },
-    {
-      label: 'Ménage',
-      backgroundColor: '#587179',
-      data: [1.72, 3.25, 4.11, 0.89, 2.45, 0.37, 4.98, 2.10, 3.76, 1.43, 0.56, 5.00],
-      scores: [0.45, 0.87, -0.12, 0.93, 0.75, -0.59, 0.23, 0.01, 0.62, 0.38, 0.94, -0.51],
-      avg_score: 0.75, // Par exemple, score globale
-      feeling: 'positive', //sentiment analysis [negative, neutre, positive]
-    }
-  ],
-})
-
-const newdata = ref({
-	labels:  [
-	  '2024-02-15',
-	  '2024-02-16',
-	  '2024-02-17',
-	  '2024-02-18',
-	  '2024-02-19',
-	  '2024-02-20',
-	  '2024-02-21',
-	  '2024-02-22',
-	  '2024-02-23',
-	  '2024-02-24',
-	  '2024-02-25'
-  ],
-   datasets: [
-    {
-      label: 'Acceuil',
-      backgroundColor: '#f87979',
-      data: [-0.45, 0.88, -0.12, 0.34, -0.76, 0.65, -0.33, 0.91, -0.58, 0.09, -0.97, 0.43],
-    },
-    {
-      label: 'Ménage',
-      backgroundColor: '#587179',
-      data: [0.45, 0.87, -0.12, 0.93, 0.75, -0.59, 0.23, 0.01, 0.62, 0.38, 0.94, -0.51],
-    }
-  ],
-})
-
-const data = ref({
+const ratingChart = ref({
 	labels: [
 	  '2024-02-15',
 	  '2024-02-16',
@@ -359,18 +268,24 @@ const data = ref({
 	  '2024-02-24',
 	  '2024-02-25'
 	],
-	datasets:[
-		{
-	      label: 'Acceuil',
-	      backgroundColor: '#f87979',
-	      data: [2.34, 4.12, 0.87, 3.45, 1.23, 5.00, 2.76, 0.98, 4.56, 3.21, 1.67, 4.89],
-	    },
-	    {
-	      label: 'Ménage',
-	      backgroundColor: '#587179',
-	      data: [1.72, 3.25, 4.11, 0.89, 2.45, 0.37, 4.98, 2.10, 3.76, 1.43, 0.56, 5.00],
-	    }
-	]
+	datasets: []
+})
+
+const confidenceChart = ref({
+	labels: [
+	  '2024-02-15',
+	  '2024-02-16',
+	  '2024-02-17',
+	  '2024-02-18',
+	  '2024-02-19',
+	  '2024-02-20',
+	  '2024-02-21',
+	  '2024-02-22',
+	  '2024-02-23',
+	  '2024-02-24',
+	  '2024-02-25'
+	],
+	datasets: []
 })
 
 const newOptions = {
@@ -493,6 +408,7 @@ const generateColor = (text) =>{
 }
 
 const loadAnalysisData = async(tag, dateStart, dateEnd, categories)=>{
+	isLoading.value = true
     let apiBase = `get/chart/review/by/etablishment`;
     let apiParams = `etablishment=${tag}`;
 
@@ -524,18 +440,22 @@ const loadAnalysisData = async(tag, dateStart, dateEnd, categories)=>{
 
     if (response.status == 200) {
     	console.log(response.data)
+    	isLoading.value = false
     	const containerBody = document.querySelector('.containerBody');
+    	const containerBody2 = document.querySelector('.containerBody2');
+    	
         
-        let totalLabels = response.data.lables.length;
+        let totalLabels = response.data.labels.length;
         
-        if (totalLabels > 11) {
-            let new_width = totalLabels * 150
+        if (totalLabels > 11 && containerBody2 && containerBody) {
+            let new_width = totalLabels * 75 * response.data.datasets.length
             containerBody.style.width = `${new_width}px`
+            containerBody2.style.width = `${new_width}px`
         } else {
             containerBody.style.width = '';
+            containerBody2.style.width = '';
         }
        await transformData(response.data)
-
     }
 }
 
@@ -544,26 +464,49 @@ watch([categoryFilters, end_date, start_date], async()=>{
 })
 
 const transformData = (chartData)=>{
-	const {lables, datasets} = chartData;
-	let plotData = {
-		labels: lables,
+	const {labels, datasets} = chartData;
+	//scores or confidence chart
+	let plotData1 = {
+		labels: labels,
 		datasets: []
 	}
+
+	//rating chart
+	let plotData2 = {
+		labels: labels,
+		datasets: []
+	}
+
 	let legends = []
 
 	datasets.forEach(category=>{
-		const {avg_score, feeling, ...dataset} = category 
-		plotData.datasets.push({dataset, backgroundColor: generateColor(dataset.label)})
+		const {avg_score, feeling, scores, data, label} = category 
+		const color = generateColor(label)
+		plotData1.datasets.push({
+			label: label, 
+			backgroundColor: color,
+			data: scores,
+			fill: false
+		})
+
+		plotData2.datasets.push({
+			label: label, 
+			backgroundColor: color,
+			data: data,
+			fill: false
+		})
+
 		legends.push({
-			label: dataset.label,
-			color: generateColor(dataset.label),
+			label: label,
+			color: color,
 			avg_score,
 			feeling
 		})
 	})
 
-	data.value = plotData;
-	console.log(data.value)
+	ratingChart.value = plotData2;
+	confidenceChart.value = plotData1;
+	console.log(plotData2)
 
 	if(legends.length>0){
 		legendData.value = []
@@ -612,18 +555,30 @@ onBeforeMount(async () => {
         }
     })
     await loadCategories(companyId)
-    // await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
+    await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
      appStore.isLoading = false;
 });
 
 
 </script>
 <style scoped>
+
+    .loaded{
+    	display: flex;
+    	justify-content: center;
+    	align-items: center;
+    	height: 400px;
+    	background: grey;
+    }
 	.legend, p{
 		color: black;
 		font-weight: 500;
 		margin-top: 2rem;
 		font-size: 14px;
 	}
+
+	/*.containerBody{
+		height: 500px !important;
+	}*/
 
 </style>

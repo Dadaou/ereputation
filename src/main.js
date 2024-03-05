@@ -1,7 +1,7 @@
 import '@Assets/main.css'
 import 'vuesalize/dist/vuesalize.css'
 
-import { createApp } from 'vue'
+import { createApp , ref} from 'vue'
 import { createPinia } from 'pinia'
 import Vuesalize from 'vuesalize'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
@@ -17,7 +17,9 @@ if(lg ==null)
     localStorage.setItem("langue","EN")
 
 const app = createApp(App)
+const baseurl = ref(window.location.origin)
 app.provide('tag', '');
+app.provide('app_url', baseurl)
 export const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
 app.use(pinia)

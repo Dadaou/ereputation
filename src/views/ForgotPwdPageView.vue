@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, defineAsyncComponent } from 'vue'
+import { ref, watch, onMounted, defineAsyncComponent, inject } from 'vue'
 import HeadComponent from '@Components/layouts/HeadComponent.vue'
 import { useUserStore } from "@Stores/user.js"
 import { useWindowSize } from '@vueuse/core'
@@ -43,6 +43,7 @@ const AlertComponent = defineAsyncComponent(() =>
     import('@Components/utils/AlertComponent.vue')
 )
 const userStore = useUserStore();
+const app_url = inject('app_url')
 
 const page = ref({
     title1: "",
@@ -65,9 +66,8 @@ const showSpinner = ref(false)
 
 const submit = async () =>{
 	showSpinner.value = true;
-	console.log(form.value.email)
 	services.setURL(import.meta.env.VITE_APP_URL)
-	await userStore.verifyPassword(form.value.email, (response)=>{
+	await userStore.verifyPassword(form.value.email, app_url.value, (response)=>{
 		isError.value = true;
 		notification.value.message = (response.status == 202)?"Thank you, an email containing the reset link has been sent to you.":response.data;
 		notification.value.type = (response.status == 202)?"success":(response.status==404)?"warning":"error"
