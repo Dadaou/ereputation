@@ -48,7 +48,7 @@
                         <div>
                             <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                                 $t("feedback.firstname") }} <span>*</span></label>
-                            <input type="text" id="first_name" v-model="firstname"
+                            <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                         </div>
                         <div>
@@ -101,7 +101,7 @@
                         <div>
                             <div class="checkbox-container">
                                 <label>
-                                    <input type="checkbox" id="agreeCheckbox" required>
+                                    <input type="checkbox" id="agreeCheckbox" oninvalid="this.setCustomValidity(getText())" required>
                                     {{ $t("feedback.indice2") }}
                                 </label>
                             </div>
@@ -123,7 +123,7 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, defineAsyncComponent, onMounted, watch, inject } from 'vue';
+import { ref, onBeforeMount, defineAsyncComponent, onMounted, watch } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useUserStore } from "@Stores/user.js";
@@ -147,7 +147,6 @@ let exist = ref(true);
 const EstablishmentNotFound = defineAsyncComponent(() =>
     import("@Views/EstablishmentNotFound.vue")
 )
-const app_url =inject('app_url')
 
 const { t } = useI18n();
 const route = useRoute();
@@ -163,6 +162,35 @@ let allAdvantages = ref([])
 let randomAdvantage = ref(null);
 
 const showSpinner = ref(false);
+
+// function getRandomValue(n) {
+//     return Math.floor(Math.random() * n);
+// }
+
+// function isBeforeTargetDate(expiredDate) {
+//     var currentDate = new Date();
+//     var targetDate = new Date(expiredDate);
+//     return currentDate < targetDate;
+// }
+
+// const getRandomAdvantage = async(tag)=>{
+//     const response = await new Promise((resolve) => {
+//             services.get_Record(`customer/establishments/advantages?tag=${tag}`, (response) => {
+//                 resolve(response);
+//             });
+//     });
+
+//     if (response.status === 200) {
+//             allAdvantages.value = response.data;
+
+//         if (allAdvantages.value.length > 0) {
+//             allAdvantages.value = allAdvantages.value.filter(adv => (adv.establishment_tag == route.
+//                     params.id && adv.enable == true && isBeforeTargetDate(adv.expired_at)));
+//             console.log(allAdvantages.value)
+//             randomAdvantage.value = allAdvantages.value[getRandomValue(allAdvantages.value.length)];
+//         }
+//     } 
+// }
 
 onBeforeMount(async () => {
     if (userStore.authenticated == null) services.setToken(import.meta.env.VITE_APP_TOKEN);
@@ -285,8 +313,7 @@ const submit = async () => {
                                     firstname: firstname.value,
                                     lastname: lastname.value,
                                     email: email.value,
-                                    language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase(),
-                                    app_url: app_url.value 
+                                    language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase()
                                 }
                                 await services.createRecord('workflow', coupons, (workflowResponse) => {
                                     console.log(workflowResponse)
@@ -298,6 +325,7 @@ const submit = async () => {
                                 params: {
                                     etab: route.params.id,
                                     tag: route.params.tag,
+                                    email_sent: email_sent
                                 },
                             });
                         }
