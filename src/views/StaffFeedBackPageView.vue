@@ -561,7 +561,7 @@ input:focus {
 .staff__card {
     /* border: 1px solid var(--light-color-bg2);*/
     padding: 5px;
-    flex-basis: 500px;
+    /*flex-basis: 500px;*/
     flex-grow: 1;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     /* border-radius: 5px;*/

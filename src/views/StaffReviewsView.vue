@@ -1,6 +1,6 @@
 <template>
     <div class="app__title">
-        <h2 v-if="selectedStaff">{{ selectedStaff.firstname }}'s intern feedback</h2>
+        <h2 v-if="selectedStaff">{{ selectedStaff.firstname }}'s intern feedbacks</h2>
     </div>
     <div class="reviews__content" v-if="_reviews.length > 0">
         <div class="reviews__pagination">
