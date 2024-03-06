@@ -23,7 +23,7 @@
                     <el-button size="small" @click="showModal = !showModal, establishment = scope.row.uri"><i
                             class="uil uil-link-add"></i></el-button>
 
-                    <el-button size="small" @click="loadLinksByEstablishment(scope.row.tag)"><i
+                    <el-button size="small" @click="loadLinksByEstablishment(scope.row.tag), currentEstablishment = scope.row"><i
                             class="uil uil-file-alt"></i></el-button>
                     <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
                             class="uil uil-edit"></i></el-button>
@@ -50,6 +50,11 @@
                          <a :href="scope.row.url" target="_blank" class="external-link"><i
                                 class="uil uil-external-link-alt"></i></a>
                     </el-button>
+                     <el-popconfirm title="Are you sure to delete this?" @confirm="handleDeleteLink(scope.$index, scope.row)">
+                        <template #reference>
+                          <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
+                        </template>
+                    </el-popconfirm>
                     
                    <!--  <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
                         <template #reference>
@@ -254,6 +259,8 @@ const handleEdit = (index, establishment) => {
     emit('edit', establishment);
 }
 
+const currentEstablishment = ref(null)
+
 const filteredCompetitor = computed(()=>{
     let  filteredData = competitorsData.value;
     console.log(filteredData)
@@ -335,6 +342,25 @@ const loadLinksByEstablishment = async (tag) =>{
            allLinks.value = transformLinksData(response.data.data)
            console.log(allLinks.value)
            
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const handleDeleteLink = async(index, link)=>{
+    try {
+        const response = await new Promise((resolve, reject) => {
+            services.patchRecord('settings', link.id, {enable: false}, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status == 200) {
+            ElMessage({
+                message: `Links deleted successfully`,
+                type: 'success',
+            })
+            loadLinksByEstablishment(currentEstablishment.value.tag)
         }
     } catch (error) {
         console.log(error)

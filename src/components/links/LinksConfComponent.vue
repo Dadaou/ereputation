@@ -239,8 +239,7 @@ const handleDelete = async (index, link)=>{
                 resolve(response);
             });
         });
-        
-        if (response.status == 204) {
+        if (response.status == 200) {
             ElMessage({
                 message: `Links deleted successfully`,
                 type: 'success',
