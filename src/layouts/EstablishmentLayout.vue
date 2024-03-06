@@ -178,6 +178,13 @@ const customerTag = inject('tag');
     max-height: 100%;
 }
 
+.right__side .establishment__info{
+    margin-bottom: 15px;
+}
+
+.right__side .date__filter{
+    margin-top: 10px;
+}
 
 .isactive,
 .mobile__filter__btn button:hover {

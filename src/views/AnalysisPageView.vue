@@ -10,20 +10,18 @@
         		Below are two sets of graphs representing score and rating of all reviews.
         		The first set illustrates ratings from all reviews, while the second set displays scores from all reviews and comments combined.
         	</p>
-            <div class="chartBox">
+            <div :class="['chartBox', isLoading?'loaded':'']">
                 <div class="containerChart">
-                    <div class="containerBody">
+                    <div :class="['containerBody', !isLoading?'':'loading']">
                         <Bar :data="ratingChart" id="rating" :options="options" />
                     </div>
-
-                    <div class="containerBody2">
+                     
+                    <div :class="['containerBody2', !isLoading?'':'loading']">
                         <Bar :data="confidenceChart" id="confidence" :options="newOptions" />
                     </div>
                 </div>
-               <!--  <div class="loaded" v-if="isLoading">
-                	<SpinnerComponent :size="'large'" />
-                </div> -->
-                <BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
+                <SpinnerComponent :size="'large'" v-if="isLoading" class="loader"/>
+                <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="legendData" :alignment="'vertical'">
        				</BaseLegend> 
             </div>
         </div>
@@ -222,8 +220,8 @@ const customerTag = inject('tag')
 const route = useRoute();
 
 const companyId = route.params.id;
-const dataLoading = ref(true)
-const isLoading = ref(true)
+const dataLoading = ref(false)
+const isLoading = ref(false)
 let establishment = ref({});
 const categories = ref([])
 const _categories = computed(()=>{
@@ -255,36 +253,12 @@ const legendData = ref([]);
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 const ratingChart = ref({
-	labels: [
-	  '2024-02-15',
-	  '2024-02-16',
-	  '2024-02-17',
-	  '2024-02-18',
-	  '2024-02-19',
-	  '2024-02-20',
-	  '2024-02-21',
-	  '2024-02-22',
-	  '2024-02-23',
-	  '2024-02-24',
-	  '2024-02-25'
-	],
+	labels: [],
 	datasets: []
 })
 
 const confidenceChart = ref({
-	labels: [
-	  '2024-02-15',
-	  '2024-02-16',
-	  '2024-02-17',
-	  '2024-02-18',
-	  '2024-02-19',
-	  '2024-02-20',
-	  '2024-02-21',
-	  '2024-02-22',
-	  '2024-02-23',
-	  '2024-02-24',
-	  '2024-02-25'
-	],
+	labels: [],
 	datasets: []
 })
 
@@ -437,10 +411,10 @@ const loadAnalysisData = async(tag, dateStart, dateEnd, categories)=>{
         });
     });
     console.log(response)
+    isLoading.value = false
 
     if (response.status == 200) {
     	console.log(response.data)
-    	isLoading.value = false
     	const containerBody = document.querySelector('.containerBody');
     	const containerBody2 = document.querySelector('.containerBody2');
     	
@@ -521,7 +495,7 @@ const transformData = (chartData)=>{
 
 onBeforeMount(async () => {
     appStore.isLoading = true;
-
+    isLoading.value = true
     companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
 
         if (data == false) {
@@ -551,7 +525,6 @@ onBeforeMount(async () => {
             all_items.value[0].value = establishment.value.rating;
             all_items.value[1].value = establishment.value.totalReviews;
             appStore.isLoading = false;
-            dataLoading.value = false;
         }
     })
     await loadCategories(companyId)
@@ -568,13 +541,23 @@ onBeforeMount(async () => {
     	justify-content: center;
     	align-items: center;
     	height: 400px;
-    	background: grey;
+    	background: rgba(0, 0, 0, 0.1);
+        opacity: 0.9;
+        z-index: 1;
     }
 	.legend, p{
 		color: black;
 		font-weight: 500;
 		margin-top: 2rem;
 		font-size: 14px;
+	}
+
+	.loading{
+		display: none;
+	}
+
+	.loader{
+		position: absolute;
 	}
 
 	/*.containerBody{

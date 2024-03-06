@@ -472,7 +472,7 @@ const all_items = ref([
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
 
-const dataLoading = ref(true);
+const dataLoading = ref(false);
 
 
 watch([start_date, end_date, selectedHashtag], async()=>{
@@ -686,7 +686,7 @@ const loadHashtags = async(tag, source)=>{
 
 onBeforeMount(async () => {
     appStore.isLoading = true;
-    dataLoading.value = true
+    // dataLoading.value = true
 
     try {
         const response = await new Promise((resolve) => {
@@ -774,7 +774,7 @@ onBeforeMount(async () => {
         establishment.value['socials'] = transformToSourceURL(socialResponse.data);
         socials.value = transformToSourceURL(socialResponse.data);
         console.log(socials.value)
-        dataLoading.value = false;
+        // dataLoading.value = false;
     }
     if (!socialStore.trendsByEstablishment[`${companyId}`]) {
         await socialStore.fetchEstablishmentTrends(companyId);
