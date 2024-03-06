@@ -49,7 +49,7 @@
                         <div>
                             <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                                 $t("feedback.firstname") }} <span>*</span></label>
-                            <input type="text" id="first_name" v-model="firstname"
+                            <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                         </div>
                         <div>
@@ -104,7 +104,7 @@
                         <div>
                             <div class="checkbox-container">
                                 <label>
-                                    <input type="checkbox" id="agreeCheckbox" required>
+                                    <input type="checkbox" id="agreeCheckbox" oninvalid="this.setCustomValidity(getText())" required>
                                     {{ $t("feedback.indice2") }}
                                 </label>
                             </div>
@@ -137,7 +137,7 @@
             </div>
             <div class="modal__container" v-if="staffs.length > 0">
                 <a class="staff__card mb-1" 
-                    :href="`/customer/${route.params.tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`"
+                    :href="`/customer/${route.tag}/establishment/${staff.establishment_competitor_tag}/staffs/${staff.tag}/feedback`"
                     v-for="staff in staffs" :key="staff.id">
                     <div class="staff__qrcode">
                         {{ staff.firstname }} <!-- {{ staff.lastname }} -->
@@ -146,10 +146,12 @@
             </div>
         </template>
     </ModalComponent>
+   
 </template>
 
 <script setup>
-import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, watch, inject } from 'vue';
+
+import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, watch } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useUserStore } from "@Stores/user.js";
@@ -178,7 +180,6 @@ const ModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/ModalComponent.vue')
 )
 
-const app_url = inject('app_url');
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
@@ -201,6 +202,9 @@ const page = ref();
 
 const showSpinner = ref(false);
 const allAdvantages = ref(null)
+const reuiredtext = ref("Champs requis");
+
+
 
 function getRandomValue(n) {
     return Math.floor(Math.random() * n);
@@ -246,7 +250,7 @@ onBeforeMount(async () => {
         console.log(error)
     }
 })
-
+const requiredinput = ref('');
 onMounted(() => {
     /** Charger le titre par defaut */
     page.value = {
@@ -254,6 +258,7 @@ onMounted(() => {
         title2: t("feedback.title2"),
         icon: "uil-comment-alt",
     };
+    requiredinput.value = t('staffFeedback.input_required')
 })
 
 watch(() => {
@@ -263,6 +268,7 @@ watch(() => {
         title2: t("feedback.title2"),
         icon: "uil-comment-alt",
     };
+    requiredinput.value = t('staffFeedback.input_required')
 })
 
 const firstname = ref('');
@@ -295,6 +301,7 @@ const resetForm = () => {
     dateVisit.value = null;
     showSpinner.value = false;
 }
+
 
 const submit = async () => {
     var lg = localStorage.getItem("langue")
@@ -345,8 +352,8 @@ const submit = async () => {
                                         firstname: firstname.value,
                                         lastname: lastname.value,
                                         email: email.value,
-                                        language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase(),
-                                        app_url: app_url.value                                    }
+                                        language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase()
+                                    }
                                     await services.createRecord('workflow', coupons, (workflowResponse) => {
                                         console.log(workflowResponse)
                                         resetForm()
@@ -358,6 +365,7 @@ const submit = async () => {
                                     params: {
                                         etab: route.params.id,
                                         tag: route.params.tag,
+                                        email_sent: email_sent
                                     },
                                 });
                             }

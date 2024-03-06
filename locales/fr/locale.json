@@ -1,0 +1,55 @@
+{
+    "title": "Veuillez vous connecter",
+    "welcome": "Bienvenue",
+    "login":{
+        "email":"Adresse email",
+        "password": "Mot de passe",
+        "forgot":"Mot de passe oublie",
+        "create":"Pas de compte, creer un",
+        "submit":"Connexion"
+    },
+    "feedback":{
+        
+        "title1":"Laissez ",
+        "title2":" vos commentaires",
+        "soustitle":"Retour d'expériences clients",
+        "rating":{
+            "title":"Notation",
+            "evaluate":{
+                "terrible":"Terrible",
+                "bad":"Mauvais",
+                "okay":"Ok",
+                "good":"Bon",
+                "amazing":"Incroyable"
+            }
+        },
+        "firstname":"Prénom",
+        "lastname":"Nom",
+        "gender":"Genre",
+        "placeholder_gender":"Choisissez le genre",
+        "datevisit":"Date de visite",
+        "placeholder_datevisit":"Choisir  date et time",
+        "indice1":" Si vous souhaitez obtenir des réductions ou des avantages, veuillez indiquer votre adresse e-mail ci-dessous.",
+        "email":"Adresse E-mail",
+        "promotion_day":"Promotion du jour",
+        "comment":"S'il vous plaît laissez un commentaire",
+        "indice2":"En utilisant nos services et en cochant la case ci-dessus, vous acceptez les conditions décrites dans cette politique de confidentialité.",
+        "post":"Poster un commentaire"
+
+    },
+    "staffFeedback":{
+        "interne":"Usage interne uniquement, votre commentaire ne sera pas diffusé sur les plateformes publiques.",
+        "departement":"Department",
+        "staffs_list":"Liste du personnel",
+        "staffs_link":"Liens du personnel pour commentaires",
+        "input_required":"Champs requis"
+        
+    },
+    "success":"Merci pour vos précieux commentaires. Nous espérons vous revoir bientôt et vous souhaitons une agréable journée.",
+    "thanks_title1":"Merci ",
+    "thanks_title2":" pour vos commentaires",
+    "discount":{
+        "title": "Coupon de Réduction Activé !",
+        "content": "Félicitations ! Votre coupon de réduction a été activé avec succès. Utilisez le code de réduction lors du paiement pour économiser sur votre commande."
+    }
+}

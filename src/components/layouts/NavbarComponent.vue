@@ -30,7 +30,7 @@
         <div class="z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700"
           id="language-dropdown" v-if="showLang">
           <ul class="py-2 font-medium" role="none">
-            <li v-for="language in languages" @click="selectCurrentLanguage(language)" :key="language">
+            <li v-for="language in languages" @click="selectCurrentLanguage(language)" :key="language" class="langueselected">
               <a href="#"
                 :class="[(currentLanguage.code == language.code) ? 'bg-gray-100' : '', 'block px-6 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white']"
                 role="menuitem">
@@ -383,6 +383,14 @@ const selectCurrentLanguage = (language) => {
   localStorage.setItem("langue", language.code)
 
   locale.value = language.bb;
+  
+  var event = event = new CustomEvent("langue", {
+	  detail: {
+	    langue: language.code
+	  }
+  });
+  
+  window.dispatchEvent(event);
 };
 </script>
 <style scoped>
