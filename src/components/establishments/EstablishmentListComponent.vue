@@ -157,7 +157,6 @@ const establishments = computed(() => {
     let filteredData = [];
     if (userStore.user && userStore.user.customer && userStore.user.customer.establishments) {
         data = userStore.user.customer.establishments;
-        console.log(data)
 
         data.forEach(establishment => {
             filteredData.push({
@@ -179,6 +178,11 @@ const establishments = computed(() => {
             })
         });
     }
+    filteredData = filteredData.filter((data)=>{
+        return !search.value || data.name.toLowerCase().includes(search.value.toLowerCase()) ||data.category.toLowerCase().includes(search.value.toLowerCase())
+            || data.address.toLowerCase().includes(search.value.toLowerCase()) || (data.country && data.country.toLowerCase().includes(search.value.toLowerCase()))
+    })
+
     return filteredData;
 });
 

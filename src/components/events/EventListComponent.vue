@@ -108,13 +108,24 @@ const getURI = (data, entity, dataset) => {
 //   return data;
 // });
 const search = ref('')
-const filterTableData = computed(() =>
-  tableData.value.filter(
-    (data) =>
-      !search.value ||
-      data.name.toLowerCase().includes(search.value.toLowerCase())
-  )
-)
+// const filterTableData = computed(() =>
+//   tableData.value.filter(
+//     (data) =>
+//       !search.value ||
+//       data.name.toLowerCase().includes(search.value.toLowerCase())
+//   )
+// )
+
+const filterTableData = computed(() =>{
+  let filteredData = tableData.value;
+   filteredData = filteredData.filter((data)=>{
+        return !search.value || 
+        data.name.toLowerCase().includes(search.value.toLowerCase()) || 
+        (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
+        (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase()))
+    })
+  return filteredData; 
+})
 
 const reloadData = (event) => {
   let data = [];

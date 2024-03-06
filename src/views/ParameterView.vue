@@ -279,7 +279,8 @@ const transformData = (data) =>{
                 establishment_region,
                 establishment_gps,
                 establishment_rank, 
-                competitor_competitor_tag
+                competitor_competitor_tag,
+                competitor_id
                 } = establishment;
 
             tag  =  (tag !== competitor_competitor_tag)? competitor_competitor_tag: tag;
@@ -302,11 +303,18 @@ const transformData = (data) =>{
                     gps: establishment_gps,
                     media: url_source, 
                     establishments: [competitorName],
-                    establishmentsTag: [{name: competitorName, tag: tag}] 
+                    competitors: [{
+                        competitor_id: competitor_id,
+                        name:competitorName
+                    }]
                 });
             } else {
                 // Ajoute le nom du concurrent à la liste des établissements existants
                 if(!establishmentMap.get(id).establishments.includes(competitorName)) establishmentMap.get(id).establishments.push(competitorName);
+                establishmentMap.get(id).competitors.push({
+                        competitor_id: competitor_id,
+                        name: competitorName
+                });
             }
         });
     }
@@ -323,6 +331,7 @@ const reloadCompetitorList = async(type)=>{
             });
         });
         if (response.status === 200) {
+            console.log(response.data)
             competitorsData.value = transformData(response.data);
             console.log(competitorsData.value)
         } 

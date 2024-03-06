@@ -58,13 +58,29 @@ const emit = defineEmits(['edit', 'setEnable', 'setDisable']);
 const advantages = inject('advantages');
 const search = ref('');
 
-const filterTableData = computed(() =>
-  advantages.value?.filter(
-    (data) =>
-      !search.value ||
-      data.name.toLowerCase().includes(search.value.toLowerCase())
-  ) || []
-);
+// const filterTableData = computed(() =>
+//   advantages.value?.filter(
+//     (data) =>
+//       !search.value ||
+//       data.name.toLowerCase().includes(search.value.toLowerCase())
+//   ) || []
+// );
+
+const filterTableData = computed(() =>{
+  let filteredData = advantages.value;
+  console.log(search.value)
+  console.log(filteredData)
+  filteredData = filteredData.filter((data)=>{
+        return !search.value || 
+        data.name.toLowerCase().includes(search.value.toLowerCase()) || 
+        (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
+        (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase())) ||
+        (data.metric && data.metric.toLowerCase().includes(search.value.toLowerCase())) ||
+        (data.scope && data.scope.toLowerCase().includes(search.value.toLowerCase()))
+
+    })
+  return filteredData
+});
 
 const reloadData = (advantageToRemove) => {
   // Filtrer la liste d'avantages pour exclure celui qui doit être supprimé

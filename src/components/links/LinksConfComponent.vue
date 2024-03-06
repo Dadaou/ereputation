@@ -24,7 +24,7 @@
                     <el-button size="small" @click="showModal = !showModal, establishment = scope.row.uri"><i
                             class="uil uil-link-add"></i></el-button>
 
-                    <el-button size="small" @click="loadLinksByEstablishment(scope.row)"><i
+                    <el-button size="small" @click="loadLinksByEstablishment(scope.row), currentEstablishment = scope.row"><i
                             class="uil uil-file-alt"></i></el-button>
                 </template>
             </el-table-column>
@@ -46,6 +46,11 @@
                          <a :href="scope.row.url" target="_blank" class="external-link"><i
                                 class="uil uil-external-link-alt"></i></a>
                     </el-button>
+                    <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
+                        <template #reference>
+                          <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
+                        </template>
+                    </el-popconfirm>
                 </template>
             </el-table-column>
         </el-table>
@@ -168,6 +173,7 @@ const isLoading = ref(false)
 const title = computed(()=>{
     return showLinkModal.value?'Links list': 'Links configuration'
 })
+const currentEstablishment = ref(null)
 
 const isHashtag = computed(()=>{
     return category.value == 'Hashtag';
@@ -190,6 +196,9 @@ const establishments = computed(() => {
             })
         });
     }
+     filteredData = filteredData.filter((data)=>{
+        return !search.value || data.name.toLowerCase().includes(search.value.toLowerCase())
+    })
     return filteredData;
 });
 
@@ -222,6 +231,26 @@ const isValidHashtag = computed(()=>{
     }
     return true
 })
+
+const handleDelete = async (index, link)=>{
+    try {
+        const response = await new Promise((resolve, reject) => {
+            services.patchRecord('settings', link.id, {enable: false}, (response) => {
+                resolve(response);
+            });
+        });
+        
+        if (response.status == 204) {
+            ElMessage({
+                message: `Links deleted successfully`,
+                type: 'success',
+            })
+            loadLinksByEstablishment(currentEstablishment.value)
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 const urlPattern = (urlTemplate) => {
     let regexPattern = urlTemplate.replace(/[\-\[\]\/\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");

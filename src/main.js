@@ -16,6 +16,7 @@ var lg = localStorage.getItem("langue")
 if(lg ==null)
     localStorage.setItem("langue","EN")
 
+services.setURL(import.meta.env.VITE_APP_API_URL)
 const app = createApp(App)
 const baseurl = ref(window.location.origin)
 app.provide('tag', '');
@@ -26,6 +27,5 @@ app.use(pinia)
 app.use(router)
 app.use(Vuesalize)
 app.use(i18n)
-services.setURL(import.meta.env.VITE_APP_API_URL)
 
 app.mount('#app')

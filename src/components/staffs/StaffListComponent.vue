@@ -114,13 +114,26 @@ let tableData = computed(() => {
   return data;
 });
 const search = ref('')
-const filterTableData = computed(() =>
-  tableData.value.filter(
-    (data) =>
-      !search.value ||
-      data.name.toLowerCase().includes(search.value.toLowerCase())
-  )
-)
+// const filterTableData = computed(() =>
+//   tableData.value.filter(
+//     (data) =>
+//       !search.value ||
+//       data.name.toLowerCase().includes(search.value.toLowerCase())
+//   )
+// )
+
+const filterTableData = computed(() =>{
+  let filterdata = tableData.value;
+  filterdata = tableData.value.filter(
+     (data) =>
+       !search.value ||
+       data.lastname.toLowerCase().includes(search.value.toLowerCase()) ||
+       data.firstname.toLowerCase().includes(search.value.toLowerCase())||
+       data.department.toLowerCase().includes(search.value.toLowerCase())||
+       data.establishment_name.toLowerCase().includes(search.value.toLowerCase())
+   )
+  return filterdata
+})
 
 const reloadData = (staff) => {
   let data = [];

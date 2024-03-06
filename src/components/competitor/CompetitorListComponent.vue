@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="mt-5 table__container" v-if="!showLinkModal">
-        <el-table :data="competitorsData">
+        <el-table :data="filteredCompetitor">
             <el-table-column label="Competitors" prop="name" style="width: 25%; min-width: 200px;" />
             <el-table-column label="Establishments" style="width: 15%; min-width: 200px;" >
                 <template #default="scope">
@@ -25,20 +25,25 @@
 
                     <el-button size="small" @click="loadLinksByEstablishment(scope.row.tag)"><i
                             class="uil uil-file-alt"></i></el-button>
-                     <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
+                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
                             class="uil uil-edit"></i></el-button>
+                     <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
+                        <template #reference>
+                          <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
+                        </template>
+                    </el-popconfirm>
                 </template>
             </el-table-column>
         </el-table>
     </div>
     <div class="mt-5 table__container" v-else>
-        <el-table :data="allLinks">
+        <el-table :data="filteredLinks">
             <el-table-column label="Establishment" prop="establishment" style="width: 50%; min-width: 200px;" />
             <el-table-column label="Provider" prop="name" style="width: 50%; min-width: 200px;" />
             <el-table-column label="Value" prop="settings_value1" style="width: 50%; min-width: 200px;" />
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
                 <template #header>
-                    <el-input v-model="search" size="small" placeholder="Type to search" />
+                    <el-input v-model="searchLink" size="small" placeholder="Type to search" />
                 </template>
                 <template #default="scope">
                     <el-button size="small">
@@ -46,7 +51,7 @@
                                 class="uil uil-external-link-alt"></i></a>
                     </el-button>
                     
-                    <!-- <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
+                   <!--  <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
                         <template #reference>
                           <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
                         </template>
@@ -150,32 +155,37 @@
 
         </template>
     </ModalComponent>
-    <!-- <ModalComponent :showModal="showLinkModal" @close="showLinkModal = !showLinkModal" :width="modalWidth">
+    <ModalComponent :showModal="showCompetitor" @close="showCompetitor = !showCompetitor" :width="modalWidth">
         <template #content>
             <div class="modal__header">
                 <div class="modal__title">
                     <h3 class="font-semibold text-gray-900 dark:text-white">
-                        <i class="uil uil-link"></i> All links
+                        <i class="uil uil-link"></i> {{establishment.name}}
                     </h3>
                 </div>
                 <div class="modal__close">
-                    <i class="uil uil-times-circle" @click="showLinkModal = !showLinkModal"></i>
+                    <i class="uil uil-times-circle" @click="showCompetitor = !showCompetitor"></i>
                 </div>
             </div>
-            <ul class="link-list">
-                <li v-for="link in filteredLinks">
-                    <div class="link-text">
-                        {{ link.url }}
+            <form @submit.prevent="deleteCompetitor" @keydown.enter.prevent="deleteCompetitor" class="mt-4 px-2">
+                <div class="grid mb-6">
+                    <div>
+                        <label for="Establishment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
+                            <span>*</span></label>
+                        <el-select v-model="establishments" placeholder="Choose establishment" size="large">
+                            <el-option v-for="item in establishment.competitors" :key="item" :label="item.name" :value="item.competitor_id" />
+                        </el-select>
                     </div>
-                    <div class="actions">
-                        <a :href="link.url" target="_blank" class="external-link"><i
-                                class="uil uil-external-link-alt"></i></a>
-                        <i @click="remove(link.id)" class="delete-icon uil uil-multiply"></i>
-                    </div>
-                </li>
-            </ul>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
+                    <button type="submit"
+                        :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800',]">
+                        Delete
+                    </button>
+                </div>
+            </form>
         </template>
-    </ModalComponent> -->
+    </ModalComponent>
 </template>
 <script setup>
 import { computed, defineAsyncComponent, ref, onBeforeMount, watch, inject } from 'vue'
@@ -223,6 +233,7 @@ const categories = ref(['Hashtag','Platform', 'Social'])
 const category = ref('Platform')
 const showSpinner = ref(false)
 const search = ref('')
+const searchLink = ref('')
 const link = ref('')
 const isValidLink = ref('true')
 const establishment = ref('')
@@ -236,41 +247,40 @@ const allLinks = ref([])
 const isHashtag = computed(()=>{
     return category.value == 'Hashtag';
 })
+const showCompetitor = ref(false)
+const establishments = ref([])
 
 const handleEdit = (index, establishment) => {
     emit('edit', establishment);
 }
 
-const establishments = computed(() => {
-    let data = [];
-    let filteredData = [];
-    if (userStore.user && userStore.user.customer) {
-        data = userStore.user.customer.establishments;
-
-        data.forEach(establishment => {
-            filteredData.push({
-                name: establishment.name,
-                media: (establishment.media.length > 0) ? establishment.media[0].url_source : '',
-                tag: establishment.competitor_tag,
-                uri: `/api/establishments/${establishment.id}`,
-                gps: establishment.gps,
-                country: establishment.country,
-                city: establishment.city,
-                category: establishment.category,
-                address: establishment.address1,
-                rank: establishment.rank,
-                region: establishment.region,
-                zipcode: establishment.zipcode,
-                positionning: establishment.positionning
-            })
-        });
-    }
-    return filteredData;
-});
+const filteredCompetitor = computed(()=>{
+    let  filteredData = competitorsData.value;
+    console.log(filteredData)
+    filteredData = filteredData.filter((data)=>{
+        return !search.value || 
+        data.name.toLowerCase().includes(search.value.toLowerCase()) || 
+        (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
+        (data.address1 && data.address1.toLowerCase().includes(search.value.toLowerCase())) || 
+        (data.address2 && data.address2.toLowerCase().includes(search.value.toLowerCase())) || 
+        (data.country && data.country.toLowerCase().includes(search.value.toLowerCase())) ||
+        (data.establishments.length>0 && data.establishments.join(' ').toLowerCase().includes(search.value.toLowerCase()))
+            
+    })
+    return filteredData
+})
 
 const filteredLinks = computed(() => {
-    let data = links.value;
-    return data.filter(item => item.establishment == establishment.value);
+    let filteredData = allLinks.value;
+    console.log(filteredData)
+    console.log(searchLink.value)
+    filteredData = filteredData.filter((data)=>{
+        return !searchLink.value || 
+        data.name.toLowerCase().includes(searchLink.value.toLowerCase()) || 
+        (data.category && data.category.toLowerCase().includes(searchLink.value.toLowerCase())) ||
+        (data.establishment && data.establishment.toLowerCase().includes(searchLink.value.toLowerCase()))
+    })
+    return filteredData
 })
 
 const filteredProviders = computed(() => {
@@ -352,16 +362,21 @@ const splitUriAndUrl = (combinedString) => {
     return { uri: combinedString, url: null };
 }
 
-const handleDelete = async(index, competitor)=>{
-    console.log(competitor)
-    try {
+const handleDelete = async(index, data)=>{
+    establishment.value = data
+    showCompetitor.value = true
+}
+
+const deleteCompetitor = async()=>{
+     try {
         const response = await new Promise((resolve, reject) => {
-            services.deleteRecord('establishments', competitor.id, (response) => {
+            services.deleteRecord('competitors', establishments.value, (response) => {
                 resolve(response);
             });
         });
-        console.log(response)
+        
         if (response.status == 204) {
+            showCompetitor.value = false
             ElMessage({
                 message: `Competitor deleted successfully`,
                 type: 'success',

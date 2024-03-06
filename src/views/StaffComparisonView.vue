@@ -120,6 +120,7 @@ const getPlotData = async (period, rangedate, next) => {
   const datefrom = moment(rangedate[0]).format(format);
   const dateto = moment(rangedate[1]).format(format);
 
+  console.log(`/establishment/${companyId}/${period}/${datefrom}/${dateto}/staff`)
   const response = await new Promise((resolve) => {
     services.get_Record(`/establishment/${companyId}/${period}/${datefrom}/${dateto}/staff`, (response) => {
       resolve(response)
