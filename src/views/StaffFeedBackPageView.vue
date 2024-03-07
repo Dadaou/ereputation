@@ -76,6 +76,7 @@
                                 v-model="dateVisit"
                                 :placeholder="$t('feedback.placeholder_datevisit')"
                                 :size="'large'"
+                                :disabled-date="disabledDate"
                               />
                         </div>
                     </div>
@@ -302,6 +303,9 @@ const resetForm = () => {
     showSpinner.value = false;
 }
 
+const disabledDate = (time) => {
+  return time.getTime() > Date.now()
+}
 
 const submit = async () => {
     var lg = localStorage.getItem("langue")

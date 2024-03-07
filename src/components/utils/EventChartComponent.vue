@@ -102,6 +102,12 @@ const positionEvent = () => {
     const elements = document.querySelectorAll(".xaxis g.tick");
     let positions = Array.from(elements).map(e => parseFloat(e.getAttribute("transform").match(/translate\(([^)]+)\)/)[1]));
     const elementWidth = elements[0].getBoundingClientRect().width; 
+     const elementsRect = document.querySelectorAll("g rect");
+     console.log(elementsRect)
+     let n = 2;
+     elementsRect.forEach(rect=>{
+      rect.setAttribute("class", 'reconstituate')
+     })
 
     const chartEvents = document.getElementById("chartEvents");
     let eventGroups = {};
@@ -130,6 +136,14 @@ const positionEvent = () => {
     });
   }, 1000);
 };
+
+const changeColor = ()=>{
+   const elementsRect = document.querySelectorAll("g rect");
+   console.log(elementsRect)
+   elementsRect.forEach(rect=>{
+    rect.setAttribute("fill", "#606266")
+   })
+}
 
 
 
@@ -190,6 +204,9 @@ const generateColor = (text) =>{
       return `rgb(${red}, ${green}, ${blue})`;
 }
 
+const decomposeData = (data)=>{
+  console.log(data)
+}
 
 const getPlotData = async(period, rangedate, next)=>{
         period = period.toLowerCase();
@@ -216,6 +233,7 @@ const getPlotData = async(period, rangedate, next)=>{
       console.log(`/establishment/${companyId}/${period}/${datefrom}/${dateto}/events`)
       if(response.status == 200){
         data = response.data;
+        decomposeData(data.notes)
       }
       next(data);
 } 
@@ -229,7 +247,6 @@ onBeforeMount(async()=>{
    });
    plotdata.value = response;  
    if(plotdata.value){
-    console.log("ito lasa aloha")
     deleteEvents()
     positionEvent()
    }
@@ -281,5 +298,9 @@ watch([date, type],async()=>{
   .chartLegend{
     display: flex;
     justify-content: space-between;
+  }
+
+  rect.reconstituate{
+    border: 5px solid red;
   }
 </style>

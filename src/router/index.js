@@ -208,7 +208,7 @@ const router = createRouter({
           component: () => import('@Views/StaffFeedBackPageView.vue')
         },
         {
-          path: '/customer/:tag/establishment/:etab/feedback-success',
+          path: '/customer/:tag/establishment/:etab/:share/feedback-success',
           name: 'SuccessFeedback',
           component: () => import('@Views/SuccessMessageFeedback.vue')
         },

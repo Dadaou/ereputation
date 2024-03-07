@@ -2,16 +2,48 @@
 <div class="main__container" v-if="exist">
     <HeadComponent :page="page"></HeadComponent> 
     <div class="feedback__form">
-        {{$t("success")}}
+        <p> {{$t("success")}} </p>
+        <div class="mt-6" v-if="route.params.share !== 'message'">
+           <h2>{{$t("success_text")}}</h2>
+            <ul class="mb-4 link socials">
+                <li v-for="link in links">
+                    <a :href="link.url" target="_blank">
+                        {{link.name}}
+                    </a>
+                </li>
+            </ul>
+            <h2>{{$t("success_text2")}}</h2>
+            <ul v-if="socials.length>0" class="socials">
+                <li v-for="link in socials">
+                    <a :href="link.url" target="_blank">
+                        <el-tooltip :content="`${$t('success_text2')} ${link.name}`" placement="top">
+                            <Icon icon="logos:facebook" width="1.6rem" height="1.6rem" v-if="link.name.toLowerCase().includes('facebook')"></Icon>
+                            <Icon icon="logos:instagram-icon" width="1.5rem" height="1.5rem" v-if="link.name.toLowerCase().includes('instagram')"></Icon>
+                            <Icon icon="logos:tiktok-icon" width="1.5rem" height="1.5rem" v-if="link.name.toLowerCase().includes('tiktok')"></Icon>
+                            <Icon icon="logos:linkedin-icon" width="1.4rem" height="1.4rem" v-if="link.name.toLowerCase().includes('linkedin')"></Icon>
+                            <Icon icon="logos:youtube-icon" width="2rem" height="2rem" v-if="link.name.toLowerCase().includes('youtube')"></Icon>
+                            <Icon icon="devicon:twitter" width="1.3rem" height="1.3rem" v-if="link.name.toLowerCase().includes('twitter')"></Icon>
+                        </el-tooltip>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 <EstablishmentNotFound v-else/>
 </template>
 
 <script setup>
-import { ref, defineAsyncComponent,onMounted, watch } from 'vue';
+import { ref, defineAsyncComponent,onMounted, watch, onBeforeMount } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import { useI18n } from "vue-i18n";
+import { Icon } from '@iconify/vue';
+import { useCompanyStore } from "@Stores/company.js";
+import { useRoute } from 'vue-router';
+import { useUserStore } from "@Stores/user.js";
+import services from '@Services/services.js';
+import 'element-plus/es/components/tooltip/style/css';
+import { ElTooltip } from 'element-plus'
 
 let exist = ref(true);
 const EstablishmentNotFound = defineAsyncComponent(()=>
@@ -23,7 +55,11 @@ const { t } = useI18n();
 const page=ref({
 
 });
-
+const links =ref([])
+const socials = ref([])
+const route = useRoute();
+const companyStore = useCompanyStore();
+const userStore = useUserStore();
 onMounted(()=>{
     /** Charger le titre par defaut */
      page.value ={
@@ -31,6 +67,20 @@ onMounted(()=>{
         title2: t("thanks_title2") ,
         icon: "uil-comment-alt",
     };
+})
+
+onBeforeMount(async()=>{
+    if (userStore.authenticated == null) services.setToken(import.meta.env.VITE_APP_TOKEN);
+    links.value = await companyStore.loadLinksByEstablishment(route.params.etab)
+    console.log(links.value)
+    socials.value = links.value.filter((link)=>{
+        return link.category == 'Social'
+    })
+
+    links.value = links.value.filter((link)=>{
+        return link.category == 'Platform'
+    })
+    console.log(links.value)
 })
 
 watch(()=>{
@@ -45,11 +95,45 @@ watch(()=>{
 </script>
 
 <style scoped>
+
+p{
+   /* text-align: center;*/
+    font-weight: 500;
+}
+
+.link li{
+   /* border: 1px solid black;*/
+    padding: 5px 10px; 
+    border-radius: 5px;
+    font-weight: 500;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.link li:hover{
+  color: white;
+  background: var(--light-color-bg2);
+}
+
+h2{
+    /*text-align: center;*/
+    font-weight: 500;
+    font-size: 16px;
+    /*color: var(--color-danger);*/
+    font-family: Arial, sans-serif;
+}
+
+.socials{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+   /* justify-content: center;*/
+    margin-top: 1.5rem;
+}
 .feedback__form{
     width: 50%;
     margin: 3rem auto;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    border: 1px solid var(--light-color-bg2);
+   /* box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;*/
+   /* border: 1px solid var(--light-color-bg2);*/
     border-radius: 5px;
     padding: 15px;
     padding-top: 2rem;

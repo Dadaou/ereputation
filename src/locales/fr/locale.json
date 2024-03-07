@@ -50,5 +50,7 @@
     "discount":{
         "title": "Coupon de Réduction Activé !",
         "content": "Félicitations ! Votre coupon de réduction a été activé avec succès. Utilisez le code de réduction lors du paiement pour économiser sur votre commande."
-    }
+    },
+    "success_text": "Vous pouvez également partager vos retours sur les plateformes",
+    "success_text2": "Rejoignez-nous sur les réseaux sociaux"
 }

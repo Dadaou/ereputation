@@ -54,5 +54,7 @@
     "discount":{
         "title": "¡Cupón de Descuento Activado!",
         "content": "¡Felicidades! Tu cupón de descuento ha sido activado con éxito. Disfruta de descuentos exclusivos en tu próxima compra. Usa el código de descuento durante el proceso de pago para ahorrar en tu pedido."
-    }
+    },
+    "success_text": "También puedes compartir tus opiniones en plataformas públicas",
+    "success_text2": "Únete a nosotros en las redes sociales"
 }

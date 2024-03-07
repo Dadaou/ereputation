@@ -75,7 +75,7 @@ const submit = async () => {
         } else {
             isError.value = true;
             if (response.status == 401) {
-                notification.value.message = "Please verify your password or email!";
+                notification.value.message = "Your login and/or password is incorrect.";
                 notification.value.type = "warning";
             }
 

@@ -70,7 +70,9 @@
                             <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                                 $t("feedback.datevisit") }}<!-- <span>*</span> --></label>
                             <el-date-picker v-model="dateVisit"
-                                :placeholder="$t('feedback.placeholder_datevisit')" :size="'large'" />
+                                :placeholder="$t('feedback.placeholder_datevisit')" :size="'large'" 
+                                :disabled-date="disabledDate"
+                                />
                         </div>
 
                     </div>
@@ -163,35 +165,6 @@ let randomAdvantage = ref(null);
 
 const showSpinner = ref(false);
 
-// function getRandomValue(n) {
-//     return Math.floor(Math.random() * n);
-// }
-
-// function isBeforeTargetDate(expiredDate) {
-//     var currentDate = new Date();
-//     var targetDate = new Date(expiredDate);
-//     return currentDate < targetDate;
-// }
-
-// const getRandomAdvantage = async(tag)=>{
-//     const response = await new Promise((resolve) => {
-//             services.get_Record(`customer/establishments/advantages?tag=${tag}`, (response) => {
-//                 resolve(response);
-//             });
-//     });
-
-//     if (response.status === 200) {
-//             allAdvantages.value = response.data;
-
-//         if (allAdvantages.value.length > 0) {
-//             allAdvantages.value = allAdvantages.value.filter(adv => (adv.establishment_tag == route.
-//                     params.id && adv.enable == true && isBeforeTargetDate(adv.expired_at)));
-//             console.log(allAdvantages.value)
-//             randomAdvantage.value = allAdvantages.value[getRandomValue(allAdvantages.value.length)];
-//         }
-//     } 
-// }
-
 onBeforeMount(async () => {
     if (userStore.authenticated == null) services.setToken(import.meta.env.VITE_APP_TOKEN);
     await services.get_Record(`establishment/${route.params.id}/media`, (response) => {
@@ -227,6 +200,10 @@ watch(() => {
         icon: "uil-comment-alt",
     };
 })
+
+const disabledDate = (time) => {
+  return time.getTime() > Date.now()
+}
 
 const firstname = ref('');
 const lastname = ref('');
@@ -325,7 +302,8 @@ const submit = async () => {
                                 params: {
                                     etab: route.params.id,
                                     tag: route.params.tag,
-                                    email_sent: email_sent
+                                    email_sent: email_sent,
+                                    share: parseFloat(review.rating)>4?'message-and-join-us':'message'
                                 },
                             });
                         }
