@@ -301,6 +301,8 @@ const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
 )
 
+const baseurl = window.location.origin;
+
 const planInfo = ref({});
 const showSpinner = ref(false)
 const userCreated = ref(false)
