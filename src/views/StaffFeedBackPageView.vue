@@ -369,13 +369,14 @@ const submit = async () => {
                                     });
                                 }
 
+
                                 router.push({
                                     name: 'SuccessFeedback',
                                     params: {
                                         etab: route.params.id,
                                         tag: route.params.tag,
                                         email_sent: email_sent,
-                                        share: parseFloat(review.rating)>4?'message-and-join-us':'message'
+                                        share: parseFloat(review.rating)>=4?'message-and-join-us':'message'
                                     },
                                 });
                             }
