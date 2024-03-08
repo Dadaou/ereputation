@@ -832,7 +832,7 @@ onBeforeMount(async () => {
 
 .tablet,
 .mobile__filter__btn {
-    display: none !important;
+    display: none;
 }
 
 .mobile__filter__btn button {
@@ -1105,6 +1105,11 @@ img {
 }
 
 @media screen and (max-width: 975px) {
+
+    .tablet,
+    .mobile__filter__btn {
+        display: block;
+    }
 
     .dashboard__content,
     .dashboard {

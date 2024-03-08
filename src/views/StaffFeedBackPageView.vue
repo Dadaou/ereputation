@@ -370,7 +370,7 @@ const submit = async () => {
                                         etab: route.params.id,
                                         tag: route.params.tag,
                                         email_sent: email_sent,
-                                        share: 'message'
+                                        share: parseFloat(review.rating)>4?'message-and-join-us':'message'
                                     },
                                 });
                             }
