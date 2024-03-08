@@ -155,7 +155,7 @@ watch(advantage_to_update, ()=>{
     }
 })
 
-const loadData = (_advantage, advantage, establishment_name) => {
+const loadData = (_advantage, advantage, establishment) => {
   console.log(_advantage)
   const new_advantage = {
           id: _advantage.id,
@@ -167,14 +167,15 @@ const loadData = (_advantage, advantage, establishment_name) => {
           metric: _advantage.metric,           
           scope: _advantage.scope,                           
           expired_at: moment(_advantage.expiredAt).format('YYYY-MM-DD'),
-          establishment_name : establishment_name,
+          establishment_name : establishment[1],
+          establishment_id : establishment[0].split('/')[3],
           enable: true
   }
   advantages.value.push(new_advantage);
   activeAdvantageTab.value = 'advantage_list'
 }
 
-const updateData = (_advantage, establishment_name)=>{
+const updateData = (_advantage, establishment)=>{
      const new_advantage = {
           id: _advantage.id,
           name: _advantage.name,
@@ -185,7 +186,8 @@ const updateData = (_advantage, establishment_name)=>{
           metric: _advantage.metric,           
           scope: _advantage.scope,                           
           expired_at: moment(_advantage.expiredAt).format('YYYY-MM-DD'),
-          establishment_name : establishment_name,
+          establishment_name : establishment[1],
+          establishment_id: establishment[0].split('/')[3],
           enable: true 
       }
 
@@ -223,7 +225,7 @@ const updateData = (_advantage, establishment_name)=>{
                 console.log(response)
 
                 if (response.status === 201) {
-                    loadData(response.data, advantageData, establishment.value.split(",")[1]);
+                    loadData(response.data, advantageData, establishment.value.split(","));
                     ElMessage({
                         message: `Advantage added successfully.`,
                         type: 'success',
@@ -254,7 +256,7 @@ const updateData = (_advantage, establishment_name)=>{
                         message: `Advantage updated successfully.`,
                         type: 'success',
                     });
-                    updateData(response.data, establishment.value.split(",")[1]);
+                    updateData(response.data, establishment.value.split(','));
                     category.value = '';
                     code.value = '';
                     advantageName.value = '';
