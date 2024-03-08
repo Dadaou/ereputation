@@ -288,6 +288,36 @@ const reviewAnalysis = async (path, value, next) => {
   }
 }
 
+function getScoreColor(score) {
+    let width, red, feeling;
+
+    if (score === 0) {
+        width = 0;
+        red = 255;
+        feeling = -1;
+    } else {
+        width = calculateWidth(score);
+        red = calculateRed(score);
+        feeling = 1;
+    }
+
+    return {
+        "width": width,
+        "red": red,
+        "green": 255,
+        "feeling": feeling,
+        "score": score
+    };
+}
+
+function calculateWidth(score) {
+    return score * 50;
+}
+
+function calculateRed(score) {
+    return (1 - score) * 255;
+}
+
 export default {
   setToken,
   setURL,
@@ -305,5 +335,6 @@ export default {
   getRecordsByParams,
   reviewAnalysis,
   post_Record,
-  postFormData
+  postFormData,
+  getScoreColor
 }

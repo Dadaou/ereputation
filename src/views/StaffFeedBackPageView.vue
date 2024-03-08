@@ -369,7 +369,8 @@ const submit = async () => {
                                     params: {
                                         etab: route.params.id,
                                         tag: route.params.tag,
-                                        email_sent: email_sent
+                                        email_sent: email_sent,
+                                        share: 'message'
                                     },
                                 });
                             }

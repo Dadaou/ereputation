@@ -10,6 +10,7 @@
       <el-table-column label="Establishment" prop="establishment_name" style="width: 15%; min-width: 250px;" />
       <el-table-column label="Amount" prop="amount" style="width: 10%; min-width: 200px;" align="center" />
       <el-table-column label="Category" prop="category" style="width: 15%; min-width: 200px;" />
+      <el-table-column label="Code" prop="code" style="width: 15%; min-width: 200px;" />
       <el-table-column label="Metric" prop="metric" style="width: 10%; min-width: 200px;" />
       <el-table-column label="Scope" prop="scope" style="width: 10%; min-width: 200px;" />
       <el-table-column label="Validity" prop="validity" style="width: 10%; min-width: 200px;" align="center" />

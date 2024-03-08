@@ -51,7 +51,15 @@
                         </div>
                         <div>
                             <label for="metric" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Metric <span></span></label>
-                            <input type="text" id="metric" v-model="metric" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                            <!-- <input type="text" id="metric" v-model="metric" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2"> -->
+                            <el-select v-model="metric" placeholder="Select metric" size="large">
+                                <el-option
+                                v-for="metric in metrics"
+                                :key="metric"
+                                :label="metric"
+                                :value="metric"
+                                />
+                            </el-select>
                         </div>
                         
                     </div>
@@ -66,7 +74,7 @@
                               <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
                                 popper-class="singleton-tooltip" placement="top">
                                 <template #content>
-                                    <span>Validity period after the création of the benefit (in number of days) </span>
+                                    <span>Validity period after coupon creation (in number of days) </span>
                                 </template>
                             </el-tooltip></label>
                             <input type="number" id="validity" v-model="validity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
@@ -130,7 +138,7 @@ const type = ref('add');
 const advantage_to_update = inject('advantage_to_update');
 const advantages = inject('advantages');
 const activeAdvantageTab = inject('advantage_activeTab');
-
+const metrics = ref(['Percent', 'Amount'])
 watch(advantage_to_update, ()=>{
     if(advantage_to_update.value != null){  
     console.log(advantage_to_update.value) 

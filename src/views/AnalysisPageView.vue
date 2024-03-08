@@ -180,6 +180,7 @@
                 <el-date-picker class="mt-2" v-model="end_date" placeholder="End date" :size="'large'" />
             </div>
         </div>
+        <CommunityFeedbackComponent :reviewFeedbackData="services.getScoreColor(avgScore)" />
     </div>
 </template>
 <script setup>
@@ -189,6 +190,7 @@ import { useAppStore } from "@Stores/app.js";
 import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
+import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
 import { ref, watch, onBeforeMount, inject, computed, defineAsyncComponent } from 'vue';
 import { ElDatePicker, ElOption, ElSelect } from 'element-plus';
 import 'element-plus/es/components/option/style/css'
@@ -224,6 +226,7 @@ const dataLoading = ref(false)
 const isLoading = ref(false)
 let establishment = ref({});
 const categories = ref([])
+const avgScore = ref(0)
 const _categories = computed(()=>{
 	let data= []
 	categories.value.forEach(category=>{
@@ -273,10 +276,10 @@ const newOptions = {
             // Assure que l'axe Y commence à -1 et se termine à 1
             ticks: {
                 stepSize: 1, // Définit l'intervalle des graduations sur l'axe Y
-                    callback: function(value, index, values) {
+                callback: function(value, index, values) {
                         // Affiche uniquement les valeurs 1, 0 et -1
                         return value === 1 || value === 0 || value === -1 ? value : '';
-                    }
+                }
             }
         }
     },
@@ -299,6 +302,35 @@ const newOptions = {
                 },
                 mode: 'x',
             }
+        },
+        beforeDraw: function(chart) {
+            var ctx = chart.ctx;
+            chart.data.datasets.forEach(function(dataset, i) {
+                var meta = chart.getDatasetMeta(i);
+                if (!meta.hidden) {
+                    meta.data.forEach(function(element, index) {
+                        // Dessiner le texte sous chaque barre en fonction de sa valeur
+                        var dataValue = dataset.data[index];
+                        var text = '';
+                        if (dataValue > 0.2) {
+                            text = 'Positif';
+                        } else if (dataValue < -0.2) {
+                            text = 'Négatif';
+                        } else {
+                            text = 'Neutre';
+                        }
+                        var fontSize = 12;
+                        var fontStyle = 'normal';
+                        var fontFamily = 'Arial';
+                        ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+                        var textWidth = ctx.measureText(text).width;
+                        var elementX = element._model.x;
+                        var elementY = element._model.y + 20; // Ajuster la valeur pour positionner le texte sous les barres
+                        ctx.fillStyle = 'black';
+                        ctx.fillText(text, elementX - textWidth / 2, elementY);
+                    });
+                }
+            });
         }
     }
 };
@@ -313,7 +345,7 @@ const options = {
             suggestedMax: 0,
             ticks: {
                 stepSize: 1,
-            }
+            },
         }
     },
     plugins: {
@@ -445,6 +477,8 @@ const transformData = (chartData)=>{
 		datasets: []
 	}
 
+    let score = 0;
+
 	//rating chart
 	let plotData2 = {
 		labels: labels,
@@ -462,6 +496,7 @@ const transformData = (chartData)=>{
 			data: scores,
 			fill: false
 		})
+        score =+ avg_score; 
 
 		plotData2.datasets.push({
 			label: label, 
@@ -481,12 +516,14 @@ const transformData = (chartData)=>{
 	ratingChart.value = plotData2;
 	confidenceChart.value = plotData1;
 	console.log(plotData2)
+    score = score/datasets.length;
+    avgScore.value = score;
 
 	if(legends.length>0){
 		legendData.value = []
 		legends.forEach((category) => {
 	        legendData.value.push({
-	            name: `${category.label}: Average score (${category.avg_score}) / Sentiment analysis: ${category.feeling}`,
+	            name: category.label,
 	            color: category.color
 	        });
 	    });
