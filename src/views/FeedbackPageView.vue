@@ -204,7 +204,7 @@ watch(() => {
 const disabledDate = (time) => {
   return time.getTime() > Date.now()
 }
-
+const app_url = inject('app_url')
 const firstname = ref('');
 const lastname = ref('');
 const gender = ref('');

@@ -116,6 +116,7 @@ export const useCompanyStore = defineStore('company', () => {
                 resolve(response);
             });
         });
+        console.log(response)
         if (response.status == 200) {
            data = transformLinksData(response.data.data, tag)
         }

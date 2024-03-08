@@ -505,6 +505,7 @@ onBeforeMount(async () => {
 
   if (response.status == 200 && response.data) {
     const data = response.data
+    console.log(data)
     plans.value = data.sort((a,b)=>a.id - b.id);
   }
 })

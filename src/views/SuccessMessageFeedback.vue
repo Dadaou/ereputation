@@ -4,15 +4,15 @@
     <div class="feedback__form">
         <p> {{$t("success")}} </p>
         <div class="mt-6" v-if="route.params.share !== 'message'">
-           <h2>{{$t("success_text")}}</h2>
-            <ul class="mb-4 link socials">
+           <h2 v-if="links.length>0">{{$t("success_text")}}</h2>
+            <ul v-if="links.length>0" class="mb-4 link socials">
                 <li v-for="link in links">
                     <a :href="link.url" target="_blank">
                         {{link.name}}
                     </a>
                 </li>
             </ul>
-            <h2>{{$t("success_text2")}}</h2>
+            <h2 v-if="socials.length>0">{{$t("success_text2")}}</h2>
             <ul v-if="socials.length>0" class="socials">
                 <li v-for="link in socials">
                     <a :href="link.url" target="_blank">

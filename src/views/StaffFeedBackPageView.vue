@@ -373,7 +373,7 @@ const submit = async () => {
                                 router.push({
                                     name: 'SuccessFeedback',
                                     params: {
-                                        etab: route.params.id,
+                                        etab: route.params.etab,
                                         tag: route.params.tag,
                                         email_sent: email_sent,
                                         share: parseFloat(review.rating)>=4?'message-and-join-us':'message'
