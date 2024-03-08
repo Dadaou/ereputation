@@ -16,7 +16,7 @@
       <el-table-column label="Validity" prop="validity" style="width: 10%; min-width: 200px;" align="center" />
       <el-table-column label="Expired At" style="width: 10%; min-width: 200px;" >
          <template #default="scope">
-                  {{moment(scope.row.expired_at).format('YYYY-MM-DD')}}
+                  {{scope.row.expired_at?moment(scope.row.expired_at).format('YYYY-MM-DD'):''}}
          </template>
       </el-table-column>
       <el-table-column label="Enable" style="width: 10%; min-width: 200px;" align="center">
