@@ -4,13 +4,13 @@
         <h3 v-if="data.amount == '0'">Let's Talk!</h3>
         <h2 v-else>{{ data.currency }}{{ fprice }}<span>/{{ data.periodicity }}</span></h2>
         <ul class="grid">
-            <li v-if="data.name.toLowerCase().includes('business')">All yours establishments</li>
+            <li v-if="data.name.toLowerCase().includes('business')">All your establishments</li>
             <li v-if="data.additional_establishment != '0' && !data.name.toLowerCase().includes('business')">
                 <input v-model="enumber" type="number" name="enumber" min="1"> establishment(s)
             </li>
             <li v-if="data.additional_establishment != '0'">+ {{ data.additional_establishment }} {{ data.currency }} per
                 additionnal establishment</li>
-            <li>1 establishement (1 QR CODE by establishment)</li>
+            
             <li v-if="data.name.toLowerCase().includes('business')">Adjustable reviews limit</li>
             <li v-else>{{ data.review_limit || 'Illimited' }} Reviews / Year</li>
             
@@ -19,7 +19,7 @@
             
             <li v-if="data.name.toLowerCase().includes('business')">Adjustable events limit</li>
             <li v-else>{{ data.event_limit || 'Illimited' }} events</li>
-            
+
             <li v-if="data.name.toLowerCase().includes('business')">Adjustable #hashtag limit</li>
             <li v-else>{{ data.hashtag_limit || 'Illimited' }} monitored #hashtag</li>
             
@@ -33,7 +33,7 @@
             <li v-else>{{ data.category_limit || 'Illimited' }} reviews categorization</li>
             
             <li v-if="data.name.toLowerCase().includes('business')">Adjustable monitored competitors</li>
-            <li v-else>{{ data.competitor_limit || 'Illimited' }} reviews categorization</li>
+            <li v-else>{{ data.competitor_limit || 'Illimited' }} monitored competitors</li>
             
             <li v-if="data.name.toLowerCase().includes('basic')">Standard forms</li>
             <li v-else>Custom forms</li> 
