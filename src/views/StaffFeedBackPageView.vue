@@ -47,19 +47,21 @@
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                         <div>
-                            <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                $t("feedback.firstname") }} <span>*</span></label>
-                            <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())"
+                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                                $t("feedback.lastname") }} <span>*</span></label>
+                            <input type="text" id="last_name" v-model="lastname" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                         </div>
                         <div>
-                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                $t("feedback.lastname") }}</label>
-                            <input type="text" id="last_name" v-model="lastname"
+                            <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                                $t("feedback.firstname") }} </label>
+                           <!--  <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required> -->
+                                 <input type="text" id="first_name" v-model="firstname" 
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
                         <div>
-                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                            <label for="genders" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                                 $t("feedback.gender") }} <!-- <span>*</span> --></label>
                             <el-select v-model="gender" :placeholder="$t('feedback.placeholder_gender')" size="large">
                                 <el-option v-for="item in genders" :key="item.value" :label="item.label"
@@ -67,7 +69,7 @@
                             </el-select>
                         </div>
                          <div>
-                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t("feedback.datevisit") }}<!--  <span>*</span> --></label>
+                            <label for="datevisit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t("feedback.datevisit") }}<!--  <span>*</span> --></label>
                              <!-- <el-date-picker
                                 v-model="dateVisit"
                                 :size="'large'"
@@ -105,7 +107,7 @@
                         <div>
                             <div class="checkbox-container">
                                 <label>
-                                    <input type="checkbox" id="agreeCheckbox" oninvalid="this.setCustomValidity(getText())" required>
+                                    <input type="checkbox" id="agreeCheckbox" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')" required>
                                     {{ $t("feedback.indice2") }}
                                 </label>
                             </div>
@@ -152,7 +154,7 @@
 
 <script setup>
 
-import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, watch } from 'vue';
+import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, watch, inject } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useUserStore } from "@Stores/user.js";
@@ -181,6 +183,7 @@ const ModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/ModalComponent.vue')
 )
 
+const app_url = inject('app_url')
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
@@ -356,7 +359,9 @@ const submit = async () => {
                                         firstname: firstname.value,
                                         lastname: lastname.value,
                                         email: email.value,
-                                        language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase()
+                                        language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase(),
+                                        app_url: app_url.value
+
                                     }
                                     await services.createRecord('workflow', coupons, (workflowResponse) => {
                                         console.log(workflowResponse)
