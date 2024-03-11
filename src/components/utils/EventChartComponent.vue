@@ -174,8 +174,9 @@ const legendDataPublic = computed(() => {
     dates.forEach((date) => {
         date.events.forEach((event) => {
             if (!nameSet.has(event.name) && event.isPublic) {
+            
                 data.push({
-                    name: `${props.establishment.locality_name}: ${event.name}`,
+                    name: `${event.locality_name}: ${event.name}`,
                     color: `${generateColor(event.name)}`
                 });
                 nameSet.add(event.name);

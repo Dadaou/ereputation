@@ -6,11 +6,35 @@
             </div>
         </div>
        <div id="ttv__container" style="margin-top: 25px;">
-       		<p class="mb-4">
+             <el-tabs
+                v-model="activeName"
+                type="card"
+                class="demo-tabs"
+              >
+                <el-tab-pane label="Categorization" name="categorization">
+                    <Categorization />
+                </el-tab-pane>
+                <el-tab-pane label="Staff" name="staff">
+                    Staff
+                </el-tab-pane>
+                <el-tab-pane label="Events & weather" name="events_weather">
+                    Events and weather
+                </el-tab-pane>
+                <el-tab-pane label="Bookings" name="bookings">
+                    Booking
+                </el-tab-pane>
+                <el-tab-pane label="Trends" name="trends">
+                    Trends
+                </el-tab-pane>
+                <el-tab-pane label="Alerts" name="alerts">
+                    Alerts
+                </el-tab-pane>
+              </el-tabs>
+       		<!-- <p class="mb-4">
         		Below are two sets of graphs representing score and rating of all reviews.
         		The first set illustrates ratings from all reviews, while the second set displays scores from all reviews and comments combined.
-        	</p>
-            <div :class="['chartBox', isLoading?'loaded':'']">
+        	</p> -->
+            <!-- <div :class="['chartBox', isLoading?'loaded':'']">
                 <div class="containerChart">
                     <div :class="['containerBody', !isLoading?'':'loading']">
                         <Bar :data="ratingChart" id="rating" :options="options" />
@@ -23,15 +47,11 @@
                 <SpinnerComponent :size="'large'" v-if="isLoading" class="loader"/>
                 <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="legendData" :alignment="'vertical'">
        				</BaseLegend> 
-            </div>
+            </div> -->
         </div>
     </div>
     
     <div class="tablet_mobile__filter">
-    	<!-- <DropdownComponent class="dropdown" title="Filter by sentiment analysis" placeholder="Select a sentiment"
-                :data="feelings" @submit="(feeling) => {
-                    selectedFeeling = feeling
-                }" :default="feelings[0]" /> -->
         <div class="date__picker px-2">
             <el-date-picker v-model="start_date" placeholder="Start date" :size="'large'" />
         </div>
@@ -191,10 +211,12 @@ import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
-import { ref, watch, onBeforeMount, inject, computed, defineAsyncComponent } from 'vue';
-import { ElDatePicker, ElOption, ElSelect } from 'element-plus';
-import 'element-plus/es/components/option/style/css'
-import 'element-plus/es/components/select/style/css'
+import { ref, watch, onBeforeMount, inject, computed, defineAsyncComponent, provide } from 'vue';
+import { ElDatePicker, ElOption, ElSelect, ElTabs, ElTabPane } from 'element-plus';
+import 'element-plus/es/components/option/style/css';
+import 'element-plus/es/components/select/style/css';
+import 'element-plus/es/components/tabs/style/css';
+import 'element-plus/es/components/tab-pane/style/css';
 import {
   Chart as ChartJS,
   Title,
@@ -213,6 +235,10 @@ const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
 )
 
+const Categorization = defineAsyncComponent(() =>
+  import('@Components/analysis/CategorizationComponent.vue')
+)
+
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 
@@ -226,15 +252,19 @@ const dataLoading = ref(false)
 const isLoading = ref(false)
 let establishment = ref({});
 const categories = ref([])
+provide('categories', categories)
 const avgScore = ref(0)
 const _categories = computed(()=>{
 	let data= []
 	categories.value.forEach(category=>{
 		data.push(category.category)
 	})
+    console.log(categories.value)
 	return data.join(',')
 })
+provide('_categories', _categories)
 const categoryFilters = ref(['all'])
+provide('categoryFilters', categoryFilters)
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
     { title: "Reviews", value: 0, icon: "uil-comment" },
@@ -242,7 +272,6 @@ const all_items = ref([
 ]);
 let dataLegends = ref([]);
 const legendData = ref([]);
-
 // watch(dataLegends, ()=>{
 // 	if(dataLegends.value.length>0){
 // 		dataLegends.value.forEach((category) => {
@@ -264,7 +293,7 @@ const confidenceChart = ref({
 	labels: [],
 	datasets: []
 })
-
+const activeName = ref('categorization');
 const newOptions = {
     // responsive: false,
     maintainAspectRatio: false,
@@ -371,7 +400,6 @@ const options = {
     }
 };
 
-
 const handleCategoryDropdown = (type) => {
     const filters = type == 'other' ? categoryFilters.value.filter(category => category != 'all') : ['all']
     categoryFilters.value = categoryFilters.value.length > 0 ? filters : ['all']
@@ -466,7 +494,7 @@ const loadAnalysisData = async(tag, dateStart, dateEnd, categories)=>{
 }
 
 watch([categoryFilters, end_date, start_date], async()=>{
- await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)	
+ await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
 })
 
 const transformData = (chartData)=>{
@@ -565,7 +593,7 @@ onBeforeMount(async () => {
         }
     })
     await loadCategories(companyId)
-    await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
+    // await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
      appStore.isLoading = false;
 });
 
