@@ -130,7 +130,7 @@ export const useChartsStore = defineStore(
       let result = []
 
       await fetchData(tag.join(','), type.toLowerCase(), fFrom, fTo, platform, (response) => {
-        let data = response.data
+        let data = response.data.data
         if (data.length) {
           let items = data.length
           Object.keys(data[0].data).forEach((key) => {
