@@ -12,7 +12,7 @@
           </div>
           <span v-else-if="appStore.account && appStore.account.brand"
             class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
-              appStore.account.brand }}</span>
+          appStore.account.brand }}</span>
         </a>
         <RouterLink :to="`/`" class="relative p-2 login-link">
           <span class="font-bolder"> Sign In</span>
@@ -103,7 +103,8 @@
               </span> -->
             </div>
             <div class="w-full">
-              <label for="cpassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password
+              <label for="cpassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm
+                password
                 <span>*</span></label>
               <input v-model="planInfo.uCPassword" type="password" id="cpassword"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
@@ -114,12 +115,12 @@
             <!-- <span v-for="error in v$User.$errors" :key="error.uid">{{ error.$property }} - {{ error.$message }}</span> -->
           </div>
           <div class="navigation-container">
-            <button type="button" class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+            <button type="button" class="btn btn-primary-3 btn-navigation" style="margin-top: 12px; border-radius: 2px;"
               @click="activeName = 'plan'">Previous</button>
             <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
               @click="activeName = 'company-info'">Next</button> -->
-            <button type="submit" class="btn btn-primary btn-navigation" :class="showSpinner == true ? 'isLoaded' : ''"
-              style="margin-top: 12px; border-radius: 2px;">
+            <button type="submit" class="btn btn-primary-3 btn-navigation"
+              :class="showSpinner == true ? 'isLoaded' : ''" style="margin-top: 12px; border-radius: 2px;">
               <SpinnerComponent v-if="showSpinner == true" :color="'red'" /> <span v-else>Next</span>
             </button>
           </div>
@@ -194,19 +195,22 @@
               <div class="w-full inline-flex items-center gap-2 mt-5">
                 <input v-model="planInfo.acceptConditions" type="checkbox" id="coding" name="interest" value="coding"
                   required />
-                <label for="coding">I read and accept <a href="" class="terms-conditions-link">Terms and Conditions</a> of
+                <label for="coding">I read and accept <a href="" class="terms-conditions-link">Terms and Conditions</a>
+                  of
                   service.</label>
               </div>
             </div>
           </div>
           <div class="navigation-container">
-            <button type="button" class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+            <button type="button" class="btn btn-primary-3 btn-navigation" style="margin-top: 12px; border-radius: 2px;"
               @click="activeName = 'user-info'">Previous</button>
-            <button type="submit" v-if="planInfo.acceptConditions" class="btn btn-primary-2 btn-navigation"
+            <button type="submit" v-if="planInfo.acceptConditions" class="btn btn-primary-3 btn-navigation"
               :class="showSpinner == true ? 'isLoaded' : ''" style="margin-top: 12px; border-radius: 2px;">
               <SpinnerComponent v-if="showSpinner == true" :color="'red'" /> <span v-else>Sign In</span>
             </button>
-            <button v-if="userCreated && planInfo.acceptConditions" type="button" class="btn btn-primary-2 btn-navigation" style="margin-top: 12px; border-radius: 2px;"  @click="activeName = 'checkout'">
+            <button v-if="userCreated && planInfo.acceptConditions" type="button"
+              class="btn btn-primary-3 btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+              @click="activeName = 'checkout'">
               Back
             </button>
           </div>
@@ -242,7 +246,8 @@
                     </tr>
                     <tr>
                       <td>Order Total</td>
-                      <td style="text-align:right;"><strong>{{ planInfo.total }}{{ planInfo.plan.currency }}</strong></td>
+                      <td style="text-align:right;"><strong>{{ planInfo.total }}{{ planInfo.plan.currency }}</strong>
+                      </td>
                     </tr>
                   </table>
                 </div>
@@ -252,7 +257,8 @@
                   <div class="app__title">
                     <h1>Payment information</h1>
                   </div>
-                  <label for="cardName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name on card
+                  <label for="cardName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name on
+                    card
                     <span>*</span></label>
                   <input v-model="planInfo.cardName" type="text" id="cardName"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
@@ -260,7 +266,7 @@
                   <div id="card-errors" role="alert"></div>
                   <div id="card-success" role="alert"></div>
                   <div class="flex items-center justify-end" style="text-align: right;"><button id="processPaymentBtn"
-                      class="btn btn-primary-2" :class="showSpinner == true ? 'isLoaded' : ''"
+                      class="btn btn-primary-3" :class="showSpinner == true ? 'isLoaded' : ''"
                       style="margin-top: 12px; border-radius: 2px; width: 208px;" @click="() => subscribe()">
                       <SpinnerComponent v-if="showSpinner == true" :color="'red'" /> <span v-else>Process to
                         payment</span>
@@ -271,8 +277,8 @@
           </div>
         </div>
         <!-- <div class="navigation-container"> -->
-        <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-            @click="activeName = 'company-info'">Previous</button>
+        <button class="btn btn-primary-3 btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+          @click="activeName = 'company-info'">Previous</button>
         <!-- </div> -->
       </el-tab-pane>
     </el-tabs>
@@ -506,7 +512,7 @@ onBeforeMount(async () => {
   if (response.status == 200 && response.data) {
     const data = response.data
     console.log(data)
-    plans.value = data.sort((a,b)=>a.id - b.id);
+    plans.value = data.sort((a, b) => a.id - b.id);
   }
 })
 

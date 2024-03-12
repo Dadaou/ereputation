@@ -80,7 +80,6 @@ body {
 .main__container {
   margin-top: 5rem;
   min-height: calc(100dvh - 280px);
-  
 }
 
 .container {
@@ -261,10 +260,26 @@ img {
 
 .btn-primary-2 {
   background-color: var(--color-primary);
-  color: var(--color-white);
+  color: white;
+  transition: all 0.5s linear;
 }
 
 .btn-primary-2:hover {
+  transition: all 0.5s linear;
+  background-color: white;
+  color: var(--color-primary);
+  outline: 2px solid var(--color-primary);
+}
+
+.btn-primary-3 {
+  margin-left: 2px;
+  background-color: white;
+  color: var(--color-primary);
+  transition: all 0.5s linear;
+}
+
+.btn-primary-3:hover {
+  transition: all 0.5s linear;
   background-color: white;
   color: var(--color-primary);
   outline: 2px solid var(--color-primary);
@@ -409,7 +424,7 @@ img {
 }
 
 @media screen and (max-width: 2560px and min-width: 1440px) {
-  .container:{
+  .container: {
     width: 100%;
   }
 }
