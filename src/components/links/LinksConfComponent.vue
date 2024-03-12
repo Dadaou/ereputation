@@ -31,13 +31,13 @@
         </el-table>
     </div>
     <div class="mt-5 table__container" v-else>
-        <el-table :data="allLinks">
+        <el-table :data="filteredLinks">
             <el-table-column label="Establishment" prop="establishment" style="width: 50%; min-width: 200px;" />
             <el-table-column label="Provider" prop="name" style="width: 50%; min-width: 200px;" />
             <el-table-column label="Value" prop="settings_value1" style="width: 50%; min-width: 200px;" />
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
                 <template #header>
-                    <el-input v-model="search" size="small" placeholder="Type to search" />
+                    <el-input v-model="searchLink" size="small" placeholder="Type to search" />
                 </template>
                 <template #default="scope">
                     <el-button size="small" @click="handleEdit(scope.row)"><i
@@ -164,6 +164,7 @@ const categories = ref(['Hashtag','Platform', 'Social'])
 const category = ref('Platform')
 const showSpinner = ref(false)
 const search = ref('')
+const searchLink = ref('')
 const link = ref('')
 const isValidLink = ref('true')
 const establishment = ref('')
@@ -202,9 +203,22 @@ const establishments = computed(() => {
     return filteredData;
 });
 
+// const filteredLinks = computed(() => {
+//     let data = links.value;
+//     return data.filter(item => item.establishment == establishment.value);
+// })
+
 const filteredLinks = computed(() => {
-    let data = links.value;
-    return data.filter(item => item.establishment == establishment.value);
+    let filteredData = allLinks.value;
+    console.log(filteredData)
+    console.log(searchLink.value)
+    filteredData = filteredData.filter((data)=>{
+        return !searchLink.value || 
+        data.name.toLowerCase().includes(searchLink.value.toLowerCase()) || 
+        (data.category && data.category.toLowerCase().includes(searchLink.value.toLowerCase())) ||
+        (data.establishment && data.establishment.toLowerCase().includes(searchLink.value.toLowerCase()))
+    })
+    return filteredData
 })
 
 const filteredProviders = computed(() => {

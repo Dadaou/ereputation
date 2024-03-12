@@ -46,19 +46,19 @@
                         }" />
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
-                        <div>
-                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                $t("feedback.lastname") }} <span>*</span></label>
-                            <input type="text" id="last_name" v-model="lastname" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-                        </div>
-                        <div>
+                         <div>
                             <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                $t("feedback.firstname") }} </label>
+                                $t("feedback.firstname") }} <span>*</span></label>
                            <!--  <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required> -->
-                                 <input type="text" id="first_name" v-model="firstname" 
+                                 <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                        </div>
+                        <div>
+                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                                $t("feedback.lastname") }} </label>
+                            <input type="text" id="last_name" v-model="lastname"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                         </div>
                         <div>
                             <label for="genders" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
@@ -140,10 +140,10 @@
             </div>
             <div class="modal__container" v-if="staffs.length > 0">
                 <a class="staff__card mb-1" 
-                    :href="`/customer/${route.tag}/establishment/${staff.establishment_competitor_tag}/staffs/${staff.tag}/feedback`"
+                    :href="`/customer/${route.params.tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`"
                     v-for="staff in staffs" :key="staff.id">
                     <div class="staff__qrcode">
-                        {{ staff.firstname }} <!-- {{ staff.lastname }} -->
+                        {{ staff.firstname }}
                     </div>
                 </a>
             </div>
