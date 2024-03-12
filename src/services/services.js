@@ -318,6 +318,47 @@ function calculateRed(score) {
     return (1 - score) * 255;
 }
 
+
+const resizeBase64Image = async (base64, targetWidth, targetHeight) => {
+ return new Promise(async (resolve, reject) => {
+    const img = new Image();
+    img.onload = async () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d', { colorSpace: 'srgb', pixelFormat: 'unorm8' });
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+
+      // Utilisation de createImageBitmap pour un redimensionnement sans flou
+      let bitmap = await createImageBitmap(img, {
+        resizeWidth: targetWidth,
+        resizeHeight: targetHeight,
+        resizeQuality: 'pixelated' // Pour une qualité pixelisée
+      });
+
+      // Dessin de l'image bitmap sur le canvas
+      ctx.drawImage(bitmap, 0, 0, targetWidth, targetHeight);
+      bitmap.close();
+
+      const newBase64 = canvas.toDataURL('image/jpeg');
+      resolve(newBase64);
+    };
+    img.onerror = reject;
+    img.src = base64;
+ });
+};
+
+const downloadQrcode = async (filename, base64Image) => {
+ try {
+    const resizedBase64Image = await resizeBase64Image(base64Image, 500, 500); // Exemple de dimensions
+    let link = document.createElement('a');
+    link.download = `${filename}.jpeg`;
+    link.href = resizedBase64Image;
+    link.click();
+ } catch (error) {
+    console.error('Erreur lors du redimensionnement de l\'image', error);
+ }
+};
+
 export default {
   setToken,
   setURL,
@@ -336,5 +377,6 @@ export default {
   reviewAnalysis,
   post_Record,
   postFormData,
-  getScoreColor
+  getScoreColor,
+  downloadQrcode
 }

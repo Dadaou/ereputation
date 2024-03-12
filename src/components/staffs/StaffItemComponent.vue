@@ -153,6 +153,7 @@ import { ElTooltip  } from 'element-plus';
 import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js'
 import { Pie } from 'vue-chartjs';
 import {useRouter} from 'vue-router';
+import services from '@Services/services.js';
 
 const ModalComponent = defineAsyncComponent(()=>
     import('@Components/utils/ModalComponent.vue')
@@ -182,13 +183,13 @@ const legendData = ref([
     {name: '5 stars', color: '#008000'},
 ])
 
-const downloadQrcode = (staffname)=>{
-    let link = document.createElement('a');
-    link.download = `${staffname}-feedback-link.jpeg`;
-    link.href = base64Image.value;
-    link.click();
-    downloaded.value = true;
+const downloadQrcode = (staffname) => {
+  const filename = `${staffname}-feedback-link`;
+  services.downloadQrcode(filename, base64Image.value);
+  downloaded.value = true;
 }
+
+
 
 const modalWidth= computed(()=>{
     let windowSize = 1500;

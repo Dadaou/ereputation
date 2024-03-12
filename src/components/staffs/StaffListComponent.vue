@@ -88,6 +88,7 @@ import 'element-plus/es/components/table-column/style/css'
 import 'element-plus/es/components/popconfirm/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
+import services from '@Services/services.js';
 
 const emit = defineEmits(['edit']);
 const staffStore = useStaffStore();
@@ -168,10 +169,8 @@ const showQRCode = (value) => {
 const base64Image = ref(null);
 const qrcode = ref(null);
 const downloadQrcode = () => {
-  let link = document.createElement('a');
-  link.download = `${staff.value.firstname} ${staff.value.lastname}-feedback-link.jpeg`;
-  link.href = base64Image.value;
-  link.click();
+  const filename = `${staff.value.firstname} ${staff.value.lastname}-feedback-link`;
+  services.downloadQrcode(filename, base64Image.value);
   downloaded.value = true;
 }
 

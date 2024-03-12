@@ -49,8 +49,8 @@ import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 
 
 const page = ref({
-  title1: "My",
-  title2: "Profile",
+  title1: "",
+  title2: "Parameters",
   icon: "uil-user-square",
 });
 const route = useRoute();

@@ -73,12 +73,10 @@ const copyCode = (code)=>{
     copy(code)
 }
 
-const downloadQrcode = ()=>{
-    let link = document.createElement('a');
-    link.download = `${advantages.value.adv_name}-${advantages.value.contact_firstname}-discount-link.jpeg`;
-    link.href = base64Image.value;
-    link.click();
-    downloaded.value = true;
+const downloadQrcode = (staffname) => {
+  const filename = `${advantages.value.adv_name}-${advantages.value.contact_firstname}-discount-link`;;
+  services.downloadQrcode(filename, base64Image.value);
+  downloaded.value = true;
 }
 
 const onDataUrlChange = (dataUrl) =>{

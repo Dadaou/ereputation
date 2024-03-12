@@ -217,12 +217,11 @@ const urlPattern = (urlTemplate) => {
 
 const base64Image = ref(null);
 const qrcode = ref(null);
+
 const downloadQrcode = () => {
-    let link = document.createElement('a');
-    link.download = `${establishment.value.name}-feedback-link.jpeg`;
-    link.href = base64Image.value;
-    link.click();
-    downloaded.value = true;
+  const filename = `${establishment.value.name}-feedback-link`;
+  services.downloadQrcode(filename, base64Image.value);
+  downloaded.value = true;
 }
 
 const onDataUrlChange = (dataUrl) => {
