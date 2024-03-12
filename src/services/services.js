@@ -359,6 +359,25 @@ const downloadQrcode = async (filename, base64Image) => {
  }
 };
 
+const hashString = (inputString) => {
+      let hash = 0;
+      for (let i = 0; i < inputString.length; i++) {
+        hash = (hash << 5) - hash + inputString.charCodeAt(i);
+      }
+      return hash;
+}
+
+const generateColor = (text) =>{
+      const inputString = text;
+      const hash = hashString(inputString);
+
+      const red = (hash & 0xFF0000) >> 16;
+      const green = (hash & 0x00FF00) >> 8;
+      const blue = hash & 0x0000FF;
+
+      return `rgb(${red}, ${green}, ${blue})`;
+}
+
 export default {
   setToken,
   setURL,
@@ -378,5 +397,6 @@ export default {
   post_Record,
   postFormData,
   getScoreColor,
-  downloadQrcode
+  downloadQrcode,
+  generateColor
 }
