@@ -24,7 +24,7 @@
         <div class="tab-pane-header">
           <h6>STEP 1 OF 3</h6>
           <div class="app__title">
-            <h1>Choose your plan.</h1>
+            <h1>Choose your plan</h1>
           </div>
         </div>
         <div v-if="plans" class="plan-container" ref="planContainer">
@@ -60,7 +60,7 @@
         <div class="tab-pane-header">
           <h6>STEP 2 OF 3</h6>
           <div class="app__title">
-            <h1>Fill your account informations.</h1>
+            <h1>Fill your account informations</h1>
           </div>
         </div>
         <form @submit.prevent="submitUserForm">
@@ -130,7 +130,7 @@
         <div class="tab-pane-header">
           <h6>STEP 2 OF 3</h6>
           <div class="app__title">
-            <h1>Fill your account informations.</h1>
+            <h1>Fill your account informations</h1>
           </div>
         </div>
         <form @submit.prevent="submitCompanyForm">
