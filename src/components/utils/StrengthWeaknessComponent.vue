@@ -38,25 +38,25 @@ const props = defineProps({
 
 <style scoped>
 ul {
-    list-style: none; /* Remove default bullets */
+    list-style: none; 
     padding-left: 0;
     font-size: 15px;
     font-weight: 500;
 }
 
 li.strength::before {
-    content: "➡️ "; /* Unicode arrow for strengths */
-    color: green; /* Green color for strengths */
+    content: "➡️ "; 
+    color: green; 
 }
 
 li.weakness::before {
-    content: "⬅️ "; /* Unicode arrow for weaknesses */
-    color: red; /* Red color for weaknesses */
+    content: "⬅️ "; 
+    color: red; 
 }
 
 li {
-    padding: 2px 0; /* Vertical padding for list items */
-    margin-bottom: 2px; /* Space between list items */
+    padding: 2px 0; 
+    margin-bottom: 2px; 
 }
 
 .categories_comparison {

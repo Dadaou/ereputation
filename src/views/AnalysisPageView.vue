@@ -38,14 +38,36 @@
                             <div :class="['containerBody', !isLoading?'':'loading']">
                                 <Bar :data="ratingChart" id="rating" :options="options" />
                             </div>
+
+                            <!-- <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="legendData" :alignment="'vertical'">
+                            </BaseLegend>  -->
                              
-                            <div :class="['containerBody2', !isLoading?'':'loading']">
+                           <!--  <div :class="['containerBody2 mt-5', !isLoading?'':'loading']">
+                                <Bar :data="confidenceChart" id="confidence" :options="newOptions" />
+                            </div> -->
+                        </div>
+                        <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="legendData" :alignment="'vertical'">
+                            </BaseLegend> 
+                         <!-- <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="dataLegend" :alignment="'vertical'">
+                            </BaseLegend>  -->
+                        <SpinnerComponent :size="'large'" v-if="isLoading" class="loader"/>   
+                    </div>
+                    <div :class="['chartBox mt-5', isLoading?'loaded':'']">
+                        <div class="containerChart">
+                            <!-- <div :class="['containerBody', !isLoading?'':'loading']">
+                                <Bar :data="ratingChart" id="rating" :options="options" />
+                            </div>
+
+                            <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="legendData" :alignment="'vertical'">
+                            </BaseLegend>  -->
+                             
+                            <div :class="['containerBody2 mt-5', !isLoading?'':'loading']">
                                 <Bar :data="confidenceChart" id="confidence" :options="newOptions" />
                             </div>
                         </div>
-                        <SpinnerComponent :size="'large'" v-if="isLoading" class="loader"/>
-                        <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="legendData" :alignment="'vertical'">
+                         <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="dataLegend" :alignment="'vertical'">
                             </BaseLegend> 
+                        <SpinnerComponent :size="'large'" v-if="isLoading" class="loader"/>   
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="Staff" name="staff">
@@ -295,18 +317,8 @@ const all_items = ref([
     { title: "Reviews", value: 0, icon: "uil-comment" },
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
-let dataLegends = ref([]);
+const dataLegend = ref([]);
 const legendData = ref([]);
-// watch(dataLegends, ()=>{
-// 	if(dataLegends.value.length>0){
-// 		dataLegends.value.forEach((category) => {
-// 	        legendData.value.push({
-// 	            name: `${category.label}: Average score (${category.avg_score}) / Sentiment analysis: ${category.feeling}`,
-// 	            color: category.color
-// 	        });
-// 	    });
-// 	}
-// })
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 const ratingChart = ref({
@@ -356,8 +368,8 @@ const newOptions = {
             ticks: {
                 stepSize: 1, // Définit l'intervalle des graduations sur l'axe Y
                 callback: function(value, index, values) {
-                        // Affiche uniquement les valeurs 1, 0 et -1
-                        return value === 1 || value === 0 || value === -1 ? value : '';
+                    // Affiche uniquement les valeurs 1, 0 et -1
+                    return value === 1 || value === 0 || value === -1 ? value : '';
                 }
             }
         }
@@ -481,25 +493,6 @@ const loadCategories = async (tag) => {
 
 const IsValueOkay = (value)=> (value == '' || value == null || value == undefined || value == [])?false:true;
 
-// const hashString = (inputString) => {
-//       let hash = 0;
-//       for (let i = 0; i < inputString.length; i++) {
-//         hash = (hash << 5) - hash + inputString.charCodeAt(i);
-//       }
-//       return hash;
-// }
-
-// const generateColor = (text) =>{
-//       const inputString = text;
-//       const hash = hashString(inputString);
-
-//       const red = (hash & 0xFF0000) >> 16;
-//       const green = (hash & 0x00FF00) >> 8;
-//       const blue = hash & 0x0000FF;
-
-//       return `rgb(${red}, ${green}, ${blue})`;
-// }
-
 const loadAnalysisData = async(tag, dateStart, dateEnd, categories)=>{
 	isLoading.value = true
     let apiBase = `get/chart/review/by/etablishment`;
@@ -573,6 +566,7 @@ const transformData = (chartData)=>{
 	}
 
 	let legends = []
+    ratings.value = []
 
 	datasets.forEach(category=>{
 		const {avg_score, feeling, scores, data, label} = category 
@@ -613,11 +607,17 @@ const transformData = (chartData)=>{
 
 	if(legends.length>0){
 		legendData.value = []
+        dataLegend.value = []
 		legends.forEach((category) => {
 	        legendData.value.push({
 	            name: category.label,
 	            color: category.color
 	        });
+
+            dataLegend.value.push({
+                name: `${category.label}: ${category.feeling}`,
+                color: category.color
+            });
 	    });
 	}
 }
@@ -667,7 +667,7 @@ onBeforeMount(async () => {
     	display: flex;
     	justify-content: center;
     	align-items: center;
-    	height: 400px;
+    	height: 200px;
     	background: rgba(0, 0, 0, 0.1);
         opacity: 0.9;
         z-index: 1;

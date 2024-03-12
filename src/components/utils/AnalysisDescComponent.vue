@@ -1,7 +1,7 @@
 <template>
 	<div class="mb-2 cat_desc">
         <p>
-            <Icon icon="ic:twotone-arrow-right" width="2rem" height="2rem"  style="color: #d9d208"></Icon> 
+            <Icon icon="ic:twotone-arrow-right" width="2rem" height="2rem"  style="color: var(--color-danger)"></Icon> 
             {{text}} :
         </p>
         <span v-for="rating in ratings" :key="rating.label" :style="{
@@ -42,7 +42,7 @@ const props = defineProps({
     }
 
     .cat_desc span{
-    	margin-left: 2rem;
+    	margin-left: 1rem;
     	font-size: 12px;
     }
 </style>
