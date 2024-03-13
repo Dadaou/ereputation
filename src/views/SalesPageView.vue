@@ -192,6 +192,7 @@ import {
     onUpdated,
     inject
 } from 'vue';
+import { useCompanyStore } from "@Stores/company.js";
 import { ElDatePicker } from 'element-plus';
 import { useResizeObserver } from '@vueuse/core';
 import {
@@ -211,7 +212,9 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Legend, Tooltip,
     LineElement)
 
 const appStore = useAppStore();
+const companiesStore = useCompanyStore();
 const route = useRoute();
+const customerTag = inject('tag')
 
 appStore.setIsExist(true);
 
@@ -365,47 +368,44 @@ const options = {
 
 onBeforeMount(async () => {
     appStore.isLoading = true;
-    console.log(companyId)
+    
+    companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
+
+        if (data == false) {
+            appStore.setIsExist(false);
+            appStore.isLoading = false;
+        }
+        else {
+            establishment.value = data;
+            // page.value.title2 = establishment.value.name;
+            appStore.setCurrentPage({
+                title1: "",
+                title2: 'Sales',
+                icon: "uil-users-alt",
+            })
+
+            appStore.setBreadcrumbs([
+                {
+                    title: establishment.value.name,
+                    path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                    isCurrent: false,
+                },
+                {
+                    title: "Sales",
+                    path: `${route.path}`,
+                    isCurrent: true,
+                },
+            ]);
+
+            all_items.value[0].value = establishment.value.rating;
+            all_items.value[1].value = establishment.value.totalReviews;
+            appStore.isLoading = false;
+            dataLoading.value = false;
+
+            }
+    })
     await loadFromServer(companyId, start_date.value, end_date.value, 'sales')
     await loadFromServer(companyId, start_date.value, end_date.value, 'number')
-
-    const response = await new Promise((resolve) => {
-        services.get_Record(`establishment/${companyId}/rating`, (response) => {
-            resolve(response)
-            if (response.status == 404) {
-                appStore.setExist(false);
-                appStore.isLoading = false;
-            }
-        });
-    });
-
-    if (response.status == 200) {
-        establishment.value = response.data;
-        appStore.setCurrentPage({
-            title1: "",
-            title2: establishment.value.name,
-            icon: "uil-users-alt",
-        })
-
-        appStore.setBreadcrumbs([
-            {
-                title: establishment.value.name,
-                path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
-                isCurrent: false,
-            },
-            {
-                title: "Sales",
-                path: `${route.path}`,
-                isCurrent: true,
-            },
-        ]);
-
-        all_items.value[0].value = establishment.value.rating;
-        all_items.value[1].value = establishment.value.totalReviews;
-        appStore.isLoading = false;
-        dataLoading.value = false;
-    }
-
 })
 
 

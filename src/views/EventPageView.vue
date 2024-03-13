@@ -386,12 +386,6 @@ onBeforeMount(async () => {
             establishment.value = data;
             console.log(establishment.value)
 
-            if(activeName.value == 'events'){
-                   await loadEvents(companyId, start_date.value, end_date.value)
-            }else{
-                   await loadEvents(companyId, start_date.value, end_date.value, establishment.value.locality_id)
-            }
-
             appStore.setCurrentPage({
                 title1: "",
                 title2: establishment.value.name,
@@ -418,6 +412,11 @@ onBeforeMount(async () => {
 
         }
     })
+    // if(activeName.value == 'events'){
+    //     await loadEvents(companyId, start_date.value, end_date.value)
+    // }else{
+    //     await loadEvents(companyId, start_date.value, end_date.value, establishment.value.locality_id)
+    // }
     chartLoading.value = false
 })
 

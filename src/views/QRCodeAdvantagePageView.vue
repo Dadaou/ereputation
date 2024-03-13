@@ -3,11 +3,13 @@
         <div class="container mx-auto advantage__qrc_content">
             <div class="bg-gradient-to-br from-purple-600 to-indigo-600 text-white text-center py-10 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative">
                 <h3 class="text-xl font-semibold mb-4">🎉 Exclusive Offer Just for You! 🎁</h3>
-                <vue-qrious
-                    class="qr__code mx-auto"
-                    :value="`${baseurl}/public/discount/validation/${route.params.discountTag}`"
-                    @change="onDataUrlChange"
-                />
+                <div id="qrcode__container" ref="qrcode">
+                     <vue-qrious
+                        class="qr__code mx-auto"
+                        :value="`${baseurl}/public/discount/validation/${route.params.discountTag}`"
+                        @change="onDataUrlChange" size="5000"
+                    />
+                </div>
                 <h3 class="text-xl font-semibold mb-4" v-if="advantages">{{ advantages.adv_name }} <br>{{ advantages.establishment_name }}</h3>
 
                 <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2 mb-6">
@@ -73,10 +75,9 @@ const copyCode = (code)=>{
     copy(code)
 }
 
-const downloadQrcode = (staffname) => {
+const downloadQrcode = () => {
   const filename = `${advantages.value.adv_name}-${advantages.value.contact_firstname}-discount-link`;;
   services.downloadQrcode(filename, base64Image.value);
-  downloaded.value = true;
 }
 
 const onDataUrlChange = (dataUrl) =>{
@@ -139,20 +140,41 @@ onBeforeMount(async () => {
     border-radius: 10px;
     margin-top: 2rem;
 }
-
-.qrcode {
-    padding: 10px;
-   /* border: 1px solid #ddd;*/
-    border-radius: 5px;
-    background-color: white;
-    margin-bottom: 20px;
+img {
+    height: 50px;
+    object-fit: cover;
+    width: 100%;
 }
 
-.qr__code {
+/*.qr__code {
     width: 150px;
     height: 150px;
     border: 1px solid #ddd;
     padding: 10px;
+    border-radius: 5px;
+    background-color: white;
+    margin-bottom: 20px;
+}*/
+
+/*.qr__code {
+    width: 12% !important;
+    padding: 10px;
+    margin: auto;
+    background-color: white;
+    border-radius: 5px;
+}*/
+#qrcode__container{
+    /*background-color: white;*/
+    padding: 5px;
+   /* border-radius: 10px;
+    border: 1px solid black;*/
+}
+
+img.qr__code{
+    width: 200px;
+    height: 200px;
+    border: 1px solid #ddd;
+    padding: 25px;
     border-radius: 5px;
     background-color: white;
     margin-bottom: 20px;

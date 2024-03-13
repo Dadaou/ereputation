@@ -8,7 +8,7 @@
         <el-table :data="establishments">
             <el-table-column width="100">
                 <template #default="scope">
-                    <img :src="scope.row.media">
+                    <img class="establishment_img" :src="scope.row.media">
                 </template>
             </el-table-column>
             <el-table-column label="Name" prop="name" style="width: 25%; min-width: 200px;">
@@ -68,7 +68,7 @@
                 <div id="qrcode__container mt-5" ref="qrcode">
                     <vue-qrious class="qr__code"
                         :value="`${baseurl}/customer/${route.params.tag}/establishment/${establishment.tag}/feedback`"
-                        @change="onDataUrlChange" />
+                        @change="onDataUrlChange" size="5000"/>
                 </div>
             </div>
             <div v-else class="establishment__review__qrcode">
@@ -470,27 +470,23 @@ input {
     font-weight: 500;
 }
 
-img {
+img.establishment_img {
     height: 50px;
     object-fit: cover;
     width: 100%;
 }
 
-#qrcode__container{
+/*#qrcode__container{
     background-color: white;
     padding: 5px;
     border-radius: 10px;
     border: 1px solid black;
-}
+}*/
 
-img.qr__code{
-    width: 150px;
-    height: 200px;
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: white;
-    margin-bottom: 20px;
+.qr__code {
+  width: 35% !important;
+  padding: 50px auto !important;
+  margin: auto;
 }
 
 .modal__header {
@@ -526,7 +522,7 @@ img.qr__code{
 }
 
 .qr__code {
-    width: 35% !important;
+    width: 40% !important;
     padding: 50px auto !important;
     margin: auto;
 }

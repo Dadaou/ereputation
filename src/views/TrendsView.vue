@@ -146,6 +146,7 @@
 import moment from 'moment';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
+import { useCompanyStore } from "@Stores/company.js";
 import { useRoute } from "vue-router";
 import { ref, watch, onBeforeMount, provide, onUpdated, inject } from 'vue';
 import { ElDatePicker } from 'element-plus';
@@ -173,13 +174,14 @@ ChartJS.register(
 
 const appStore = useAppStore();
 const route = useRoute();
+const companiesStore = useCompanyStore();
 
 appStore.setIsExist(true);
 
 appStore.setCurrentPage({
     title1: "",
-    title2: "",
-    icon: "uil-users-alt",
+    title2: "Trends",
+    icon: "uil-trophy",
 })
 
 appStore.setBreadcrumbs([
@@ -199,6 +201,7 @@ const dataLoading = ref(true)
 let establishment = ref({});
 provide('establishment', establishment)
 const companyId = route.params.id;
+const customerTag = inject('tag')
 
 let timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
 let selectedTimePeriod = ref(timePeriods.value[0]);
@@ -284,44 +287,77 @@ watch([date, selectedTimePeriod], () => {
 
 onBeforeMount(async () => {
     appStore.isLoading = true;
-    console.log(companyId)
-    await loadFromServer('daily', companyId, start_date.value, end_date.value)
+    companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
 
-    const response = await new Promise((resolve) => {
-        services.get_Record(`establishment/${companyId}/rating`, (response) => {
-            resolve(response)
-            if (response.status == 404) {
-                appStore.setIsExist(false);
-                appStore.isLoading = false;
-            }
-        });
+        if (data == false) {
+            appStore.setIsExist(false);
+            appStore.isLoading = false;
+        }
+        else {
+            establishment.value = data;
+            
+            appStore.setCurrentPage({
+                title1: "",
+                title2: "Trends",
+                icon: "uil-trophy",
+            })
+
+            appStore.setBreadcrumbs([
+                {
+                    title: establishment.value.name,
+                    path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                    isCurrent: false,
+                },
+                {
+                    title: "Trends",
+                    path: `${route.path}`,
+                    isCurrent: true,
+                },
+            ]);
+            all_items.value[0].value = establishment.value.rating;
+            all_items.value[1].value = establishment.value.totalReviews;
+            appStore.isLoading = false;
+            dataLoading.value = false;
+        }
     });
 
-    if (response.status == 200) {
-        establishment.value = response.data;
-        appStore.setCurrentPage({
-            title1: "",
-            title2: establishment.value.name,
-            icon: "uil-users-alt",
-        })
+    await loadFromServer('daily', companyId, start_date.value, end_date.value)
 
-        appStore.setBreadcrumbs([
-            {
-                title: establishment.value.name,
-                path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
-                isCurrent: false,
-            },
-            {
-                title: "Trends",
-                path: `${route.path}`,
-                isCurrent: true,
-            },
-        ]);
-        all_items.value[0].value = establishment.value.rating;
-        all_items.value[1].value = establishment.value.totalReviews;
-        appStore.isLoading = false;
-        dataLoading.value = false;
-    }
+    // const response = await new Promise((resolve) => {
+    //     services.get_Record(`establishment/${companyId}/rating`, (response) => {
+    //         resolve(response)
+    //         if (response.status == 404) {
+    //             appStore.setIsExist(false);
+    //             appStore.isLoading = false;
+    //         }
+    //     });
+    // });
+
+    // if (response.status == 200) {
+    //     establishment.value = response.data;
+    //    appStore.setCurrentPage({
+    //         title1: "",
+    //         title2: "Trends",
+    //         icon: "uil-trophy",
+    //     })
+
+    //     appStore.setBreadcrumbs([
+    //         {
+    //             title: establishment.value.name,
+    //             path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+    //             isCurrent: false,
+    //         },
+    //         {
+    //             title: "Trends",
+    //             path: `${route.path}`,
+    //             isCurrent: true,
+    //         },
+    //     ]);
+    //     all_items.value[0].value = establishment.value.rating;
+    //     all_items.value[1].value = establishment.value.totalReviews;
+    //     appStore.isLoading = false;
+    //     dataLoading.value = false;
+    // }
 
 })
 

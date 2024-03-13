@@ -74,7 +74,7 @@
                 <div id="qrcode__container mt-5" ref="qrcode">
                     <vue-qrious class="qr__code"
                         :value="`${baseurl}/customer/${tag}/establishment/${establishment.competitor_tag}/feedback`"
-                        @change="onDataUrlChange" />
+                        @change="onDataUrlChange" size="5000"/>
                 </div>
             </div>
             <div v-else class="establishment__review__qrcode">

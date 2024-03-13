@@ -27,14 +27,14 @@
                     {{ advantages.contact_firstname }}  {{ advantages.contact_lastname }}
                   </td>
                 </tr>
-                <tr class="border-b border-gray-200 dark:border-gray-700">
+                <!-- <tr class="border-b border-gray-200 dark:border-gray-700">
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
                     Category
                   </th>
                   <td class="px-6 py-4">
                     {{ advantages.adv_category }}
                   </td>
-                </tr>
+                </tr> -->
                 <tr class="border-b border-gray-200 dark:border-gray-700">
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
                     Code
@@ -158,19 +158,6 @@ onBeforeMount(async () => {
 .info-table tr {
   background-color: white;
   color: black;
-}
-
-/* Responsive Table */
-@media screen and (max-width: 640px) {
-  .info-table {
-    display: block;
-    overflow-x: auto;
-  }
-
-  .info-table th,
-  .info-table td {
-    padding: 12px;
-  }
 }
 
 /* Responsive Flex Container */

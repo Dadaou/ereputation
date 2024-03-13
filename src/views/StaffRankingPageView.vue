@@ -336,8 +336,8 @@ onBeforeMount(async () => {
             establishment.value = data;
             appStore.setCurrentPage({
                 title1: "",
-                title2: establishment.value.name,
-                icon: "uil-users-alt",
+                title2: "Staff ranking",
+                icon: "uil-trophy",
             })
 
             appStore.setBreadcrumbs([
@@ -365,7 +365,7 @@ onBeforeMount(async () => {
 
         }
     })
-    loadFromServer(selectedTimePeriod.value.toLowerCase(), companyId, start_date.value, end_date.value);
+    await loadFromServer(selectedTimePeriod.value.toLowerCase(), companyId, start_date.value, end_date.value);
     // const response = await new Promise((resolve) => {
     //     firstDateOfPreviousYear = moment(firstDateOfPreviousYear).format('YYYY-MM-DD');
     //     lastDateOfCurrentYear = moment(lastDateOfCurrentYear).format('YYYY-MM-DD');

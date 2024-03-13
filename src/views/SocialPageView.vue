@@ -688,32 +688,6 @@ onBeforeMount(async () => {
     appStore.isLoading = true;
     // dataLoading.value = true
 
-    try {
-        const response = await new Promise((resolve) => {
-            services.get_Record(`providers`, (response) => {
-                resolve(response);
-            });
-        });
-
-        if (response.status === 200) {
-            const data = response.data['hydra:member'];
-
-            data.forEach(item => {
-                providers.value.push({
-                    category: item.category,
-                    name: item.name,
-                    url: item.url,
-                    uri: `/api/providers/${item.id}`
-                })
-            })
-
-        } else {
-            console.error('Error fetching advantages:', response);
-        }
-    } catch (error) {
-        console.error('Error in onBeforeMount:', error);
-    }
-
     companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
 
         if (data == false) {
@@ -747,6 +721,32 @@ onBeforeMount(async () => {
 
         }
     })
+
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`providers`, (response) => {
+                resolve(response);
+            });
+        });
+
+        if (response.status === 200) {
+            const data = response.data['hydra:member'];
+
+            data.forEach(item => {
+                providers.value.push({
+                    category: item.category,
+                    name: item.name,
+                    url: item.url,
+                    uri: `/api/providers/${item.id}`
+                })
+            })
+
+        } else {
+            console.error('Error fetching advantages:', response);
+        }
+    } catch (error) {
+        console.error('Error in onBeforeMount:', error);
+    }
 
     if(activeName.value == 'socials'){
          await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
