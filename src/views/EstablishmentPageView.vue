@@ -928,6 +928,7 @@ onBeforeMount(async () => {
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
     margin: 15px auto;
+    width:100%;
 }
 
 .reviews__star {
@@ -979,6 +980,7 @@ onBeforeMount(async () => {
 
 .chart__rating {
     display: flex;
+    padding: 5px;
 }
 
 .legend {
