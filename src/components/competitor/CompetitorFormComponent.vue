@@ -2,11 +2,12 @@
     <div class="security__header border__bottom mt-10">
         <div class="security__edit">
             <h4><i class="uil uil-company"></i> Competitor</h4>
-            <p>{{informationText}}</p>
+            <p>{{ informationText }}</p>
         </div>
     </div>
     <div class="table__container">
-        <form id="competitorForm" @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2" v-if="!showSecondStep">
+        <form id="competitorForm" @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2"
+            v-if="!showSecondStep">
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div class="md:order-2">
                     <div class="image-selector border-gray-300" :class="!previewImage && 'hover'" @click="selectImg"
@@ -22,19 +23,22 @@
                 </div>
                 <div class="md:order-1">
                     <div class="mb-6">
-                        <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name
+                        <label for="company_name"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name
                             <span>*</span></label>
                         <input type="text" id="company_name" name="name" v-model="data.name" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                     </div>
                     <div class="mb-6">
-                        <label for="address1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address 1
+                        <label for="address1"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address 1
                             <span>*</span></label>
                         <input type="text" id="address1" name="address1" v-model="data.address1" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                     </div>
                     <div>
-                        <label for="address2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address
+                        <label for="address2"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address
                             2</label>
                         <input type="text" id="address2" name="address2" v-model="data.address2"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
@@ -58,7 +62,7 @@
                     <label for="country" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country
                         <span>*</span></label>
                     <el-select v-model="data.country" placeholder="" size="large">
-                        <el-option v-for="(country, index) in countries" :key="index" :label="country.name"
+                        <el-option v-for="(country, index) in competitor_countries" :key="index" :label="country.name"
                             :value="country.name" />
                     </el-select>
                 </div>
@@ -100,7 +104,8 @@
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
             </div>
-            <div class="flex flex-wrap gap-3 items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
+            <div
+                class="flex flex-wrap gap-3 items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
                 <button type="submit"
                     class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                     <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
@@ -115,26 +120,27 @@
         </form>
         <div v-else>
             <form @submit.prevent="submitCompetitor" @keydown.enter.prevent="submitCompetitor" class="mt-4 px-2 h-full">
-                    <div class="grid gap-6 mb-6 md:grid-cols-2">
-                        <div>
-                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishments <span>*</span></label>
-                            <el-select v-model="establishments" placeholder="Choose establishment" size="large" multiple collapse-tags collapse-tags-tooltip>
-                                <el-option
-                                v-for="item in userStore.user.customer.establishments"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.competitor_tag"
-                                />
-                            </el-select>
-                        </div>
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div>
+                        <label for="countries"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishments
+                            <span>*</span></label>
+                        <el-select v-model="establishments" placeholder="Choose establishment" size="large" multiple
+                            collapse-tags collapse-tags-tooltip>
+                            <el-option v-for="item in userStore.user.customer.establishments" :key="item.id"
+                                :label="item.name" :value="item.competitor_tag" />
+                        </el-select>
                     </div>
-                    <div class="flex items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
-                       <button type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
-                                <SpinnerComponent :show-spinner="showSpinner" :color="'gray'"/> <span v-if="showSpinner">Loading ...</span>
-                               <span v-show="!showSpinner"><i class="uil uil-save"></i> save competitor</span>
-                 </button>
-                        </div>
-                </form>
+                </div>
+                <div class="flex items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
+                    <button type="submit"
+                        class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                        <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span
+                            v-if="showSpinner">Loading ...</span>
+                        <span v-show="!showSpinner"><i class="uil uil-save"></i> save competitor</span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </template>
@@ -152,8 +158,8 @@ import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
-import { useRouter } from 'vue-router';
-import { countries, categories } from '@Services/input-list.js';
+import { useRoute } from 'vue-router';
+import { countries, competitor_countries, categories } from '@Services/input-list.js';
 
 const previewImage = ref(null);
 const imageInputHover = ref(false);
@@ -167,10 +173,10 @@ const activeCompetitorsTab = inject('activeCompetitorsTab');
 
 const cleanEstablishmentForm = inject('clearEstablishmentForm');
 const showSecondStep = ref(false)
-const informationText = computed(()=>{
-    if(showSecondStep.value) return 'Select your establishment related to the competitor.'
-    return 'Please provide the necessary information to add a new competitor.' 
-}) 
+const informationText = computed(() => {
+    if (showSecondStep.value) return 'Select your establishment related to the competitor.'
+    return 'Please provide the necessary information to add a new competitor.'
+})
 
 const reloadCompetitor = inject('reloadCompetitor')
 const establishments = ref([])
@@ -182,6 +188,10 @@ const resetForm = () => {
     previewImage.value = null;
     type.value = 'Add';
 }
+
+const route = useRoute();
+
+const competitorsData = inject('competitorsData')
 
 watch(cleanEstablishmentForm, () => {
     resetForm();
@@ -248,6 +258,7 @@ const submit = async () => {
             data.value = {}
             showSpinner.value = false;
             showSecondStep.value = true
+            reloadCompetitorList()
         }
 
         if (response.status == 200) {
@@ -259,34 +270,111 @@ const submit = async () => {
             data.value = {}
             emit('reload')
             showSpinner.value = false;
+            reloadCompetitorList()
         }
     };
 
 };
 
-const submitCompetitor = ()=>{
+const transformData = (data) => {
+    const establishmentMap = new Map();
+    let tag = ''
+    for (const [competitorName, establishments] of Object.entries(data)) {
+        establishments.forEach(establishment => {
+            const {
+                establishment_competitor_tag,
+                establishment_category,
+                id,
+                url_source,
+                establishment_address1,
+                establishment_address2,
+                establishment_zipcode,
+                establishment_city,
+                establishment_country,
+                establishment_region,
+                establishment_gps,
+                establishment_rank,
+                competitor_competitor_tag,
+                competitor_id
+            } = establishment;
+
+            tag = (tag !== competitor_competitor_tag) ? competitor_competitor_tag : tag;
+
+            // Vérifie si cet établissement a déjà été traité
+            if (!establishmentMap.has(id)) {
+                establishmentMap.set(id, {
+                    name: establishment.establishment_name,
+                    id: id,
+                    uri: `/api/establishments/${id}`,
+                    tag: establishment_competitor_tag,
+                    category: establishment_category,
+                    address1: establishment_address1,
+                    address2: establishment_address2,
+                    city: establishment_city,
+                    country: establishment_country,
+                    zipcode: establishment_zipcode,
+                    region: establishment_region,
+                    rank: establishment_rank,
+                    gps: establishment_gps,
+                    media: url_source,
+                    establishments: [competitorName],
+                    competitors: [{
+                        competitor_id: competitor_id,
+                        name: competitorName
+                    }]
+                });
+            } else {
+                // Ajoute le nom du concurrent à la liste des établissements existants
+                if (!establishmentMap.get(id).establishments.includes(competitorName)) establishmentMap.get(id).establishments.push(competitorName);
+                establishmentMap.get(id).competitors.push({
+                    competitor_id: competitor_id,
+                    name: competitorName
+                });
+            }
+        });
+    }
+
+    return Array.from(establishmentMap.values());
+}
+
+const reloadCompetitorList = async () => {
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`customer/establishment/competitors?tag=${route.params.tag}`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            competitorsData.value = transformData(response.data);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const submitCompetitor = () => {
 
     showSpinner.value = true;
     let created = []
 
-    establishments.value.forEach(async tag=>{
-         const data =  {
+    establishments.value.forEach(async tag => {
+        const data = {
             establishment: `/api/establishments/${competitor.value.id}`,
             competitorTag: tag
         }
         const response = await new Promise((resolve, reject) => {
-                services.createRecord('competitors', data, (response) => {
-                    resolve(response);
-                });
+            services.createRecord('competitors', data, (response) => {
+                resolve(response);
+            });
         });
         console.log(response)
-        if(response.status == 201) created.push(1)
+        if (response.status == 201) created.push(1)
 
-        if(created.length == establishments.value.length){
-             showSpinner.value = false;
-             emit('reload')
-             showSecondStep.value = false;
-             // reloadCompetitor.value = true;
+        if (created.length == establishments.value.length) {
+            showSpinner.value = false;
+            emit('reload')
+            showSecondStep.value = false;
+            // reloadCompetitor.value = true;
         }
     })
 }

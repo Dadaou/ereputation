@@ -244,4 +244,11 @@ export const countries = [
   { name: 'Zimbabwe', code: 'ZW' }
 ]
 
+export const competitor_countries = [
+  { name: 'France', code: 'FR' },
+  { name: 'Spain', code: 'ES' },
+  { name: 'United Kingdom', code: 'GB' },
+  { name: 'United States', code: 'US' }
+]
+
 export const categories = ['Hotel', 'Residence', 'Restaurant', 'Other']
