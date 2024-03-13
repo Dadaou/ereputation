@@ -1083,7 +1083,7 @@ onBeforeMount(async () => {
 /* Css correction */
 
 img {
-    height: 200px !important;
+    height: 200px ;
 }
 
 @media screen and (max-width:1440px) {
@@ -1109,6 +1109,10 @@ img {
     .tablet,
     .mobile__filter__btn {
         display: block;
+    }
+
+    img{
+        height:auto;
     }
 
     .dashboard__content,
