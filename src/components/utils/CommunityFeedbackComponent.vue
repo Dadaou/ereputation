@@ -64,15 +64,24 @@ const props = defineProps({
     flex-direction: row;
     display: flex;
     justify-content: space-between;
+    margin-top: 5px;
+    widows: 100%;
 }
 
 .review-feedback__labels span {
     margin: 0 !important;
     font-size: 12px;
     font-weight: 600;
+
     color: var(--light-color-bg2);
 }
-
+@media screen and (max-width: 625px){
+    .review-feedback__labels {
+    flex-direction: row;
+    display: flex;
+    justify-content: space-between !important;
+    }
+}
 .review-feedback__negative {
     transform: rotate(180deg);
     transform-origin: center left;

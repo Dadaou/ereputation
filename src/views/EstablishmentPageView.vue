@@ -980,7 +980,7 @@ onBeforeMount(async () => {
 
 .chart__rating {
     display: flex;
-    padding: 5px;
+   padding:5px;
 }
 
 .legend {
