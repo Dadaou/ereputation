@@ -12,42 +12,80 @@
                 class="demo-tabs"
               >
                 <el-tab-pane label="Categorization" name="categorization">
-                    <Categorization />
+
+                   <AnalysisCategory 
+                    text="Your customers appreciated your establishment for the following sercices"
+                    :ratings="ratingsCondition1"
+                    v-if="ratingsCondition1.length>0"
+                   />
+
+                   <AnalysisCategory 
+                    text="Your customers believe that you can improve the quality of the following services"
+                    :ratings="ratingsCondition2"
+                    v-if="ratingsCondition2.length>0"
+                   />
+
+                   <AnalysisCategory 
+                    text="It is necessary to establish actions in order to improve the following areas"
+                    :ratings="ratingsCondition3"
+                    v-if="ratingsCondition3.length>0"
+                   />
+
+                   <StrengthWeakness :weaknesses="ratingsCondition4" :strengths="ratingsCondition1"/>
+                    
+                   <div :class="['chartBox mt-5', isLoading?'loaded':'']">
+                        <div class="containerChart">
+                            <div :class="['containerBody', !isLoading?'':'loading']">
+                                <Bar :data="ratingChart" id="rating" :options="options" />
+                            </div>
+
+                            <!-- <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="legendData" :alignment="'vertical'">
+                            </BaseLegend>  -->
+                             
+                           <!--  <div :class="['containerBody2 mt-5', !isLoading?'':'loading']">
+                                <Bar :data="confidenceChart" id="confidence" :options="newOptions" />
+                            </div> -->
+                        </div>
+                        <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="legendData" :alignment="'vertical'">
+                            </BaseLegend> 
+                         <!-- <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="dataLegend" :alignment="'vertical'">
+                            </BaseLegend>  -->
+                        <SpinnerComponent :size="'large'" v-if="isLoading" class="loader"/>   
+                    </div>
+                    <div :class="['chartBox mt-5', isLoading?'loaded':'']">
+                        <div class="containerChart">
+                            <!-- <div :class="['containerBody', !isLoading?'':'loading']">
+                                <Bar :data="ratingChart" id="rating" :options="options" />
+                            </div>
+
+                            <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="legendData" :alignment="'vertical'">
+                            </BaseLegend>  -->
+                             
+                            <div :class="['containerBody2 mt-5', !isLoading?'':'loading']">
+                                <Bar :data="confidenceChart" id="confidence" :options="newOptions" />
+                            </div>
+                        </div>
+                         <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="dataLegend" :alignment="'vertical'">
+                            </BaseLegend> 
+                        <SpinnerComponent :size="'large'" v-if="isLoading" class="loader"/>   
+                    </div>
                 </el-tab-pane>
                 <el-tab-pane label="Staff" name="staff">
-                    Staff
+                    Coming soon ...
                 </el-tab-pane>
                 <el-tab-pane label="Events & weather" name="events_weather">
-                    Events and weather
+                    Coming soon ...
                 </el-tab-pane>
                 <el-tab-pane label="Bookings" name="bookings">
-                    Booking
+                    Coming soon ...
                 </el-tab-pane>
                 <el-tab-pane label="Trends" name="trends">
-                    Trends
+                    Coming soon ...
                 </el-tab-pane>
                 <el-tab-pane label="Alerts" name="alerts">
-                    Alerts
+                    Coming soon ...
                 </el-tab-pane>
               </el-tabs>
-       		<!-- <p class="mb-4">
-        		Below are two sets of graphs representing score and rating of all reviews.
-        		The first set illustrates ratings from all reviews, while the second set displays scores from all reviews and comments combined.
-        	</p> -->
-            <!-- <div :class="['chartBox', isLoading?'loaded':'']">
-                <div class="containerChart">
-                    <div :class="['containerBody', !isLoading?'':'loading']">
-                        <Bar :data="ratingChart" id="rating" :options="options" />
-                    </div>
-                     
-                    <div :class="['containerBody2', !isLoading?'':'loading']">
-                        <Bar :data="confidenceChart" id="confidence" :options="newOptions" />
-                    </div>
-                </div>
-                <SpinnerComponent :size="'large'" v-if="isLoading" class="loader"/>
-                <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="legendData" :alignment="'vertical'">
-       				</BaseLegend> 
-            </div> -->
         </div>
     </div>
     
@@ -211,12 +249,13 @@ import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
-import { ref, watch, onBeforeMount, inject, computed, defineAsyncComponent, provide } from 'vue';
+import { ref, watch, onBeforeMount, onMounted, inject, computed, defineAsyncComponent, provide } from 'vue';
 import { ElDatePicker, ElOption, ElSelect, ElTabs, ElTabPane } from 'element-plus';
 import 'element-plus/es/components/option/style/css';
 import 'element-plus/es/components/select/style/css';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
+
 import {
   Chart as ChartJS,
   Title,
@@ -237,6 +276,14 @@ const SpinnerComponent = defineAsyncComponent(() =>
 
 const Categorization = defineAsyncComponent(() =>
   import('@Components/analysis/CategorizationComponent.vue')
+)
+
+const AnalysisCategory = defineAsyncComponent(() =>
+  import('@Components/utils/AnalysisDescComponent.vue')
+)
+
+const StrengthWeakness = defineAsyncComponent(() =>
+  import('@Components/utils/StrengthWeaknessComponent.vue')
 )
 
 const companiesStore = useCompanyStore();
@@ -270,18 +317,8 @@ const all_items = ref([
     { title: "Reviews", value: 0, icon: "uil-comment" },
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
-let dataLegends = ref([]);
+const dataLegend = ref([]);
 const legendData = ref([]);
-// watch(dataLegends, ()=>{
-// 	if(dataLegends.value.length>0){
-// 		dataLegends.value.forEach((category) => {
-// 	        legendData.value.push({
-// 	            name: `${category.label}: Average score (${category.avg_score}) / Sentiment analysis: ${category.feeling}`,
-// 	            color: category.color
-// 	        });
-// 	    });
-// 	}
-// })
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 const ratingChart = ref({
@@ -293,6 +330,31 @@ const confidenceChart = ref({
 	labels: [],
 	datasets: []
 })
+const ratings = ref([])
+const ratingsCondition1 = computed(()=>{
+    let data = ratings.value;
+    data = data.filter(value=> value.avg_rating>=4)
+    return data
+})
+
+const ratingsCondition2 = computed(()=>{
+    let data = ratings.value;
+    data = data.filter(value=> value.avg_rating<4 && value.avg_rating>=3)
+    return data
+})
+
+const ratingsCondition3 = computed(()=>{
+    let data = ratings.value;
+    data = data.filter(value=> value.avg_rating<3)
+    return data
+})
+
+const ratingsCondition4 = computed(()=>{
+    let data = ratings.value;
+    data = data.filter(value=> value.avg_rating<4)
+    return data
+})
+
 const activeName = ref('categorization');
 const newOptions = {
     // responsive: false,
@@ -306,8 +368,8 @@ const newOptions = {
             ticks: {
                 stepSize: 1, // Définit l'intervalle des graduations sur l'axe Y
                 callback: function(value, index, values) {
-                        // Affiche uniquement les valeurs 1, 0 et -1
-                        return value === 1 || value === 0 || value === -1 ? value : '';
+                    // Affiche uniquement les valeurs 1, 0 et -1
+                    return value === 1 || value === 0 || value === -1 ? value : '';
                 }
             }
         }
@@ -400,6 +462,14 @@ const options = {
     }
 };
 
+const calculateAvg = (data)=>{
+    let m = 0;
+    data.forEach(value=>{
+        m = (m + value) / 2
+    })
+    return Number(m.toFixed(1))
+}
+
 const handleCategoryDropdown = (type) => {
     const filters = type == 'other' ? categoryFilters.value.filter(category => category != 'all') : ['all']
     categoryFilters.value = categoryFilters.value.length > 0 ? filters : ['all']
@@ -414,6 +484,7 @@ const loadCategories = async (tag) => {
     });
 
     if (response.status == 200) {
+        console.log(response.data)
         if (response.data && response.data.data) {
             categories.value = response.data.data
         }
@@ -421,25 +492,6 @@ const loadCategories = async (tag) => {
 }
 
 const IsValueOkay = (value)=> (value == '' || value == null || value == undefined || value == [])?false:true;
-
-const hashString = (inputString) => {
-      let hash = 0;
-      for (let i = 0; i < inputString.length; i++) {
-        hash = (hash << 5) - hash + inputString.charCodeAt(i);
-      }
-      return hash;
-}
-
-const generateColor = (text) =>{
-      const inputString = text;
-      const hash = hashString(inputString);
-
-      const red = (hash & 0xFF0000) >> 16;
-      const green = (hash & 0x00FF00) >> 8;
-      const blue = hash & 0x0000FF;
-
-      return `rgb(${red}, ${green}, ${blue})`;
-}
 
 const loadAnalysisData = async(tag, dateStart, dateEnd, categories)=>{
 	isLoading.value = true
@@ -514,10 +566,11 @@ const transformData = (chartData)=>{
 	}
 
 	let legends = []
+    ratings.value = []
 
 	datasets.forEach(category=>{
 		const {avg_score, feeling, scores, data, label} = category 
-		const color = generateColor(label)
+		const color = services.generateColor(label)
 		plotData1.datasets.push({
 			label: label, 
 			backgroundColor: color,
@@ -539,6 +592,11 @@ const transformData = (chartData)=>{
 			avg_score,
 			feeling
 		})
+
+        ratings.value.push({
+            label: label,
+            avg_rating: calculateAvg(data)
+        })
 	})
 
 	ratingChart.value = plotData2;
@@ -549,11 +607,17 @@ const transformData = (chartData)=>{
 
 	if(legends.length>0){
 		legendData.value = []
+        dataLegend.value = []
 		legends.forEach((category) => {
 	        legendData.value.push({
 	            name: category.label,
 	            color: category.color
 	        });
+
+            dataLegend.value.push({
+                name: `${category.label}: ${category.feeling}`,
+                color: category.color
+            });
 	    });
 	}
 }
@@ -593,11 +657,9 @@ onBeforeMount(async () => {
         }
     })
     await loadCategories(companyId)
-    // await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
+    await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
      appStore.isLoading = false;
 });
-
-
 </script>
 <style scoped>
 
@@ -605,7 +667,7 @@ onBeforeMount(async () => {
     	display: flex;
     	justify-content: center;
     	align-items: center;
-    	height: 400px;
+    	height: 200px;
     	background: rgba(0, 0, 0, 0.1);
         opacity: 0.9;
         z-index: 1;
@@ -624,9 +686,4 @@ onBeforeMount(async () => {
 	.loader{
 		position: absolute;
 	}
-
-	/*.containerBody{
-		height: 500px !important;
-	}*/
-
 </style>

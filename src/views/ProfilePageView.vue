@@ -42,18 +42,55 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed  } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 
-
-const page = ref({
-  title1: "",
-  title2: "Parameters",
-  icon: "uil-user-square",
-});
 const route = useRoute();
+
+const page = computed(()=>{
+  let data = {
+    "Personal_details": {
+      title1: "",
+      title2: "Personal details",
+      icon: "uil-user",
+    },
+    "Subscription": {
+      title1: "",
+      title2: "Subscriptions",
+      icon: "uil-book",
+    },
+    "Subscription_list": {
+      title1: "",
+      title2: "Subscriptions",
+      icon: "uil-book",
+    },
+    "new_subscription": {
+      title1: "",
+      title2: "Subscriptions",
+      icon: "uil-book",
+    },
+    "Contact": {
+      title1: "",
+      title2: "Contact",
+      icon: "uil-envelope",
+    },
+    "Discount_coupons": {
+      title1: "",
+      title2: "Discount",
+      icon: "uil-bill",
+    },
+    "Parameters": {
+      title1: "",
+      title2: "Parameters",
+      icon: "uil-setting",
+    }
+  }
+
+  return data[route.name]
+})
+
 const breadcrumbData = [
   {
     title: "Profile",
