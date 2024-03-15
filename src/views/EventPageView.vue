@@ -412,11 +412,11 @@ onBeforeMount(async () => {
 
         }
     })
-    // if(activeName.value == 'events'){
-    //     await loadEvents(companyId, start_date.value, end_date.value)
-    // }else{
-    //     await loadEvents(companyId, start_date.value, end_date.value, establishment.value.locality_id)
-    // }
+    if(activeName.value == 'events'){
+        await loadEvents(companyId, start_date.value, end_date.value)
+    }else{
+        await loadEvents(companyId, start_date.value, end_date.value, establishment.value.locality_id)
+    }
     chartLoading.value = false
 })
 

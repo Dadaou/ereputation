@@ -156,7 +156,7 @@ const legendData = computed(() => {
         date.events.forEach((event) => {
             if (!nameSet.has(event.name) && !event.isPublic) {
                 data.push({
-                    name: event.name,
+                    name: `${event.name} from ${event.datefrom} to ${event.dateto}`,
                     color: `${generateColor(event.name)}`
                 });
                 nameSet.add(event.name);
