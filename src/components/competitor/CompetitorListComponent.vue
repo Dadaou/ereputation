@@ -46,8 +46,8 @@
                     <el-input v-model="searchLink" size="small" placeholder="Type to search" />
                 </template>
                 <template #default="scope">
-                    <el-button size="small" @click="handleEditLink(scope.row)"><i
-                            class="uil uil-edit"></i></el-button>
+                    <!-- <el-button size="small" @click="handleEditLink(scope.row)"><i
+                            class="uil uil-edit"></i></el-button> -->
                     <el-button size="small">
                          <a :href="scope.row.url" target="_blank" class="external-link"><i
                                 class="uil uil-external-link-alt"></i></a>
