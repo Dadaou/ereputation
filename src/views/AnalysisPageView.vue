@@ -18,6 +18,7 @@
                     :ratings="ratingsCondition1"
                     condition= 'condition1'
                     v-if="ratingsCondition1.length>0"
+                    class="mb-4"
                    />
 
                    <AnalysisCategory 
@@ -25,6 +26,7 @@
                     :ratings="ratingsCondition2"
                     condition= 'condition2'
                     v-if="ratingsCondition2.length>0"
+                    class="mb-4"
                    />
 
                    <AnalysisCategory 
@@ -32,6 +34,7 @@
                     :ratings="ratingsCondition3"
                     condition= 'condition3'
                     v-if="ratingsCondition3.length>0"
+                    class="mb-4"
                    />
 
                    <!-- <StrengthWeakness :weaknesses="ratingsCondition4" :strengths="ratingsCondition1"/> -->
@@ -646,7 +649,7 @@ const transformData = (chartData)=>{
 	        });
 
             dataLegend.value.push({
-                name: `${category.label}: ${category.feeling}`,
+                name: `${category.label}`,
                 color: category.color
             });
 	    });

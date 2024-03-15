@@ -173,6 +173,7 @@ const legendDataPublic = computed(() => {
 
     dates.forEach((date) => {
         date.events.forEach((event) => {
+           console.log(event)
             if (!nameSet.has(event.name) && event.isPublic) {
             
                 data.push({

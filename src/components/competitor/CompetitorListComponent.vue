@@ -46,6 +46,8 @@
                     <el-input v-model="searchLink" size="small" placeholder="Type to search" />
                 </template>
                 <template #default="scope">
+                    <el-button size="small" @click="handleEditLink(scope.row)"><i
+                            class="uil uil-edit"></i></el-button>
                     <el-button size="small">
                          <a :href="scope.row.url" target="_blank" class="external-link"><i
                                 class="uil uil-external-link-alt"></i></a>
@@ -254,7 +256,8 @@ const isHashtag = computed(()=>{
 })
 const showCompetitor = ref(false)
 const establishments = ref([])
-
+const isEdit = ref(false)
+const id= ref('')
 const handleEdit = (index, establishment) => {
     emit('edit', establishment);
 }
@@ -313,6 +316,15 @@ const isValidHashtag = computed(()=>{
     // }
     return true
 })
+
+const getURIbyName = (name)=>{
+    let data = filteredProviders.value
+    console.log(data)
+    data = data.filter(item=> item.name == name)
+    console.log(data)
+    if(data.length>0) return `${data[0].uri}${data[0].url}`
+    return ''
+}
 
 function transformLinksData(inputData) {
     return inputData.map(item => {
@@ -457,24 +469,82 @@ const submit = async () => {
         provider: urlObject.uri,
         enable: true
     }
+    console.log(isEdit.value)
+    console.log(id.value)
+    console.log(data)
 
-    try {
-        const response = await new Promise((resolve, reject) => {
-            services.createRecord('settings', data, (response) => {
-                resolve(response);
-            });
-        });
-        if (response.status == 201) {
-            ElMessage({
-                message: `link added successfully`,
-                type: 'success',
-            })
-            showSpinner.value = false;
-            resetValue()
-        }
-    } catch (error) {
-        console.log(error)
-    }
+    // if(isEdit.value){
+    //     try {
+    //         const response = await new Promise((resolve) => {
+    //                 services.putRecord('settings', id.value, data, (response) => {
+    //                     resolve(response);
+    //                 });
+    //         });
+    //         console.log(response)
+    //         if (response.status == 200) {
+    //             ElMessage({
+    //                 message: `link updated successfully`,
+    //                 type: 'success',
+    //             })
+    //             loadLinksByEstablishment(establishment.value)
+    //             showSpinner.value = false;
+    //             isEdit.value = false
+    //             resetValue()
+    //         }
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }else{
+    //     try {
+    //         const response = await new Promise((resolve) => {
+    //                 services.createRecord('settings', data, (response) => {
+    //                     resolve(response);
+    //                 });
+    //         });
+    //         if (response.status == 201) {
+    //             ElMessage({
+    //                 message: `link added successfully`,
+    //                 type: 'success',
+    //             })
+    //             showSpinner.value = false;
+    //             resetValue()
+    //         }
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
+    // try {
+    //     const response = await new Promise((resolve, reject) => {
+    //         services.createRecord('settings', data, (response) => {
+    //             resolve(response);
+    //         });
+    //     });
+    //     if (response.status == 201) {
+    //         ElMessage({
+    //             message: `link added successfully`,
+    //             type: 'success',
+    //         })
+    //         showSpinner.value = false;
+    //         resetValue()
+    //     }
+    // } catch (error) {
+    //     console.log(error)
+    // }
+}
+
+const handleEditLink = (data) => {
+    showModal.value = true
+    category.value = data.category
+
+    setTimeout(function() {
+      // link.value = data.category=='Hashtag'?`#${data.settings_value1}`:data.url
+      link.value = data.settings_value1
+    }, 250);
+
+    id.value = data.id
+    isEdit.value = true
+    provider.value = getURIbyName(data.name)
 }
 
 const resetValue = () => {

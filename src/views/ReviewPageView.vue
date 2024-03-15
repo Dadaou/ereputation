@@ -335,7 +335,7 @@ let paginationConfig = ref({
 let dataLoading = ref(true);
 let currentFilter = ref('filter');
 const language = inject('language')
-let feelings = ref(['All', 'Positive', 'Neutre', 'Negative']);
+let feelings = ref(['All', 'Positive', 'Neutral', 'Negative']);
 let selectedFeeling = ref(null);
 let selectedWebsites = ref('Global');
 let websites = ref(['Global']);
@@ -439,6 +439,7 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     }
 
     if (selectedFeeling.value && selectedFeeling.value != 'All') {
+        selectedFeeling.value = selectedFeeling.value=='neutral'?'neutre': selectedFeeling.value
         apiParams += `&feeling=${selectedFeeling.value.toLowerCase()}`
     }
 

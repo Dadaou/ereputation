@@ -366,6 +366,7 @@ const submit = async () => {
         provider: urlObject.uri,
         enable: true
     }
+    console.log(data)
     if(isEdit.value){
         try {
             const response = await new Promise((resolve) => {
@@ -428,9 +429,12 @@ const getURIbyName = (name)=>{
 const handleEdit = (data) => {
     showModal.value = true
     category.value = data.category
+
     setTimeout(function() {
-      link.value = data.category=='Hashtag'?`#${data.settings_value1}`:data.url
+      // link.value = data.category=='Hashtag'?`#${data.settings_value1}`:data.url
+      link.value = data.settings_value1
     }, 250);
+
     id.value = data.id
     isEdit.value = true
     provider.value = getURIbyName(data.name)

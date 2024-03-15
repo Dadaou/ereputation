@@ -6,7 +6,8 @@
                     color: `${generateColor(event.name)}`,
                     fontWeight: 600,
                 }">{{ event.name }}</h5></li>
-                <li class="event_category"><span class="label">Category: </span> <span>{{ event.category }}</span></li>
+                <li class="event_category" v-if="event.category"><span class="label">Category: </span> <span>{{ event.category }}</span></li>
+                <li class="event_category" v-if="event.segment"><span class="label">Segment: </span> <span>{{ event.segment }}</span></li>
                 <li class="period"><i class="uil uil-calender"></i> <span>{{ moment(event.datefrom).format('DD MMMM YYYY') }}</span> <span v-if="event.dateto != null">{{ `to ${moment(event.dateto).format('DD MMMM YYYY')}` }}</span></li>
             </ul>
              <div class="pie__chart">
