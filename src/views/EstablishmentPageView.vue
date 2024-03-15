@@ -41,7 +41,7 @@
                 }" />
             </div>
             <CommentComponent v-if="reviewsLoading == false" :reviews="visibleData" :allReviews="establishment.reviews"
-                :showEmoji="false" />
+                :showEmoji="false" :categories="categories"/>
             <div v-else role="status"
                 class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
                 v-for="index in 20" :key="index">
@@ -413,6 +413,7 @@ const language = inject('language')
 // const end_date = ref(appStore.end_date);
 const start_date = inject('start_date');
 const end_date = inject('end_date');
+const categories = ref([])
 
 let selectedTimePeriod = ref('');
 let timePeriods = ref(['Days', 'Weeks', 'Months', 'Quarters', 'Semesters']);
@@ -480,6 +481,21 @@ const formatSixMonthsChartData = (datas) => {
     chartdata.labels = labels
 
     return chartdata
+}
+
+const loadCategories = async (tag) => {
+    const api = `establishment/${tag}/categories`
+    const response = await new Promise((resolve) => {
+        services.get_Record(api, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+        if (response.data && response.data.data) {
+            categories.value = response.data.data
+        }
+    }
 }
 
 const loadDatasets = async () => {
@@ -812,6 +828,7 @@ onBeforeMount(async () => {
             websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
         }
     })
+    await loadCategories(companyId.value)
 });
 </script>
 
