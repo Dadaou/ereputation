@@ -472,65 +472,66 @@ const submit = async () => {
     console.log(isEdit.value)
     console.log(id.value)
     console.log(data)
+    establishment = scope.row.uri
 
-    // if(isEdit.value){
-    //     try {
-    //         const response = await new Promise((resolve) => {
-    //                 services.putRecord('settings', id.value, data, (response) => {
-    //                     resolve(response);
-    //                 });
-    //         });
-    //         console.log(response)
-    //         if (response.status == 200) {
-    //             ElMessage({
-    //                 message: `link updated successfully`,
-    //                 type: 'success',
-    //             })
-    //             loadLinksByEstablishment(establishment.value)
-    //             showSpinner.value = false;
-    //             isEdit.value = false
-    //             resetValue()
-    //         }
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }else{
-    //     try {
-    //         const response = await new Promise((resolve) => {
-    //                 services.createRecord('settings', data, (response) => {
-    //                     resolve(response);
-    //                 });
-    //         });
-    //         if (response.status == 201) {
-    //             ElMessage({
-    //                 message: `link added successfully`,
-    //                 type: 'success',
-    //             })
-    //             showSpinner.value = false;
-    //             resetValue()
-    //         }
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
+    if(isEdit.value){
+        try {
+            const response = await new Promise((resolve) => {
+                    services.putRecord('settings', id.value, data, (response) => {
+                        resolve(response);
+                    });
+            });
+            console.log(response)
+            if (response.status == 200) {
+                ElMessage({
+                    message: `link updated successfully`,
+                    type: 'success',
+                })
+                loadLinksByEstablishment(establishment.value)
+                showSpinner.value = false;
+                isEdit.value = false
+                resetValue()
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }else{
+        try {
+            const response = await new Promise((resolve) => {
+                    services.createRecord('settings', data, (response) => {
+                        resolve(response);
+                    });
+            });
+            if (response.status == 201) {
+                ElMessage({
+                    message: `link added successfully`,
+                    type: 'success',
+                })
+                showSpinner.value = false;
+                resetValue()
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
-    // try {
-    //     const response = await new Promise((resolve, reject) => {
-    //         services.createRecord('settings', data, (response) => {
-    //             resolve(response);
-    //         });
-    //     });
-    //     if (response.status == 201) {
-    //         ElMessage({
-    //             message: `link added successfully`,
-    //             type: 'success',
-    //         })
-    //         showSpinner.value = false;
-    //         resetValue()
-    //     }
-    // } catch (error) {
-    //     console.log(error)
-    // }
+    try {
+        const response = await new Promise((resolve, reject) => {
+            services.createRecord('settings', data, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status == 201) {
+            ElMessage({
+                message: `link added successfully`,
+                type: 'success',
+            })
+            showSpinner.value = false;
+            resetValue()
+        }
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 const handleEditLink = (data) => {

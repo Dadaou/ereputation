@@ -244,7 +244,6 @@
                 <el-date-picker class="mt-2" v-model="end_date" placeholder="End date" :size="'large'" />
             </div>
         </div>
-        {{avgScore}}
         <CommunityFeedbackComponent :reviewFeedbackData="services.getScoreColor(avgScore)" />
     </div>
 </template>
