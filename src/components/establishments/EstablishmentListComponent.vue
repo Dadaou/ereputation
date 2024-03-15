@@ -21,7 +21,7 @@
             <el-table-column label="Category" prop="category" style="width: 15%; min-width: 200px;" />
             <el-table-column label="Address" prop="address" style="width: 25%; min-width: 200px;" />
             <el-table-column label="Country" prop="country" style="width: 15%; min-width: 200px;" />
-            <el-table-column label="Disable" style="width: 10%; min-width: 200px;" align="center">
+            <!-- <el-table-column label="Disable" style="width: 10%; min-width: 200px;" align="center">
                 <template #default="scope">
                   <el-button v-if="scope.row.disable || scope.row.disable == true" size="small" @click="handleEnable(scope.$index, scope.row)"><i
                       class="uil uil-check-square" style="color: #777; font-size: 15px;"></i></el-button>
@@ -29,21 +29,22 @@
                   <el-button v-else size="small" @click="handleDisable(scope.$index, scope.row)"><i class="uil uil-square"
                       style="color: #777; font-size: 15px;"></i></el-button>
                 </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
                 <template #header>
                     <el-input v-model="search" size="small" placeholder="Type to search" />
                 </template>
                 <template #default="scope">
                     <el-button size="small" @click="showModal = true, establishment = scope.row"><i class="uil uil-qrcode-scan"></i></el-button>
-                    <!-- <el-popconfirm title="Are you sure to delete this?">
+                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
+                            class="uil uil-edit"></i></el-button>
+                    <el-popconfirm title="Are you sure to delete this?"
+                    @confirm="handleDisable(scope.$index, scope.row)"
+                    >
                         <template #reference>
                             <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
                         </template>
-                    </el-popconfirm> -->
-
-                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
-                            class="uil uil-edit"></i></el-button>
+                    </el-popconfirm>
                 </template>
             </el-table-column>
         </el-table>
@@ -305,7 +306,7 @@ const remove = (id) => {
 }
 
 const handleEnable = (index, establishment) => {
-    console.log(establishment)
+  console.log(establishment)
   emit('setEnable', establishment.id);
 };
 

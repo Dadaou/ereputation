@@ -126,7 +126,7 @@
             </RouterLink>
           </li>
           <li @click="closeDropdownMenu">
-            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/socials`">
+            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/social`">
               <i class="uil uil-users-alt"></i>
               <span>Social</span>
             </RouterLink>

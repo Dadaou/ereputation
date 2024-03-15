@@ -24,13 +24,13 @@
                     <div class="mb-6">
                         <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name
                             <span>*</span></label>
-                        <input type="text" id="company_name" name="name" v-model="data.name" required
+                        <input type="text" id="company_name" name="name" v-model="data.name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                     </div>
                     <div class="mb-6">
                         <label for="address1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address 1
                             <span>*</span></label>
-                        <input type="text" id="address1" name="address1" v-model="data.address1" required
+                        <input type="text" id="address1" name="address1" v-model="data.address1"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                     </div>
                     <div>
@@ -45,20 +45,20 @@
                 <div>
                     <label for="zipcode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Zipcode
                         <span>*</span></label>
-                    <input type="text" id="zipcode" name="zipcode" v-model="data.zipcode" required
+                    <input type="text" id="zipcode" name="zipcode" v-model="data.zipcode"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
                 <div>
                     <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City
                         <span>*</span></label>
-                    <input type="text" id="city" name="city" v-model="data.city" required
+                    <input type="text" id="city" name="city" v-model="data.city"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
                 <div>
                     <label for="country" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country
                         <span>*</span></label>
-                    <el-select v-model="data.country" placeholder="" size="large" filterable>
-                        <el-option v-for="(country, index) in countries" :key="index" :label="country.name"
+                    <el-select v-model="data.country" placeholder="" size="large" filterable ref="selectCountry">
+                        <el-option v-for="(country, index) in competitor_countries" :key="index" :label="country.name"
                             :value="country.name" />
                     </el-select>
                 </div>
@@ -143,7 +143,7 @@
 </template>
 <script setup>
 import moment from 'moment';
-import { ref, inject, watch } from 'vue';
+import { ref, inject, watch, onMounted } from 'vue';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import { useStaffStore } from "@Stores/staff.js";
@@ -156,7 +156,7 @@ import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
 import { useRouter } from 'vue-router';
-import { countries, categories } from '@Services/input-list.js';
+import { countries, categories, competitor_countries } from '@Services/input-list.js';
 
 const previewImage = ref(null);
 const imageInputHover = ref(false);
@@ -175,6 +175,8 @@ const resetForm = () => {
     previewImage.value = null;
     type.value = 'Add';
 }
+
+const selectCountry = ref(null)
 
 watch(cleanEstablishmentForm, () => {
     resetForm();
@@ -201,9 +203,15 @@ const submit = async () => {
     const formData = new FormData(form);
 
     const establishmentData = { ...data.value, customer: `${userStore.user.customer.tag}` };
-    console.log(establishmentData);
+    console.log(data.value);
 
-    if (establishmentData.category && establishmentData.country) {
+    if (establishmentData.category 
+        && establishmentData.country
+        && establishmentData.city 
+        && establishmentData.zipcode
+        && establishmentData.category
+        && establishmentData.name 
+        && establishmentData.address1) {
 
         formData.append('category', establishmentData.category);
         formData.append('country', establishmentData.country);
@@ -247,7 +255,12 @@ const submit = async () => {
             data.value = {}
             showSpinner.value = false;
         }
-    };
+    }else{
+        ElMessage({
+            message: `Please fill correctly all required form`,
+            type: 'warning',
+        });
+    }
 
 };
 
@@ -280,6 +293,23 @@ watch(establishment_to_update, () => {
         type.value = 'Edit';
     }
 });
+
+// onMounted(()=>{
+//     console.log(selectCountry.value)
+//    var elSelect = document.querySelector('.el-input__inner');
+//     console.log(elSelect)
+//     elSelect.setAttribute("required", true)
+//     elSelect.addEventListener('invalid', function(event) {
+//         // Vérifiez si l'élément est invalide
+//         if (selectElement.validity.valueMissing) {
+//             // Définissez un message de validation personnalisé
+//             event.target.setCustomValidity('Veuillez sélectionner un pays.');
+//         } else {
+//             // Si aucune erreur, réinitialisez le message de validation
+//             event.target.setCustomValidity('');
+//         }
+//     });
+// });
 
 
 </script>

@@ -18,7 +18,7 @@
         <ComparisonChartComponent :data="plotdata" :width="chart__width" :chartheight="chart__height"
             :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors"
             :timePeriod="selectedTimePeriod" :colors="colors"/>
-        <BaseLegend v-if="chartLoading == false" class="legend" :LegendData="legendData" :alignment="'vertical'">
+        <BaseLegend v-if="chartLoading == false" class="legend" :LegendData="legendData" :alignment="'horizontal'">
         </BaseLegend>
         <div class="head">
             <div class="app__title">

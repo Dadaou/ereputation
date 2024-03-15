@@ -15,6 +15,7 @@ import { useAppStore } from "@Stores/app.js"
 import { useUserStore } from "@Stores/user.js"
 import { RouterView, useRoute } from 'vue-router';
 import services from '@Services/services.js';
+import { useHead } from '@unhead/vue'
 
 const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
@@ -67,7 +68,23 @@ const language = computed(()=>{
   return 'fr'
 })
 provide('language', language);
-console.log(language.value)
+console.log(language.value);
+
+const appConfig = ref({
+  title: '',
+  logo: ''
+})
+
+const config = computed(()=>{
+  return appConfig.value
+})
+
+useHead({
+  title: ()=> config.value.title,
+  link: ()=> [
+      { rel: 'icon', type: 'image/png', href: config.value.logo, class: 'link-rel' },
+   ],
+})
 
 const initTheme = () => {
   appStore.setCssVariable('--color-bgp', appStore.account.back_color);
@@ -90,9 +107,12 @@ onBeforeMount(async () => {
       }
     }, true);
   });
+  console.log(response)
 
   if (response.status == 200 && response.data) {
     const data = response.data
+    appConfig.value.title = data.brand
+    appConfig.value.logo = data.logo
 
     appStore.setAccount(data);
 
@@ -158,5 +178,10 @@ watch(width, () => {
 .other_erep_app {
   position: relative;
   top: -5em;
+}
+
+.link-rel{
+  width: 50px;
+  height: 50px;
 }
 </style>

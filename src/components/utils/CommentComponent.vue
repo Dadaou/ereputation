@@ -32,13 +32,31 @@
                 </div>
                 <div class="review__right mt-2">
                     <div style="height: 20px;">
-                        <div v-if="review.category" class="review__category-container">
+                        <div v-if="review.category" class="review__category-container" @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review)">
                             <span v-for="item in review.category.split(';')" :key="item" class="review__category">{{ item
                             }}</span>
                         </div>
+                        <div class="review__category-container" v-else>
+                            <i class="uil uil-question-circle"
+                                  style="color: var(--color-warning); font-size: 18px; cursor: pointer"
+                                  @mouseover="(e) => {
+                                  buttonRef = e.currentTarget
+                                  visible = true
+                                  }"
+                                  @mouseleave="()=>visible = false"
+                                  @click="handleModal('Add review feeling', 'add', 'uil-add', 'category', review)"
+                            >
+                            </i>
+                             <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
+                                popper-class="singleton-tooltip" placement="top">
+                                <template #content>
+                                    <span>Click to add category</span>
+                                </template>
+                            </el-tooltip>
+                        </div>
                     </div>
                     <div>
-                        <span class="emoji mx-1" v-if="showEmoji" @click="editReview(review)">
+                        <span class="emoji mx-1" v-if="showEmoji" @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review)">
                             <span v-if="review.feeling == 'positive'">😀</span>
                             <span v-if="review.feeling == 'neutre' || review.feeling == 'neutral'">😐</span>
                             <span v-if="review.feeling == 'negative'">😕</span>
@@ -58,7 +76,7 @@
                 <div class="modal__header">
                     <div class="modal__title">
                         <h3 class="font-semibold text-gray-900 dark:text-white">
-                            <i class="uil uil-edit"></i> Review Feeling
+                            <i class="uil uil-edit"></i> {{modal.text}}
                         </h3>
                     </div>
                     <div class="modal__close">
@@ -66,13 +84,23 @@
                     </div>
                 </div>
                 <div class="mb-6 feedback__rating">
-                    <FeelingFeedbackComponent @updateValue="(feeling) => {
+                    <FeelingFeedbackComponent v-if="modal.type == 'feeling'" @updateValue="(feeling) => {
                         feel = feeling
                     }" />
+
+                    <el-select v-else
+                    v-model="category" 
+                    filterable
+                    placeholder="select categories" 
+                    size="large">
+                        <el-option v-for="(item, index) in categories" :key="index" :label="item.category"
+                            :value="item.category"/>
+                    </el-select>
+
                 </div>
                 <div class="mt-5 download__qr_btn">
                     <button class="btn__light_secondary" @click="updateReview">
-                        <i class="uil uil-save"></i> Save
+                        <i class="uil uil-save"></i> {{modal.action=="edit"?'Save':'Add'}}
                     </button>
                 </div>
             </template>
@@ -88,6 +116,9 @@ import FeelingFeedbackComponent from '@Components/utils/FeelingFeedbackComponent
 import { useFeedbackStore } from '@Stores/feedback.js';
 import { useCompanyStore } from "@Stores/company.js";
 import { useWindowSize } from '@vueuse/core';
+import { ElDatePicker, ElOption, ElSelect, ElTooltip } from 'element-plus';
+import 'element-plus/es/components/option/style/css'
+import 'element-plus/es/components/select/style/css'
 
 const props = defineProps({
     reviews: {
@@ -102,6 +133,10 @@ const props = defineProps({
     showEmoji: {
         type: Boolean,
         default: false
+    },
+    categories: {
+        type: Array,
+        default: []
     }
 });
 
@@ -116,6 +151,9 @@ const modalWidth = computed(() => {
     let gap = (windowSize - width.value) / 19;
     return gap + 35;
 })
+const buttonRef = ref()
+const tooltipRef = ref()
+const visible = ref(false)
 const formatRating = (rating, source) => {
     if (source == 'tripadvisor' && rating * 5 <= 5) {
         rating = rating * 5
@@ -128,10 +166,17 @@ const formatRating = (rating, source) => {
 }
 
 const showModal = ref(false);
+const modal = ref({
+    text: '',
+    action: '',
+    icon: '',
+    type: ''
+})
 const feel = ref('okay');
 const id = ref('');
 const selectedReview = ref(null);
 provide('feeling', feel);
+const category = ref('')
 
 const editReview = (review) => {
     feel.value = review.feeling;
@@ -151,14 +196,17 @@ const updateReview = async () => {
 
     let updatedValue = {
         feeling: feel.value,
-        confidence: 1
+        confidence: 1,
+        categoryCheck: category.value
     }
     selectedReview.value.feeling = feel.value;
+    selectedReview.value.category = category.value
 
     try {
-        reloadData(selectedReview.value, feel.value)
+        // reloadData(selectedReview.value, feel.value)
         showModal.value = false;
         await feedbackStore.updateReview(id.value, updatedValue, response => {
+            console.log(response);
             if (response.status == 200) {
                 //
             }
@@ -166,6 +214,19 @@ const updateReview = async () => {
     } catch (error) {
         console.log(error);
     }
+};
+
+const handleModal = (text, action, icon, type, review)=>{
+    showModal.value = true
+    modal.value = {
+        text: text,
+        action: action,
+        icon: icon,
+        type: type
+    }
+
+    editReview(review)
+
 };
 
 </script>
@@ -249,6 +310,7 @@ const updateReview = async () => {
     align-items: center;
     justify-content: right;
     gap: 2px;
+    cursor: pointer;
 }
 
 .review__category {

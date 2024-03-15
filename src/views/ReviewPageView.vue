@@ -22,8 +22,13 @@
     loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
 }" />
             </div>
-            <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
-                @reloadData="(review) => reloadData(review)" />
+            <CommentComponent 
+            v-if="reviews_loader == false" 
+            :reviews="visibleData" 
+            :showEmoji="true"
+            @reloadData="(review) => reloadData(review)"
+            :categories="categories" 
+            />
             <div v-else role="status"
                 class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
                 v-for="index in 5" :key="index">

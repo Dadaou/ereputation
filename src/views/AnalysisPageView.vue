@@ -16,22 +16,25 @@
                    <AnalysisCategory 
                     text="Your customers appreciated your establishment for the following sercices"
                     :ratings="ratingsCondition1"
+                    condition= 'condition1'
                     v-if="ratingsCondition1.length>0"
                    />
 
                    <AnalysisCategory 
                     text="Your customers believe that you can improve the quality of the following services"
                     :ratings="ratingsCondition2"
+                    condition= 'condition2'
                     v-if="ratingsCondition2.length>0"
                    />
 
                    <AnalysisCategory 
                     text="It is necessary to establish actions in order to improve the following areas"
                     :ratings="ratingsCondition3"
+                    condition= 'condition3'
                     v-if="ratingsCondition3.length>0"
                    />
 
-                   <StrengthWeakness :weaknesses="ratingsCondition4" :strengths="ratingsCondition1"/>
+                   <!-- <StrengthWeakness :weaknesses="ratingsCondition4" :strengths="ratingsCondition1"/> -->
                     
                    <div :class="['chartBox mt-5', isLoading?'loaded':'']">
                         <div class="containerChart">
@@ -62,7 +65,7 @@
                             </BaseLegend>  -->
                              
                             <div :class="['containerBody2 mt-5', !isLoading?'':'loading']">
-                                <Bar :data="confidenceChart" id="confidence" :options="newOptions" />
+                                <Line :data="confidenceChart" id="confidence" :options="newOptions" />
                             </div>
                         </div>
                          <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="dataLegend" :alignment="'vertical'">
@@ -256,19 +259,41 @@ import 'element-plus/es/components/select/style/css';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
 
+// import {
+//   Chart as ChartJS,
+//   Title,
+//   Tooltip,
+//   Legend,
+//   BarElement,
+//   CategoryScale,
+//   LinearScale,
+//   ArcElement
+// } from 'chart.js'
 import {
   Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
   CategoryScale,
   LinearScale,
-  ArcElement
-} from 'chart.js'
+  PointElement,
+  BarElement,
+  LineElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
 
-import { Bar, Pie } from 'vue-chartjs'
-ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale, LinearScale, BarElement)
+import { Line, Bar } from 'vue-chartjs'
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend
+)
 
 const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
@@ -325,6 +350,7 @@ const ratingChart = ref({
 	labels: [],
 	datasets: []
 })
+const colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
 
 const confidenceChart = ref({
 	labels: [],
@@ -568,14 +594,18 @@ const transformData = (chartData)=>{
 	let legends = []
     ratings.value = []
 
-	datasets.forEach(category=>{
+	datasets.forEach((category, index)=>{
 		const {avg_score, feeling, scores, data, label} = category 
-		const color = services.generateColor(label)
+		// const color = services.generateColor(label)
+        const color = colors[index]
 		plotData1.datasets.push({
 			label: label, 
 			backgroundColor: color,
+            borderColor: color,
 			data: scores,
-			fill: false
+			// pointRadius: 0,
+            // fill: false,
+            tension: 0.1
 		})
         score =+ avg_score; 
 
@@ -595,7 +625,8 @@ const transformData = (chartData)=>{
 
         ratings.value.push({
             label: label,
-            avg_rating: calculateAvg(data)
+            avg_rating: calculateAvg(data),
+            color: color
         })
 	})
 
@@ -639,17 +670,17 @@ onBeforeMount(async () => {
 			});
 
             appStore.setBreadcrumbs([
-			    {
-			        title: "Establishment",
-			        path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
-			        isCurrent: false,
-			    },
-			    {
-			        title: "Analysis",
-			        path: `${route.path}`,
-			        isCurrent: true
-			    }
-			])
+                {
+                    title: establishment.value.name,
+                    path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                    isCurrent: false,
+                },
+                {
+                    title: "Analysis",
+                    path: `${route.path}`,
+                    isCurrent: true
+                }
+            ])
 
             all_items.value[0].value = establishment.value.rating;
             all_items.value[1].value = establishment.value.totalReviews;

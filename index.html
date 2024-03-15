@@ -4,50 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
-    <title>e-reputation</title>
+    <title></title>
   </head>
   <body>
     <div id="app"></div>
  
     <script type="module" src="/src/main.js"></script>
-      <script type="text/javascript">
+    <script type="text/javascript">
 
-var lg = localStorage.getItem("langue")
+      var lg = localStorage.getItem("langue")
 
-var langues =[
-    {name:"EN",code:"en"},
-    {name:"FR",code:"fr"},
-    {name:"SP",code:"sp"},
-]
+      var langues =[
+          {name:"EN",code:"en"},
+          {name:"FR",code:"fr"},
+          {name:"SP",code:"sp"},
+      ]
 
-var langselected = ""
-for(let i=0;i<langues.length;i++){
-    if(langues[i].name== lg){
-        langselected = langues[i].code
-    }
-}
+      var langselected = ""
+      for(let i=0;i<langues.length;i++){
+          if(langues[i].name== lg){
+              langselected = langues[i].code
+          }
+      }
 
-var datalg = null;
+      var datalg = null;
 
-//Charger la langue par defaut
-fetch('/locales/'+langselected+'/locale.json')
-    .then((response) =>  datalg = response.json())
-    .then((json) =>{ datalg =json;});
+      //Charger la langue par defaut
+      fetch('/locales/'+langselected+'/locale.json')
+          .then((response) =>  datalg = response.json())
+          .then((json) =>{ datalg =json;});
 
-function getText(){
-  return datalg["staffFeedback"]["input_required"];
-}
+      function getText(){
+        return datalg["staffFeedback"]["input_required"];
+      }
 
-// Event listener pour la langue
-window.addEventListener("langue", event => {
-   var langue = event.detail.langue;
-   var lg = langue.toLowerCase();
-   console.log(lg);
-   datalg = null;
-   fetch('/locales/'+lg+'/locale.json')
-    .then((response) =>  datalg = response.json())
-    .then((json) =>{ datalg =json;});
-});
-</script> 
+      // Event listener pour la langue
+      window.addEventListener("langue", event => {
+         var langue = event.detail.langue;
+         var lg = langue.toLowerCase();
+         console.log(lg);
+         datalg = null;
+         fetch('/locales/'+lg+'/locale.json')
+          .then((response) =>  datalg = response.json())
+          .then((json) =>{ datalg =json;});
+      });
+  </script> 
   </body>
 </html>

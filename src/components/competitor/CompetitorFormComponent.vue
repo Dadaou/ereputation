@@ -26,14 +26,14 @@
                         <label for="company_name"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name
                             <span>*</span></label>
-                        <input type="text" id="company_name" name="name" v-model="data.name" required
+                        <input type="text" id="company_name" name="name" v-model="data.name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                     </div>
                     <div class="mb-6">
                         <label for="address1"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address 1
                             <span>*</span></label>
-                        <input type="text" id="address1" name="address1" v-model="data.address1" required
+                        <input type="text" id="address1" name="address1" v-model="data.address1"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                     </div>
                     <div>
@@ -49,7 +49,7 @@
                 <div>
                     <label for="zipcode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Zipcode
                         <span>*</span></label>
-                    <input type="text" id="zipcode" name="zipcode" v-model="data.zipcode" required
+                    <input type="text" id="zipcode" name="zipcode" v-model="data.zipcode"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
                 <div>
@@ -70,7 +70,7 @@
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
                     <label for="region" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Region
-                        <span>*</span></label>
+                        <!-- <span>*</span> --></label>
                     <input type="text" id="region" name="region" v-model="data.region"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
@@ -222,7 +222,13 @@ const submit = async () => {
     const establishmentData = { ...data.value };
     console.log(establishmentData)
 
-    if (establishmentData.category && establishmentData.country) {
+    if (establishmentData.category 
+        && establishmentData.country
+        && establishmentData.city 
+        && establishmentData.zipcode
+        && establishmentData.category
+        && establishmentData.name 
+        && establishmentData.address1) {
 
         formData.append('category', establishmentData.category);
         formData.append('country', establishmentData.country);
@@ -272,7 +278,9 @@ const submit = async () => {
             showSpinner.value = false;
             reloadCompetitorList()
         }
-    };
+    }else{
+        ElMessage.error(`Please, provide all required information to add / update a competitor`);
+    }
 
 };
 

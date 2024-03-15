@@ -99,9 +99,9 @@
                 </div>
                 <div> 
                     <div>
-                        <div id="url_example" v-if="provider || isHashtag">
+                        <!-- <div id="url_example" v-if="provider || isHashtag">
                             {{!isHashtag?`Follow this template: ${splitUriAndUrl(provider).url}`:' Follow this example: #hashtag' }}
-                        </div>
+                        </div> -->
 
                         <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> {{!isHashtag?'Paste the link here':'Hashtag value'}} <span>*</span></label>
                         <p v-if="!isValidLink && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
@@ -304,13 +304,13 @@ const filteredProviders = computed(() => {
 
 const isValidHashtag = computed(()=>{
     console.log(link.value.startsWith("#"))
-    if(link.value != ''){
-        if (link.value.startsWith("#")) {
-            return true;
-        }else{
-            return false
-        }
-    }
+    // if(link.value != ''){
+    //     if (link.value.startsWith("#")) {
+    //         return true;
+    //     }else{
+    //         return false
+    //     }
+    // }
     return true
 })
 
@@ -415,12 +415,12 @@ const deleteCompetitor = async()=>{
 }
 
 const isValidUrl = (url, urlTemplate) => {
-    const pattern = urlPattern(urlTemplate);
-    let isValid = false
+    // const pattern = urlPattern(urlTemplate);
+    let isValid = true
 
-    if (pattern.test(url)) {
-        isValid = true;
-    }
+    // if (pattern.test(url)) {
+    //     isValid = true;
+    // }
 
     return isValid
 }
@@ -438,13 +438,21 @@ const getHashtagValue = (value)=>{
     if (value.startsWith("#")) {
         return value.slice(1); 
     }
+    return value
 }
 
 const submit = async () => {
     showSpinner.value = true;
     let urlObject = splitUriAndUrl(provider.value)
+    // const data = {
+    //     value1: isHashtag.value?getHashtagValue(link.value):getValueUrl(link.value, urlObject.url),
+    //     establishment: establishment.value,
+    //     provider: urlObject.uri,
+    //     enable: true
+    // }
+
     const data = {
-        value1: isHashtag.value?getHashtagValue(link.value):getValueUrl(link.value, urlObject.url),
+        value1: isHashtag.value?getHashtagValue(link.value):link.value,
         establishment: establishment.value,
         provider: urlObject.uri,
         enable: true

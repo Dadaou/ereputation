@@ -244,7 +244,7 @@ const handleDisable = async (value, type) => {
 };
 
 const setStatus = async(id, status)=>{
-     userStore.user.customer.establishments = userStore.user.customer.establishments.map((x) => {
+    userStore.user.customer.establishments = userStore.user.customer.establishments.map((x) => {
             if (x.id == id) {
                 x.disable = status=='disable'?true:false
                 return x;
@@ -252,6 +252,8 @@ const setStatus = async(id, status)=>{
                 return x;
             }
     });
+
+     userStore.user.customer.establishments = userStore.user.customer.establishments.filter((x) => x.disable==false);
      const response = await new Promise((resolve) => {
         services.post_Record(`/customer/establishment/${id}/${status}`, {}, (response) => {
             resolve(response)

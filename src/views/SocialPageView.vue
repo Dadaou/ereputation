@@ -711,7 +711,7 @@ onBeforeMount(async () => {
                     isCurrent: false,
                 },
                 {
-                    title: "Socials",
+                    title: "Social network",
                     path: `${route.path}`,
                     isCurrent: true
                 }
