@@ -18,7 +18,7 @@
 		    color: 'white',
 		    padding: '5px',
 		    borderRadius: '5px',
-		    marginRight: '5px' 
+		    marginRight: '10px' 
 		}">
 		    {{ rating.label }}
 		</span>
