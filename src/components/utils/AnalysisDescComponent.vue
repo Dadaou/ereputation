@@ -1,6 +1,6 @@
 <template>
 	<div class="mb-2 cat_desc">
-        <p>
+        <p class="mb-2">
             <!-- <Icon icon="ic:twotone-arrow-right" width="2rem" height="2rem"  style="color: var(--color-danger)"></Icon> --> 
             <span v-if="condition == 'condition1'">
             	😀
