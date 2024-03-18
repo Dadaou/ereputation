@@ -1,7 +1,7 @@
 <template>
 	 <div v-if="!dataLoading">
         <div class="client__container__head" v-if="customers.length > 0">
-          Welcome, Partner <b>{{ userStore.user.partner.name }}</b>! <br/>
+          Welcome, <b>{{ userStore.user.partner.name }}</b>! <br/>
           We're thrilled to have you on board. Here, you'll find your customer list displayed below.
         </div>
         <div class="client__container__head" v-else>

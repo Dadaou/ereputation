@@ -248,7 +248,7 @@ const router = createRouter({
           ]
         },
         {
-          path: '/forgot-pwd',
+          path: '/user-confirmation/password/reset',
           name: 'ForgotPwd',
           component: ForgotPwdPageView
         },

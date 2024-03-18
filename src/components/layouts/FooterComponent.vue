@@ -28,8 +28,21 @@
             </div>
             <div class="footer__links">
                 <ul>
-                    <li><i class="uil uil-facebook-f"></i></li>
-                    <li><i class="uil uil-linkedin-alt"></i></li>
+                    <li v-if="appStore.account && appStore.account.facebook">
+                      <a :href="appStore.account.facebook" target="_blank">
+                        <i class="uil uil-facebook-f"></i>
+                      </a>
+                    </li>
+                    <li v-if="appStore.account && appStore.account.linkedin">
+                      <a :href="appStore.account.linkedin" target="_blank">
+                        <i class="uil uil-linkedin-alt"></i>
+                      </a>
+                    </li>
+                     <li v-if="appStore.account && appStore.account.instagram">
+                      <a :href="appStore.account.instagram" target="_blank">
+                        <i class="uil uil-linkedin-alt"></i>
+                      </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -108,6 +121,7 @@ footer {
     padding: 0.6rem 0.9rem;
     border: 1px solid var(--color-white);
     border-radius: 50%;
+    cursor: pointer;
 }
 
 /* Media query for smaller screens */

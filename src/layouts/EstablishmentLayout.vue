@@ -192,6 +192,10 @@ const customerTag = inject('tag');
     color: white !important;
 }
 
+.mobile__filter__btn {
+    display: none !important;
+}
+
 @media screen and (min-width: 1439px) and (max-width: 2559px) {
     .left__side {
         width: 73.5%;

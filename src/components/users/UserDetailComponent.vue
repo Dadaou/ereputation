@@ -58,6 +58,9 @@
             </div>
         </div>
         <div class="edit__actions">
+                    <a class="register-link forgot__password edit" href="/user-confirmation/password/reset" target="_blank">
+                        Change password
+                    </a>
                     <span class="cancel" v-if="editing" @click="editing = false">
                         Cancel
                     </span>

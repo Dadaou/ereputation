@@ -36,6 +36,7 @@ export const useUserStore = defineStore(
     }
 
     const verifyPassword = async (email, app_url, next) => {
+      console.log(app_url)
       await services.post_Record('password/reset', { email: email, app_url: app_url }, (response) => {
         console.log(response)
         next(response)

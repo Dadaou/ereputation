@@ -4,7 +4,7 @@
             <div class="item__title">{{ item.title }}
                 <i v-if="item.description" class="uil uil-question-circle"
                     style="color: var(--color-warning); font-size: 18px; cursor: pointer"
-                    @mouseover="(e) => (buttonRef = e.currentTarget)" @click="visible = !visible">
+                    @mouseover="(e) => {buttonRef = e.currentTarget, visible = true}" @mouseleave="visible = false">
                 </i>
             </div>
             <span class="item__value" v-if="!isLoading">{{ item.value }}</span>

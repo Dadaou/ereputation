@@ -8,7 +8,7 @@
                 <span>Connect to your account</span>
                 <input type="email" name="Email Address" placeholder="Email address" v-model="form.email" required>
                 <input type="password" name="Password" placeholder="Password" v-model="form.password" required>
-                <a class="register-link forgot__password" href="/forgot-pwd">Forgot Password?</a>
+                <a class="register-link forgot__password" href="/user-confirmation/password/reset">Forgot Password?</a>
                 <button type="submit" :class="['btn btn__light2', showSpinner == true ? 'isLoaded' : '']">
                     <SpinnerComponent v-if="showSpinner == true" :color="'red'" />
                     <span v-else>Submit</span>

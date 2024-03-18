@@ -15,13 +15,13 @@
             <li v-else>{{ data.review_limit || 'Illimited' }} Reviews / Year</li>
             
             <li v-if="data.name.toLowerCase().includes('business')">Adjustable leads limit</li>
-            <li v-else>{{ data.contact_limit || 'Illimited' }} leads</li>
+            <li v-else>{{ data.contact_limit || 'Illimited' }} leads / Year</li>
             
             <li v-if="data.name.toLowerCase().includes('business')">Adjustable events limit</li>
-            <li v-else>{{ data.event_limit || 'Illimited' }} events</li>
+            <li v-else>{{ data.event_limit || 'Illimited' }} events / Year</li>
 
             <li v-if="data.name.toLowerCase().includes('business')">Adjustable #hashtag limit</li>
-            <li v-else>{{ data.hashtag_limit || 'Illimited' }} monitored #hashtag</li>
+            <li v-else>{{ data.hashtag_limit || 'Illimited' }} monitored #hashtag </li>
             
             <li v-if="data.name.toLowerCase().includes('business')">Adjustable points of sale limit</li>
             <li v-else>{{ data.pointofsale_limit || 'Illimited' }} monitored points of sale (1 QR Code by point of sale)</li>
@@ -35,8 +35,8 @@
             <li v-if="data.name.toLowerCase().includes('business')">Adjustable monitored competitors</li>
             <li v-else>{{ data.competitor_limit || 'Illimited' }} monitored competitors</li>
             
-            <li v-if="data.name.toLowerCase().includes('basic')">Standard forms</li>
-            <li v-else>Custom forms</li> 
+            <li v-if="data.name.toLowerCase().includes('business')">Custom forms</li>
+            <li v-else>Standard forms</li> 
 
             <li v-if="!data.name.toLowerCase().includes('basic')">Reviews history</li>
             
