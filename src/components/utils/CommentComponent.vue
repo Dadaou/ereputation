@@ -44,7 +44,7 @@
                                   visible = true
                                   }"
                                   @mouseleave="()=>visible = false"
-                                  @click="handleModal('Add review feeling', 'add', 'uil-add', 'category', review)"
+                                  @click="handleModal('Add review category', 'add', 'uil-add', 'category', review)"
                             >
                             </i>
                              <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
@@ -183,6 +183,7 @@ const editReview = (review) => {
     review.feeling = feel.value;
     id.value = review.id;
     selectedReview.value = review;
+    category.value = review.category
 
     if (feel.value == 'neutre') feel.value = 'neutral';
     showModal.value = true;
@@ -197,20 +198,21 @@ const updateReview = async () => {
     let updatedValue = {
         feeling: feel.value,
         confidence: 1,
-        categoryCheck: category.value
     }
     selectedReview.value.feeling = feel.value;
-    selectedReview.value.category = category.value
 
     try {
-        // reloadData(selectedReview.value, feel.value)
         showModal.value = false;
-        await feedbackStore.updateReview(id.value, updatedValue, response => {
-            console.log(response);
-            if (response.status == 200) {
-                //
-            }
-        })
+        if(modal.value.type == 'feeling'){
+            await feedbackStore.updateReview(id.value, updatedValue, response => {
+                console.log(response);
+            })
+        }else{
+            await feedbackStore.updateReviewCategory(id.value, modal.value.action,selectedReview.value.category, category.value , response => {
+                console.log(response);
+            })
+            selectedReview.value.category = category.value
+        }
     } catch (error) {
         console.log(error);
     }

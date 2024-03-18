@@ -11,11 +11,28 @@ export const useFeedbackStore = defineStore("feedback", {
                 next(response);
             });
         }, 
+
         async updateReview(id, review, next){
             await services.patchRecord(this.entity, id, review, (response)=>{
                 next(response);
             });
         },
+
+        async updateReviewCategory(id, type, old, current, next){
+            let api = '/modify/classification'
+            let parameters = `type=${type}&review=${id}&current_category=${current}`
+            parameters = type=='add'?`${parameters}&old_category`:`${parameters}&old_category=${old}`
+            
+            api = `${api}?${parameters}`
+
+           const response = await new Promise((resolve) => {
+                    services.get_Record(api, (response) => {
+                        resolve(response);
+                    });
+            });
+           next(response)
+        },
+
         isBeforeTargetDate(expiredDate) {
             var currentDate = new Date();
             var targetDate = new Date(expiredDate);
