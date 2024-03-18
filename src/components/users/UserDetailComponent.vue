@@ -58,7 +58,8 @@
             </div>
         </div>
         <div class="edit__actions">
-                    <a class="register-link forgot__password edit" href="/user-confirmation/password/reset" target="_blank">
+                    <a class="forgot__password" href="/user-confirmation/password/reset" target="_blank">
+                        <i class="uil uil-key-skeleton"></i>
                         Change password
                     </a>
                     <span class="cancel" v-if="editing" @click="editing = false">
@@ -258,6 +259,13 @@ input{
 .edit__actions .edit:hover {
     background-color: var(--color-primary);
     color: var(--color-white);
+}
+
+.forgot__password{
+    background-color: var(--color-danger);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 5px;
 }
 
 @media screen and (max-width: 800px) {
