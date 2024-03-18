@@ -52,13 +52,13 @@
                            <!--  <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required> -->
                                  <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                         </div>
                         <div>
                             <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                                 $t("feedback.lastname") }} </label>
                             <input type="text" id="last_name" v-model="lastname"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
                         <div>
                             <label for="genders" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
