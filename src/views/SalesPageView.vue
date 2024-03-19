@@ -8,7 +8,7 @@
 
         <div id="ttv__container" style="margin-top: 25px;">
             <div class="app__title" style="margin-bottom: 25px;">
-                <h2>TTV</h2>
+                <h3>Total transaction value (purchase date)</h3>
             </div>
             <div class="chartBox">
                 <div class="containerChart">
@@ -27,7 +27,7 @@
 
         <div style="margin-top: 25px;">
             <div class="app__title" style="margin-bottom: 25px;">
-                <h2>Number of booking</h2>
+                <h3>Number of products (purchase date)</h3>
             </div>
             <div class="chartBox">
                 <div class="containerChart">

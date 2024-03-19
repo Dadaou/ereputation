@@ -179,9 +179,4 @@ watch(width, () => {
   position: relative;
   top: -5em;
 }
-
-.link-rel{
-  width: 50px;
-  height: 50px;
-}
 </style>

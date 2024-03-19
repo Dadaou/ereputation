@@ -256,10 +256,7 @@ const submit = async () => {
             showSpinner.value = false;
         }
     }else{
-        ElMessage({
-            message: `Please fill correctly all required form`,
-            type: 'warning',
-        });
+        ElMessage.error(`Please, provide all required information to add / update an establishment`);
     }
 
 };

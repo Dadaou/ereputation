@@ -51,8 +51,11 @@
                                 $t("feedback.firstname") }} <span>*</span></label>
                            <!--  <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required> -->
-                                 <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
+                                <!--  <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required> -->
+                                <input type="text" id="first_name" v-bind:value="firstname" v-on:input="firstname = $event.target.value" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
+
                         </div>
                         <div>
                             <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
@@ -215,7 +218,7 @@ function getRandomValue(n) {
 }
 
 onBeforeMount(async () => {
-    if (userStore.authenticated == null) services.setToken(import.meta.env.VITE_APP_TOKEN);
+    services.setToken(import.meta.env.VITE_APP_TOKEN);
 
     await services.get_Record(`establishment/${route.params.etab}/media`, (response) => {
         console.log(response)
@@ -347,10 +350,10 @@ const submit = async () => {
             showSpinner.value = true;
             await feedbackStore.createReview(review, async (response) => {
                 if (response.status == 201) {
-                    await services.createRecord('contacts', contactData, async (contactResponse) => {
+                    if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
+                        await services.createRecord('contacts', contactData, async (contactResponse) => {
+                            let email_sent = false
                             if (contactResponse.status == 201) {
-                                let email_sent = false
-                                if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
                                     email_sent = true
                                     let coupons = {
                                         advantage: randomAdvantage.value.id,
@@ -367,22 +370,20 @@ const submit = async () => {
                                         console.log(workflowResponse)
                                         resetForm()
                                     });
-                                }
-
-
-                                router.push({
-                                    name: 'SuccessFeedback',
-                                    params: {
-                                        etab: route.params.etab,
-                                        tag: route.params.tag,
-                                        email_sent: email_sent,
-                                        share: parseFloat(review.rating)>=4?'message-and-join-us':'message'
-                                    },
-                                });
                             }
-                        
-                    });
 
+                            router.push({
+                                name: 'SuccessFeedback',
+                                params: {
+                                    etab: route.params.etab,
+                                    tag: route.params.tag,
+                                    email_sent: email_sent,
+                                    share: parseFloat(review.rating)>=4?'message-and-join-us':'message'
+                                },
+                            });
+                            
+                        });
+                    }
                 }
             })
         } else ElMessage.error(`Please, provide all needed information`);

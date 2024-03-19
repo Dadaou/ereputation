@@ -166,7 +166,7 @@ let randomAdvantage = ref(null);
 const showSpinner = ref(false);
 
 onBeforeMount(async () => {
-    if (userStore.authenticated == null) services.setToken(import.meta.env.VITE_APP_TOKEN);
+    services.setToken(import.meta.env.VITE_APP_TOKEN);
     await services.get_Record(`establishment/${route.params.id}/media`, (response) => {
         console.log(response)
         if (response.status == 200) {
@@ -277,11 +277,10 @@ const submit = async () => {
             await feedbackStore.createReview(review, async (response) => {
             
                 if (response.status == 201) {
-                    await services.createRecord('contacts', contactData, async (contactResponse) => {
-                        
-                        if (contactResponse.status == 201) {
+                    if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
+                        await services.createRecord('contacts', contactData, async (contactResponse) => {
                             let email_sent = false
-                            if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
+                            if (contactResponse.status == 201) {
                                 email_sent = true
                                 let coupons = {
                                     advantage: randomAdvantage.value.id,
@@ -298,6 +297,7 @@ const submit = async () => {
                                     resetForm()
                                 });
                             }
+
                             router.push({
                                 name: 'SuccessFeedback',
                                 params: {
@@ -307,8 +307,8 @@ const submit = async () => {
                                     share: parseFloat(review.rating)>=4?'message-and-join-us':'message'
                                 },
                             });
-                        }
-                    });
+                        });
+                    }
                 }
             });
         } else {

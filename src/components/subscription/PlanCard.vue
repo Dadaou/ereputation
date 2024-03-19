@@ -141,7 +141,7 @@ watch(enumber, () => {
 }
 
 .plan-card ul {
-    list-style-image: url('sqpurple.gif');
+   /* list-style-image: url('sqpurple.gif');*/
     text-align: left;
     justify-self: flex-start;
 }
