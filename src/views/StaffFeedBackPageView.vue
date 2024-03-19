@@ -53,7 +53,7 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required> -->
                                 <!--  <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required> -->
-                                <input type="text" id="first_name" v-bind:value="firstname" v-on:input="firstname = $event.target.value" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
+                                <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
 
                         </div>
@@ -350,9 +350,10 @@ const submit = async () => {
             showSpinner.value = true;
             await feedbackStore.createReview(review, async (response) => {
                 if (response.status == 201) {
+                    let email_sent = false
                     if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
-                            let email_sent = false
+                            
                             if (contactResponse.status == 201) {
                                     email_sent = true
                                     let coupons = {
@@ -371,19 +372,17 @@ const submit = async () => {
                                         resetForm()
                                     });
                             }
-
-                            router.push({
-                                name: 'SuccessFeedback',
-                                params: {
-                                    etab: route.params.etab,
-                                    tag: route.params.tag,
-                                    email_sent: email_sent,
-                                    share: parseFloat(review.rating)>=4?'message-and-join-us':'message'
-                                },
-                            });
-                            
                         });
                     }
+                    router.push({
+                        name: 'SuccessFeedback',
+                        params: {
+                            etab: route.params.etab,
+                            tag: route.params.tag,
+                            email_sent: email_sent,
+                            share: parseFloat(review.rating)>=4?'message-and-join-us':'message'
+                        },
+                    });
                 }
             })
         } else ElMessage.error(`Please, provide all needed information`);

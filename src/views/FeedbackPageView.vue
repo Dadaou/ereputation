@@ -277,9 +277,9 @@ const submit = async () => {
             await feedbackStore.createReview(review, async (response) => {
             
                 if (response.status == 201) {
+                    let email_sent = false
                     if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
-                            let email_sent = false
                             if (contactResponse.status == 201) {
                                 email_sent = true
                                 let coupons = {
@@ -297,18 +297,17 @@ const submit = async () => {
                                     resetForm()
                                 });
                             }
-
-                            router.push({
-                                name: 'SuccessFeedback',
-                                params: {
-                                    etab: route.params.id,
-                                    tag: route.params.tag,
-                                    email_sent: email_sent,
-                                    share: parseFloat(review.rating)>=4?'message-and-join-us':'message'
-                                },
-                            });
                         });
                     }
+                    router.push({
+                        name: 'SuccessFeedback',
+                        params: {
+                            etab: route.params.id,
+                            tag: route.params.tag,
+                            email_sent: email_sent,
+                            share: parseFloat(review.rating)>=4?'message-and-join-us':'message'
+                        },
+                    });
                 }
             });
         } else {
