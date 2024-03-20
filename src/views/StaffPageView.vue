@@ -36,7 +36,7 @@
                 <span v-if="!dataLoading">{{ establishment.city }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
             </div>
-            <div class="society__location">
+            <!-- <div class="society__location">
                 <i class="uil uil-favorite"></i>
                 <span v-if="!dataLoading" class="society__location">{{ all_items[0].value }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
@@ -50,7 +50,7 @@
                 <i class="uil uil-building"></i>
                 <span v-if="!dataLoading">{{ all_items[2].value }} competitors</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
+            </div> -->
             <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/staffsranking`">
                 <button class="btn">
                     <i class="uil uil-trophy" :style="{ 'color': 'white' }"></i>

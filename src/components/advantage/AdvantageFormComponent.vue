@@ -1,9 +1,9 @@
 <template>
-<div class="security__header border__bottom my-10">
-            <div class="security__edit">
+        <div class="security__header border__bottom my-10">
+           <!--  <div class="security__edit">
                 <h4><i class="uil uil-calender"></i> Advantage</h4>
                 <p>Complete the following information to add an advantage.</p>
-            </div>
+            </div> -->
         </div>
         <div>
             <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2 h-full">

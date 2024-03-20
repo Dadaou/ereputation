@@ -1,9 +1,9 @@
 <template>
     <div class="security__header border__bottom mt-10">
-        <div class="security__edit">
+       <!--  <div class="security__edit">
             <h4><i class="uil uil-company"></i> Establishment</h4>
             <p>Please provide the necessary information to add a new establishment.</p>
-        </div>
+        </div> -->
     </div>
     <div class="table__container">
         <form id="establishmentForm" @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">

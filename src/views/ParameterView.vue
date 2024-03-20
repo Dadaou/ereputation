@@ -58,6 +58,18 @@
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
+            <el-tab-pane label="AI categorizations" name="categorization">
+                <el-tabs v-model="activeCategorizationTab" class="demo-tabs">
+                    <el-tab-pane label="Categorization list" name="categorization_list">
+                       
+                       En cours ...
+                    </el-tab-pane>
+                    <el-tab-pane label="Add a new categorization" name="categorization_form">
+                      
+                      <CategorizationFormComponent/>
+                    </el-tab-pane>
+                </el-tabs>
+            </el-tab-pane>
         </el-tabs>
     </div>
 </template>
@@ -122,6 +134,10 @@ const CompetitorFormComponent = defineAsyncComponent(() =>
     import("@Components/competitor/CompetitorFormComponent.vue")
 )
 
+const CategorizationFormComponent = defineAsyncComponent(() =>
+    import("@Components/categorization/CategorizationFormComponent.vue")
+)
+
 const position = ref('top')
 watch(width, () => {
     if (width.value < 800) {
@@ -147,7 +163,7 @@ provide('establishment_activeTab', activeEstablishmentTab);
 const cleanEstablishmentForm = ref(false);
 provide('clearEstablishmentForm', cleanEstablishmentForm);
 
-const activeCompetitorsTab = ref('competitor_form')
+const activeCompetitorsTab = ref('competitor_list')
 provide('activeCompetitorsTab', activeCompetitorsTab);
 
 const staff_to_update = ref(null);
@@ -161,6 +177,9 @@ const activeEventTab = ref('event_list')
 provide('event_activeTab', activeEventTab)
 
 const activeAdvantageTab = ref('advantage_list')
+provide('advantage_activeTab', activeAdvantageTab)
+
+const activeCategorizationTab = ref('categorization_list')
 provide('advantage_activeTab', activeAdvantageTab)
 
 

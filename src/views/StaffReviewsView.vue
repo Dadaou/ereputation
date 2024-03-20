@@ -7,7 +7,12 @@
             <CommentPagination v-if="_reviews.length > 0" :config="paginationConfig" @updatePage="updatePage"
                 :color="'#6c63ff'" :nb="_reviews.length" :data="visibleData"></CommentPagination>
         </div>
-        <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="false" />
+        <CommentComponent 
+            v-if="reviews_loader == false" 
+            :reviews="visibleData" 
+            :showEmoji="true" 
+            :categories="categories"
+        />
         <div v-else role="status"
             class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
             v-for="index in 5" :key="index">
@@ -46,6 +51,7 @@ const route = useRoute()
 const visibleData = ref([])
 const selectedStaff = inject('selectedStaff')
 const date = inject('date')
+const companyId = route.params.id;
 const _reviews = ref([])
 const paginationConfig = ref({
     current: 0,
@@ -97,6 +103,23 @@ const loadReviews = async (staffTag, dateStart, dateEnd) => {
 
 }
 
+const categories = ref([]);
+
+const loadCategories = async (tag) => {
+    const api = `establishment/${tag}/categories`
+    const response = await new Promise((resolve) => {
+        services.get_Record(api, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+        if (response.data && response.data.data) {
+            categories.value = response.data.data
+        }
+    }
+}
+
 watch(date, async () => {
     console.log(date.value)
     if (date.value.length > 1) {
@@ -108,6 +131,7 @@ onMounted(async () => {
     reviews_loader.value = true
     console.log('Component onMounted')
     await loadReviews(route.params.staff_tag, '', '')
+    await loadCategories(companyId)
 });
 
 onUnmounted(() => {

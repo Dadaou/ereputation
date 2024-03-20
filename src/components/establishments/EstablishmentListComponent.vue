@@ -1,8 +1,8 @@
 <template>
     <div class="profile__header mt-2">
-        <div class="profile__edit">
+        <!-- <div class="profile__edit">
             <h2>Establishments</h2>
-        </div>
+        </div> -->
     </div>
     <div class="mt-5 table__container">
         <el-table :data="establishments">

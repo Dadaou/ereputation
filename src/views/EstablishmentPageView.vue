@@ -172,6 +172,11 @@
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
             </div>
             <div class="society__location">
+                 <i class="uil uil-favorite"></i>
+                <span v-if="!establishmentLoading">{{ all_items.global.value }}</span>
+                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+            </div>
+            <div class="society__location">
                 <i class="uil uil-analysis"></i>
                 <span v-if="!establishmentLoading">{{ all_items.index.value }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>

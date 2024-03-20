@@ -82,7 +82,7 @@
                 <el-tab-pane label="Events & weather" name="events_weather">
                     Coming soon ...
                 </el-tab-pane>
-                <el-tab-pane label="Bookings" name="bookings">
+                <el-tab-pane label="Sales" name="sales">
                     Coming soon ...
                 </el-tab-pane>
                 <el-tab-pane label="Trends" name="trends">
@@ -133,7 +133,7 @@
                 <span v-if="!dataLoading">{{ establishment.city }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
             </div>
-            <div class="society__location">
+            <!-- <div class="society__location">
                 <i class="uil uil-favorite"></i>
                 <span v-if="!dataLoading" class="society__location">{{ all_items[0].value }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
@@ -147,7 +147,7 @@
                 <i class="uil uil-building"></i>
                 <span v-if="!dataLoading">{{ all_items[2].value }} competitors</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
+            </div> -->
         </div>
         <div class="photo" v-if="!dataLoading">
             <div v-if="establishment.url_source !== null" class="establishment__img">
@@ -390,18 +390,18 @@ const newOptions = {
     maintainAspectRatio: false,
     // aspectRatio: 2,
     scales: {
-        y: {
-            suggestedMin: -1, // suggère une valeur minimale pour l'axe Y
-            suggestedMax: 1, // suggère une valeur maximale pour l'axe Y
-            // Assure que l'axe Y commence à -1 et se termine à 1
-            ticks: {
-                stepSize: 1, // Définit l'intervalle des graduations sur l'axe Y
-                callback: function(value, index, values) {
-                    // Affiche uniquement les valeurs 1, 0 et -1
-                    return value === 1 || value === 0 || value === -1 ? value : '';
-                }
-            }
-        }
+        // y: {
+        //     suggestedMin: -1, // suggère une valeur minimale pour l'axe Y
+        //     suggestedMax: 1, // suggère une valeur maximale pour l'axe Y
+        //     // Assure que l'axe Y commence à -1 et se termine à 1
+        //     ticks: {
+        //         stepSize: 1, // Définit l'intervalle des graduations sur l'axe Y
+        //         callback: function(value, index, values) {
+        //             // Affiche uniquement les valeurs 1, 0 et -1
+        //             return value === 1 || value === 0 || value === -1 ? value : '';
+        //         }
+        //     }
+        // }
     },
     plugins: {
         legend: {

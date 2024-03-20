@@ -1,9 +1,9 @@
 <template>
     <div class="security__header border__bottom mt-10">
-        <div class="security__edit">
+        <!-- <div class="security__edit">
             <h4><i class="uil uil-users-alt"></i> Staff</h4>
             <p>Please provide the necessary information to add a new staff member to one of your establishment.</p>
-        </div>
+        </div> -->
     </div>
     <div>
         <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
@@ -177,8 +177,7 @@ const submit = async ()=>{
         "dateto": (endDate.value==null ||endDate.value == "")?null:moment(endDate.value).format('YYYY-MM-DD'),
         "establishment": establishment.value,
     }
-
-    console.log(staff);
+    
     try {
         if(gender.value != '' && department.value != '' && startDate.value != null && establishment.value != '' && firstname.value != ''){
              showSpinner.value = true;

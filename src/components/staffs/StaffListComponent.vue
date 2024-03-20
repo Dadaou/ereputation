@@ -1,8 +1,8 @@
 <template>
   <div class="security__header border__bottom">
-    <div class="security__edit">
+    <!-- <div class="security__edit">
       <h4><i class="uil uil-users-alt"></i> Staff List</h4>
-    </div>
+    </div> -->
   </div>
   <div class="mt-5 table__container">
     <el-table :data="filterTableData">
