@@ -172,18 +172,18 @@ const router = createRouter({
           component: () => import('@Views/TrendsView.vue')
         },
         {
-          path: '/customer/:tag/establishment/:id/staffs',
+          path: '/customer/:tag/establishment/:id/services',
           name: 'Staff',
           beforeEnter: [CheckAccess],
           component: () => import('@Views/StaffPageView.vue'),
           children: [
             {
               path: '',
-              name: 'StaffComparison',
-              component: () => import('@Views/StaffComparisonView.vue')
+              name: 'Services',
+              component: () => import('@Views/ServicesPageView.vue')
             },
             {
-              path: 'list/:staff_tag/reviews',
+              path: '/staff/:staff_tag/reviews',
               name: 'StaffReview',
               component: () => import('@Views/StaffReviewsView.vue')
             }

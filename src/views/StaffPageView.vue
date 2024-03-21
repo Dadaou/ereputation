@@ -186,7 +186,7 @@ const breadcrumbData = ref([
         isCurrent: false,
     },
     {
-        title: "Staffs",
+        title: "Services",
         path: `${route.path}`,
         isCurrent: true
     }
@@ -201,7 +201,7 @@ appStore.setBreadcrumbs([
         isCurrent: false,
     },
     {
-        title: "Staffs",
+        title: "Services",
         path: `${route.path}`,
         isCurrent: true
     }
@@ -273,19 +273,19 @@ watch(route_name, () => {
                 isCurrent: false,
             },
             {
-                title: "Staffs",
-                path: `/customer/${route.params.tag}/establishment/${route.params.id}/staffs`,
-                isCurrent: false
+                title: "Services",
+                path: `${route.path}`,
+                isCurrent: true
             },
             {
-                title: "Reviews",
+                title: "Staff Reviews",
                 path: `${route.path}`,
                 isCurrent: true,
             }
         ]);
     }
 
-    if (route_name.value == 'StaffComparison') {
+    if (route_name.value == 'Services') {
         appStore.setBreadcrumbs([
             {
                 title: establishment_name,
@@ -293,7 +293,7 @@ watch(route_name, () => {
                 isCurrent: false,
             },
             {
-                title: "Staffs",
+                title: "Services",
                 path: `${route.path}`,
                 isCurrent: true
             }
@@ -339,8 +339,8 @@ onBeforeMount(async () => {
             establishment.value = data;
             appStore.setCurrentPage({
                 title1: "",
-                title2: establishment.value.name,
-                icon: "uil-users-alt"
+                title2: "Services",
+                icon: "uil-clipboard-notes"
             });
 
             const establishment_name = establishment.value ? establishment.value.name : "Establishment";
@@ -353,8 +353,8 @@ onBeforeMount(async () => {
                         isCurrent: false,
                     },
                     {
-                        title: "Staffs",
-                        path: `/customer/${route.params.tag}/establishment/${route.params.id}/staffs`,
+                        title: "Services",
+                        path: `/customer/${route.params.tag}/establishment/${route.params.id}/services`,
                         isCurrent: false
                     },
                     {
@@ -365,7 +365,7 @@ onBeforeMount(async () => {
                 ]);
             }
 
-            if (route_name.value == 'StaffComparison') {
+            if (route_name.value == 'Services') {
                 appStore.setBreadcrumbs([
                     {
                         title: establishment_name,
@@ -373,7 +373,7 @@ onBeforeMount(async () => {
                         isCurrent: false,
                     },
                     {
-                        title: "Staffs",
+                        title: "Services",
                         path: `${route.path}`,
                         isCurrent: true
                     }

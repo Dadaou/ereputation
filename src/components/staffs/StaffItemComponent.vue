@@ -252,7 +252,15 @@ const calculateAverageRating = (data) =>  {
 
 const showReview = (customer_tag, staff_tag, establishment_tag, staff)=>{
     selectedStaff.value = staff;
-    router.push(`/customer/${customer_tag}/establishment/${establishment_tag}/staffs/list/${staff_tag}/reviews`);
+    // router.push(`/customer/${customer_tag}/establishment/${establishment_tag}/staffs/list/${staff_tag}/reviews`);
+    router.push({
+        name:'StaffReview',
+        params:{
+            tag: customer_tag,
+            id: establishment_tag,
+            staff_tag: staff_tag
+        }
+    })
 };
 </script>
 <style scoped>

@@ -113,10 +113,16 @@
         <ul
           :class="['menu flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-2 md:mt-0 md:border-0']">
 
-          <li @click="closeDropdownMenu">
+          <!-- <li @click="closeDropdownMenu">
             <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/staffs`">
               <i class="uil uil-users-alt"></i>
               <span>Staff</span>
+            </RouterLink>
+          </li> -->
+          <li @click="closeDropdownMenu">
+            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/services`">
+              <i class="uil uil-clipboard-notes"></i>
+              <span>Services</span>
             </RouterLink>
           </li>
           <li @click="closeDropdownMenu">
@@ -128,13 +134,13 @@
           <li @click="closeDropdownMenu">
             <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/social`">
               <i class="uil uil-users-alt"></i>
-              <span>Social</span>
+              <span>Socials</span>
             </RouterLink>
           </li>
           <li @click="closeDropdownMenu">
             <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/weathers`">
               <i class="uil uil-cloud-sun"></i>
-              <span>Weather</span>
+              <span>Weathers</span>
             </RouterLink>
           </li>
           <li @click="closeDropdownMenu">
@@ -239,7 +245,7 @@ const showMenu = computed(() => {
     'Trends',
     'Sales',
     'Staff',
-    'StaffComparison',
+    'Services',
     'StaffReview',
     'Analysis'
   ];

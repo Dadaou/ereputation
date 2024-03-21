@@ -14,6 +14,7 @@
       <el-table-column label="Metric" prop="metric" style="width: 10%; min-width: 200px;" />
       <el-table-column label="Scope" prop="scope" style="width: 10%; min-width: 200px;" />
       <el-table-column label="Validity" prop="validity" style="width: 10%; min-width: 200px;" align="center" />
+      <el-table-column label="Limit" prop="advantageLimit" style="width: 10%; min-width: 200px;" align="center" />
       <el-table-column label="Expired At" style="width: 10%; min-width: 200px;" >
          <template #default="scope">
                   {{scope.row.expired_at?moment(scope.row.expired_at).format('YYYY-MM-DD'):''}}

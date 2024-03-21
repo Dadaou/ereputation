@@ -448,7 +448,10 @@ const loadAdvantage = async()=>{
             });
         });
         if (response.status === 200) {
-            allAdvantages.value = response.data;
+            allAdvantages.value = response.data.map(adv=>{
+                const {advantage_limit, ...advantage} = adv;
+                return {...advantage, advantageLimit:advantage_limit}
+            });
         } else {
             console.error('Error fetching advantages:', response);
         }
