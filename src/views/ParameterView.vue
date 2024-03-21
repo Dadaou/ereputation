@@ -26,7 +26,7 @@
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="Staff" name="staff">
+            <el-tab-pane label="Staffs" name="staff">
                 <el-tabs v-model="activeStaffTab" class="demo-tabs">
                     <el-tab-pane label="Staff list" name="staff_list">
                         <StaffListComponent @edit="(staff) => handleEdit(staff, 'staff')" />
@@ -36,25 +36,13 @@
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="Event" name="event">
+            <el-tab-pane label="Events" name="event">
                 <el-tabs v-model="activeEventTab" class="demo-tabs">
                     <el-tab-pane label="Event list" name="event_list">
                         <EventListComponent @edit="(event) => handleEdit(event, 'event')" />
                     </el-tab-pane>
                     <el-tab-pane label="Add a new event" name="event_form">
                         <EventFormComponent />
-                    </el-tab-pane>
-                </el-tabs>
-            </el-tab-pane>
-            <el-tab-pane label="Advantage" name="advantage">
-                <el-tabs v-model="activeAdvantageTab" class="demo-tabs">
-                    <el-tab-pane label="Advantage list" name="advantage_list">
-                        <AdvantageListComponent @edit="(advantage) => handleEdit(advantage, 'advantage')"
-                            @setEnable="(advantage) => handleEnable(advantage, 'advantage')"
-                            @setDisable="(advantage) => handleDisable(advantage, 'advantage')" />
-                    </el-tab-pane>
-                    <el-tab-pane label="Add a new advantage" name="advantage_form">
-                        <AdvantageFormComponent />
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
@@ -67,6 +55,29 @@
                     <el-tab-pane label="Add a new categorization" name="categorization_form">
                       
                       <CategorizationFormComponent/>
+                    </el-tab-pane>
+                </el-tabs>
+            </el-tab-pane>
+            <el-tab-pane label="Advantages" name="advantage">
+                <el-tabs v-model="activeAdvantageTab" class="demo-tabs">
+                    <el-tab-pane label="Advantage list" name="advantage_list">
+                        <AdvantageListComponent @edit="(advantage) => handleEdit(advantage, 'advantage')"
+                            @setEnable="(advantage) => handleEnable(advantage, 'advantage')"
+                            @setDisable="(advantage) => handleDisable(advantage, 'advantage')" />
+                    </el-tab-pane>
+                    <el-tab-pane label="Add a new advantage" name="advantage_form">
+                        <AdvantageFormComponent />
+                    </el-tab-pane>
+                </el-tabs>
+            </el-tab-pane>
+            <el-tab-pane label="Partnerships" name="partnerships">
+                <el-tabs v-model="activePartnershipTab" class="demo-tabs">
+                    <el-tab-pane label="Partner list" name="partner_list">
+                       
+                      Coming soon ...
+                    </el-tab-pane>
+                    <el-tab-pane label="Add a new partner" name="partner_form">
+                      Coming soon ...
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
@@ -180,7 +191,10 @@ const activeAdvantageTab = ref('advantage_list')
 provide('advantage_activeTab', activeAdvantageTab)
 
 const activeCategorizationTab = ref('categorization_list')
-provide('advantage_activeTab', activeAdvantageTab)
+provide('categorization_activeTab', activeCategorizationTab)
+
+const activePartnershipTab = ref('partner_list')
+provide('partnership_activeTab', activePartnershipTab)
 
 
 const event_to_update = ref(null)
