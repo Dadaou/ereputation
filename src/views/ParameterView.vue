@@ -3,7 +3,7 @@
         <el-tabs v-model="activeName" type="card" class="demo-tabs">    
             <el-tab-pane label="Establishments" name="establishments">
                 <el-tabs v-model="activeEstablishmentTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
-                    <el-tab-pane label="Establishment list" name="establishment_list">
+                    <el-tab-pane label="Establishments" name="establishment_list">
                         <EstablishmentListComponent @edit="(establishment) => handleEdit(establishment, 'establishment')" 
                             @setEnable="(id) => setStatus(id, 'enable')"
                             @setDisable="(id) => setStatus(id, 'disable')"/>
@@ -18,7 +18,7 @@
             </el-tab-pane>
               <el-tab-pane label="competitors" name="competitors">
                 <el-tabs v-model="activeCompetitorsTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
-                    <el-tab-pane label="Competitors list" name="competitor_list">
+                    <el-tab-pane label="Competitors" name="competitor_list">
                         <CompetitorListComponent @edit="(establishment) => handleEdit(establishment, 'competitor')"  @reload="reloadCompetitorList('list')"/>
                     </el-tab-pane>
                     <el-tab-pane label="Add a new competitor" name="competitor_form">
@@ -28,7 +28,7 @@
             </el-tab-pane>
             <el-tab-pane label="Staffs" name="staff">
                 <el-tabs v-model="activeStaffTab" class="demo-tabs">
-                    <el-tab-pane label="Staff list" name="staff_list">
+                    <el-tab-pane label="Staffs" name="staff_list">
                         <StaffListComponent @edit="(staff) => handleEdit(staff, 'staff')" />
                     </el-tab-pane>
                     <el-tab-pane label="Add a new staff member" name="staff_form">
@@ -38,7 +38,7 @@
             </el-tab-pane>
             <el-tab-pane label="Events" name="event">
                 <el-tabs v-model="activeEventTab" class="demo-tabs">
-                    <el-tab-pane label="Event list" name="event_list">
+                    <el-tab-pane label="Events" name="event_list">
                         <EventListComponent @edit="(event) => handleEdit(event, 'event')" />
                     </el-tab-pane>
                     <el-tab-pane label="Add a new event" name="event_form">
@@ -48,10 +48,10 @@
             </el-tab-pane>
             <el-tab-pane label="AI categorizations" name="categorization">
                 <el-tabs v-model="activeCategorizationTab" class="demo-tabs">
-                    <el-tab-pane label="Categorization list" name="categorization_list">
+                    <el-tab-pane label="Categories" name="categorization_list">
                       <CategorizationListComponent @edit="(category) => handleEdit(category, 'category')"/>
                     </el-tab-pane>
-                    <el-tab-pane label="Add a new categorization" name="categorization_form">
+                    <el-tab-pane label="Add a new category" name="categorization_form">
                       
                       <CategorizationFormComponent/>
                     </el-tab-pane>
@@ -59,7 +59,7 @@
             </el-tab-pane>
             <el-tab-pane label="Advantages" name="advantage">
                 <el-tabs v-model="activeAdvantageTab" class="demo-tabs">
-                    <el-tab-pane label="Advantage list" name="advantage_list">
+                    <el-tab-pane label="Advantages" name="advantage_list">
                         <AdvantageListComponent @edit="(advantage) => handleEdit(advantage, 'advantage')"
                             @setEnable="(advantage) => handleEnable(advantage, 'advantage')"
                             @setDisable="(advantage) => handleDisable(advantage, 'advantage')" />
@@ -71,7 +71,7 @@
             </el-tab-pane>
             <el-tab-pane label="Partnerships" name="partnerships">
                 <el-tabs v-model="activePartnershipTab" class="demo-tabs">
-                    <el-tab-pane label="Partner list" name="partner_list">
+                    <el-tab-pane label="Partners" name="partner_list">
                        
                       Coming soon ...
                     </el-tab-pane>

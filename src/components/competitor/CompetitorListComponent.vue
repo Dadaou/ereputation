@@ -2,7 +2,7 @@
     <div class="profile__header mt-2">
         <div class="profile__edit">
              <div class="links__header">
-                 <h2>{{title}}</h2>
+                 <h2></h2>
                 <button v-if="showLinkModal" @click="showLinkModal = !showLinkModal">Back</button>
             </div>
         </div>

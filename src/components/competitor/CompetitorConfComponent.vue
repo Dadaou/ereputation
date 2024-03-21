@@ -1,8 +1,8 @@
 <template>
     <div class="profile__header mt-2">
         <div class="profile__edit">
-            <h2 v-if="!showCompetitors">Competitors configuration</h2>
-            <div class="competitor__head" v-else>
+           <!--  <h2 v-if="!showCompetitors">Competitors configuration</h2> -->
+            <div class="competitor__head" v-if="showCompetitors">
             	<h2>Competitors list for "{{selectedEstablishment.name}}"</h2>
             	<button @click="showCompetitors = !showCompetitors">Back</button>
         	</div>
