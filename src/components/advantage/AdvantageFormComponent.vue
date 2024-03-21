@@ -80,6 +80,11 @@
                             <input type="number" id="validity" v-model="validity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
                         </div>
                         <div>
+                            <label for="limit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Limit
+                             </label>
+                            <input type="number" id="limit" v-model="advantageLimit" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
+                        </div>
+                        <div>
                             <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Expired at <span></span></label>
                             <el-date-picker
                                 v-model="dateTo"
@@ -129,6 +134,7 @@ const showSpinner = ref(false);
  const metric = ref('');
  const scope = ref(null);
  const validity = ref(null);
+ const advantageLimit = ref(null);
 
 const buttonRef = ref()
 const tooltipRef = ref()
@@ -151,6 +157,7 @@ watch(advantage_to_update, ()=>{
         amount.value = advantage_to_update.value["amount"];
         advantageName.value = advantage_to_update.value["name"];
         establishment.value = `/api/establishments/${advantage_to_update.value['establishment_id']},${advantage_to_update.value['establishment_name']}`
+        advantageLimit.value = advantage_to_update.value["advantageLimit"];
         type.value = 'edit';
     }
 })
@@ -164,6 +171,7 @@ const loadData = (_advantage, advantage, establishment) => {
           code: _advantage.code,     
           amount: _advantage.amount,
           validity: _advantage.validity,
+          advantageLimit: _advantage.advantageLimit,
           metric: _advantage.metric,           
           scope: _advantage.scope,                           
           expired_at: moment(_advantage.expiredAt).format('YYYY-MM-DD'),
@@ -183,6 +191,7 @@ const updateData = (_advantage, establishment)=>{
           code: _advantage.code,     
           amount: _advantage.amount,
           validity: _advantage.validity,
+          advantageLimit: _advantage.advantageLimit,
           metric: _advantage.metric,           
           scope: _advantage.scope,                           
           expired_at: moment(_advantage.expiredAt).format('YYYY-MM-DD'),
@@ -206,6 +215,7 @@ const updateData = (_advantage, establishment)=>{
         "metric": metric.value,
         "scope": scope.value,
         "validity": validity.value,
+        "advantageLimit": advantageLimit.value,
         "enable": true,
         "establishment": establishment.value.split(",")[0],
         "expiredAt": dateTo.value
@@ -230,17 +240,6 @@ const updateData = (_advantage, establishment)=>{
                         message: `Advantage added successfully.`,
                         type: 'success',
                     });
-                    category.value = '';
-                    code.value = '';
-                    advantageName.value = '';
-                    amount.value = '';
-                    metric.value = '';
-                    scope.value = '';
-                    validity.value = '';
-                    establishment.value = "";
-                    dateTo.value = '';
-                    showSpinner.value = false;
-
                 }
             } else if (type.value === 'edit' && advantage_to_update.value !== null) {
                 const advantageId = advantage_to_update.value.id;
@@ -257,19 +256,21 @@ const updateData = (_advantage, establishment)=>{
                         type: 'success',
                     });
                     updateData(response.data, establishment.value.split(','));
-                    category.value = '';
-                    code.value = '';
-                    advantageName.value = '';
-                    amount.value = '';
-                    metric.value = '';
-                    scope.value = '';
-                    validity.value = '';
-                    establishment.value = "";
-                    dateTo.value = '';
-                    activeAdvantageTab.value = 'advantage_list';
-                    showSpinner.value = false;
                 }
             }
+
+            category.value = '';
+            code.value = '';
+            advantageName.value = '';
+            amount.value = '';
+            metric.value = '';
+            scope.value = '';
+            validity.value = '';
+            advantageLimit.value = ''
+            establishment.value = "";
+            dateTo.value = '';
+            showSpinner.value = false;
+            activeAdvantageTab.value = 'advantage_list';
         } else {
             ElMessage.error(`Please, provide all needed information to add/update an advantage`);
             showSpinner.value = false;

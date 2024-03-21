@@ -38,8 +38,19 @@ const type = ref('add');
 const category = ref('');
 const establishment = ref('');
 const showSpinner = ref(false);
+const activeCategorizationTab = inject('categorization_activeTab');
+const category_to_update = inject('category_to_update');
+const categories = inject('categories');
 
-const submit = ()=>{
+watch(category_to_update, ()=>{
+    if(category_to_update.value != null){
+        establishment.value = category_to_update.value["establishment"];
+        category.value = category_to_update.value["category"];
+        type.value = 'edit';
+    }
+})
+
+const submit = async()=>{
 	let data = {
 	  "category": category.value,
 	  "establishment": establishment.value
@@ -47,13 +58,87 @@ const submit = ()=>{
 
 	try{
 		if(data.category !== '' && data.establishment !== ''){
-			console.log(data)
+            showSpinner.value = true;
+			if(type.value == 'add'){
+                const response = await new Promise((resolve) => {
+                  services.createRecord('categories', data, (response) => {
+                    resolve(response);
+                  });
+                });
+
+                 if(response.status == 201){
+                        ElMessage({
+                            message: 'category added successfully',
+                            type: 'success',
+                        })
+                        loadData(establishment.value, response.data)
+                        category.value = '';
+                        establishment.value = '';
+                        showSpinner.value = false;
+                    }
+            }else{
+                const response = await new Promise((resolve) => {
+                  services.putRecord('categories', category_to_update.value['id'], data, (response) => {
+                    resolve(response);
+                  });
+                });
+                if(response.status == 200){
+                        ElMessage({
+                            message: 'category updated successfully',
+                            type: 'success',
+                        })
+                        updateData(establishment.value, response.data)
+                        category.value = '';
+                        establishment.value = '';
+                        showSpinner.value = false;
+                }
+            }
+
+            activeCategorizationTab.value = 'categorization_list'
 		}else{
 			 ElMessage.error(`Please, fill the form correctly!`);
 		}
 	}catch(error){
 		console.log(error);
 	}
+};
+
+const loadData = (establishmentTag, category)=>{
+    let establishment = userStore.user.customer.establishments.find(i=>establishmentTag == `/api/establishments/${i.id}`);
+    let newCategory = {}
+    if(establishment){
+        const {id, name} = establishment;
+        newCategory = {
+            id: category.id,
+            category: category.category,
+            category_uri: category['@id'],
+            establishment: category.establishment,
+            establishment_id: id,
+            establishment_name: name
+        }
+        categories.value.push(newCategory)
+    }
+};
+
+const updateData = (establishmentTag, category)=>{
+
+    let establishment = userStore.user.customer.establishments.find(i=>establishmentTag == `/api/establishments/${i.id}`);
+    let currentCategory = {}
+    if(establishment){
+        const {id, name} = establishment;
+        currentCategory = {
+            id: category.id,
+            category: category.category,
+            category_uri: category['@id'],
+            establishment: category.establishment,
+            establishment_id: id,
+            establishment_name: name
+        }
+    }
+
+    categories.value.forEach((item, index)=>{
+        if(item.id == currentCategory.id) categories.value[index] = currentCategory;
+    })
 };
 
 </script>

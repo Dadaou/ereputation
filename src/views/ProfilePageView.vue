@@ -156,6 +156,7 @@ const breadcrumbData = [
   flex: auto;
   width: calc(100% - 65px);
   padding-right: 8px;
+  margin-top: 0px;
 }
 
 /* Pour les tablettes */
@@ -178,6 +179,10 @@ const breadcrumbData = [
     font-size: 15px;
     padding: 10px 25px;
   }
+
+  .all__content {
+    margin-top: 50px;
+  }
 }
 
 /* Styles pour le menu sur les petits écrans */
@@ -199,6 +204,10 @@ const breadcrumbData = [
 
 /* Pour les petits écrans (par exemple, les téléphones mobiles) */
 @media screen and (max-width: 800px) {
+  .all__content {
+    margin-top: 0px;
+  }
+
   .admin__container {
     flex-direction: column;
   }

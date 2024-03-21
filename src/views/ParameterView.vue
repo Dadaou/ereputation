@@ -49,8 +49,7 @@
             <el-tab-pane label="AI categorizations" name="categorization">
                 <el-tabs v-model="activeCategorizationTab" class="demo-tabs">
                     <el-tab-pane label="Categorization list" name="categorization_list">
-                       
-                       En cours ...
+                      <CategorizationListComponent @edit="(category) => handleEdit(category, 'category')"/>
                     </el-tab-pane>
                     <el-tab-pane label="Add a new categorization" name="categorization_form">
                       
@@ -149,6 +148,10 @@ const CategorizationFormComponent = defineAsyncComponent(() =>
     import("@Components/categorization/CategorizationFormComponent.vue")
 )
 
+const CategorizationListComponent = defineAsyncComponent(() =>
+    import("@Components/categorization/CategorizationListComponent.vue")
+)
+
 const position = ref('top')
 watch(width, () => {
     if (width.value < 800) {
@@ -159,31 +162,33 @@ watch(width, () => {
 });
 
 const clearEstablishmentForm = () => {
-    cleanEstablishmentForm.value = !cleanEstablishmentForm.value;
+    cleanEstablishmentForm.value = !cleanEstablishmentForm.value
 }
 
-const appStore = useAppStore();
-const userStore = useUserStore();
-const activeName = ref('establishments');
+const appStore = useAppStore()
+const userStore = useUserStore()
+const activeName = ref('establishments')
 const activeStaffTab = ref('staff_list')
 
-const establishment_to_update = ref(null);
+const establishment_to_update = ref(null)
 const activeEstablishmentTab = ref('establishment_list')
-provide('establishment_to_update', establishment_to_update);
-provide('establishment_activeTab', activeEstablishmentTab);
+provide('establishment_to_update', establishment_to_update)
+provide('establishment_activeTab', activeEstablishmentTab)
 const cleanEstablishmentForm = ref(false);
-provide('clearEstablishmentForm', cleanEstablishmentForm);
+provide('clearEstablishmentForm', cleanEstablishmentForm)
 
 const activeCompetitorsTab = ref('competitor_list')
-provide('activeCompetitorsTab', activeCompetitorsTab);
+provide('activeCompetitorsTab', activeCompetitorsTab)
 
 const staff_to_update = ref(null);
-provide('staff_to_update', staff_to_update);
-provide('staff_activeTab', activeStaffTab);
+provide('staff_to_update', staff_to_update)
+provide('staff_activeTab', activeStaffTab)
 
-const allEvents = ref([]);
-const allStaffs = ref([]);
-const allAdvantages = ref([]);
+const allEvents = ref([])
+const allStaffs = ref([])
+const allAdvantages = ref([])
+const allCategories = ref([])
+
 const activeEventTab = ref('event_list')
 provide('event_activeTab', activeEventTab)
 
@@ -203,9 +208,13 @@ provide('event_to_update', event_to_update)
 const advantage_to_update = ref(null)
 provide('advantage_to_update', advantage_to_update)
 
+const category_to_update = ref(null)
+provide('category_to_update', category_to_update)
+
 provide('staffs', allStaffs)
 provide('events', allEvents)
 provide('advantages', allAdvantages)
+provide('categories', allCategories)
 
 const reloadCompetitor = ref(false)
 provide('reloadCompetitor', reloadCompetitor)
@@ -238,6 +247,11 @@ const handleEdit = (value, type) => {
     if(type == 'event') {
         activeEventTab.value = 'event_form';
         event_to_update.value = value;
+    }
+
+    if(type == 'category') {
+        activeCategorizationTab.value = 'categorization_form'
+        category_to_update.value = value;
     }
 };
 
@@ -439,8 +453,45 @@ const loadAdvantage = async()=>{
             console.error('Error fetching advantages:', response);
         }
     } catch (error) {
-        console.error('Error in onBeforeMount:', error);
+        console.error(error);
     }
+}
+
+const loadCategories = async()=>{
+    try {
+        const response = await new Promise((resolve) => {
+           services.get_Record('categories', (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            allCategories.value = filterCategory(response.data['hydra:member']);
+        } else {
+            console.error('Error fetching categories:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const filterCategory = (data)=>{
+    const establishments = userStore.user.customer.establishments;
+    let categories = []
+    data.forEach(category=>{
+        let establishment = establishments.find(i=>category.establishment == `/api/establishments/${i.id}`); 
+        if(establishment){
+            const {id, name} = establishment
+            categories.push({
+                id: category.id,
+                category: category.category,
+                category_uri: category['@id'],
+                establishment: category.establishment,
+                establishment_id: id,
+                establishment_name: name
+            })
+        }
+    })
+    return categories
 }
 
 onBeforeMount(async () => {
@@ -454,6 +505,7 @@ onBeforeMount(async () => {
     await reloadStaffsList();
     await reloadEventsList();
     await loadAdvantage();
+    await loadCategories();
 
 });
 
