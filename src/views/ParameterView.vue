@@ -26,7 +26,7 @@
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="Staffs" name="staff">
+            <el-tab-pane label="Staff" name="staff">
                 <el-tabs v-model="activeStaffTab" class="demo-tabs">
                     <el-tab-pane label="Staffs" name="staff_list">
                         <StaffListComponent @edit="(staff) => handleEdit(staff, 'staff')" />

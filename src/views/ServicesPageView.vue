@@ -1,6 +1,6 @@
 <template>
   <el-tabs v-model="activeName" type="card" class="demo-tabs">    
-      <el-tab-pane label="Staffs" name="staffs">
+      <el-tab-pane label="Staff" name="staffs">
           <div class="head">
           <div class="app__title">
             <h2>Staffs Histogram</h2>
@@ -65,7 +65,7 @@
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="Points of sales" name="pointsOfSales">
+      <el-tab-pane label="Points of sale" name="pointsOfSale">
           Coming soon...
       </el-tab-pane>
   </el-tabs>
@@ -92,7 +92,7 @@ const SpinnerComponent = defineAsyncComponent(() =>
 );
 
 const route = useRoute();
-
+const companyId = route.params.id;
 const type = inject('type');
 const date = inject('date');
 const plotdata = ref([]);
@@ -113,10 +113,9 @@ window.addEventListener('resize', () => {
 
 const colors = ref(['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']);
 
-const getPlotData = async (period, rangedate, next) => {
+const getPlotData = async (period, rangedate, companyId, next) => {
   period = period.toLowerCase();
   let format = 'YYYY-MM-DD';
-  const companyId = route.params.id;
   let data = [];
 
   if (period == 'monthly') {
@@ -142,6 +141,18 @@ const getPlotData = async (period, rangedate, next) => {
   }
   console.log(chartLoading.value)
   next(data);
+}
+
+const getUnitServices = async(tag)=>{
+   const response = await new Promise((resolve) => {
+    services.get_Record(`/customer/establishments/unit?establishment=${tag}`, (response) => {
+      resolve(response)
+    });
+  });
+   console.log(response)
+  if (response.status == 200) {
+    console.log(response.data)
+  }
 }
 
 function reordonnerObjets(listeObjets) {
@@ -189,11 +200,13 @@ const legendData = computed(() => {
 
 onMounted(async () => {
   const response = await new Promise((resolve) => {
-    getPlotData(type.value, date.value, (response) => {
+    getPlotData(type.value, date.value, companyId, (response) => {
       resolve(response)
     })
   });
   plotdata.value = reordonnerObjets(response);
+
+  await getUnitServices(companyId)
   console.log(plotdata.value)
 });
 
@@ -201,7 +214,7 @@ watch([date, type], async () => {
   if (date.value !== null) {
     chartLoading.value = true;
     const response = await new Promise((resolve) => {
-      getPlotData(type.value, date.value, (response) => {
+      getPlotData(type.value, date.value, companyId, (response) => {
         resolve(response)
       })
     });

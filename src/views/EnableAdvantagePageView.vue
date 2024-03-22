@@ -24,7 +24,7 @@
                     Customer
                   </th>
                   <td class="px-6 py-4">
-                    {{ advantages.contact_firstname }}  {{ advantages.contact_lastname }}
+                    {{ capitalizeFirstLetter(advantages.contact_firstname, advantages.contact_lastname) }}
                   </td>
                 </tr>
                 <!-- <tr class="border-b border-gray-200 dark:border-gray-700">
@@ -116,6 +116,19 @@ const submit = ()=>{
 		    })
 	}
   localStorage.setItem('isSellerAuthenticated', 'true');
+}
+
+function capitalizeFirstLetter(firstname, lastname) {
+ const capitalizedFirstname = firstname.charAt(0).toUpperCase() + firstname.slice(1);
+
+ let capitalizedLastname = lastname;
+ if (lastname && lastname.trim() !== '') {
+    capitalizedLastname = lastname.charAt(0).toUpperCase() + lastname.slice(1);
+ }else{
+  capitalizedLastname = ''
+ }
+  
+ return `${capitalizedFirstname} ${capitalizedLastname}`;
 }
 
 onBeforeMount(async () => {

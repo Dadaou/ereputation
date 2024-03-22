@@ -3,14 +3,24 @@
 		<div class="publication" :key="post.id">
 			 <div class="post-info">
 			 	<div class="post-head">
-					<span class="post-source" :style="{
-						color: `${colors[post.source]}`
-					}">
-          <i :class="`uil uil-${post.source}`" v-if="post.source !=='twitter' && post.source !=='tiktok'"></i>
-        <Icon :icon="'devicon:twitter'" width="15" v-if="post.source == 'twitter'"></Icon>
-        <Icon :icon="'logos:tiktok-icon'" width="15" v-if="post.source == 'tiktok'"></Icon>
-          {{ post.author }}</span>
-					<span class="post-date">{{ moment(post.published_at).format("DD MMM, YYYY") }}</span>
+          <div class="post-source-date">
+            <span class="post-source" :style="{
+                color: `${colors[post.source]}`
+            }">
+              <i :class="`uil uil-${post.source}`" v-if="post.source !=='twitter' && post.source !=='tiktok'"></i>
+              <Icon :icon="'devicon:twitter'" width="15" v-if="post.source == 'twitter'"></Icon>
+              <Icon :icon="'logos:tiktok-icon'" width="15" v-if="post.source == 'tiktok'"></Icon>
+              {{ post.author }}
+            </span>
+            <span class="post-date">{{ moment(post.published_at).format("DD MMM, YYYY") }}</span>
+          </div>
+          <div class="post-emoji-category">
+              <span class="emoji mx-1" v-if="showEmoji">
+                <span v-if="post.feeling == 'positive'">😀</span>
+                <span v-if="post.feeling == 'neutre' || post.feeling == 'neutral'">😐</span>
+                <span v-if="post.feeling == 'negative'">😕</span>
+              </span>
+          </div>
 				</div>
 				<div class="post-title">
 					{{ post.title }}
@@ -54,7 +64,6 @@ import services from '@Services/services.js';
 import { Icon } from '@iconify/vue';
 
 const socialComment = defineAsyncComponent(()=>import('@Components/utils/SocialPostCommentComponent.vue'))
-const posts = inject('posts');
 const commentsLoaded =ref(false)
 const postLoaded = inject('postLoaded')
 const commentsTemp = [
@@ -97,7 +106,24 @@ const colors = {
         'twitter': '#1DA1F2',
         'youtube': '#FF0000'
 };
-const props = defineProps(['post']);
+const props = defineProps({
+  post: {
+    type: Object,
+    required: true
+  },
+  showEmoji: {
+    type: Boolean,
+    default: false
+  },
+  showFeeling: {
+    type: Boolean,
+    default: false
+  },
+  showCategory: {
+    type: Boolean,
+    default: false
+  },
+});
 const showComment = ref(false);
 
 const showComments = async(id)=>{
@@ -164,6 +190,8 @@ const loadComments = async(id)=>{
 	 margin-top: 10px;
 	 font-size: 14px;
 	 border-radius: 5px;
+   text-align: justify;
+   text-justify: inter-word;
 }
 
 .post-head{
@@ -194,6 +222,11 @@ const loadComments = async(id)=>{
 
 .post-info{
 	z-index: 1
+}
+
+.post-emoji-category, .post-source-date{
+  display: flex;
+  flex-direction: column;
 }
 
 .animate__animated.animate__fadeInDown, .animate__animated.animate__fadeInOut {

@@ -104,7 +104,7 @@
                     </div>
 
                
-                <SocialPostComponent v-for="post in hashtagData" :post="post" v-if="!postLoaded"/>
+                <SocialPostComponent v-for="post in hashtagData" :post="post" v-if="!postLoaded" :showEmoji="true"/>
                     <div class="publication-container" v-for="index in 5" v-if="postLoaded">
                         <div class="publication bg-gray-200 animate-pulse">
                             <div class="post-info">

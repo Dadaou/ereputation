@@ -64,6 +64,8 @@ const customColorMethod = (percentage) => {
   margin-bottom: 5px;
   display: flex;
   justify-content: space-between;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .comment-meta {
