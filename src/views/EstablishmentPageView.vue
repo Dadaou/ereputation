@@ -62,14 +62,17 @@
                 </div>
                 <span class="sr-only">Loading...</span>
             </div>
+
             <div class="no-comment" v-if="visibleData.length == 0">
                 No reviews meet to the current filters
             </div>
+
             <PaginationComponent v-if="visibleData.length > 0" :options="options" @next="(option) => {
                 loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, language)
             }" @prev="(option) => {
-    loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, language)
-}" />
+                loadReviews(companyId, option.page, option.limit, option.current, dateStart, dateEnd, selectedWebsites, selectedStars, language)
+            }" />
+
             <aside v-if="lastReviews.length > 0">
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ all_items.rating.value - 3 }} reviews
                     remains</p>
@@ -146,46 +149,16 @@
             </div>
         </div>
     </div>
-    <div class="tablet_mobile__head">
-        <div class="establishment__info_tablet">
-            <label v-if="!establishmentLoading">{{ establishment.name }}</label>
-            <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
-            <div>
-                <i
-                    :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '', establishment.category == 'Other' ? 'uil-home' : '']"></i>
-                <span v-if="!establishmentLoading">{{ establishment.category }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
-            </div>
-            <div class="society__location" v-if="establishment.country != null">
-                <i class="uil uil-map"></i>
-                <span v-if="!establishmentLoading">{{ establishment.country }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
-            <div class="society__location">
-                <i class="uil uil-location-point"></i>
-                <span v-if="!establishmentLoading">{{ establishment.city }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
-            <div class="society__location">
-                <i class="uil uil-favorite"></i>
-                <span v-if="!establishmentLoading" class="society__location">{{ all_items.rating.value }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
-            <div class="society__location">
-                 <i class="uil uil-favorite"></i>
-                <span v-if="!establishmentLoading">{{ all_items.global.value }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
-            <div class="society__location">
-                <i class="uil uil-analysis"></i>
-                <span v-if="!establishmentLoading">{{ all_items.index.value }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
-            <div class="society__location">
-                <i class="uil uil-comment-alt"></i>
-                <span v-if="!establishmentLoading">{{ all_items.reviews.value }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
+
+    <EstablishmentInfoMobile 
+    :establishment="establishment" 
+    :isLoading="establishmentLoading">
+        <template #dashboard>
+             <div class="dashboard_mobile mt-1">
+                 <DashboardMobile v-for="item in all_items" :item="item" :key="item" /> 
+             </div>
+        </template>
+        <template #btn>
             <div class="mobile__filter__btn">
                 <button :class="['btn', (currentFilter == 'feedback') ? 'isactive' : '']"
                     @click="currentFilter = 'feedback'">
@@ -199,35 +172,9 @@
                     <i class="uil uil-filter"></i>Filters
                 </button>
             </div>
-        </div>
-        <div class="photo" v-if="!establishmentLoading">
-            <div v-if="establishment.url_source !== null" class="establishment__img">
-                <img :src="establishment.url_source" alt="" />
-            </div>
-            <div v-else role="status"
-                class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                    <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
-                    <path
-                        d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
-                </svg>
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-        <div class="photo" v-else>
-            <div role="status"
-                class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                    <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
-                    <path
-                        d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
-                </svg>
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-    </div>
+        </template>
+    </EstablishmentInfoMobile>
+
     <div class="right__side">
         <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" v-if="!establishmentLoading">
@@ -332,7 +279,7 @@ import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import ComparisonChartComponent from '@Components/utils/ComparisonChartComponent.vue';
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
-import { ref, reactive, watch, onBeforeMount, computed, provide, inject } from 'vue';
+import { ref, reactive, watch, onBeforeMount, computed, provide, inject, defineAsyncComponent } from 'vue';
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css'
 import { useChartsStore } from "@Stores/charts.js"
@@ -347,6 +294,14 @@ import {
     Tooltip,
 } from 'chart.js'
 import { Line } from 'vue-chartjs';
+
+const EstablishmentInfoMobile = defineAsyncComponent(
+    ()=> import("@Components/utils/EstablishmentInfoMobile.vue")
+)
+
+const DashboardMobile = defineAsyncComponent(
+    ()=> import("@Components/utils/DashboardMobileComponent.vue")
+)
 
 const options = ref({
     rowLimit: 20,
@@ -863,7 +818,7 @@ onBeforeMount(async () => {
     border-radius: 5px;
     font-size: 13px;
     font-weight: 500;
-    padding: 2px 6px;
+    padding: 5px 6px;
     flex-basis: 100%;
 }
 

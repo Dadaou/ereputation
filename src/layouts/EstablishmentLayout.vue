@@ -36,6 +36,19 @@ const customerTag = inject('tag');
 
 <style>
 
+.dashboard_mobile{
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    border: 1px solid var(--color-primary);
+    color: white !important;
+    border-radius: 5px
+}
+
+.dashboard_mobile >div{
+    padding: 7px 5px;
+}
+
 .app__container {
     margin-top: 5rem;
     min-height:calc(90dvh - 140px);
