@@ -1,11 +1,11 @@
 <template>
   <el-tabs v-model="activeName" type="card" class="demo-tabs">    
       <el-tab-pane label="Staff" name="staffs">
-          <div class="head">
-          <div class="app__title">
-            <h2>Staffs Histogram</h2>
+        <div class="head">
+            <div class="app__title">
+              <h2>Staffs Histogram</h2>
+            </div>
           </div>
-        </div>
         <div class="reviews__content" ref="el">
           <div v-if="chartLoading == true" :style="{
             'width': `100%`,
@@ -66,7 +66,22 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="Points of sale" name="pointsOfSale">
+        <div class="head">
+            <div class="app__title">
+              <h2>Points of Sale Histogram</h2>
+            </div>
+        </div>
+        <div class="reviews__content">
           Coming soon...
+        </div>
+        <div class="head">
+          <div class="app__title">
+            <h2>Points of Sale</h2>
+          </div>
+        </div>
+         <div class="reviews__content">
+          Coming soon...
+        </div>
       </el-tab-pane>
   </el-tabs>
 </template>
