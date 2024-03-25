@@ -32,7 +32,7 @@
               :y-tick-format="d => `${d}`" />
           </div>
           <div>
-            <BaseLegend class="legend" style="margin-bottom: 50px;" :LegendData="legendData" :alignment="'vertical'">
+            <BaseLegend class="legend" style="margin-bottom: 50px;" :LegendData="legendData" :alignment="'horizontal'">
             </BaseLegend>
           </div>
         </div>
@@ -65,29 +65,33 @@
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="Points of sale" name="pointsOfSale">
+      <el-tab-pane v-for="category in categories" :label="category" :name="category">
         <div class="head">
             <div class="app__title">
-              <h2>Points of Sale Histogram</h2>
+              <h2>{{category}} Histogram</h2>
             </div>
         </div>
         <div class="reviews__content">
-          Coming soon...
+          <UnitChartComponent 
+          :category="category"
+          :plotdata="[]"
+          :legendData="[]"
+          />
         </div>
         <div class="head">
           <div class="app__title">
-            <h2>Points of Sale</h2>
+            <h2>{{category}}</h2>
           </div>
         </div>
          <div class="reviews__content">
-          Coming soon...
+         <UnitItemComponent :category="category" :units="unitByCategory[category]"/>
         </div>
       </el-tab-pane>
   </el-tabs>
 </template>
 <script setup>
 import moment from 'moment';
-import { computed, onMounted, ref, watch, inject, defineAsyncComponent } from 'vue';
+import { computed, onMounted, onBeforeMount, ref, watch, inject, defineAsyncComponent } from 'vue';
 import StaffItemComponent from '@Components/staffs/StaffItemComponent.vue';
 import { useRoute } from 'vue-router';
 import { useAppStore } from "@Stores/app.js";
@@ -106,6 +110,14 @@ const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
 );
 
+const UnitChartComponent = defineAsyncComponent(() =>
+  import('@Components/units/UnitChartComponent.vue')
+);
+
+const UnitItemComponent = defineAsyncComponent(() =>
+  import('@Components/units/UnitItemComponent.vue')
+);
+
 const route = useRoute();
 const companyId = route.params.id;
 const type = inject('type');
@@ -120,6 +132,8 @@ const custom_width = computed(() => {
 
   return width;
 })
+const unitByCategory = ref(null)
+const categories = ref([])
 
 const isMobile = ref(window.innerWidth <= 768);
 window.addEventListener('resize', () => {
@@ -160,13 +174,23 @@ const getPlotData = async (period, rangedate, companyId, next) => {
 
 const getUnitServices = async(tag)=>{
    const response = await new Promise((resolve) => {
-    services.get_Record(`/customer/establishments/unit?establishment=${tag}`, (response) => {
+    services.get_Record(`/customer/establishment/unit?tag=${tag}`, (response) => {
       resolve(response)
     });
   });
-   console.log(response)
+  let units = {}
   if (response.status == 200) {
-    console.log(response.data)
+    response.data.forEach(unit =>{
+      if(units[unit.category]){
+        units[unit.category].push(unit)
+      }else{
+        units[unit.category] = []
+        units[unit.category].push(unit)
+      }
+    })
+    unitByCategory.value = units;
+    categories.value = Object.keys(units)
+    console.log(unitByCategory.value)
   }
 }
 
@@ -220,10 +244,11 @@ onMounted(async () => {
     })
   });
   plotdata.value = reordonnerObjets(response);
-
-  await getUnitServices(companyId)
-  console.log(plotdata.value)
 });
+
+onBeforeMount(async()=>{
+  await getUnitServices(companyId)
+})
 
 watch([date, type], async () => {
   if (date.value !== null) {
@@ -234,7 +259,6 @@ watch([date, type], async () => {
       })
     });
     plotdata.value = reordonnerObjets(response);
-    
   }
 });
 

@@ -503,7 +503,7 @@ onBeforeMount(async () => {
             establishment.value = data;
             appStore.setCurrentPage({
                 title1: "",
-                title2: establishment.value.name,
+                title2: "Weather",
                 icon: "uil-cloud-sun",
             })
 

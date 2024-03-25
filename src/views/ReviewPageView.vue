@@ -610,8 +610,8 @@ onBeforeMount(async () => {
             // page.value.title2 = establishment.value.name;
             appStore.setCurrentPage({
                 title1: "",
-                title2: establishment.value.name,
-                icon: "uil-estate",
+                title2: "Reviews",
+                icon: "uil-comment-alt-dots",
             });
 
             appStore.setBreadcrumbs([

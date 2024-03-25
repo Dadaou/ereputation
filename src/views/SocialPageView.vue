@@ -700,7 +700,7 @@ onBeforeMount(async () => {
             all_items.value[1].value = establishment.value.totalReviews;
             appStore.setCurrentPage({
                 title1: "",
-                title2: establishment.value.name,
+                title2: "Social",
                 icon: "uil-users-alt",
             });
 
@@ -711,7 +711,7 @@ onBeforeMount(async () => {
                     isCurrent: false,
                 },
                 {
-                    title: "Social network",
+                    title: "Social",
                     path: `${route.path}`,
                     isCurrent: true
                 }

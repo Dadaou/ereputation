@@ -14,7 +14,7 @@
                 <el-tab-pane label="Categorization" name="categorization">
 
                    <AnalysisCategory 
-                    text="Your customers appreciated your establishment for the following sercices"
+                    text="Your customers appreciated your establishment for the following services"
                     :ratings="ratingsCondition1"
                     condition= 'condition1'
                     v-if="ratingsCondition1.length>0"

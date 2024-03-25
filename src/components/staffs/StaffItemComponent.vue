@@ -21,7 +21,7 @@
                                  <vue-qrious
                                     class="qr__code"
                                     @click="showModal=true, staf = staff"
-                                     :value="`${baseurl}/customer/${tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`"
+                                     :value="`${baseurl}/public/${tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`"
                                     @change="onDataUrlChange"
                                     />
                              </el-tooltip>
@@ -81,7 +81,7 @@
                             <div id="qrcode__container  mt-5" ref="qrcode">
                                 <vue-qrious
                                     class="qr__code_view"
-                                     :value="`${baseurl}/customer/${tag}/establishment/${staf.establishment_tag}/staffs/${staf.tag}/feedback`" size="5000"
+                                     :value="`${baseurl}/public/${tag}/establishment/${staf.establishment_tag}/staffs/${staf.tag}/feedback`" size="5000"
                                     @change="onDataUrlChange"
                                     />
                                 
@@ -188,8 +188,6 @@ const downloadQrcode = (staffname) => {
   services.downloadQrcode(filename, base64Image.value);
   downloaded.value = true;
 }
-
-
 
 const modalWidth= computed(()=>{
     let windowSize = 1500;

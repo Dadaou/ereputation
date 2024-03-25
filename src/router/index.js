@@ -198,17 +198,22 @@ const router = createRouter({
       redirect: '/',
       children: [
         {
-          path: '/customer/:tag/establishment/:id/feedback',
+          path: '/public/:tag/establishment/:id/feedback',
           name: 'FeedBack',
           component: () => import('@Views/FeedbackPageView.vue')
         },
         {
-          path: '/customer/:tag/establishment/:etab/staffs/:id/feedback',
+          path: '/public/:tag/establishment/:etab/staffs/:id/feedback',
           name: 'StaffFeedBack',
           component: () => import('@Views/StaffFeedBackPageView.vue')
         },
         {
-          path: '/customer/:tag/establishment/:etab/:share/feedback-success',
+          path: '/public/:tag/establishment/:etab/units/:id/feedback',
+          name: 'UnitFeedBack',
+          component: () => import('@Components/units/UnitFeedbackComponent.vue')
+        },
+        {
+          path: '/public/:tag/establishment/:etab/:share/feedback-success',
           name: 'SuccessFeedback',
           component: () => import('@Views/SuccessMessageFeedback.vue')
         },
@@ -217,8 +222,8 @@ const router = createRouter({
           name: 'QRCodeAdvContact',
           component: () => import('@Views/QRCodeAdvantagePageView.vue')
         },
-         {
-          path: '/customer/:tag/establishment/:etab/advantagecontact/:discountTag/enable',
+        {
+          path: '/public/:tag/establishment/:etab/advantagecontact/:discountTag/enable',
           name: 'EnableAdvContact',
           component: () => import('@Views/EnableAdvantagePageView.vue')
         },
