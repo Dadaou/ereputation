@@ -247,7 +247,8 @@ const showMenu = computed(() => {
     'Staff',
     'Services',
     'StaffReview',
-    'Analysis'
+    'Analysis',
+    'UnitReview'
   ];
   return routeName.includes(route.name)
 })
@@ -257,7 +258,7 @@ const checkAccess = (roles, role)=>{
 }
 
 const isFeedback = computed(() => {
-  let routeName = ['FeedBack', 'StaffFeedBack', 'SuccessFeedback', 'EnableAdvContact', 'QRCodeAdvContact', undefined];
+  let routeName = ['FeedBack', 'UnitFeedBack', 'StaffFeedBack', 'SuccessFeedback', 'EnableAdvContact', 'QRCodeAdvContact', undefined];
   return routeName.includes(route.name)
 })
 

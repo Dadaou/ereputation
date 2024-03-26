@@ -2,7 +2,7 @@
     <div class="unit__list" v-if="units.length>0">
         <div class="unit__card" v-for="unit in units" :key="unit">
             <div class="unit__qrcode">    
-                <div>
+                <div class="unit_info">
                     <ul>
                         <li>
                         	<span class="label name">{{unit.name}}</span>
@@ -11,6 +11,16 @@
                         	<span class="label">Code: {{unit.code}}</span>
                         </li>
                     </ul>
+                    <RouterLink :to="{
+                        name: 'UnitReview',
+                        params: {
+                            tag: route.params.tag,
+                            id: unit.establishment_competitor_tag,
+                            unit: unit.tag
+                        }
+                    }" class="btn reviews">
+                        Reviews
+                    </RouterLink>
                 </div>
                 <div>
                     <div id="qrcode__container mt-5" ref="qrcode">
@@ -78,6 +88,7 @@ import VueQrious from 'vue-qrious';
 import { useWindowSize } from '@vueuse/core';
 import services from '@Services/services.js';
 import { ElTooltip  } from 'element-plus';
+import { useRoute } from "vue-router";
 
 const props = defineProps({
 	category:{
@@ -126,6 +137,30 @@ const close = ()=>{
 </script>
 <style scoped>
 
+.unit_info{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+a.reviews{
+    border: 1px solid var(--light-color-bg1);
+    transition: var(--transition);
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 2px 6px;
+}
+
+.unit_info a.reviews{
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+}
+
+.unit_info a:hover{
+    transform: scale(0.95);
+}
+
 a{
     text-decoration: none;
 }
@@ -147,6 +182,7 @@ a{
     gap:1rem;
     flex-direction: column;
     margin-bottom: 10px;
+    align-content: center;
 }
 
 span.rating{

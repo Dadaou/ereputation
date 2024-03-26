@@ -183,9 +183,14 @@ const router = createRouter({
               component: () => import('@Views/ServicesPageView.vue')
             },
             {
-              path: '/staff/:staff_tag/reviews',
+              path: 'staff/:staff_tag/reviews',
               name: 'StaffReview',
               component: () => import('@Views/StaffReviewsView.vue')
+            },
+            {
+              path: 'units/:unit/reviews',
+              name: 'UnitReview',
+              component: () => import('@Components/units/UnitReviewComponent.vue')
             }
           ]
         }

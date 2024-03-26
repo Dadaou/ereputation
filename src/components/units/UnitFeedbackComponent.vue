@@ -16,10 +16,10 @@
                                 {{ $t("staffFeedback.interne") }}
                             </li>
                         </ul>
-                        <button class="btn mt-2  btn-primary staffs__btn" @click="showModal = true"> 
+                        <!-- <button class="btn mt-2  btn-primary staffs__btn" @click="showModal = true"> 
                             services list 
                             <i class="uil uil-clipboard-notes"></i>
-                        </button>
+                        </button> -->
                     </div>
                 </div>
                 <div class="photo">
