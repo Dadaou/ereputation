@@ -355,12 +355,10 @@ const submit = async () => {
             showSpinner.value = true;
             await feedbackStore.createReview(review, async (response) => {
                 if (response.status == 201) {
-                    let email_sent = false
                     if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
                             
                             if (contactResponse.status == 201) {
-                                    email_sent = true
                                     let coupons = {
                                         advantage: randomAdvantage.value.id,
                                         establishment: route.params.etab,
@@ -370,8 +368,8 @@ const submit = async () => {
                                         email: email.value,
                                         language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase(),
                                         app_url: app_url.value
-
                                     }
+                                    console.log(coupons)
                                     await services.createRecord('workflow', coupons, (workflowResponse) => {
                                         console.log(workflowResponse)
                                         resetForm()
@@ -384,7 +382,6 @@ const submit = async () => {
                         params: {
                             etab: route.params.etab,
                             tag: route.params.tag,
-                            email_sent: email_sent,
                             share: parseFloat(review.rating)>=4?'message-and-join-us':'message'
                         },
                     });
