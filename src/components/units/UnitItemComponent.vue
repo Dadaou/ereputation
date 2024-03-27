@@ -14,7 +14,7 @@
                     <RouterLink :to="{
                         name: 'UnitReview',
                         params: {
-                            tag: route.params.tag,
+                            tag: tag,
                             id: unit.establishment_competitor_tag,
                             unit: unit.tag
                         }

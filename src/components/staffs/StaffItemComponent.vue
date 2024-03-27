@@ -15,7 +15,7 @@
                         <li class="period"><span class="label">Period: </span> <span>{{ moment(staff.datefrom).format('DD MMMM YYYY') }}</span> <span v-if="staff.dateto != null">{{ `to ${moment(staff.dateto).format('DD MMMM YYYY')}` }}</span></li>
                     </ul>
                 </div>
-                 <div>
+                <div>
                     <div id="qrcode__container mt-5" ref="qrcode">
                              <el-tooltip content="Click me to download The staff QRCode" placement="top">
                                  <vue-qrious
@@ -103,7 +103,7 @@
                         </div>
                     </template>
     </ModalComponent>
-    <ModalComponent :showModal="showChart" @close="showChart=false">
+    <!-- <ModalComponent :showModal="showChart" @close="showChart=false">
                     <template #content>
                         <div class="modal__header">
                             <div class="modal__title">
@@ -142,7 +142,7 @@
                          <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
                         </BaseLegend>
                     </template>
-    </ModalComponent>
+    </ModalComponent> -->
 </template>
 <script setup>
 import {ref, inject, computed, defineAsyncComponent} from 'vue';

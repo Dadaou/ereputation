@@ -51,10 +51,6 @@
                          <div>
                             <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                                 $t("feedback.firstname") }} <span>*</span></label>
-                           <!--  <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required> -->
-                                <!--  <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required> -->
                                 <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
 
@@ -75,10 +71,6 @@
                         </div>
                          <div>
                             <label for="datevisit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t("feedback.datevisit") }}<!--  <span>*</span> --></label>
-                             <!-- <el-date-picker
-                                v-model="dateVisit"
-                                :size="'large'"
-                              /> -->
                               <el-date-picker
                                 v-model="dateVisit"
                                 :placeholder="$t('feedback.placeholder_datevisit')"
