@@ -22,7 +22,7 @@
                         </RouterLink>
                       </li>
                     </ul>
-                    <span><i class="uil uil-copyright"></i>2024, allright reserved</span>
+                    <span><i class="uil uil-copyright"></i>2024, all rights reserved</span>
                   </li>
                 </ul>
             </div>
