@@ -1,6 +1,6 @@
 <template>
     <div class="head__container" v-if="isSearch == false">
-        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 35 35" v-if="route.name=='Sales'">
+        <!-- <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 35 35" v-if="route.name=='Sales'">
                 <g transform="scale(0.8 1)">
                   <g transform="scale(0.4 0.35) translate(52 -9)">
                     <path fill="currentColor" fill-rule="evenodd"
@@ -12,8 +12,8 @@
                       d="m1 16l7-7l5 5L23 4M0 22h23.999M16 4h7v7" />
                   </g>
                 </g>
-        </svg>
-        <i class="uil" :class="page.icon" v-else></i>
+        </svg> -->
+        <i class="uil" :class="page.icon"></i>
         <div class="head__title">{{ page.title1 }} <b>{{ page.title2 }}</b></div>
     </div>
     <div class="container head__container" v-else :style="isSearch ? { 'backgroundColor': '#f75842', 'height': '9rem' } : {}">
@@ -69,6 +69,7 @@ const route = useRoute();
 
 .head__title {
     padding-top: 15px;
+    text-align: center;
 }
 
 @media screen and (max-width:1024px) {

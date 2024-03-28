@@ -221,7 +221,7 @@ appStore.setIsExist(true);
 appStore.setCurrentPage({
     title1: "",
     title2: "",
-    icon: "uil-users-alt",
+    icon: "uil-arrow-growth",
 });
 
 appStore.setBreadcrumbs([
@@ -381,7 +381,7 @@ onBeforeMount(async () => {
             appStore.setCurrentPage({
                 title1: "",
                 title2: 'Sales',
-                icon: "uil-users-alt",
+                icon: "uil-arrow-growth",
             })
 
             appStore.setBreadcrumbs([

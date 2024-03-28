@@ -31,10 +31,9 @@
                     </div>
                 </div>
                 <div class="review__right mt-2">
-                    <div style="height: 20px;">
+                    <div style="height: 20px;" v-if="showCategory">
                         <div v-if="review.category" class="review__category-container" @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review)">
-                            <span v-for="item in review.category.split(';')" :key="item" class="review__category">{{ item
-                            }}</span>
+                            <span v-for="item in review.category.split(';')" :key="item" class="review__category">{{ item }}</span>
                         </div>
                         <div class="review__category-container" v-else>
                             <i class="uil uil-question-circle"
@@ -133,6 +132,10 @@ const props = defineProps({
     showEmoji: {
         type: Boolean,
         default: false
+    },
+    showCategory:{
+        type: Boolean,
+        default: true
     },
     categories: {
         type: Array,

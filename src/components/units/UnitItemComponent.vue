@@ -18,7 +18,7 @@
                             id: unit.establishment_competitor_tag,
                             unit: unit.tag
                         }
-                    }" class="btn reviews">
+                    }" class="btn reviews" @click="selectedUnit = unit">
                         Reviews
                     </RouterLink>
                 </div>
@@ -117,7 +117,7 @@ const onDataUrlChange = (dataUrl) =>{
 const { width } = useWindowSize()
 const showModal = ref(false);
 const downloaded = ref(false);
-const selectedUnit = ref(null)
+const selectedUnit = inject('selectedUnit')
 const downloadQrcode = (unit) => {
   const filename = `${unit}-feedback-link`;
   services.downloadQrcode(filename, base64Image.value);

@@ -1,9 +1,144 @@
 <template>
-	Unit Reviews coming soon...
+    <div class="app__title">
+        <h2 v-if="selectedUnit">{{ selectedUnit.name }} intern feedbacks</h2>
+    </div>
+    <div class="reviews__content" v-if="_reviews.length > 0">
+        <div class="reviews__pagination">
+            <CommentPagination v-if="_reviews.length > 0" :config="paginationConfig" @updatePage="updatePage"
+                :color="'#6c63ff'" :nb="_reviews.length" :data="visibleData"></CommentPagination>
+        </div>
+        <CommentComponent 
+            v-if="reviews_loader == false" 
+            :reviews="visibleData" 
+            :showEmoji="true" 
+            :showCategory="false"
+            :categories="categories"
+        />
+        <div v-else role="status"
+            class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
+            v-for="index in 5" :key="index">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                        <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                        <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                    </div>
+                    <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
+                </div>
+                <div>
+                    <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                    <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                    <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
+                </div>
+            </div>
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <div v-else>No Reviews</div>
 </template>
 <script setup>
-	
+import {
+    ref, watch, onMounted, inject,
+    onUnmounted
+} from 'vue'
+import CommentComponent from '@Components/utils/CommentComponent.vue'
+import CommentPagination from '@Components/utils/CommentPagination.vue'
+import { useRoute } from "vue-router"
+import services from '@Services/services.js'
+import moment from 'moment'
+
+const route = useRoute()
+const visibleData = ref([])
+const selectedUnit = inject('selectedUnit')
+const date = inject('date')
+const companyId = route.params.id;
+const _reviews = ref([])
+const paginationConfig = ref({
+    current: 0,
+    size: 5,
+    data: [],
+    _data: []
+})
+const reviews_loader = ref(false)
+
+const updatePage = (pageNumber) => {
+    paginationConfig.value.current = pageNumber;
+    updateVisibleData(_reviews.value);
+}
+
+const updateVisibleData = (_data) => {
+    let data = paginationConfig.value
+    _reviews.value = _data
+    paginationConfig.value.data = _data.slice(data.current * data.size, (data.current * data.size) + data.size)
+    if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
+        updatePage(paginationConfig.value.current - 1)
+    }
+    visibleData.value = paginationConfig.value.data
+    reviews_loader.value = false;
+};
+
+const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
+const loadReviews = async (unit, dateStart, dateEnd) => {
+    const apiBase = `/unit/reviews`
+    let apiParams = `tag=${unit}`
+
+    if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
+        dateStart = moment(dateStart).format('YYYY-MM-DD');
+        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        apiParams += `&from=${dateStart}&to=${dateEnd}`;
+    }
+
+    const api = apiBase + '?' + apiParams;
+    const response = await new Promise((resolve) => {
+        services.get_Record(api, (response) => {
+            resolve(response)
+        });
+    });
+
+    console.log(api)
+
+    if (response.status == 200) {
+        reviews_loader.value = false;
+        selectedUnit.value = response.data
+        console.log(selectedUnit.value)
+        updateVisibleData(selectedUnit.value.reviews);
+    }
+
+}
+
+const categories = ref([]);
+
+const loadCategories = async (tag) => {
+    const api = `establishment/${tag}/categories`
+    const response = await new Promise((resolve) => {
+        services.get_Record(api, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+        if (response.data && response.data.data) {
+            categories.value = response.data.data
+        }
+    }
+}
+
+watch(date, async () => {
+    console.log(date.value)
+    if (date.value.length > 1) {
+        await loadReviews(route.params.unit, date.value[0], date.value[1])
+    }
+})
+
+onMounted(async () => {
+    reviews_loader.value = true
+    console.log('Component onMounted')
+    await loadReviews(route.params.unit, '', '')
+    await loadCategories(companyId)
+});
+
+onUnmounted(() => {
+    console.log("Component unmounted");
+});
 </script>
-<style scoped>
-	
-</style>

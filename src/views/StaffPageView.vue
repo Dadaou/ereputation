@@ -36,21 +36,6 @@
                 <span v-if="!dataLoading">{{ establishment.city }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
             </div>
-            <!-- <div class="society__location">
-                <i class="uil uil-favorite"></i>
-                <span v-if="!dataLoading" class="society__location">{{ all_items[0].value }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
-            <div class="society__location">
-                <i class="uil uil-comment-alt"></i>
-                <span v-if="!dataLoading">{{ all_items[1].value }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
-            <div class="society__location">
-                <i class="uil uil-building"></i>
-                <span v-if="!dataLoading">{{ all_items[2].value }} competitors</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div> -->
             <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/staffsranking`">
                 <button class="btn">
                     <i class="uil uil-trophy" :style="{ 'color': 'white' }"></i>
@@ -136,12 +121,12 @@
                 <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
                 <el-date-picker class="mt-2" v-model="end_date" type="date" placeholder="Select the end date"
                     :size="'large'" />
-                <DropdownComponent v-if="route.name !== 'StaffReview'" :showTitle="false" placeholder="" :data="timePeriods"
+                <DropdownComponent v-if="route.name !== 'StaffReview' && route.name !== 'UnitReview'" :showTitle="false" placeholder="" :data="timePeriods"
                     @submit="(timePeriod) => {
                         selectedTimePeriod = timePeriod
                     }" :default="timePeriods[0]" />
             </div>
-            <RouterLink v-if="route.name !== 'StaffReview'"
+            <RouterLink v-if="route.name !== 'StaffReview' && route.name !== 'UnitReview'"
                 :to="`/customer/${customerTag}/establishment/${$route.params.id}/staffsranking`">
                 <button class="btn">
                     <i class="uil uil-trophy"></i>
@@ -217,6 +202,9 @@ const companyId = route.params.id;
 const selectedStaff = ref(null);
 provide('selectedStaff', selectedStaff);
 
+const selectedUnit = ref(null)
+provide('selectedUnit', selectedUnit)
+
 const dataLoading = ref(true);
 const chartLoading = ref(false);
 provide('dataLoading', dataLoading);
@@ -229,12 +217,6 @@ let staffs = ref([]);
 provide('staffs', staffs);
 const timePeriods = ref(['Daily', 'Weekly', 'Monthly', 'Yearly']);
 const selectedTimePeriod = ref(timePeriods.value[0]);
-// let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-// let endDate = moment().format('YYYY-M-DD');
-// let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
-// let end_date = ref(moment().format('YYYY-M-DD'));
-// const start_date = ref(appStore.start_date);
-// const end_date = ref(appStore.end_date);
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 const date = ref([start_date.value, end_date.value]);
@@ -279,6 +261,26 @@ watch(route_name, () => {
             },
             {
                 title: "Staff Reviews",
+                path: `${route.path}`,
+                isCurrent: true,
+            }
+        ]);
+    }
+
+    if (route_name.value == 'UnitReview') {
+        appStore.setBreadcrumbs([
+            {
+                title: establishment_name,
+                path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                isCurrent: false,
+            },
+            {
+                title: "Services",
+                path: `${route.path}`,
+                isCurrent: true
+            },
+            {
+                title: "Unit Reviews",
                 path: `${route.path}`,
                 isCurrent: true,
             }
@@ -365,6 +367,26 @@ onBeforeMount(async () => {
                 ]);
             }
 
+            if (route_name.value == 'UnitReview') {
+                appStore.setBreadcrumbs([
+                    {
+                        title: establishment_name,
+                        path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                        isCurrent: false,
+                    },
+                    {
+                        title: "Services",
+                        path: `${route.path}`,
+                        isCurrent: true
+                    },
+                    {
+                        title: "Unit Reviews",
+                        path: `${route.path}`,
+                        isCurrent: true,
+                    }
+                ]);
+            }
+
             if (route_name.value == 'Services') {
                 appStore.setBreadcrumbs([
                     {
@@ -388,23 +410,6 @@ onBeforeMount(async () => {
     })
 
     await loadStaffs(companyId, start_date.value, end_date.value)
-    
-
-    // const response = await new Promise((resolve) => {
-    //     services.get_Record(`/establishment/${companyId}/staffs`, (response) => {
-    //         resolve(response)
-    //         if (response.status == 404) {
-    //             appStore.setIsExist(false);
-    //             appStore.isLoading = false;
-    //         }
-    //     });
-    // });
-
-    // if (response.status == 200) {
-    //     staffs.value = response.data;
-    //     console.log(staffs.value)
-    //     staffLoading.value = false;
-    // }
 })
 
 const el = ref(null);

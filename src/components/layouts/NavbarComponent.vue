@@ -151,7 +151,8 @@
           </li>
           <li @click="closeDropdownMenu">
             <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/sales`">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24">
+             <i class="uil uil-arrow-growth"></i>
+              <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24">
                 <g transform="scale(0.8 1)">
                   <g transform="scale(0.4 0.35) translate(52 -9)">
                     <path fill="currentColor" fill-rule="evenodd"
@@ -163,7 +164,7 @@
                       d="m1 16l7-7l5 5L23 4M0 22h23.999M16 4h7v7" />
                   </g>
                 </g>
-              </svg>
+              </svg> -->
               <span>Sales</span>
             </RouterLink>
           </li>

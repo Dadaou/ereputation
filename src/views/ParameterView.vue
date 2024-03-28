@@ -36,6 +36,16 @@
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
+            <el-tab-pane label="Services" name="service">
+                <el-tabs v-model="activeUnitTab" class="demo-tabs">
+                    <el-tab-pane label="Services" name="unit_list">
+                        <UnitListComponent @edit="(service) => handleEdit(service, 'service')" />
+                    </el-tab-pane>
+                    <el-tab-pane label="Add a new service" name="unit_form">
+                        <UnitFormComponent />
+                    </el-tab-pane>
+                </el-tabs>
+            </el-tab-pane>
             <el-tab-pane label="Events" name="event">
                 <el-tabs v-model="activeEventTab" class="demo-tabs">
                     <el-tab-pane label="Events" name="event_list">
@@ -116,6 +126,14 @@ const EventListComponent = defineAsyncComponent(() =>
     import("@Components/events/EventListComponent.vue")
 )
 
+const UnitFormComponent = defineAsyncComponent(() =>
+    import("@Components/units/UnitFormComponent.vue")
+)
+
+const UnitListComponent = defineAsyncComponent(() =>
+    import("@Components/units/UnitListComponent.vue")
+)
+
 const AdvantageFormComponent = defineAsyncComponent(() =>
     import("@Components/advantage/AdvantageFormComponent.vue")
 )
@@ -188,6 +206,13 @@ const allEvents = ref([])
 const allStaffs = ref([])
 const allAdvantages = ref([])
 const allCategories = ref([])
+const allUnits = ref([])
+
+provide('staffs', allStaffs)
+provide('events', allEvents)
+provide('advantages', allAdvantages)
+provide('categories', allCategories)
+provide('units', allUnits)
 
 const activeEventTab = ref('event_list')
 provide('event_activeTab', activeEventTab)
@@ -201,6 +226,8 @@ provide('categorization_activeTab', activeCategorizationTab)
 const activePartnershipTab = ref('partner_list')
 provide('partnership_activeTab', activePartnershipTab)
 
+const activeUnitTab = ref('unit_list')
+provide('unit_activeTab', activeUnitTab)
 
 const event_to_update = ref(null)
 provide('event_to_update', event_to_update)
@@ -211,10 +238,8 @@ provide('advantage_to_update', advantage_to_update)
 const category_to_update = ref(null)
 provide('category_to_update', category_to_update)
 
-provide('staffs', allStaffs)
-provide('events', allEvents)
-provide('advantages', allAdvantages)
-provide('categories', allCategories)
+const unit_to_update = ref(null)
+provide('unit_to_update', unit_to_update)
 
 const reloadCompetitor = ref(false)
 provide('reloadCompetitor', reloadCompetitor)
@@ -252,6 +277,11 @@ const handleEdit = (value, type) => {
     if(type == 'category') {
         activeCategorizationTab.value = 'categorization_form'
         category_to_update.value = value;
+    }
+
+    if(type == 'service') {
+        activeUnitTab.value = 'unit_form'
+        unit_to_update.value = value;
     }
 };
 
@@ -477,6 +507,27 @@ const loadCategories = async()=>{
     }
 }
 
+const loadUnits = async ()=>{
+    try {
+        const response = await new Promise((resolve) => {
+           services.get_Record(`/customer/establishments/unit?tag=${route.params.tag}`, (response) => {
+                resolve(response);
+            });
+        });
+        console.log(response)
+        if (response.status === 200) {
+            let data = response.data
+            data = data.filter(i=> i.units.length>0);
+            data = data.map(i=>i.units)
+            allUnits.value = data.flat()
+        } else {
+            console.error('Error fetching units:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 const filterCategory = (data)=>{
     const establishments = userStore.user.customer.establishments;
     let categories = []
@@ -509,7 +560,7 @@ onBeforeMount(async () => {
     await reloadEventsList();
     await loadAdvantage();
     await loadCategories();
-
+    await loadUnits();
 });
 
 </script>
