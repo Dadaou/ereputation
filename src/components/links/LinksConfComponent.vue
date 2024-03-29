@@ -425,7 +425,6 @@ const getURIbyName = (name)=>{
 const handleEdit = (data) => {
     showModal.value = true
     category.value = data.category
-
     setTimeout(function() {
       // link.value = data.category=='Hashtag'?`#${data.settings_value1}`:data.url
       link.value = data.settings_value1

@@ -23,7 +23,7 @@
                     <el-button size="small" @click="showModal = !showModal, establishment = scope.row.uri"><i
                             class="uil uil-link-add"></i></el-button>
 
-                    <el-button size="small" @click="loadLinksByEstablishment(scope.row.tag), currentEstablishment = scope.row"><i
+                    <el-button size="small" @click="loadLinksByEstablishment(scope.row)"><i
                             class="uil uil-file-alt"></i></el-button>
                     <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
                             class="uil uil-edit"></i></el-button>
@@ -46,8 +46,8 @@
                     <el-input v-model="searchLink" size="small" placeholder="Type to search" />
                 </template>
                 <template #default="scope">
-                    <!-- <el-button size="small" @click="handleEditLink(scope.row)"><i
-                            class="uil uil-edit"></i></el-button> -->
+                    <el-button size="small" @click="handleEditLink(scope.row)"><i
+                            class="uil uil-edit"></i></el-button>
                     <el-button size="small">
                          <a :href="scope.row.url" target="_blank" class="external-link"><i
                                 class="uil uil-external-link-alt"></i></a>
@@ -312,8 +312,11 @@ function transformLinksData(inputData) {
     });
 }
 
-const loadLinksByEstablishment = async (tag) =>{
+const loadLinksByEstablishment = async (company) =>{
+     const tag = company.tag
      showLinkModal.value = !showLinkModal.value
+     currentEstablishment.value = company
+     establishment.value = company.uri
     
      try {
         const response = await new Promise((resolve) => {
@@ -344,7 +347,7 @@ const handleDeleteLink = async(index, link)=>{
                 message: `Links deleted successfully`,
                 type: 'success',
             })
-            loadLinksByEstablishment(currentEstablishment.value.tag)
+            loadLinksByEstablishment(currentEstablishment.value)
         }
     } catch (error) {
         console.log(error)
@@ -443,12 +446,13 @@ const submit = async () => {
                         resolve(response);
                     });
             });
+            console.log(response)
             if (response.status == 200) {
                 ElMessage({
                     message: `link updated successfully`,
                     type: 'success',
                 })
-                loadLinksByEstablishment(establishment.value)
+                loadLinksByEstablishment(currentEstablishment.value)
                 showSpinner.value = false;
                 isEdit.value = false
                 resetValue()
@@ -475,27 +479,10 @@ const submit = async () => {
             console.log(error)
         }
     }
-
-    // try {
-    //     const response = await new Promise((resolve, reject) => {
-    //         services.createRecord('settings', data, (response) => {
-    //             resolve(response);
-    //         });
-    //     });
-    //     if (response.status == 201) {
-    //         ElMessage({
-    //             message: `link added successfully`,
-    //             type: 'success',
-    //         })
-    //         showSpinner.value = false;
-    //         resetValue()
-    //     }
-    // } catch (error) {
-    //     console.log(error)
-    // }
 }
 
 const handleEditLink = (data) => {
+    console.log(data)
     showModal.value = true
     category.value = data.category
 
@@ -504,6 +491,7 @@ const handleEditLink = (data) => {
     }, 250);
 
     id.value = data.id
+
     isEdit.value = true
     provider.value = getURIbyName(data.name)
 }
