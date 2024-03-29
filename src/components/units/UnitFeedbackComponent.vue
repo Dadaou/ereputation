@@ -85,8 +85,14 @@
                                 <i class="uil uil-info-circle"></i> {{ $t("feedback.indice1") }}
                             </span>
                             <p v-if="randomAdvantage">
-                                <b>{{ $t("feedback.promotion_day") }}</b> {{ randomAdvantage.name }} 
+                                <b>{{ $t("feedback.promotion_day") }}</b> <!-- {{ randomAdvantage.name }}  -->
                             </p>
+                            <DiscountCheckList
+                                :establishment="route.params.id"
+                                :customer="route.params.tag"
+                                @select="(value)=>randomAdvantage = value"
+                            />
+
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
                                 address <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email"
@@ -182,6 +188,10 @@ const EstablishmentNotFound = defineAsyncComponent(() =>
     import("@Views/EstablishmentNotFound.vue")
 )
 
+const DiscountCheckList = defineAsyncComponent(() =>
+    import('@Components/utils/DiscountCheckListComponent.vue')
+);
+
 const ModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/ModalComponent.vue')
 )
@@ -243,7 +253,7 @@ onBeforeMount(async () => {
         if (response.status == 404) exist.value = false
     });
     
-    randomAdvantage.value = await feedbackStore.getRandomAdvantage(route.params.tag, route.params.etab)
+    // randomAdvantage.value = await feedbackStore.getRandomAdvantage(route.params.tag, route.params.etab)
 })
 const requiredinput = ref('');
 onMounted(() => {

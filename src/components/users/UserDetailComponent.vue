@@ -3,7 +3,7 @@
         <div class="profile__header border__bottom">
             <div class="profile__edit">
                 <h2>Personal details</h2>
-                <p>Update your information and find out how it's used.</p>
+                <!-- <p>Update your information and find out how it's used.</p> -->
             </div>
             <div class="profile__image">
                 <div class="user__main__avatar">

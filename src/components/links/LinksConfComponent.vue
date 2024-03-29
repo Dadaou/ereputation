@@ -89,11 +89,7 @@
                 </div>
                 <div> 
                     <div>
-                        <!-- <div id="url_example" v-if="provider || isHashtag">
-                            {{!isHashtag?`Follow this template: ${splitUriAndUrl(provider).url}`:' Follow this example: #hashtag' }}
-                        </div> -->
-
-                        <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> {{!isHashtag?'Paste the link here':'Hashtag value'}} <span>*</span></label>
+                        <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> {{!isHashtag?'Link value':'Hashtag value'}} <span>*</span></label>
                         <p v-if="!isValidLink && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
                         <p v-if="!isValidHashtag && isHashtag" class="text-red-500 text-sm">Invalid hashtag format</p>
                         <input v-if="isHashtag" type="text" id="link" v-model="link"

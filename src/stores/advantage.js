@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import services from '@Services/services.js';
 
-export const useEventStore = defineStore("advantage", {
+export const useAdvantageStore = defineStore("advantage", {
     state: () => ({
         advantages: [],
         entity: 'advantages'
@@ -22,5 +22,30 @@ export const useEventStore = defineStore("advantage", {
                 next(response);
             })
         },
+        async getAdvantageAvailable(customer, establishment){
+            let data = []
+            const response = await new Promise((resolve) => {
+                services.get_Record(`customer/establishments/advantages?tag=${customer}`, (response) => {
+                    resolve(response);
+                });
+            });
+
+            const isDateNotExpired = (noteDate)=> {
+                if(noteDate){
+                  const parsedNoteDate = new Date(noteDate);
+                  const currentDate = new Date();
+                  return parsedNoteDate > currentDate;
+                }
+                return true
+            }
+
+            if(response.status === 200){
+                data = response.data.filter(i=>{
+                    return (isDateNotExpired(i.expired_at) && i.enable == true && i.establishment_tag == establishment)
+                })
+            }
+            console.log(data)
+            return data;
+        }
     },
 })

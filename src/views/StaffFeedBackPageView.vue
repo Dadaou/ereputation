@@ -49,10 +49,6 @@
                          <div>
                             <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                                 $t("feedback.firstname") }} <span>*</span></label>
-                           <!--  <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required> -->
-                                <!--  <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required> -->
                                 <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
 
@@ -72,11 +68,7 @@
                             </el-select>
                         </div>
                          <div>
-                            <label for="datevisit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t("feedback.datevisit") }}<!--  <span>*</span> --></label>
-                             <!-- <el-date-picker
-                                v-model="dateVisit"
-                                :size="'large'"
-                              /> -->
+                            <label for="datevisit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t("feedback.datevisit") }}</label>
                               <el-date-picker
                                 v-model="dateVisit"
                                 :placeholder="$t('feedback.placeholder_datevisit')"
@@ -91,8 +83,14 @@
                                 <i class="uil uil-info-circle"></i> {{ $t("feedback.indice1") }}
                             </span>
                             <p v-if="randomAdvantage">
-                                <b>{{ $t("feedback.promotion_day") }}</b> {{ randomAdvantage.name }} 
+                                <b>{{ $t("feedback.promotion_day") }}</b> <!-- {{ randomAdvantage.name }}  -->
                             </p>
+                            <DiscountCheckList
+                                :establishment="route.params.etab"
+                                :customer="route.params.tag"
+                                @select="(value)=>randomAdvantage = value"
+                            />
+
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
                                 address <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email"
@@ -187,6 +185,10 @@ const EstablishmentNotFound = defineAsyncComponent(() =>
     import("@Views/EstablishmentNotFound.vue")
 )
 
+const DiscountCheckList = defineAsyncComponent(() =>
+    import('@Components/utils/DiscountCheckListComponent.vue')
+);
+
 const ModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/ModalComponent.vue')
 )
@@ -216,8 +218,6 @@ const showSpinner = ref(false);
 const allAdvantages = ref(null)
 const reuiredtext = ref("Champs requis");
 
-
-
 function getRandomValue(n) {
     return Math.floor(Math.random() * n);
 }
@@ -246,7 +246,7 @@ onBeforeMount(async () => {
         if (response.status == 404) exist.value = false
     });
     
-    randomAdvantage.value = await feedbackStore.getRandomAdvantage(route.params.tag, route.params.etab)
+    // randomAdvantage.value = await feedbackStore.getRandomAdvantage(route.params.tag, route.params.etab)
 
     try {
         const responseEstablishment = await new Promise((resolve) => {

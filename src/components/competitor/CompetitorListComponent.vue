@@ -105,7 +105,7 @@
                             {{!isHashtag?`Follow this template: ${splitUriAndUrl(provider).url}`:' Follow this example: #hashtag' }}
                         </div> -->
 
-                        <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> {{!isHashtag?'Paste the link here':'Hashtag value'}} <span>*</span></label>
+                        <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> {{!isHashtag?'Link value':'Hashtag value'}} <span>*</span></label>
                         <p v-if="!isValidLink && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
                         <p v-if="!isValidHashtag && isHashtag" class="text-red-500 text-sm">Invalid hashtag format</p>
                         <input v-if="isHashtag" type="text" id="link" v-model="link"
@@ -130,34 +130,6 @@
                         <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
                     </button>
                 </div>
-                <!-- <div>
-                    <div>
-                        <div v-if="provider && !isHashtag" id="url_example">
-                            Follow this template: {{ splitUriAndUrl(provider).url }}
-                        </div>
-                        <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> {{!isHashtag?'Paste the link here':'Hastag value'}} <span>*</span></label>
-                        <p v-if="!isValidLink && link !== '' && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
-                        <input v-if="isHashtag" type="text" id="link" v-model="link"
-                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']" placeholder="hashtag">
-                        <input v-else type="text" id="link" v-model="link"
-                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']">
-                       
-                    </div>
-                </div>
-                <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
-                   <button v-if="!isHashtag" type="submit" :disabled="!isValidLink"
-                        :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
-                        <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
-                            ...</span>
-                        <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
-                    </button>
-                    <button v-else type="submit"
-                        :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800']">
-                        <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
-                            ...</span>
-                        <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
-                    </button>
-                </div> -->
             </form>
 
         </template>
@@ -456,23 +428,13 @@ const getHashtagValue = (value)=>{
 const submit = async () => {
     showSpinner.value = true;
     let urlObject = splitUriAndUrl(provider.value)
-    // const data = {
-    //     value1: isHashtag.value?getHashtagValue(link.value):getValueUrl(link.value, urlObject.url),
-    //     establishment: establishment.value,
-    //     provider: urlObject.uri,
-    //     enable: true
-    // }
-
+   
     const data = {
         value1: isHashtag.value?getHashtagValue(link.value):link.value,
         establishment: establishment.value,
         provider: urlObject.uri,
         enable: true
     }
-    console.log(isEdit.value)
-    console.log(id.value)
-    console.log(data)
-    establishment = scope.row.uri
 
     if(isEdit.value){
         try {
@@ -481,7 +443,6 @@ const submit = async () => {
                         resolve(response);
                     });
             });
-            console.log(response)
             if (response.status == 200) {
                 ElMessage({
                     message: `link updated successfully`,
@@ -515,23 +476,23 @@ const submit = async () => {
         }
     }
 
-    try {
-        const response = await new Promise((resolve, reject) => {
-            services.createRecord('settings', data, (response) => {
-                resolve(response);
-            });
-        });
-        if (response.status == 201) {
-            ElMessage({
-                message: `link added successfully`,
-                type: 'success',
-            })
-            showSpinner.value = false;
-            resetValue()
-        }
-    } catch (error) {
-        console.log(error)
-    }
+    // try {
+    //     const response = await new Promise((resolve, reject) => {
+    //         services.createRecord('settings', data, (response) => {
+    //             resolve(response);
+    //         });
+    //     });
+    //     if (response.status == 201) {
+    //         ElMessage({
+    //             message: `link added successfully`,
+    //             type: 'success',
+    //         })
+    //         showSpinner.value = false;
+    //         resetValue()
+    //     }
+    // } catch (error) {
+    //     console.log(error)
+    // }
 }
 
 const handleEditLink = (data) => {
@@ -539,7 +500,6 @@ const handleEditLink = (data) => {
     category.value = data.category
 
     setTimeout(function() {
-      // link.value = data.category=='Hashtag'?`#${data.settings_value1}`:data.url
       link.value = data.settings_value1
     }, 250);
 
