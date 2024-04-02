@@ -1,5 +1,5 @@
 <template>
-<div v-if="chartLoading == true" :style="{
+<div v-if="load == true" :style="{
             'width': `100%`,
             'height': `200px`,
             'display': 'flex',
@@ -62,6 +62,10 @@ const custom_width = computed(() => {
   }
 
   return width;
+});
+
+const load = computed(()=>{
+  return props.chartLoading
 })
 	
 </script>

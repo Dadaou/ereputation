@@ -226,7 +226,7 @@ span.name{
 }
 
 .qr__code_view{
-    width: 30% !important;
+    width: 40% !important;
     padding: 10px auto !important;
     margin: auto;
 }

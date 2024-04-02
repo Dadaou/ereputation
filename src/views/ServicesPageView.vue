@@ -76,6 +76,7 @@
           :category="category"
           :plotdata="unitData"
           :legendData="legendUnitData"
+          :chartLoading="chartUnitLoading"
           />
         </div>
         <div class="head">
@@ -123,6 +124,7 @@ const companyId = route.params.id;
 const type = inject('type');
 const date = inject('date');
 const plotdata = ref([]);
+const chartUnitLoading = ref(false)
 const custom_width = computed(() => {
   let nb = plotdata.value.length;
   let width = 800;
@@ -272,6 +274,7 @@ const getUnitChartdata = async(tag, category, rangedate)=>{
   let apiBase = '/customer/establishment/unit/chart';
   let apiParams = `tag=${tag}&by=daily`;
   let format = 'YYYY-MM-DD';
+  chartUnitLoading.value = true
 
   const dateStart = moment(rangedate[0]).format(format);
   const dateEnd = moment(rangedate[1]).format(format);
@@ -280,9 +283,9 @@ const getUnitChartdata = async(tag, category, rangedate)=>{
     apiParams += `&fromDate=${dateStart}&toDate=${dateEnd}`;
   }
 
-  // if (IsValueOkay(category)) {
-  //   apiParams += `&category=${category}`
-  // }
+  if (IsValueOkay(category)) {
+    apiParams += `&category=${category}`
+  }
 
   const api = apiBase + '?' + apiParams;
   console.log(api)
@@ -304,6 +307,7 @@ const getUnitChartdata = async(tag, category, rangedate)=>{
       }
     });
   }
+  chartUnitLoading.value = false
 }
 
 watch(activeName, async()=>{

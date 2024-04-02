@@ -256,8 +256,8 @@ watch(route_name, () => {
             },
             {
                 title: "Services",
-                path: `${route.path}`,
-                isCurrent: true
+                path: `/customer/${route.params.tag}/establishment/${route.params.id}/services`,
+                isCurrent: false
             },
             {
                 title: "Staff Reviews",
@@ -276,8 +276,8 @@ watch(route_name, () => {
             },
             {
                 title: "Services",
-                path: `${route.path}`,
-                isCurrent: true
+                path: `/customer/${route.params.tag}/establishment/${route.params.id}/services`,
+                isCurrent: false
             },
             {
                 title: "Unit Reviews",
