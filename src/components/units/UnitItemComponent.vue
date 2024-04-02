@@ -7,11 +7,21 @@
                         <li>
                         	<span class="label name">{{unit.name}}</span>
                         </li>
-                        <li v-if="unit.code">
-                        	<span class="label">Code: {{unit.code}}</span>
+                        <li>
+                        	<!-- <span class="label">Code: {{unit.code}}</span> -->
+                            <RouterLink :to="{
+                                name: 'UnitReview',
+                                params: {
+                                    tag: tag,
+                                    id: unit.establishment_competitor_tag,
+                                    unit: unit.tag
+                                }
+                            }" class="btn reviews" @click="selectedUnit = unit">
+                                Reviews
+                            </RouterLink>
                         </li>
                     </ul>
-                    <RouterLink :to="{
+                    <!-- <RouterLink :to="{
                         name: 'UnitReview',
                         params: {
                             tag: tag,
@@ -20,7 +30,7 @@
                         }
                     }" class="btn reviews" @click="selectedUnit = unit">
                         Reviews
-                    </RouterLink>
+                    </RouterLink> -->
                 </div>
                 <div>
                     <div id="qrcode__container mt-5" ref="qrcode">

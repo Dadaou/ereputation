@@ -74,8 +74,8 @@
         <div class="reviews__content">
           <UnitChartComponent 
           :category="category"
-          :plotdata="[]"
-          :legendData="[]"
+          :plotdata="unitData"
+          :legendData="legendUnitData"
           />
         </div>
         <div class="head">
@@ -134,6 +134,7 @@ const custom_width = computed(() => {
 })
 const unitByCategory = ref(null)
 const categories = ref([])
+const unitData = ref([])
 
 const isMobile = ref(window.innerWidth <= 768);
 window.addEventListener('resize', () => {
@@ -236,6 +237,80 @@ const legendData = computed(() => {
 
   return data;
 });
+
+const legendUnitData = computed(() => {
+  let data = [];
+  let dates = unitData.value;
+  let nameSet = new Set();
+
+  let n = 1;
+  dates.forEach((date) => {
+    for (const key in date) {
+      if (key != "date" && key != "Score") {
+        if (!nameSet.has(key)) {
+          data.push({
+            name: key,
+            color: colors.value[n]
+          });
+          nameSet.add(key);
+          n++;
+        }
+      }
+    }
+  });
+
+  data.unshift({
+    name: 'Score',
+    color: colors.value[0]
+  });
+
+  return data;
+});
+
+const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
+const getUnitChartdata = async(tag, category, rangedate)=>{
+  let apiBase = '/customer/establishment/unit/chart';
+  let apiParams = `tag=${tag}&by=daily`;
+  let format = 'YYYY-MM-DD';
+
+  const dateStart = moment(rangedate[0]).format(format);
+  const dateEnd = moment(rangedate[1]).format(format);
+
+  if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
+    apiParams += `&fromDate=${dateStart}&toDate=${dateEnd}`;
+  }
+
+  // if (IsValueOkay(category)) {
+  //   apiParams += `&category=${category}`
+  // }
+
+  const api = apiBase + '?' + apiParams;
+  console.log(api)
+  const response = await new Promise((resolve) => {
+    services.get_Record(api, (response) => {
+      resolve(response)
+    });
+  });
+
+  console.log(response)
+  
+  if (response.status == 200) {
+    console.log(response.data)
+    unitData.value = response.data.map(item => {
+      const {Score, ...data} = item
+      return{
+       Score: Score,
+       ...data
+      }
+    });
+  }
+}
+
+watch(activeName, async()=>{
+  if(activeName.value !== 'staffs'){
+   await getUnitChartdata(companyId, activeName.value, date.value)
+  }
+})
 
 onMounted(async () => {
   const response = await new Promise((resolve) => {
