@@ -1,6 +1,5 @@
 <template>
 	<div class="publication-container">
-    {{post}}
 		<div class="publication" :key="post.id">
 			 <div class="post-info">
 			 	<div class="post-head">
@@ -16,9 +15,9 @@
             <span class="post-date">{{ moment(post.published_at).format("DD MMM, YYYY") }}</span>
           </div>
           <div class="post-emoji-category">
-              <div style="height: 20px;">
+              <div style="height: 20px;"  v-if="showCategory">
                         <div v-if="post.category" class="review__category-container" @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review)">
-                            <span v-for="item in review.category.split(';')" :key="item" class="review__category">{{ item }}</span>
+                            <span v-for="item in post.category.split(';')" :key="item" class="review__category">{{ item }}</span>
                         </div>
                         <div class="review__category-container" v-else>
                             <i class="uil uil-question-circle"
@@ -28,7 +27,7 @@
                                   visible = true
                                   }"
                                   @mouseleave="()=>visible = false"
-                                  @click="handleModal('Add review category', 'add', 'uil-add', 'category', review)"
+                                  @click="handleModal('Add hashtag category', 'add', 'uil-add', 'category', post)"
                             >
                             </i>
                              <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
@@ -39,11 +38,36 @@
                             </el-tooltip>
                         </div>
               </div>
-              <span class="emoji mx-1" v-if="showEmoji">
+              <div v-if="showEmoji">
+                <span v-if="post.feeling" class="emoji mx-1" @click="handleModal('Edit hashtag feeling', 'edit', 'uil-edit', 'feeling', post)">
+                            <span v-if="post.feeling == 'positive'">😀</span>
+                            <span v-if="post.feeling == 'neutre' || post.feeling == 'neutral'">😐</span>
+                            <span v-if="post.feeling == 'negative'">😕</span>
+                        </span>
+                        <span class="emoji mx-1" v-else>
+                            <i class="uil uil-question-circle"
+                                  style="color: var(--color-warning); font-size: 18px; cursor: pointer"
+                                  @mouseover="(e) => {
+                                  buttonRef2 = e.currentTarget
+                                  visible2 = true
+                                  }"
+                                  @mouseleave="()=>visible2 = false"
+                                  @click="handleModal('Add hashtag feeling', 'add', 'uil-add', 'feeling', review)"
+                            >
+                            </i>
+                             <el-tooltip ref="tooltipRef2" :visible="visible2" :virtual-ref="buttonRef2" virtual-triggering
+                                popper-class="singleton-tooltip" placement="top">
+                                <template #content>
+                                    <span>Click to add feeling</span>
+                                </template>
+                            </el-tooltip>
+                        </span>
+              </div>
+              <!-- <span class="emoji mx-1" v-if="showEmoji">
                 <span v-if="post.feeling == 'positive'">😀</span>
                 <span v-if="post.feeling == 'neutre' || post.feeling == 'neutral'">😐</span>
                 <span v-if="post.feeling == 'negative'">😕</span>
-              </span>
+              </span> -->
           </div>
 				</div>
 				<div class="post-title">
@@ -79,16 +103,56 @@
 			    </div>
 			</transition>
 	    </div>
+      <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
+            <template #content>
+                <div class="modal__header">
+                    <div class="modal__title">
+                        <h3 class="font-semibold text-gray-900 dark:text-white">
+                            <i class="uil uil-edit"></i> {{modal.text}}
+                        </h3>
+                    </div>
+                    <div class="modal__close">
+                        <i class="uil uil-times-circle" @click="showModal = false"></i>
+                    </div>
+                </div>
+                <div class="mb-6 feedback__rating">
+                    <FeelingFeedbackComponent v-if="modal.type == 'feeling'" @updateValue="(feeling) => {
+                        feel = feeling
+                    }" />
+
+                    <el-select v-else
+                    v-model="category" 
+                    filterable
+                    placeholder="select categories" 
+                    size="large">
+                        <el-option v-for="(item, index) in categories" :key="index" :label="item.category"
+                            :value="item.category"/>
+                    </el-select>
+
+                </div>
+                <div class="mt-5 download__qr_btn">
+                    <button class="btn__light_secondary" @click="updateReview">
+                        <i class="uil uil-save"></i> {{modal.action=="edit"?'Save':'Add'}}
+                    </button>
+                </div>
+            </template>
+        </ModalComponent>
 	</div>
 </template>
 <script setup>
-import { inject, ref, defineAsyncComponent } from 'vue';
+import { inject, ref, defineAsyncComponent, computed, provide } from 'vue';
 import moment from 'moment';
 import services from '@Services/services.js';
 import { Icon } from '@iconify/vue';
 import { ElOption, ElSelect, ElTooltip } from 'element-plus';
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
+import { useUserStore } from "@Stores/user.js";
+import ModalComponent from '@Components/utils/ModalComponent.vue';
+import FeelingFeedbackComponent from '@Components/utils/FeelingFeedbackComponent.vue';
+import { useFeedbackStore } from '@Stores/feedback.js';
+import { useCompanyStore } from "@Stores/company.js";
+import { useWindowSize } from '@vueuse/core';
 
 const socialComment = defineAsyncComponent(()=>import('@Components/utils/SocialPostCommentComponent.vue'))
 const commentsLoaded =ref(false)
@@ -122,20 +186,44 @@ const commentsTemp = [
     "source": "social media"
   }
 ]
+const emits = defineEmits(['reloadData']);
 
+const { width, height } = useWindowSize();
+const userStore = useUserStore();
+const feedbackStore = useFeedbackStore();
+const companiesStore = useCompanyStore();
 const comments = ref([])
 const buttonRef = ref()
 const tooltipRef = ref()
+const buttonRef2 = ref()
+const tooltipRef2 = ref()
 const visible = ref(false)
+const visible2 = ref(false)
+const showModal = ref(false);
+const modal = ref({
+    text: '',
+    action: '',
+    icon: '',
+    type: ''
+})
+const feel = ref('okay');
+const id = ref('');
+provide('feeling', feel);
+const modalWidth = computed(() => {
+    let windowSize = 1500;
+    let gap = (windowSize - width.value) / 19;
+    return gap + 35;
+})
 
 const colors = {
-        'facebook': '#1877F2',
-        'instagram': '#E4405F',
-        'linkedin': '#0A66C2',
-        'tiktok': '#000000',
-        'twitter': '#1DA1F2',
-        'youtube': '#FF0000'
+  'facebook': '#1877F2',
+  'instagram': '#E4405F',
+  'linkedin': '#0A66C2',
+  'tiktok': '#000000',
+  'twitter': '#1DA1F2',
+  'youtube': '#FF0000'
 };
+
 const props = defineProps({
   post: {
     type: Object,
@@ -153,6 +241,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  categories: {
+    type: Array,
+    default: []
+  }
 });
 const showComment = ref(false);
 
@@ -163,16 +255,27 @@ const showComments = async(id)=>{
 	}
 }
 
-const handleModal = (text, action, icon, type, review)=>{
-    // showModal.value = true
-    // modal.value = {
-    //     text: text,
-    //     action: action,
-    //     icon: icon,
-    //     type: type
-    // }
+const editReview = (review) => {
+    feel.value = review.feeling;
+    review.feeling = feel.value;
+    id.value = review.id;
+    // selectedReview.value = review;
+    category.value = review.category
 
-    // editReview(review)
+    if (feel.value == 'neutre') feel.value = 'neutral';
+    showModal.value = true;
+}
+
+const handleModal = (text, action, icon, type, review)=>{
+    showModal.value = true
+    modal.value = {
+        text: text,
+        action: action,
+        icon: icon,
+        type: type
+    }
+
+    editReview(review)
     console.log('handle modal')
 
 };
@@ -201,6 +304,35 @@ const loadComments = async(id)=>{
 };
 </script>
 <style scoped>
+.modal__header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal__header div {
+    align-self: center;
+}
+
+.modal__close i {
+    float: right;
+    font-size: 25px;
+    color: red;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.modal__close i:hover {
+    transform: rotate(360deg);
+}
+
+.download__qr_btn {
+    display: flex;
+    justify-content: center;
+}
+
+.download__qr_btn button {
+    flex-basis: 50%;
+}
 
 .publication {
    margin-bottom: 20px;
@@ -241,6 +373,10 @@ const loadComments = async(id)=>{
 .post-head{
 	display: flex;
 	justify-content: space-between;
+}
+
+.emoji {
+    cursor: pointer;
 }
 
 .post-footer{
@@ -319,5 +455,32 @@ const loadComments = async(id)=>{
 
 .comment-likes i {
   margin-right: 5px;
+}
+
+.review__category-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
+    gap: 2px;
+    cursor: pointer;
+}
+
+.review__category {
+    background: var(--color-danger);
+    color: white;
+    font-size: 13px;
+    border-radius: 8px;
+    padding: 0 8px;
+    font-weight: 400;
+}
+
+.review__right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 16px;
+    height: 100%;
 }
 </style>

@@ -104,7 +104,7 @@
                     </div>
 
                
-                <SocialPostComponent v-for="post in hashtagData" :post="post" v-if="!postLoaded" :showEmoji="true"/>
+                <SocialPostComponent v-for="post in hashtagData" :post="post" v-if="!postLoaded" showEmoji="true" showCategory="true" :categories="categories"/>
                     <div class="publication-container" v-for="index in 5" v-if="postLoaded">
                         <div class="publication bg-gray-200 animate-pulse">
                             <div class="post-info">
@@ -412,6 +412,7 @@ window.onresize = () => {
 
 const route = useRoute();
 const companyId = route.params.id;
+const categories = ref([])
 
 appStore.setBreadcrumbs([
     {
@@ -684,7 +685,21 @@ const loadHashtags = async(tag, source)=>{
        hashtags.value = removeDuplicates(response.data);
        hashtags.value.unshift({id: 0, value: 'All'})
     }
+}
 
+const loadCategories = async (tag) => {
+    const api = `establishment/${tag}/categories`
+    const response = await new Promise((resolve) => {
+        services.get_Record(api, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+        if (response.data && response.data.data) {
+            categories.value = response.data.data
+        }
+    }
 }
 
 onBeforeMount(async () => {
@@ -724,6 +739,7 @@ onBeforeMount(async () => {
 
         }
     })
+    await loadCategories(companyId)
 
     try {
         const response = await new Promise((resolve) => {
