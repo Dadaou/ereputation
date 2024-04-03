@@ -60,7 +60,7 @@
                             <span v-if="review.feeling == 'neutre' || review.feeling == 'neutral'">😐</span>
                             <span v-if="review.feeling == 'negative'">😕</span>
                         </span>
-                        <span class="review__category-container" v-else>
+                        <span class="emoji mx-1" v-else>
                             <i class="uil uil-question-circle"
                                   style="color: var(--color-warning); font-size: 18px; cursor: pointer"
                                   @mouseover="(e) => {
