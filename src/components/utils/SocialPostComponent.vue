@@ -1,5 +1,6 @@
 <template>
 	<div class="publication-container">
+    {{post}}
 		<div class="publication" :key="post.id">
 			 <div class="post-info">
 			 	<div class="post-head">
@@ -15,6 +16,29 @@
             <span class="post-date">{{ moment(post.published_at).format("DD MMM, YYYY") }}</span>
           </div>
           <div class="post-emoji-category">
+              <div style="height: 20px;">
+                        <div v-if="post.category" class="review__category-container" @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review)">
+                            <span v-for="item in review.category.split(';')" :key="item" class="review__category">{{ item }}</span>
+                        </div>
+                        <div class="review__category-container" v-else>
+                            <i class="uil uil-question-circle"
+                                  style="color: var(--color-warning); font-size: 18px; cursor: pointer"
+                                  @mouseover="(e) => {
+                                  buttonRef = e.currentTarget
+                                  visible = true
+                                  }"
+                                  @mouseleave="()=>visible = false"
+                                  @click="handleModal('Add review category', 'add', 'uil-add', 'category', review)"
+                            >
+                            </i>
+                             <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
+                                popper-class="singleton-tooltip" placement="top">
+                                <template #content>
+                                    <span>Click to add category</span>
+                                </template>
+                            </el-tooltip>
+                        </div>
+              </div>
               <span class="emoji mx-1" v-if="showEmoji">
                 <span v-if="post.feeling == 'positive'">😀</span>
                 <span v-if="post.feeling == 'neutre' || post.feeling == 'neutral'">😐</span>
@@ -62,6 +86,9 @@ import { inject, ref, defineAsyncComponent } from 'vue';
 import moment from 'moment';
 import services from '@Services/services.js';
 import { Icon } from '@iconify/vue';
+import { ElOption, ElSelect, ElTooltip } from 'element-plus';
+import 'element-plus/es/components/option/style/css'
+import 'element-plus/es/components/select/style/css'
 
 const socialComment = defineAsyncComponent(()=>import('@Components/utils/SocialPostCommentComponent.vue'))
 const commentsLoaded =ref(false)
@@ -97,6 +124,9 @@ const commentsTemp = [
 ]
 
 const comments = ref([])
+const buttonRef = ref()
+const tooltipRef = ref()
+const visible = ref(false)
 
 const colors = {
         'facebook': '#1877F2',
@@ -132,6 +162,20 @@ const showComments = async(id)=>{
 		await loadComments(id);
 	}
 }
+
+const handleModal = (text, action, icon, type, review)=>{
+    // showModal.value = true
+    // modal.value = {
+    //     text: text,
+    //     action: action,
+    //     icon: icon,
+    //     type: type
+    // }
+
+    // editReview(review)
+    console.log('handle modal')
+
+};
 
 const loadComments = async(id)=>{
 	commentsLoaded.value = true;

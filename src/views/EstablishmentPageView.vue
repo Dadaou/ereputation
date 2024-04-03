@@ -41,7 +41,7 @@
                 }" />
             </div>
             <CommentComponent v-if="reviewsLoading == false" :reviews="visibleData" :allReviews="establishment.reviews"
-                :showEmoji="false" :categories="categories"/>
+                :showEmoji="true" :categories="categories"/>
             <div v-else role="status"
                 class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
                 v-for="index in 20" :key="index">

@@ -630,7 +630,10 @@ const loadPostHashtagData = async(tag, source, dateStart, dateEnd, hashtag, page
     });
     console.log(response)
     if (response.status == 200) {
-       hashtagData.value = response.data.data
+       hashtagData.value = response.data.data.map(i=>({
+        category: "Menage",
+        ...i
+       }))
        options.value.max = response.data['length'];
        postLoaded.value = false
     }

@@ -11,7 +11,7 @@
                 <h3>Total transaction value (purchase date)</h3>
             </div>
             <div class="chartBox">
-                <div class="containerChart">
+                <div class="containerChart" ref="scrollContainer1" @scroll="syncScroll('scrollContainer1', 'scrollContainer2')">
                     <div class="containerBody">
                         <Bar :data="data" :options="options" />
                     </div>
@@ -30,7 +30,7 @@
                 <h3>Number of products (purchase date)</h3>
             </div>
             <div class="chartBox">
-                <div class="containerChart">
+                <div class="containerChart" ref="scrollContainer2" @scroll="syncScroll('scrollContainer2', 'scrollContainer1')">
                     <div class="containerBody2">
                         <Bar :data="dataBooking" :options="options" />
                     </div>
@@ -257,6 +257,18 @@ let dataBooking = ref({
     labels: [],
     datasets: []
 })
+
+const scrollContainer1 = ref(null);
+const scrollContainer2 = ref(null);
+
+const syncScroll = (source, target)=> {
+ const sourceElement = source === 'scrollContainer1' ? scrollContainer1.value : scrollContainer2.value;
+ const targetElement = target === 'scrollContainer1' ? scrollContainer1.value : scrollContainer2.value;
+
+ if (sourceElement && targetElement) {
+    targetElement.scrollLeft = sourceElement.scrollLeft;
+ }
+}
 
 
 provide('date', date);

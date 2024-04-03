@@ -54,12 +54,31 @@
                             </el-tooltip>
                         </div>
                     </div>
-                    <div>
-                        <span class="emoji mx-1" v-if="showEmoji" @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review)">
+                    <div v-if="showEmoji">
+                        <span v-if="review.feeling" class="emoji mx-1" @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review)">
                             <span v-if="review.feeling == 'positive'">😀</span>
                             <span v-if="review.feeling == 'neutre' || review.feeling == 'neutral'">😐</span>
                             <span v-if="review.feeling == 'negative'">😕</span>
                         </span>
+                        <span class="review__category-container" v-else>
+                            <i class="uil uil-question-circle"
+                                  style="color: var(--color-warning); font-size: 18px; cursor: pointer"
+                                  @mouseover="(e) => {
+                                  buttonRef2 = e.currentTarget
+                                  visible2 = true
+                                  }"
+                                  @mouseleave="()=>visible2 = false"
+                                  @click="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review)"
+                            >
+                            </i>
+                             <el-tooltip ref="tooltipRef2" :visible="visible2" :virtual-ref="buttonRef2" virtual-triggering
+                                popper-class="singleton-tooltip" placement="top">
+                                <template #content>
+                                    <span>Click to add feeling</span>
+                                </template>
+                            </el-tooltip>
+                        </span>
+                        
                         <p
                             class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center px-3 py-1 rounded dark:bg-yellow-200 dark:text-yellow-800">
                             {{ review.star | review.rating }}</p>
@@ -156,7 +175,10 @@ const modalWidth = computed(() => {
 })
 const buttonRef = ref()
 const tooltipRef = ref()
+const buttonRef2 = ref()
+const tooltipRef2 = ref()
 const visible = ref(false)
+const visible2 = ref(false)
 const formatRating = (rating, source) => {
     if (source == 'tripadvisor' && rating * 5 <= 5) {
         rating = rating * 5
