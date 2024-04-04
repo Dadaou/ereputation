@@ -18,12 +18,23 @@ export const useFeedbackStore = defineStore("feedback", {
             });
         },
 
-        async updateReviewCategory(id, type, old, current, next){
+         async updatePost(id, post, next){
+            await services.patchRecord('social_posts', id, post, (response)=>{
+                next(response);
+            });
+        },
+
+        async updateReviewCategory(id, type, old, current, ishashtag, next){
             let api = '/modify/classification'
-            let parameters = `type=${type}&review=${id}&current_category=${current}`
+
+            //comment if comment, review if review and post if hashtag
+            let parameters = ishashtag
+            ? `type=${type}&post=${id}&current_category=${current}`
+            : `type=${type}&review=${id}&current_category=${current}`;
             parameters = type=='add'?`${parameters}&old_category`:`${parameters}&old_category=${old}`
             
             api = `${api}?${parameters}`
+            console.log(api)
 
            const response = await new Promise((resolve) => {
                     services.get_Record(api, (response) => {

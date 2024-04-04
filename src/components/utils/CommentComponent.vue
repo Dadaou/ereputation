@@ -33,7 +33,8 @@
                 <div class="review__right mt-2">
                     <div style="height: 20px;" v-if="showCategory">
                         <div v-if="review.category" class="review__category-container" @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review)">
-                            <span v-for="item in review.category.split(';')" :key="item" class="review__category">{{ item }}</span>
+                            <span v-if="review.category.split(';').length>0" :key="item" class="review__category">{{ review.category.split(';')[0] }}</span>
+                            
                         </div>
                         <div class="review__category-container" v-else>
                             <i class="uil uil-question-circle"
@@ -54,12 +55,31 @@
                             </el-tooltip>
                         </div>
                     </div>
-                    <div>
-                        <span class="emoji mx-1" v-if="showEmoji" @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review)">
+                    <div v-if="showEmoji">
+                        <span v-if="review.feeling" class="emoji mx-1" @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review)">
                             <span v-if="review.feeling == 'positive'">😀</span>
                             <span v-if="review.feeling == 'neutre' || review.feeling == 'neutral'">😐</span>
                             <span v-if="review.feeling == 'negative'">😕</span>
                         </span>
+                        <span class="emoji mx-1" v-else>
+                            <i class="uil uil-question-circle"
+                                  style="color: var(--color-warning); font-size: 18px; cursor: pointer"
+                                  @mouseover="(e) => {
+                                  buttonRef2 = e.currentTarget
+                                  visible2 = true
+                                  }"
+                                  @mouseleave="()=>visible2 = false"
+                                  @click="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review)"
+                            >
+                            </i>
+                             <el-tooltip ref="tooltipRef2" :visible="visible2" :virtual-ref="buttonRef2" virtual-triggering
+                                popper-class="singleton-tooltip" placement="top">
+                                <template #content>
+                                    <span>Click to add feeling</span>
+                                </template>
+                            </el-tooltip>
+                        </span>
+                        
                         <p
                             class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center px-3 py-1 rounded dark:bg-yellow-200 dark:text-yellow-800">
                             {{ review.star | review.rating }}</p>
@@ -156,7 +176,10 @@ const modalWidth = computed(() => {
 })
 const buttonRef = ref()
 const tooltipRef = ref()
+const buttonRef2 = ref()
+const tooltipRef2 = ref()
 const visible = ref(false)
+const visible2 = ref(false)
 const formatRating = (rating, source) => {
     if (source == 'tripadvisor' && rating * 5 <= 5) {
         rating = rating * 5
@@ -211,7 +234,7 @@ const updateReview = async () => {
                 console.log(response);
             })
         }else{
-            await feedbackStore.updateReviewCategory(id.value, modal.value.action,selectedReview.value.category, category.value , response => {
+            await feedbackStore.updateReviewCategory(id.value, modal.value.action,selectedReview.value.category, category.value, false, response => {
                 console.log(response);
             })
             selectedReview.value.category = category.value

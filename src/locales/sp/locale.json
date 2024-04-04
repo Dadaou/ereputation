@@ -33,7 +33,8 @@
         "email":"Correo electrónico",
         "promotion_day":"Promoción del día",
         "comment":"Tus comentarios",
-        "indice2":"Al utilizar nuestros servicios y marcar la casilla anterior, aceptas los términos descritos en esta Política de Privacidad",
+        "indice2":"Al utilizar nuestros servicios y marcar esta casilla, aceptas los términos descritos en estas",
+        "indice3":"condiciones generales de uso",
         "post":"Publicar comentario",
         "thanks":{
             "title1":"Gracias ",

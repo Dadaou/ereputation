@@ -109,8 +109,9 @@
                             <div class="checkbox-container">
                                 <label>
                                     <input type="checkbox" id="agreeCheckbox" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')" required>
-                                    {{ $t("feedback.indice2") }}
+                                    {{ $t("feedback.indice2") }} <span @click="iframeVisible=!iframeVisible">{{ $t("feedback.indice3") }}</span>
                                 </label>
+                                <div v-if="iframeVisible && appStore.account.cgu" id="conteneurIframe" v-html="appStore.account.cgu"></div>
                             </div>
                         </div>
                         <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
@@ -137,6 +138,7 @@ import { useUserStore } from "@Stores/user.js";
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
 import { useFeedbackStore } from '@Stores/feedback.js';
+import { useAppStore } from "@Stores/app.js"
 import moment from 'moment';
 import { useI18n } from "vue-i18n";
 import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus';
@@ -163,9 +165,11 @@ const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
+const appStore = useAppStore()
 const feedbackStore = useFeedbackStore();
 const establishment = ref({});
 let media = [];
+const iframeVisible = ref(false);
 
 const page = ref({})
 
@@ -299,7 +303,8 @@ const submit = async () => {
                                     lastname: lastname.value,
                                     email: email.value,
                                     language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase(),
-                                    app_url: app_url.value
+                                    app_url: app_url.value,
+                                    template: 'workflow_en'
                                 }
                                 await services.createRecord('workflow', coupons, (workflowResponse) => {
                                     console.log(workflowResponse)
@@ -462,6 +467,17 @@ input:focus {
 
 img {
     height: 100%;
+}
+
+.checkbox-container div{
+    height: 500px;
+    overflow-y: auto;
+}
+
+.checkbox-container span{
+    color: var(--color-danger);
+    font-weight:500;
+    cursor: pointer;
 }
 
 @media screen and (max-width:1075px) {

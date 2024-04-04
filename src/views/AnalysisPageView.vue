@@ -26,7 +26,8 @@
                     <!-- <StrengthWeakness :weaknesses="ratingsCondition4" :strengths="ratingsCondition1"/> -->
 
                     <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']">
-                        <div class="containerChart">
+                        <div class="containerChart" ref="scrollContainer1"
+                            @scroll="syncScroll('scrollContainer1', 'scrollContainer2')">
                             <div :class="['containerBody', !isLoading ? '' : 'loading']">
                                 <Bar :data="ratingChart" id="rating" :options="options" />
                             </div>
@@ -45,8 +46,10 @@
                             </BaseLegend>  -->
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
+
                     <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']">
-                        <div class="containerChart">
+                        <div class="containerChart" ref="scrollContainer2"
+                            @scroll="syncScroll('scrollContainer2', 'scrollContainer1')">
                             <!-- <div :class="['containerBody', !isLoading?'':'loading']">
                                 <Bar :data="ratingChart" id="rating" :options="options" />
                             </div>
@@ -537,6 +540,18 @@ const options = {
         }
     }
 };
+
+const scrollContainer1 = ref(null);
+const scrollContainer2 = ref(null);
+
+const syncScroll = (source, target) => {
+    const sourceElement = source === 'scrollContainer1' ? scrollContainer1.value : scrollContainer2.value;
+    const targetElement = target === 'scrollContainer1' ? scrollContainer1.value : scrollContainer2.value;
+
+    if (sourceElement && targetElement) {
+        targetElement.scrollLeft = sourceElement.scrollLeft;
+    }
+}
 
 const calculateAvg = (data) => {
     let m = 0;
