@@ -11,7 +11,7 @@
                         </div>
                         <h1 class="society__name">{{ unit.name }}</h1>
                         <ul>
-                            <li><span class="label">Category: </span> <span>{{ unit.category }}</span></li>
+                            <!-- <li><span class="label">Category: </span> <span>{{ unit.category }}</span></li> -->
                             <li class="Gender">
                                 {{ $t("staffFeedback.interne") }}
                             </li>
@@ -88,7 +88,7 @@
                                 <b>{{ $t("feedback.promotion_day") }}</b> <!-- {{ randomAdvantage.name }}  -->
                             </p>
                             <DiscountCheckList
-                                :establishment="route.params.id"
+                                :establishment="route.params.etab"
                                 :customer="route.params.tag"
                                 @select="(value)=>randomAdvantage = value"
                             />
@@ -111,7 +111,7 @@
                             <div class="checkbox-container">
                                 <label>
                                     <input type="checkbox" id="agreeCheckbox" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')" required>
-                                    {{ $t("feedback.indice2") }}
+                                    {{ $t("feedback.indice2") }} <a href="#">{{ $t("feedback.indice3") }}</a>
                                 </label>
                             </div>
                         </div>
@@ -361,9 +361,9 @@ const submit = async () => {
                                         lastname: lastname.value,
                                         email: email.value,
                                         language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase(),
-                                        app_url: app_url.value
+                                        app_url: app_url.value,
+                                        template: `workflow_en`
                                     }
-                                    console.log(coupons)
                                     await services.createRecord('workflow', coupons, (workflowResponse) => {
                                         console.log(workflowResponse)
                                         resetForm()

@@ -33,7 +33,8 @@
         "email":"Adresse E-mail",
         "promotion_day":"Promotion du jour",
         "comment":"Vos commentaires",
-        "indice2":"En utilisant nos services et en cochant la case ci-dessus, vous acceptez les conditions décrites dans cette politique de confidentialité.",
+        "indice2":"En utilisant nos services et en cochant cette case, vous acceptez les conditions décrites dans nos",
+        "indice3": "conditions générales d’utilisations",
         "post":"Poster un commentaire"
 
     },

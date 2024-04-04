@@ -234,7 +234,7 @@ const updateReview = async () => {
                 console.log(response);
             })
         }else{
-            await feedbackStore.updateReviewCategory(id.value, modal.value.action,selectedReview.value.category, category.value , response => {
+            await feedbackStore.updateReviewCategory(id.value, modal.value.action,selectedReview.value.category, category.value, false, response => {
                 console.log(response);
             })
             selectedReview.value.category = category.value

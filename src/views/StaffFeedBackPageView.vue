@@ -109,7 +109,7 @@
                             <div class="checkbox-container">
                                 <label>
                                     <input type="checkbox" id="agreeCheckbox" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')" required>
-                                    {{ $t("feedback.indice2") }}
+                                    {{ $t("feedback.indice2") }} <a href="#">{{ $t("feedback.indice3") }}</a>
                                 </label>
                             </div>
                         </div>
@@ -367,7 +367,8 @@ const submit = async () => {
                                         lastname: lastname.value,
                                         email: email.value,
                                         language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase(),
-                                        app_url: app_url.value
+                                        app_url: app_url.value,
+                                        template: 'workflow_en'
                                     }
                                     console.log(coupons)
                                     await services.createRecord('workflow', coupons, (workflowResponse) => {

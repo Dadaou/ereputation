@@ -109,8 +109,11 @@
                             <div class="checkbox-container">
                                 <label>
                                     <input type="checkbox" id="agreeCheckbox" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')" required>
-                                    {{ $t("feedback.indice2") }}
+                                    {{ $t("feedback.indice2") }} <a href="#" @click="afficherIframe">{{ $t("feedback.indice3") }}</a>
                                 </label>
+                                <!-- <div v-if="iframeVisible" id="conteneurIframe">
+                                  <iframe :src="urlIframe" width="600" height="400"></iframe>
+                                </div> -->
                             </div>
                         </div>
                         <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
@@ -137,6 +140,7 @@ import { useUserStore } from "@Stores/user.js";
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
 import { useFeedbackStore } from '@Stores/feedback.js';
+import { useAppStore } from "@Stores/app.js"
 import moment from 'moment';
 import { useI18n } from "vue-i18n";
 import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus';
@@ -163,9 +167,18 @@ const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
+const appStore = useAppStore()
 const feedbackStore = useFeedbackStore();
 const establishment = ref({});
 let media = [];
+const iframeVisible = ref(false);
+    const urlIframe = ref('');
+
+function afficherIframe() {
+    console.log(appStore.account)
+    iframeVisible.value = !iframeVisible.value;
+    urlIframe.value = 'https://www.example.com'; // URL de la page à afficher dans l'iframe
+}
 
 const page = ref({})
 
@@ -299,7 +312,8 @@ const submit = async () => {
                                     lastname: lastname.value,
                                     email: email.value,
                                     language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase(),
-                                    app_url: app_url.value
+                                    app_url: app_url.value,
+                                    template: 'workflow_en'
                                 }
                                 await services.createRecord('workflow', coupons, (workflowResponse) => {
                                     console.log(workflowResponse)

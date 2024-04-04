@@ -16,7 +16,7 @@
           </div>
           <div class="post-emoji-category">
               <div style="height: 20px;"  v-if="showCategory">
-                        <div v-if="post.category" class="review__category-container" @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review)">
+                        <div v-if="post.category" class="review__category-container" @click="handleModal('Edit review category', 'modify', 'uil-edit', 'category', post)">
                             <span v-for="item in post.category.split(';')" :key="item" class="review__category">{{ item }}</span>
                         </div>
                         <div class="review__category-container" v-else>
@@ -52,7 +52,7 @@
                                   visible2 = true
                                   }"
                                   @mouseleave="()=>visible2 = false"
-                                  @click="handleModal('Add hashtag feeling', 'add', 'uil-add', 'feeling', review)"
+                                  @click="handleModal('Add hashtag feeling', 'add', 'uil-add', 'feeling', post)"
                             >
                             </i>
                              <el-tooltip ref="tooltipRef2" :visible="visible2" :virtual-ref="buttonRef2" virtual-triggering
@@ -132,7 +132,7 @@
                 </div>
                 <div class="mt-5 download__qr_btn">
                     <button class="btn__light_secondary" @click="updateReview">
-                        <i class="uil uil-save"></i> {{modal.action=="edit"?'Save':'Add'}}
+                        <i class="uil uil-save"></i> {{modal.action=="modify"?'Save':'Add'}}
                     </button>
                 </div>
             </template>
@@ -208,7 +208,10 @@ const modal = ref({
 })
 const feel = ref('okay');
 const id = ref('');
+const selectedReview = ref(null);
 provide('feeling', feel);
+const category = ref('')
+
 const modalWidth = computed(() => {
     let windowSize = 1500;
     let gap = (windowSize - width.value) / 19;
@@ -255,18 +258,44 @@ const showComments = async(id)=>{
 	}
 }
 
-const editReview = (review) => {
-    feel.value = review.feeling;
-    review.feeling = feel.value;
-    id.value = review.id;
-    // selectedReview.value = review;
-    category.value = review.category
+const editPost = (post) => {
+    feel.value = post.feeling;
+    post.feeling = feel.value;
+    id.value = post.id;
+    selectedReview.value = post;
+    category.value = post.category
+    
 
     if (feel.value == 'neutre') feel.value = 'neutral';
     showModal.value = true;
 }
 
-const handleModal = (text, action, icon, type, review)=>{
+const updateReview = async () => {
+
+    let updatedValue = {
+        feeling: feel.value,
+        confidence: 1,
+    }
+    selectedReview.value.feeling = feel.value;
+
+    try {
+        showModal.value = false;
+        if(modal.value.type == 'feeling'){
+            await feedbackStore.updatePost(id.value, updatedValue, response => {
+                console.log(response);
+            })
+        }else{
+            await feedbackStore.updateReviewCategory(id.value, modal.value.action,selectedReview.value.category, category.value, true, response => {
+                console.log(response);
+            })
+            selectedReview.value.category = category.value
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const handleModal = (text, action, icon, type, post)=>{
     showModal.value = true
     modal.value = {
         text: text,
@@ -274,10 +303,7 @@ const handleModal = (text, action, icon, type, review)=>{
         icon: icon,
         type: type
     }
-
-    editReview(review)
-    console.log('handle modal')
-
+    editPost(post)
 };
 
 const loadComments = async(id)=>{

@@ -104,7 +104,9 @@
                     </div>
 
                
-                <SocialPostComponent v-for="post in hashtagData" :post="post" v-if="!postLoaded" showEmoji="true" showCategory="true" :categories="categories"/>
+                <SocialPostComponent v-for="post in hashtagData" :post="post" v-if="!postLoaded" :showEmoji="true" :showCategory="true" :categories="categories"
+                @reloadData="(post) => reloadData(post)"
+                />
                     <div class="publication-container" v-for="index in 5" v-if="postLoaded">
                         <div class="publication bg-gray-200 animate-pulse">
                             <div class="post-info">
@@ -631,13 +633,18 @@ const loadPostHashtagData = async(tag, source, dateStart, dateEnd, hashtag, page
     });
     console.log(response)
     if (response.status == 200) {
-       hashtagData.value = response.data.data.map(i=>({
-        category: "Menage",
-        ...i
-       }))
+       hashtagData.value = response.data.data
        options.value.max = response.data['length'];
        postLoaded.value = false
     }
+}
+
+const reloadData = (postUpdated) => {
+    hashtagData.value.forEach((post, index) => {
+        if (post.id == postUpdated.id) {
+            hashtagData.value[index].feeling = postUpdated.feeling;
+        }
+    })
 }
 
 function removeDuplicates(array) {
