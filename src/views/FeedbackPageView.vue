@@ -109,11 +109,9 @@
                             <div class="checkbox-container">
                                 <label>
                                     <input type="checkbox" id="agreeCheckbox" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')" required>
-                                    {{ $t("feedback.indice2") }} <a href="#" @click="afficherIframe">{{ $t("feedback.indice3") }}</a>
+                                    {{ $t("feedback.indice2") }} <span @click="iframeVisible=!iframeVisible">{{ $t("feedback.indice3") }}</span>
                                 </label>
-                                <!-- <div v-if="iframeVisible" id="conteneurIframe">
-                                  <iframe :src="urlIframe" width="600" height="400"></iframe>
-                                </div> -->
+                                <div v-if="iframeVisible && appStore.account.cgu" id="conteneurIframe" v-html="appStore.account.cgu"></div>
                             </div>
                         </div>
                         <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
@@ -172,13 +170,6 @@ const feedbackStore = useFeedbackStore();
 const establishment = ref({});
 let media = [];
 const iframeVisible = ref(false);
-    const urlIframe = ref('');
-
-function afficherIframe() {
-    console.log(appStore.account)
-    iframeVisible.value = !iframeVisible.value;
-    urlIframe.value = 'https://www.example.com'; // URL de la page à afficher dans l'iframe
-}
 
 const page = ref({})
 
@@ -476,6 +467,17 @@ input:focus {
 
 img {
     height: 100%;
+}
+
+.checkbox-container div{
+    height: 500px;
+    overflow-y: auto;
+}
+
+.checkbox-container span{
+    color: var(--color-danger);
+    font-weight:500;
+    cursor: pointer;
 }
 
 @media screen and (max-width:1075px) {

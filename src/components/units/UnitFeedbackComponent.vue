@@ -108,11 +108,18 @@
                                 class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"></textarea>
                         </div>
                         <div>
-                            <div class="checkbox-container">
+                           <!--  <div class="checkbox-container">
                                 <label>
                                     <input type="checkbox" id="agreeCheckbox" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')" required>
                                     {{ $t("feedback.indice2") }} <a href="#">{{ $t("feedback.indice3") }}</a>
                                 </label>
+                            </div> -->
+                            <div class="checkbox-container">
+                                <label>
+                                    <input type="checkbox" id="agreeCheckbox" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')" required>
+                                    {{ $t("feedback.indice2") }} <span @click="iframeVisible=!iframeVisible">{{ $t("feedback.indice3") }}</span>
+                                </label>
+                                <div v-if="iframeVisible && appStore.account.cgu" id="conteneurIframe" v-html="appStore.account.cgu"></div>
                             </div>
                         </div>
                         <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
@@ -218,7 +225,7 @@ const modalWidth = computed(() => {
 const establishment = ref({});
 
 const page = ref();
-
+const iframeVisible = ref(false);
 const showSpinner = ref(false);
 const allAdvantages = ref(null)
 const reuiredtext = ref("Champs requis");
@@ -600,6 +607,18 @@ input:focus {
     font-size: 14px;
     color: var(--color-bg2);
 }
+
+.checkbox-container div{
+    height: 500px;
+    overflow: auto;
+}
+
+.checkbox-container span{
+    color: var(--color-danger);
+    font-weight:500;
+    cursor: pointer;
+}
+
 
 span.label {
     color: var(--color-bg1);
