@@ -89,40 +89,44 @@
 
                             <li>
                                 Your average customer cart is <span class="analysis-value"> {{
-                salesAnalysis.avgCustomerCard
-            }} {{
-                    salesAnalysis.currency }}</span>
+                                    salesAnalysis.avgCustomerCard
+                                }} {{
+                                        salesAnalysis.currency }}</span>
                             </li>
                             <li>
                                 Your overall score over the selected period is <span class="analysis-value">{{
-                salesAnalysis.current.score }}</span> which corresponds to <span
+                                    salesAnalysis.current.score }}</span> which corresponds to <span
                                     class="analysis-value">{{ salesAnalysis.current.avgBookings }}</span>
                                 sales with <span class="analysis-value">{{ salesAnalysis.current.avgTTV }}
                                     {{ salesAnalysis.currency }}</span> by day with this
                                 score on average.
                             </li>
-                            <li v-if="salesAnalysis.under">
+                        </ul>
+                        <p class="analysis-sales-title" style="margin-top: 2rem;"></p>
+                        <ul v-if="(salesAnalysis.under && salesAnalysis.under.bookingDiff < 0) || (salesAnalysis.above && salesAnalysis.above.bookingDiff > 0)"
+                            class="analysis-sales">
+                            <li v-if="salesAnalysis.under && salesAnalysis.under.bookingDiff < 0">
                                 Without taking into account contextual elements, we could consider that decrease of
                                 <span class="analysis-value">{{ salesAnalysis.under.scoreDiff }}</span> in
                                 the score will reduce your sales by <span class="analysis-value">{{
-                salesAnalysis.under.bookingDiff }}</span> sales (loss -<span
+                                    salesAnalysis.under.bookingDiff }}</span> sales (loss -<span
                                     class="analysis-value">{{
-                salesAnalysis.under.ttvDiff }} {{ salesAnalysis.currency
+                                        salesAnalysis.under.ttvDiff }} {{ salesAnalysis.currency
                                     }})</span>
                             </li>
-                            <li v-if="salesAnalysis.above">
+                            <li v-if="salesAnalysis.above && salesAnalysis.above.bookingDiff > 0">
                                 Without taking into account contextual elements, we could consider that an increase of
                                 <span class="analysis-value">{{ salesAnalysis.above.scoreDiff }}</span>
                                 will boost your sales by <span class="analysis-value">{{
-                salesAnalysis.above.bookingDiff }}</span> sales (profit <span
+                                    salesAnalysis.above.bookingDiff }}</span> sales (profit <span
                                     class="analysis-value">{{
-                salesAnalysis.above.ttvDiff }} {{ salesAnalysis.currency
+                                        salesAnalysis.above.ttvDiff }} {{ salesAnalysis.currency
                                     }}</span>)
                             </li>
 
                         </ul>
                         <div v-if="salesAnalysis.events.length">
-                            <p class="mt-3 analysis-sales-title">
+                            <p style="font-size: 1rem;">
                                 These indicators doesn't take into account the following events :
                             </p>
                             <ul class="sales-event-list">
@@ -265,7 +269,7 @@
                 <div class="society__location">
                     <i class="uil uil-location-point"></i>
                     <span v-if="!dataLoading" class="society__location">{{
-                establishment.city }}</span>
+                        establishment.city }}</span>
                     <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                 </div>
             </div>
@@ -292,6 +296,12 @@
             </div>
         </div>
         <CommunityFeedbackComponent :reviewFeedbackData="services.getScoreColor(avgScore)" />
+        <el-tooltip ref="tooltipRef" :visible="desc.visible" :virtual-ref="buttonRef" virtual-triggering
+            popper-class="singleton-tooltip" placement="top">
+            <template #content>
+                <span> {{ desc.text }} </span>
+            </template>
+        </el-tooltip>
     </div>
 </template>
 <script setup>
@@ -303,7 +313,7 @@ import { useCompanyStore } from "@Stores/company.js";
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
 import { ref, watch, onBeforeMount, onMounted, inject, computed, defineAsyncComponent, provide } from 'vue';
-import { ElDatePicker, ElOption, ElSelect, ElTabs, ElTabPane } from 'element-plus';
+import { ElDatePicker, ElOption, ElSelect, ElTabs, ElTabPane, ElTooltip } from 'element-plus';
 import 'element-plus/es/components/option/style/css';
 import 'element-plus/es/components/select/style/css';
 import 'element-plus/es/components/tabs/style/css';
@@ -387,6 +397,13 @@ const _categories = computed(() => {
 provide('_categories', _categories)
 const categoryFilters = ref(['all'])
 provide('categoryFilters', categoryFilters)
+
+const desc = ref({
+    text: '',
+    visible: false
+})
+const buttonRef = ref()
+
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
     { title: "Reviews", value: 0, icon: "uil-comment" },
