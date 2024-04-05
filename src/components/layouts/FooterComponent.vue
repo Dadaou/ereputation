@@ -30,17 +30,17 @@
                 <ul>
                     <li v-if="appStore.account && appStore.account.facebook">
                       <a :href="appStore.account.facebook" target="_blank">
-                        <i class="uil uil-facebook-f"></i>
+                        <Icon :icon="'uiw:facebook'" width="25"></Icon>
                       </a>
                     </li>
                     <li v-if="appStore.account && appStore.account.linkedin">
                       <a :href="appStore.account.linkedin" target="_blank">
-                        <i class="uil uil-linkedin-alt"></i>
+                         <Icon :icon="'uiw:linkedin'" width="25"></Icon>
                       </a>
                     </li>
                      <li v-if="appStore.account && appStore.account.instagram">
                       <a :href="appStore.account.instagram" target="_blank">
-                        <i class="uil uil-linkedin-alt"></i>
+                        <Icon :icon="'uim:instagram'" width="25"></Icon>
                       </a>
                     </li>
                 </ul>
@@ -52,10 +52,11 @@
 <script setup>
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useAppStore } from "@Stores/app.js"
+import { useAppStore } from "@Stores/app.js";
+import { Icon } from '@iconify/vue';
+
+
 const appStore = useAppStore();
-
-
 const route = useRoute();
 const isContactActive = ref(route.path === '/contact');
 const isSignUpActive = ref(route.path === '/sign-up');
@@ -114,15 +115,15 @@ footer {
 
 .footer__links ul {
     display: flex;
-    gap: 2rem;
+    gap: 1rem;
 }
 
-.footer__links li {
+/*.footer__links li {
     padding: 0.6rem 0.9rem;
     border: 1px solid var(--color-white);
     border-radius: 50%;
     cursor: pointer;
-}
+}*/
 
 /* Media query for smaller screens */
 @media screen and (min-width: 768px) {
