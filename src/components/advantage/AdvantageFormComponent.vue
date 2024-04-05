@@ -22,7 +22,15 @@
                         </div>
                         <div>
                             <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category <span></span></label>
-                            <input type="text" id="category" v-model="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                            <!-- <input type="text" id="category" v-model="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2"> -->
+                            <el-select v-model="category" placeholder="Select category" size="large">
+                                <el-option
+                                v-for="category in categoriesOptions"
+                                :key="category.value"
+                                :label="category.label"
+                                :value="category.value"
+                                />
+                            </el-select>
                         </div>
                     </div>
                     
@@ -118,6 +126,13 @@ import 'element-plus/es/components/date-picker/style/css'
 const scopeOptions = ref([
   { label: 'individual', value: 'individual' },
   { label: 'bill', value: 'bill' },
+]);
+
+const categoriesOptions = ref([
+  { label: 'Discount', value: 'Discount' },
+  { label: 'Gift', value: 'Gift' },
+  { label: 'Free', value: 'Free' },
+  { label: 'Lottery', value: 'Lottery' },
 ]);
 
 const userStore = useUserStore();

@@ -9,7 +9,7 @@
                         </li>
                         <li>
                         	<!-- <span class="label">Code: {{unit.code}}</span> -->
-                            <RouterLink :to="{
+                            <!-- <RouterLink :to="{
                                 name: 'UnitReview',
                                 params: {
                                     tag: tag,
@@ -18,10 +18,10 @@
                                 }
                             }" class="btn reviews" @click="selectedUnit = unit">
                                 Reviews
-                            </RouterLink>
+                            </RouterLink> -->
                         </li>
                     </ul>
-                    <!-- <RouterLink :to="{
+                    <RouterLink :to="{
                         name: 'UnitReview',
                         params: {
                             tag: tag,
@@ -30,7 +30,7 @@
                         }
                     }" class="btn reviews" @click="selectedUnit = unit">
                         Reviews
-                    </RouterLink> -->
+                    </RouterLink>
                 </div>
                 <div>
                     <div id="qrcode__container mt-5" ref="qrcode">
@@ -150,7 +150,7 @@ const close = ()=>{
 .unit_info{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 a.reviews{

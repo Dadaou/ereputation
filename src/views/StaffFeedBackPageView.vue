@@ -79,18 +79,20 @@
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
                         <div class="author__email">
-                            <span v-if="randomAdvantage">
+                            <!-- <span v-if="randomAdvantage">
                                 <i class="uil uil-info-circle"></i> {{ $t("feedback.indice1") }}
-                            </span>
-                            <p v-if="randomAdvantage">
-                                <b>{{ $t("feedback.promotion_day") }}</b> <!-- {{ randomAdvantage.name }}  -->
-                            </p>
+                            </span> -->
+                            <!-- <p v-if="randomAdvantage">
+                                <b>{{ $t("feedback.promotion_day") }}</b>
+                            </p> -->
                             <DiscountCheckList
                                 :establishment="route.params.etab"
                                 :customer="route.params.tag"
                                 @select="(value)=>randomAdvantage = value"
                             />
-
+                            <span v-if="randomAdvantage">
+                                <i class="uil uil-info-circle"></i> {{ $t("feedback.indice1") }}
+                            </span>
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
                                 address <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email"
