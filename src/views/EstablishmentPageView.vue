@@ -365,12 +365,6 @@ const feedbackLoading = ref(false)
 const semesterChartLoading = ref(false)
 const chartLoading = ref(false)
 const language = inject('language')
-// let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-// let endDate = moment().format('YYYY-M-DD');
-// let start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'));
-// let end_date = ref(moment().format('YYYY-M-DD'));
-// const start_date = ref(appStore.start_date);
-// const end_date = ref(appStore.end_date);
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 const categories = ref([])
@@ -516,8 +510,6 @@ const formatStarsData = (data) => {
 }
 
 const globalComparison = async (establishment, establishmentTag, dateStart, dateEnd, website, stars, language, competitors, timePeriods) => {
-    // selectedCompetitors.value = 'Global';
-    // selectedWebsites.value = 'Global';
     viewData(establishment, establishmentTag, dateStart, dateEnd, website, competitors, timePeriods);
     loadReviews(establishmentTag, 1, 20, 1, dateStart, dateEnd, website, stars, language);
 };
@@ -550,24 +542,12 @@ const chart__height = ref(300);
 
 
 watch([start_date, end_date, selectedWebsites], () => {
-    // viewData()
-    // loadReviews(companyId.value, 1, 20, 1, start_date.value, end_date.value, selectedWebsites.value, '', language.value);
-    // appStore.setDatesValue(start_date.value, end_date.value);
     globalComparison(establishment.value, companyId.value, start_date.value, end_date.value, selectedWebsites.value, '', language.value, selectedCompetitors.value, selectedTimePeriod.value)
 })
 
 watch([selectedCompetitors, selectedTimePeriod], async () => {
-    // startDate = moment(start_date.value).format('YYYY-M-DD');
-    // endDate = moment(end_date.value).format('YYYY-M-DD');
     viewData(establishment.value, companyId.value, start_date.value, end_date.value, selectedWebsites.value, selectedCompetitors.value, selectedTimePeriod.value)
 })
-
-
-// watch(selectedTimePeriod, async () => {
-//     startDate = moment(start_date.value).format('YYYY-M-DD');
-//     endDate = moment(end_date.value).format('YYYY-M-DD');
-//     viewData()
-// })
 
 let selectedStars = ref('0');
 const starFilter = (star) => {
@@ -575,7 +555,7 @@ const starFilter = (star) => {
 };
 
 watch(selectedStars, () => {
-    loadReviews(companyId.value, 1, options.value['rowLimit'], 1, '', '', selectedWebsites.value, selectedStars.value, language.value);
+    loadReviews(companyId.value, 1, options.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, language.value);
 });
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
@@ -602,10 +582,6 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         apiParams += `&star=${stars}`
     }
 
-    // if(IsValueOkay(language)){
-    //     apiParams += `&language=${language}`
-    // }
-
     const api = apiBase + '?' + apiParams;
     console.log(api)
 
@@ -619,9 +595,12 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         });
     });
 
+    console.log(response)
+
     if (response.status == 200) {
         reviewsLoading.value = false;
         visibleData.value = response.data['data'];
+        console.log(response.data)
 
         if (response.data['count'] <= 100) options.value.max = response.data['count'];
         else options.value.max = 100;
@@ -761,7 +740,6 @@ onBeforeMount(async () => {
     companiesStore.getEstablishment(customerTag.value, companyId.value).then((data) => {
 
         if (data == false) {
-            // exist.value = false;
             appStore.setIsExist(false);
             appStore.isLoading = false;
         }

@@ -140,7 +140,7 @@
           <li @click="closeDropdownMenu">
             <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/weathers`">
               <i class="uil uil-cloud-sun"></i>
-              <span>Weathers</span>
+              <span>Weather</span>
             </RouterLink>
           </li>
           <li @click="closeDropdownMenu">

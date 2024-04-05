@@ -670,4 +670,23 @@ button.isLoaded {
 .subscription__container .el-tab-pane {
   padding-bottom: 100px;
 }
+
+@media (min-width: 768px) and (max-width: 1024px) {
+ form{
+  margin: 0 50px;
+ }
+}
+
+/* Ajustements pour les mobiles */
+@media (max-width: 768px) {
+ form{
+  margin: 0 25px;
+ }
+}
+
+@media (max-width: 500px) {
+ form{
+  margin: 0 10px;
+ }
+}
 </style>

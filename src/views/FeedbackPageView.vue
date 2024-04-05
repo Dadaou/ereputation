@@ -109,9 +109,9 @@
                             <div class="checkbox-container">
                                 <label>
                                     <input type="checkbox" id="agreeCheckbox" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')" required>
-                                    {{ $t("feedback.indice2") }} <span @click="iframeVisible=!iframeVisible">{{ $t("feedback.indice3") }}</span>
                                 </label>
-                                <div v-if="iframeVisible && appStore.account.cgu" id="conteneurIframe" v-html="appStore.account.cgu"></div>
+                                 {{ $t("feedback.indice2") }} <span @click="iframeVisible=!iframeVisible">{{ $t("feedback.indice3") }}</span>
+                               <div v-if="iframeVisible && appStore.account && appStore.account.cgu" id="conteneurIframe" v-html="appStore.account.cgu"></div>
                             </div>
                         </div>
                         <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
@@ -138,7 +138,7 @@ import { useUserStore } from "@Stores/user.js";
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
 import { useFeedbackStore } from '@Stores/feedback.js';
-import { useAppStore } from "@Stores/app.js"
+import { useAppStore } from "@Stores/app.js";
 import moment from 'moment';
 import { useI18n } from "vue-i18n";
 import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus';
@@ -165,7 +165,7 @@ const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
-const appStore = useAppStore()
+const appStore = useAppStore();
 const feedbackStore = useFeedbackStore();
 const establishment = ref({});
 let media = [];

@@ -4,14 +4,26 @@
     <li
       v-for="(discount, index) in discounts"
       :key="index"
-      :style="{ backgroundColor: discountColors[index], color: '#fff' }"
       @click="selectDiscount(index, discount)"
-      :class="[isSelected(index)?'selected':'', 'bg-gradient-to-br from-purple-600 to-indigo-600 text-white text-center py-10 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative']"
+      :class="[isSelected(index)?'selected gradient-green':'gradient-violet', 'text-white text-center py-10 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative']"
     >
-      <label>{{ discount.name }}</label>
-      <span :class="['icon', isSelected(index)?'icon-selected':'']">
+      <div>
+        <span id="discount_name">
+              <span :class="['icon', isSelected(index)?'icon-selected':'']">
+                {{ isSelected(index)?'✔':discount.icon }}
+              </span>
+              {{ discount.name }} 
+              <span :class="['icon', isSelected(index)?'icon-selected':'']">
+                {{ isSelected(index)?'✔':discount.icon }}
+              </span>
+        </span>
+        <div id="discount_establishment">{{discount.establishment_name}}</div>
+        <div id="discount_category">{{discount.category}} {{discount.validity}} {{discount.validity>1?'days':'day'}} of validity</div>
+      </div>
+      <!-- <div id="discount_validity">{{discount.validity}} {{discount.validity>1?'days':'day'}} of validity</div> -->
+      <!-- <span :class="['icon', isSelected(index)?'icon-selected':'']">
         {{ isSelected(index)?'✔':discount.icon }}
-      </span>
+      </span> -->
       <div class="w-4 h-4 bg-white rounded-full absolute top-1/2 transform -translate-y-1/2 left-0 -ml-3"></div>
       <div class="w-4 h-4 bg-white rounded-full absolute top-1/2 transform -translate-y-1/2 right-0 -mr-3"></div>
     </li>
@@ -53,6 +65,7 @@ onMounted(async() => {
     }
     return { ...discount, icon };
   });
+  console.log(data)
   generateColors();
   if(discounts.value.length>0){
   	selectDiscount(0, discounts.value[0]);
@@ -88,6 +101,15 @@ const isSelected = (index) => {
 </script>
 
 <style scoped>
+
+.gradient-green {
+ background: linear-gradient(to right, #48bb78 0%, #009688 100%);
+}
+
+.gradient-violet {
+ background: linear-gradient(to right, #6b46c1, #5a67d8);
+}
+
 .scroll-wrapper {
  width: 100%;
  max-width: 1000px; /* Example maximum width */
@@ -110,24 +132,25 @@ ul {
   white-space: nowrap; */
 }
 
-label {
+#discount_name {
   font-weight: 600;
   font-size: 13px;
+  text-align: left;
+}
+
+#discount_category, #discount_establishment{
+ text-align:left;
+ font-size: 9px;
+ font-weight: 500;
 }
 
 .discount-list li {
-  display: flex;
-  align-items: center;
   margin-bottom: 5px;
   padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
-  height: 5rem;
+  height: 4rem;
   width: 200px;
-  /*display: inline-block; 
-  padding: 10px;
-  border: 1px solid #ddd; 
-  margin-right: 5px; */
 }
 
 .discount-list .icon {
@@ -146,7 +169,7 @@ label {
 .discount-list .icon-selected {
   display: none;
   font-size: 1em;
-  margin-right: 5px;
+ /* margin-right: 5px;*/
 }
 
 .discount-list li.selected .icon-selected {

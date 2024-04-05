@@ -108,18 +108,12 @@
                                 class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"></textarea>
                         </div>
                         <div>
-                           <!--  <div class="checkbox-container">
+                           <div class="checkbox-container">
                                 <label>
                                     <input type="checkbox" id="agreeCheckbox" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')" required>
-                                    {{ $t("feedback.indice2") }} <a href="#">{{ $t("feedback.indice3") }}</a>
                                 </label>
-                            </div> -->
-                            <div class="checkbox-container">
-                                <label>
-                                    <input type="checkbox" id="agreeCheckbox" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')" required>
-                                    {{ $t("feedback.indice2") }} <span @click="iframeVisible=!iframeVisible">{{ $t("feedback.indice3") }}</span>
-                                </label>
-                                <div v-if="iframeVisible && appStore.account.cgu" id="conteneurIframe" v-html="appStore.account.cgu"></div>
+                                 {{ $t("feedback.indice2") }} <span @click="iframeVisible=!iframeVisible">{{ $t("feedback.indice3") }}</span>
+                               <div v-if="iframeVisible && appStore.account && appStore.account.cgu" id="conteneurIframe" v-html="appStore.account.cgu"></div>
                             </div>
                         </div>
                         <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
@@ -179,6 +173,7 @@ import services from '@Services/services.js';
 import { useFeedbackStore } from '@Stores/feedback.js';
 import moment from 'moment';
 import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus';
+import { useAppStore } from "@Stores/app.js";
 import { useWindowSize } from '@vueuse/core';
 import { useI18n } from "vue-i18n";
 import 'element-plus/es/components/message/style/css'
@@ -208,6 +203,7 @@ const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
+const appStore = useAppStore();
 const feedbackStore = useFeedbackStore();
 const staff = ref(null);
 const staffs = ref([]);
