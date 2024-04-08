@@ -10,7 +10,7 @@
     <div id="app"></div>
  
     <script type="module" src="/src/main.js"></script>
-    <script type="text/javascript">
+   <!--  <script type="text/javascript">
 
       var lg = localStorage.getItem("langue")
 
@@ -20,7 +20,7 @@
           {name:"SP",code:"sp"},
       ]
 
-      var langselected = ""
+      var langselected = "en"
       for(let i=0;i<langues.length;i++){
           if(langues[i].name== lg){
               langselected = langues[i].code
@@ -30,7 +30,7 @@
       var datalg = null;
 
       //Charger la langue par defaut
-      fetch('/locales/'+langselected+'/locale.json')
+      fetch('./src/locales/'+langselected+'/locale.json')
           .then((response) =>  datalg = response.json())
           .then((json) =>{ datalg =json;});
 
@@ -44,10 +44,10 @@
          var lg = langue.toLowerCase();
          console.log(lg);
          datalg = null;
-         fetch('/locales/'+lg+'/locale.json')
+         fetch('./src/locales/'+lg+'/locale.json')
           .then((response) =>  datalg = response.json())
           .then((json) =>{ datalg =json;});
       });
-  </script> 
+  </script>  -->
   </body>
 </html>

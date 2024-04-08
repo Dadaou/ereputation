@@ -148,7 +148,7 @@ const router = createRouter({
           component: () => import('@Views/SocialPageView.vue')
         },
         {
-          path: '/customer/:tag/establishment/:id/weathers',
+          path: '/customer/:tag/establishment/:id/weather',
           name: 'Weather',
           beforeEnter: [CheckAccess],
           component: () => import('@Views/WeatherPageView.vue')
@@ -173,7 +173,7 @@ const router = createRouter({
         },
         {
           path: '/customer/:tag/establishment/:id/services',
-          name: 'Staff',
+          name: 'EstablishmentServices',
           beforeEnter: [CheckAccess],
           component: () => import('@Views/StaffPageView.vue'),
           children: [

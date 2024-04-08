@@ -7,7 +7,7 @@
                     <input type="text" id="unit_name" v-model="unit.name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" placeholder="name">
                 </div>
                  <div>
-                    <label for="unit_code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Code <span>*</span></label>
+                    <label for="unit_code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Code <!-- <span>*</span> --></label>
                     <input type="text" id="unit_code" v-model="unit.code" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" placeholder="code">
                 </div>
             </div>
@@ -77,7 +77,7 @@ const submit = async()=>{
 	console.log(data)
 
 	try{
-		if(IsValueOkay(data.category) && IsValueOkay(data.establishment) && IsValueOkay(data.name) && IsValueOkay(data.code)){
+		if(IsValueOkay(data.category) && IsValueOkay(data.establishment) && IsValueOkay(data.name)){
             showSpinner.value = true;
 			if(type.value == 'add'){
                 const response = await new Promise((resolve) => {

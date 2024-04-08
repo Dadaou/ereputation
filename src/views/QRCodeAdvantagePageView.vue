@@ -140,6 +140,7 @@ onBeforeMount(async () => {
     border-radius: 10px;
     margin-top: 2rem;
 }
+
 img {
     height: 50px;
     object-fit: cover;

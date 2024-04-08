@@ -75,5 +75,18 @@ const handleDelete = async(index, category)=>{
 	
 </script>
 <style scoped>
+button {
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+button i.uil-trash-alt {
+    color: red !important;
+}
+
+button i.uil-edit {
+    color: var(--color-danger) !important;
+}
 	
 </style>

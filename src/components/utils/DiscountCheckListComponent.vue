@@ -20,10 +20,6 @@
         <div id="discount_establishment">{{discount.establishment_name}}</div>
         <div id="discount_category">{{discount.category}} {{discount.validity}} {{discount.validity>1?'days':'day'}} of validity</div>
       </div>
-      <!-- <div id="discount_validity">{{discount.validity}} {{discount.validity>1?'days':'day'}} of validity</div> -->
-      <!-- <span :class="['icon', isSelected(index)?'icon-selected':'']">
-        {{ isSelected(index)?'✔':discount.icon }}
-      </span> -->
       <div class="w-4 h-4 bg-white rounded-full absolute top-1/2 transform -translate-y-1/2 left-0 -ml-3"></div>
       <div class="w-4 h-4 bg-white rounded-full absolute top-1/2 transform -translate-y-1/2 right-0 -mr-3"></div>
     </li>
@@ -124,12 +120,9 @@ ul {
   display: flex;
   gap: 1rem;
   overflow-x: scroll; 
-  white-space: nowrap; 
-  /*list-style-type: none;
-  padding: 0;
-  margin: 0;
-  overflow-x: scroll; 
-  white-space: nowrap; */
+  white-space: nowrap;
+  scrollbar-width: none; 
+  -ms-overflow-style: none;
 }
 
 #discount_name {
@@ -176,23 +169,7 @@ ul {
   display: inline-block;
 }
 
-/*.bg-gradient-to-br {
-  background: linear-gradient(45deg, #f75842, #f96a57); 
-}*/
-
-/* Style the scrollbar track */
-ul::-webkit-scrollbar-track {
-  background-color: transparent; /* Make scrollbar track transparent */
-}
-
-/* Style the scrollbar thumb */
-ul::-webkit-scrollbar-thumb {
-  background-color: white; /* Color of the scrollbar thumb */
-  border-radius: 10px; /* Rounded corners for the scrollbar thumb */
-}
-
-/* Show the scrollbar thumb on hover */
-ul:hover::-webkit-scrollbar-thumb {
-  background-color: white; /* Change thumb color on hover */
+ul::-webkit-scrollbar {
+ display: none;
 }
 </style>

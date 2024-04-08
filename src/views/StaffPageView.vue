@@ -36,7 +36,9 @@
                 <span v-if="!dataLoading">{{ establishment.city }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
             </div>
-            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/staffsranking`">
+            <RouterLink 
+            v-if="route.name !== 'StaffReview' && route.name !== 'UnitReview' && onglet == 'staffs'"
+            :to="`/customer/${customerTag}/establishment/${$route.params.id}/staffsranking`">
                 <button class="btn">
                     <i class="uil uil-trophy" :style="{ 'color': 'white' }"></i>
                     <span class="ml-2" :style="{ 'color': 'white' }">Staff Ranking</span>
@@ -126,7 +128,7 @@
                         selectedTimePeriod = timePeriod
                     }" :default="timePeriods[0]" />
             </div>
-            <RouterLink v-if="route.name !== 'StaffReview' && route.name !== 'UnitReview'"
+            <RouterLink v-if="route.name !== 'StaffReview' && route.name !== 'UnitReview' && onglet == 'staffs'"
                 :to="`/customer/${customerTag}/establishment/${$route.params.id}/staffsranking`">
                 <button class="btn">
                     <i class="uil uil-trophy"></i>
@@ -204,6 +206,9 @@ provide('selectedStaff', selectedStaff);
 
 const selectedUnit = ref(null)
 provide('selectedUnit', selectedUnit)
+
+const onglet = ref('staffs');
+provide('onglet', onglet)
 
 const dataLoading = ref(true);
 const chartLoading = ref(false);

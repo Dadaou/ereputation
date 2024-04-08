@@ -11,7 +11,7 @@
     "feedback":{
         "title1":"Leave ",
         "title2":" your feedback",
-        "soustitle":"Customer experiences feedback",
+        "soustitle":"How was your experience in our establishment ?",
         "rating":{
             "title":"Rating",
             "evaluate":{
@@ -35,7 +35,6 @@
         "indice2":"By using our services and checking this box, you agree to the",
         "indice3":"terms and conditions",
         "post":"Post comment"
-
     },
     "staffFeedback":{
         "interne":"Internal use only, your comment will not be posted on the public platforms.",

@@ -40,8 +40,6 @@
                     <el-input v-model="searchLink" size="small" placeholder="Type to search" />
                 </template>
                 <template #default="scope">
-                    <el-button size="small" @click="handleEdit(scope.row)"><i
-                            class="uil uil-edit"></i></el-button>
                     <el-button size="small">
                          <a :href="scope.row.url" target="_blank" class="external-link"><i
                                 class="uil uil-external-link-alt"></i></a>
@@ -51,6 +49,8 @@
                           <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
                         </template>
                     </el-popconfirm>
+                     <el-button size="small" @click="handleEdit(scope.row)"><i
+                            class="uil uil-edit"></i></el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -89,7 +89,7 @@
                 </div>
                 <div> 
                     <div>
-                        <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> {{!isHashtag?'Link value':'Hashtag value'}} <span>*</span></label>
+                        <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> {{!isHashtag?'Link':'Hashtag'}} <span>*</span></label>
                         <p v-if="!isValidLink && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
                         <p v-if="!isValidHashtag && isHashtag" class="text-red-500 text-sm">Invalid hashtag format</p>
                         <input v-if="isHashtag" type="text" id="link" v-model="link"
@@ -162,7 +162,7 @@ const showSpinner = ref(false)
 const search = ref('')
 const searchLink = ref('')
 const link = ref('')
-const isValidLink = ref('true')
+const isValidLink = ref(true)
 const establishment = ref('')
 const links = ref([])
 const allLinks = ref([])
@@ -283,12 +283,12 @@ const splitUriAndUrl = (combinedString) => {
 }
 
 const isValidUrl = (url, urlTemplate) => {
-    // const pattern = urlPattern(urlTemplate);
-    let isValid = true
+    const pattern = urlPattern(urlTemplate);
+    let isValid = false
 
-    // if (pattern.test(url)) {
-    //     isValid = true;
-    // }
+    if (pattern.test(url)) {
+        isValid = true;
+    }
 
     return isValid
 }
@@ -350,18 +350,18 @@ const submit = async () => {
     showSpinner.value = true;
     let urlObject = splitUriAndUrl(provider.value)
 
-    // const data = {
-    //     value1: isHashtag.value?getHashtagValue(link.value):getValueUrl(link.value, urlObject.url),
-    //     establishment: establishment.value,
-    //     provider: urlObject.uri,
-    //     enable: true
-    // }
-     const data = {
-        value1: isHashtag.value?getHashtagValue(link.value):link.value,
+    const data = {
+        value1: isHashtag.value?getHashtagValue(link.value):getValueUrl(link.value, urlObject.url),
         establishment: establishment.value,
         provider: urlObject.uri,
         enable: true
     }
+    // const data = {
+    //     value1: isHashtag.value?getHashtagValue(link.value):link.value,
+    //     establishment: establishment.value,
+    //     provider: urlObject.uri,
+    //     enable: true
+    // }
     console.log(data)
     if(isEdit.value){
         try {
@@ -426,8 +426,9 @@ const handleEdit = (data) => {
     showModal.value = true
     category.value = data.category
     setTimeout(function() {
-      // link.value = data.category=='Hashtag'?`#${data.settings_value1}`:data.url
-      link.value = data.settings_value1
+      link.value = data.category=='Hashtag'?`#${data.settings_value1}`:data.url
+      // link.value = data.settings_value1
+      // link.value = data.url
     }, 250);
 
     id.value = data.id
@@ -441,6 +442,8 @@ watch([provider, link], () => {
     if (provider.value !== null && link.value !== '') {
         urlTemplate = splitUriAndUrl(provider.value).url;
         if (urlTemplate) isValidLink.value = isValidUrl(link.value, urlTemplate)
+    }else{
+        isValidLink.value = true
     }
 
 })
@@ -508,6 +511,20 @@ onBeforeMount(async () => {
 });
 </script>
 <style scoped>
+button {
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+button i.uil-trash-alt {
+    color: red !important;
+}
+
+button i.uil-edit {
+    color: var(--color-danger) !important;
+}
+
 .links__header{
     display: flex;
     justify-content: space-between;

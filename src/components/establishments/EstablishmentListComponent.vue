@@ -36,15 +36,15 @@
                 </template>
                 <template #default="scope">
                     <el-button size="small" @click="showModal = true, establishment = scope.row"><i class="uil uil-qrcode-scan"></i></el-button>
-                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
-                            class="uil uil-edit"></i></el-button>
-                    <el-popconfirm title="Are you sure to delete this?"
+                     <el-popconfirm title="Are you sure to delete this?"
                     @confirm="handleDisable(scope.$index, scope.row)"
                     >
                         <template #reference>
                             <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
                         </template>
                     </el-popconfirm>
+                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
+                            class="uil uil-edit"></i></el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -393,11 +393,11 @@ button {
 }
 
 button i.uil-trash-alt {
-    color: var(--color-danger) !important;
+    color: red !important;
 }
 
 button i.uil-edit {
-    color: var(--color-primary) !important;
+    color: var(--color-danger) !important;
 }
 
 .link-list {

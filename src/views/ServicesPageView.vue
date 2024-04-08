@@ -137,6 +137,7 @@ const custom_width = computed(() => {
 const unitByCategory = ref(null)
 const categories = ref([])
 const unitData = ref([])
+const onglet = inject('onglet')
 
 const isMobile = ref(window.innerWidth <= 768);
 window.addEventListener('resize', () => {
@@ -311,6 +312,7 @@ const getUnitChartdata = async(tag, category, rangedate)=>{
 }
 
 watch(activeName, async()=>{
+  onglet.value = activeName.value
   if(activeName.value !== 'staffs'){
    await getUnitChartdata(companyId, activeName.value, date.value)
   }

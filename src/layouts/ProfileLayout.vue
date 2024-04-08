@@ -10,6 +10,6 @@ const FooterComponent = defineAsyncComponent(() =>
     import('@Components/layouts/FooterComponent.vue')
 )
 const NavbarComponent = defineAsyncComponent(() =>
-    import('@Components/layouts/NavbarComponent.vue')
+    import('@Components/layouts/NavbarTempComponent.vue')
 );
 </script>
