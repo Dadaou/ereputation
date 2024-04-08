@@ -13,16 +13,21 @@
             </router-link>
           </li>
           <li>
-              <router-link :to="{ name: 'Subscription' }" active-class="active">
-                  <i class="uil uil-book"></i> <span>Subscription</span>
-              </router-link>
+            <router-link :to="{ name: 'Subscription' }" active-class="active">
+              <i class="uil uil-book"></i> <span>Subscription</span>
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="{ name: 'QRCodes' }" active-class="active">
+              <i class="uil uil-book"></i> <span>My QRCodes</span>
+            </router-link>
           </li>
           <li>
             <router-link :to="{ name: 'Contact' }">
               <i class="uil uil-envelope"></i> <span>Contacts</span>
             </router-link>
           </li>
-           <li>
+          <li>
             <router-link :to="{ name: 'Discount_coupons' }">
               <i class="uil uil-bill"></i> <span>Discount coupons</span>
             </router-link>
@@ -42,14 +47,14 @@
 </template>
 
 <script setup>
-import { ref, computed  } from 'vue';
+import { ref, computed } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 
 const route = useRoute();
 
-const page = computed(()=>{
+const page = computed(() => {
   let data = {
     "Personal_details": {
       title1: "",
@@ -142,12 +147,14 @@ const breadcrumbData = [
   width: 200px;
 }
 
-.router-link-exact-active, .active {
+.router-link-exact-active,
+.active {
   background-color: var(--color-danger);
   color: var(--color-white) !important;
 }
 
-.admin__menu li .router-link-exact-active:hover, .admin__menu li .active:hover {
+.admin__menu li .router-link-exact-active:hover,
+.admin__menu li .active:hover {
   background-color: var(--color-danger);
   color: var(--color-white);
 }
@@ -199,7 +206,7 @@ const breadcrumbData = [
 
 .erep__app {
   position: absolute;
-  top: -5em;  
+  top: -5em;
 }
 
 /* Pour les petits écrans (par exemple, les téléphones mobiles) */

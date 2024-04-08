@@ -14,51 +14,51 @@ import { useUserStore } from '@Stores/user.js'
 const CheckAuthentication = (to, from, next) => {
   const user = useUserStore().user
   if (to.name == 'Login') {
-      if(localStorage.getItem('access')){
-          const roles = user?user.roles:[];
-          let defaultRoute = {name:'HomeViewForUserConnected'};
-           if ((roles.includes("ROLE_PARTNER") && (user.partner !== null || user.customer !== null))) {
-                  next({ name: "CustomersList" });
-           } else if (roles.includes("ROLE_CUSTOMER") && user.customer !== null) {
-                  next({ name: "EstablishmentList", params: { tag: user.customer.tag } });
-           } else {
-                  next(defaultRoute);
-           }
-      }else next();
+    if (localStorage.getItem('access')) {
+      const roles = user ? user.roles : []
+      let defaultRoute = { name: 'HomeViewForUserConnected' }
+      if (roles.includes('ROLE_PARTNER') && (user.partner !== null || user.customer !== null)) {
+        next({ name: 'CustomersList' })
+      } else if (roles.includes('ROLE_CUSTOMER') && user.customer !== null) {
+        next({ name: 'EstablishmentList', params: { tag: user.customer.tag } })
+      } else {
+        next(defaultRoute)
+      }
+    } else next()
   }
 }
 
-const checkUser = (to, from, next)=>{
+const checkUser = (to, from, next) => {
   const user = useUserStore().user
-   const roles = user.roles;
-   if(to.name == 'EstablishmentList'){
-     if ((roles.includes("ROLE_PARTNER") && (user.partner !== null || user.customer !== null))) {
-            next();
-     } else if (roles.includes("ROLE_CUSTOMER") && user.customer !== null) {
-            next();
-     } else {
-           next({name:'HomeViewForUserConnected'});
-     }
-   }
+  const roles = user.roles
+  if (to.name == 'EstablishmentList') {
+    if (roles.includes('ROLE_PARTNER') && (user.partner !== null || user.customer !== null)) {
+      next()
+    } else if (roles.includes('ROLE_CUSTOMER') && user.customer !== null) {
+      next()
+    } else {
+      next({ name: 'HomeViewForUserConnected' })
+    }
+  }
 }
 
-const checkNavigation = (to, from, next)=>{
-   const user = useUserStore().user
-   const roles = user.roles;
-   let defaultRoute = {name:'HomeViewForUserConnected'};
-   if(to.name == 'HomeViewForUserConnected'){
-    if (roles.includes("ROLE_EREP")) {
-        if ((roles.includes("ROLE_PARTNER") && user.partner !== null)) {
-            next({ name: "CustomersList" });
-        } else if (roles.includes("ROLE_CUSTOMER") && user.customer !== null) {
-            next({ name: "EstablishmentList", params: { tag: user.customer.tag } });
-        } else {
-            next();
-        }
+const checkNavigation = (to, from, next) => {
+  const user = useUserStore().user
+  const roles = user.roles
+  let defaultRoute = { name: 'HomeViewForUserConnected' }
+  if (to.name == 'HomeViewForUserConnected') {
+    if (roles.includes('ROLE_EREP')) {
+      if (roles.includes('ROLE_PARTNER') && user.partner !== null) {
+        next({ name: 'CustomersList' })
+      } else if (roles.includes('ROLE_CUSTOMER') && user.customer !== null) {
+        next({ name: 'EstablishmentList', params: { tag: user.customer.tag } })
+      } else {
+        next()
+      }
     } else {
-        next();
+      next()
     }
-   }
+  }
 }
 
 const removeAccess = (to, from, next) => {
@@ -88,7 +88,7 @@ const router = createRouter({
       path: '/',
       name: 'default',
       component: DefaultLayout,
-      redirect: {name: 'Login'},
+      redirect: { name: 'Login' },
       children: [
         {
           path: '/sign-up',
@@ -236,11 +236,11 @@ const router = createRouter({
           path: '/',
           name: 'DiscountValidation',
           redirect: { name: 'DiscountAuthentication' },
-          children:[
+          children: [
             {
               path: '/public/discount/auth',
               name: 'DiscountAuthentication',
-              component: ()=> import('@Views/DiscountValidationAuthPageView.vue')
+              component: () => import('@Views/DiscountValidationAuthPageView.vue')
             },
             {
               path: '/public/discount/validation/:discountTag',
@@ -281,7 +281,7 @@ const router = createRouter({
         {
           path: '/partner/theme',
           name: 'Theme',
-          component: () => import('@Views/AppsCustomisationView.vue'),
+          component: () => import('@Views/AppsCustomisationView.vue')
         },
         {
           path: '/home',
@@ -293,18 +293,18 @@ const router = createRouter({
             {
               path: 'customer/:tag',
               name: 'EstablishmentList',
-              component: ()=> import('@Views/EstablishmentsListView.vue')
+              component: () => import('@Views/EstablishmentsListView.vue')
             },
             {
               path: 'customers',
               name: 'CustomersList',
-              component: ()=> import('@Views/CustomerListView.vue')
+              component: () => import('@Views/CustomerListView.vue')
             },
             {
               path: 'user',
               name: 'HomeViewForUserConnected',
               beforeEnter: [checkNavigation],
-              component: ()=> import('@Views/HomeViewForUserConnected.vue')
+              component: () => import('@Views/HomeViewForUserConnected.vue')
             }
           ]
         },
@@ -347,6 +347,11 @@ const router = createRouter({
               component: () => import('@Views/DiscountCouponsPageView.vue')
             },
             {
+              path: 'my_qrcodes',
+              name: 'QRCodes',
+              component: () => import('@Views/MyQRCodesPageView.vue')
+            },
+            {
               path: 'parameters',
               name: 'Parameters',
               component: () => import('@Views/ParameterView.vue')
@@ -359,24 +364,24 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    const isAuthenticated = checkAuthentication(); // Votre logique d'authentification
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    const isAuthenticated = checkAuthentication() // Votre logique d'authentification
     if (!isAuthenticated) {
       next({
         name: 'DiscountAuthentication',
         query: { redirect: to.fullPath }
-      });
+      })
     } else {
-      next();
+      next()
     }
   } else {
-    next();
+    next()
   }
-});
+})
 
 function checkAuthentication() {
-  const isAuthenticated = localStorage.getItem('isSellerAuthenticated');
-  return isAuthenticated === 'true';
+  const isAuthenticated = localStorage.getItem('isSellerAuthenticated')
+  return isAuthenticated === 'true'
 }
 
 export default router
