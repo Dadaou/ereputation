@@ -49,9 +49,12 @@
           Download this QR code to link your client to the feedback page
         </p>
         <div id="qrcode__container mt-5" ref="qrcode">
-          <vue-qrious class="qr__code"
+          <!-- <vue-qrious class="qr__code"
             :value="`${baseurl}/public/${tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`"
-            size="5000" @change="onDataUrlChange" />
+            size="5000" @change="onDataUrlChange" /> -->
+          <qrcode-vue style="margin: 48px auto" class="qr__code" id="qrcode"
+            :value="`${baseurl}/public/${tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`"
+            :size="250" level="L" render-as="svg" />
         </div>
       </div>
       <div v-else class="establishment__review__qrcode">
@@ -76,20 +79,17 @@
 import { computed, ref, inject } from 'vue';
 import { useWindowSize } from '@vueuse/core';
 import moment from 'moment';
-import { useStaffStore } from "@Stores/staff.js";
-import VueQrious from 'vue-qrious';
 import ModalComponent from '@Components/utils/ModalComponent.vue';
-import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
+import { ElTable, ElTableColumn, ElButton, ElInput } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
 import 'element-plus/es/components/table-column/style/css'
 import 'element-plus/es/components/popconfirm/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
+import QrcodeVue from 'qrcode.vue'
 import services from '@Services/services.js';
 
-const emit = defineEmits(['edit']);
-const staffStore = useStaffStore();
 const baseurl = window.location.origin;
 const showModal = ref(false);
 const downloaded = ref(false);
@@ -134,47 +134,17 @@ const filterTableData = computed(() => {
   return filterdata
 })
 
-const reloadData = (staff) => {
-  let data = [];
-  staffs.value.forEach(staff_item => {
-    if (staff_item.id !== staff.id) data.push(staff_item);
-  })
-  staffs.value = data;
-}
-
-const handleEdit = (index, staff) => {
-  emit('edit', staff);
-}
-
-const handleDelete = async (index, staff) => {
-  await staffStore.removeStaff(staff.id, (response) => {
-    console.log(response)
-    if (response.status == 204) {
-      reloadData(staff);
-      ElMessage({
-        message: `Staff removed successfully.`,
-        type: 'success',
-      });
-    }
-  })
-}
-
 const showQRCode = (value) => {
   staff.value = value;
   showModal.value = true;
 }
 
-const base64Image = ref(null);
 const qrcode = ref(null);
 const downloadQrcode = () => {
   const filename = `${staff.value.firstname} ${staff.value.lastname}-feedback-link`;
-  services.downloadQrcode(filename, base64Image.value);
+  services.downloadSVGQrcode(filename, 'qrcode');
   downloaded.value = true;
 }
-
-const onDataUrlChange = (dataUrl) => {
-  base64Image.value = dataUrl;
-};
 
 </script>
 <style scoped>

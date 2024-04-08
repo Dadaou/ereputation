@@ -48,9 +48,12 @@
                     Download this QR code to link your client to the feedback page
                 </p>
                 <div id="qrcode__container mt-5" ref="qrcode">
-                    <vue-qrious class="qr__code"
+                    <!-- <vue-qrious class="qr__code"
                         :value="`${baseurl}/public/${route.params.tag}/establishment/${establishment.tag}/feedback`"
-                        @change="onDataUrlChange" size="5000" />
+                        @change="onDataUrlChange" size="5000" /> -->
+                    <qrcode-vue style="margin: 48px auto" class="qr__code" id="qrcode"
+                        :value="`${baseurl}/public/${route.params.tag}/establishment/${establishment.tag}/feedback`"
+                        :size="250" level="L" render-as="svg" />
                 </div>
             </div>
             <div v-else class="establishment__review__qrcode">
@@ -78,12 +81,10 @@ import {
     ElMessage,
     ElTable,
     ElTableColumn,
-    ElPopconfirm,
     ElButton,
-    ElInput, ElOption, ElSelect, ElDatePicker, ElTooltip
+    ElInput, ElTooltip
 } from 'element-plus'
 import { useWindowSize } from '@vueuse/core';
-import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import services from '@Services/services.js';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
@@ -96,7 +97,7 @@ import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
 import 'element-plus/es/components/tooltip/style/css'
-import VueQrious from 'vue-qrious';
+import QrcodeVue from 'qrcode.vue'
 import { useRoute, useRouter } from "vue-router";
 
 const ModalComponent = defineAsyncComponent(() =>
@@ -107,7 +108,7 @@ const emit = defineEmits(['edit', 'setEnable', 'setDisable']);
 
 const userStore = useUserStore();
 const appStore = useAppStore();
-const { width, height } = useWindowSize();
+const { width } = useWindowSize();
 const modalWidth = computed(() => {
     let windowSize = 1500;
     let gap = (windowSize - width.value) / 19;
@@ -116,11 +117,8 @@ const modalWidth = computed(() => {
 const route = useRoute()
 const router = useRouter()
 const showModal = ref(false);
-const showLinkModal = ref(false);
 const providers = ref([]);
 const provider = ref(null)
-const categories = ref(['Platform', 'Social'])
-const category = ref('Platform')
 const showSpinner = ref(false)
 const search = ref('')
 const link = ref('')
@@ -129,10 +127,6 @@ const establishment = ref(null)
 const links = ref([])
 const baseurl = window.location.origin;
 const downloaded = ref(false)
-
-const handleEdit = (index, establishment) => {
-    emit('edit', establishment);
-}
 
 const establishments = computed(() => {
     let data = [];
@@ -168,16 +162,6 @@ const establishments = computed(() => {
     return filteredData;
 });
 
-const filteredLinks = computed(() => {
-    let data = links.value;
-    return data.filter(item => item.establishment == establishment.value);
-})
-
-const filteredProviders = computed(() => {
-    let data = providers.value;
-    return data.filter(item => item.category == category.value);
-})
-
 const goToCompany = (customerTag, establishmentTag) => {
     appStore.isLoading = true;
     setTimeout(() => {
@@ -202,13 +186,9 @@ const qrcode = ref(null);
 
 const downloadQrcode = () => {
     const filename = `${establishment.value.name}-feedback-link`;
-    services.downloadQrcode(filename, base64Image.value);
+    services.downloadSVGQrcode(filename, 'qrcode');
     downloaded.value = true;
 }
-
-const onDataUrlChange = (dataUrl) => {
-    base64Image.value = dataUrl;
-};
 
 const splitUriAndUrl = (combinedString) => {
     if (combinedString !== '') {
@@ -244,56 +224,6 @@ const getValueUrl = (url, urlTemplate) => {
     }
     return null;
 }
-
-const submit = async () => {
-    showSpinner.value = true;
-    let urlObject = splitUriAndUrl(provider.value)
-    const data = {
-        value1: getValueUrl(link.value, urlObject.url),
-        establishment: establishment.value,
-        provider: urlObject.uri,
-        enable: false
-    }
-
-    try {
-        const response = await new Promise((resolve, reject) => {
-            services.createRecord('settings', data, (response) => {
-                resolve(response);
-            });
-        });
-        if (response.status == 201) {
-            ElMessage({
-                message: `link added successfully`,
-                type: 'success',
-            })
-            showSpinner.value = false;
-            resetValue()
-        }
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-const resetValue = () => {
-    establishment.value = ''
-    provider.value = ''
-    isValidLink.value = false
-    link.value = ''
-    showModal.value = false
-}
-
-const remove = (id) => {
-    console.log(id)
-}
-
-const handleEnable = (index, establishment) => {
-    console.log(establishment)
-    emit('setEnable', establishment.id);
-};
-
-const handleDisable = (index, establishment) => {
-    emit('setDisable', establishment.id);
-};
 
 watch([provider, link], () => {
     let urlTemplate;

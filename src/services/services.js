@@ -289,93 +289,117 @@ const reviewAnalysis = async (path, value, next) => {
 }
 
 function getScoreColor(score) {
-    let width, red, feeling;
+  let width, red, feeling
 
-    if (score === 0) {
-        width = 0;
-        red = 255;
-        feeling = -1;
-    } else {
-        width = calculateWidth(score);
-        red = calculateRed(score);
-        feeling = 1;
-    }
+  if (score === 0) {
+    width = 0
+    red = 255
+    feeling = -1
+  } else {
+    width = calculateWidth(score)
+    red = calculateRed(score)
+    feeling = 1
+  }
 
-    return {
-        "width": width,
-        "red": red,
-        "green": 255,
-        "feeling": feeling,
-        "score": score
-    };
+  return {
+    width: width,
+    red: red,
+    green: 255,
+    feeling: feeling,
+    score: score
+  }
 }
 
 function calculateWidth(score) {
-    return score * 50;
+  return score * 50
 }
 
 function calculateRed(score) {
-    return (1 - score) * 255;
+  return (1 - score) * 255
 }
 
-
 const resizeBase64Image = async (base64, targetWidth, targetHeight) => {
- return new Promise(async (resolve, reject) => {
-    const img = new Image();
+  return new Promise(async (resolve, reject) => {
+    const img = new Image()
     img.onload = async () => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d', { colorSpace: 'srgb', pixelFormat: 'unorm8' });
-      canvas.width = targetWidth;
-      canvas.height = targetHeight;
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d', { colorSpace: 'srgb', pixelFormat: 'unorm8' })
+      canvas.width = targetWidth
+      canvas.height = targetHeight
 
       // Utilisation de createImageBitmap pour un redimensionnement sans flou
       let bitmap = await createImageBitmap(img, {
         resizeWidth: targetWidth,
         resizeHeight: targetHeight,
         resizeQuality: 'pixelated' // Pour une qualité pixelisée
-      });
+      })
 
       // Dessin de l'image bitmap sur le canvas
-      ctx.drawImage(bitmap, 0, 0, targetWidth, targetHeight);
-      bitmap.close();
+      ctx.drawImage(bitmap, 0, 0, targetWidth, targetHeight)
+      bitmap.close()
 
-      const newBase64 = canvas.toDataURL('image/jpeg');
-      resolve(newBase64);
-    };
-    img.onerror = reject;
-    img.src = base64;
- });
-};
-
-const downloadQrcode = async (filename, base64Image) => {
- try {
-    const resizedBase64Image = await resizeBase64Image(base64Image, 500, 500); // Exemple de dimensions
-    let link = document.createElement('a');
-    link.download = `${filename}.jpeg`;
-    link.href = resizedBase64Image;
-    link.click();
- } catch (error) {
-    console.error('Erreur lors du redimensionnement de l\'image', error);
- }
-};
-
-const hashString = (inputString) => {
-      let hash = 0;
-      for (let i = 0; i < inputString.length; i++) {
-        hash = (hash << 5) - hash + inputString.charCodeAt(i);
-      }
-      return hash;
+      const newBase64 = canvas.toDataURL('image/jpeg')
+      resolve(newBase64)
+    }
+    img.onerror = reject
+    img.src = base64
+  })
 }
 
-const generateColor = (text) =>{
-      const inputString = text;
-      const hash = hashString(inputString);
+const downloadSVGQrcode = async (filename, elementID) => {
+  try {
+    // const resizedBase64Image = await resizeBase64Image(base64Image, 500, 500) // Exemple de dimensions
+    var svg = document.getElementById(elementID)
 
-      const red = (hash & 0xFF0000) >> 16;
-      const green = (hash & 0x00FF00) >> 8;
-      const blue = hash & 0x0000FF;
+    let link = document.createElement('a')
+    link.download = `${filename}.svg`
 
-      return `rgb(${red}, ${green}, ${blue})`;
+    var serializer = new XMLSerializer()
+    var source = serializer.serializeToString(svg)
+    if (!source.match(/^<svg[^>]+xmlns="http:\/\/www\.w3\.org\/2000\/svg"/)) {
+      source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"')
+    }
+    if (!source.match(/^<svg[^>]+"http:\/\/www\.w3\.org\/1999\/xlink"/)) {
+      source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"')
+    }
+    source = '<?xml version="1.0" standalone="no"?>\r\n' + source
+    var url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(source)
+    link.href = url
+    link.click()
+  } catch (error) {
+    console.error("Erreur lors du redimensionnement de l'image", error)
+  }
+}
+
+const downloadQrcode = async (filename, base64Image) => {
+  try {
+    const resizedBase64Image = await resizeBase64Image(base64Image, 500, 500) // Exemple de dimensions
+    let link = document.createElement('a')
+    link.download = `${filename}.jpeg`
+    link.href = resizedBase64Image
+    link.click()
+  } catch (error) {
+    console.error("Erreur lors du redimensionnement de l'image", error)
+  }
+}
+
+const hashString = (inputString) => {
+  let hash = 0
+  for (let i = 0; i < inputString.length; i++) {
+    hash = (hash << 5) - hash + inputString.charCodeAt(i)
+  }
+  return hash
+}
+
+const generateColor = (text) => {
+  const inputString = text
+  const hash = hashString(inputString)
+
+  const red = (hash & 0xff0000) >> 16
+  const green = (hash & 0x00ff00) >> 8
+  const blue = hash & 0x0000ff
+
+  return `rgb(${red}, ${green}, ${blue})`
 }
 
 export default {
@@ -398,5 +422,6 @@ export default {
   postFormData,
   getScoreColor,
   downloadQrcode,
+  downloadSVGQrcode,
   generateColor
 }

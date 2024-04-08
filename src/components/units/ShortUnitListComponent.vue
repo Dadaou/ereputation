@@ -34,10 +34,14 @@
           Download this QR code to link your client to the feedback page
         </p>
         <div id="qrcode__container mt-5" ref="qrcode">
-          <vue-qrious class="qr__code"
+          <!-- <vue-qrious class="qr__code"
             :value="`${baseurl}/public/${tag}/establishment/${unit.establishment_competitor_tag}/units/${unit.tag}/feedback`"
-            size="5000" @change="onDataUrlChange" />
+            size="5000" @change="onDataUrlChange" />-->
+          <qrcode-vue style="margin: 48px auto" id="qrcode"
+            :value="`${baseurl}/public/${tag}/establishment/${unit.establishment_competitor_tag}/units/${unit.tag}/feedback`"
+            :size="250" level="L" render-as="svg" />
         </div>
+
       </div>
       <div v-else class="establishment__review__qrcode">
         <p class="mb-5">
@@ -66,11 +70,11 @@ import 'element-plus/es/components/popconfirm/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
 import services from '@Services/services.js';
-import VueQrious from 'vue-qrious';
+import QrcodeVue from 'qrcode.vue'
 import ModalComponent from '@Components/utils/ModalComponent.vue';
 import { useWindowSize } from '@vueuse/core';
 
-const emit = defineEmits(['edit']);
+// const emit = defineEmits(['edit']);
 const units = inject('units')
 const search = ref('');
 const showModal = ref(false);
@@ -85,7 +89,7 @@ const modalWidth = computed(() => {
   return gap + 45;
 });
 
-const base64Image = ref(null);
+// const base64Image = ref(null);
 const qrcode = ref(null);
 const downloaded = ref(false);
 const unit = ref(null);
@@ -95,14 +99,14 @@ const showQRCode = (value) => {
   showModal.value = true;
 }
 
-const onDataUrlChange = (dataUrl) => {
-  console.log(dataUrl);
-  base64Image.value = dataUrl;
-};
+// const onDataUrlChange = (dataUrl) => {
+//   console.log(dataUrl);
+//   base64Image.value = dataUrl;
+// };
 
 const downloadQrcode = () => {
   const filename = `${unit.value.category}-${unit.value.name}-feedback-link`;
-  services.downloadQrcode(filename, base64Image.value);
+  services.downloadSVGQrcode(filename, 'qrcode');
   downloaded.value = true;
 }
 
@@ -117,10 +121,6 @@ const filterTableData = computed(() => {
   )
   return filterdata
 })
-
-const handleEdit = (index, unit) => {
-  emit('edit', unit);
-};
 
 </script>
 <style scoped>
