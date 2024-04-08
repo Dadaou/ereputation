@@ -31,12 +31,6 @@
 		  	:customer="userStore.user.customer"
 		  	@signOut="signOut"
 		  />
-		 <!--  <button v-if="showMenu" @click="toggleMobileMenu">
-	        <span class="sr-only">Open main menu</span>
-	        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-	            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
-	        </svg>
-	  </button> -->
 	  </div>
 	   <transition 
 	        enter-active-class="animate__animated animate__zoomIn"
@@ -46,60 +40,18 @@
 		  v-if="show_menu && showMenu"
 		  class="items-center w-full" id="navbar-language">
 			    <ul class="menu font-medium">
-			      <li @click="closeDropdownMenu">
-			            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/staffs`">
-			              <i class="uil uil-users-alt"></i>
-			              <span>Staff</span>
-			            </RouterLink>
-			          </li>
-			          <li @click="closeDropdownMenu">
-			            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/events`">
-			              <i class="uil uil-calendar-alt"></i>
-			              <span>Events</span>
-			            </RouterLink>
-			          </li>
-			          <li @click="closeDropdownMenu">
-			            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/socials`">
-			              <i class="uil uil-users-alt"></i>
-			              <span>Social</span>
-			            </RouterLink>
-			          </li>
-			          <li @click="closeDropdownMenu">
-			            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/weathers`">
-			              <i class="uil uil-cloud-sun"></i>
-			              <span>Weather</span>
-			            </RouterLink>
-			          </li>
-			          <li @click="closeDropdownMenu">
-			            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/reviews`">
-			              <i class="uil uil-comment-alt-dots"></i>
-			              <span>Reviews</span>
-			            </RouterLink>
-			          </li>
-			          <li @click="closeDropdownMenu">
-			            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/sales`">
-			              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="18" viewBox="0 0 24 24">
-			                <g transform="scale(0.8 1)">
-			                  <g transform="scale(0.4 0.35) translate(52 -9)">
-			                    <path fill="currentColor" fill-rule="evenodd"
-			                      d="M26 8a2 2 0 1 0-4 0v2a8 8 0 1 0 0 16v8a4.002 4.002 0 0 1-3.773-2.666a2 2 0 0 0-3.771 1.332A8.003 8.003 0 0 0 22 38v2a2 2 0 1 0 4 0v-2a8 8 0 1 0 0-16v-8a4.002 4.002 0 0 1 3.773 2.666a2 2 0 0 0 3.771-1.332A8.003 8.003 0 0 0 26 10zm-4 6a4 4 0 0 0 0 8zm4 12v8a4 4 0 0 0 0-8"
-			                      clip-rule="evenodd" />
-			                  </g>
-			                  <g transform="translate(0 0)">
-			                    <path fill="none" stroke="currentColor" stroke-width="2"
-			                      d="m1 16l7-7l5 5L23 4M0 22h23.999M16 4h7v7" />
-			                  </g>
-			                </g>
-			              </svg>
-			              <span>Sales</span>
-			            </RouterLink>
-			          </li>
-			          <li @click="closeDropdownMenu">
-			            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/analysis`">
-			              <i class="uil uil-analytics"></i>
-			              <span>Analysis</span>
-			            </RouterLink>
-			          </li>
+    			    <li v-for="menu in mainMenu" @click="closeDropdownMenu">
+                <RouterLink :to="{
+                    name: menu.routeName,
+                    params: {
+                      tag: customerTag,
+                      id: route.params.id,
+                    }
+                }">
+                 <i :class="`uil ${menu.icon}`"></i>
+                 <span>{{menu.name}}</span>
+                </RouterLink>
+              </li>
 			    </ul>
 		  </div>
 	</transition>
@@ -115,6 +67,7 @@ import { useI18n } from "vue-i18n";
 import { i18n } from '@/i18n';
 import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import { languages, current } from '@Services/languages.js';
+import { mainMenu } from '@Services/routes.js'
 
 
 const UserDropdownMenu = defineAsyncComponent(
@@ -139,7 +92,7 @@ const isScrolling = ref(false);
 const show_menu = ref(true);
 
 const isFeedback = computed(() => {
-  let routeName = ['FeedBack', 'StaffFeedBack', 'SuccessFeedback', 'EnableAdvContact', 'QRCodeAdvContact', undefined];
+  let routeName = ['FeedBack', 'UnitFeedBack', 'StaffFeedBack', 'SuccessFeedback', 'EnableAdvContact', 'QRCodeAdvContact', undefined];
   return routeName.includes(route.name)
 });
 
@@ -154,9 +107,10 @@ const showMenu = computed(() => {
     'Trends',
     'Sales',
     'Staff',
-    'StaffComparison',
+    'Services',
     'StaffReview',
-    'Analysis'
+    'Analysis',
+    'UnitReview'
   ];
   return routeName.includes(route.name)
 })
@@ -210,12 +164,6 @@ watch(width, () => {
   console.log(width.value)
   if (width.value > 1000) show_menu.value = true;
   else show_menu.value = true;
-
-  // if (width.value <= 700 && route.name == 'Login') {
-  //   nav__container__ref.value.classList.add('nav__login');
-  // } else {
-  //   nav__container__ref.value.classList.remove('nav__login');
-  // }
 });
 
 onMounted(() => {
@@ -233,12 +181,6 @@ onMounted(() => {
       locale.value = item.bb
     }
   }
-
-  // if (width.value <= 700 && route.name == 'Login') {
-  //   nav__container__ref.value.classList.add('nav__login');
-  // } else {
-  //   nav__container__ref.value.classList.remove('nav__login');
-  // }
 });
 
 onBeforeMount(()=>{
@@ -283,7 +225,7 @@ a {
 ul.menu{
 	display: flex;
 	justify-content: center;
-	gap: 1rem;
+	gap: 1.2rem;
 	margin-top: -2rem; 
 }
 

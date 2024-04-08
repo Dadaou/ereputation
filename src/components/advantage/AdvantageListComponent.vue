@@ -5,22 +5,22 @@
     </div> -->
   </div>
   <div class="mt-5 erep_table table__container">
-    <el-table :data="filterTableData">
-      <el-table-column label="Name" prop="name" style="width: 10%; min-width: 200px;" />
-      <el-table-column label="Establishment" prop="establishment_name" style="width: 15%; min-width: 250px;" />
-      <el-table-column label="Amount" prop="amount" style="width: 10%; min-width: 200px;" align="center" />
-      <el-table-column label="Category" prop="category" style="width: 15%; min-width: 200px;" />
-      <el-table-column label="Code" prop="code" style="width: 15%; min-width: 200px;" />
-      <el-table-column label="Metric" prop="metric" style="width: 10%; min-width: 200px;" />
-      <el-table-column label="Scope" prop="scope" style="width: 10%; min-width: 200px;" />
-      <el-table-column label="Validity" prop="validity" style="width: 10%; min-width: 200px;" align="center" />
-      <el-table-column label="Limit" prop="advantageLimit" style="width: 10%; min-width: 200px;" align="center" />
-      <el-table-column label="Expired At" style="width: 10%; min-width: 200px;" >
+    <el-table :data="filterTableData" style="width: 85%">
+      <el-table-column label="Name" fixed prop="name" width="200"/>
+      <el-table-column label="Establishment" prop="establishment_name" width="200"/>
+      <el-table-column label="Amount" prop="amount" align="center" width="100"/>
+      <el-table-column label="Category" prop="category" width="150"/>
+      <el-table-column label="Code" prop="code" width="100"/>
+      <el-table-column label="Metric" prop="metric" width="100"/>
+      <el-table-column label="Scope" prop="scope" width="100"/>
+      <el-table-column label="Validity" prop="validity" align="center" width="100"/>
+      <el-table-column label="Limit" prop="advantageLimit" align="center" width="100"/>
+      <el-table-column label="Expired At" width="150">
          <template #default="scope">
                   {{scope.row.expired_at?moment(scope.row.expired_at).format('YYYY-MM-DD'):''}}
          </template>
       </el-table-column>
-      <el-table-column label="Enable" style="width: 10%; min-width: 200px;" align="center">
+      <el-table-column label="Enable" align="center" width="100">
         <template #default="scope">
           <el-button v-if="scope.row.enable" size="small" @click="handleDisable(scope.$index, scope.row)"><i
               class="uil uil-check-square" style="color: #777; font-size: 15px;"></i></el-button>
@@ -30,7 +30,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="Operations" style="width: 10%; min-width: 100px;" align="right">
+      <el-table-column label="Operations" fixed="right" width="150">
 
         <template #header>
           <el-input v-model="search" size="small" placeholder="Type to search" />
@@ -55,10 +55,15 @@ import { computed, ref, inject} from 'vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 import services from '@Services/services.js';
 import moment from 'moment';
+import { useWindowSize } from '@vueuse/core';
 
 const emit = defineEmits(['edit', 'setEnable', 'setDisable']);
 const advantages = inject('advantages');
 const search = ref('');
+const { width } = useWindowSize();
+const tableWidth= computed(()=>{
+    return width.value>800?`width: ${100}%`:`width: ${100}%`;
+});
 
 // const filterTableData = computed(() =>
 //   advantages.value?.filter(
@@ -156,16 +161,9 @@ button i.uil-edit {
   margin: 8px 0;
 }
 
-.table__container {
-  /* overflow-x: scroll; */
-  width: 85%;
-}
 
 @media screen and (min-width: 800px) {
 
-  .table__container {
-    width: 100%;
-  }
 }
 </style>
   
