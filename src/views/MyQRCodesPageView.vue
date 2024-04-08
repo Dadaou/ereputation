@@ -17,7 +17,6 @@ import { ref, provide, defineAsyncComponent, onBeforeMount, watch } from 'vue';
 import moment from 'moment';
 import { ElTabs, ElTabPane } from 'element-plus';
 import services from '@Services/services.js';
-import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
 import { useWindowSize } from '@vueuse/core';
 import { useRoute } from 'vue-router';
@@ -28,65 +27,12 @@ import 'element-plus/es/components/tab-pane/style/css';
 const { width } = useWindowSize();
 const route = useRoute();
 
-
-const StaffFormComponent = defineAsyncComponent(() =>
-  import("@Components/staffs/StaffFormComponent.vue")
-)
-
 const ShortStaffListComponent = defineAsyncComponent(() =>
   import("@Components/staffs/ShortStaffListComponent.vue")
 )
 
-const EventFormComponent = defineAsyncComponent(() =>
-  import("@Components/events/EventFormComponent.vue")
-)
-
-const EventListComponent = defineAsyncComponent(() =>
-  import("@Components/events/EventListComponent.vue")
-)
-
-const UnitFormComponent = defineAsyncComponent(() =>
-  import("@Components/units/UnitFormComponent.vue")
-)
-
-const UnitListComponent = defineAsyncComponent(() =>
-  import("@Components/units/UnitListComponent.vue")
-)
-
-const AdvantageFormComponent = defineAsyncComponent(() =>
-  import("@Components/advantage/AdvantageFormComponent.vue")
-)
-
-const AdvantageListComponent = defineAsyncComponent(() =>
-  import("@Components/advantage/AdvantageListComponent.vue")
-)
-
-const LinksConfComponent = defineAsyncComponent(() =>
-  import("@Components/links/LinksConfComponent.vue")
-)
-
 const ShortEstablishmentListComponent = defineAsyncComponent(() =>
   import("@Components/establishments/ShortEstablishmentListComponent.vue")
-)
-
-const EstablishmentFormComponent = defineAsyncComponent(() =>
-  import("@Components/establishments/EstablishmentFormComponent.vue")
-)
-
-const CompetitorListComponent = defineAsyncComponent(() =>
-  import("@Components/competitor/CompetitorListComponent.vue")
-)
-
-const CompetitorFormComponent = defineAsyncComponent(() =>
-  import("@Components/competitor/CompetitorFormComponent.vue")
-)
-
-const CategorizationFormComponent = defineAsyncComponent(() =>
-  import("@Components/categorization/CategorizationFormComponent.vue")
-)
-
-const CategorizationListComponent = defineAsyncComponent(() =>
-  import("@Components/categorization/CategorizationListComponent.vue")
 )
 
 const position = ref('top')
@@ -98,11 +44,6 @@ watch(width, () => {
   }
 });
 
-const clearEstablishmentForm = () => {
-  cleanEstablishmentForm.value = !cleanEstablishmentForm.value
-}
-
-const appStore = useAppStore()
 const userStore = useUserStore()
 const activeName = ref('establishments')
 const activeStaffTab = ref('staff_list')
@@ -201,41 +142,6 @@ const handleEdit = (value, type) => {
   if (type == 'service') {
     activeUnitTab.value = 'unit_form'
     unit_to_update.value = value;
-  }
-};
-
-
-
-const handleEnable = async (value, type) => {
-  console.log(type)
-  const response = await new Promise((resolve) => {
-    services.post_Record(`/customer/establishments/advantage/${value}/enable`, {}, (response) => {
-      resolve(response)
-    }, false);
-  });
-  if (response.status == 200) {
-    allAdvantages.value = allAdvantages.value.map((adv) => {
-      if (adv.id == value) {
-        adv.enable = true;
-      }
-      return adv;
-    })
-  }
-};
-
-const handleDisable = async (value, type) => {
-  const response = await new Promise((resolve) => {
-    services.post_Record(`/customer/establishments/advantage/${value}/disable`, {}, (response) => {
-      resolve(response)
-    }, false);
-  });
-  if (response.status == 200) {
-    allAdvantages.value = allAdvantages.value.map((adv) => {
-      if (adv.id == value) {
-        adv.enable = false;
-      }
-      return adv;
-    })
   }
 };
 
