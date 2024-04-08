@@ -8,6 +8,9 @@
       <el-tab-pane label="Staff" name="staff">
         <ShortStaffListComponent />
       </el-tab-pane>
+      <el-tab-pane label="Services" name="service">
+        <ShortUnitListComponent />
+      </el-tab-pane>
     </el-tabs>
 
   </div>
@@ -33,6 +36,10 @@ const ShortStaffListComponent = defineAsyncComponent(() =>
 
 const ShortEstablishmentListComponent = defineAsyncComponent(() =>
   import("@Components/establishments/ShortEstablishmentListComponent.vue")
+)
+
+const ShortUnitListComponent = defineAsyncComponent(() =>
+  import("@Components/units/ShortUnitListComponent.vue")
 )
 
 const position = ref('top')
