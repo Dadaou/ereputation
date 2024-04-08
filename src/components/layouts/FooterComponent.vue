@@ -30,7 +30,7 @@
                 <ul>
                     <li v-if="appStore.account && appStore.account.facebook">
                       <a :href="appStore.account.facebook" target="_blank">
-                        <Icon :icon="'uiw:facebook'" width="25"></Icon>
+                        <Icon :icon="'bi:facebook'" width="25"></Icon>
                       </a>
                     </li>
                     <li v-if="appStore.account && appStore.account.linkedin">

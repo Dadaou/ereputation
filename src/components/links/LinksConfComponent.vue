@@ -40,8 +40,6 @@
                     <el-input v-model="searchLink" size="small" placeholder="Type to search" />
                 </template>
                 <template #default="scope">
-                    <el-button size="small" @click="handleEdit(scope.row)"><i
-                            class="uil uil-edit"></i></el-button>
                     <el-button size="small">
                          <a :href="scope.row.url" target="_blank" class="external-link"><i
                                 class="uil uil-external-link-alt"></i></a>
@@ -51,6 +49,8 @@
                           <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
                         </template>
                     </el-popconfirm>
+                     <el-button size="small" @click="handleEdit(scope.row)"><i
+                            class="uil uil-edit"></i></el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -511,6 +511,20 @@ onBeforeMount(async () => {
 });
 </script>
 <style scoped>
+button {
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+button i.uil-trash-alt {
+    color: red !important;
+}
+
+button i.uil-edit {
+    color: var(--color-danger) !important;
+}
+
 .links__header{
     display: flex;
     justify-content: space-between;

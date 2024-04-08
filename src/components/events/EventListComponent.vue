@@ -158,11 +158,11 @@ button {
 }
 
 button i.uil-trash-alt {
-  color: var(--color-danger) !important;
+  color: red !important;
 }
 
 button i.uil-edit {
-  color: var(--color-primary) !important;
+  color: var(--color-danger) !important;
 }
 
 .security__header {

@@ -43,7 +43,6 @@
           </el-popconfirm>
 
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
-
         </template>
       </el-table-column>
     </el-table>
@@ -132,17 +131,17 @@ const handleDelete = async (index, advantages) => {
 
 <style scoped>
 button {
-  border: none;
-  cursor: pointer;
-  font-size: 15px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
 }
 
 button i.uil-trash-alt {
-  color: var(--color-danger) !important;
+    color: red !important;
 }
 
 button i.uil-edit {
-  color: var(--color-primary) !important;
+    color: var(--color-danger) !important;
 }
 
 .security__header {
