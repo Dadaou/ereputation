@@ -138,6 +138,7 @@ const customerTag = inject('tag');
 .tablet_mobile__filter {
     display: none;
 }
+
 .community__feedback {
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
@@ -197,6 +198,16 @@ const customerTag = inject('tag');
 
 .right__side .date__filter{
     margin-top: 10px;
+}
+
+.mobile__filter__btn button {
+    border: 1px solid var(--light-color-bg1);
+    transition: var(--transition);
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 5px 6px;
+    flex-basis: 100%;
 }
 
 .isactive,
@@ -277,13 +288,13 @@ const customerTag = inject('tag');
         display: flex;
         width: inherit;
         align-items: center;
-        gap: 1rem;
+        gap: 0.5rem;
         padding: 5px 15px;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
         border-radius: 5px;
     }
 
-    .tablet_mobile__filter * {
+    .tablet_mobile__filter > * {
         flex-basis: 200px;
     }
 
@@ -351,11 +362,9 @@ const customerTag = inject('tag');
         padding: 5px 0px !important;
     }
 
-    .tablet_mobile__filter * {
+    .tablet_mobile__filter > * {
         flex-basis: inherit !important;
-        /*width: 100% !important;*/
         justify-content: center !important;
-        /*padding: 0px 2px;*/
     }
 
     .date__picker {

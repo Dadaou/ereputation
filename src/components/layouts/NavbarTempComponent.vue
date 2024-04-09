@@ -191,6 +191,15 @@ onBeforeMount(()=>{
 </script>
 <style scoped>
 
+.animate__animated.animate__zoomIn {
+  --animate-duration: 0.5s;
+}
+
+.animate__animated.animate__zoomOut {
+  --animate-duration: 1s;
+}
+
+
 .menu-barre{
     display: none;
 }

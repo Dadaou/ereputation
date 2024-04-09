@@ -105,6 +105,7 @@
         </div>
         <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
     </div>
+    
     <div class="tablet_mobile__filter" v-if="currentFilter == 'filter'">
         <DropdownComponent class="dropdown w-full" :showTitle="false" title="Compare to" placeholder="Select a competitor"
             :data="computedCompetitors" @submit="(competitor) => {
@@ -117,12 +118,10 @@
         <DropdownComponent :showTitle="false" class="dropdown w-full" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
             selectedTimePeriod = timePeriod
         }" :default="timePeriods[0]" />
-        <div class="date__picker px-2">
-
+        <div class="date__picker">
             <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
         </div>
-        <div class="date__picker px-2">
-
+        <div class="date__picker">
             <el-date-picker v-model="end_date" type="date" placeholder="Select the end date" :size="'large'" />
         </div>
     </div>
@@ -771,34 +770,16 @@ onBeforeMount(async () => {
 </script>
 
 <style scoped>
-.btn {
-    width: 100%;
-    background-color: var(--color-primary);
-    color: white;
-    border-radius: 5px;
-    padding: 5px;
-    font-size: 14px;
-}
 
 * {
     transition: var(--transition);
 }
-
 
 .tablet,
 .mobile__filter__btn {
     display: none;
 }
 
-.mobile__filter__btn button {
-    border: 1px solid var(--light-color-bg1);
-    transition: var(--transition);
-    border-radius: 5px;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 5px 6px;
-    flex-basis: 100%;
-}
 
 .isactive,
 .mobile__filter__btn button:hover {
