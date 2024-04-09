@@ -5,13 +5,28 @@
                 <h2>Personal details</h2>
                 <!-- <p>Update your information and find out how it's used.</p> -->
             </div>
-            <div class="profile__image">
+            <div class="profile__image" @click="showModal=true">
                 <div class="user__main__avatar">
                     <img src="/src/assets/images/Portrait_Placeholder.png">
                     <i class="uil uil-camera"></i>
                 </div>
             </div>
         </div>
+        <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
+        <template #content>
+            <div class="modal__header mb-5">
+                <div class="modal__title">
+                    <h3 class="font-semibold text-gray-900 dark:text-white">
+                        <i class="uil uil-image-v"></i> Upload profile image
+                    </h3>
+                </div>
+                <div class="modal__close">
+                    <i class="uil uil-times-circle" @click="showModal = false"></i>
+                </div>
+            </div>
+            <EditProfileEdit/>
+        </template> 
+    </ModalComponent>
         <div class="personal__info border__bottom">
             <div v-if="!editing" class="info__title">
                 Name
@@ -79,19 +94,36 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, defineAsyncComponent } from 'vue';
+import { ref, onBeforeMount, defineAsyncComponent, computed } from 'vue';
 import { useUserStore } from "@Stores/user.js";
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css';
 import services from '@Services/services.js';
 import { ElMessage } from 'element-plus';
+import { useWindowSize } from '@vueuse/core';
 
 const VueCountryCode = defineAsyncComponent(()=>
     import("@Components/utils/CountryCodeComponent.vue")
 )
+
+const EditProfileEdit = defineAsyncComponent(()=>
+    import("@Components/users/EditProfilePictureComponent.vue")
+)
+
+const ModalComponent = defineAsyncComponent(() =>
+    import('@Components/utils/ModalComponent.vue')
+)
+
 const date = ref();
 const flow = ref(['month', 'year', 'calendar']);
 const userStore = useUserStore();
+const showModal = ref(false);
+const { width, height } = useWindowSize();
+const modalWidth = computed(() => {
+    let windowSize = 1500;
+    let gap = (windowSize - width.value) / 19;
+    return gap + 45;
+});
 
 let enableEdit = ref({
     name: false,
@@ -266,6 +298,27 @@ input{
     color: white;
     padding: 2px 6px;
     border-radius: 5px;
+}
+
+.modal__header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal__header div {
+    align-self: center;
+}
+
+.modal__close i {
+    float: right;
+    font-size: 25px;
+    color: red;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.modal__close i:hover {
+    transform: rotate(360deg);
 }
 
 @media screen and (max-width: 800px) {
