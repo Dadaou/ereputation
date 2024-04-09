@@ -18,7 +18,7 @@
               </span>
         </span>
         <div id="discount_establishment">{{discount.establishment_name}}</div>
-        <div id="discount_category">{{discount.category}} {{discount.validity}} {{discount.validity>1?'days':'day'}} of validity</div>
+        <div id="discount_category" v-if="discount.validity">{{discount.category}} advantage to be used within {{discount.validity}} {{discount.validity>1?'days':'day'}} </div>
       </div>
       <div class="w-4 h-4 bg-white rounded-full absolute top-1/2 transform -translate-y-1/2 left-0 -ml-3"></div>
       <div class="w-4 h-4 bg-white rounded-full absolute top-1/2 transform -translate-y-1/2 right-0 -mr-3"></div>
@@ -63,10 +63,10 @@ onMounted(async() => {
   });
   console.log(data)
   generateColors();
-  if(discounts.value.length>0){
-  	selectDiscount(0, discounts.value[0]);
-  	isSelected(0)
-  }
+  // if(discounts.value.length>0){
+  // 	selectDiscount(0, discounts.value[0]);
+  // 	isSelected(0)
+  // }
 });
 
 const generateColors = () => {
@@ -84,11 +84,14 @@ const generateColor = () => {
   return color.hex();
 };
 
-
-
 const selectDiscount = (index, discount) => {
-  selectedDiscount.value = index;
-  emits('select', discount);
+  if(isSelected(index)){
+    selectedDiscount.value = null
+     emits('select', null);
+  }else{
+    selectedDiscount.value = index;
+    emits('select', discount);
+  }
 };
 
 const isSelected = (index) => {
@@ -143,7 +146,7 @@ ul {
   border-radius: 5px;
   cursor: pointer;
   height: 4rem;
-  width: 200px;
+  width: 250px;
 }
 
 .discount-list .icon {

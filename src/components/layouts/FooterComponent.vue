@@ -118,12 +118,9 @@ footer {
     gap: 1rem;
 }
 
-/*.footer__links li {
-    padding: 0.6rem 0.9rem;
-    border: 1px solid var(--color-white);
-    border-radius: 50%;
-    cursor: pointer;
-}*/
+.footer__links li:hover {
+    
+}
 
 /* Media query for smaller screens */
 @media screen and (min-width: 768px) {

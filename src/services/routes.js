@@ -10,7 +10,7 @@ export const mainMenu = [
 		icon: "uil-calendar-alt"
 	},
 	{
-		name: "Socials",
+		name: "Social",
 		routeName: "Social",
 		icon: "uil-users-alt"
 	},

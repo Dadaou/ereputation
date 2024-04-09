@@ -189,7 +189,7 @@ const loadData = (_advantage, advantage, establishment) => {
           advantageLimit: _advantage.advantageLimit,
           metric: _advantage.metric,           
           scope: _advantage.scope,                           
-          expired_at: moment(_advantage.expiredAt).format('YYYY-MM-DD'),
+          expired_at:_advantage.expiredAt?moment(_advantage.expiredAt).format('YYYY-MM-DD'):null,
           establishment_name : establishment[1],
           establishment_id : establishment[0].split('/')[3],
           enable: true
@@ -209,7 +209,7 @@ const updateData = (_advantage, establishment)=>{
           advantageLimit: _advantage.advantageLimit,
           metric: _advantage.metric,           
           scope: _advantage.scope,                           
-          expired_at: moment(_advantage.expiredAt).format('YYYY-MM-DD'),
+          expired_at: _advantage.expiredAt?moment(_advantage.expiredAt).format('YYYY-MM-DD'):null,
           establishment_name : establishment[1],
           establishment_id: establishment[0].split('/')[3],
           enable: true 

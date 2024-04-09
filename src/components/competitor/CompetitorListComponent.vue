@@ -106,6 +106,7 @@
                         </div> -->
 
                         <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> {{!isHashtag?'Link':'Hashtag'}} <span>*</span></label>
+                         <p v-if="!isHashtag && provider" class="text-gray-900 text-sm">Url must start with {{splitUriAndUrl(provider).baseUrl}}</p>
                         <p v-if="!isValidLink && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
                         <p v-if="!isValidHashtag && isHashtag" class="text-red-500 text-sm">Invalid hashtag format</p>
                         <input v-if="isHashtag" type="text" id="link" v-model="link"
@@ -360,6 +361,21 @@ const urlPattern = (urlTemplate) => {
     return new RegExp('^' + regexPattern);
 }
 
+// const splitUriAndUrl = (combinedString) => {
+//     if (combinedString !== '') {
+//         const urlPattern = /https?:\/\/\S+/;
+//         const match = combinedString.match(urlPattern);
+
+//         if (match) {
+//             const url = match[0];
+//             const uri = combinedString.replace(url, '').trim();
+//             return { uri, url };
+//         }
+//     }
+
+//     return { uri: combinedString, url: null };
+// }
+
 const splitUriAndUrl = (combinedString) => {
     if (combinedString !== '') {
         const urlPattern = /https?:\/\/\S+/;
@@ -368,11 +384,15 @@ const splitUriAndUrl = (combinedString) => {
         if (match) {
             const url = match[0];
             const uri = combinedString.replace(url, '').trim();
-            return { uri, url };
+
+            const urlObject = new URL(url);
+            const baseUrl = urlObject.origin;
+
+            return { uri, url, baseUrl };
         }
     }
 
-    return { uri: combinedString, url: null };
+    return { uri: combinedString, url: null, baseUrl: null };
 }
 
 const handleDelete = async(index, data)=>{
