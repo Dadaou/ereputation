@@ -103,5 +103,12 @@ const closeDropdown = () => {
 	color: rgb(108, 142, 191);
 }
 
+.animate__animated.animate__fadeInRight {
+  --animate-duration: 0.5s;
+}
+
+.animate__animated.animate__fadeOutRight {
+  --animate-duration: 1s;
+}
 	
 </style>
