@@ -172,6 +172,12 @@ const router = createRouter({
           component: () => import('@Views/TrendsView.vue')
         },
         {
+          path: '/customer/:tag/establishment/:id/qr_code_document_preview',
+          name: 'QRCodeDocumentPreview',
+          beforeEnter: [CheckAccess],
+          component: () => import('@Views/QRCodeDocumentPreview.vue')
+        },
+        {
           path: '/customer/:tag/establishment/:id/services',
           name: 'EstablishmentServices',
           beforeEnter: [CheckAccess],

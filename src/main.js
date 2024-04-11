@@ -5,6 +5,7 @@ import { createApp , ref} from 'vue'
 import { createPinia } from 'pinia'
 import { createHead } from '@unhead/vue'
 import Vuesalize from 'vuesalize'
+// import Vue3SimpleHtml2pdf from "vue3-simple-html2pdf";
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import services from '@Services/services.js'
 import 'animate.css'
@@ -29,6 +30,7 @@ app.use(head)
 app.use(router)
 app.use(Vuesalize)
 app.use(i18n)
+// app.use(Vue3SimpleHtml2pdf)
 services.setURL(import.meta.env.VITE_APP_API_URL)
 
 app.mount('#app')

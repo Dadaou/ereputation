@@ -109,11 +109,11 @@ const legendData = ref([
     {name: '5 stars', color: '#008000'},
 ])
 
-const downloadQrcode = (staffname) => {
-  const filename = `${staffname}-feedback-link`;
-  services.downloadQrcode(filename, base64Image.value);
-  downloaded.value = true;
-}
+// const downloadQrcode = (staffname) => {
+//   const filename = `${staffname}-feedback-link`;
+//   services.downloadQrcode(filename, base64Image.value);
+//   downloaded.value = true;
+// }
 
 const staffComparison = ref({})
 

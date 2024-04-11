@@ -237,7 +237,7 @@
                 }" :default="timePeriods[0]" />
             </div>
             <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/trends`">
-                <button class="btn">
+                <button class="btn trends">
                     <i class="uil uil-trophy"></i>
                     <span class="ml-2">Trends</span>
                 </button>
@@ -771,6 +771,22 @@ onBeforeMount(async () => {
 
 <style scoped>
 
+.btn.trends {
+    width: 100%;
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.mobile__filter__btn .btn {
+    width: 100%;
+    background-color: white;
+    color: var(--color-primary);
+    border-radius: 5px;
+    padding: 5px;
+}
+
 * {
     transition: var(--transition);
 }
@@ -781,13 +797,13 @@ onBeforeMount(async () => {
 }
 
 
-.isactive,
+.mobile__filter__btn .isactive,
 .mobile__filter__btn button:hover {
     background-color: var(--color-primary);
     color: white !important;
 }
 
-.isactive i,
+.mobile__filter__btn .isactive i,
 .mobile__filter__btn button:hover i {
     color: white !important;
 }
