@@ -1,5 +1,5 @@
 <template>
-	<ModalComponent :showModal="showModal" @close="close" :width="modalWidth">
+  <ModalComponent :showModal="showModal" @close="close" :width="modalWidth">
     <template #content>
       <div class="modal__header">
         <div class="modal__title">
@@ -17,9 +17,8 @@
           Download this QR code to link your client to the feedback page
         </p>
         <div id="qrcode__container mt-5" ref="qrcode">
-          <qrcode-vue id="qrcode"
-            :value="qrcodeValue"
-            :size="250" level="L" render-as="svg" />
+          <qrcode-vue id="qrcode" style="margin-top: 50px; margin-inline: auto;" :value="qrcodeValue" :size="250"
+            level="L" render-as="svg" />
         </div>
 
       </div>
@@ -55,35 +54,35 @@ import { useWindowSize } from '@vueuse/core';
 import { useRouter } from "vue-router";
 
 const props = defineProps({
-	qrcodeValue: {
-		type: String,
-		default: "erep app"
-	},
-	filename: {
-		type: String,
-		default: "qrcode"
-	},
+  qrcodeValue: {
+    type: String,
+    default: "erep app"
+  },
+  filename: {
+    type: String,
+    default: "qrcode"
+  },
   customer: {
     type: String,
     required: false,
     default: '652f8b33787bd'
   },
-  establishment:{
+  establishment: {
     type: String,
     required: false,
     default: '645de52f135e8'
   },
-	showModal: {
-		type: Boolean,
-		default: false
-	}
+  showModal: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const emits = defineEmits(['close'])
 const router = useRouter();
-const close = ()=>{
-	emits('close')
-	downloaded.value = false
+const close = () => {
+  emits('close')
+  downloaded.value = false
 }
 
 const { width } = useWindowSize()
@@ -93,38 +92,37 @@ const modalWidth = computed(() => {
   return gap + 45;
 });
 
-const show = computed(()=> props.showModal)
+const show = computed(() => props.showModal)
 
 const base64Image = ref(null);
 const qrcode = ref(null);
 const downloaded = ref(false);
 
 const downloadQrcode = (type) => {
-	if(type == 'svg'){
-		services.downloadSVGQrcode(props.filename, 'qrcode');
-	}else{
-		services.downloadJPEGQrcode(props.filename, 'qrcode', 500, 500);
-	}
+  if (type == 'svg') {
+    services.downloadSVGQrcode(props.filename, 'qrcode');
+  } else {
+    services.downloadJPEGQrcode(props.filename, 'qrcode', 500, 500);
+  }
   downloaded.value = true;
 };
 
-const print = (customer_tag, establishment_tag)=>{
-	console.log('print');
+const print = (customer_tag, establishment_tag) => {
+  console.log('print');
   router.push({
-        name:'QRCodeDocumentPreview',
-        params:{
-            tag: customer_tag,
-            id: establishment_tag,
-        }
-    })
-	downloaded.value = true;
+    name: 'QRCodeDocumentPreview',
+    params: {
+      tag: customer_tag,
+      id: establishment_tag,
+    }
+  })
+  downloaded.value = true;
 };
-	
+
 </script>
 <style scoped>
-
-#qrcode{
-	margin: auto;
+#qrcode {
+  margin: auto;
 }
 
 .modal__header {
@@ -145,23 +143,22 @@ const print = (customer_tag, establishment_tag)=>{
 }
 
 .download__qr_btn {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }
 
 .download__qr_btn button {
-    flex-basis: 50%;
+  flex-basis: 50%;
 }
 
 .modal__close i:hover {
-    transform: rotate(360deg);
+  transform: rotate(360deg);
 }
 
 .establishment__review__qrcode p {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--color-bg2);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-bg2);
 }
-	
 </style>
