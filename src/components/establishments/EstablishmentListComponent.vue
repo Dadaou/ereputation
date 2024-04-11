@@ -49,45 +49,11 @@
             </el-table-column>
         </el-table>
     </div>
-    <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
-        <template #content>
-            <div class="modal__header">
-                <div class="modal__title">
-                    <h3 class="font-semibold text-gray-900 dark:text-white">
-                        <i class="uil uil-qrcode-scan"></i> QR Code
-                    </h3>
-                </div>
-                <div class="modal__close">
-                    <i class="uil uil-times-circle" @click="showModal = false"></i>
-                </div>
-            </div>
-
-            <div v-if="downloaded == false" class="establishment__review__qrcode">
-                <p class="mb-5">
-                    Download this QR code to link your client to the feedback page
-                </p>
-                <div id="qrcode__container mt-5" ref="qrcode">
-                    <vue-qrious class="qr__code"
-                        :value="`${baseurl}/public/${route.params.tag}/establishment/${establishment.tag}/feedback`"
-                        @change="onDataUrlChange" size="5000"/>
-                </div>
-            </div>
-            <div v-else class="establishment__review__qrcode">
-                <p class="mb-5">
-                    Your download is successfully complete!
-                </p>
-            </div>
-            <div class="mt-5 download__qr_btn">
-                <button v-if="downloaded == false" class="btn__light_secondary" @click="downloadQrcode">
-                    <i class="uil uil-download-alt"></i> Download
-                </button>
-                <button v-else class="btn__light_secondary" @click="showModal = false, downloaded = false">
-                    close
-                </button>
-            </div>
-
-        </template>
-    </ModalComponent>
+    <QrCodeModalComponent v-if="establishment" :qrcodeValue="`${baseurl}/public/${route.params.tag}/establishment/${establishment.tag}/feedback`" 
+    :showModal="showModal"
+    :filename="`${establishment.name}-feedback-link`"
+    @close="showModal=false"
+    />
 </template>
 <script setup>
 import { computed, defineAsyncComponent, ref, onBeforeMount, watch } from 'vue'
@@ -101,7 +67,6 @@ import {
     ElButton,
     ElInput, ElOption, ElSelect, ElDatePicker, ElTooltip
 } from 'element-plus'
-import { useWindowSize } from '@vueuse/core';
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import services from '@Services/services.js';
 import 'element-plus/es/components/message/style/css'
@@ -115,23 +80,16 @@ import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
 import 'element-plus/es/components/tooltip/style/css'
-import VueQrious from 'vue-qrious';
 import { useRoute, useRouter } from "vue-router";
 
-const ModalComponent = defineAsyncComponent(() =>
-    import('@Components/utils/ModalComponent.vue')
+const QrCodeModalComponent = defineAsyncComponent(() =>
+    import('@Components/utils/QrCodeModalComponent.vue')
 )
 
 const emit = defineEmits(['edit', 'setEnable', 'setDisable']);
 
 const userStore = useUserStore();
 const appStore = useAppStore();
-const { width, height } = useWindowSize();
-const modalWidth = computed(() => {
-    let windowSize = 1500;
-    let gap = (windowSize - width.value) / 19;
-    return gap + 45;
-});
 const route = useRoute()
 const router = useRouter()
 const showModal = ref(false);
@@ -215,19 +173,6 @@ const urlPattern = (urlTemplate) => {
     regexPattern = regexPattern.replace(/{value1}/g, '(.+)');
     return new RegExp('^' + regexPattern);
 }
-
-const base64Image = ref(null);
-const qrcode = ref(null);
-
-const downloadQrcode = () => {
-  const filename = `${establishment.value.name}-feedback-link`;
-  services.downloadQrcode(filename, base64Image.value);
-  downloaded.value = true;
-}
-
-const onDataUrlChange = (dataUrl) => {
-    base64Image.value = dataUrl;
-};
 
 const splitUriAndUrl = (combinedString) => {
     if (combinedString !== '') {
@@ -442,10 +387,6 @@ button i.uil-edit {
     text-decoration: none;
 }
 
-.delete-icon {
-    /* Optional: You might want to add some specific style for the delete icon */
-}
-
 input {
     caret-color: var(--color-primary) !important;
 }
@@ -477,59 +418,10 @@ img.establishment_img {
     width: 100%;
 }
 
-/*#qrcode__container{
-    background-color: white;
-    padding: 5px;
-    border-radius: 10px;
-    border: 1px solid black;
-}*/
-
-.qr__code {
-  width: 35% !important;
-  padding: 50px auto !important;
-  margin: auto;
-}
-
-.modal__header {
-    display: flex;
-    justify-content: space-between;
-}
-
-.modal__header div {
-    align-self: center;
-}
-
-.modal__close i {
-    float: right;
-    font-size: 25px;
-    color: red;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
 .establishment__review__qrcode p {
     font-size: 15px;
     font-weight: 500;
     color: var(--color-bg2);
-}
-
-.download__qr_btn {
-    display: flex;
-    justify-content: center;
-}
-
-.download__qr_btn button {
-    flex-basis: 50%;
-}
-
-.qr__code {
-    width: 40% !important;
-    padding: 50px auto !important;
-    margin: auto;
-}
-
-.modal__close i:hover {
-    transform: rotate(360deg);
 }
 
 .table__container {

@@ -54,54 +54,17 @@
             </div>
         </div>
     </div>
-    <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
-        <template #content>
-            <div class="modal__header">
-                <div class="modal__title">
-                    <h3 class="font-semibold text-gray-900 dark:text-white">
-                        <i class="uil uil-qrcode-scan"></i> QR Code
-                    </h3>
-                </div>
-                <div class="modal__close">
-                    <i class="uil uil-times-circle" @click="showModal = false"></i>
-                </div>
-            </div>
-
-            <div v-if="downloaded == false" class="establishment__review__qrcode">
-                <p class="mb-5">
-                    Download this QR code to link your client to the feedback page
-                </p>
-                <div id="qrcode__container mt-5" ref="qrcode">
-                    <vue-qrious class="qr__code"
-                        :value="`${baseurl}/public/${tag}/establishment/${establishment.competitor_tag}/feedback`"
-                        @change="onDataUrlChange" size="5000"/>
-                </div>
-            </div>
-            <div v-else class="establishment__review__qrcode">
-                <p class="mb-5">
-                    Your download is successfully complete!
-                </p>
-            </div>
-            <div class="mt-5 download__qr_btn">
-                <button v-if="downloaded == false" class="btn__light_secondary" @click="downloadQrcode">
-                    <i class="uil uil-download-alt"></i> Download
-                </button>
-                <button v-else class="btn__light_secondary" @click="showModal = false, downloaded = false">
-                    close
-                </button>
-            </div>
-
-        </template>
-    </ModalComponent>
+    <QrCodeModalComponent v-if="establishment" :qrcodeValue="`${baseurl}/public/${tag}/establishment/${establishment.competitor_tag}/feedback`" 
+    :showModal="showModal"
+    :filename="`${establishment.name}-feedback-link`"
+    @close="showModal=false"
+    />
 </template>
 <script setup>
 import { ref, defineAsyncComponent, computed, inject } from 'vue';
 import RatingComponent from '@Components/utils/RatingComponent.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Virtual } from 'swiper/modules';
-import VueQrious from 'vue-qrious';
-import { useWindowSize } from '@vueuse/core';
-import * as htmlToImage from 'html-to-image';
 import { useMediaStore } from "@Stores/media.js";
 import { useAppStore } from "@Stores/app.js";
 import { useRouter } from "vue-router";
@@ -109,8 +72,8 @@ import 'swiper/css';
 import { useUserStore } from "@Stores/user.js";
 import services from '@Services/services.js';
 
-const ModalComponent = defineAsyncComponent(() =>
-    import('@Components/utils/ModalComponent.vue')
+const QrCodeModalComponent = defineAsyncComponent(() =>
+    import('@Components/utils/QrCodeModalComponent.vue')
 )
 
 const router = useRouter();
@@ -132,14 +95,7 @@ const tag = inject('tag')
 
 const establishment = ref(null);
 const showModal = ref(false);
-const downloaded = ref(false);
-const { width, height } = useWindowSize();
 const baseurl = window.location.origin;
-const modalWidth = computed(() => {
-    let windowSize = 1500;
-    let gap = (windowSize - width.value) / 19;
-    return gap + 45;
-});
 
 const goToCompany = (establishment) => {
     appStore.isLoading = true;
@@ -152,20 +108,6 @@ const goToCompany = (establishment) => {
             },
         });
     }, 100);
-}
-
-const base64Image = ref(null);
-const qrcode = ref(null);
-
-const downloadQrcode = () => {
-  const filename = `${establishment.value.name}-feedback-link`;
-  services.downloadQrcode(filename, base64Image.value);
-  downloaded.value = true;
-}
-
-
-const onDataUrlChange = (dataUrl) => {
-    base64Image.value = dataUrl;
 };
 </script>
 <style scoped>

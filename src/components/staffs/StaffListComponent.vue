@@ -33,54 +33,17 @@
       </el-table-column>
     </el-table>
   </div>
-  <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
-    <template #content>
-      <div class="modal__header">
-        <div class="modal__title">
-          <h3 class="font-semibold text-gray-900 dark:text-white">
-            <i class="uil uil-qrcode-scan"></i> QR Code
-          </h3>
-        </div>
-        <div class="modal__close">
-          <i class="uil uil-times-circle" @click="showModal = false"></i>
-        </div>
-      </div>
-
-      <div v-if="downloaded == false" class="establishment__review__qrcode">
-        <p class="mb-5">
-          Download this QR code to link your client to the feedback page
-        </p>
-        <div id="qrcode__container mt-5" ref="qrcode">
-          <vue-qrious class="qr__code"
-            :value="`${baseurl}/public/${tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`" size="5000"
-            @change="onDataUrlChange" />
-        </div>
-      </div>
-      <div v-else class="establishment__review__qrcode">
-        <p class="mb-5">
-          Your download is successfully complete!
-        </p>
-      </div>
-      <div class="mt-5 download__qr_btn">
-        <button v-if="downloaded == false" class="btn__light_secondary" @click="downloadQrcode">
-          <i class="uil uil-download-alt"></i> Download
-        </button>
-        <button v-else class="btn__light_secondary" @click="showModal = false, downloaded = false">
-          close
-        </button>
-      </div>
-
-    </template>
-  </ModalComponent>
+  <QrCodeModalComponent v-if="staff" :qrcodeValue="`${baseurl}/public/${tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`" 
+    :showModal="showModal"
+    :filename="`${staff.firstname} ${staff.lastname}-feedback-link`"
+    @close="showModal=false"
+    />
 </template>
   
 <script setup>
-import { computed, ref, inject } from 'vue';
-import { useWindowSize } from '@vueuse/core';
+import { computed, ref, defineAsyncComponent, inject } from 'vue';
 import moment from 'moment';
 import { useStaffStore } from "@Stores/staff.js";
-import VueQrious from 'vue-qrious';
-import ModalComponent from '@Components/utils/ModalComponent.vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
@@ -90,18 +53,15 @@ import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
 import services from '@Services/services.js';
 
+const QrCodeModalComponent = defineAsyncComponent(() =>
+    import('@Components/utils/QrCodeModalComponent.vue')
+)
+
 const emit = defineEmits(['edit']);
 const staffStore = useStaffStore();
 const baseurl = window.location.origin;
 const showModal = ref(false);
-const downloaded = ref(false);
 const staff = ref(null);
-const { width } = useWindowSize()
-const modalWidth = computed(() => {
-  let windowSize = 1500;
-  let gap = (windowSize - width.value) / 19;
-  return gap + 45;
-})
 const staffs = inject('staffs')
 const tag = inject('tag');
 
@@ -114,15 +74,8 @@ let tableData = computed(() => {
   })
   return data;
 });
-const search = ref('')
-// const filterTableData = computed(() =>
-//   tableData.value.filter(
-//     (data) =>
-//       !search.value ||
-//       data.name.toLowerCase().includes(search.value.toLowerCase())
-//   )
-// )
 
+const search = ref('')
 const filterTableData = computed(() =>{
   let filterdata = tableData.value;
   filterdata = tableData.value.filter(
@@ -164,18 +117,6 @@ const handleDelete = async (index, staff) => {
 const showQRCode = (value) => {
   staff.value = value;
   showModal.value = true;
-}
-
-const base64Image = ref(null);
-const qrcode = ref(null);
-const downloadQrcode = () => {
-  const filename = `${staff.value.firstname} ${staff.value.lastname}-feedback-link`;
-  services.downloadQrcode(filename, base64Image.value);
-  downloaded.value = true;
-}
-
-const onDataUrlChange = (dataUrl) => {
-  base64Image.value = dataUrl;
 };
 
 </script>

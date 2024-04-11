@@ -35,7 +35,13 @@ const customerTag = inject('tag');
 </script>
 
 <style>
-
+.btn {
+    width: 100%;
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+}
 .dashboard_mobile{
     display: flex;
     justify-content: space-between;
@@ -345,6 +351,14 @@ const customerTag = inject('tag');
         gap: 0.5rem;
         justify-content: center;
         margin-top: 10px;
+    }
+
+    .btn {
+        width: 100%;
+        background-color: white;
+        color: var(--color-primary);
+        border-radius: 5px;
+        padding: 5px;
     }
 
     .photo {

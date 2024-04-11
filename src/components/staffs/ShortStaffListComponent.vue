@@ -20,66 +20,20 @@
         </template>
         <template #default="scope">
           <el-button size="small" @click="showQRCode(scope.row)"><i class="uil uil-qrcode-scan"></i></el-button>
-          <!-- <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
-            <template #reference>
-              <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
-            </template>
-  </el-popconfirm> -->
-
-          <!-- <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button> -->
         </template>
       </el-table-column>
     </el-table>
   </div>
-  <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
-    <template #content>
-      <div class="modal__header">
-        <div class="modal__title">
-          <h3 class="font-semibold text-gray-900 dark:text-white">
-            <i class="uil uil-qrcode-scan"></i> QR Code
-          </h3>
-        </div>
-        <div class="modal__close">
-          <i class="uil uil-times-circle" @click="showModal = false"></i>
-        </div>
-      </div>
-
-      <div v-if="downloaded == false" class="establishment__review__qrcode">
-        <p class="mb-5">
-          Download this QR code to link your client to the feedback page
-        </p>
-        <div id="qrcode__container mt-5" ref="qrcode">
-          <!-- <vue-qrious class="qr__code"
-            :value="`${baseurl}/public/${tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`"
-            size="5000" @change="onDataUrlChange" /> -->
-          <qrcode-vue style="margin: 48px auto" class="qr__code" id="qrcode"
-            :value="`${baseurl}/public/${tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`"
-            :size="250" level="L" render-as="svg" />
-        </div>
-      </div>
-      <div v-else class="establishment__review__qrcode">
-        <p class="mb-5">
-          Your download is successfully complete!
-        </p>
-      </div>
-      <div class="mt-5 download__qr_btn">
-        <button v-if="downloaded == false" class="btn__light_secondary" @click="downloadQrcode">
-          <i class="uil uil-download-alt"></i> Download
-        </button>
-        <button v-else class="btn__light_secondary" @click="showModal = false, downloaded = false">
-          close
-        </button>
-      </div>
-
-    </template>
-  </ModalComponent>
+  <QrCodeModalComponent v-if="staff" :qrcodeValue="`${baseurl}/public/${tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`" 
+    :showModal="showModal"
+    :filename="`${staff.firstname} ${staff.lastname}-feedback-link`"
+    @close="showModal=false"
+    />
 </template>
 
 <script setup>
-import { computed, ref, inject } from 'vue';
-import { useWindowSize } from '@vueuse/core';
+import { computed, ref, inject, defineAsyncComponent } from 'vue';
 import moment from 'moment';
-import ModalComponent from '@Components/utils/ModalComponent.vue';
 import { ElTable, ElTableColumn, ElButton, ElInput } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
@@ -87,19 +41,15 @@ import 'element-plus/es/components/table-column/style/css'
 import 'element-plus/es/components/popconfirm/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
-import QrcodeVue from 'qrcode.vue'
 import services from '@Services/services.js';
+
+const QrCodeModalComponent = defineAsyncComponent(() =>
+    import('@Components/utils/QrCodeModalComponent.vue')
+)
 
 const baseurl = window.location.origin;
 const showModal = ref(false);
-const downloaded = ref(false);
 const staff = ref(null);
-const { width } = useWindowSize()
-const modalWidth = computed(() => {
-  let windowSize = 1500;
-  let gap = (windowSize - width.value) / 19;
-  return gap + 45;
-})
 const staffs = inject('staffs')
 const tag = inject('tag');
 
@@ -113,13 +63,6 @@ let tableData = computed(() => {
   return data;
 });
 const search = ref('')
-// const filterTableData = computed(() =>
-//   tableData.value.filter(
-//     (data) =>
-//       !search.value ||
-//       data.name.toLowerCase().includes(search.value.toLowerCase())
-//   )
-// )
 
 const filterTableData = computed(() => {
   let filterdata = tableData.value;
@@ -137,14 +80,7 @@ const filterTableData = computed(() => {
 const showQRCode = (value) => {
   staff.value = value;
   showModal.value = true;
-}
-
-const qrcode = ref(null);
-const downloadQrcode = () => {
-  const filename = `${staff.value.firstname} ${staff.value.lastname}-feedback-link`;
-  services.downloadSVGQrcode(filename, 'qrcode');
-  downloaded.value = true;
-}
+};
 
 </script>
 <style scoped>
@@ -178,50 +114,8 @@ button i.uil-edit {
   margin: 8px 0;
 }
 
-.modal__header {
-  display: flex;
-  justify-content: space-between;
-}
-
-.modal__header div {
-  align-self: center;
-}
-
-.modal__close i {
-  float: right;
-  font-size: 25px;
-  color: red;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.establishment__review__qrcode p {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--color-bg2);
-}
-
-.download__qr_btn {
-  display: flex;
-  justify-content: center;
-}
-
-.download__qr_btn button {
-  flex-basis: 50%;
-}
-
-.qr__code {
-  width: 35% !important;
-  padding: 50px auto !important;
-  margin: auto;
-}
-
-.modal__close i:hover {
-  transform: rotate(360deg);
-}
-
 /* Appliquez une largeur de 100% aux éléments parents */
-c .security__header {
+.security__header {
   width: 100%;
 }
 

@@ -10,58 +10,19 @@
           <el-input v-model="search" size="small" placeholder="Type to search" />
         </template>
         <template #default="scope">
-          <!-- <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button> -->
           <el-button size="small" @click="showQRCode(scope.row)"><i class="uil uil-qrcode-scan"></i></el-button>
         </template>
       </el-table-column>
     </el-table>
   </div>
-  <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
-    <template #content>
-      <div class="modal__header">
-        <div class="modal__title">
-          <h3 class="font-semibold text-gray-900 dark:text-white">
-            <i class="uil uil-qrcode-scan"></i> QR Code
-          </h3>
-        </div>
-        <div class="modal__close">
-          <i class="uil uil-times-circle" @click="showModal = false"></i>
-        </div>
-      </div>
-
-      <div v-if="downloaded == false" class="establishment__review__qrcode">
-        <p class="mb-5">
-          Download this QR code to link your client to the feedback page
-        </p>
-        <div id="qrcode__container mt-5" ref="qrcode">
-          <!-- <vue-qrious class="qr__code"
-            :value="`${baseurl}/public/${tag}/establishment/${unit.establishment_competitor_tag}/units/${unit.tag}/feedback`"
-            size="5000" @change="onDataUrlChange" />-->
-          <qrcode-vue style="margin: 48px auto" id="qrcode"
-            :value="`${baseurl}/public/${tag}/establishment/${unit.establishment_competitor_tag}/units/${unit.tag}/feedback`"
-            :size="250" level="L" render-as="svg" />
-        </div>
-
-      </div>
-      <div v-else class="establishment__review__qrcode">
-        <p class="mb-5">
-          Your download is successfully complete!
-        </p>
-      </div>
-      <div class="mt-5 download__qr_btn">
-        <button v-if="downloaded == false" class="btn__light_secondary" @click="downloadQrcode">
-          <i class="uil uil-download-alt"></i> Download
-        </button>
-        <button v-else class="btn__light_secondary" @click="showModal = false, downloaded = false">
-          close
-        </button>
-      </div>
-
-    </template>
-  </ModalComponent>
+  <QrCodeModalComponent v-if="unit" :qrcodeValue="`${baseurl}/public/${tag}/establishment/${unit.establishment_competitor_tag}/units/${unit.tag}/feedback`" 
+    :showModal="showModal"
+    :filename="`${unit.category}-${unit.name}-feedback-link`"
+    @close="showModal=false"
+    />
 </template>
 <script setup>
-import { computed, ref, inject } from 'vue';
+import { computed, ref, inject, defineAsyncComponent } from 'vue';
 import { ElTable, ElTableColumn, ElButton, ElInput } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
@@ -70,44 +31,22 @@ import 'element-plus/es/components/popconfirm/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
 import services from '@Services/services.js';
-import QrcodeVue from 'qrcode.vue'
-import ModalComponent from '@Components/utils/ModalComponent.vue';
-import { useWindowSize } from '@vueuse/core';
 
-// const emit = defineEmits(['edit']);
+const QrCodeModalComponent = defineAsyncComponent(() =>
+    import('@Components/utils/QrCodeModalComponent.vue')
+)
+
 const units = inject('units')
 const search = ref('');
 const showModal = ref(false);
 const tag = inject('tag');
 
 const baseurl = window.location.origin;
-
-const { width } = useWindowSize()
-const modalWidth = computed(() => {
-  let windowSize = 1500;
-  let gap = (windowSize - width.value) / 19;
-  return gap + 45;
-});
-
-// const base64Image = ref(null);
-const qrcode = ref(null);
-const downloaded = ref(false);
 const unit = ref(null);
 
 const showQRCode = (value) => {
   unit.value = value;
   showModal.value = true;
-}
-
-// const onDataUrlChange = (dataUrl) => {
-//   console.log(dataUrl);
-//   base64Image.value = dataUrl;
-// };
-
-const downloadQrcode = () => {
-  const filename = `${unit.value.category}-${unit.value.name}-feedback-link`;
-  services.downloadSVGQrcode(filename, 'qrcode');
-  downloaded.value = true;
 }
 
 const filterTableData = computed(() => {
@@ -120,7 +59,7 @@ const filterTableData = computed(() => {
       data.establishment_name.toLowerCase().includes(search.value.toLowerCase())
   )
   return filterdata
-})
+});
 
 </script>
 <style scoped>
@@ -197,7 +136,7 @@ button i.uil-edit {
 }
 
 /* Appliquez une largeur de 100% aux éléments parents */
-c .security__header {
+.security__header {
   width: 100%;
 }
 

@@ -61,88 +61,11 @@
     </div>
 </div>
     <div v-if="staffs.length==0">No staff</div>
-    <ModalComponent :showModal="showModal " @close="showModal=false" :width="modalWidth" >
-                    <template #content>
-                        <div class="modal__header">
-                            <div class="modal__title">
-                                <h3 class="font-semibold text-gray-900 dark:text-white">
-                                    <i class="uil uil-qrcode-scan"></i> 
-                                </h3>
-                            </div>
-                            <div class="modal__close">
-                                <i class="uil uil-times-circle"  @click="showModal = false"></i>
-                            </div>
-                        </div>
-
-                        <div  v-if="downloaded==false" class="establishment__review__qrcode">
-                            <p class="mb-5">
-                                Download this QR code to link staff <b>{{ staf.firstname }}</b> to the feedback page
-                            </p>
-                            <div id="qrcode__container  mt-5" ref="qrcode">
-                                <vue-qrious
-                                    class="qr__code_view"
-                                     :value="`${baseurl}/public/${tag}/establishment/${staf.establishment_tag}/staffs/${staf.tag}/feedback`" size="5000"
-                                    @change="onDataUrlChange"
-                                    />
-                                
-                            </div>
-                        </div>
-                        <div v-else class="establishment__review__qrcode">
-                            <p class="mb-5">
-                                Your download is successfully complete!
-                            </p>
-                        </div>
-                        <div class="mt-5 download__qr_btn">
-                            <button v-if="
-                            downloaded==false" class="btn__light_secondary" @click="downloadQrcode(staf.firstname)">
-                                <i class="uil uil-download-alt"></i> Download 
-                            </button>
-                            <button v-else class="btn__light_secondary" @click="close()">
-                                close
-                            </button>
-                        </div>
-                    </template>
-    </ModalComponent>
-    <!-- <ModalComponent :showModal="showChart" @close="showChart=false">
-                    <template #content>
-                        <div class="modal__header">
-                            <div class="modal__title">
-                                <h3 class="font-semibold text-gray-900 dark:text-white">
-                                    <i class="uil uil-chart-pie-alt"></i> Graphic Chart
-                                </h3>
-                            </div>
-                            <div class="modal__close">
-                                <i class="uil uil-times-circle"  @click="showChart = false"></i>
-                            </div>
-                        </div>
-
-                       <div class="pie__chart">
-                            <div>
-                                <h3 class="mb-2">Before (<span class="rating">{{calculateAverageRating(staffRatingDataset(staffComparison, 'beforeData'))}}</span>)</h3>
-                                <Pie 
-                                    :data="staffRatingDataset(staffComparison, 'beforeData')" 
-                                    :options="options" 
-                                />
-                            </div>
-                            <div>
-                                <h3 class="mb-2">During (<span class="rating">{{calculateAverageRating(staffRatingDataset(staffComparison, 'duringData'))}}</span>)</h3>
-                                <Pie 
-                                    :data="staffRatingDataset(staffComparison, 'duringData')" 
-                                    :options="options" 
-                                />
-                            </div>
-                            <div>
-                                <h3 class="mb-2">After (<span class="rating">{{calculateAverageRating(staffRatingDataset(staffComparison, 'afterData'))}}</span>)</h3>
-                                <Pie 
-                                    :data="staffRatingDataset(staffComparison, 'afterData')" 
-                                    :options="options" 
-                                />
-                            </div>
-                        </div>
-                         <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
-                        </BaseLegend>
-                    </template>
-    </ModalComponent> -->
+    <QrCodeModalComponent v-if="staf" :qrcodeValue="`${baseurl}/public/${tag}/establishment/${staf.establishment_tag}/staffs/${staf.tag}/feedback`" 
+    :showModal="showModal"
+    :filename="`${staf.firstname} ${staf.lastname}-feedback-link`"
+    @close="showModal=false"
+    />
 </template>
 <script setup>
 import {ref, inject, computed, defineAsyncComponent} from 'vue';
@@ -159,9 +82,14 @@ const ModalComponent = defineAsyncComponent(()=>
     import('@Components/utils/ModalComponent.vue')
 )
 
+const QrCodeModalComponent = defineAsyncComponent(() =>
+    import('@Components/utils/QrCodeModalComponent.vue')
+)
+
 ChartJS.register(ArcElement, Tooltip)
 const router = useRouter();
 const staffs = inject('staffs');
+const staf = ref(null)
 const selectedStaff = inject('selectedStaff')
 const baseurl = window.location.origin;
 const base64Image = ref(null);
@@ -171,8 +99,6 @@ const onDataUrlChange = (dataUrl) =>{
 }
 const { width } = useWindowSize()
 const showModal = ref(false);
-const showChart = ref(false);
-const downloaded = ref(false);
 const tag = inject('tag')
 
 const legendData = ref([
@@ -189,12 +115,6 @@ const downloadQrcode = (staffname) => {
   downloaded.value = true;
 }
 
-const modalWidth= computed(()=>{
-    let windowSize = 1500;
-    let gap = (windowSize - width.value)/19;
-    return gap + 45;
-})
-
 const staffComparison = ref({})
 
 const options = {
@@ -207,11 +127,6 @@ const options = {
   },
   aspectRatio: 1,
 };
-
-const close = ()=>{
-    showModal.value = false; 
-    downloaded.value = false;
-}
 
 const staffRatingDataset = (periods, type)=> {
       return {
@@ -250,7 +165,6 @@ const calculateAverageRating = (data) =>  {
 
 const showReview = (customer_tag, staff_tag, establishment_tag, staff)=>{
     selectedStaff.value = staff;
-    // router.push(`/customer/${customer_tag}/establishment/${establishment_tag}/staffs/list/${staff_tag}/reviews`);
     router.push({
         name:'StaffReview',
         params:{
@@ -315,39 +229,6 @@ span.label{
     width: 30% !important;
     padding: 10px auto !important;
     margin: auto;
-}
-.modal__header{
-    display: flex;
-    justify-content: space-between;
-}
-
-.modal__header div{
-    align-self: center;
-}
-
-.modal__close i{
-   float: right;
-   font-size: 25px;
-   color: red;
-   cursor: pointer;
-   transition: var(--transition);
-}
-
-.establishment__review__qrcode p{
-    font-size: 14px;
-}
-
-.modal__close i:hover{
-    transform: rotate(360deg);
-}
-
-.download__qr_btn{
-    display: flex;
-    justify-content: center;
-}
-
-.download__qr_btn button{
-    flex-basis: 50%;
 }
 
 .pie__chart{
