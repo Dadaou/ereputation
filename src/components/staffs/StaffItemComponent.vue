@@ -65,6 +65,8 @@
     :showModal="showModal"
     :filename="`${staf.firstname} ${staf.lastname}-feedback-link`"
     @close="showModal=false"
+    :customer="tag"
+    :establishment="staf.establishment_tag"
     />
 </template>
 <script setup>

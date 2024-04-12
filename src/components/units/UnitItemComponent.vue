@@ -52,6 +52,8 @@
     :showModal="showModal"
     :filename="`${selectedUnit.name}-feedback-link`"
     @close="showModal=false"
+    :customer="tag"
+    :establishment="selectedUnit.establishment_competitor_tag"
     />
 </template>
 <script setup>

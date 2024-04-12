@@ -565,11 +565,11 @@ onBeforeMount(async () => {
 
 </script>
 <style scoped>
-@media screen and (max-width: 800px) {
+/*@media screen and (max-width: 800px) {
     .user__main__container {
-        width: 120%;
+        width: 100%;
     }
-}
+}*/
 
 *{
     overflow: hidden;

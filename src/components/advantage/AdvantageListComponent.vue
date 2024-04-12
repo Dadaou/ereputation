@@ -5,7 +5,7 @@
     </div> -->
   </div>
   <div class="mt-5 erep_table table__container">
-    <el-table :data="filterTableData" style="width: 85%">
+    <el-table :data="filterTableData" style="width: 100%">
       <el-table-column label="Name" fixed prop="name" width="200"/>
       <el-table-column label="Establishment" prop="establishment_name" width="200"/>
       <el-table-column label="Amount" prop="amount" align="center" width="100"/>
@@ -64,14 +64,6 @@ const tableWidth= computed(()=>{
     return width.value>800?`width: ${100}%`:`width: ${100}%`;
 });
 
-// const filterTableData = computed(() =>
-//   advantages.value?.filter(
-//     (data) =>
-//       !search.value ||
-//       data.name.toLowerCase().includes(search.value.toLowerCase())
-//   ) || []
-// );
-
 const filterTableData = computed(() =>{
   let filteredData = advantages.value;
   console.log(search.value)
@@ -85,6 +77,7 @@ const filterTableData = computed(() =>{
         (data.scope && data.scope.toLowerCase().includes(search.value.toLowerCase()))
 
     })
+  console.log(filteredData)
   return filteredData
 });
 
@@ -160,9 +153,10 @@ button i.uil-edit {
   margin: 8px 0;
 }
 
-
-@media screen and (min-width: 800px) {
-
+@media screen and (max-width: 800px) {
+  .table__container{
+    width: 87%;
+  }
 }
 </style>
   

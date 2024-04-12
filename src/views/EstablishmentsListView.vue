@@ -2,18 +2,18 @@
 	<div v-if="userStore.customer">
 		<div v-if="!dataLoading">
 	        <div class="client__container__head" v-if="establishments.length > 0">
-	           Welcome, Customer <b>{{ userStore.customer.name }}</b>! Your establishments are listed below. <span>({{ establishments.length }} found)</span>
+	           Welcome, <b>{{ userStore.customer.name }}</b>! Your establishments are listed below. <span>({{ establishments.length }} found)</span>
 	        </div>
 	        <div class="client__container__head" v-else>
-	           Welcome , Customer <b>{{ userStore.customer.name }}</b>! No companies found yet.
+	           Welcome , <b>{{ userStore.customer.name }}</b>! No companies found yet.
 	        </div>
 	    </div>
 	    <div v-else>
 	        <div class="client__container__head">
-	            Welcome, Customer <b>{{ userStore.customer.name }}</b>! Your establishments are listed below. <span>({{ establishments.length }} found)</span>
+	            Welcome, <b>{{ userStore.customer.name }}</b>! Your establishments are listed below. <span>({{ establishments.length }} found)</span>
 	        </div>
 	    </div>
-	    <div class="society__list" v-if="establishments.length > 0">
+	    <div class="society__list mt-5" v-if="establishments.length > 0">
 	        <suspense>
 	            <establishments-list-component :establishments="establishments" :tag='customerTag'/>
 	            <template #fallback>

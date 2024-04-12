@@ -19,7 +19,7 @@
           </li>
           <li>
             <router-link :to="{ name: 'QRCodes' }" active-class="active">
-              <i class="uil uil-book"></i> <span>My QRCodes</span>
+              <i class="uil uil-qrcode-scan"></i> <span>My QRCodes</span>
             </router-link>
           </li>
           <li>
@@ -161,7 +161,7 @@ const breadcrumbData = [
 
 .all__content {
   flex: auto;
-  width: calc(100% - 65px);
+  width:65%;
   padding-right: 8px;
   margin-top: 0px;
 }
@@ -213,6 +213,7 @@ const breadcrumbData = [
 @media screen and (max-width: 800px) {
   .all__content {
     margin-top: 0px;
+    width:115%;
   }
 
   .admin__container {
@@ -221,10 +222,6 @@ const breadcrumbData = [
 
   .admin__menu li a span {
     display: block;
-  }
-
-  .all__content {
-    width: 100%;
   }
 
   ul {

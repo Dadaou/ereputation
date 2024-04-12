@@ -8,7 +8,7 @@
                     <el-option v-for="(item, index) in templates" :key="index" :label="item.name"
                         :value="item"/>
                 </el-select>
-                <button class="btn downloads mt-2" @click="generatePdf">Télécharger en PDF</button>
+                <button class="btn downloads mt-2" @click="generatePdf">PDF Download</button>
         </div>
       </div>
     </div>
@@ -22,6 +22,7 @@
           :size="150" level="L" render-as="svg" />
           <p v-html="template.text3" ref="text3"></p>
       </div>
+      <div v-else></div>
     </div>
   </div>
   <div id="qrCodeContainer"></div>

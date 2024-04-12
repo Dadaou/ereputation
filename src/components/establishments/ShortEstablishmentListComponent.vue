@@ -34,6 +34,8 @@
     :showModal="showModal"
     :filename="`${establishment.name}-feedback-link`"
     @close="showModal=false"
+    :customer="route.params.tag"
+    :establishment="establishment.tag"
     />
 </template>
 <script setup>

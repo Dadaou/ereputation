@@ -5,9 +5,9 @@
                 <p>Complete the following information to add an advantage.</p>
             </div> -->
         </div>
-        <div>
+        <div class="advantage_container">
+          <div class="form-container">
             <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2 h-full">
-                  
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                         <div>
                             <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span></span></label>
@@ -33,7 +33,7 @@
                             </el-select>
                         </div>
                     </div>
-                    
+                   
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                         <div>
                             <label for="scope" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Scope <span></span></label>
@@ -72,8 +72,8 @@
                         
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
-                       
-                        <div>
+                        <div class="grid gap-6 mb-6 md:grid-cols-2">
+                          <div>
                             <label for="validity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Validity 
                               <i class="uil uil-question-circle"
                                   style="color: var(--color-warning); font-size: 18px; cursor: pointer"
@@ -86,34 +86,60 @@
                                 </template>
                             </el-tooltip></label>
                             <input type="number" id="validity" v-model="validity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
-                        </div>
-                        <div>
+                          </div>
+                           <div>
                             <label for="limit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Limit
                              </label>
                             <input type="number" id="limit" v-model="advantageLimit" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
                         </div>
+                        </div>
                         <div>
                             <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Expired at <span></span></label>
                             <el-date-picker
-                                v-model="dateTo"
-                                id="dateTo"
+                                v-model="expiredAt"
+                                :size="'large'"
+                              />
+                        </div>    
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date from <span></span></label>
+                            <el-date-picker
+                                v-model="dateFrom"
                                 :size="'large'"
                               />
                         </div>      
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date to <span></span></label>
+                            <el-date-picker
+                                v-model="dateEnd"
+                                :size="'large'"
+                              />
+                        </div> 
                     </div>
+                    <div>
+                       <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
+                      <textarea 
+                      v-model="description"
+                      id="message" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here...">
+                      </textarea>
+                    </div>
+
                   
                     <div class="flex items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
-                       <button type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                      <button type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                                 <SpinnerComponent :show-spinner="showSpinner" :color="'gray'"/> <span v-if="showSpinner">Loading ...</span>
                                <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} advantage</span>
-                 </button>
-                        </div>
+                      </button>
+                    </div>
                 </form>
+              </div>
+              <div class="template-container">
+                <AdvantageTemplate @select="(advantage)=>selectAdvantage(advantage)"/>
+             </div>
         </div>
 </template>
 <script setup>
 import moment from 'moment';
-import { ref, inject, watch } from 'vue';
+import { ref, inject, watch, defineAsyncComponent } from 'vue';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
@@ -122,6 +148,14 @@ import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
+
+const QrCodeModalComponent = defineAsyncComponent(() =>
+    import('@Components/utils/QrCodeModalComponent.vue')
+)
+
+const AdvantageTemplate = defineAsyncComponent(() =>
+    import('@Components/advantage/AdvantageTemplateComponent.vue')
+)
 
 const scopeOptions = ref([
   { label: 'individual', value: 'individual' },
@@ -140,7 +174,10 @@ const showSpinner = ref(false);
 /**
  * Event
  */
- const dateTo = ref(null);
+ const dateFrom = ref(null);
+ const dateEnd = ref(null);
+ const expiredAt =  ref(null);
+ const description = ref(null);
  const category = ref('');
  const advantageName = ref('');
  const establishment = ref("");
@@ -162,8 +199,7 @@ const activeAdvantageTab = inject('advantage_activeTab');
 const metrics = ref(['Percent', 'Amount'])
 watch(advantage_to_update, ()=>{
     if(advantage_to_update.value != null){  
-    console.log(advantage_to_update.value) 
-        dateTo.value = new Date(advantage_to_update.value["expired_at"]);
+        expiredAt.value = new Date(advantage_to_update.value["expired_at"]);
         category.value = advantage_to_update.value["category"];
         code.value = advantage_to_update.value["code"];
         metric.value = advantage_to_update.value["metric"];
@@ -178,7 +214,6 @@ watch(advantage_to_update, ()=>{
 })
 
 const loadData = (_advantage, advantage, establishment) => {
-  console.log(_advantage)
   const new_advantage = {
           id: _advantage.id,
           name: _advantage.name,
@@ -223,18 +258,21 @@ const updateData = (_advantage, establishment)=>{
 
   const submit = async () => {
     const advantageData = {
-        "category": category.value,
-        "code": code.value,
-        "name": advantageName.value,
-        "amount": parseFloat(amount.value),
-        "metric": metric.value,
-        "scope": scope.value,
-        "validity": validity.value,
-        "advantageLimit": advantageLimit.value,
-        "enable": true,
-        "establishment": establishment.value.split(",")[0],
-        "expiredAt": dateTo.value
-    };
+      "category": category.value,
+      "code": code.value,
+      "name": advantageName.value,
+      "amount": parseFloat(amount.value),
+      "metric": metric.value,
+      "enable": true,
+      "establishment": establishment.value.split(",")[0],
+      "scope": scope.value,
+      "validity":validity.value,
+      "description": description.value,
+      "expiredAt": expiredAt.value,
+      "advantageLimit": advantageLimit.value,
+      "dateFrom": dateFrom.value,
+      "dateTo":  dateEnd.value,
+    }
 
     try {
         if (category.value.length > 0) {
@@ -250,7 +288,9 @@ const updateData = (_advantage, establishment)=>{
                 console.log(response)
 
                 if (response.status === 201) {
-                    loadData(response.data, advantageData, establishment.value.split(","));
+                    const {id , ...data} = response.data;
+                    advantageData.id = id;
+                    loadData(advantageData, advantageData, establishment.value.split(","));
                     ElMessage({
                         message: `Advantage added successfully.`,
                         type: 'success',
@@ -270,10 +310,16 @@ const updateData = (_advantage, establishment)=>{
                         message: `Advantage updated successfully.`,
                         type: 'success',
                     });
-                    updateData(response.data, establishment.value.split(','));
+                    const {id , ...data} = response.data;
+                    advantageData.id = id;
+                    updateData(advantageData, establishment.value.split(','));
                 }
             }
 
+            dateFrom.value = null;
+            dateEnd.value = null;
+            expiredAt.value =  null;
+            description.value = null;
             category.value = '';
             code.value = '';
             advantageName.value = '';
@@ -283,7 +329,6 @@ const updateData = (_advantage, establishment)=>{
             validity.value = '';
             advantageLimit.value = ''
             establishment.value = "";
-            dateTo.value = '';
             showSpinner.value = false;
             activeAdvantageTab.value = 'advantage_list';
         } else {
@@ -295,10 +340,59 @@ const updateData = (_advantage, establishment)=>{
     }
 };
 
+const selectAdvantage = (advantage)=>{
+  const capitalize = (str)=> {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  dateFrom.value = advantage.From?new Date(advantage.From):advantage.From;
+  dateEnd.value = advantage.To?new Date(advantage.To):advantage.To;
+  expiredAt.value =  advantage.Expired_at?new Date(advantage.Expired_at):advantage.Expired_at;
+  description.value = advantage.description;
+  category.value = capitalize(advantage.Category);
+  code.value =  null;
+  advantageName.value = advantage.Name;
+  amount.value = advantage.Amount;
+  metric.value = advantage.Metric;
+  scope.value = advantage.Scope;
+  validity.value = advantage.Validity;
+  advantageLimit.value = advantage.Limit
+  const companies = userStore.user.customer.establishments
+  establishment.value = companies.length>0?`/api/establishments/${companies[0].id},${companies[0].name}`:"";
+};
 </script>
 <style scoped>
-form{
-    height: 800px !important;
+.advantage_container {
+ display: flex;
+ flex-direction: row; 
+ justify-content: space-between;
+ width: 100%;
+ gap:1rem;
+}
+
+.form-container {
+ flex: 3; 
+}
+
+.template-container {
+ flex: 1; 
+}
+
+@media (max-width: 850px) {
+ .advantage_container {
+    flex-direction: column-reverse;
+    width: 85% 
+  }
+}
+
+@media (max-width: 768px) {
+ .advantage_container {
+    flex-direction: column-reverse; 
+  }
+
+  .form-container{
+    width: auto;
+  }
 }
 
 form button{

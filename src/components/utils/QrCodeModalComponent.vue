@@ -35,7 +35,7 @@
         <button v-if="downloaded == false" class="btn__light_secondary" @click="downloadQrcode('svg')">
           <i class="uil uil-download-alt"></i> SVG
         </button>
-        <button v-if="downloaded == false" class="btn__light_secondary" @click="print(route.params.tag, route.params.id)">
+        <button v-if="downloaded == false" class="btn__light_secondary" @click="print(customer, establishment)">
           <i class="uil uil-download-alt"></i> Print A5
         </button>
         <button v-else class="btn__light_secondary" @click="close">

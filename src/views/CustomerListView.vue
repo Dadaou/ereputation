@@ -5,7 +5,7 @@
           We're thrilled to have you on board. Here, you'll find your customer list displayed below.
         </div>
         <div class="client__container__head" v-else>
-          	Welcome, Partner <b>{{ userStore.user.partner.name }}</b>! <br/>
+          	Welcome, <b>{{ userStore.user.partner.name }}</b>! <br/>
 
 			We're thrilled to have you on board. While your customer list is currently empty, it's the perfect opportunity to kickstart your journey towards building a thriving network. Explore the possibilities and lay the groundwork for future connections.
 
