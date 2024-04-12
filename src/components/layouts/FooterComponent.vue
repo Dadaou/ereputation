@@ -9,7 +9,7 @@
                         </div>
                     </li>
                     <li class="flex items-start justify-center flex-col gap-2">
-                    <ul>
+                    <ul v-if="!isFeedback">
                       <li>Legal Notice</li>
                       <li>
                         <RouterLink to="/contact" :class="{ 'active-link': isContactActive }">
@@ -22,6 +22,7 @@
                         </RouterLink>
                       </li>
                     </ul>
+                    <ul v-else></ul>
                     <span><i class="uil uil-copyright"></i>2024, all rights reserved</span>
                   </li>
                 </ul>
@@ -50,7 +51,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAppStore } from "@Stores/app.js";
 import { Icon } from '@iconify/vue';
@@ -60,6 +61,11 @@ const appStore = useAppStore();
 const route = useRoute();
 const isContactActive = ref(route.path === '/contact');
 const isSignUpActive = ref(route.path === '/sign-up');
+
+const isFeedback = computed(() => {
+  let routeName = ['FeedBack', 'UnitFeedBack', 'StaffFeedBack', 'SuccessFeedback', 'EnableAdvContact', 'QRCodeAdvContact', undefined];
+  return routeName.includes(route.name)
+});
 
 </script>
 
