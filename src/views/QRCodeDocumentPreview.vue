@@ -1,24 +1,42 @@
 <template>
-  <div id="preview" style="font-family: Arial, sans-serif;">
-    <p>Dear Customer,</p>
-    <p>At Nexties, we value your feedback as it helps us enhance your experience. We invite you to share your thoughts by scanning the QR code below.</p>
-    <p>As a token of our appreciation, you'll unlock exclusive benefits and surprises upon completing the feedback. Your input is crucial in shaping the future of our services.</p>
-    <qrcode-vue id="qrcode"
-    value="https://example.com/feedback"
-    :size="150" level="L" render-as="svg" />
-    <p>Thank you for being a valued part of our community. Together, let's make Nexties even better!</p>
+  <div class="document_preview">
+    <div class="filter">
+      <div>
+         <div class="template__filter">
+                <div class="text-sm title">Choose a template</div>
+                <el-select v-model="template" filterable placeholder="select template" size="large">
+                    <el-option v-for="(item, index) in templates" :key="index" :label="item.category"
+                        :value="item.category"/>
+                </el-select>
+                <button class="btn" @click="generatePdf">Télécharger en PDF</button>
+        </div>
+      </div>
+    </div>
+    <div id="preview" style="font-family: Arial, sans-serif;">
+      <div>
+          <p>Dear Customer,</p>
+          <p>At Nexties, we value your feedback as it helps us enhance your experience. We invite you to share your thoughts by scanning the QR code below.</p>
+          <p>As a token of our appreciation, you'll unlock exclusive benefits and surprises upon completing the feedback. Your input is crucial in shaping the future of our services.</p>
+          <qrcode-vue id="qrcode"
+          value="https://example.com/feedback"
+          :size="150" level="L" render-as="svg" />
+          <div id="qrCodeContainer"></div>
+          <p>Thank you for being a valued part of our community. Together, let's make Nexties even better!</p>
+      </div>
+    </div>
   </div>
-  <div id="qrCodeContainer"></div>
-  <button @click="generatePdf">Télécharger en PDF</button>
 </template>
 
 <script setup>
-import { onBeforeMount } from 'vue';
+import { onBeforeMount, ref } from 'vue';
 import { useAppStore } from "@Stores/app.js";
 import { useRoute } from "vue-router";
 import jsPDF from 'jspdf';
 import QrcodeVue from 'qrcode.vue';
 import QRCode from 'qrcode';
+import { ElOption, ElSelect, ElTooltip } from 'element-plus';
+import 'element-plus/es/components/option/style/css';
+import 'element-plus/es/components/select/style/css';
 
 const appStore = useAppStore();
 const route = useRoute();
@@ -26,6 +44,9 @@ const doc = new jsPDF({
     orientation: 'portrait',
     format: 'a5',
 });
+const template =ref(null)
+
+const templates = ref([])
 
 const generatePdf = () => {
   addContentToPdf();
@@ -85,7 +106,7 @@ onBeforeMount(()=>{
         isCurrent: false,
      },
      {
-        title: "Analysis",
+        title: "Document preview",
         path: `${route.path}`,
         isCurrent: true
      }
@@ -94,10 +115,27 @@ onBeforeMount(()=>{
 });
 </script>
 <style scoped>
-#preview{
+.document_preview{
+  min-height:calc(90dvh - 140px);
+ /* width: var(--container-width-lg);*/
+  margin: 0 auto;
+  margin-top: 5rem;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.filter{
+  flex-basis: 400px;
+  /*border: 1px solid black;*/
+}
+
+
+#preview >div{
 	margin: auto;
-	margin-top: 3rem;
-  width: 50%;
+  width: 70%;
+  text-align: justify;
 }
 
 #qrcode{
