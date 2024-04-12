@@ -5,31 +5,32 @@
          <div class="template__filter">
                 <div class="text-sm title">Choose a template</div>
                 <el-select v-model="template" filterable placeholder="select template" size="large">
-                    <el-option v-for="(item, index) in templates" :key="index" :label="item.category"
-                        :value="item.category"/>
+                    <el-option v-for="(item, index) in templates" :key="index" :label="item.name"
+                        :value="item"/>
                 </el-select>
-                <button class="btn" @click="generatePdf">Télécharger en PDF</button>
+                <button class="btn downloads mt-2" @click="generatePdf">Télécharger en PDF</button>
         </div>
       </div>
     </div>
     <div id="preview" style="font-family: Arial, sans-serif;">
-      <div>
-          <p>Dear Customer,</p>
-          <p>At Nexties, we value your feedback as it helps us enhance your experience. We invite you to share your thoughts by scanning the QR code below.</p>
-          <p>As a token of our appreciation, you'll unlock exclusive benefits and surprises upon completing the feedback. Your input is crucial in shaping the future of our services.</p>
+      <div v-if="template">
+          <p v-html="template.text_greeting" ref="text_greeting"></p>
+          <p v-html="template.text1" ref="text1"></p>
+          <p v-html="template.text2" ref="text2"></p>
           <qrcode-vue id="qrcode"
-          value="https://example.com/feedback"
+          :value="qrStore.qrcodeValue"
           :size="150" level="L" render-as="svg" />
-          <div id="qrCodeContainer"></div>
-          <p>Thank you for being a valued part of our community. Together, let's make Nexties even better!</p>
+          <p v-html="template.text3" ref="text3"></p>
       </div>
     </div>
   </div>
+  <div id="qrCodeContainer"></div>
 </template>
 
 <script setup>
 import { onBeforeMount, ref } from 'vue';
 import { useAppStore } from "@Stores/app.js";
+import { useQrStore } from "@Stores/qrtemplate.js";
 import { useRoute } from "vue-router";
 import jsPDF from 'jspdf';
 import QrcodeVue from 'qrcode.vue';
@@ -44,23 +45,35 @@ const doc = new jsPDF({
     orientation: 'portrait',
     format: 'a5',
 });
+const qrStore = useQrStore();
 const template =ref(null)
+const text_greeting = ref(null)
+const text1 = ref(null)
+const text2 = ref(null)
+const text3 = ref(null)
 
 const templates = ref([])
 
 const generatePdf = () => {
+  generateQRCode();
   addContentToPdf();
   doc.save('preview.pdf');
 };
 
 const addContentToPdf = () => {
+
+ const greeting = text_greeting.value;
+ const paragraph1 = text1.value;
+ const paragraph2 = text2.value;
+ const paragraph3 = text3.value;
+
  const content = `
-    Dear Customer,\n\n
-    At Nexties, we value your feedback as it helps us enhance your experience. We invite you to share your thoughts by scanning the QR code below.\n\n
-    As a token of our appreciation, you'll unlock exclusive benefits and surprises upon completing the feedback. Your input is crucial in shaping the future of our services.\n\n
+    ${greeting.textContent.trim()}\n\n
+    ${paragraph1.textContent.trim()}\n\n
+    ${paragraph2.textContent.trim()}\n\n
  `;
 
- const text2 = `Thank you for being a valued part of our community. Together, let's make Nexties even better!\n`
+ const text = `${paragraph3.textContent.trim()}\n`
  doc.setFontSize(10);
  const maxWidth = 140; 
  const lines = doc.splitTextToSize(content, maxWidth);
@@ -70,8 +83,7 @@ const addContentToPdf = () => {
     doc.text(lines[i], 6, y); 
     y += 4; 
  }
- generateQRCode();
- const lines2 = doc.splitTextToSize(text2, maxWidth)
+ const lines2 = doc.splitTextToSize(text, maxWidth)
  y +=35
  for (let i = 0; i < lines2.length; i++) {
     doc.text(lines2[i], 6, y); 
@@ -79,9 +91,9 @@ const addContentToPdf = () => {
  }
 };
 
-
 const generateQRCode = () => {
-  const qrCodeData = 'https://example.com/feedback'; // Example URL for feedback
+  const qrCodeData = qrStore.qrcodeValue; 
+  console.log(qrStore.qrcodeValue)
   QRCode.toCanvas(document.getElementById('qrCodeContainer'), qrCodeData, { width: 100, height: 100 }, (error, canvas) => {
     if (!error) {
       const imageData = canvas.toDataURL('image/png');
@@ -92,7 +104,7 @@ const generateQRCode = () => {
   });
 };
 
-onBeforeMount(()=>{
+onBeforeMount(async()=>{
   appStore.setCurrentPage({
     title1: "",
     title2: "Doc Preview",
@@ -111,7 +123,10 @@ onBeforeMount(()=>{
         isCurrent: true
      }
    ])
-   generateQRCode();
+    generateQRCode();
+   templates.value = await qrStore.getTemplates(route.params.tag, route.params.id);
+   if(templates.value.length>0) template.value = templates.value[0]
+   console.log(templates.value)
 });
 </script>
 <style scoped>
@@ -144,6 +159,14 @@ onBeforeMount(()=>{
 
 #preview p{
   padding: 15px 0;
+}
+
+.btn.downloads {
+    width: 100%;
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
 }
 </style>
 

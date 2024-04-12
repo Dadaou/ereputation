@@ -37,14 +37,19 @@ export const useQrStore = defineStore('qr', () => {
   }
 
   const setQrCodeValue = (value)=>{
-  	if(qrcodeValu.value || qrcodeValue.value !== value){
+  	if(qrcodeValue.value || qrcodeValue.value !== value){
   		qrcodeValue.value = value
   	}
   }
 
   return {
     templates,
+    qrcodeValue,
     getTemplates,
     setQrCodeValue
   }
-})
+ },
+  {
+    persist: true
+  }
+)
