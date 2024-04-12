@@ -132,7 +132,6 @@ onBeforeMount(async()=>{
 <style scoped>
 .document_preview{
   min-height:calc(90dvh - 140px);
- /* width: var(--container-width-lg);*/
   margin: 0 auto;
   margin-top: 5rem;
   padding: 0;
@@ -143,7 +142,6 @@ onBeforeMount(async()=>{
 
 .filter{
   flex-basis: 400px;
-  /*border: 1px solid black;*/
 }
 
 
@@ -168,5 +166,52 @@ onBeforeMount(async()=>{
     border-radius: 5px;
     padding: 5px;
 }
+
+@media only screen and (max-width: 768px) {
+  .document_preview {
+    flex-direction: column; 
+  }
+
+  .filter {
+    flex-basis: 100%; 
+    margin-bottom: 1rem; 
+  }
+
+  #preview > div {
+    width: 100%;
+    text-align: left; 
+  }
+
+  #qrcode {
+    margin: 1rem auto;
+  }
+
+  #preview p {
+    padding: 10px 0;
+  }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .document_preview {
+    gap: 0.5rem;
+  }
+
+  .filter {
+    flex-basis: 50%; 
+  }
+
+  #preview > div {
+    width: 100%; 
+  }
+
+  #qrcode {
+    margin: 1rem auto; 
+  }
+
+  #preview p {
+    padding: 12px 0;
+  }
+}
+
 </style>
 
