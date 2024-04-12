@@ -58,6 +58,8 @@
     :showModal="showModal"
     :filename="`${establishment.name}-feedback-link`"
     @close="showModal=false"
+    :customer="tag"
+    :establishment="establishment.competitor_tag"
     />
 </template>
 <script setup>

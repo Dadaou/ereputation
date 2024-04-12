@@ -1,10 +1,10 @@
 <template>
-    <div class="left__side">
-        <div class="head">
+    <!-- <div class="left__side"> -->
+        <!-- <div class="head">
             <div class="app__title">
                 <h2>Staffs Ranking</h2>
             </div>
-        </div>
+        </div> -->
 
         <!-- Table of ranking -->
         <div class="relative overflow-x-auto" style="margin-top: 15px;">
@@ -68,9 +68,9 @@
             </table>
         </div>
 
-    </div>
+    <!-- </div> -->
 
-    <div class="tablet_mobile__filter">
+    <!-- <div class="tablet_mobile__filter">
         <div class="date__picker">
             <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
         </div>
@@ -103,21 +103,6 @@
                 <span v-if="!dataLoading">{{ establishment.address1 }}, {{ establishment.city }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
             </div>
-            <!-- <div class="society__location">
-                <i class="uil uil-favorite"></i>
-                <span v-if="!dataLoading" class="society__location">{{ all_items[0].value }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
-            <div class="society__location">
-                <i class="uil uil-comment-alt"></i>
-                <span v-if="!dataLoading">{{ all_items[1].value }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
-            <div class="society__location">
-                <i class="uil uil-building"></i>
-                <span v-if="!dataLoading">{{ all_items[2].value }} competitors</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div> -->
         </div>
         <div class="photo" v-if="!dataLoading">
             <div v-if="establishment.url_source !== null" class="establishment__img">
@@ -204,7 +189,7 @@
                 }" :default="timePeriods[1]" />
             </div>
         </div>
-    </div>
+    </div> -->
 </template>
 
 <script setup>
@@ -233,23 +218,23 @@ appStore.setIsExist(true);
 
 const route = useRoute();
 
-appStore.setBreadcrumbs([
-    {
-        title: "Establishment",
-        path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
-        isCurrent: false,
-    },
-    {
-        title: "Staffs",
-        path: `/customer/${route.params.tag}/establishment/${route.params.id}/staffs`,
-        isCurrent: false,
-    },
-    {
-        title: "Staffs Ranking",
-        path: `${route.path}`,
-        isCurrent: true
-    }
-]);
+// appStore.setBreadcrumbs([
+//     {
+//         title: "Establishment",
+//         path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+//         isCurrent: false,
+//     },
+//     {
+//         title: "Staffs",
+//         path: `/customer/${route.params.tag}/establishment/${route.params.id}/staffs`,
+//         isCurrent: false,
+//     },
+//     {
+//         title: "Staffs Ranking",
+//         path: `${route.path}`,
+//         isCurrent: true
+//     }
+// ]);
 
 const dataLoading = ref(true)
 let establishment = ref({});
@@ -261,13 +246,6 @@ let timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
 let selectedTimePeriod = ref(timePeriods.value[0]);
 const date = ref([]);
 const currentDate = new Date();
-// let firstDateOfPreviousYear = new Date(currentDate.getFullYear() - 1, 0, 1);
-// firstDateOfPreviousYear.setHours(0, 0, 0, 0);
-// let lastDateOfCurrentYear = new Date(currentDate.getFullYear(), 11, 31, 23, 59, 59);
-// let start_date = ref(firstDateOfPreviousYear);
-// let end_date = ref(lastDateOfCurrentYear);
-// const start_date = ref(appStore.start_date);
-// const end_date = ref(appStore.end_date);
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 
@@ -324,47 +302,47 @@ watch([start_date, end_date, selectedTimePeriod], () => {
 })
 
 onBeforeMount(async () => {
-    appStore.isLoading = true;
+    // appStore.isLoading = true;
 
-    companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
+    // companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
 
-        if (data == false) {
-            appStore.setIsExist(false);
-            appStore.isLoading = false;
-        }
-        else {
-            establishment.value = data;
-            appStore.setCurrentPage({
-                title1: "",
-                title2: "Staff ranking",
-                icon: "uil-trophy",
-            })
+    //     if (data == false) {
+    //         appStore.setIsExist(false);
+    //         appStore.isLoading = false;
+    //     }
+    //     else {
+    //         establishment.value = data;
+    //         appStore.setCurrentPage({
+    //             title1: "",
+    //             title2: "Staff ranking",
+    //             icon: "uil-trophy",
+    //         })
 
-            appStore.setBreadcrumbs([
-                {
-                    title: establishment.value.name,
-                    path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
-                    isCurrent: false,
-                },
-                {
-                    title: "Staffs",
-                    path: `/customer/${route.params.tag}/establishment/${route.params.id}/staffs`,
-                    isCurrent: false,
-                },
-                {
-                    title: "Staffs Ranking",
-                    path: `${route.path}`,
-                    isCurrent: true
-                }
-            ]);
+    //         appStore.setBreadcrumbs([
+    //             {
+    //                 title: establishment.value.name,
+    //                 path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+    //                 isCurrent: false,
+    //             },
+    //             {
+    //                 title: "Staffs",
+    //                 path: `/customer/${route.params.tag}/establishment/${route.params.id}/staffs`,
+    //                 isCurrent: false,
+    //             },
+    //             {
+    //                 title: "Staffs Ranking",
+    //                 path: `${route.path}`,
+    //                 isCurrent: true
+    //             }
+    //         ]);
 
-            all_items.value[0].value = establishment.value.rating;
-            all_items.value[1].value = establishment.value.totalReviews;
-            appStore.isLoading = false;
-            dataLoading.value = false;
+    //         all_items.value[0].value = establishment.value.rating;
+    //         all_items.value[1].value = establishment.value.totalReviews;
+    //         appStore.isLoading = false;
+    //         dataLoading.value = false;
 
-        }
-    })
+    //     }
+    // })
     await loadFromServer(selectedTimePeriod.value.toLowerCase(), companyId, start_date.value, end_date.value);
     // const response = await new Promise((resolve) => {
     //     firstDateOfPreviousYear = moment(firstDateOfPreviousYear).format('YYYY-MM-DD');

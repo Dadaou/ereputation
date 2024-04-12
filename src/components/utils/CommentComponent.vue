@@ -112,7 +112,8 @@
                     filterable
                     placeholder="select categories" 
                     size="large">
-                        <el-option v-for="(item, index) in categories" :key="index" :label="item.category"
+                        <el-option key="0" label="" value=""/>
+                        <el-option v-for="(item, index) in categories" :key="index+1" :label="item.category"
                             :value="item.category"/>
                     </el-select>
 

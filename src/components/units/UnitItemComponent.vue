@@ -47,50 +47,7 @@
     <div v-if="units.length == 0">No units</div>
     <QrCodeModalComponent v-if="selectedUnit"
         :qrcodeValue="`${baseurl}/public/${tag}/establishment/${selectedUnit.establishment_competitor_tag}/units/${selectedUnit.tag}/feedback`"
-        :showModal="showModal" :filename="`${selectedUnit.establishment_name}-${selectedUnit.name}-feedback-link`"
-        @close="showModal = false" />
-    <!-- <ModalComponent :showModal="showModal " @close="showModal=false" :width="modalWidth" >
-                    <template #content>
-                        <div class="modal__header">
-                            <div class="modal__title">
-                                <h3 class="font-semibold text-gray-900 dark:text-white">
-                                    <i class="uil uil-qrcode-scan"></i> 
-                                </h3>
-                            </div>
-                            <div class="modal__close">
-                                <i class="uil uil-times-circle"  @click="showModal = false"></i>
-                            </div>
-                        </div>
-
-                        <div  v-if="downloaded==false" class="establishment__review__qrcode">
-                            <p class="mb-5">
-                                Download this QR code to link <b>{{ selectedUnit.name }}</b> feedback page
-                            </p>
-                            <div id="qrcode__container  mt-5" ref="qrcode">
-                                <vue-qrious
-                                    class="qr__code_view"
-                                     :value="`${baseurl}/public/${tag}/establishment/${selectedUnit.establishment_competitor_tag}/units/${selectedUnit.tag}/feedback`" size="5000"
-                                    @change="onDataUrlChange"
-                                    />
-                                
-                            </div>
-                        </div>
-                        <div v-else class="establishment__review__qrcode">
-                            <p class="mb-5">
-                                Your download is successfully complete!
-                            </p>
-                        </div>
-                        <div class="mt-5 download__qr_btn">
-                            <button v-if="
-                            downloaded==false" class="btn__light_secondary" @click="downloadQrcode(selectedUnit.name)">
-                                <i class="uil uil-download-alt"></i> Download 
-                            </button>
-                            <button v-else class="btn__light_secondary" @click="close()">
-                                close
-                            </button>
-                        </div>
-                    </template>
-</ModalComponent> -->
+        :showModal="showModal" :filename="`${selectedUnit.name}-feedback-link`" @close="showModal = false" />
 </template>
 <script setup>
 import { ref, inject, computed, defineAsyncComponent } from 'vue';
@@ -113,11 +70,6 @@ const props = defineProps({
 });
 
 const tag = inject('tag')
-
-/** QR Code download code need a refactor **/
-const ModalComponent = defineAsyncComponent(() =>
-    import('@Components/utils/ModalComponent.vue')
-);
 
 const QrCodeModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/QrCodeModalComponent.vue')

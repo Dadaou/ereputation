@@ -1,51 +1,110 @@
 <template>
-<div class="container preview">
-	<!-- <vue3-simple-html2pdf
-    ref="vue3SimpleHtml2pdf"
-    :options="pdfOptions"
-    :filename="exportFilename"
-  > -->
-    <div class="main-content">
-      Dear Customer,
-
-			At Nexties, we value your feedback as it helps us enhance your experience. We invite you to share your thoughts by scanning the QR code below.
-
-			As a token of our appreciation, you'll unlock exclusive benefits and surprises upon completing the feedback. Your input is crucial in shaping the future of our services.
-
-			Thank you for being a valued part of our community. Together, let's make Nexties even better!
+  <div class="document_preview">
+    <div class="filter">
+      <div>
+         <div class="template__filter">
+                <div class="text-sm title">Choose a template</div>
+                <el-select v-model="template" filterable placeholder="select template" size="large">
+                    <el-option v-for="(item, index) in templates" :key="index" :label="item.name"
+                        :value="item"/>
+                </el-select>
+                <button class="btn downloads mt-2" @click="generatePdf">Télécharger en PDF</button>
+        </div>
+      </div>
     </div>
-  <!-- </vue3-simple-html2pdf>
-
-  <button @click="download">Download pdf</button> -->
-</div>
+    <div id="preview" style="font-family: Arial, sans-serif;">
+      <div v-if="template">
+          <p v-html="template.text_greeting" ref="text_greeting"></p>
+          <p v-html="template.text1" ref="text1"></p>
+          <p v-html="template.text2" ref="text2"></p>
+          <qrcode-vue id="qrcode"
+          :value="qrStore.qrcodeValue"
+          :size="150" level="L" render-as="svg" />
+          <p v-html="template.text3" ref="text3"></p>
+      </div>
+    </div>
+  </div>
+  <div id="qrCodeContainer"></div>
 </template>
+
 <script setup>
 import { onBeforeMount, ref } from 'vue';
 import { useAppStore } from "@Stores/app.js";
+import { useQrStore } from "@Stores/qrtemplate.js";
 import { useRoute } from "vue-router";
+import jsPDF from 'jspdf';
+import QrcodeVue from 'qrcode.vue';
+import QRCode from 'qrcode';
+import { ElOption, ElSelect, ElTooltip } from 'element-plus';
+import 'element-plus/es/components/option/style/css';
+import 'element-plus/es/components/select/style/css';
 
 const appStore = useAppStore();
 const route = useRoute();
-const vue3SimpleHtml2pdf = ref(null)
-const pdfOptions = {
-    margin: 15,
-      image: {
-        type: "jpeg",
-        quality: 1,
-    },
-    html2canvas: { scale: 3 },
-    jsPDF: {
-      unit: "mm",
-      format: "a4",
-      orientation: "p",
-    },
-}
-// const exportFilename =  "my-custom-file.pdf",
-const download = ()=> {
-   // vue3SimpleHtml2pdf.download();
-}
+const doc = new jsPDF({
+    orientation: 'portrait',
+    format: 'a5',
+});
+const qrStore = useQrStore();
+const template =ref(null)
+const text_greeting = ref(null)
+const text1 = ref(null)
+const text2 = ref(null)
+const text3 = ref(null)
 
-onBeforeMount(()=>{
+const templates = ref([])
+
+const generatePdf = () => {
+  generateQRCode();
+  addContentToPdf();
+  doc.save('preview.pdf');
+};
+
+const addContentToPdf = () => {
+
+ const greeting = text_greeting.value;
+ const paragraph1 = text1.value;
+ const paragraph2 = text2.value;
+ const paragraph3 = text3.value;
+
+ const content = `
+    ${greeting.textContent.trim()}\n\n
+    ${paragraph1.textContent.trim()}\n\n
+    ${paragraph2.textContent.trim()}\n\n
+ `;
+
+ const text = `${paragraph3.textContent.trim()}\n`
+ doc.setFontSize(10);
+ const maxWidth = 140; 
+ const lines = doc.splitTextToSize(content, maxWidth);
+
+ let y = 25;
+ for (let i = 0; i < lines.length; i++) {
+    doc.text(lines[i], 6, y); 
+    y += 4; 
+ }
+ const lines2 = doc.splitTextToSize(text, maxWidth)
+ y +=35
+ for (let i = 0; i < lines2.length; i++) {
+    doc.text(lines2[i], 6, y); 
+    y += 3;
+ }
+};
+
+const generateQRCode = () => {
+  const qrCodeData = qrStore.qrcodeValue; 
+  console.log(qrStore.qrcodeValue)
+  QRCode.toCanvas(document.getElementById('qrCodeContainer'), qrCodeData, { width: 100, height: 100 }, (error, canvas) => {
+    if (!error) {
+      const imageData = canvas.toDataURL('image/png');
+      doc.addImage(imageData, 'PNG', 50, 60, 50, 50);
+    } else {
+      console.error('QR Code generation error:', error);
+    }
+  });
+};
+
+onBeforeMount(async()=>{
   appStore.setCurrentPage({
     title1: "",
     title2: "Doc Preview",
@@ -59,17 +118,100 @@ onBeforeMount(()=>{
         isCurrent: false,
      },
      {
-        title: "Analysis",
+        title: "Document preview",
         path: `${route.path}`,
         isCurrent: true
      }
    ])
+    generateQRCode();
+   templates.value = await qrStore.getTemplates(route.params.tag, route.params.id);
+   if(templates.value.length>0) template.value = templates.value[0]
+   console.log(templates.value)
 });
 </script>
 <style scoped>
-.preview{
-	margin-top: 5rem; 
+.document_preview{
+  min-height:calc(90dvh - 140px);
+  margin: 0 auto;
+  margin-top: 5rem;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
 }
 
-	
+.filter{
+  flex-basis: 400px;
+}
+
+
+#preview >div{
+	margin: auto;
+  width: 70%;
+  text-align: justify;
+}
+
+#qrcode{
+  margin: auto;
+}
+
+#preview p{
+  padding: 15px 0;
+}
+
+.btn.downloads {
+    width: 100%;
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+@media only screen and (max-width: 768px) {
+  .document_preview {
+    flex-direction: column; 
+  }
+
+  .filter {
+    flex-basis: 100%; 
+    margin-bottom: 1rem; 
+  }
+
+  #preview > div {
+    width: 100%;
+    text-align: left; 
+  }
+
+  #qrcode {
+    margin: 1rem auto;
+  }
+
+  #preview p {
+    padding: 10px 0;
+  }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .document_preview {
+    gap: 0.5rem;
+  }
+
+  .filter {
+    flex-basis: 50%; 
+  }
+
+  #preview > div {
+    width: 100%; 
+  }
+
+  #qrcode {
+    margin: 1rem auto; 
+  }
+
+  #preview p {
+    padding: 12px 0;
+  }
+}
+
 </style>
+

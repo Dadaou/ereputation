@@ -39,7 +39,7 @@
                         </div>
               </div>
               <div v-if="showEmoji">
-                <span v-if="post.feeling" class="emoji mx-1" @click="handleModal('Edit hashtag feeling', 'edit', 'uil-edit', 'feeling', post)">
+                <span v-if="post.feeling" class="emoji" @click="handleModal('Edit hashtag feeling', 'edit', 'uil-edit', 'feeling', post)">
                             <span v-if="post.feeling == 'positive'">😀</span>
                             <span v-if="post.feeling == 'neutre' || post.feeling == 'neutral'">😐</span>
                             <span v-if="post.feeling == 'negative'">😕</span>
@@ -63,11 +63,6 @@
                             </el-tooltip>
                         </span>
               </div>
-              <!-- <span class="emoji mx-1" v-if="showEmoji">
-                <span v-if="post.feeling == 'positive'">😀</span>
-                <span v-if="post.feeling == 'neutre' || post.feeling == 'neutral'">😐</span>
-                <span v-if="post.feeling == 'negative'">😕</span>
-              </span> -->
           </div>
 				</div>
 				<div class="post-title">
@@ -125,7 +120,8 @@
                     filterable
                     placeholder="select categories" 
                     size="large">
-                        <el-option v-for="(item, index) in categories" :key="index" :label="item.category"
+                        <el-option key="0" label="" value=""/>
+                        <el-option v-for="(item, index) in categories" :key="index+1" :label="item.category"
                             :value="item.category"/>
                     </el-select>
 
@@ -430,7 +426,14 @@ const loadComments = async(id)=>{
 	z-index: 1
 }
 
-.post-emoji-category, .post-source-date{
+.post-emoji-category{
+  display: flex;
+  flex-direction: column;
+  align-items: right;
+  gap:0.5rem;
+}
+
+.post-source-date{
   display: flex;
   flex-direction: column;
 }

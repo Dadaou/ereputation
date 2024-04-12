@@ -34,7 +34,8 @@
         <button v-if="downloaded == false" class="btn__light_secondary" @click="downloadQrcode('svg')">
           <i class="uil uil-download-alt"></i> SVG
         </button>
-        <button v-if="downloaded == false" class="btn__light_secondary" @click="print(customer, establishment)">
+        <button v-if="downloaded == false" class="btn__light_secondary"
+          @click="print(route.params.tag, route.params.id)">
           <i class="uil uil-download-alt"></i> Print A5
         </button>
         <button v-else class="btn__light_secondary" @click="close">
@@ -51,7 +52,8 @@ import ModalComponent from '@Components/utils/ModalComponent.vue';
 import QrcodeVue from 'qrcode.vue';
 import services from '@Services/services.js';
 import { useWindowSize } from '@vueuse/core';
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
+import { useQrStore } from "@Stores/qrtemplate.js";
 
 const props = defineProps({
   qrcodeValue: {
@@ -80,6 +82,9 @@ const props = defineProps({
 
 const emits = defineEmits(['close'])
 const router = useRouter();
+
+const route = useRoute();
+const qrStore = useQrStore();
 const close = () => {
   emits('close')
   downloaded.value = false
@@ -108,7 +113,7 @@ const downloadQrcode = (type) => {
 };
 
 const print = (customer_tag, establishment_tag) => {
-  console.log('print');
+  qrStore.setQrCodeValue(props.qrcodeValue);
   router.push({
     name: 'QRCodeDocumentPreview',
     params: {

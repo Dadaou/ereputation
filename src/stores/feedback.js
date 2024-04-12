@@ -31,8 +31,12 @@ export const useFeedbackStore = defineStore("feedback", {
             let parameters = ishashtag
             ? `type=${type}&post=${id}&current_category=${current}`
             : `type=${type}&review=${id}&current_category=${current}`;
-            parameters = type=='add'?`${parameters}&old_category`:`${parameters}&old_category=${old}`
-            
+
+            parameters = type=='add'
+            ?`${parameters}&old_category`
+            :(old !=='')?`${parameters}&old_category=${old}`:`${parameters}&old_category=${null}`
+
+
             api = `${api}?${parameters}`
             console.log(api)
 
