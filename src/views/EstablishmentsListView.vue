@@ -31,7 +31,6 @@ import { ref, onBeforeMount, onMounted, defineAsyncComponent, inject, computed }
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
 import { useCompanyStore } from "@Stores/company.js";
-import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import EstablishmentListLoadedComponent from '@Components/utils/EstablishmentListLoadedComponent.vue';
 import { useRouter, useRoute } from "vue-router";
 import services from '@Services/services.js';
@@ -51,7 +50,7 @@ const customerTag = inject('tag');
 const customer = ref(null)
 
 const loadCustomer = async(partner)=>{
-	appStore.isLoading = true
+	// appStore.isLoading = true
 	const response = await new Promise((resolve) => {
         services.get_Record(`partner/customer?id=${partner}`, (response) => {
             resolve(response)
@@ -69,12 +68,12 @@ const loadCustomer = async(partner)=>{
 	    		}
     		}
     	})
-        appStore.isLoading = false
+        // appStore.isLoading = false
     }
 };
 
 onBeforeMount(async () => {
-    appStore.isLoading = true;
+    // appStore.isLoading = true;
     dataLoading.value = true;
 
     if(userStore.user.roles.includes("ROLE_PARTNER") && userStore.user.partner && userStore.customer.tag !== customerTag.value){
@@ -93,7 +92,7 @@ onMounted(async()=>{
             }
             dataLoading.value = false
         })
-    } else appStore.isLoading = false;
+    } // else appStore.isLoading = false;
 });
 </script>
 <style scoped>
