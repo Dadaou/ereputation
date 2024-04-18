@@ -59,6 +59,25 @@
                 </button>
             </div>
         </form>
+        <div class="profile__header mt-6">
+            <div class="profile__edit">
+                <p>Do you wish to establish a partnership with a new establishment not listed?
+                    Let them know through a simple email and take advantage of the benefits of our endorsement program :
+                </p>
+            </div>
+        </div>
+        <form @submit.prevent="submitEmail" @keydown.enter.prevent="submitEmail" class="mt-4 px-2">
+            <div class="inline-flex items-center gap-2">
+                <input type="email" id="email" v-model="email"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-50 p-2">
+                <button type="submit"
+                    class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
+                        ...</span>
+                    <span v-show="!showSpinner"><i class="uil uil-telegram-alt mr-1"></i> Invite a friend</span>
+                </button>
+            </div>
+        </form>
     </div>
 </template>
 <script setup>
@@ -75,6 +94,7 @@ import 'element-plus/es/components/select/style/css'
 const partnership = ref('');
 const partnerships = ref([]);
 const advantage = ref('');
+const email = ref('');
 const expiredAt = ref(null);
 const limit = ref(0);
 const showSpinner = ref(false);
