@@ -27,7 +27,7 @@
                             <div class="item__head">
                                 <div class="society__info">
                                     <a class="establishment__link" @click="goToCompany(company)">
-                                        <label class="society__name">{{ company.name }} ({{ company.score }})</label>
+                                        <label class="society__name">{{ company.name }} {{ company.score?`(${company.score})`:'' }}</label>
                                     </a>
                                     <div class="society__category">
                                         <i
@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <RatingComponent class="rating__content" :reviews="company.totalReviews"
-                        :rating="Number(company.rating).toFixed(1)" :score="company.score" :feeling="company.feeling" />
+                        :rating="Number(company.rating).toFixed(1)" :score="company.score" :feeling="company.feeling" :company="company"/>
                 </div>
                 <div class="list__actions">
                     <button class="btn mr-2 qrcode" @click="showModal = true, establishment = company">QR Code <i

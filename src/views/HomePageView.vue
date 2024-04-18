@@ -3,82 +3,36 @@
         <HeadComponent :page="page"></HeadComponent>
         <div class="container client__container">
             <div class="header">
-                <div class="search__icon">
-                    <i class="uil uil-building"></i>
-                    <div class="line"></div>
+                <div class="header_navigation">
+                    <RouterLink class="search__icon" :to="{ name: 'EstablishmentList', params: { tag: tag} }">
+                        <Icon :icon="'ion:list'" width="26"></Icon>
+                    </RouterLink>
+                    <RouterLink v-if="show" class="search__icon" :to="{ name: 'EstablishmentRanking', params: { tag: tag} }"> 
+                        <Icon :icon="'ph:ranking-fill'" width="25"></Icon>
+                    </RouterLink>
+                    <RouterLink v-if="show" class="search__icon" :to="{ name: 'EstablishmentListByTrend', params: { tag: tag} }"> 
+                        <Icon :icon="'gg:trending'" width="25"></Icon>
+                    </RouterLink>
                 </div>
                 <button v-if="userStore.user.partner && userStore.user.roles.includes('ROLE_PARTNER') && route.name !== 'CustomersList'" @click="backToCustomer">
                 <i class="uil uil-arrow-left"></i>Back</button>
             </div>
             <RouterView/>
         </div>
-        <!-- <div class="container client__container">
-            <div class="search__icon">
-                <i class="uil uil-building"></i>
-                <div class="line"></div>
-            </div>
-            <div v-if="!dataLoading">
-
-                <div class="client__container__head" v-if="establishments.length > 0">
-                    Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, your establishments are
-                    listed bellow. <span>({{ establishments.length }} found)</span>
-                </div>
-                <div class="client__container__head" v-else>
-                    Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, no companies found yet.
-                </div>
-            </div>
-            <div v-else>
-                <div class="client__container__head">
-                    Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, your establishments are
-                    listed bellow.
-                </div>
-            </div>
-            <div class="society__list" v-if="establishments.length > 0">
-                <suspense>
-                    <establishments-list-component :establishments="establishments" />
-                    <template #fallback>
-                        <establishment-list-loaded-component :nb="3" />
-                    </template>
-                </suspense>
-            </div>
-        </div>
-        <div class="container client__container" v-else>
-            <div class="search__icon">
-                <i class="uil uil-envelope-alt"></i>
-                <div class="line"></div>
-            </div>
-            <div class="app__message">
-                <p>Welcome <b>{{ userStore.user.firstname }} {{ userStore.user.lastname }}</b>, It seems you are not yet an
-                    active customer. To proceed further and access our services, kindly get in touch with our admin team.
-                    They will assist you in finalizing your registration and become a valued customer.</p>
-                <button class="btn" @click="signOut">Disconnect</button>
-            </div>
-        </div> -->
     </div>
 </template>
 
 <script setup>
-import { ref, inject } from 'vue'
-// import { useAppStore } from "@Stores/app.js";
+import { ref, inject, computed } from 'vue';
 import { useUserStore } from "@Stores/user.js";
-// import { useCompanyStore } from "@Stores/company.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
-// import EstablishmentListLoadedComponent from '@Components/utils/EstablishmentListLoadedComponent.vue';
 import { useRouter, useRoute } from "vue-router";
-
-
-// const EstablishmentsListComponent = defineAsyncComponent(() =>
-//     import('@Components/utils/EstablishmentsListComponent.vue')
-// )
+import { Icon } from '@iconify/vue';
 
 const userStore = useUserStore();
-// const appStore = useAppStore();
-// const companiesStore = useCompanyStore();
-// const establishments = ref([]);
-// const dataLoading = ref(true);
 const router = useRouter();
 const route = useRoute();
-// const customerTag = inject('tag')
+const tag = inject("tag")
 
 const page = ref({
     title1: "",
@@ -90,25 +44,10 @@ const backToCustomer = ()=>{
     router.push({name: "CustomersList"})
 };
 
-// const signOut = () => {
-//     userStore.signOut();
-//     userStore.authenticated = false;
-//     if (userStore.authenticated == false) router.push({ name: "Login" });
-// }
-
-// onBeforeMount(async () => {
-//     appStore.isLoading = true;
-//     dataLoading.value = true;
-//     if (userStore.user.customer !== null) {
-//         companiesStore.getEstablishments(customerTag).then((data) => {
-//             establishments.value = data;
-//             if(userStore.user.customer){
-//                 userStore.user.customer['establishments'] = establishments.value
-//             }
-//             dataLoading.value = false
-//         })
-//     } else appStore.isLoading = false;
-// });
+const show = computed(() => {
+  let routeName = ['EstablishmentList', 'EstablishmentRanking', 'EstablishmentListByTrend', undefined];
+  return routeName.includes(route.name)
+});
 </script>
 
 <style scoped>
@@ -208,6 +147,49 @@ const backToCustomer = ()=>{
 
 .list__actions button:hover {
     background-color: var(--color-primary);
+}
+
+/*.header_navigation{
+    display: flex;
+    gap: 15px;
+}*/
+
+.header_navigation {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    gap: 15px;
+}
+
+.search__icon {
+    text-decoration: none;
+    color: #333;
+    margin: 0 5px;
+    transition: color 0.3s ease;
+}
+
+.search__icon:hover {
+    color: var(--color-danger);
+}
+
+.search__icon.router-link-exact-active{
+     color: var(--color-danger);
+}
+
+
+@media screen and (max-width: 600px) {
+    .header_navigation {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 5px 10px;
+    }
+
+    .search__icon {
+        margin: 5px;
+    }
 }
 
 @media screen and (max-width:1163px) {

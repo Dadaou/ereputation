@@ -302,6 +302,16 @@ const router = createRouter({
               component: () => import('@Views/EstablishmentsListView.vue')
             },
             {
+              path: 'customer/:tag/establishment/rank',
+              name: 'EstablishmentRanking',
+              component: () => import('@Views/EstablishmentRankingView.vue')
+            },
+            {
+              path: 'customer/:tag/establishment/trends',
+              name: 'EstablishmentListByTrend',
+              component: () => import('@Views/EstablishmentListByTrendView.vue')
+            },
+            {
               path: 'customers',
               name: 'CustomersList',
               component: () => import('@Views/CustomerListView.vue')
