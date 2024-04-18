@@ -129,7 +129,9 @@
     <EstablishmentNotFound v-else />
 </template>
 
+
 <script setup>
+
 import { ref, onBeforeMount, defineAsyncComponent, onMounted, watch, inject } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
@@ -159,17 +161,17 @@ const EstablishmentNotFound = defineAsyncComponent(() =>
     import("@Views/EstablishmentNotFound.vue")
 )
 
-const { t } = useI18n();
-const route = useRoute();
-const router = useRouter();
-const userStore = useUserStore();
+const { t }         = useI18n();
+const route         = useRoute();
+const router        = useRouter();
+const userStore     = useUserStore();
 const feedbackStore = useFeedbackStore();
 const establishment = ref({});
 let media = [];
 
 const page = ref({})
 
-let allAdvantages = ref([])
+let allAdvantages   = ref([])
 let randomAdvantage = ref(null);
 
 const showSpinner = ref(false);
@@ -194,6 +196,7 @@ onBeforeMount(async () => {
 
 onMounted(() => {
     /** Charger le titre par defaut */
+    window.FingerprintG2A.default.main();
     page.value = {
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),
