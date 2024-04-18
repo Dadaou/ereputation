@@ -108,7 +108,7 @@ const submit = async () => {
         "advantage": advantage.value,
         "partnership": partnership.value,
         "limite": limit.value,
-        "expired_at": expiredAt.value
+        "expiredAt": expiredAt.value
     }
 
     try {
