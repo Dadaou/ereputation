@@ -27,7 +27,7 @@
                             <div class="item__head">
                                 <div class="society__info">
                                     <a class="establishment__link" @click="goToCompany(company)">
-                                        <label class="society__name">{{ company.name }} ({{ company.score }})</label>
+                                        <label class="society__name">{{ company.name }} {{ company.score?`(${company.score})`:'' }}</label>
                                     </a>
                                     <div class="society__category">
                                         <i
