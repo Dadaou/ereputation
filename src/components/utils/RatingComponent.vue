@@ -1,33 +1,47 @@
 <template>
-<div class="society__rating">
-    <div class="reviews">
-       <div class="rating__observation" v-if="rating > 0">
-       {{feeling}}
-       </div>
-       <div class="reviews__value">
-            {{ reviews }} 
-            <span v-if="Number(props.reviews) >= 2">
-                reviews
-            </span> 
-            <span v-else>
-                review
-            </span> 
-        </div>
-    </div>
-    <div class="global__rating">
-           <!--  <span class="font-bold" :data-tooltip="`Score: ${score}`">{{ score }} </span>
-            <span> | </span> -->
-            <span class="font-medium" :data-tooltip="`Rating: ${rating}`">{{ rating }}</span>
-    </div>
+  <div class="rating_container">
+    <div class="society__rating">
+      <div class="reviews">
+         <div class="rating__observation" v-if="rating > 0">
+         {{feeling}}
+         </div>
+         <div class="reviews__value">
+              {{ reviews }} 
+              <span v-if="Number(props.reviews) >= 2">
+                  reviews
+              </span> 
+              <span v-else>
+                  review
+              </span> 
+          </div>
+      </div>
+      <div class="global__rating">
+             <!--  <span class="font-bold" :data-tooltip="`Score: ${score}`">{{ score }} </span>
+              <span> | </span> -->
+              <span class="font-medium" :data-tooltip="`Rating: ${rating}`">{{ rating }}</span>
+      </div>
+  </div>
+  <div class="ratio">{{company.ratio?`Ratio ${Number(company.ratio).toFixed(1)}%`:''}}</div>
 </div>
 </template>
 
 <script setup>
-const props = defineProps(['reviews', 'rating', 'score', 'feeling']);
+const props = defineProps(['reviews', 'rating', 'score', 'feeling', 'company']);
 
 </script>
 
 <style scoped>
+    .rating_container{
+      display: flex;
+      flex-direction: column;
+      align-content: flex-start;
+    }
+
+    .ratio{
+      font-size: 11px;
+      font-weight: 500;
+    }
+
     .society__rating{
         display: flex;
         align-items: center;
