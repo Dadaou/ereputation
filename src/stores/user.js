@@ -13,7 +13,6 @@ export const useUserStore = defineStore(
     const signIn = async (email, password, next) => {
       const response = await services.login(email, password)
       if (response.status == 200) {
-        console.log(response.data['user'])
         const _user = response.data['user']
         const roles = _user?_user.roles:[];
         if (roles.includes("ROLE_EREP")) {
@@ -36,9 +35,7 @@ export const useUserStore = defineStore(
     }
 
     const verifyPassword = async (email, app_url, next) => {
-      console.log(app_url)
       await services.post_Record('password/reset', { email: email, app_url: app_url }, (response) => {
-        console.log(response)
         next(response)
       })
     }
@@ -52,7 +49,6 @@ export const useUserStore = defineStore(
           app_url: app_url 
         },
         (response) => {
-          console.log(response)
           next(response)
         }
       )

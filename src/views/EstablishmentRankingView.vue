@@ -66,23 +66,6 @@ const categoryFilters = ref('all')
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 
-// const filteredEstablishments = computed(()=>{
-// 	const sortBy = type.value;
-// 	const categorie = categoryFilters.value;
-
-// 	let result = establishments.value.sort(function(a, b) {
-//         return b[sortBy] - a[sortBy];
-//     });
-
-//     if(categorie !== 'All'){
-//     	result = establishments.value.filter(function(etablissement) {
-// 	    	return etablissement.category === categorie;
-// 	    });
-//     }
-
-//     return result;
-// })
-
 watch([type, categoryFilters, start_date, end_date],async()=>{
     if(start_date.value && end_date.value){
     	await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, type.value)
@@ -101,32 +84,27 @@ const loadEstablishment = async(tag, category, dateStart, dateEnd, note)=>{
 	}
 
 	uri = `${uri}?${params}`
-	console.log(uri)
 
 	const response = await new Promise((resolve) => {
             services.get_Record(uri, (response) => {
                 resolve(response);
             });
-        });
-    console.log(response)
+    });
+
     if(response.status == 200) {
-      console.log(response.data) 
-      establishments.value = response.data 
+      console.log(response.data)
+      establishments.value = response.data.map(objet => {
+
+      	//si global on affiche la note
+      	if(note == 'global'){
+      		objet.rating = objet.note
+      	}
+      	return {...objet, isGlobal:(note == 'global')}
+	  });
     }
 }
 
 onMounted(async()=>{
-	// if (userStore.user) {
- //        companiesStore.getEstablishments(customerTag.value).then((data) => {
- //            establishments.value = data;
- //            if(userStore.user.customer){
- //                userStore.user.customer['establishments'] = establishments.value;
- //                userStore.customer = userStore.user.customer
- //            }
- //            dataLoading.value = false
- //        })
- //    } else appStore.isLoading = false;
-
     if(start_date.value && end_date.value){
     	await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, type.value)
     	dataLoading.value = false

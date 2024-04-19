@@ -102,17 +102,17 @@ const loadEstablishment = async(tag, category, days, note)=>{
     // }
 
     uri = `${uri}?${params}`
-    console.log(uri)
 
     const response = await new Promise((resolve) => {
             services.get_Record(uri, (response) => {
                 resolve(response);
             });
-        });
-    console.log(response)
+    });
+
     if(response.status == 200) {
-      console.log(response.data) 
-      establishments.value = response.data 
+       establishments.value = response.data.map(objet => {
+        return {...objet, isTrends:true}
+      });
     }
 }
 
