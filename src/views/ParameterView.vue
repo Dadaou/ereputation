@@ -84,10 +84,10 @@
             <el-tab-pane label="Partnerships" name="partnerships">
                 <el-tabs v-model="activePartnershipTab" class="demo-tabs">
                     <el-tab-pane label="Partnership list" name="partnership_list">
-                        <PartnershipListComponent @edit="(category) => handleEdit(category, 'category')" />
+                        <PartnershipListComponent @update="() => reloadPartnershipsData()" />
                     </el-tab-pane>
                     <el-tab-pane label="Request a new partnership" name="partnership_form">
-                        <PartnershipFormComponent />
+                        <PartnershipFormComponent @update="() => reloadPartnershipsData()" />
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
@@ -216,12 +216,14 @@ const allStaffs = ref([])
 const allAdvantages = ref([])
 const allCategories = ref([])
 const allUnits = ref([])
+const allPartnerships = ref({})
 
 provide('staffs', allStaffs)
 provide('events', allEvents)
 provide('advantages', allAdvantages)
 provide('categories', allCategories)
 provide('units', allUnits)
+provide('partnerships', allPartnerships)
 
 const activeEventTab = ref('event_list')
 provide('event_activeTab', activeEventTab)
@@ -232,7 +234,7 @@ provide('advantage_activeTab', activeAdvantageTab)
 const activeCategorizationTab = ref('categorization_list')
 provide('categorization_activeTab', activeCategorizationTab)
 
-const activePartnershipTab = ref('partner_list')
+const activePartnershipTab = ref('partnership_list')
 provide('partnership_activeTab', activePartnershipTab)
 
 const activeUnitTab = ref('unit_list')
@@ -275,7 +277,6 @@ const handleEdit = (value, type) => {
     if (type == 'competitor') {
         activeCompetitorsTab.value = 'competitor_form';
         establishment_to_update.value = value;
-        console.log(value)
     }
 
     if (type == 'event') {
@@ -297,7 +298,6 @@ const handleEdit = (value, type) => {
 
 
 const handleEnable = async (value, type) => {
-    console.log(type)
     const response = await new Promise((resolve) => {
         services.post_Record(`/customer/establishments/advantage/${value}/enable`, {}, (response) => {
             resolve(response)
@@ -339,19 +339,16 @@ const setStatus = async (id, status) => {
         }
     });
 
-    userStore.user.customer.establishments = userStore.user.customer.establishments.filter((x) => x.disable == false);
-    const response = await new Promise((resolve) => {
+    userStore.user.customer.establishments = userStore.user.customer.establishments.filter((x) => x.disable == false); await new Promise((resolve) => {
         services.post_Record(`/customer/establishment/${id}/${status}`, {}, (response) => {
             resolve(response)
         }, false);
     });
-    console.log(response)
 }
 
 const transformData = (data) => {
     const establishmentMap = new Map();
     let tag = ''
-    console.log(data)
     for (const [competitorName, establishments] of Object.entries(data)) {
         establishments.forEach(establishment => {
             const {
@@ -419,14 +416,23 @@ const reloadCompetitorList = async (type) => {
             });
         });
         if (response.status === 200) {
-            console.log(response.data)
             competitorsData.value = transformData(response.data);
-            console.log(competitorsData.value)
         }
 
         if (type == 'form') activeCompetitorsTab.value = 'competitor_list';
     } catch (error) {
         console.error(error);
+    }
+}
+
+const reloadPartnershipsData = async () => {
+    const response = await new Promise((resolve) => {
+        services.get_Record(`partnership/${route.params.tag}/list`, (response) => {
+            resolve(response);
+        });
+    });
+    if (response.status === 200) {
+        allPartnerships.value = response.data;
     }
 }
 
@@ -469,7 +475,6 @@ const reloadStaffsList = async (type) => {
             });
         });
         if (response.status === 200) {
-            console.log(response.data)
             allStaffs.value = response.data
         }
 
@@ -523,7 +528,6 @@ const loadUnits = async () => {
                 resolve(response);
             });
         });
-        console.log(response)
         if (response.status === 200) {
             let data = response.data
             data = data.filter(i => i.units.length > 0);
@@ -570,6 +574,7 @@ onBeforeMount(async () => {
     await loadAdvantage();
     await loadCategories();
     await loadUnits();
+    await reloadPartnershipsData();
 });
 
 </script>

@@ -68,7 +68,7 @@
         </div>
         <form @submit.prevent="submitEmail" @keydown.enter.prevent="submitEmail" class="mt-4 px-2">
             <div class="inline-flex items-center gap-2">
-                <input type="email" id="email" v-model="email"
+                <input type="email" id="email" v-model="email" placeholder="Enter an email address"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-50 p-2">
                 <button type="submit"
                     class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
@@ -98,7 +98,8 @@ const email = ref('');
 const expiredAt = ref(null);
 const limit = ref(0);
 const showSpinner = ref(false);
-const activeCategorizationTab = inject('categorization_activeTab');
+const activePartnershipTab = inject('partnership_activeTab');
+const emit = defineEmits(['update']);
 
 const advantages = inject('advantages');
 
@@ -116,10 +117,11 @@ const updatePartnershipList = async (advantageId) => {
         });
     });
     if (response.status === 200) {
-        console.log(response.data)
         partnerships.value = response.data;
     }
 }
+
+
 
 const submit = async () => {
     let data = {
@@ -150,8 +152,9 @@ const submit = async () => {
                 advantage.value = '';
                 showSpinner.value = false;
             }
+            emit('update');
 
-            activeCategorizationTab.value = 'categorization_list'
+            activePartnershipTab.value = 'partnership_list'
         } else {
             ElMessage.error(`Please, fill the form correctly!`);
         }
