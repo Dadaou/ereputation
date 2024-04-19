@@ -1,12 +1,13 @@
 <template>
     <div class="user__main__container">
-        <el-tabs v-model="activeName" type="card" class="demo-tabs">    
+        <el-tabs v-model="activeName" type="card" class="demo-tabs">
             <el-tab-pane label="Establishments" name="establishments">
                 <el-tabs v-model="activeEstablishmentTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
                     <el-tab-pane label="Establishments" name="establishment_list">
-                        <EstablishmentListComponent @edit="(establishment) => handleEdit(establishment, 'establishment')" 
+                        <EstablishmentListComponent
+                            @edit="(establishment) => handleEdit(establishment, 'establishment')"
                             @setEnable="(id) => setStatus(id, 'enable')"
-                            @setDisable="(id) => setStatus(id, 'disable')"/>
+                            @setDisable="(id) => setStatus(id, 'disable')" />
                     </el-tab-pane>
                     <el-tab-pane label="Add a new establishment" name="establishment_form">
                         <EstablishmentFormComponent />
@@ -16,10 +17,11 @@
             <el-tab-pane label="Links" name="links">
                 <LinksConfComponent />
             </el-tab-pane>
-              <el-tab-pane label="competitors" name="competitors">
+            <el-tab-pane label="competitors" name="competitors">
                 <el-tabs v-model="activeCompetitorsTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
                     <el-tab-pane label="Competitors" name="competitor_list">
-                        <CompetitorListComponent @edit="(establishment) => handleEdit(establishment, 'competitor')"  @reload="reloadCompetitorList('list')"/>
+                        <CompetitorListComponent @edit="(establishment) => handleEdit(establishment, 'competitor')"
+                            @reload="reloadCompetitorList('list')" />
                     </el-tab-pane>
                     <el-tab-pane label="Add a new competitor" name="competitor_form">
                         <CompetitorFormComponent @reload="reloadCompetitorList('form')" />
@@ -59,11 +61,11 @@
             <el-tab-pane label="AI categorizations" name="categorization">
                 <el-tabs v-model="activeCategorizationTab" class="demo-tabs">
                     <el-tab-pane label="Categories" name="categorization_list">
-                      <CategorizationListComponent @edit="(category) => handleEdit(category, 'category')"/>
+                        <CategorizationListComponent @edit="(category) => handleEdit(category, 'category')" />
                     </el-tab-pane>
                     <el-tab-pane label="Add a new category" name="categorization_form">
-                      
-                      <CategorizationFormComponent/>
+
+                        <CategorizationFormComponent />
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
@@ -81,12 +83,11 @@
             </el-tab-pane>
             <el-tab-pane label="Partnerships" name="partnerships">
                 <el-tabs v-model="activePartnershipTab" class="demo-tabs">
-                    <el-tab-pane label="Partners" name="partner_list">
-                       
-                      Coming soon ...
+                    <el-tab-pane label="Partnership list" name="partnership_list">
+                        <PartnershipListComponent @edit="(category) => handleEdit(category, 'category')" />
                     </el-tab-pane>
-                    <el-tab-pane label="Add a new partner" name="partner_form">
-                      Coming soon ...
+                    <el-tab-pane label="Request a new partnership" name="partnership_form">
+                        <PartnershipFormComponent />
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
@@ -168,6 +169,14 @@ const CategorizationFormComponent = defineAsyncComponent(() =>
 
 const CategorizationListComponent = defineAsyncComponent(() =>
     import("@Components/categorization/CategorizationListComponent.vue")
+)
+
+const PartnershipFormComponent = defineAsyncComponent(() =>
+    import("@Components/partnership/PartnershipFormComponent.vue")
+)
+
+const PartnershipListComponent = defineAsyncComponent(() =>
+    import("@Components/partnership/PartnershipListComponent.vue")
 )
 
 const position = ref('top')
@@ -261,7 +270,7 @@ const handleEdit = (value, type) => {
     if (type == 'establishment') {
         activeEstablishmentTab.value = 'establishment_form';
         establishment_to_update.value = value;
-    } 
+    }
 
     if (type == 'competitor') {
         activeCompetitorsTab.value = 'competitor_form';
@@ -269,17 +278,17 @@ const handleEdit = (value, type) => {
         console.log(value)
     }
 
-    if(type == 'event') {
+    if (type == 'event') {
         activeEventTab.value = 'event_form';
         event_to_update.value = value;
     }
 
-    if(type == 'category') {
+    if (type == 'category') {
         activeCategorizationTab.value = 'categorization_form'
         category_to_update.value = value;
     }
 
-    if(type == 'service') {
+    if (type == 'service') {
         activeUnitTab.value = 'unit_form'
         unit_to_update.value = value;
     }
@@ -320,18 +329,18 @@ const handleDisable = async (value, type) => {
     }
 };
 
-const setStatus = async(id, status)=>{
+const setStatus = async (id, status) => {
     userStore.user.customer.establishments = userStore.user.customer.establishments.map((x) => {
-            if (x.id == id) {
-                x.disable = status=='disable'?true:false
-                return x;
-            } else {
-                return x;
-            }
+        if (x.id == id) {
+            x.disable = status == 'disable' ? true : false
+            return x;
+        } else {
+            return x;
+        }
     });
 
-     userStore.user.customer.establishments = userStore.user.customer.establishments.filter((x) => x.disable==false);
-     const response = await new Promise((resolve) => {
+    userStore.user.customer.establishments = userStore.user.customer.establishments.filter((x) => x.disable == false);
+    const response = await new Promise((resolve) => {
         services.post_Record(`/customer/establishment/${id}/${status}`, {}, (response) => {
             resolve(response)
         }, false);
@@ -339,16 +348,16 @@ const setStatus = async(id, status)=>{
     console.log(response)
 }
 
-const transformData = (data) =>{
+const transformData = (data) => {
     const establishmentMap = new Map();
     let tag = ''
     console.log(data)
     for (const [competitorName, establishments] of Object.entries(data)) {
         establishments.forEach(establishment => {
-            const { 
-                establishment_competitor_tag, 
-                establishment_category, 
-                id, 
+            const {
+                establishment_competitor_tag,
+                establishment_category,
+                id,
                 url_source,
                 establishment_address1,
                 establishment_address2,
@@ -357,12 +366,12 @@ const transformData = (data) =>{
                 establishment_country,
                 establishment_region,
                 establishment_gps,
-                establishment_rank, 
+                establishment_rank,
                 competitor_competitor_tag,
                 competitor_id
-                } = establishment;
+            } = establishment;
 
-            tag  =  (tag !== competitor_competitor_tag)? competitor_competitor_tag: tag;
+            tag = (tag !== competitor_competitor_tag) ? competitor_competitor_tag : tag;
 
             // Vérifie si cet établissement a déjà été traité
             if (!establishmentMap.has(id)) {
@@ -380,19 +389,19 @@ const transformData = (data) =>{
                     region: establishment_region,
                     rank: establishment_rank,
                     gps: establishment_gps,
-                    media: url_source, 
+                    media: url_source,
                     establishments: [competitorName],
                     competitors: [{
                         competitor_id: competitor_id,
-                        name:competitorName
+                        name: competitorName
                     }]
                 });
             } else {
                 // Ajoute le nom du concurrent à la liste des établissements existants
-                if(!establishmentMap.get(id).establishments.includes(competitorName)) establishmentMap.get(id).establishments.push(competitorName);
+                if (!establishmentMap.get(id).establishments.includes(competitorName)) establishmentMap.get(id).establishments.push(competitorName);
                 establishmentMap.get(id).competitors.push({
-                        competitor_id: competitor_id,
-                        name: competitorName
+                    competitor_id: competitor_id,
+                    name: competitorName
                 });
             }
         });
@@ -402,7 +411,7 @@ const transformData = (data) =>{
 }
 
 
-const reloadCompetitorList = async(type)=>{
+const reloadCompetitorList = async (type) => {
     try {
         const response = await new Promise((resolve) => {
             services.get_Record(`customer/establishment/competitors?tag=${route.params.tag}`, (response) => {
@@ -413,47 +422,47 @@ const reloadCompetitorList = async(type)=>{
             console.log(response.data)
             competitorsData.value = transformData(response.data);
             console.log(competitorsData.value)
-        } 
+        }
 
-        if(type=='form') activeCompetitorsTab.value = 'competitor_list';
+        if (type == 'form') activeCompetitorsTab.value = 'competitor_list';
     } catch (error) {
         console.error(error);
     }
 }
 
-const reloadEventsList = async(type)=>{
-     try {
+const reloadEventsList = async (type) => {
+    try {
         const response = await new Promise((resolve) => {
             services.get_Record(`customer/establishment/event/list?customer=${route.params.tag}`, (response) => {
                 resolve(response);
             });
         });
         if (response.status === 200) {
-           const events = response.data;
-           events.forEach(event => {
-                    let event_found = allEvents.value.find(obj => obj.id === event.id);
-                    if (event_found) {
-                        event_found.establishment_name = `${event_found.establishment_name}, ${event.establishment_name}`;
-                        event_found.establishment.push(event.establishment);
+            const events = response.data;
+            events.forEach(event => {
+                let event_found = allEvents.value.find(obj => obj.id === event.id);
+                if (event_found) {
+                    event_found.establishment_name = `${event_found.establishment_name}, ${event.establishment_name}`;
+                    event_found.establishment.push(event.establishment);
 
-                    } else {
-                        event['date'] = `${moment(event.datefrom).format('YYYY-MM-DD')} to ${moment(event.dateto).format('YYYY-MM-DD')}`
-                        const uri = `/api/establishments/${event['establishment']}`;
-                        event['establishment'] = [];
-                        event['establishment'].push(uri)
-                        allEvents.value.push(event);
-                    }
+                } else {
+                    event['date'] = `${moment(event.datefrom).format('YYYY-MM-DD')} to ${moment(event.dateto).format('YYYY-MM-DD')}`
+                    const uri = `/api/establishments/${event['establishment']}`;
+                    event['establishment'] = [];
+                    event['establishment'].push(uri)
+                    allEvents.value.push(event);
+                }
             })
-        } 
+        }
 
-        if(type=='form') activeEventTab.value = 'event_list';
+        if (type == 'form') activeEventTab.value = 'event_list';
     } catch (error) {
         console.error(error);
     }
 }
 
-const reloadStaffsList = async(type)=>{
-     try {
+const reloadStaffsList = async (type) => {
+    try {
         const response = await new Promise((resolve) => {
             services.get_Record(`customer/establishment/staff/list?customer=${route.params.tag}`, (response) => {
                 resolve(response);
@@ -462,25 +471,25 @@ const reloadStaffsList = async(type)=>{
         if (response.status === 200) {
             console.log(response.data)
             allStaffs.value = response.data
-        } 
+        }
 
-        if(type=='form') activeStaffTab.value = 'staff_list';
+        if (type == 'form') activeStaffTab.value = 'staff_list';
     } catch (error) {
         console.error(error);
     }
 }
 
-const loadAdvantage = async()=>{
+const loadAdvantage = async () => {
     try {
         const response = await new Promise((resolve) => {
-           services.get_Record(`customer/establishments/advantages?tag=${route.params.tag}`, (response) => {
+            services.get_Record(`customer/establishments/advantages?tag=${route.params.tag}`, (response) => {
                 resolve(response);
             });
         });
         if (response.status === 200) {
-            allAdvantages.value = response.data.map(adv=>{
-                const {advantage_limit, ...advantage} = adv;
-                return {...advantage, advantageLimit:advantage_limit}
+            allAdvantages.value = response.data.map(adv => {
+                const { advantage_limit, ...advantage } = adv;
+                return { ...advantage, advantageLimit: advantage_limit }
             });
         } else {
             console.error('Error fetching advantages:', response);
@@ -490,10 +499,10 @@ const loadAdvantage = async()=>{
     }
 }
 
-const loadCategories = async()=>{
+const loadCategories = async () => {
     try {
         const response = await new Promise((resolve) => {
-           services.get_Record('categories', (response) => {
+            services.get_Record('categories', (response) => {
                 resolve(response);
             });
         });
@@ -507,18 +516,18 @@ const loadCategories = async()=>{
     }
 }
 
-const loadUnits = async ()=>{
+const loadUnits = async () => {
     try {
         const response = await new Promise((resolve) => {
-           services.get_Record(`/customer/establishments/unit?tag=${route.params.tag}`, (response) => {
+            services.get_Record(`/customer/establishments/unit?tag=${route.params.tag}`, (response) => {
                 resolve(response);
             });
         });
         console.log(response)
         if (response.status === 200) {
             let data = response.data
-            data = data.filter(i=> i.units.length>0);
-            data = data.map(i=>i.units)
+            data = data.filter(i => i.units.length > 0);
+            data = data.map(i => i.units)
             allUnits.value = data.flat()
         } else {
             console.error('Error fetching units:', response);
@@ -528,13 +537,13 @@ const loadUnits = async ()=>{
     }
 }
 
-const filterCategory = (data)=>{
+const filterCategory = (data) => {
     const establishments = userStore.user.customer.establishments;
     let categories = []
-    data.forEach(category=>{
-        let establishment = establishments.find(i=>category.establishment == `/api/establishments/${i.id}`); 
-        if(establishment){
-            const {id, name} = establishment
+    data.forEach(category => {
+        let establishment = establishments.find(i => category.establishment == `/api/establishments/${i.id}`);
+        if (establishment) {
+            const { id, name } = establishment
             categories.push({
                 id: category.id,
                 category: category.category,
@@ -571,7 +580,7 @@ onBeforeMount(async () => {
     }
 }*/
 
-*{
+* {
     overflow: hidden;
 }
 </style>
