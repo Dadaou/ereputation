@@ -72,9 +72,10 @@
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-50 p-2">
                 <button type="submit"
                     class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
-                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
+                    <SpinnerComponent :show-spinner="showSpinnerEmail" :color="'gray'" /> <span
+                        v-if="showSpinnerEmail">Loading
                         ...</span>
-                    <span v-show="!showSpinner"><i class="uil uil-telegram-alt mr-1"></i> Invite a friend</span>
+                    <span v-show="!showSpinnerEmail"><i class="uil uil-telegram-alt mr-1"></i> Invite a friend</span>
                 </button>
             </div>
         </form>
@@ -90,6 +91,7 @@ import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
+import { useRoute } from 'vue-router';
 
 const partnership = ref('');
 const partnerships = ref([]);
@@ -98,6 +100,7 @@ const email = ref('');
 const expiredAt = ref(null);
 const limit = ref(0);
 const showSpinner = ref(false);
+const showSpinnerEmail = ref(false);
 const activePartnershipTab = inject('partnership_activeTab');
 const emit = defineEmits(['update']);
 
@@ -151,6 +154,7 @@ const submit = async () => {
                 partnership.value = '';
                 advantage.value = '';
                 showSpinner.value = false;
+                expiredAt.value = '';
             }
             emit('update');
 
@@ -161,6 +165,45 @@ const submit = async () => {
     } catch (error) {
         console.log(error);
     }
+};
+
+const submitEmail = async () => {
+    const route = useRoute();
+    // if (email.value) {
+    //     const data = {
+    //         'email': email.value,
+    //         'advantage': advantage.value,
+    //         'pricing_url': route.
+    //     }
+    //     try {
+    //         showSpinnerEmail.value = true;
+    //         const response = await new Promise((resolve) => {
+    //             services.createRecord('partnerships', data, (response) => {
+    //                 resolve(response);
+    //             });
+    //         });
+
+    //         if (response.status == 201) {
+    //             ElMessage({
+    //                 message: 'partnership requested successfully',
+    //                 type: 'success',
+    //             })
+
+    //             partnership.value = '';
+    //             advantage.value = '';
+    //             showSpinner.value = false;
+    //             expiredAt.value = '';
+    //         }
+    //         emit('update');
+
+    //         activePartnershipTab.value = 'partnership_list'
+
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // } else {
+    //     ElMessage.error(`Please, fill the form correctly!`);
+    // }
 };
 
 </script>
