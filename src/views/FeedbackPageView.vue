@@ -195,8 +195,11 @@ onBeforeMount(async () => {
 })
 
 onMounted(() => {
+    
+    if (window.FingerprintG2A && window.FingerprintG2A.default && typeof window.FingerprintG2A.default.main === 'function') {
+        window.FingerprintG2A.default.main();
+    }
     /** Charger le titre par defaut */
-    window.FingerprintG2A.default.main();
     page.value = {
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),
