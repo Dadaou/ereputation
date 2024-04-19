@@ -17,7 +17,7 @@ const FooterComponent = defineAsyncComponent(() =>
     import('@Components/layouts/FooterComponent.vue')
 )
 const NavbarComponent = defineAsyncComponent(() =>
-    import('@Components/layouts/NavbarTempComponent.vue')
+    import('@Components/layouts/NavbarComponent.vue')
 )
 const EstablishmentNotFound = defineAsyncComponent(() =>
     import("@Views/EstablishmentNotFound.vue")

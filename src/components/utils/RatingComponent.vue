@@ -15,18 +15,27 @@
               </span> 
           </div>
       </div>
-      <div class="global__rating">
-             <!--  <span class="font-bold" :data-tooltip="`Score: ${score}`">{{ score }} </span>
-              <span> | </span> -->
-              <span class="font-medium" :data-tooltip="`Rating: ${rating}`">{{ rating }}</span>
+       <div :class="['global__rating', company.ratio>0?'green':'red']" v-if="company.isTrends">
+              <span class="font-medium" :data-tooltip="`Ratio: ${arrondirRatio(company.ratio)}`">{{ arrondirRatio(company.ratio) }}</span>
+      </div>
+      <div class="global__rating" v-else>
+            <span class="font-medium" :data-tooltip="`Note: ${rating}`" v-if="company.isGlobal">{{ rating }}</span>
+            <span class="font-medium" :data-tooltip="`Score: ${rating}`" v-else>{{ rating }}</span>
       </div>
   </div>
-  <div class="ratio">{{company.ratio?`Ratio ${Number(company.ratio).toFixed(1)}%`:''}}</div>
+ <!--  <div class="ratio">{{company.ratio?`Ratio ${Number(company.ratio).toFixed(1)}%`:''}}</div> -->
 </div>
 </template>
 
 <script setup>
 const props = defineProps(['reviews', 'rating', 'score', 'feeling', 'company']);
+
+const arrondirRatio = (ratio)=>{
+    ratio = ratio ? Number(ratio) : 0;
+    let ratioArrondi = ratio > 1.5 ? Math.ceil(ratio) : Math.round(ratio);
+
+    return ratioArrondi;
+};
 
 </script>
 
@@ -71,6 +80,14 @@ const props = defineProps(['reviews', 'rating', 'score', 'feeling', 'company']);
         justify-content: center;
         align-content: center;
         gap: 3px;
+    }
+
+    .global__rating.red{
+      background-color: red;
+    }
+
+    .global__rating.green{
+      background-color: green;
     }
 
     .society__rating a{

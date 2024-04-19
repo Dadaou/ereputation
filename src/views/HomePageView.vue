@@ -1,6 +1,6 @@
 <template>
     <div class="main__container">
-        <HeadComponent :page="page"></HeadComponent>
+      <!--   <HeadComponent :page="page"></HeadComponent> -->
         <div class="container client__container">
             <div class="header">
                 <div class="header_navigation">
@@ -8,7 +8,7 @@
                         <Icon :icon="'ion:list'" width="26"></Icon>
                     </RouterLink>
                     <RouterLink v-if="show" class="search__icon" :to="{ name: 'EstablishmentRanking', params: { tag: tag} }"> 
-                        <Icon :icon="'ph:ranking-fill'" width="25"></Icon>
+                        <Icon :icon="'solar:cup-first-bold'" width="25"></Icon>
                     </RouterLink>
                     <RouterLink v-if="show" class="search__icon" :to="{ name: 'EstablishmentListByTrend', params: { tag: tag} }"> 
                         <Icon :icon="'gg:trending'" width="25"></Icon>
@@ -84,8 +84,8 @@ const show = computed(() => {
 
 .client__container {
     position: relative;
-    top: 1rem;
-    height: inherit;
+    top: 5rem;
+   /* height: inherit;*/
     display: flex;
     gap: 1rem;
     width: 50%;

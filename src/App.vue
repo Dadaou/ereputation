@@ -68,7 +68,6 @@ const language = computed(()=>{
   return 'fr'
 })
 provide('language', language);
-console.log(language.value);
 
 const appConfig = ref({
   title: '',
@@ -107,7 +106,6 @@ onBeforeMount(async () => {
       }
     }, true);
   });
-  console.log(response)
 
   if (response.status == 200 && response.data) {
     const data = response.data

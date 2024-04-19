@@ -30,7 +30,7 @@ import { useWindowSize } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
 import { useAppStore } from "@Stores/app.js"
-import services from '@Services/services.js';
+import services from '@Services/services.js'
 
 
 const SpinnerComponent = defineAsyncComponent(() =>

@@ -120,7 +120,6 @@ const get_Record = async (url, next, isPublic = false) => {
       return next(error.response)
     }
   } else {
-    console.log(url)
     try {
       await publicAxiosInstance.get(`${url}`, { headers }).then((response) => {
         next(response)
@@ -188,7 +187,6 @@ const deleteRecord = async (entity, recordId, next) => {
         return next(response)
       })
     } catch (error) {
-      console.log(error)
       return next(error.response)
     }
   }
@@ -206,7 +204,6 @@ const patchRecord = async (entity, recordId, value, next) => {
         return next(response)
       })
     } catch (error) {
-      console.log(error)
       return next(error.response)
     }
   }
@@ -251,7 +248,6 @@ const login = async (email, password) => {
     const response = await axiosInstance.post('/login', { email: email, password: password })
     if (response.status == 200) {
       setToken(response.data['token'])
-      console.log(response.data)
     }
     return response
   } catch (error) {
@@ -267,7 +263,6 @@ const login_2nd = async (email, password, next) => {
     await axiosInstance
       .post('/login', { email: email, password: password }, { headers })
       .then((response) => {
-        console.log(response)
         if (response.status == 200) {
           setToken(response.data['token'])
         }
