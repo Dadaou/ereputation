@@ -209,6 +209,11 @@ const router = createRouter({
       redirect: '/',
       children: [
         {
+          path: '/public/:tag/establishment/:id/gates',
+          name: 'Gate',
+          component: () => import('@Views/GatePageView.vue')
+        },
+        {
           path: '/public/:tag/establishment/:id/feedback',
           name: 'FeedBack',
           component: () => import('@Views/FeedbackPageView.vue')

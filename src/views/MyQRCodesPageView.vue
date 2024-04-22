@@ -1,6 +1,9 @@
 <template>
   <div class="user__main__container">
     <el-tabs v-model="activeName" type="card" class="demo-tabs">
+      <el-tab-pane label="Gates" name="gates">
+        <ShortGateListComponent />
+      </el-tab-pane>
       <el-tab-pane label="Establishments" name="establishments">
         <ShortEstablishmentListComponent @edit="(establishment) => handleEdit(establishment, 'establishment')"
           @setEnable="(id) => setStatus(id, 'enable')" @setDisable="(id) => setStatus(id, 'disable')" />
@@ -40,6 +43,10 @@ const ShortEstablishmentListComponent = defineAsyncComponent(() =>
 
 const ShortUnitListComponent = defineAsyncComponent(() =>
   import("@Components/units/ShortUnitListComponent.vue")
+)
+
+const ShortGateListComponent = defineAsyncComponent(() =>
+  import("@Components/gate/ShortGateListComponent.vue")
 )
 
 const position = ref('top')

@@ -162,7 +162,6 @@
 </template>
 
 <script setup>
-
 import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, watch, inject } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
