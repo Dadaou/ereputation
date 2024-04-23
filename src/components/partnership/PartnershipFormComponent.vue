@@ -48,6 +48,7 @@
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
             </div>
+            <AdvantagePartnershipList :items="allAdvantageList" class="mt-5" />
             <div class="flex items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
                 <button type="submit"
                     class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
@@ -78,7 +79,6 @@
                 </button>
             </div>
         </form>
-        <!-- <AdvantagePartnershipList :items="allAdvantageList" class="mt-5" /> -->
     </div>
 </template>
 <script setup>
@@ -103,6 +103,7 @@ const app_url = inject('app_url')
 const partnership = ref('');
 const establishment = ref('');
 const partnerships = ref([]);
+const other_advantages = ref([]);
 const advantage = ref('');
 const email = ref('');
 const expiredAt = ref(null);
@@ -119,7 +120,9 @@ const advantages = inject('advantages');
 watch(advantage, () => {
     if (advantage.value) {
         partnership.value = null;
-        updatePartnershipList(advantage.value.split('/').pop());
+        let advantage_id = advantage.value.split('/').slice(-1);
+        updatePartnershipList(advantage_id);
+        updateOtherAdvantageList(advantage_id);
         establishment.value = advantages.value.find(v => { return v.id == Number(advantage.value.split('/').pop()) }).establishment_tag
     }
 })
@@ -134,7 +137,7 @@ watch(partnership, () => {
 })
 
 const allAdvantageList = computed(() => {
-    return advantages.value.map((discount, index) => {
+    return other_advantages.value.map((discount, index) => {
         let icon = '';
         if (index % 2 === 0) {
             icon = "🎁";
@@ -159,7 +162,44 @@ const updatePartnershipList = async (advantageId) => {
     appStore.isLoading = false;
 }
 
-
+const updateOtherAdvantageList = async (advantageId) => {
+    appStore.isLoading = true;
+    const response = await new Promise((resolve) => {
+        services.get_Record(`advantage/${advantageId}/other_advantage`, (response) => {
+            resolve(response);
+        });
+    });
+    if (response.status === 200) {
+        // other_advantages.value = response.data;
+        other_advantages.value = [
+            {
+                "id": 3,
+                "category": "Free",
+                "code": "qsq",
+                "name": "sss",
+                "amount": null,
+                "metric": "",
+                "expired_at": null,
+                "created_at": "2024-04-23T15:46:04+02:00",
+                "enable": true,
+                "scope": "",
+                "validity": 5,
+                "amount_min": 0,
+                "advantage_limit": null,
+                "description": null,
+                "date_from": null,
+                "date_to": null,
+                "amountMin": 0,
+                "advantageLimit": null,
+                "dateFrom": null,
+                "dateTo": null,
+                "establishment_name": "Meta"
+            }
+        ]
+        appStore.isLoading = false;
+    }
+    appStore.isLoading = false;
+}
 
 const submit = async () => {
     let data = {
