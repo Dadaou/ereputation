@@ -170,32 +170,7 @@ const updateOtherAdvantageList = async (advantageId) => {
         });
     });
     if (response.status === 200) {
-        // other_advantages.value = response.data;
-        other_advantages.value = [
-            {
-                "id": 3,
-                "category": "Free",
-                "code": "qsq",
-                "name": "sss",
-                "amount": null,
-                "metric": "",
-                "expired_at": null,
-                "created_at": "2024-04-23T15:46:04+02:00",
-                "enable": true,
-                "scope": "",
-                "validity": 5,
-                "amount_min": 0,
-                "advantage_limit": null,
-                "description": null,
-                "date_from": null,
-                "date_to": null,
-                "amountMin": 0,
-                "advantageLimit": null,
-                "dateFrom": null,
-                "dateTo": null,
-                "establishment_name": "Meta"
-            }
-        ]
+        other_advantages.value = response.data;
         appStore.isLoading = false;
     }
     appStore.isLoading = false;
