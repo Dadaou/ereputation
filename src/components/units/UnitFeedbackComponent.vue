@@ -75,7 +75,7 @@
                         <div>
                             <label for="datevisit"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                $t("feedback.datevisit") }}<!--  <span>*</span> --></label>
+                                    $t("feedback.datevisit") }}<!--  <span>*</span> --></label>
                             <el-date-picker v-model="dateVisit" :placeholder="$t('feedback.placeholder_datevisit')"
                                 :size="'large'" :disabled-date="disabledDate" />
                         </div>
@@ -363,6 +363,8 @@ const submit = async () => {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
 
                             if (contactResponse.status == 201) {
+                                services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] })
+
                                 let coupons = {
                                     advantage: randomAdvantage.value.id,
                                     establishment: route.params.etab,
@@ -375,7 +377,7 @@ const submit = async () => {
                                     template: `workflow_en`
                                 }
                                 await services.createRecord('workflow', coupons, (workflowResponse) => {
-                                    console.log(workflowResponse)
+                                    // console.log(workflowResponse)
                                     resetForm()
                                 });
                             }

@@ -310,6 +310,7 @@ const submit = async () => {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
                             if (contactResponse.status == 201) {
                                 email_sent = true
+                                services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] })
                                 let coupons = {
                                     advantage: randomAdvantage.value.id,
                                     establishment: route.params.id,
@@ -325,6 +326,8 @@ const submit = async () => {
                                     console.log(workflowResponse)
                                     resetForm()
                                 });
+
+                                // console.log(contactResponse)
                             }
                         });
                     }
