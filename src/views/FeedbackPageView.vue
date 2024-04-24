@@ -46,20 +46,24 @@
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                         <div>
-                            <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                $t("feedback.firstname") }} <span>*</span></label>
-                            <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
+                            <label for="first_name"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                                    $t("feedback.firstname") }} <span>*</span></label>
+                            <input type="text" id="first_name" v-model="firstname"
+                                oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                         </div>
                         <div>
-                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                $t("feedback.lastname") }}</label>
+                            <label for="last_name"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                                    $t("feedback.lastname") }}</label>
                             <input type="text" id="last_name" v-model="lastname"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
                         <div>
-                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                $t("feedback.gender") }} </label>
+                            <label for="countries"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                                    $t("feedback.gender") }} </label>
                             <el-select v-model="gender" :placeholder="$t('feedback.placeholder_gender')" size="large">
                                 <el-option v-for="item in genders" :key="item.value" :label="item.label"
                                     :value="item.value" />
@@ -67,34 +71,28 @@
                         </div>
                         <div>
 
-                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                $t("feedback.datevisit") }}<!-- <span>*</span> --></label>
-                            <el-date-picker v-model="dateVisit"
-                                :placeholder="$t('feedback.placeholder_datevisit')" :size="'large'" 
-                                :disabled-date="disabledDate"
-                                />
+                            <label for="last_name"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                                    $t("feedback.datevisit") }}<!-- <span>*</span> --></label>
+                            <el-date-picker v-model="dateVisit" :placeholder="$t('feedback.placeholder_datevisit')"
+                                :size="'large'" :disabled-date="disabledDate" />
                         </div>
 
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
                         <div class="author__email">
-                           <!--  <span v-if="randomAdvantage">
+                            <!--  <span v-if="randomAdvantage">
                                 <i class="uil uil-info-circle"></i>{{ $t("feedback.indice1") }}
                             </span> -->
-                           <!--  <p v-if="randomAdvantage">
+                            <!--  <p v-if="randomAdvantage">
                                 <b>{{ $t("feedback.promotion_day") }} </b> 
                             </p> -->
-                            <DiscountCheckList
-                                :establishment="route.params.id"
-                                :customer="route.params.tag"
-                                @select="(value)=>randomAdvantage = value"
-                            />
+                            <DiscountCheckList :establishment="route.params.id" :customer="route.params.tag"
+                                @select="(value) => randomAdvantage = value" />
                             <span v-if="randomAdvantage">
                                 <i class="uil uil-info-circle"></i>{{ $t("feedback.indice1") }}
                             </span>
-                            <label 
-                                for="email"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 {{ $t("feedback.email") }}
                             </label>
                             <input type="email" v-model="email" id="email"
@@ -111,10 +109,14 @@
                         <div>
                             <div class="checkbox-container">
                                 <label>
-                                    <input type="checkbox" id="agreeCheckbox" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')" required>
+                                    <input type="checkbox" id="agreeCheckbox"
+                                        oninvalid="this.setCustomValidity(getText())"
+                                        oninput="this.setCustomValidity('')" required>
                                 </label>
-                                 {{ $t("feedback.indice2") }} <span @click="iframeVisible=!iframeVisible">{{ $t("feedback.indice3") }}</span>
-                               <div v-if="iframeVisible && appStore.account && appStore.account.cgu" id="conteneurIframe" v-html="appStore.account.cgu"></div>
+                                {{ $t("feedback.indice2") }} <span @click="iframeVisible = !iframeVisible">{{
+                                    $t("feedback.indice3") }}</span>
+                                <div v-if="iframeVisible && appStore.account && appStore.account.cgu"
+                                    id="conteneurIframe" v-html="appStore.account.cgu"></div>
                             </div>
                         </div>
                         <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
@@ -180,7 +182,7 @@ const iframeVisible = ref(false);
 
 const page = ref({})
 
-let allAdvantages   = ref([])
+let allAdvantages = ref([])
 let randomAdvantage = ref(null);
 
 const showSpinner = ref(false);
@@ -204,7 +206,7 @@ onBeforeMount(async () => {
 })
 
 onMounted(() => {
-    
+
     if (window.FingerprintG2A && window.FingerprintG2A.default && typeof window.FingerprintG2A.default.main === 'function') {
         window.FingerprintG2A.default.main();
     }
@@ -226,7 +228,7 @@ watch(() => {
 })
 
 const disabledDate = (time) => {
-  return time.getTime() > Date.now()
+    return time.getTime() > Date.now()
 }
 const app_url = inject('app_url')
 const firstname = ref('');
@@ -263,6 +265,7 @@ const resetForm = () => {
 
 const submit = async () => {
     var lg = localStorage.getItem("langue")
+    let visitorId = localStorage.getItem("visitId")
     let date_review = new Date();
     let review = {
         "author": `${firstname.value} ${lastname.value}`,
@@ -282,7 +285,8 @@ const submit = async () => {
         "staff": null,
         "optin": true,
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
-        "dateReview": moment(date_review, 'DD/MM/YYYY')
+        "dateReview": moment(date_review, 'DD/MM/YYYY'),
+        "visitor": `/api/visitors/${visitorId}`
     };
 
     let contactData = {
@@ -293,13 +297,13 @@ const submit = async () => {
         establishment: `/api/establishments/${establishment.value.id}`
     };
 
-    
+
     try {
         if (firstname.value !== '' && ratingCustomer.value !== null) {
             showSpinner.value = true;
 
             await feedbackStore.createReview(review, async (response) => {
-            
+
                 if (response.status == 201) {
                     let email_sent = false
                     if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
@@ -313,7 +317,7 @@ const submit = async () => {
                                     firstname: firstname.value,
                                     lastname: lastname.value,
                                     email: email.value,
-                                    language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase(),
+                                    language: (lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase(),
                                     app_url: app_url.value,
                                     template: 'workflow_en'
                                 }
@@ -329,7 +333,7 @@ const submit = async () => {
                         params: {
                             etab: route.params.id,
                             tag: route.params.tag,
-                            share: parseFloat(review.rating)>=4?'message-and-join-us':'message'
+                            share: parseFloat(review.rating) >= 4 ? 'message-and-join-us' : 'message'
                         },
                     });
                 }
@@ -480,14 +484,14 @@ img {
     height: 100%;
 }
 
-.checkbox-container div{
+.checkbox-container div {
     height: 500px;
     overflow-y: auto;
 }
 
-.checkbox-container span{
+.checkbox-container span {
     color: var(--color-danger);
-    font-weight:500;
+    font-weight: 500;
     cursor: pointer;
 }
 
@@ -515,4 +519,5 @@ img {
     .feedback__form {
         width: 90%;
     }
-}</style>
+}
+</style>

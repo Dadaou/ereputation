@@ -324,6 +324,7 @@ const disabledDate = (time) => {
 
 const submit = async () => {
     var lg = localStorage.getItem("langue")
+    let visitorId = localStorage.getItem("visitId")
     let date_review = new Date();
     let review = {
         "author": `${firstname.value} ${lastname.value}`,
@@ -343,7 +344,8 @@ const submit = async () => {
         "staff": `/api/staff/${staff.value.id}`,
         "optin": true,
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
-        "dateReview": moment(date_review, 'DD/MM/YYYY')
+        "dateReview": moment(date_review, 'DD/MM/YYYY'),
+        "visitor": `/api/visitors/${visitorId}`
     }
     
     let contactData = {
