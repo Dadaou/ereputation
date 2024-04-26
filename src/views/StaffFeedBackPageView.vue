@@ -10,8 +10,9 @@
                         </div>
                         <h1 class="society__name">{{ staff.firstname }}</h1>
                         <ul>
-                            <li><span class="label">{{ $t("staffFeedback.departement") }}: </span> <span>{{ staff.department
-                            }}</span></li>
+                            <li><span class="label">{{ $t("staffFeedback.departement") }}: </span> <span>{{
+                                staff.department
+                                    }}</span></li>
                             <li class="Gender">
                                 {{ $t("staffFeedback.interne") }}
                             </li>
@@ -46,16 +47,19 @@
                         }" />
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
-                         <div>
-                            <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                $t("feedback.firstname") }} <span>*</span></label>
-                                <input type="text" id="first_name" v-model="firstname" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
+                        <div>
+                            <label for="first_name"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                                    $t("feedback.firstname") }} <span>*</span></label>
+                            <input type="text" id="first_name" v-model="firstname"
+                                oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
 
                         </div>
                         <div>
-                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                $t("feedback.lastname") }} </label>
+                            <label for="last_name"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                                    $t("feedback.lastname") }} </label>
                             <input type="text" id="last_name" v-model="lastname"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
@@ -67,14 +71,12 @@
                                     :value="item.value" />
                             </el-select>
                         </div>
-                         <div>
-                            <label for="datevisit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t("feedback.datevisit") }}</label>
-                              <el-date-picker
-                                v-model="dateVisit"
-                                :placeholder="$t('feedback.placeholder_datevisit')"
-                                :size="'large'"
-                                :disabled-date="disabledDate"
-                              />
+                        <div>
+                            <label for="datevisit"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                                    $t("feedback.datevisit") }}</label>
+                            <el-date-picker v-model="dateVisit" :placeholder="$t('feedback.placeholder_datevisit')"
+                                :size="'large'" :disabled-date="disabledDate" />
                         </div>
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
@@ -85,15 +87,13 @@
                             <!-- <p v-if="randomAdvantage">
                                 <b>{{ $t("feedback.promotion_day") }}</b>
                             </p> -->
-                            <DiscountCheckList
-                                :establishment="route.params.etab"
-                                :customer="route.params.tag"
-                                @select="(value)=>randomAdvantage = value"
-                            />
+                            <DiscountCheckList :establishment="route.params.etab" :customer="route.params.tag"
+                                @select="(value) => randomAdvantage = value" />
                             <span v-if="randomAdvantage">
                                 <i class="uil uil-info-circle"></i> {{ $t("feedback.indice1") }}
                             </span>
-                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
+                            <label for="email"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
                                 address <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
@@ -110,10 +110,14 @@
                         <div>
                             <div class="checkbox-container">
                                 <label>
-                                    <input type="checkbox" id="agreeCheckbox" oninvalid="this.setCustomValidity(getText())" oninput="this.setCustomValidity('')" required>
+                                    <input type="checkbox" id="agreeCheckbox"
+                                        oninvalid="this.setCustomValidity(getText())"
+                                        oninput="this.setCustomValidity('')" required>
                                 </label>
-                                 {{ $t("feedback.indice2") }} <span @click="iframeVisible=!iframeVisible">{{ $t("feedback.indice3") }}</span>
-                               <div v-if="iframeVisible && appStore.account && appStore.account.cgu" id="conteneurIframe" v-html="appStore.account.cgu"></div>
+                                {{ $t("feedback.indice2") }} <span @click="iframeVisible = !iframeVisible">{{
+                                    $t("feedback.indice3") }}</span>
+                                <div v-if="iframeVisible && appStore.account && appStore.account.cgu"
+                                    id="conteneurIframe" v-html="appStore.account.cgu"></div>
                             </div>
                         </div>
                         <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
@@ -152,13 +156,13 @@
                     }
                 }" target="_blank">
                     <div class="staff__qrcode">
-                            {{ staff.firstname }}
-                    </div>   
+                        {{ staff.firstname }}
+                    </div>
                 </RouterLink>
             </div>
         </template>
     </ModalComponent>
-   
+
 </template>
 
 <script setup>
@@ -249,7 +253,7 @@ onBeforeMount(async () => {
 
         if (response.status == 404) exist.value = false
     });
-    
+
     // randomAdvantage.value = await feedbackStore.getRandomAdvantage(route.params.tag, route.params.etab)
 
     try {
@@ -262,7 +266,7 @@ onBeforeMount(async () => {
         if (responseEstablishment.status == 200) {
             staffs.value = responseEstablishment.data
         }
-    } catch(error) {
+    } catch (error) {
         console.log(error)
     }
 })
@@ -319,11 +323,12 @@ const resetForm = () => {
 }
 
 const disabledDate = (time) => {
-  return time.getTime() > Date.now()
+    return time.getTime() > Date.now()
 }
 
 const submit = async () => {
     var lg = localStorage.getItem("langue")
+    let visitorId = localStorage.getItem("visitId")
     let date_review = new Date();
     let review = {
         "author": `${firstname.value} ${lastname.value}`,
@@ -343,9 +348,10 @@ const submit = async () => {
         "staff": `/api/staff/${staff.value.id}`,
         "optin": true,
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
-        "dateReview": moment(date_review, 'DD/MM/YYYY')
+        "dateReview": moment(date_review, 'DD/MM/YYYY'),
+        "visitor": `/api/visitors/${visitorId}`
     }
-    
+
     let contactData = {
         gender: gender.value,
         firstname: firstname.value,
@@ -353,7 +359,7 @@ const submit = async () => {
         email: email.value,
         establishment: `/api/establishments/${establishment.value.id}`
     }
-   
+
     try {
         if (firstname.value !== '' && ratingCustomer.value !== null) {
             showSpinner.value = true;
@@ -361,24 +367,25 @@ const submit = async () => {
                 if (response.status == 201) {
                     if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
-                            
+
                             if (contactResponse.status == 201) {
-                                    let coupons = {
-                                        advantage: randomAdvantage.value.id,
-                                        establishment: route.params.etab,
-                                        gender: gender.value,
-                                        firstname: firstname.value,
-                                        lastname: lastname.value,
-                                        email: email.value,
-                                        language: (lg.toLowerCase() == 'sp')?'es':lg.toLowerCase(),
-                                        app_url: app_url.value,
-                                        template: 'workflow_en'
-                                    }
-                                    console.log(coupons)
-                                    await services.createRecord('workflow', coupons, (workflowResponse) => {
-                                        console.log(workflowResponse)
-                                        resetForm()
-                                    });
+                                services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] })
+                                let coupons = {
+                                    advantage: randomAdvantage.value.id,
+                                    establishment: route.params.etab,
+                                    gender: gender.value,
+                                    firstname: firstname.value,
+                                    lastname: lastname.value,
+                                    email: email.value,
+                                    language: (lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase(),
+                                    app_url: app_url.value,
+                                    template: 'workflow_en'
+                                }
+                                // console.log(coupons)
+                                await services.createRecord('workflow', coupons, (workflowResponse) => {
+                                    // console.log(workflowResponse)
+                                    resetForm()
+                                });
                             }
                         });
                     }
@@ -387,7 +394,7 @@ const submit = async () => {
                         params: {
                             etab: route.params.etab,
                             tag: route.params.tag,
-                            share: parseFloat(review.rating)>=4?'message-and-join-us':'message'
+                            share: parseFloat(review.rating) >= 4 ? 'message-and-join-us' : 'message'
                         },
                     });
                 }
@@ -612,14 +619,14 @@ input:focus {
     color: var(--color-bg2);
 }
 
-.checkbox-container div{
+.checkbox-container div {
     height: 500px;
     overflow: auto;
 }
 
-.checkbox-container span{
+.checkbox-container span {
     color: var(--color-danger);
-    font-weight:500;
+    font-weight: 500;
     cursor: pointer;
 }
 
@@ -653,4 +660,5 @@ span.label {
     .feedback__form {
         width: 90%;
     }
-}</style>
+}
+</style>

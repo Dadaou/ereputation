@@ -17,7 +17,20 @@
       </el-table-column>
       <el-table-column label="State" prop="state" align="center" style="width: 10%; min-width: 200px;">
         <template #default="scope">
-          <span style="text-transform: uppercase; font-size: 12px;">{{ scope.row.state }}</span>
+          <span v-if="scope.row.state == 'pending'"
+            style="text-transform: uppercase; font-size: 14px; color:var(--color-warning);">{{ scope.row.state }}</span>
+          <span v-else style="text-transform: uppercase; font-size: 14px; color:var(--color-success);">{{
+            scope.row.state }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Enable" prop="enable" align="center" style="width: 10%; min-width: 200px;">
+        <template #default="scope">
+          <span style="text-transform: uppercase;">
+            <i v-if="scope.row.enable" class="uil uil-check mr-1"
+              style="color:var(--color-success); font-size: 16px;"></i>
+            <i v-else class="uil uil-times mr-1" style="color:var(--color-danger2); font-size: 16px;"></i>
+          </span>
+
         </template>
       </el-table-column>
       <el-table-column>
@@ -43,7 +56,47 @@
       </el-table-column>
       <el-table-column label="State" prop="state" align="center" style="width: 10%; min-width: 200px;">
         <template #default="scope">
-          <span style="text-transform: uppercase; font-size: 12px;">{{ scope.row.state }}</span>
+          <el-popconfirm v-if="scope.row.state == 'valid'"
+            title='Are you sure to change the state of partnership to "PENDING"?'
+            @confirm="handleEvent(scope.$index, scope.row, 'state', 'pending')">
+            <template #reference>
+              <el-button><span style="color:var(--color-success); font-size: 14px; text-transform: uppercase;">{{
+                scope.row.state }}</span></el-button>
+            </template>
+          </el-popconfirm>
+          <el-popconfirm v-if="scope.row.state == 'pending'"
+            title='Are you sure to change the state of partnership to "VALID"'
+            @confirm="handleEvent(scope.$index, scope.row, 'state', 'valid')">
+            <template #reference>
+              <el-button><span style="color:var(--color-warning); font-size: 14px; text-transform: uppercase;">{{
+                scope.row.state }}</span></el-button>
+            </template>
+          </el-popconfirm>
+          <!-- <span style="text-transform: uppercase; font-size: 12px;">{{ scope.row.state }}</span> -->
+        </template>
+      </el-table-column>
+      <el-table-column label="Enable" prop="enable" align="center" style="width: 10%; min-width: 200px;">
+        <template #default="scope">
+          <el-popconfirm v-if="scope.row.enable == false" title='Are you sure to "ENABLE" this partnership?'
+            @confirm="handleEvent(scope.$index, scope.row, 'enable', true)">
+            <template #reference>
+              <el-button><i class="uil uil-times mr-1"
+                  style="color:var(--color-danger2); font-size: 16px;"></i></el-button>
+            </template>
+          </el-popconfirm>
+          <el-popconfirm v-if="scope.row.enable == true" title='Are you sure to "DISABLE" this partnership?'
+            @confirm="handleEvent(scope.$index, scope.row, 'enable', false)">
+            <template #reference>
+              <el-button><i class="uil uil-check-circle mr-1"
+                  style="color:var(--color-success); font-size: 16px;"></i></el-button>
+            </template>
+          </el-popconfirm>
+          <!-- <span style="text-transform: uppercase;">
+            <i v-if="scope.row.enable" class="uil uil-check mr-1"
+              style="color:var(--color-success); font-size: 16px;"></i>
+            <i v-else class="uil uil-times mr-1" style="color:var(--color-danger2); font-size: 16px;"></i>
+          </span> -->
+
         </template>
       </el-table-column>
       <el-table-column style="width: 15%; min-width: 200px;" align="right">
@@ -51,19 +104,14 @@
           <el-input v-model="searchReceived" size="small" placeholder="Type to search" />
         </template>
         <template #default="scope">
-          <el-popconfirm title="Are you sure to accept this request?" @confirm="handleAccept(scope.$index, scope.row)">
+          <el-popconfirm v-if="scope.row.state == 'pending' && scope.row.enable == false"
+            title="Are you sure to accept this request?" @confirm="handleAccept(scope.$index, scope.row)">
             <template #reference>
-              <el-button v-if="scope.row.state == 'pending'"><i class="uil uil-check-circle mr-1"
+              <el-button><i class="uil uil-check-circle mr-1"
                   style="color:var(--color-success); font-size: 16px;"></i><span
                   style="color:var(--color-success); font-size:10px;">Accept</span></el-button>
             </template>
           </el-popconfirm>
-          <!-- <el-popconfirm title="Are you sure to refuse this request?" @confirm="handleRefuse(scope.$index, scope.row)">
-            <template #reference>
-              <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
-            </template>
-          </el-popconfirm> -->
-          <!-- <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -125,10 +173,28 @@ const handleAccept = async (index, partnership) => {
       resolve(response);
     });
   });
-  if (response.status == 204) {
+  if (response.status == 200) {
     emit('update');
     ElMessage({
       message: `Request accepted successfully.`,
+      type: 'success',
+    });
+  }
+};
+
+const handleEvent = async (index, partnership, column, value) => {
+  let body = {}
+  body[`${column}`] = value
+
+  const response = await new Promise((resolve) => {
+    services.patchRecord('partnerships', partnership['id'], body, (response) => {
+      resolve(response);
+    });
+  });
+  if (response.status == 200) {
+    emit('update');
+    ElMessage({
+      message: `Modification done.`,
       type: 'success',
     });
   }
