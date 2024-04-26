@@ -172,7 +172,6 @@
 import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, watch, inject } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
-import { useUserStore } from "@Stores/user.js";
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
 import { useFeedbackStore } from '@Stores/feedback.js';
@@ -207,15 +206,11 @@ const app_url = inject('app_url')
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
-const userStore = useUserStore();
 const appStore = useAppStore();
 const feedbackStore = useFeedbackStore();
-const staff = ref(null);
-const staffs = ref([]);
 const unit = ref(null);
 const units = ref([]);
 const showModal = ref(false);
-const companyId = route.params.etab;
 let randomAdvantage = ref(null);
 const { width } = useWindowSize()
 const modalWidth = computed(() => {
@@ -228,20 +223,11 @@ const establishment = ref({});
 const page = ref();
 const iframeVisible = ref(false);
 const showSpinner = ref(false);
-const allAdvantages = ref(null)
-const reuiredtext = ref("Champs requis");
-
-
-
-function getRandomValue(n) {
-    return Math.floor(Math.random() * n);
-}
 
 onBeforeMount(async () => {
     services.setToken(import.meta.env.VITE_APP_TOKEN);
 
     await services.get_Record(`establishment/${route.params.etab}/media`, (response) => {
-        console.log(response)
         if (response !== undefined && response.status == 200) {
             establishment.value = response['data'];
         }
@@ -252,16 +238,12 @@ onBeforeMount(async () => {
     });
 
     await services.get_Record(`/customer/establishment/unit?tag=${route.params.etab}`, (response) => {
-        console.log(response)
         if (response.status == 200) {
-            console.log(response.data)
             units.value = response.data;
             unit.value = response.data.filter(i => i.tag == route.params.id).length > 0 ? response.data.filter(i => i.tag == route.params.id)[0] : null
         }
         if (response.status == 404) exist.value = false
     });
-
-    // randomAdvantage.value = await feedbackStore.getRandomAdvantage(route.params.tag, route.params.etab)
 })
 const requiredinput = ref('');
 onMounted(() => {
@@ -376,8 +358,7 @@ const submit = async () => {
                                     app_url: app_url.value,
                                     template: `workflow_en`
                                 }
-                                await services.createRecord('workflow', coupons, (workflowResponse) => {
-                                    // console.log(workflowResponse)
+                                await services.createRecord('workflow', coupons, () => {
                                     resetForm()
                                 });
                             }
@@ -392,8 +373,11 @@ const submit = async () => {
                         },
                     });
                 }
+                if (response.status == 200) {
+                    ElMessage.error(t('feedback.alreadysend'));
+                }
             })
-        } else ElMessage.error(`Please, provide all needed information`);
+        } else ElMessage.error(t('feedback.requiredinputs'));
     } catch (error) {
         console.log(error)
     }

@@ -141,7 +141,6 @@
 import { ref, onBeforeMount, defineAsyncComponent, onMounted, watch, inject } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
-import { useUserStore } from "@Stores/user.js";
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
 import { useFeedbackStore } from '@Stores/feedback.js';
@@ -172,7 +171,6 @@ const EstablishmentNotFound = defineAsyncComponent(() =>
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
-const userStore = useUserStore();
 const appStore = useAppStore();
 
 const feedbackStore = useFeedbackStore();
@@ -182,7 +180,6 @@ const iframeVisible = ref(false);
 
 const page = ref({})
 
-let allAdvantages = ref([])
 let randomAdvantage = ref(null);
 
 const showSpinner = ref(false);
@@ -190,10 +187,8 @@ const showSpinner = ref(false);
 onBeforeMount(async () => {
     services.setToken(import.meta.env.VITE_APP_TOKEN);
     await services.get_Record(`establishment/${route.params.id}/media`, (response) => {
-        console.log(response)
         if (response.status == 200) {
             establishment.value = response['data'];
-            console.log(establishment.value)
             media.value = response['data'].url_source == null ? [] : response['data'].url_source;
         }
 
@@ -202,7 +197,6 @@ onBeforeMount(async () => {
         }
     });
 
-    // randomAdvantage.value = await feedbackStore.getRandomAdvantage(route.params.tag, route.params.id)
 })
 
 onMounted(() => {
@@ -305,11 +299,9 @@ const submit = async () => {
             await feedbackStore.createReview(review, async (response) => {
 
                 if (response.status == 201) {
-                    let email_sent = false
                     if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
                             if (contactResponse.status == 201) {
-                                email_sent = true
                                 services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] })
                                 let coupons = {
                                     advantage: randomAdvantage.value.id,
@@ -322,12 +314,9 @@ const submit = async () => {
                                     app_url: app_url.value,
                                     template: 'workflow_en'
                                 }
-                                await services.createRecord('workflow', coupons, (workflowResponse) => {
-                                    console.log(workflowResponse)
+                                await services.createRecord('workflow', coupons, () => {
                                     resetForm()
                                 });
-
-                                // console.log(contactResponse)
                             }
                         });
                     }
@@ -340,16 +329,18 @@ const submit = async () => {
                         },
                     });
                 }
+                if (response.status == 200) {
+                    ElMessage.error(t('feedback.alreadysend'));
+                }
             });
         } else {
-            ElMessage.error(`Please, provide all needed information`);
+            ElMessage.error(t('feedback.requiredinputs'));
         }
     } catch (error) {
         console.log(error);
     } finally {
         showSpinner.value = false;
     }
-
 };
 </script>
 
