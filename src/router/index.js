@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@Views/LoginView.vue'
 import SubscriptionPageView from '@Views/SubscriptionPageView.vue'
-// import CongratulationView from '@Views/CongratulationView.vue'
 import ForgotPwdPageView from '@Views/ForgotPwdPageView.vue'
 import ResetPwdPageView from '@Views/ResetPwdPageView.vue'
 import ExpiredTokenPageView from '@Views/ExpiredTokenPageView.vue'

@@ -1,5 +1,6 @@
 <template>
 	<div class="offers-list">
+    <span>Use a pre-formatted template</span>
     <div
       v-for="(offer, index) in offers"
       :key="index"
@@ -95,6 +96,11 @@ const selectOffer = (offer) => {
 .offers-list {
   max-height: 500px;
   overflow-y: auto;
+  margin-top: 10px; 
+}
+
+.offers-list span{
+  margin: auto;
 }
 
 .offer-item {
