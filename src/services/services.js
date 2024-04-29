@@ -378,33 +378,65 @@ const downloadSVGQrcode = async (filename, elementID) => {
   }
 }
 
+// const downloadJPEGQrcode = async (filename, elementID, maxWidth, maxHeight) => {
+//   try {
+//     var canvas = document.createElement('canvas')
+//     canvas.width = maxWidth
+//     canvas.height = maxHeight
+
+//     // Ajout des marges
+//     var marginX = 20
+//     var marginY = 20
+//     var newCanvas = document.createElement('canvas')
+//     newCanvas.width = canvas.width + 2 * marginX
+//     newCanvas.height = canvas.height + 2 * marginY
+//     var newCtx = newCanvas.getContext('2d')
+//     newCtx.fillStyle = 'white'
+//     newCtx.fillRect(0, 0, newCanvas.width, newCanvas.height)
+//     newCtx.drawImage(canvas, marginX, marginY)
+
+//     var dataURL = newCanvas.toDataURL('image/jpeg')
+
+//     let link = document.createElement('a')
+//     link.download = `${filename}.jpeg`
+//     link.href = dataURL
+//     link.click()
+//   } catch (error) {
+//     console.error("Erreur lors du redimensionnement de l'image", error)
+//   }
+// }
+
 const downloadJPEGQrcode = async (filename, elementID, maxWidth, maxHeight) => {
   try {
-    var canvas = document.createElement('canvas')
-    canvas.width = maxWidth
-    canvas.height = maxHeight
+    var svg = document.getElementById(elementID);
+    var canvas = document.createElement('canvas');
+    canvas.width = maxWidth;
+    canvas.height = maxHeight;
+    var ctx = canvas.getContext('2d');
+    canvg(canvas, svg.outerHTML);
 
-    // Ajout des marges
-    var marginX = 20
-    var marginY = 20
-    var newCanvas = document.createElement('canvas')
-    newCanvas.width = canvas.width + 2 * marginX
-    newCanvas.height = canvas.height + 2 * marginY
-    var newCtx = newCanvas.getContext('2d')
-    newCtx.fillStyle = 'white'
-    newCtx.fillRect(0, 0, newCanvas.width, newCanvas.height)
-    newCtx.drawImage(canvas, marginX, marginY)
+    // Ajout des marges de 20 pixels
+    var marginX = 20;
+    var marginY = 20;
+    var newCanvas = document.createElement('canvas');
+    newCanvas.width = canvas.width + 2 * marginX;
+    newCanvas.height = canvas.height + 2 * marginY;
+    var newCtx = newCanvas.getContext('2d');
+    newCtx.fillStyle = 'white';
+    newCtx.fillRect(0, 0, newCanvas.width, newCanvas.height);
+    newCtx.drawImage(canvas, marginX, marginY);
 
-    var dataURL = newCanvas.toDataURL('image/jpeg')
+    var dataURL = newCanvas.toDataURL('image/jpeg');
 
-    let link = document.createElement('a')
-    link.download = `${filename}.jpeg`
-    link.href = dataURL
-    link.click()
+    let link = document.createElement('a');
+    link.download = `${filename}.jpeg`;
+    link.href = dataURL;
+    link.click();
   } catch (error) {
-    console.error("Erreur lors du redimensionnement de l'image", error)
+    console.error("Erreur lors du redimensionnement de l'image", error);
   }
-}
+};
+
 
 const hashString = (inputString) => {
   let hash = 0

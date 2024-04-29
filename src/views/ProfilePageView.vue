@@ -22,6 +22,16 @@
               <i class="uil uil-qrcode-scan"></i> <span>My QRCodes</span>
             </router-link>
           </li>
+           <li>
+            <router-link :to="{ name: 'Advantage' }">
+               <i class="uil uil-bill"></i> <span>Advantages</span>
+            </router-link>
+          </li>
+           <li>
+            <router-link :to="{ name: 'Partnership' }">
+               <i class="uil uil-users-alt"></i> <span>Partnership</span>
+            </router-link>
+          </li>
           <li>
             <router-link :to="{ name: 'Contact' }">
               <i class="uil uil-envelope"></i> <span>Contacts</span>
@@ -90,6 +100,16 @@ const page = computed(() => {
       title1: "",
       title2: "Parameters",
       icon: "uil-setting",
+    },
+    "Advantage": {
+      title1: "",
+      title2: "Advantage",
+      icon: "uil-bill",
+    },
+    "Partnership": {
+      title1: "",
+      title2: "Partnership",
+      icon: "uil-users-alt",
     }
   }
 

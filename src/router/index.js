@@ -27,9 +27,6 @@ const CheckAuthentication = (to, from, next) => {
   }
 }
 
-
-
-
 const checkUser = (to, from, next) => {
   const user = useUserStore().user
   const roles = user.roles
@@ -398,6 +395,16 @@ const router = createRouter({
               path: 'parameters',
               name: 'Parameters',
               component: () => import('@Views/ParameterView.vue')
+            },
+            {
+              path: 'advantage',
+              name: 'Advantage',
+              component: () => import('@Components/advantage/AdvantageView.vue')
+            },
+            {
+              path: 'partnership',
+              name: 'Partnership',
+              component: () => import('@Components/partnership/PartnershipView.vue')
             }
           ]
         }
