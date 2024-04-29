@@ -13,6 +13,9 @@
             Advantage name
           </th>
           <th scope="col" class="px-6 py-3">
+            Discount Code
+          </th>
+          <th scope="col" class="px-6 py-3">
             Code
           </th>
           <th scope="col" class="px-6 py-3">
@@ -40,6 +43,9 @@
           </td>
            <td class="px-6 py-4">
             {{ discount.adv_name }}
+          </td>
+           <td class="px-6 py-4">
+            {{ discount.adv_code }}
           </td>
           <td class="px-6 py-4">
             {{ discount.code }}

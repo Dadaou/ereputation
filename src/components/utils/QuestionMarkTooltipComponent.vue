@@ -1,7 +1,7 @@
 <template>
 <i class="uil uil-question-circle"
    style="color: var(--color-warning); font-size: 18px; cursor: pointer"
-   @mouseover="(e) => (buttonRef = e.currentTarget)" @click="visible = !visible">
+   @mouseover="(e) => {buttonRef = e.currentTarget, visible = true}" @mouseleave="visible = false">
 </i>
 <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering popper-class="singleton-tooltip" placement="top">
  <template #content>
