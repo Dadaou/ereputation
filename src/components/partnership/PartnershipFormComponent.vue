@@ -26,8 +26,7 @@
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Partnership
                         <span>*</span></label>
                     <el-select v-model="partnership" placeholder="Choose a partnership" size="large">
-                        <el-option v-for="item in partnerships" :key="item.id" :label="item.name"
-                            :value="`/api/establishments/${item.id}`">
+                        <el-option v-for="item in partnerships" :key="item.id" :label="item.name" :value="item.tag">
                             <span><strong>{{ item.name }}</strong>, </span>
                             <span style="color: var(--el-text-color-secondary);font-size: 13px;"> {{
                                 item.address1 }}, {{ item.zipcode }}, {{
@@ -39,7 +38,7 @@
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
                     <label for="expired_at" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Expired
-                        at <span>*</span></label>
+                        at </label>
                     <el-date-picker v-model="expiredAt" :size="'large'" />
                 </div>
                 <div>
@@ -49,6 +48,7 @@
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
             </div>
+            <AdvantagePartnershipList :items="allAdvantageList" class="mt-5" />
             <div class="flex items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
                 <button type="submit"
                     class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
@@ -83,7 +83,7 @@
 </template>
 <script setup>
 // import moment from 'moment';
-import { ref, inject, watch } from 'vue'
+import { ref, inject, watch, defineAsyncComponent, computed } from 'vue'
 import services from '@Services/services.js'
 // import { useUserStore } from "@Stores/user.js"
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue'
@@ -92,9 +92,18 @@ import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import { useRoute } from 'vue-router';
+import { useAppStore } from "@Stores/app.js"
 
+const AdvantagePartnershipList = defineAsyncComponent(() =>
+    import('@Components/utils/AdvantagePartnershipListComponent.vue')
+);
+
+const partner = ref(import.meta.env.VITE_PARTNER_CODE);
+const app_url = inject('app_url')
 const partnership = ref('');
+const establishment = ref('');
 const partnerships = ref([]);
+const other_advantages = ref([]);
 const advantage = ref('');
 const email = ref('');
 const expiredAt = ref(null);
@@ -102,18 +111,45 @@ const limit = ref(0);
 const showSpinner = ref(false);
 const showSpinnerEmail = ref(false);
 const activePartnershipTab = inject('partnership_activeTab');
+const route = useRoute();
 const emit = defineEmits(['update']);
+const appStore = useAppStore()
 
 const advantages = inject('advantages');
 
 watch(advantage, () => {
     if (advantage.value) {
         partnership.value = null;
-        updatePartnershipList(advantage.value.split('/').pop());
+        let advantage_id = advantage.value.split('/').slice(-1);
+        updatePartnershipList(advantage_id);
+        updateOtherAdvantageList(advantage_id);
+        establishment.value = advantages.value.find(v => { return v.id == Number(advantage.value.split('/').pop()) }).establishment_tag
     }
 })
 
+watch(partnership, () => {
+    if (partnership.value) {
+        let estab = partnerships.value.find(v => { return v.tag == partnership.value })
+        if (estab) {
+            email.value = estab.email
+        }
+    }
+})
+
+const allAdvantageList = computed(() => {
+    return other_advantages.value.map((discount, index) => {
+        let icon = '';
+        if (index % 2 === 0) {
+            icon = "🎁";
+        } else {
+            icon = "🎉";
+        }
+        return { ...discount, icon };
+    });
+})
+
 const updatePartnershipList = async (advantageId) => {
+    appStore.isLoading = true;
     const response = await new Promise((resolve) => {
         services.get_Record(`advantage/${advantageId}/other_establishments`, (response) => {
             resolve(response);
@@ -121,10 +157,24 @@ const updatePartnershipList = async (advantageId) => {
     });
     if (response.status === 200) {
         partnerships.value = response.data;
+        appStore.isLoading = false;
     }
+    appStore.isLoading = false;
 }
 
-
+const updateOtherAdvantageList = async (advantageId) => {
+    appStore.isLoading = true;
+    const response = await new Promise((resolve) => {
+        services.get_Record(`advantage/${advantageId}/other_advantage`, (response) => {
+            resolve(response);
+        });
+    });
+    if (response.status === 200) {
+        other_advantages.value = response.data;
+        appStore.isLoading = false;
+    }
+    appStore.isLoading = false;
+}
 
 const submit = async () => {
     let data = {
@@ -168,43 +218,48 @@ const submit = async () => {
 };
 
 const submitEmail = async () => {
-    const route = useRoute();
-    // if (email.value) {
-    //     const data = {
-    //         'email': email.value,
-    //         'advantage': advantage.value,
-    //         'pricing_url': route.
-    //     }
+    if (partner.value && email.value && establishment.value) {
+        showSpinnerEmail.value = true;
+
+        let data = {
+            "email": email.value,
+            "code": establishment.value,
+            "partner": partner.value,
+            "url": app_url.value,
+            "template": partnership.value ? "partnership_customer" : "partnership_nocustomer"
+        }
+
+        const response = await new Promise((resolve) => {
+            services.createRecord('partnership/invite', data, (response) => {
+                resolve(response);
+            });
+        });
+
+        if (response.status == 200) {
+            ElMessage({
+                message: 'partnership invitation sent successfully',
+                type: 'success',
+            })
+
+            partnership.value = '';
+            email.value = '';
+            establishment.value = '';
+            advantage.value = '';
+            expiredAt.value = '';
+            showSpinnerEmail.value = false;
+        }
+    }
+    // if (partnership.value && partnership.value) {
     //     try {
-    //         showSpinnerEmail.value = true;
-    //         const response = await new Promise((resolve) => {
-    //             services.createRecord('partnerships', data, (response) => {
-    //                 resolve(response);
-    //             });
-    //         });
 
-    //         if (response.status == 201) {
-    //             ElMessage({
-    //                 message: 'partnership requested successfully',
-    //                 type: 'success',
-    //             })
+    //     } catch (e) {
 
-    //             partnership.value = '';
-    //             advantage.value = '';
-    //             showSpinner.value = false;
-    //             expiredAt.value = '';
-    //         }
-    //         emit('update');
-
-    //         activePartnershipTab.value = 'partnership_list'
-
-    //     } catch (error) {
-    //         console.log(error);
     //     }
-    // } else {
-    //     ElMessage.error(`Please, fill the form correctly!`);
-    // }
-};
+    //     // } else {
+    //     //     ElMessage.error(`Please, fill the form correctly!`);
+    //     // }
+    // };
+}
 
 </script>
 <style scoped>

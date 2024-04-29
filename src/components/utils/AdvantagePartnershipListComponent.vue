@@ -1,16 +1,16 @@
 <template>
   <div class="scroll-wrapper">
     <ul class="discount-list">
-      <li v-for="(discount, index) in discounts" :key="index" @click="selectDiscount(index, discount)"
-        :class="[isSelected(index) ? 'selected gradient-green' : 'gradient-violet', 'text-white text-center py-10 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative']">
+      <li v-for="(discount, index) in items" :key="index"
+        class="gradient-violet text-white text-center py-10 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative">
         <div>
           <span id="discount_name">
-            <span :class="['icon', isSelected(index) ? 'icon-selected' : '']">
-              {{ isSelected(index) ? '✔' : discount.icon }}
+            <span class="icon">
+              {{ discount.icon }}
             </span>
             {{ discount.name }}
-            <span :class="['icon', isSelected(index) ? 'icon-selected' : '']">
-              {{ isSelected(index) ? '✔' : discount.icon }}
+            <span class="icon">
+              {{ discount.icon }}
             </span>
           </span>
           <div id="discount_establishment">{{ discount.establishment_name }}</div>
@@ -25,73 +25,45 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import chroma from 'chroma-js';
-import { useAdvantageStore } from '@Stores/advantage.js';
+// import { ref } from 'vue';
+// import chroma from 'chroma-js';
+// import { useAdvantageStore } from '@Stores/advantage.js';
 
-const selectedDiscount = ref(null);
-const discountColors = ref([]);
-const advantageStore = useAdvantageStore();
-const discounts = ref([])
+// const selectedDiscount = ref(null);
+// const discountColors = ref([]);
+// const advantageStore = useAdvantageStore();
+// const discounts = ref([])
 
 const props = defineProps({
-  customer: {
-    type: String,
-    required: true
-  },
-  establishment: {
-    type: String,
+  items: {
+    type: Array,
     required: true
   }
 });
 
-const emits = defineEmits(['select'])
+// watch([establishmnt.value, custmer.value], () => {
+//   alert("ici");
+// })
 
-onMounted(async () => {
-  let data = await advantageStore.getAdvantageAvailable(props.customer, props.establishment)
-  discounts.value = data.map((discount, index) => {
-    let icon = '';
-    if (index % 2 === 0) {
-      icon = "🎁";
-    } else {
-      icon = "🎉";
-    }
-    return { ...discount, icon };
-  });
-  generateColors();
-  if (discounts.value.length) {
-    selectDiscount(0, discounts.value[0]);
-  }
-});
+// onMounted(async () => {
+//   await updateList()
+// });
 
-const generateColors = () => {
-  discountColors.value = discounts.value.map(generateColor);
-};
+// const generateColors = () => {
+//   discountColors.value = discounts.value.map(generateColor);
+// };
 
-const generateColor = () => {
-  let color = chroma.random();
-  const contrastThreshold = 4.5;
+// const generateColor = () => {
+//   let color = chroma.random();
+//   const contrastThreshold = 4.5;
 
-  while (chroma.contrast(color, 'white') < contrastThreshold) {
-    color = chroma.random();
-  }
+//   while (chroma.contrast(color, 'white') < contrastThreshold) {
+//     color = chroma.random();
+//   }
 
-  return color.hex();
-};
+//   return color.hex();
+// };
 
-const selectDiscount = (index, discount) => {
-  if (isSelected(index)) {
-    selectedDiscount.value = null
-    emits('select', null);
-  } else {
-    selectedDiscount.value = index;
-    emits('select', discount);
-  }
-};
-
-const isSelected = (index) => {
-  return selectedDiscount.value === index;
-};
 </script>
 
 <style scoped>

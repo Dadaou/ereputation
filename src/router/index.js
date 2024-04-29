@@ -27,6 +27,9 @@ const CheckAuthentication = (to, from, next) => {
   }
 }
 
+
+
+
 const checkUser = (to, from, next) => {
   const user = useUserStore().user
   const roles = user.roles
@@ -78,6 +81,16 @@ const CheckAccess = (to, from, next) => {
       userStore.signOut()
     } else next()
   }
+}
+
+
+const generateRandomString = (length) => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
 }
 
 const router = createRouter({
@@ -213,19 +226,29 @@ const router = createRouter({
           component: () => import('@Views/GatePageView.vue')
         },
         {
-          path: '/public/:tag/establishment/:id/feedback',
+          path: '/public/:tag/establishment/:id/feedback/',
           name: 'FeedBack',
-          component: () => import('@Views/FeedbackPageView.vue')
+          component: () => import('@Views/FeedbackPageView.vue'),
         },
+       
         {
           path: '/public/:tag/establishment/:etab/staffs/:id/feedback',
           name: 'StaffFeedBack',
           component: () => import('@Views/StaffFeedBackPageView.vue')
         },
         {
-          path: '/public/:tag/establishment/:etab/units/:id/feedback',
+          path: '/public/:tag/establishment/:etab/units/:id/feedback/:rfuid?',
           name: 'UnitFeedBack',
-          component: () => import('@Components/units/UnitFeedbackComponent.vue')
+          component: () => import('@Components/units/UnitFeedbackComponent.vue'),
+          beforeEnter: (to, from, next) => {
+            console.log('beforeEnter hook called');
+            if (!to.params.rfuid) {
+              const rfuid = generateRandomString(16); 
+              next({ name: 'UnitFeedBack', params: { ...to.params, rfuid } });
+            } else {
+              next();
+            }
+          }
         },
         {
           path: '/public/:tag/establishment/:etab/:share/feedback-success',
