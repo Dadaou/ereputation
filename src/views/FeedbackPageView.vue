@@ -60,7 +60,7 @@
                             <input type="text" id="last_name" v-model="lastname"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
-                        <div>
+                        <!-- <div>
                             <label for="countries"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                                     $t("feedback.gender") }} </label>
@@ -68,14 +68,15 @@
                                 <el-option v-for="item in genders" :key="item.value" :label="item.label"
                                     :value="item.value" />
                             </el-select>
-                        </div>
+                        </div> -->
                         <div>
 
                             <label for="last_name"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                                     $t("feedback.datevisit") }}<!-- <span>*</span> --></label>
                             <el-date-picker v-model="dateVisit" :placeholder="$t('feedback.placeholder_datevisit')"
-                                :size="'large'" :disabled-date="disabledDate" />
+                                :size="'large'" :disabled-date="disabledDate" type="datetime"
+                                :default-time="Date(Date.now())" format="YYYY-MM-DD HH:mm" />
                         </div>
 
                     </div>
@@ -147,7 +148,7 @@ import { useFeedbackStore } from '@Stores/feedback.js';
 import { useAppStore } from "@Stores/app.js";
 import moment from 'moment';
 import { useI18n } from "vue-i18n";
-import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus';
+import { ElMessage, ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
@@ -227,30 +228,30 @@ const disabledDate = (time) => {
 const app_url = inject('app_url')
 const firstname = ref('');
 const lastname = ref('');
-const gender = ref('');
+// const gender = ref('');
 const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
 const dateVisit = ref(moment().format('YYYY-MM-DD'));
-const genders = [
-    {
-        value: 'M',
-        label: 'Male',
-    },
-    {
-        value: 'F',
-        label: 'Female',
-    },
-    {
-        value: 'O',
-        label: 'Other',
-    }
-]
+// const genders = [
+//     {
+//         value: 'M',
+//         label: 'Male',
+//     },
+//     {
+//         value: 'F',
+//         label: 'Female',
+//     },
+//     {
+//         value: 'O',
+//         label: 'Other',
+//     }
+// ]
 
 const resetForm = () => {
     firstname.value = '';
     lastname.value = '';
-    gender.value = '';
+    // gender.value = '';
     comment.value = '';
     email.value = '';
     dateVisit.value = null;
@@ -276,7 +277,6 @@ const submit = async () => {
         "authorUrl": null,
         "profilePhoto": null,
         "email": email.value,
-        "staff": null,
         "optin": true,
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
         "dateReview": moment(date_review, 'DD/MM/YYYY'),
@@ -284,7 +284,7 @@ const submit = async () => {
     };
 
     let contactData = {
-        gender: gender.value,
+        // gender: gender.value,
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,
@@ -306,7 +306,7 @@ const submit = async () => {
                                 let coupons = {
                                     advantage: randomAdvantage.value.id,
                                     establishment: route.params.id,
-                                    gender: gender.value,
+                                    // gender: gender.value,
                                     firstname: firstname.value,
                                     lastname: lastname.value,
                                     email: email.value,

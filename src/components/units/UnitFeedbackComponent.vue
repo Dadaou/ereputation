@@ -64,20 +64,21 @@
                             <input type="text" id="last_name" v-model="lastname"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
-                        <div>
+                        <!-- <div>
                             <label for="genders" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                $t("feedback.gender") }} <!-- <span>*</span> --></label>
+                                $t("feedback.gender") }} <span>*</span> </label>
                             <el-select v-model="gender" :placeholder="$t('feedback.placeholder_gender')" size="large">
                                 <el-option v-for="item in genders" :key="item.value" :label="item.label"
                                     :value="item.value" />
                             </el-select>
-                        </div>
+                        </div> -->
                         <div>
                             <label for="datevisit"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                                     $t("feedback.datevisit") }}<!--  <span>*</span> --></label>
                             <el-date-picker v-model="dateVisit" :placeholder="$t('feedback.placeholder_datevisit')"
-                                :size="'large'" :disabled-date="disabledDate" />
+                                :size="'large'" :disabled-date="disabledDate" type="datetime"
+                                :default-time="Date(Date.now())" :teleported="true" format="YYYY-MM-DD HH:mm" />
                         </div>
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
@@ -176,7 +177,7 @@ import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
 import { useFeedbackStore } from '@Stores/feedback.js';
 import moment from 'moment';
-import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus';
+import { ElMessage, ElDatePicker } from 'element-plus';
 import { useAppStore } from "@Stores/app.js";
 import { useWindowSize } from '@vueuse/core';
 import { useI18n } from "vue-i18n";
@@ -247,6 +248,9 @@ onBeforeMount(async () => {
 })
 const requiredinput = ref('');
 onMounted(() => {
+    if (window.FingerprintG2A && window.FingerprintG2A.default && typeof window.FingerprintG2A.default.main === 'function') {
+        window.FingerprintG2A.default.main();
+    }
     /** Charger le titre par defaut */
     page.value = {
         title1: t("feedback.title1"),
@@ -272,21 +276,21 @@ const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
 const dateVisit = ref(moment().format('YYYY-MM-DD'));
-const gender = ref('');
-const genders = [
-    {
-        value: 'M',
-        label: 'Male',
-    },
-    {
-        value: 'F',
-        label: 'Female',
-    },
-    {
-        value: 'O',
-        label: 'Other',
-    }
-]
+// const gender = ref('');
+// const genders = [
+//     {
+//         value: 'M',
+//         label: 'Male',
+//     },
+//     {
+//         value: 'F',
+//         label: 'Female',
+//     },
+//     {
+//         value: 'O',
+//         label: 'Other',
+//     }
+// ]
 
 const resetForm = () => {
     firstname.value = '';
@@ -313,7 +317,6 @@ const submit = async () => {
         "translated": null,
         "source": "App (Private)",
         "catering": null,
-        "establishment": null,
         "feeling": ratingCustomer.value.feeling,
         "score": 0,
         "confidence": 0,
@@ -321,7 +324,6 @@ const submit = async () => {
         "profilePhoto": null,
         "email": email.value,
         "unit": `/api/units/${unit.value.id}`,
-        "staff": null,
         "optin": true,
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
         "dateReview": moment(date_review, 'DD/MM/YYYY'),
@@ -329,7 +331,7 @@ const submit = async () => {
     }
 
     let contactData = {
-        gender: gender.value,
+        // gender: gender.value,
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,
@@ -350,7 +352,7 @@ const submit = async () => {
                                 let coupons = {
                                     advantage: randomAdvantage.value.id,
                                     establishment: route.params.etab,
-                                    gender: gender.value,
+                                    // gender: gender.value,
                                     firstname: firstname.value,
                                     lastname: lastname.value,
                                     email: email.value,
