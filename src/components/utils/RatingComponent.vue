@@ -15,7 +15,7 @@
               </span> 
           </div>
       </div>
-       <div :class="['global__rating', company.ratio>0?'green':'red']" v-if="company.isTrends">
+       <div :class="['global__rating', company.ratio>0?'green':(company.ratio === 0 ? 'grey' :'red')]" v-if="company.isTrends">
               <span class="font-medium" :data-tooltip="`Ratio: ${arrondirRatio(company.ratio)}`">{{ arrondirRatio(company.ratio) }}</span>
       </div>
       <div class="global__rating" v-else>
@@ -88,6 +88,10 @@ const arrondirRatio = (ratio)=>{
 
     .global__rating.green{
       background-color: green;
+    }
+
+    .global__rating.grey{
+      background-color: grey;
     }
 
     .society__rating a{
