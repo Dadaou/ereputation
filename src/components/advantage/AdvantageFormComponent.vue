@@ -53,13 +53,21 @@
                         
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
-                        <div>
-                            <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount <span></span></label>
-                            <input type="number" id="amount" v-model="amount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
+                       <div class="grid gap-6 mb-6 md:grid-cols-2">
+                          <div>
+                              <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount <span></span></label>
+                              <input type="number" id="amount" v-model="amount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
+                          </div>
+                          <div>
+                              <label for="code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Code
+                                <Tooltip text="Use your own discount code recognized by your system"/>
+                               </label>
+                              <input type="text" id="code" v-model="code" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                          </div>
                         </div>
                         <div>
                             <label for="metric" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Metric <span></span></label>
-                            <!-- <input type="text" id="metric" v-model="metric" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2"> -->
                             <el-select v-model="metric" placeholder="Select metric" size="large">
                                 <el-option
                                 v-for="metric in metrics"
@@ -74,21 +82,15 @@
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                         <div class="grid gap-6 mb-6 md:grid-cols-2">
                           <div>
-                            <label for="validity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Validity 
-                              <i class="uil uil-question-circle"
-                                  style="color: var(--color-warning); font-size: 18px; cursor: pointer"
-                                  @mouseover="(e) => (buttonRef = e.currentTarget)" @click="visible = !visible">
-                              </i>
-                              <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
-                                popper-class="singleton-tooltip" placement="top">
-                                <template #content>
-                                    <span>Validity period after coupon creation (in number of days) </span>
-                                </template>
-                            </el-tooltip></label>
+                            <label for="validity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Validity   
+                            <Tooltip text="Validity period after coupon creation (in number of days)"/>
+                            </label>
                             <input type="number" id="validity" v-model="validity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
                           </div>
                            <div>
-                            <label for="limit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Limit
+                            <label for="limit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                              Limit
+                             <Tooltip text="Offer limited to x units"/>
                              </label>
                             <input type="number" id="limit" v-model="advantageLimit" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
                         </div>
@@ -101,14 +103,20 @@
                               />
                         </div>    
                         <div>
-                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date from <span></span></label>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                              Date from 
+                              <Tooltip text="To use before the [date]"/>
+                            </label>
                             <el-date-picker
                                 v-model="dateFrom"
                                 :size="'large'"
                               />
                         </div>      
                         <div>
-                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date to <span></span></label>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                              Date to
+                              <Tooltip text="To use after the [date]"/> 
+                            </label>
                             <el-date-picker
                                 v-model="dateEnd"
                                 :size="'large'"
@@ -122,9 +130,8 @@
                       id="message" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here...">
                       </textarea>
                     </div>
-
                   
-                    <div class="flex items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
+                    <div class="flex items-center justify-between py-5 border-t border-b dark:border-gray-600">
                       <button type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                                 <SpinnerComponent :show-spinner="showSpinner" :color="'gray'"/> <span v-if="showSpinner">Loading ...</span>
                                <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} advantage</span>
@@ -157,6 +164,10 @@ const AdvantageTemplate = defineAsyncComponent(() =>
     import('@Components/advantage/AdvantageTemplateComponent.vue')
 )
 
+const Tooltip = defineAsyncComponent(() =>
+    import('@Components/utils/QuestionMarkTooltipComponent.vue')
+)
+
 const scopeOptions = ref([
   { label: 'individual', value: 'individual' },
   { label: 'bill', value: 'bill' },
@@ -187,10 +198,6 @@ const showSpinner = ref(false);
  const scope = ref(null);
  const validity = ref(null);
  const advantageLimit = ref(null);
-
-const buttonRef = ref()
-const tooltipRef = ref()
-const visible = ref(false)
 
 const type = ref('add');
 const advantage_to_update = inject('advantage_to_update');

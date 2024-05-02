@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@Views/LoginView.vue'
 import SubscriptionPageView from '@Views/SubscriptionPageView.vue'
-// import CongratulationView from '@Views/CongratulationView.vue'
 import ForgotPwdPageView from '@Views/ForgotPwdPageView.vue'
 import ResetPwdPageView from '@Views/ResetPwdPageView.vue'
 import ExpiredTokenPageView from '@Views/ExpiredTokenPageView.vue'
@@ -27,9 +26,6 @@ const CheckAuthentication = (to, from, next) => {
     } else next()
   }
 }
-
-
-
 
 const checkUser = (to, from, next) => {
   const user = useUserStore().user
@@ -399,6 +395,16 @@ const router = createRouter({
               path: 'parameters',
               name: 'Parameters',
               component: () => import('@Views/ParameterView.vue')
+            },
+            {
+              path: 'advantage',
+              name: 'Advantage',
+              component: () => import('@Components/advantage/AdvantageView.vue')
+            },
+            {
+              path: 'partnership',
+              name: 'Partnership',
+              component: () => import('@Components/partnership/PartnershipView.vue')
             }
           ]
         }

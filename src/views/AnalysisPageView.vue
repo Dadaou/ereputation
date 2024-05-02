@@ -31,32 +31,16 @@
                             <div :class="['containerBody', !isLoading ? '' : 'loading']">
                                 <Bar :data="ratingChart" id="rating" :options="options" />
                             </div>
-
-                            <!-- <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="legendData" :alignment="'vertical'">
-                            </BaseLegend>  -->
-
-                            <!--  <div :class="['containerBody2 mt-5', !isLoading?'':'loading']">
-                                <Bar :data="confidenceChart" id="confidence" :options="newOptions" />
-                            </div> -->
                         </div>
                         <BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData"
                             :alignment="'vertical'">
                         </BaseLegend>
-                        <!-- <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="dataLegend" :alignment="'vertical'">
-                            </BaseLegend>  -->
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
 
                     <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']">
                         <div class="containerChart" ref="scrollContainer2"
                             @scroll="syncScroll('scrollContainer2', 'scrollContainer1')">
-                            <!-- <div :class="['containerBody', !isLoading?'':'loading']">
-                                <Bar :data="ratingChart" id="rating" :options="options" />
-                            </div>
-
-                            <BaseLegend :class="['legend', !isLoading?'':'loading']" :LegendData="legendData" :alignment="'vertical'">
-                            </BaseLegend>  -->
-
                             <div :class="['containerBody2 mt-5', !isLoading ? '' : 'loading']">
                                 <Line :data="confidenceChart" id="confidence" :options="newOptions" />
                             </div>
@@ -457,27 +441,12 @@ const ratingsCondition4 = computed(() => {
 
 const activeName = ref('categorization');
 const newOptions = {
-    // responsive: false,
     maintainAspectRatio: false,
-    // aspectRatio: 2,
     scales: {
-        // y: {
-        //     suggestedMin: -1, // suggère une valeur minimale pour l'axe Y
-        //     suggestedMax: 1, // suggère une valeur maximale pour l'axe Y
-        //     // Assure que l'axe Y commence à -1 et se termine à 1
-        //     ticks: {
-        //         stepSize: 1, // Définit l'intervalle des graduations sur l'axe Y
-        //         callback: function(value, index, values) {
-        //             // Affiche uniquement les valeurs 1, 0 et -1
-        //             return value === 1 || value === 0 || value === -1 ? value : '';
-        //         }
-        //     }
-        // }
     },
     plugins: {
         legend: {
             display: false,
-            // position: 'bottom'
         },
         zoom: {
             pan: {
@@ -527,9 +496,12 @@ const newOptions = {
 };
 
 const options = {
-    // responsive: false,
     maintainAspectRatio: false,
-    // aspectRatio: 2,
+    layout: {
+        padding: {
+        top: 10
+      }
+    },
     scales: {
         y: {
             suggestedMin: 5,
@@ -542,7 +514,6 @@ const options = {
     plugins: {
         legend: {
             display: false,
-            // position: 'bottom'
         },
         zoom: {
             pan: {
@@ -814,6 +785,12 @@ onBeforeMount(async () => {
 });
 </script>
 <style scoped>
+#rating .y-axis {
+    position: sticky;
+    left: 0;
+    top: 0;
+    z-index: 2;
+}
 .loaded {
     display: flex;
     justify-content: center;

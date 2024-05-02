@@ -107,19 +107,20 @@ p{
     border-radius: 5px;
     font-weight: 500;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    color: white;
+    background-color: var(--color-bgp);
 }
 
 .link li:hover{
-  color: white;
   background: var(--light-color-bg2);
 }
 
 h2{
     /*text-align: center;*/
     font-weight: 500;
-    font-size: 16px;
+    font-size: 14px;
     /*color: var(--color-danger);*/
-    font-family: Arial, sans-serif;
+    /* font-family: Arial, sans-serif; */
 }
 
 .socials{
@@ -127,7 +128,7 @@ h2{
     gap: 1rem;
     align-items: center;
    /* justify-content: center;*/
-    margin-top: 1.5rem;
+    margin-top: 1rem;
 }
 .feedback__form{
     width: 50%;

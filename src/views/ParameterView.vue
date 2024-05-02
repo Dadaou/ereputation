@@ -69,7 +69,7 @@
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="Advantages" name="advantage">
+            <!-- <el-tab-pane label="Advantages" name="advantage">
                 <el-tabs v-model="activeAdvantageTab" class="demo-tabs">
                     <el-tab-pane label="Advantages" name="advantage_list">
                         <AdvantageListComponent @edit="(advantage) => handleEdit(advantage, 'advantage')"
@@ -80,8 +80,8 @@
                         <AdvantageFormComponent />
                     </el-tab-pane>
                 </el-tabs>
-            </el-tab-pane>
-            <el-tab-pane label="Partnerships" name="partnerships">
+            </el-tab-pane> -->
+           <!--  <el-tab-pane label="Partnerships" name="partnerships">
                 <el-tabs v-model="activePartnershipTab" class="demo-tabs">
                     <el-tab-pane label="Partnership list" name="partnership_list">
                         <PartnershipListComponent @update="() => reloadPartnershipsData()" />
@@ -90,7 +90,7 @@
                         <PartnershipFormComponent @update="() => reloadPartnershipsData()" />
                     </el-tab-pane>
                 </el-tabs>
-            </el-tab-pane>
+            </el-tab-pane> -->
         </el-tabs>
     </div>
 </template>
@@ -571,10 +571,10 @@ onBeforeMount(async () => {
     await reloadCompetitorList();
     await reloadStaffsList();
     await reloadEventsList();
-    await loadAdvantage();
+    // await loadAdvantage();
     await loadCategories();
     await loadUnits();
-    await reloadPartnershipsData();
+    // await reloadPartnershipsData();
 });
 
 </script>

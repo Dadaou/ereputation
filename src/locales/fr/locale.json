@@ -1,52 +1,53 @@
 {
     "title": "Veuillez vous connecter",
     "welcome": "Bienvenue",
-    "login":{
-        "email":"Adresse email",
+    "login": {
+        "email": "Adresse email",
         "password": "Mot de passe",
-        "forgot":"Mot de passe oublie",
-        "create":"Pas de compte, creer un",
-        "submit":"Connexion"
+        "forgot": "Mot de passe oublie",
+        "create": "Pas de compte, creer un",
+        "submit": "Connexion"
     },
-    "feedback":{
-        "title1":"Laissez ",
-        "title2":" vos commentaires",
-        "soustitle":"Quelle a été votre expérience au sein de notre établissement ?",
-        "rating":{
-            "title":"Notation",
-            "evaluate":{
-                "terrible":"Terrible",
-                "bad":"Mauvais",
-                "okay":"Ok",
-                "good":"Bon",
-                "amazing":"Incroyable"
+    "feedback": {
+        "title1": "Laissez ",
+        "title2": " vos commentaires",
+        "soustitle": "Quelle a été votre expérience au sein de notre établissement ?",
+        "alreadysend": "Vous avez déjà envoyé votre avis aujourd'hui.",
+        "rating": {
+            "title": "Notation",
+            "evaluate": {
+                "terrible": "Terrible",
+                "bad": "Mauvais",
+                "okay": "Ok",
+                "good": "Bon",
+                "amazing": "Incroyable"
             }
         },
-        "firstname":"Prénom",
-        "lastname":"Nom",
-        "gender":"Genre",
-        "placeholder_gender":"Choisissez le genre",
-        "datevisit":"Date de visite",
-        "placeholder_datevisit":"Choisir  date et time",
-        "indice1":" Si vous souhaitez obtenir des réductions ou des avantages, veuillez indiquer votre adresse e-mail ci-dessous.",
-        "email":"Adresse E-mail",
-        "promotion_day":"Promotions du jour",
-        "comment":"Vos commentaires",
-        "indice2":"En utilisant nos services et en cochant cette case, vous acceptez les conditions décrites dans nos",
+        "firstname": "Prénom",
+        "lastname": "Nom",
+        "gender": "Genre",
+        "placeholder_gender": "Choisissez le genre",
+        "datevisit": "Date de visite",
+        "placeholder_datevisit": "Choisir la date et l'heure",
+        "indice1": " Si vous souhaitez obtenir des réductions ou des avantages, veuillez indiquer votre adresse e-mail ci-dessous.",
+        "email": "Adresse E-mail",
+        "promotion_day": "Promotions du jour",
+        "comment": "Vos commentaires",
+        "indice2": "En utilisant nos services et en cochant cette case, vous acceptez les conditions décrites dans nos",
         "indice3": "conditions générales d’utilisations",
-        "post":"Poster un commentaire"
+        "post": "Poster un commentaire",
+        "requiredinputs": "Veuillez fournir toutes les informations nécessaires."
     },
-    "staffFeedback":{
-        "interne":"Usage interne uniquement, votre commentaire ne sera pas diffusé sur les plateformes publiques.",
-        "departement":"Department",
-        "staffs_list":"Liste du personnel",
-        "staffs_link":"Liens du personnel pour commentaires"
-        
+    "staffFeedback": {
+        "interne": "Usage interne uniquement, votre commentaire ne sera pas diffusé sur les plateformes publiques.",
+        "departement": "Department",
+        "staffs_list": "Liste du personnel",
+        "staffs_link": "Liens du personnel pour commentaires"
     },
-    "success":"Merci pour vos précieux commentaires. Nous espérons vous revoir bientôt et vous souhaitons une agréable journée.",
-    "thanks_title1":"Merci ",
-    "thanks_title2":" pour vos commentaires",
-    "discount":{
+    "success": "Merci pour vos précieux commentaires. Nous espérons vous revoir bientôt et vous souhaitons une agréable journée.",
+    "thanks_title1": "Merci ",
+    "thanks_title2": " pour vos commentaires",
+    "discount": {
         "title": "Coupon de Réduction Activé !",
         "content": "Félicitations ! Votre coupon de réduction a été activé avec succès. Utilisez le code de réduction lors du paiement pour économiser sur votre commande."
     },

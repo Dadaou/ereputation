@@ -63,20 +63,21 @@
                             <input type="text" id="last_name" v-model="lastname"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
-                        <div>
+                        <!-- <div>
                             <label for="genders" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                $t("feedback.gender") }} <!-- <span>*</span> --></label>
+                                $t("feedback.gender") }}</label>
                             <el-select v-model="gender" :placeholder="$t('feedback.placeholder_gender')" size="large">
                                 <el-option v-for="item in genders" :key="item.value" :label="item.label"
                                     :value="item.value" />
                             </el-select>
-                        </div>
+                        </div> -->
                         <div>
                             <label for="datevisit"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                                     $t("feedback.datevisit") }}</label>
                             <el-date-picker v-model="dateVisit" :placeholder="$t('feedback.placeholder_datevisit')"
-                                :size="'large'" :disabled-date="disabledDate" />
+                                :size="'large'" :disabled-date="disabledDate" type="datetime"
+                                :default-time="Date(Date.now())" format="YYYY-MM-DD HH:mm" />
                         </div>
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
@@ -169,13 +170,13 @@
 import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, watch, inject } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
-import { useUserStore } from "@Stores/user.js";
+// import { useUserStore } from "@Stores/user.js";
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
 import { useFeedbackStore } from '@Stores/feedback.js';
 import { useAppStore } from "@Stores/app.js";
 import moment from 'moment';
-import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus';
+import { ElMessage, ElDatePicker } from 'element-plus';
 import { useWindowSize } from '@vueuse/core';
 import { useI18n } from "vue-i18n";
 import 'element-plus/es/components/message/style/css'
@@ -204,7 +205,6 @@ const app_url = inject('app_url')
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
-const userStore = useUserStore();
 const feedbackStore = useFeedbackStore();
 const appStore = useAppStore();
 const staff = ref(null);
@@ -223,18 +223,11 @@ const iframeVisible = ref(false);
 const page = ref();
 
 const showSpinner = ref(false);
-const allAdvantages = ref(null)
-const reuiredtext = ref("Champs requis");
-
-function getRandomValue(n) {
-    return Math.floor(Math.random() * n);
-}
 
 onBeforeMount(async () => {
     services.setToken(import.meta.env.VITE_APP_TOKEN);
 
     await services.get_Record(`establishment/${route.params.etab}/media`, (response) => {
-        console.log(response)
         if (response !== undefined && response.status == 200) {
             establishment.value = response['data'];
         }
@@ -245,10 +238,8 @@ onBeforeMount(async () => {
     });
 
     await services.get_Record(`staffs/${route.params.id}/descriptions`, (response) => {
-        console.log(response)
         if (response.status == 200) {
             staff.value = response.data[0];
-            console.log(staff.value)
         }
 
         if (response.status == 404) exist.value = false
@@ -272,6 +263,9 @@ onBeforeMount(async () => {
 })
 const requiredinput = ref('');
 onMounted(() => {
+    if (window.FingerprintG2A && window.FingerprintG2A.default && typeof window.FingerprintG2A.default.main === 'function') {
+        window.FingerprintG2A.default.main();
+    }
     /** Charger le titre par defaut */
     page.value = {
         title1: t("feedback.title1"),
@@ -297,21 +291,21 @@ const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
 const dateVisit = ref(moment().format('YYYY-MM-DD'));
-const gender = ref('');
-const genders = [
-    {
-        value: 'M',
-        label: 'Male',
-    },
-    {
-        value: 'F',
-        label: 'Female',
-    },
-    {
-        value: 'O',
-        label: 'Other',
-    }
-]
+// const gender = ref('');
+// const genders = [
+//     {
+//         value: 'M',
+//         label: 'Male',
+//     },
+//     {
+//         value: 'F',
+//         label: 'Female',
+//     },
+//     {
+//         value: 'O',
+//         label: 'Other',
+//     }
+// ]
 
 const resetForm = () => {
     firstname.value = '';
@@ -338,7 +332,6 @@ const submit = async () => {
         "translated": null,
         "source": "App (Private)",
         "catering": null,
-        "establishment": null,
         "feeling": ratingCustomer.value.feeling,
         "score": 0,
         "confidence": 0,
@@ -353,7 +346,7 @@ const submit = async () => {
     }
 
     let contactData = {
-        gender: gender.value,
+        // gender: gender.value,
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,
@@ -373,7 +366,7 @@ const submit = async () => {
                                 let coupons = {
                                     advantage: randomAdvantage.value.id,
                                     establishment: route.params.etab,
-                                    gender: gender.value,
+                                    // gender: gender.value,
                                     firstname: firstname.value,
                                     lastname: lastname.value,
                                     email: email.value,
@@ -381,9 +374,7 @@ const submit = async () => {
                                     app_url: app_url.value,
                                     template: 'workflow_en'
                                 }
-                                // console.log(coupons)
-                                await services.createRecord('workflow', coupons, (workflowResponse) => {
-                                    // console.log(workflowResponse)
+                                await services.createRecord('workflow', coupons, () => {
                                     resetForm()
                                 });
                             }
@@ -398,8 +389,11 @@ const submit = async () => {
                         },
                     });
                 }
+                if (response.status == 200) {
+                    ElMessage.error(t('feedback.alreadysend'));
+                }
             })
-        } else ElMessage.error(`Please, provide all needed information`);
+        } else ElMessage.error(t('feedback.requiredinputs'));
     } catch (error) {
         console.log(error)
     }
