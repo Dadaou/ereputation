@@ -185,12 +185,18 @@ onBeforeMount(async()=>{
         ADD_ATTR: ['style', 'width', 'height', 'alt']
     };
     
-    decodedHTML = decodedHTML.replace(/<img.*?>/g, '<div id="qrcodeContainer" style="margin: 25px; margin-inline: auto;"></div>');
+    console.log(decodedHTML)
+
+    decodedHTML = decodedHTML.replace(/<img src="qrcodeimg.jpeg".*?>/g, '<div id="qrcodeContainer" style="margin: 25px; margin-inline: auto;"></div>');
     coreText.value = DOMPurify.sanitize(decodedHTML);
    } 
 });
 </script>
 <style scoped>
+.content img#logo{
+  height: 50px;
+}
+
 .document_preview{
   min-height:calc(90dvh - 140px);
   margin: 0 auto;
@@ -204,7 +210,6 @@ onBeforeMount(async()=>{
 .filter{
   flex-basis: 400px;
 }
-
 
 #preview >div{
 	margin: auto;
