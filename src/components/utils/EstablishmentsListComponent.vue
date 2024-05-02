@@ -47,8 +47,8 @@
                         :rating="Number(company.rating).toFixed(1)" :score="company.score" :feeling="company.feeling" :company="company"/>
                 </div>
                 <div class="list__actions">
-                    <button class="btn mr-2 qrcode" @click="showModal = true, establishment = company">QR Code <i
-                            class="uil uil-qrcode-scan"></i></button>
+                    <!-- <button class="btn mr-2 qrcode" @click="showModal = true, establishment = company">QR Code <i
+                            class="uil uil-qrcode-scan"></i></button> -->
                     <button class="btn" @click="goToCompany(company)">More details</button>
                 </div>
             </div>

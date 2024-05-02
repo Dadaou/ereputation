@@ -193,8 +193,13 @@ onBeforeMount(async()=>{
 });
 </script>
 <style scoped>
-.content img#logo{
+/*.content img#logo{
   height: 50px;
+  margin: auto;
+}*/
+
+#qrcodeContainer{
+  width: 100% !important;
 }
 
 .document_preview{

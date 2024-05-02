@@ -111,7 +111,7 @@ const loadEstablishment = async(tag, category, days, note)=>{
 
     if(response.status == 200) {
        establishments.value = response.data.map(objet => {
-        return {...objet, isTrends:true}
+        return {...objet, ratio: objet.ratio_value, isTrends:true}
       });
     }
 }
