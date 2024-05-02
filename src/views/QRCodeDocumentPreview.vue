@@ -43,13 +43,18 @@ import jsPDF from 'jspdf';
 import QrcodeVue from 'qrcode.vue';
 import QRCode from 'qrcode';
 import DOMPurify from 'dompurify';
-import he from 'he';
+// import he from 'he';
 import { ElOption, ElSelect, ElTooltip } from 'element-plus';
 import 'element-plus/es/components/option/style/css';
 import 'element-plus/es/components/select/style/css';
 import html2canvas from 'html2canvas';
 
 const appStore = useAppStore();
+ appStore.setCurrentPage({
+    title1: "",
+    title2: "Doc Preview",
+    icon: "uil-qrcode-scan"
+  });
 const route = useRoute();
 const doc = new jsPDF({
     orientation: 'portrait',
@@ -173,7 +178,8 @@ onBeforeMount(async()=>{
   
    if(templates.value.length>0){
     template.value = templates.value[0]
-    let decodedHTML = he.decode(template.value.core);
+    // let decodedHTML = he.decode(template.value.core);
+    let decodedHTML = template.value.core;
     const config = {
         ALLOWED_TAGS: ['p', 'span', 'br', 'img'], 
         ADD_ATTR: ['style', 'width', 'height', 'alt']
