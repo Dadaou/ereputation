@@ -1,11 +1,15 @@
 <template>
   <div class="rating_container">
+    <div class="reviews__value mb-2" v-if="company.isTrends">
+           <div>P: {{company.previous.from}} / {{company.previous.to}}</div> 
+           <div>C: {{company.curent.from}} / {{company.curent.to}}</div>
+    </div>
     <div class="society__rating">
       <div class="reviews">
          <div class="rating__observation" v-if="rating > 0">
          {{feeling}}
          </div>
-         <div class="reviews__value">
+         <div class="reviews__value" v-if="!company.isTrends">
               {{ reviews }} 
               <span v-if="Number(props.reviews) >= 2">
                   reviews
@@ -13,10 +17,10 @@
               <span v-else>
                   review
               </span> 
-          </div>
+         </div>
       </div>
-       <div :class="['global__rating', company.ratio>0?'green':(company.ratio === 0 ? 'grey' :'red')]" v-if="company.isTrends">
-              <span class="font-medium" :data-tooltip="`Ratio: ${arrondirRatio(company.ratio)}`">{{ arrondirRatio(company.ratio) }}</span>
+      <div :class="['global__rating', company.ratio>0?'green':(company.ratio === 0 ? 'grey' :'red')]" v-if="company.isTrends">
+              <span class="font-medium" :data-tooltip="`Ratio: ${arrondirRatio(company.ratio)}`">{{ arrondirRatio(company.ratio) }} {{company.isTrends?"%":''}}</span>
       </div>
       <div class="global__rating" v-else>
             <span class="font-medium" :data-tooltip="`Note: ${rating}`" v-if="company.isGlobal">{{ rating }}</span>
