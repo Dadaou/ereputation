@@ -1,9 +1,6 @@
 <template>
   <div class="rating_container">
-    <div class="reviews__value mb-2" v-if="company.isTrends">
-           <div>P: {{company.previous.from}} / {{company.previous.to}}</div> 
-           <div>C: {{company.curent.from}} / {{company.curent.to}}</div>
-    </div>
+    
     <div class="society__rating">
       <div class="reviews">
          <div class="rating__observation" v-if="rating > 0">
@@ -26,7 +23,12 @@
             <span class="font-medium" :data-tooltip="`Note: ${rating}`" v-if="company.isGlobal">{{ rating }}</span>
             <span class="font-medium" :data-tooltip="`Score: ${rating}`" v-else>{{ rating }}</span>
       </div>
-  </div>
+      
+    </div>
+    <div class="reviews__value mb-2" v-if="company.isTrends">
+           <div>Previous: {{company.previous.from}} / {{company.previous.to}} , Notes:{{company.previous.note}} </div> 
+           <div>Period: {{company.curent.from}} / {{company.curent.to}} , Notes:{{company.curent.note}}</div>
+      </div> 
  <!--  <div class="ratio">{{company.ratio?`Ratio ${Number(company.ratio).toFixed(1)}%`:''}}</div> -->
 </div>
 </template>
@@ -58,7 +60,7 @@ const arrondirRatio = (ratio)=>{
     .society__rating{
         display: flex;
         align-items: center;
-        width: 125px;
+        /*width: 125px;*/
     }
 
     .reviews{
