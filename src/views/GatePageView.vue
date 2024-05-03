@@ -52,8 +52,20 @@
                 <div v-if="showList" class="card-container">
                     <div class="card-item">
                         <h4><i class="uil uil-link mr-1"></i>Establishment review</h4>
-                        <div class="card-item-list">
-                            <div v-for="(link, index) in filteredLinks" :key="index">
+                        <div v-for="(link, index) in filteredLinks" :key="index" class="card-item-list">
+                            <div v-if="link.source === 'establishment'">
+                                <a :href="link.value" target="_blank" >
+                                    <div class="item-name">
+                                        {{ link.name }}
+                                    </div>
+                                </a>
+                            </div>
+				        </div>
+                    </div>
+                    <div class="card-item">
+                        <h4><i class="uil uil-chat-bubble-user mr-1"></i>Staff review</h4> 
+                        <div v-for="(link, index) in filteredLinks" :key="index" class="card-item-list">
+                            <div v-if="link.source === 'staff'">
                                 <a :href="link.value" target="_blank" >
                                     <div class="item-name">
                                         {{ link.name }}
@@ -63,15 +75,21 @@
                         </div>
                     </div>
                     <div class="card-item">
-                        <h4><i class="uil uil-chat-bubble-user mr-1"></i>Staff review</h4> 
-                    </div>
-                    <div class="card-item">
                         <h4><i class="uil uil-clipboard-notes mr-1"></i>Service review</h4>
+                        <div v-for="(link, index) in filteredLinks" :key="index" class="card-item-list">
+                            <div v-if="link.source === 'unit'">
+                                <a :href="link.value" target="_blank" >
+                                    <div class="item-name">
+                                        {{ link.name }}
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-			<div v-if="type !== 'reviews'" class="links">
+			<!-- <div v-if="type !== 'reviews'" class="links">
 				<div v-for="(link, index) in filteredLinks" :key="index">
 					<a :href="link.value" target="_blank" >
 						<div class="item-name">
@@ -79,7 +97,7 @@
 						</div>
 					</a>
 				</div>
-			</div>
+			</div> -->
 			
 	    </div>
 	</div>
@@ -123,13 +141,6 @@ const type = ref("menus");
 
 const filteredLinks = computed(()=>{
  let data = links.value;
- if(type.value) data = data.filter(link=>{
- 	if(type.value === 'others'){
- 		return link.category === null
- 	}
-
- 	return link.category === type.value
- })
 
  return data;
 });
