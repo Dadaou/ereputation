@@ -1,9 +1,16 @@
 <template>
 	<div class="filters">
-		<el-select v-model="type" size="large">
+		<!-- <el-select v-model="type" size="large">
             <el-option v-for="(item, index) in types" :key="index" :label="item.label"
                         :value="item.value"/>
-        </el-select>
+        </el-select> -->
+        <div class="select_info">
+             <el-select v-model="type" size="large">
+                <el-option v-for="(item, index) in types" :key="index" :label="item.label"
+                            :value="item.value"/>
+            </el-select>
+            <Tooltip :text="info_bulle_text"/>
+        </div>
 		<el-select v-model="categoryFilters" size="large">
             <el-option v-for="(item, index) in categories" :key="index" :label="item.label"
                         :value="item.value"/>
@@ -41,6 +48,12 @@ const EstablishmentsListComponent = defineAsyncComponent(() =>
     import('@Components/utils/EstablishmentsListComponent.vue')
 )
 
+const Tooltip = defineAsyncComponent(() =>
+    import('@Components/utils/QuestionMarkTooltipComponent.vue')
+)
+
+const info_bulle_text = `"global" means the average of the final grades displayed on the platforms.This grade typically covers the entire platform history, and it's this grade that consumers typically look at first.
+"score" means the average ratings of all comments within a defined date range.`
 const userStore = useUserStore();
 const appStore = useAppStore();
 const companiesStore = useCompanyStore();
@@ -128,6 +141,12 @@ onMounted(async()=>{
  margin: 2px;
  flex-grow: 1;
  max-width: 200px; /* Adjust based on your design needs */
+}
+
+.select_info{
+    display: flex;
+    align-items: center;
+    align-content: center;
 }
 
 @media (max-width: 768px) {

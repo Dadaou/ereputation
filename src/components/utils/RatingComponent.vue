@@ -17,7 +17,9 @@
          </div>
       </div>
       <div :class="['global__rating', company.ratio>0?'green':(company.ratio === 0 ? 'grey' :'red')]" v-if="company.isTrends">
-              <span class="font-medium" :data-tooltip="`Ratio: ${arrondirRatio(company.ratio)}`">{{ arrondirRatio(company.ratio) }} {{company.isTrends?"%":''}}</span>
+              <span class="font-medium" :data-tooltip="`Ratio: ${company.ratio_text}`"> 
+              {{ company.ratio_text }}
+              </span>
       </div>
       <div class="global__rating" v-else>
             <span class="font-medium" :data-tooltip="`Note: ${rating}`" v-if="company.isGlobal">{{ rating }}</span>
