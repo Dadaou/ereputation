@@ -83,7 +83,7 @@
 </template>
 <script setup>
 // import moment from 'moment';
-import { ref, inject, watch, defineAsyncComponent, computed } from 'vue'
+import { ref, inject, watch, defineAsyncComponent, computed, onBeforeMount } from 'vue'
 import services from '@Services/services.js'
 // import { useUserStore } from "@Stores/user.js"
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue'
@@ -115,7 +115,7 @@ const route = useRoute();
 const emit = defineEmits(['update']);
 const appStore = useAppStore()
 
-const advantages = inject('advantages');
+const advantages = ref([]);
 
 watch(advantage, () => {
     if (advantage.value) {
@@ -134,6 +134,10 @@ watch(partnership, () => {
             email.value = estab.email
         }
     }
+})
+
+onBeforeMount(async () => {
+    await loadAdvantage();
 })
 
 const allAdvantageList = computed(() => {
@@ -259,6 +263,26 @@ const submitEmail = async () => {
     //     //     ElMessage.error(`Please, fill the form correctly!`);
     //     // }
     // };
+}
+
+const loadAdvantage = async () => {
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`customer/establishments/advantages?tag=${route.params.tag}`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            advantages.value = response.data.map(adv => {
+                const { advantage_limit, ...advantage } = adv;
+                return { ...advantage, advantageLimit: advantage_limit }
+            });
+        } else {
+            console.error('Error fetching advantages:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 </script>
