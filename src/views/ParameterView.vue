@@ -15,7 +15,17 @@
                 </el-tabs>
             </el-tab-pane>
             <el-tab-pane label="Links" name="links">
-                <LinksConfComponent />
+                <!--
+                    <LinksConfComponent />
+                -->
+                <el-tabs v-model="activeEstablishmentTab" class="demo-tabs">
+                    <el-tab-pane label="Links" name="establishment_list">
+                        <LinksConfComponent />
+                    </el-tab-pane>
+                    <el-tab-pane label="Add a new Links" name="">
+                        <LinksFomrComponent />
+                    </el-tab-pane>
+                </el-tabs>
             </el-tab-pane>
             <el-tab-pane label="competitors" name="competitors">
                 <el-tabs v-model="activeCompetitorsTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
@@ -145,6 +155,10 @@ const AdvantageListComponent = defineAsyncComponent(() =>
 
 const LinksConfComponent = defineAsyncComponent(() =>
     import("@Components/links/LinksConfComponent.vue")
+)
+
+const LinksFomrComponent = defineAsyncComponent(() =>
+    import("@Components/links/LinksFormComponent.vue")
 )
 
 const EstablishmentListComponent = defineAsyncComponent(() =>
