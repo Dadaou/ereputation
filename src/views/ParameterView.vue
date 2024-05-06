@@ -91,7 +91,7 @@
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane> -->
-           <!--  <el-tab-pane label="Partnerships" name="partnerships">
+            <!--  <el-tab-pane label="Partnerships" name="partnerships">
                 <el-tabs v-model="activePartnershipTab" class="demo-tabs">
                     <el-tab-pane label="Partnership list" name="partnership_list">
                         <PartnershipListComponent @update="() => reloadPartnershipsData()" />
@@ -498,26 +498,6 @@ const reloadStaffsList = async (type) => {
     }
 }
 
-const loadAdvantage = async () => {
-    try {
-        const response = await new Promise((resolve) => {
-            services.get_Record(`customer/establishments/advantages?tag=${route.params.tag}`, (response) => {
-                resolve(response);
-            });
-        });
-        if (response.status === 200) {
-            allAdvantages.value = response.data.map(adv => {
-                const { advantage_limit, ...advantage } = adv;
-                return { ...advantage, advantageLimit: advantage_limit }
-            });
-        } else {
-            console.error('Error fetching advantages:', response);
-        }
-    } catch (error) {
-        console.error(error);
-    }
-}
-
 const loadCategories = async () => {
     try {
         const response = await new Promise((resolve) => {
@@ -585,7 +565,6 @@ onBeforeMount(async () => {
     await reloadCompetitorList();
     await reloadStaffsList();
     await reloadEventsList();
-    // await loadAdvantage();
     await loadCategories();
     await loadUnits();
     // await reloadPartnershipsData();

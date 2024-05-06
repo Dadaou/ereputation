@@ -35,3 +35,21 @@ export const mainMenu = [
 		icon: "uil-analytics"
 	},
 ]
+
+export const publicUrls = ['FeedBack', 'UnitFeedBack', 'StaffFeedBack', 'SuccessFeedback', 'EnableAdvContact', 'QRCodeAdvContact','Gate', undefined]
+
+export const privateUrls = [
+    'Establishment',
+    'StaffRanking',
+    'Review',
+    'Event',
+    'Social',
+    'Weather',
+    'Trends',
+    'Sales',
+    'Staff',
+    'Services',
+    'StaffReview',
+    'Analysis',
+    'UnitReview'
+  ]

@@ -67,7 +67,7 @@ import { useI18n } from "vue-i18n";
 import { i18n } from '@/i18n';
 import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import { languages, current } from '@Services/languages.js';
-import { mainMenu } from '@Services/routes.js'
+import { mainMenu, publicUrls, privateUrls } from '@Services/routes.js';
 
 
 const UserDropdownMenu = defineAsyncComponent(
@@ -92,27 +92,27 @@ const isScrolling = ref(false);
 const show_menu = ref(true);
 
 const isFeedback = computed(() => {
-  let routeName = ['FeedBack', 'UnitFeedBack', 'StaffFeedBack', 'SuccessFeedback', 'EnableAdvContact', 'QRCodeAdvContact', undefined];
-  return routeName.includes(route.name)
+  // let routeName = ['FeedBack', 'UnitFeedBack', 'StaffFeedBack', 'SuccessFeedback', 'EnableAdvContact', 'QRCodeAdvContact', undefined];
+  return publicUrls.includes(route.name)
 });
 
 const showMenu = computed(() => {
-  let routeName = [
-    'Establishment',
-    'StaffRanking',
-    'Review',
-    'Event',
-    'Social',
-    'Weather',
-    'Trends',
-    'Sales',
-    'Staff',
-    'Services',
-    'StaffReview',
-    'Analysis',
-    'UnitReview'
-  ];
-  return routeName.includes(route.name)
+  // let routeName = [
+  //   'Establishment',
+  //   'StaffRanking',
+  //   'Review',
+  //   'Event',
+  //   'Social',
+  //   'Weather',
+  //   'Trends',
+  //   'Sales',
+  //   'Staff',
+  //   'Services',
+  //   'StaffReview',
+  //   'Analysis',
+  //   'UnitReview'
+  // ];
+  return privateUrls.includes(route.name)
 })
 
 const signOut = () => {
