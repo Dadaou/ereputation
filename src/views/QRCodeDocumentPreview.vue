@@ -10,6 +10,26 @@
                 </el-select>
                 <button class="btn downloads mt-2" @click="generatePdf">PDF Download</button>
         </div>
+        <form class="my-form" @submit.prevent="submit">
+            <label for="textGreeting">Text Greeting:</label>
+            <input type="text" id="textGreeting" v-model="textGreeting" >
+
+            <label for="textClosing">Text Closing:</label>
+            <input type="text" id="textClosing" v-model="textClosing" >
+
+            <label for="text1">Text 1:</label>
+            <input type="text" id="text1" v-model="text1" >
+
+           <label for="text2">Text 2:</label>
+           <input type="text" id="text2" v-model="text2" >
+
+           <label for="text3">Text 3:</label>
+           <input type="text" id="text3" v-model="text3" >
+
+             <button @click="previewData">Preview</button>
+             <button type="submit">Update</button>
+             
+           </form>
       </div>
     </div>
     <div id="preview" style="font-family: Arial, sans-serif;">
@@ -40,6 +60,7 @@ import { useAppStore } from "@Stores/app.js";
 import { useQrStore } from "@Stores/qrtemplate.js";
 import { useRoute } from "vue-router";
 import jsPDF from 'jspdf';
+import axios from 'axios';
 import QrcodeVue from 'qrcode.vue';
 import QRCode from 'qrcode';
 import DOMPurify from 'dompurify';
@@ -67,6 +88,55 @@ const template =ref(null);
 const templates = ref([]);
 const coreText = ref(null);
 const filename = ref('preview')
+
+const textGreeting = ref('');
+   const textClosing = ref('');
+   const text1 = ref('');
+   const text2 = ref('');
+   const text3 = ref('');
+
+   const previewData = async () => {
+    try {
+     const response = await axios.get('https://api-dev.nexties.fr/api/customer/qrtemplates');
+     const data = response.data; 
+    
+    // Assigner les données aux champs du formulaire
+    textGreeting.value = data.textGreeting;
+    textClosing.value = data.textClosing;
+    text1.value = data.text1;
+    text2.value = data.text2;
+    text3.value = data.text3;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des données:', error);
+  }
+};
+     const submit = async () => {
+        try {
+         // Récupérer les valeurs des champs du formulaire
+         const formData = {
+            textGreeting: textGreeting.value,
+            textClosing: textClosing.value,
+            text1: text1.value,
+            text2: text2.value,
+           text3: text3.value
+      };
+
+    // Effectuer une requête HTTP POST vers votre API avec les données du formulaire
+    const response = await axios.post('https://api-dev.nexties.fr/api/customer/qrtemplates', formData);
+
+    // Vérifier si la requête a réussi
+    if (response.status === 200) {
+      // Traiter la réponse de l'API en fonction de votre logique métier
+      console.log('Form updated successfully!');
+    } else {
+      // Gérer les erreurs en cas de réponse non attendue
+      console.error('Error updating form:', response.data);
+    }
+  } catch (error) {
+    // Gérer les erreurs en cas d'échec de la requête
+    console.error('Error updating form:', error);
+  }
+};
 
 const generatePdf = () => {
   generateQRCode();
@@ -190,6 +260,7 @@ onBeforeMount(async()=>{
     decodedHTML = decodedHTML.replace(/<img src="qrcodeimg.jpeg".*?>/g, '<div id="qrcodeContainer" style="margin: 25px; margin-inline: auto;"></div>');
     coreText.value = DOMPurify.sanitize(decodedHTML);
    } 
+
 });
 </script>
 <style scoped>
@@ -197,6 +268,7 @@ onBeforeMount(async()=>{
   height: 50px;
   margin: auto;
 }*/
+
 
 #qrcodeContainer{
   width: 100% !important;
@@ -295,6 +367,25 @@ onBeforeMount(async()=>{
     padding: 12px 0;
   }
 }
+<style scoped>
+.my-form {
+  max-width: 200px; /* Ajustez cette valeur selon vos préférences */
+  margin: 0 auto; /* Centrer horizontalement */
+}
 
+/* Styles supplémentaires pour le formulaire */
+.my-form label {
+  display: block; /* Afficher les labels sur une ligne différente */
+  margin-bottom: 5px; /* Ajouter un espace entre les labels et les champs de saisie */
+}
+
+.my-form input {
+  width: 100%; /* Les champs de saisie occupent toute la largeur */
+  margin-bottom: 10px; /* Ajouter un espace entre les champs de saisie */
+}
+
+.my-form button {
+  width: 100%; /* Le bouton de soumission occupe toute la largeur */
+}
 </style>
 

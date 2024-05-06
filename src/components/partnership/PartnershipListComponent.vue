@@ -17,10 +17,8 @@
       </el-table-column>
       <el-table-column label="State" prop="state" align="center" style="width: 10%; min-width: 200px;">
         <template #default="scope">
-          <span v-if="scope.row.state == 'pending'"
-            style="text-transform: uppercase; font-size: 14px; color:var(--color-warning);">{{ scope.row.state }}</span>
-          <span v-else style="text-transform: uppercase; font-size: 14px; color:var(--color-success);">{{
-            scope.row.state }}</span>
+          <i v-if="scope.row.state == 'pending'" class="uil uil-dna mr-1" style="font-size: 16px;"></i>
+          <i v-else class="uil uil-check mr-1" style="color:var(--color-success); font-size: 16px;"></i>
         </template>
       </el-table-column>
       <el-table-column label="Enable" prop="enable" align="center" style="width: 10%; min-width: 200px;">
@@ -60,16 +58,15 @@
             title='Are you sure to change the state of partnership to "PENDING"?'
             @confirm="handleEvent(scope.$index, scope.row, 'state', 'pending')">
             <template #reference>
-              <el-button><span style="color:var(--color-success); font-size: 14px; text-transform: uppercase;">{{
-                scope.row.state }}</span></el-button>
+              <el-button><i class="uil uil-check mr-1"
+                  style="color:var(--color-success); font-size: 16px;"></i></el-button>
             </template>
           </el-popconfirm>
           <el-popconfirm v-if="scope.row.state == 'pending'"
             title='Are you sure to change the state of partnership to "VALID"'
             @confirm="handleEvent(scope.$index, scope.row, 'state', 'valid')">
             <template #reference>
-              <el-button><span style="color:var(--color-warning); font-size: 14px; text-transform: uppercase;">{{
-                scope.row.state }}</span></el-button>
+              <el-button><i class="uil uil-dna mr-1" style="font-size: 16px;"></i></el-button>
             </template>
           </el-popconfirm>
           <!-- <span style="text-transform: uppercase; font-size: 12px;">{{ scope.row.state }}</span> -->
@@ -87,7 +84,7 @@
           <el-popconfirm v-if="scope.row.enable == true" title='Are you sure to "DISABLE" this partnership?'
             @confirm="handleEvent(scope.$index, scope.row, 'enable', false)">
             <template #reference>
-              <el-button><i class="uil uil-check-circle mr-1"
+              <el-button><i class="uil uil-check mr-1"
                   style="color:var(--color-success); font-size: 16px;"></i></el-button>
             </template>
           </el-popconfirm>
@@ -107,8 +104,7 @@
           <el-popconfirm v-if="scope.row.state == 'pending' && scope.row.enable == false"
             title="Are you sure to accept this request?" @confirm="handleAccept(scope.$index, scope.row)">
             <template #reference>
-              <el-button><i class="uil uil-check-circle mr-1"
-                  style="color:var(--color-success); font-size: 16px;"></i><span
+              <el-button><i class="uil uil-check mr-1" style="color:var(--color-success); font-size: 16px;"></i><span
                   style="color:var(--color-success); font-size:10px;">Accept</span></el-button>
             </template>
           </el-popconfirm>
