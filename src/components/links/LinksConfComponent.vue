@@ -180,6 +180,8 @@ const isHashtag = computed(()=>{
 const isEdit = ref(false)
 const id= ref('')
 
+const emit = defineEmits(['edit']);
+
 const establishments = computed(() => {
     let data = [];
     let filteredData = [];
@@ -199,11 +201,6 @@ const establishments = computed(() => {
     })
     return filteredData;
 });
-
-// const filteredLinks = computed(() => {
-//     let data = links.value;
-//     return data.filter(item => item.establishment == establishment.value);
-// })
 
 const filteredLinks = computed(() => {
     let filteredData = allLinks.value;
@@ -228,7 +225,8 @@ const filteredProviders = computed(() => {
         return 0;
     });
     provider.value = null
-    return data.filter(item => item.category == category.value);
+    // return data.filter(item => item.category == category.value);
+    return data;
 })
 
 const isValidHashtag = computed(()=>{
@@ -444,18 +442,23 @@ const getURIbyName = (name)=>{
     return ''
 }
 
-const handleEdit = (data) => {
-    showModal.value = true
-    category.value = data.category
-    setTimeout(function() {
-      link.value = data.category=='Hashtag'?`#${data.settings_value1}`:data.url
-      // link.value = data.settings_value1
-      // link.value = data.url
-    }, 250);
-
-    id.value = data.id
-    isEdit.value = true
+const handleEdit = async (data) => {
+    link.value = data.category=='Hashtag'?`#${data.settings_value1}`:data.url
     provider.value = getURIbyName(data.name)
+
+    const payload = {
+        category: data.category,
+        link: link.value,
+        provider: provider.value,
+        id: data.id,
+        establishment: establishment.value
+    }
+
+    console.log(payload, data)
+    showLinkModal.value = false;
+    setTimeout(function() {
+     emit('edit', payload)
+    }, 250);
 }
 
 watch([provider, link], () => {

@@ -5,39 +5,38 @@
             <p>Please provide the necessary information to add a new establishment.</p>
         </div> -->
     </div>
-    <div class="table__container">
-        <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
-            <div class="grid gap-12 mb-12 ">
-                
-                <div class="md:order-1">
-                    <div  class="mb-6">
-                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span>*</span></label>
-                        <el-select v-model="establishment" placeholder="Choose establishment" size="large">
-                            <el-option
-                            v-for="item in userStore.user.customer.establishments"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="`/api/establishments/${item.id}`"
-                            />
+    <div>
+     <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div>
+                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span>*</span></label>
+                            <el-select v-model="establishment" placeholder="Choose establishment" size="large">
+                                <el-option
+                                v-for="item in establishments"
+                                :key="item.tag"
+                                :label="item.name"
+                                :value="item.uri"
+                                />
+                            </el-select>
+                        </div>
+                    <div>
+                        <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
+                            <span>*</span></label>
+                        <el-select id="category" v-model="category" placeholder="Choose category" size="large">
+                            <el-option v-for="item in categories" :key="item" :label="item" :value="item" />
                         </el-select>
                     </div>
-                    <div class="mb-6">
-                        <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categorie
-                            <span>*</span></label>
-                        <input type="text" id="company_name" name="name" v-model="category"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                    </div>
-                   
-                    <div  class="mb-6">
-                        <label for="countries"
+                    <div>
+                        <label for="providers"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Providers
                             <span>*</span></label>
-                        <el-select v-model="provider" placeholder="Choose provider" size="large" filterable>
+                        <el-select id="providers" v-model="provider" placeholder="Choose provider" size="large" filterable>
                             <el-option v-for="item in filteredProviders" :key="item.uri" :label="item.name"
                                 :value="`${item.uri}${item.url}`" />
                         </el-select>
                     </div>
-                    <div> 
+                </div>
+                <div> 
                     <div>
                         <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> {{!isHashtag?'Link':'Hashtag'}} <span>*</span></label>
                         <p v-if="!isHashtag && provider" class="text-gray-900 text-sm">Url must start with {{splitUriAndUrl(provider).baseUrl}}</p>
@@ -50,62 +49,124 @@
                        
                     </div>
                 </div>
-                </div>
-            </div>
-            
-            <div class="grid gap-6 mb-6 md:grid-cols-4">
+                <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
 
-            </div>
-            <div class="flex flex-wrap gap-3 items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
-                <button type="submit"
-                    class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
-                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
-                        ...</span>
-                    <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} links</span>
-                </button>
-                <button @click="resetForm"
-                    class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-gray-700 rounded-lg focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-900 hover:bg-gray-800">
-                    <span><i class="uil uil-times"></i> Clear </span>
-                </button>
-            </div>
-        </form>
+                    <button v-if="!isHashtag" type="submit" :disabled="!isValidLink || !provider"
+                        :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink || !provider? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                        <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
+                            ...</span>
+                        <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
+                    </button>
+                    <button v-else type="submit" :disabled="!isValidHashtag || !provider"
+                        :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidHashtag || !provider? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                        <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
+                            ...</span>
+                        <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
+                    </button>
+                </div>
+            </form>   
     </div>
 </template>
 <script setup>
-import moment from 'moment';
-import { ref, inject, watch, onBeforeMount, computed } from 'vue';
-import services from '@Services/services.js';
-import { useUserStore } from "@Stores/user.js";
-import { useStaffStore } from "@Stores/staff.js";
-import { useCompanyStore } from "@Stores/company.js";
-import { useAppStore } from "@Stores/app.js";
+import { computed, defineAsyncComponent, ref, onBeforeMount, watch, inject } from 'vue'
+import { useUserStore } from "@Stores/user.js"
+import {
+    ElMessage,
+    ElTable,
+    ElTableColumn,
+    ElButton,
+    ElInput, ElOption, ElSelect, ElPopconfirm
+} from 'element-plus'
+import { useWindowSize } from '@vueuse/core';
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
-import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus';
+import services from '@Services/services.js';
+import 'element-plus/es/components/popconfirm/style/css'
+import 'element-plus/es/components/table/style/css'
+import 'element-plus/es/components/table-column/style/css'
+import 'element-plus/es/components/popconfirm/style/css'
+import 'element-plus/es/components/button/style/css'
+import 'element-plus/es/components/input/style/css'
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
-import 'element-plus/es/components/date-picker/style/css'
-import { useRouter } from 'vue-router';
-import { countries, categories, competitor_countries } from '@Services/input-list.js';
 
+const ModalComponent = defineAsyncComponent(() =>
+    import('@Components/utils/ModalComponent.vue')
+)
 
-const showSpinner = ref(false);
-const type = ref('Add');
 const userStore = useUserStore();
-
-
-const isValidLink = ref(true);
-const category = ref('Platform');
-const provider = ref(null);
-const link = ref('');
-const establishment = ref('');
+const { width } = useWindowSize();
+const modalWidth = computed(() => {
+    let windowSize = 1500;
+    let gap = (windowSize - width.value) / 19;
+    return gap + 45;
+});
+const link_to_update = inject('link_to_update');
+const showModal = ref(false);
+const showLinkModal = ref(false);
 const providers = ref([]);
-const links = ref([]);
+const provider = ref(null)
+const categories = ref(['Hashtag','Platform', 'Social'])
+const category = ref('Platform')
+const showSpinner = ref(false)
+const search = ref('')
+const searchLink = ref('')
+const link = ref('')
+const isValidLink = ref(true)
+const establishment = ref('')
+const links = ref([])
+const allLinks = ref([])
+const isLoading = ref(false)
+const title = computed(()=>{
+    return showLinkModal.value?'Links list': 'Links configuration'
+})
+const currentEstablishment = ref(null)
 
 const isHashtag = computed(()=>{
     return category.value == 'Hashtag';
 })
 
+const isEdit = ref(false)
+const id= ref('')
+
+watch(link_to_update, ()=>{
+    if(link_to_update.value != null){  
+        handleEdit(link_to_update.value);
+    }
+})
+
+const establishments = computed(() => {
+    let data = [];
+    let filteredData = [];
+    if (userStore.user && userStore.user.customer) {
+        data = userStore.user.customer.establishments;
+        data.forEach(establishment => {
+            filteredData.push({
+                name: establishment.name,
+                media: (establishment.url_source) ? establishment.url_source : '',
+                tag: establishment.competitor_tag,
+                uri: `/api/establishments/${establishment.id}`,
+            })
+        });
+    }
+     filteredData = filteredData.filter((data)=>{
+        return !search.value || data.name.toLowerCase().includes(search.value.toLowerCase())
+    })
+    return filteredData;
+});
+
+const filteredLinks = computed(() => {
+    let filteredData = allLinks.value;
+    console.log(filteredData)
+    console.log(searchLink.value)
+    filteredData = filteredData.filter((data)=>{
+        return !searchLink.value || 
+        data.name.toLowerCase().includes(searchLink.value.toLowerCase()) || 
+        (data.category && data.category.toLowerCase().includes(searchLink.value.toLowerCase())) ||
+        (data.establishment && data.establishment.toLowerCase().includes(searchLink.value.toLowerCase()))
+    })
+    return filteredData
+})
 
 const filteredProviders = computed(() => {
     let data = providers.value;
@@ -120,13 +181,41 @@ const filteredProviders = computed(() => {
     return data.filter(item => item.category == category.value);
 })
 
+const isValidHashtag = computed(()=>{
+    console.log(link.value.startsWith("#"))
+    // if(link.value != ''){
+    //     if (link.value.startsWith("#")) {
+    //         return true;
+    //     }else{
+    //         return false
+    //     }
+    // }
+    return true
+})
 
-const resetValue = () => {
-    establishment.value = ''
-    provider.value = null
-    isValidLink.value = true
-    link.value = ''
-    category.value = ''
+const handleDelete = async (index, link)=>{
+    try {
+        const response = await new Promise((resolve, reject) => {
+            services.patchRecord('settings', link.id, {enable: false}, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status == 200) {
+            ElMessage({
+                message: `Links deleted successfully`,
+                type: 'success',
+            })
+            loadLinksByEstablishment(currentEstablishment.value)
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const urlPattern = (urlTemplate) => {
+    let regexPattern = urlTemplate.replace(/[\-\[\]\/\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    regexPattern = regexPattern.replace(/{value1}/g, '(.+)');
+    return new RegExp('^' + regexPattern);
 }
 
 const splitUriAndUrl = (combinedString) => {
@@ -150,11 +239,15 @@ const splitUriAndUrl = (combinedString) => {
 }
 
 
-const getHashtagValue = (value)=>{
-    if (value.startsWith("#")) {
-        return value.slice(1); 
+const isValidUrl = (url, urlTemplate) => {
+    const pattern = urlPattern(urlTemplate);
+    let isValid = false
+
+    if (pattern.test(url)) {
+        isValid = true;
     }
-    return value
+
+    return isValid
 }
 
 const getValueUrl = (url, urlTemplate) => {
@@ -166,48 +259,156 @@ const getValueUrl = (url, urlTemplate) => {
     return null;
 }
 
-const urlPattern = (urlTemplate) => {
-    let regexPattern = urlTemplate.replace(/[\-\[\]\/\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-    regexPattern = regexPattern.replace(/{value1}/g, '(.+)');
-    return new RegExp('^' + regexPattern);
+const transformLinksData = (inputData, tag)=> {
+    return inputData.map(item => {
+        return {
+            establishment: item.establishment_name || '',
+            establishmentTag: tag,
+            category: item.provider_category || '',
+            name: item.provider_name || '',
+            providerurl: item.provider_url,
+            url: item.provider_url ? item.provider_url.replace('{value1}', item.settings_value1) : '',
+            id: item.settings_id || 0,
+            settings_value1: item.settings_value1 || ''
+        };
+    });
+}
+
+const loadLinksByEstablishment = async (etab) =>{
+     showLinkModal.value = !showLinkModal.value
+     isLoading.value = true
+     establishment.value = etab.uri
+
+     try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`establishment/url?tag=${etab.tag}`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status == 200) {
+           console.log(response.data)
+           allLinks.value = transformLinksData(response.data.data, etab.tag)
+           console.log(allLinks.value)
+           isLoading.value = false
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const getHashtagValue = (value)=>{
+    if (value.startsWith("#")) {
+        return value.slice(1); 
+    }
+    return value
 }
 
 const submit = async () => {
     showSpinner.value = true;
     let urlObject = splitUriAndUrl(provider.value)
 
-    console.log("uuuuurlObject",  urlObject);
-
     const data = {
         value1: isHashtag.value?getHashtagValue(link.value):getValueUrl(link.value, urlObject.url),
-        //value1:"tesstttt",
         establishment: establishment.value,
-        category: category.value,
         provider: urlObject.uri,
-        link: link.value,
         enable: true
     }
-   
+
     console.log(data)
-    try {
-        const response = await new Promise((resolve) => {
-                services.createRecord('settings', data, (response) => {
-                    resolve(response);
-                });
-        });
-        console.log("resonseeee ",response);
-        if (response.status == 201) {
-            ElMessage({
-                message: `link added successfully`,
-                type: 'success',
-            })
-            showSpinner.value = false;
-            resetValue()
+    if(isEdit.value){
+        try {
+            const response = await new Promise((resolve) => {
+                    services.putRecord('settings', id.value, data, (response) => {
+                        resolve(response);
+                    });
+            });
+            console.log(response)
+            if (response.status == 200) {
+                ElMessage({
+                    message: `link updated successfully`,
+                    type: 'success',
+                })
+                loadLinksByEstablishment(establishment.value)
+                showSpinner.value = false;
+                isEdit.value = false
+                resetValue()
+            }
+        } catch (error) {
+            console.log(error)
         }
-    } catch (error) {
-        console.log("erreur   ",error)
+    }else{
+        try {
+            const response = await new Promise((resolve) => {
+                    services.createRecord('settings', data, (response) => {
+                        resolve(response);
+                    });
+            });
+            if (response.status == 201) {
+                ElMessage({
+                    message: `link added successfully`,
+                    type: 'success',
+                })
+                showSpinner.value = false;
+                resetValue()
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
-};
+}
+
+const resetValue = () => {
+    establishment.value = ''
+    provider.value = null
+    isValidLink.value = true
+    link.value = ''
+    showModal.value = false
+}
+
+const getURIbyName = (name)=>{
+    let data = filteredProviders.value
+    console.log(data)
+    data = data.filter(item=> item.name == name)
+    console.log(data)
+    if(data.length>0) return `${data[0].uri}${data[0].url}`
+    return ''
+}
+
+const handleEdit = async(data) => {
+    // showModal.value = true
+    category.value = data.category
+
+    // id.value = data.id
+    // isEdit.value = true
+    // provider.value = getURIbyName(data.name)
+    console.log(data)
+    establishment.value = data.establishment;
+    setTimeout(function() {
+      category.value = data.category;
+       link.value = data.link;
+       provider.value = data.provider;
+       id.value = data.id;
+    }, 250);
+   
+    isEdit.value = true;
+}
+
+watch([provider, link], () => {
+    let urlTemplate;
+    
+    if (provider.value !== null && link.value !== '') {
+        urlTemplate = splitUriAndUrl(provider.value).url;
+        if (urlTemplate) isValidLink.value = isValidUrl(link.value, urlTemplate)
+    }else{
+        isValidLink.value = true
+    }
+
+})
+
+watch(category, ()=>{
+    isValidLink.value = true
+    link.value = ''
+})
 
 onBeforeMount(async () => {
     try {
@@ -243,8 +444,6 @@ onBeforeMount(async () => {
             });
         });
 
-        console.log(response.data);
-
         if (response.status === 200) {
             const data = response.data;
 
@@ -265,7 +464,6 @@ onBeforeMount(async () => {
         console.error('Error in onBeforeMount:', error);
     }
 });
-
 </script>
 <style scoped>
 form {

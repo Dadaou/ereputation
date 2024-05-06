@@ -15,15 +15,12 @@
                 </el-tabs>
             </el-tab-pane>
             <el-tab-pane label="Links" name="links">
-                <!--
-                    <LinksConfComponent />
-                -->
-                <el-tabs v-model="activeEstablishmentTab" class="demo-tabs">
-                    <el-tab-pane label="Links" name="establishment_list">
-                        <LinksConfComponent />
+                <el-tabs v-model="activeLinkTab" class="demo-tabs">
+                    <el-tab-pane label="Links" name="link_list">
+                        <LinksConfComponent @edit="(link) => handleEdit(link, 'link')"/>
                     </el-tab-pane>
-                    <el-tab-pane label="Add a new Links" name="">
-                        <LinksFomrComponent />
+                    <el-tab-pane label="Add a new Links" name="link_form">
+                        <LinksFormComponent />
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
@@ -157,7 +154,7 @@ const LinksConfComponent = defineAsyncComponent(() =>
     import("@Components/links/LinksConfComponent.vue")
 )
 
-const LinksFomrComponent = defineAsyncComponent(() =>
+const LinksFormComponent = defineAsyncComponent(() =>
     import("@Components/links/LinksFormComponent.vue")
 )
 
@@ -210,6 +207,7 @@ const appStore = useAppStore()
 const userStore = useUserStore()
 const activeName = ref('establishments')
 const activeStaffTab = ref('staff_list')
+const activeLinkTab = ref('link_list')
 
 const establishment_to_update = ref(null)
 const activeEstablishmentTab = ref('establishment_list')
@@ -266,6 +264,9 @@ provide('category_to_update', category_to_update)
 const unit_to_update = ref(null)
 provide('unit_to_update', unit_to_update)
 
+const link_to_update = ref(null)
+provide('link_to_update', link_to_update)
+
 const reloadCompetitor = ref(false)
 provide('reloadCompetitor', reloadCompetitor)
 const competitorsData = ref([])
@@ -306,6 +307,11 @@ const handleEdit = (value, type) => {
     if (type == 'service') {
         activeUnitTab.value = 'unit_form'
         unit_to_update.value = value;
+    }
+
+    if (type == 'link') {
+        activeLinkTab.value = 'link_form'
+        link_to_update.value = value;
     }
 };
 
