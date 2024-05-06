@@ -12,8 +12,9 @@
                 <div>
                     <label for="advantage"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Advantage *</label>
-                    <el-select v-model="advantage" placeholder="Choose an advantage" size="large">
-                        <el-option v-for="item in advantages" :key="item.id" :label="item.name"
+                    <el-select v-model="advantage" placeholder="Choose an advantage" size="large" filterable remote
+                        reserve-keyword remote-show-suffix :loading="loading" :remote-method="searchAdvantage">
+                        <el-option v-for="item in advantageOptions" :key="item.id" :label="item.name"
                             :value="`/api/advantages/${item.id}`">
                             <span><strong>{{ item.name }}</strong>, </span>
                             <span style="color: var(--el-text-color-secondary);font-size: 13px;"> {{
@@ -25,8 +26,10 @@
                     <label for="partnership"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Partnership
                         <span>*</span></label>
-                    <el-select v-model="partnership" placeholder="Choose a partnership" size="large">
-                        <el-option v-for="item in partnerships" :key="item.id" :label="item.name" :value="item.tag">
+                    <el-select v-model="partnership" placeholder="Choose a partnership" size="large" filterable remote
+                        reserve-keyword remote-show-suffix :loading="loading2" :remote-method="searchPartnership">
+                        <el-option v-for="item in partnershipOptions" :key="item.id" :label="item.name"
+                            :value="item.tag">
                             <span><strong>{{ item.name }}</strong>, </span>
                             <span style="color: var(--el-text-color-secondary);font-size: 13px;"> {{
                                 item.address1 }}, {{ item.zipcode }}, {{
@@ -83,7 +86,7 @@
 </template>
 <script setup>
 // import moment from 'moment';
-import { ref, inject, watch, defineAsyncComponent, computed } from 'vue'
+import { ref, inject, watch, defineAsyncComponent, computed, onBeforeMount } from 'vue'
 import services from '@Services/services.js'
 // import { useUserStore } from "@Stores/user.js"
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue'
@@ -115,7 +118,11 @@ const route = useRoute();
 const emit = defineEmits(['update']);
 const appStore = useAppStore()
 
-const advantages = inject('advantages');
+const advantages = ref([]);
+const advantageOptions = ref([]);
+const loading = ref(false)
+const partnershipOptions = ref([]);
+const loading2 = ref(false)
 
 watch(advantage, () => {
     if (advantage.value) {
@@ -135,6 +142,39 @@ watch(partnership, () => {
         }
     }
 })
+
+onBeforeMount(async () => {
+    await loadAdvantage();
+})
+
+const searchAdvantage = (query) => {
+    if (query) {
+        loading.value = true
+        setTimeout(() => {
+            loading.value = false
+            advantageOptions.value = advantages.value.filter((item) => {
+                return item.name.toLowerCase().includes(query.toLowerCase()) || item.establishment_name.toLowerCase().includes(query.toLowerCase())
+                // return true
+            })
+        }, 200)
+    } else {
+        advantageOptions.value = advantages.value
+    }
+}
+
+const searchPartnership = (query) => {
+    if (query) {
+        loading.value = true
+        setTimeout(() => {
+            loading.value = false
+            partnershipOptions.value = partnerships.value.filter((item) => {
+                return item.name.toLowerCase().includes(query.toLowerCase())
+            })
+        }, 200)
+    } else {
+        partnershipOptions.value = partnerships.value
+    }
+}
 
 const allAdvantageList = computed(() => {
     return other_advantages.value.map((discount, index) => {
@@ -259,6 +299,26 @@ const submitEmail = async () => {
     //     //     ElMessage.error(`Please, fill the form correctly!`);
     //     // }
     // };
+}
+
+const loadAdvantage = async () => {
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`customer/establishments/advantages?tag=${route.params.tag}`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            advantages.value = response.data.map(adv => {
+                const { advantage_limit, ...advantage } = adv;
+                return { ...advantage, advantageLimit: advantage_limit }
+            });
+        } else {
+            console.error('Error fetching advantages:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 </script>
