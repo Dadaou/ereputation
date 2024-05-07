@@ -131,14 +131,14 @@ const toggleList = () => {
 
 const links = ref([
     { name: "Lien 1", category: "menus", value: "https://example.com/link1" },
-    { name: "Lien 2", category: "infos", value: "https://example.com/link2" },
+    { name: "Lien 2", category: "follow us", value: "https://example.com/link2" },
     { name: "Lien 3", category: "reviews", value: "https://example.com/link3" },
     { name: "Lien 4", category: "offers", value: "https://example.com/link4" }
 ]);
 
 const categories = [
  {label: "Menus", value: "menus", icon: "uim:th-large"},
- {label: "Infos", value: "infos", icon: "uil:info-circle"},
+ {label: "Follow us", value: "follow us", icon: "uil:info-circle"},
  {label: "Reviews", value: "reviews", icon: "uil:star"},
  {label: "Offers", value: "offers", icon: "bi:tags"}
 ];
