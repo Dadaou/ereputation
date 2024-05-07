@@ -25,8 +25,8 @@
           <label for="text3" class="text-sm title">Text 3:</label>
           <input type="text" id="text3" v-model="text3">
 
-          <button class="btn downloads mt-2" @click="updatePreview">Preview</button><br><br>
-          <button class="btn btn-secondary" type="submit">Update</button>
+          <button class="btn downloads mt-2" @click="updatePreview">Preview</button>
+          <button class="btn btn-secondary mt-1" type="submit">Update</button>
 
         </form>
       </div>
@@ -398,7 +398,7 @@ watch(template, () => {
 }
 
 .my-form {
-  max-width: 200px;
+  max-width: 100%;
   /* Ajustez cette valeur selon vos préférences */
   margin: 0 auto;
   /* Centrer horizontalement */
