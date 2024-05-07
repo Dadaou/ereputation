@@ -1,87 +1,36 @@
 <template>
-    <div class="profile__header mt-2">
-        <div class="profile__edit">
-            <div class="links__header">
-                <!-- <h2>{{title}}</h2> -->
-                <button v-if="showLinkModal" @click="showLinkModal = !showLinkModal">Back</button>
-            </div>
-            <p v-if="!showLinkModal">Configure all links related to your establishments</p>
-        </div>
+    <div class="security__header border__bottom mt-10">
+       <!--  <div class="security__edit">
+            <h4><i class="uil uil-company"></i> Establishment</h4>
+            <p>Please provide the necessary information to add a new establishment.</p>
+        </div> -->
     </div>
-    <div class="mt-5 table__container" v-if="!showLinkModal">
-        <el-table :data="establishments">
-            <el-table-column width="200">
-                <template #default="scope">
-                    <img :src="scope.row.media">
-                </template>
-            </el-table-column>
-            <el-table-column label="Name" prop="name" style="width: 75%; min-width: 200px;" />
-            <el-table-column style="width: 25%; min-width: 200px;" align="right">
-                <template #header>
-                    <el-input v-model="search" size="small" placeholder="Type to search" />
-                </template>
-                <template #default="scope">
-                    <el-button size="small" @click="showModal = !showModal, establishment = scope.row.uri"><i
-                            class="uil uil-link-add"></i></el-button>
-
-                    <el-button size="small" @click="loadLinksByEstablishment(scope.row), currentEstablishment = scope.row"><i
-                            class="uil uil-file-alt"></i></el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-    </div>
-    <div class="mt-5 table__container" v-else>
-        <el-table :data="filteredLinks">
-            <el-table-column label="Establishment" prop="establishment" style="width: 50%; min-width: 200px;" />
-            <el-table-column label="Provider" prop="name" style="width: 50%; min-width: 200px;" />
-            <el-table-column label="Value" prop="settings_value1" style="width: 50%; min-width: 200px;" />
-            <el-table-column style="width: 25%; min-width: 200px;" align="right">
-                <template #header>
-                    <el-input v-model="searchLink" size="small" placeholder="Type to search" />
-                </template>
-                <template #default="scope">
-                    <el-button size="small">
-                         <a :href="scope.row.url" target="_blank" class="external-link"><i
-                                class="uil uil-external-link-alt"></i></a>
-                    </el-button>
-                    <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
-                        <template #reference>
-                          <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
-                        </template>
-                    </el-popconfirm>
-                     <el-button size="small" @click="handleEdit(scope.row)"><i
-                            class="uil uil-edit"></i></el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-    </div>
-    <ModalComponent :showModal="showModal" @close="resetValue" :width="modalWidth">
-        <template #content>
-            <div class="modal__header">
-                <div class="modal__title">
-                    <h3 class="font-semibold text-gray-900 dark:text-white">
-                        <i class="uil uil-link-add"></i> Add new link
-                    </h3>
-                </div>
-                <div class="modal__close">
-                    <i class="uil uil-times-circle" @click="resetValue"></i>
-                </div>
-            </div>
-
-            <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
+    <div>
+     <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
                 <div class="grid gap-6 mb-6 md:grid-cols-2">
                     <div>
-                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
+                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span>*</span></label>
+                            <el-select v-model="establishment" placeholder="Choose establishment" size="large">
+                                <el-option
+                                v-for="item in establishments"
+                                :key="item.tag"
+                                :label="item.name"
+                                :value="item.uri"
+                                />
+                            </el-select>
+                        </div>
+                    <div>
+                        <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
                             <span>*</span></label>
-                        <el-select v-model="category" placeholder="Choose category" size="large">
+                        <el-select id="category" v-model="category" placeholder="Choose category" size="large">
                             <el-option v-for="item in categories" :key="item" :label="item" :value="item" />
                         </el-select>
                     </div>
                     <div>
-                        <label for="countries"
+                        <label for="providers"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Providers
                             <span>*</span></label>
-                        <el-select v-model="provider" placeholder="Choose provider" size="large" filterable>
+                        <el-select id="providers" v-model="provider" placeholder="Choose provider" size="large" filterable>
                             <el-option v-for="item in filteredProviders" :key="item.uri" :label="item.name"
                                 :value="`${item.uri}${item.url}`" />
                         </el-select>
@@ -115,12 +64,11 @@
                         <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
                     </button>
                 </div>
-            </form>
-        </template>
-    </ModalComponent>
+            </form>   
+    </div>
 </template>
 <script setup>
-import { computed, defineAsyncComponent, ref, onBeforeMount, watch } from 'vue'
+import { computed, defineAsyncComponent, ref, onBeforeMount, watch, inject } from 'vue'
 import { useUserStore } from "@Stores/user.js"
 import {
     ElMessage,
@@ -153,6 +101,7 @@ const modalWidth = computed(() => {
     let gap = (windowSize - width.value) / 19;
     return gap + 45;
 });
+const link_to_update = inject('link_to_update');
 const showModal = ref(false);
 const showLinkModal = ref(false);
 const providers = ref([]);
@@ -180,7 +129,11 @@ const isHashtag = computed(()=>{
 const isEdit = ref(false)
 const id= ref('')
 
-const emit = defineEmits(['edit']);
+watch(link_to_update, ()=>{
+    if(link_to_update.value != null){  
+        handleEdit(link_to_update.value);
+    }
+})
 
 const establishments = computed(() => {
     let data = [];
@@ -225,8 +178,7 @@ const filteredProviders = computed(() => {
         return 0;
     });
     provider.value = null
-    // return data.filter(item => item.category == category.value);
-    return data;
+    return data.filter(item => item.category == category.value);
 })
 
 const isValidHashtag = computed(()=>{
@@ -265,21 +217,6 @@ const urlPattern = (urlTemplate) => {
     regexPattern = regexPattern.replace(/{value1}/g, '(.+)');
     return new RegExp('^' + regexPattern);
 }
-
-// const splitUriAndUrl = (combinedString) => {
-//     if (combinedString !== '') {
-//         const urlPattern = /https?:\/\/\S+/;
-//         const match = combinedString.match(urlPattern);
-
-//         if (match) {
-//             const url = match[0];
-//             const uri = combinedString.replace(url, '').trim();
-//             return { uri, url };
-//         }
-//     }
-
-//     return { uri: combinedString, url: null };
-// }
 
 const splitUriAndUrl = (combinedString) => {
     if (combinedString !== '') {
@@ -376,12 +313,7 @@ const submit = async () => {
         provider: urlObject.uri,
         enable: true
     }
-    // const data = {
-    //     value1: isHashtag.value?getHashtagValue(link.value):link.value,
-    //     establishment: establishment.value,
-    //     provider: urlObject.uri,
-    //     enable: true
-    // }
+
     console.log(data)
     if(isEdit.value){
         try {
@@ -442,23 +374,23 @@ const getURIbyName = (name)=>{
     return ''
 }
 
-const handleEdit = async (data) => {
-    link.value = data.category=='Hashtag'?`#${data.settings_value1}`:data.url
-    provider.value = getURIbyName(data.name)
+const handleEdit = async(data) => {
+    // showModal.value = true
+    category.value = data.category
 
-    const payload = {
-        category: data.category,
-        link: link.value,
-        provider: provider.value,
-        id: data.id,
-        establishment: establishment.value
-    }
-
-    console.log(payload, data)
-    showLinkModal.value = false;
+    // id.value = data.id
+    // isEdit.value = true
+    // provider.value = getURIbyName(data.name)
+    console.log(data)
+    establishment.value = data.establishment;
     setTimeout(function() {
-     emit('edit', payload)
+      category.value = data.category;
+       link.value = data.link;
+       provider.value = data.provider;
+       id.value = data.id;
     }, 250);
+   
+    isEdit.value = true;
 }
 
 watch([provider, link], () => {
@@ -512,8 +444,6 @@ onBeforeMount(async () => {
             });
         });
 
-        console.log(response.data);
-
         if (response.status === 200) {
             const data = response.data;
 
@@ -536,169 +466,121 @@ onBeforeMount(async () => {
 });
 </script>
 <style scoped>
-button {
-  border: none;
-  cursor: pointer;
-  font-size: 15px;
+form {
+    height: 750px !important;
 }
 
-button i.uil-trash-alt {
-    color: red !important;
+form button {
+    min-width: 8rem !important;
 }
 
-button i.uil-edit {
-    color: var(--color-danger) !important;
-}
-
-.links__header{
-    display: flex;
-    justify-content: space-between;
-}
-
-.links__header button{
-    background-color: var(--color-primary);
-    color: white;
-    font-weight: 500;
-    font-size: 14px;
-    padding: 2px 10px;
-    border-radius: 2px;
-}
-
-.link-list {
-    list-style: none;
-    padding: 0;
-}
-
-.link-list li {
-    border-bottom: 1px solid #ccc;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.link-text {
-    font-size: 16px;
-    color: #333;
-    margin-right: 10px;
-}
-
-.actions {
-    display: flex;
-    align-items: center;
-}
-
-.actions a,
-.actions i {
-    color: #555;
-    font-size: 18px;
-    margin-left: 10px;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.actions a:hover,
-.actions i:hover {
-    color: #000;
-}
-
-.external-link {
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.delete-icon {
-    /* Optional: You might want to add some specific style for the delete icon */
-}
-
-
-input {
-    caret-color: var(--color-primary) !important;
-}
-
-#url_example {
-    font-size: 14px;
-    color: grey;
-    font-weight: 500;
-}
-
-.profile__edit h2 {
-    font-weight: 600;
-    font-size: 18px;
-}
-
-.profile__header h2 {
-    color: var(--color-bg2);
-}
-
-.profile__header p {
-    font-size: 14px;
-    color: grey;
-    font-weight: 500;
-}
-
-img {
-    height: 50px;
-    object-fit: cover;
-    width: 100%;
-}
-
-.modal__header {
-    display: flex;
-    justify-content: space-between;
-}
-
-.modal__header div {
-    align-self: center;
-}
-
-.modal__close i {
-    float: right;
-    font-size: 25px;
-    color: red;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.establishment__review__qrcode p {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--color-bg2);
-}
-
-.download__qr_btn {
+button.isLoaded {
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
-.download__qr_btn button {
-    flex-basis: 50%;
+.security__header {
+    display: flex;
+    justify-content: space-between;
 }
 
-.qr__code {
-    width: 35% !important;
-    padding: 50px auto !important;
-    margin: auto;
+.security__header h4 {
+    color: var(--color-bg2);
+    font-size: 19px;
+    font-weight: bold;
 }
 
-.modal__close i:hover {
-    transform: rotate(360deg);
+.security__header p {
+    font-size: 15px;
+    margin: 8px 0;
 }
 
-.link-list li {
-    max-width: 100%;
-    overflow: auto hidden;
+input,
+select {
+    border-radius: 4px !important;
+    background-color: white;
+}
+
+label {
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    color: var(--color-bg2) !important;
+}
+
+label span {
+    color: red;
+}
+
+input {
+    caret-color: var(--light-color-bg2);
+}
+
+.image-selector {
+    width: 100%;
+    height: 250px;
+    border-radius: 8px;
+    border-width: 2px;
+    border-style: solid;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.image-selector.hover:hover {
+    background: rgba(245, 245, 250, .4);
+}
+
+.image-selector * {
+    font-size: 64px;
+    color: var(--color-bg2)
+}
+
+.img-hover {
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(245, 245, 250, .4);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 .table__container {
     /* overflow-x: scroll; */
+    overflow-y: auto;
     width: 85%;
 }
 
-@media screen and (min-width: 800px) {
+form button {
+    width: 100%;
+}
+
+@media screen and (min-width: 480px) {
 
     .table__container {
         width: 100%;
+    }
+
+    form button {
+        width: 12rem !important;
+    }
+}
+
+@media screen and (max-width: 800px) {
+
+    .table__container,
+    .security__header {
+        width: 84%;
+        /* Occuper toute la largeur sur les petits écrans */
     }
 }
 </style>
