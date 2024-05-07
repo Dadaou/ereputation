@@ -8,25 +8,25 @@
             <el-option v-for="(item, index) in templates" :key="index" :label="item.name" :value="item" />
           </el-select>
           <button class="btn downloads mt-2" @click="generatePdf">PDF Download</button>
-        </div>
+        </div> <br>
         <form class="my-form" @submit.prevent="submit">
-          <label for="textGreeting">Text Greeting:</label>
+          <label for="textGreeting" class="text-sm title">Text Greeting:</label>
           <input type="text" id="textGreeting" v-model="textGreeting">
 
-          <label for="textClosing">Text Closing:</label>
+          <label for="textClosing" class="text-sm title">Text Closing:</label>
           <input type="text" id="textClosing" v-model="textClosing">
 
-          <label for="text1">Text 1:</label>
+          <label for="text1" class="text-sm title">Text 1:</label>
           <input type="text" id="text1" v-model="text1">
 
-          <label for="text2">Text 2:</label>
+          <label for="text2" class="text-sm title">Text 2:</label>
           <input type="text" id="text2" v-model="text2">
 
-          <label for="text3">Text 3:</label>
+          <label for="text3" class="text-sm title">Text 3:</label>
           <input type="text" id="text3" v-model="text3">
 
-          <button @click="updatePreview">Preview</button>
-          <button type="submit">Update</button>
+          <button class="btn downloads mt-2" @click="updatePreview">Preview</button><br><br>
+          <button class="btn btn-secondary" type="submit">Update</button>
 
         </form>
       </div>
@@ -407,20 +407,45 @@ watch(template, () => {
 /* Styles supplémentaires pour le formulaire */
 .my-form label {
   display: block;
-  /* Afficher les labels sur une ligne différente */
-  margin-bottom: 5px;
-  /* Ajouter un espace entre les labels et les champs de saisie */
+  margin-bottom: 1rem;
+  /* Ajoutez une marge inférieure de 2rem */
+  font-size: 1rem;
+  /* Taille de police */
+  font-weight: 500;
+  /* Épaisseur de police */
+  color: #333;
+  /* Couleur du texte */
 }
 
 .my-form input {
   width: 100%;
-  /* Les champs de saisie occupent toute la largeur */
-  margin-bottom: 10px;
-  /* Ajouter un espace entre les champs de saisie */
+  margin-bottom: 1rem;
+  /* Ajoutez une marge inférieure de 2rem */
+  font-size: 1rem;
+  /* Taille de police */
+  font-weight: 500;
+  /* Épaisseur de police */
+  color: #333;
+  /* Couleur du texte */
+  padding: 0.5rem 1rem;
+  /* Ajoutez un remplissage pour le texte d'entrée */
+  border: 1px solid #ccc;
+  /* Ajoutez une bordure */
+  border-radius: 0.25rem;
+  /* Ajoutez un rayon de bordure */
 }
 
 .my-form button {
   width: 100%;
-  /* Le bouton de soumission occupe toute la largeur */
+  font-size: 1rem;
+  /* Taille de police */
+  background-color: #0873DE;
+  color: white;
+  padding: 0.35rem 0.25rem;
+  /* Ajoutez un remplissage pour le texte d'entrée */
+  border: 100%px solid #ccc;
+  /* Ajoutez une bordure */
+  border-radius: 0.25rem;
+  /* Ajoutez un rayon de bordure */
 }
 </style>
