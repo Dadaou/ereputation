@@ -17,15 +17,15 @@
           <input type="text" id="textClosing" v-model="textClosing">
 
           <label for="text1" class="text-sm title">Text 1:</label>
-          <input type="text" id="text1" v-model="text1">
+          <textarea name="text1" rows="3" cols="30" v-model="text1"></textarea>
 
           <label for="text2" class="text-sm title">Text 2:</label>
-          <input type="text" id="text2" v-model="text2">
+          <textarea name="text2" rows="3" cols="30" v-model="text2"></textarea>
 
           <label for="text3" class="text-sm title">Text 3:</label>
-          <input type="text" id="text3" v-model="text3">
+          <textarea name="text3" rows="3" cols="30" v-model="text3"></textarea>
 
-          <button class="btn downloads mt-2" @click="updatePreview">Preview</button>
+          <!-- <button class="btn downloads mt-2" @click="updatePreview">Preview</button> -->
           <button class="btn btn-secondary mt-1" type="submit">Update</button>
 
         </form>
@@ -33,7 +33,17 @@
     </div>
     <div id="preview" style="font-family: Arial, sans-serif;">
       <div v-if="template">
-        <div ref="htmlContainer" v-html="coreText"></div>
+        <p v-html="textGreeting"></p>
+        <p>
+          <span v-html="text1"></span>
+          <span v-html="text2"></span>
+        </p>
+
+        <qrcode-vue id="qrcode2" style="margin-inline: auto;" :value="qrStore.qrcodeValue" :size="150" level="L"
+          render-as="svg" />
+
+        <p v-html="text3"></p>
+        <p v-html="textClosing"></p>
       </div>
       <div v-else class="space-y-5 rounded-2xl bg-white/5 p-4 relative skeleton">
         <div class="h-24 rounded-lg bg-gray-200 animate-pulse"></div>
@@ -49,14 +59,10 @@
       </div>
     </div>
   </div>
-  <Teleport to="#qrcodeContainer" v-if="coreText">
-    <qrcode-vue id="qrcode" style="margin-inline: auto;" :value="qrStore.qrcodeValue" :size="150" level="L"
-      render-as="svg" />
-  </Teleport>
 </template>
 
 <script setup>
-import { onBeforeMount, watch, ref, Teleport, nextTick } from 'vue';
+import { onBeforeMount, watch, ref } from 'vue';
 import { useAppStore } from "@Stores/app.js";
 import { useQrStore } from "@Stores/qrtemplate.js";
 import { useRoute } from "vue-router";
@@ -233,25 +239,25 @@ const generateQRCode = () => {
   });
 };
 
-const updatePreview = async () => {
+// const updatePreview = async () => {
 
-  let content = `
-    <p>${textGreeting.value}</p><br>
-    <p>${text1.value}</p>
-    <p>${text2.value}</p><br>
-    <img src="qrcodeimg.jpeg"><br>
-    <p>${text3.value}</p>
-    <p>${textClosing.value}</p>
- `;
+//   let content = `
+//     <p>${textGreeting.value}</p><br>
+//     <p>${text1.value}</p>
+//     <p>${text2.value}</p><br>
+//     <img src="qrcodeimg.jpeg"><br>
+//     <p>${text3.value}</p>
+//     <p>${textClosing.value}</p>
+//  `;
 
-  console.log(content);
+//   console.log(content);
 
-  content = content.replace(/<img src="qrcodeimg.jpeg".*?>/g, '<div id="qrcodeContainer" style="margin: 25px; margin-inline: auto;"></div>');
-  coreText.value = DOMPurify.sanitize(content);
-  // generateQRCode();
-  await nextTick();
+//   content = content.replace(/<img src="qrcodeimg.jpeg".*?>/g, '<div id="qrcodeContainer" style="margin: 25px; margin-inline: auto;"></div>');
+//   coreText.value = DOMPurify.sanitize(content);
+//   // generateQRCode();
+//   await nextTick();
 
-}
+// }
 
 onBeforeMount(async () => {
   appStore.setCurrentPage({
@@ -287,7 +293,6 @@ watch(template, () => {
     text1.value = removeHtmlTags(template.value.text1);
     text2.value = removeHtmlTags(template.value.text2);
     text3.value = removeHtmlTags(template.value.text3);
-    updatePreview();
   }
 
 })
@@ -314,7 +319,7 @@ watch(template, () => {
 }
 
 .filter {
-  flex-basis: 400px;
+  flex-basis: 800px;
 }
 
 #preview>div {
