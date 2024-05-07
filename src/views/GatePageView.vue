@@ -95,7 +95,7 @@
                 </div>
             </div>
 
-			<!-- <div v-if="type !== 'reviews'" class="links">
+			<!-- <div v-if="type !== 'reviews'" class="links"> 
 				<div v-for="(link, index) in filteredLinks" :key="index">
 					<a :href="link.value" target="_blank" >
 						<div class="item-name">
