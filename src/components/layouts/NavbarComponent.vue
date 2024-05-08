@@ -7,7 +7,7 @@
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
           </svg>
     </button>
-	  <a :href="baseurl" class="flex items-center space-x-3 rtl:space-x-reverse">
+	  <a v-if="!isFeedback" :href="baseurl" class="flex items-center space-x-3 rtl:space-x-reverse">
 	      <div v-if="appStore.account && appStore.account.logo" class="nav-logo">
 	          <img :src="appStore.account.logo">
 	      </div>
@@ -15,6 +15,13 @@
 	          class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
 	            appStore.account.brand }}</span>
 	  </a>
+    <a v-else :href="baseurl" class="flex items-center space-x-3 rtl:space-x-reverse">
+        <div v-if="logo && logo.logo" class="nav-logo">
+            <img :src="logo.logo">
+        </div>
+        <span v-else-if="logo && logo.name" class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
+              logo.name }}</span>
+    </a>
 	  <div class="nav-dropdown">
 	      <LanguageMenuDropdown
 	        v-if="isFeedback"
@@ -90,28 +97,13 @@ const nav__ref = ref(null);
 const nav__container__ref = ref(null);
 const isScrolling = ref(false);
 const show_menu = ref(true);
+const logo = ref(null)
 
 const isFeedback = computed(() => {
-  // let routeName = ['FeedBack', 'UnitFeedBack', 'StaffFeedBack', 'SuccessFeedback', 'EnableAdvContact', 'QRCodeAdvContact', undefined];
   return publicUrls.includes(route.name)
 });
 
 const showMenu = computed(() => {
-  // let routeName = [
-  //   'Establishment',
-  //   'StaffRanking',
-  //   'Review',
-  //   'Event',
-  //   'Social',
-  //   'Weather',
-  //   'Trends',
-  //   'Sales',
-  //   'Staff',
-  //   'Services',
-  //   'StaffReview',
-  //   'Analysis',
-  //   'UnitReview'
-  // ];
   return privateUrls.includes(route.name)
 })
 
@@ -179,12 +171,17 @@ onMounted(() => {
       i18n.locale = item.bb
       locale.value = item.bb
     }
-  }
+  } 
 });
 
-onBeforeMount(()=>{
+onBeforeMount(async()=>{
   if (width.value > 1000) show_menu.value = true;
   else show_menu.value = false;
+
+  if(route.params.tag){
+    logo.value = await appStore.getCustomerLogo(route.params.tag)
+    console.log(logo.value)
+  }
 });
 
 </script>

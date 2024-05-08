@@ -1,5 +1,5 @@
 <template>
-	<div class="flex items-center md:order-2">
+	<div class="md:items-center md:order-2">
 	   <button id="lang-btn" type="button"
 	       class="inline-flex items-center font-medium justify-center px-4 py-2 text-sm text-gray-900 dark:text-white rounded-lg bg-gray-100 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
 	          @click="show = !show">
@@ -58,12 +58,15 @@ const chooseLanguage = (language)=>{
 
 #lang-btn{
 	width: 7rem;
+	position: relative;
+    left: -9px; 
+	padding: 13px;
 }
 
 #language-dropdown {
   position: absolute;
   top: 3.5rem;
-  right: 1rem;
+  right: 3rem;
   background: var(--color-white);
   z-index: 12;
   border-radius: 1rem;
@@ -75,7 +78,7 @@ const chooseLanguage = (language)=>{
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+  transition: opacity 0.1s;
 }
 .fade-enter, .fade-leave-to {
   opacity:  0;
