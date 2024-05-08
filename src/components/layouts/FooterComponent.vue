@@ -4,8 +4,11 @@
             <div class="footer__info">
                 <ul>
                     <li>
-                        <div v-if="appStore.account && appStore.account.logo" class="footer-logo" :title="appStore.account.brand || ''">
+                        <div v-if="appStore.account && appStore.account.logo && !isFeedback" class="footer-logo" :title="appStore.account.brand || ''">
                             <img :src="appStore.account.logo">
+                        </div>
+                        <div v-if="logo && logo.logo && isFeedback" class="footer-logo">
+                            <img :src="logo.logo">
                         </div>
                     </li>
                     <li class="flex items-start justify-center flex-col gap-2">
@@ -23,11 +26,12 @@
                       </li>
                     </ul>
                     <ul v-else></ul>
-                    <span><i class="uil uil-copyright"></i>2024, all rights reserved</span>
+                    <!-- <span v-if="!isFeedback"><i class="uil uil-copyright"></i>2024, all rights reserved</span> -->
+                    <span v-if="appStore.account.brand">Powered by {{appStore.account.brand}}</span>
                   </li>
                 </ul>
             </div>
-            <div class="footer__links">
+            <div class="footer__links" v-if="!isFeedback">
                 <ul>
                     <li v-if="appStore.account && appStore.account.facebook">
                       <a :href="appStore.account.facebook" target="_blank">
@@ -52,20 +56,26 @@
 
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAppStore } from "@Stores/app.js";
 import { Icon } from '@iconify/vue';
-
+import { publicUrls} from '@Services/routes.js';
 
 const appStore = useAppStore();
 const route = useRoute();
 const isContactActive = ref(route.path === '/contact');
 const isSignUpActive = ref(route.path === '/sign-up');
+const logo = ref(null)
 
 const isFeedback = computed(() => {
-  let routeName = ['FeedBack', 'UnitFeedBack', 'StaffFeedBack', 'SuccessFeedback', 'EnableAdvContact', 'QRCodeAdvContact', undefined];
-  return routeName.includes(route.name)
+  return publicUrls.includes(route.name)
+});
+
+onBeforeMount(async()=>{
+  if(route.params.tag){
+    logo.value = await appStore.getCustomerLogo(route.params.tag)
+  }
 });
 
 </script>
@@ -88,7 +98,7 @@ footer {
 }
 
 .footer-logo {
-    height: 80px;
+    height: 59px;
     width: auto;
     padding: 12px;
     background-color: var(--color-white);
