@@ -2,26 +2,30 @@
 	<div class="main__container">
 	    <div>
             <div class="tablet_mobile__head">
-				<div class="establishment__info">
-                    <h1 class="society__name">{{ establishment.name }}</h1>
-                    <div class="society__category">
-                        <i
-                            :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
-                        <span class="ml-2">{{ establishment.category }}</span>
-                    </div>
-                    <div class="society__country" v-if="establishment.country != null">
-                        <i class="uil uil-map"></i>
-                        <span class="ml-2">{{ establishment.country }}</span>
-                    </div>
-                    <div class="society__location">
-                        <i class="uil uil-location-point"></i>
-                        <span class="ml-2">{{ establishment.city }}</span>
-                    </div>
+    <div class="establishment__info">
+        <h1 class="society__name" style="font-family: 'Script MT Bold'; font-size: 40px; font-weight: bold;">{{ establishment.name }}</h1>
+
+        <div class="society__category">
+            <i :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
+            <span class="ml-2" style="font-family: 'Arial'; font-size: 16px;">{{ establishment.category }}</span>
+        </div>
+
+        <div class="society__country" v-if="establishment.country != null">
+            <i class="uil uil-map"></i>
+            <span class="ml-2" style="font-family: 'Arial'; font-size: 16px;">{{ establishment.country }}</span>
+        </div>
+        
+        <div class="society__location">
+            <i class="uil uil-location-point"></i>
+            <span class="ml-2" style="font-family: 'Arial'; font-size: 16px;">{{ establishment.city }}</span>
+        </div>
+        
                 </div>
 				<div class="photo">
                     <div v-if="establishment.url_source !== null" class="establishment__img">
                         <img :src="establishment.url_source" alt="" />
                     </div>
+                    
                     <div v-else role="status"
                         class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                         <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
@@ -131,14 +135,14 @@ const toggleList = () => {
 
 const links = ref([
     { name: "Lien 1", category: "menus", value: "https://example.com/link1" },
-    { name: "Lien 2", category: "infos", value: "https://example.com/link2" },
+    { name: "Lien 2", category: "Follow us", value: "https://example.com/link2" },
     { name: "Lien 3", category: "reviews", value: "https://example.com/link3" },
     { name: "Lien 4", category: "offers", value: "https://example.com/link4" }
 ]);
 
 const categories = [
  {label: "Menus", value: "menus", icon: "uim:th-large"},
- {label: "Infos", value: "infos", icon: "uil:info-circle"},
+ {label: "Follow us", value: "Follow us", icon: "uil:info-circle"},
  {label: "Reviews", value: "reviews", icon: "uil:star"},
  {label: "Offers", value: "offers", icon: "bi:tags"}
 ];
@@ -184,7 +188,8 @@ const updateType = (value) => {
 
 .main__container > div{
 	width: 50%;
-	margin: 2rem auto;
+	margin: auto;
+    padding: 10px;
 }
 
 .filters {
@@ -194,9 +199,9 @@ const updateType = (value) => {
 .filters h4 {
 	display: flex;
 	align-items: center;
-	padding: .25rem;
+	padding: .5rem;
 	margin: .25rem;
-	border-radius: 0.25rem;
+	border-radius: 025rem;
 	background-color: #0000000a;
 	cursor: pointer;
 	color: var(--color-bgp);
@@ -209,8 +214,8 @@ const updateType = (value) => {
 }
 
 .links {
-    padding: .25rem;
-	max-height: 300px;
+    padding: 25rem;
+	max-height: 100px;
 	overflow-y: scroll;
  }
 
@@ -229,9 +234,9 @@ const updateType = (value) => {
  
  a .item-name {
 	background-color: #0000000a;
-	padding: .25rem;
+	padding: .55rem;
 	margin: .55rem;
-	border-radius: .25rem;
+	border-radius: .55rem;
  }
 
  .filters h4:hover, 
@@ -254,16 +259,17 @@ const updateType = (value) => {
 
 .tablet_mobile__head img {
     height: 125px !important;
+    display: flex;
 }
 
 .review-content {
     cursor:pointer;
     color: var(--color-bgp);
-    display: inline-flex;
-    border-radius: .5rem;
+    display: flex;
+    border-radius: 2.5rem;
     align-items: center;
     background-color: var(--light-color-bg2);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;
 }
 
@@ -273,13 +279,13 @@ const updateType = (value) => {
 
 .logo {
     display:flex;
-    height: 40px;
-    padding: 8px 16px;
+    height: 50px;
+    padding: 8px;
 }
 
 .logo img {
     object-fit: cover;
-    width: auto;
+    width: 100px;
 }
 
 .card-container {
@@ -316,7 +322,7 @@ const updateType = (value) => {
 
  @media (max-width: 768px) {
 	.main__container > div{
-		width: 95%;
+		width: 100%;
 		margin: .75rem auto;
 		flex-wrap: wrap;
 	}
@@ -330,4 +336,37 @@ const updateType = (value) => {
         margin-top: 1rem
     }
 }
+
+.society__category {
+        margin-top: 1px;
+        margin-bottom: 10px; 
+        border-bottom: 1px solid #ccc; 
+        padding-bottom: 10px; 
+    }
+
+   
+    .society__country {
+        margin-bottom: 10px; 
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 10px; 
+    }
+
+  
+    .society__location {
+        margin-bottom: 10px; 
+        border-bottom: 1px solid #ccc; 
+        padding-bottom: 10px; 
+    }
+    .society__name {
+        margin-top: -10px; 
+        margin-left: 20px;
+    }
+    .logo-mv {
+    width: auto; 
+    height: 120px; 
+    }
+    .establishment__img {
+    width: 100%;  
+    height:10%; 
+    }
 </style>

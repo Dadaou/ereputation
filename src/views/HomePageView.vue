@@ -2,15 +2,15 @@
     <div class="main__container">
       <!--   <HeadComponent :page="page"></HeadComponent> -->
         <div class="container client__container">
-            <div class="header">
+            <div v-if="!dataLoading" class="header">
                 <div class="header_navigation">
                     <RouterLink class="search__icon" :to="{ name: 'EstablishmentList', params: { tag: tag} }">
                         <Icon :icon="'ion:list'" width="26"></Icon>
                     </RouterLink>
-                    <RouterLink v-if="show" class="search__icon" :to="{ name: 'EstablishmentRanking', params: { tag: tag} }"> 
+                    <RouterLink v-if="show && establishments.length > 1" class="search__icon" :to="{ name: 'EstablishmentRanking', params: { tag: tag} }"> 
                         <Icon :icon="'solar:cup-first-bold'" width="25"></Icon>
                     </RouterLink>
-                    <RouterLink v-if="show" class="search__icon" :to="{ name: 'EstablishmentListByTrend', params: { tag: tag} }"> 
+                    <RouterLink v-if="show && establishments.length > 1" class="search__icon" :to="{ name: 'EstablishmentListByTrend', params: { tag: tag} }"> 
                         <Icon :icon="'gg:trending'" width="25"></Icon>
                     </RouterLink>
                 </div>
@@ -23,16 +23,21 @@
 </template>
 
 <script setup>
-import { ref, inject, computed } from 'vue';
+import { ref, inject, computed, onMounted } from 'vue';
 import { useUserStore } from "@Stores/user.js";
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import { useRouter, useRoute } from "vue-router";
 import { Icon } from '@iconify/vue';
+import { useCompanyStore } from "@Stores/company.js";
 
 const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 const tag = inject("tag")
+const companiesStore = useCompanyStore();
+const establishments = ref([]);
+const customerTag = inject('tag');
+const dataLoading = ref(true);
 
 const page = ref({
     title1: "",
@@ -47,6 +52,15 @@ const backToCustomer = ()=>{
 const show = computed(() => {
   let routeName = ['EstablishmentList', 'EstablishmentRanking', 'EstablishmentListByTrend', undefined];
   return routeName.includes(route.name)
+});
+onMounted(async()=>{
+    dataLoading.value = true;
+	if (userStore.user) {
+        companiesStore.getEstablishments(customerTag.value).then((data) => {
+            establishments.value = data;
+            dataLoading.value = false;
+        })
+    }
 });
 </script>
 
