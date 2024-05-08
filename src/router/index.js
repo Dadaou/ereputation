@@ -7,6 +7,7 @@ import ExpiredTokenPageView from '@Views/ExpiredTokenPageView.vue'
 import DefaultLayout from '@Layouts/DefaultLayout.vue'
 import EstablishmentLayout from '@Layouts/EstablishmentLayout.vue'
 import ProfileLayout from '@Layouts/ProfileLayout.vue'
+import PublicLayout from '../layouts/PublicLayout.vue'
 
 import { useUserStore } from '@Stores/user.js'
 
@@ -80,14 +81,13 @@ const CheckAccess = (to, from, next) => {
   }
 }
 
-
 const generateRandomString = (length) => {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let result = ''
   for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
+    result += characters.charAt(Math.floor(Math.random() * characters.length))
   }
-  return result;
+  return result
 }
 
 const router = createRouter({
@@ -213,8 +213,8 @@ const router = createRouter({
     },
     {
       path: '/',
-      name: 'profileLayout',
-      component: ProfileLayout,
+      name: 'publicLayout',
+      component: PublicLayout,
       redirect: '/',
       children: [
         {
@@ -225,9 +225,9 @@ const router = createRouter({
         {
           path: '/public/:tag/establishment/:id/feedback/',
           name: 'FeedBack',
-          component: () => import('@Views/FeedbackPageView.vue'),
+          component: () => import('@Views/FeedbackPageView.vue')
         },
-       
+
         {
           path: '/public/:tag/establishment/:etab/staffs/:id/feedback',
           name: 'StaffFeedBack',
@@ -238,12 +238,12 @@ const router = createRouter({
           name: 'UnitFeedBack',
           component: () => import('@Components/units/UnitFeedbackComponent.vue'),
           beforeEnter: (to, from, next) => {
-            console.log('beforeEnter hook called');
+            console.log('beforeEnter hook called')
             if (!to.params.rfuid) {
-              const rfuid = generateRandomString(16); 
-              next({ name: 'UnitFeedBack', params: { ...to.params, rfuid } });
+              const rfuid = generateRandomString(16)
+              next({ name: 'UnitFeedBack', params: { ...to.params, rfuid } })
             } else {
-              next();
+              next()
             }
           }
         },
@@ -251,7 +251,15 @@ const router = createRouter({
           path: '/public/:tag/establishment/:etab/:share/feedback-success',
           name: 'SuccessFeedback',
           component: () => import('@Views/SuccessMessageFeedback.vue')
-        },
+        }
+      ]
+    },
+    {
+      path: '/',
+      name: 'profileLayout',
+      component: ProfileLayout,
+      redirect: '/',
+      children: [
         {
           path: '/public/advantagecontact/:discountTag',
           name: 'QRCodeAdvContact',
