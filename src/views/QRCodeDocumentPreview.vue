@@ -215,7 +215,7 @@ const generateCore = async () => {
   const qrCanvas = await QRCode.toCanvas(canvas, qrData);
   const qrCodeDataURL = qrCanvas.toDataURL(); // Convert to base64
   tmp = tmp.replace('{{qrcodeimg}}', `<img src="${qrCodeDataURL}" style="width: 100%;">`)
-  tmp = tmp.replace('{{logo}}', '');
+  tmp = tmp.replace('{{logo}}', `<img src="data:image/png;base64,${template.value.logo_base64}" style="width: 100%;">`);
 
   // imageUrlToBase64(template.value.logo)
   //   .then(base64Image => {
