@@ -1,7 +1,7 @@
 <template>
   <div class="mt-5 table__container">
     <div class="table-description" style="margin-bottom: 16px;">
-      <p>The partnerships for which you have made a request</p>
+      <p>Partnerships requested by your establishment</p>
     </div>
     <el-table :data="filterTableDataSent">
       <el-table-column label="Advantage" prop="advantage_name" style="width: 15%; min-width: 200px;" />
@@ -38,7 +38,7 @@
       </el-table-column>
     </el-table>
     <div class="table-description" style="margin-block: 32px 16px;">
-      <p>Partnerships sent to you by others</p>
+      <p>Requests for partnerships</p>
     </div>
     <el-table :data="filterTableDataReceived">
       <el-table-column label="Advantage" prop="advantage_name" style="width: 15%; min-width: 200px;" />
