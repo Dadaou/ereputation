@@ -27,7 +27,7 @@
                     </ul>
                     <ul v-else></ul>
                     <!-- <span v-if="!isFeedback"><i class="uil uil-copyright"></i>2024, all rights reserved</span> -->
-                    <span v-if="appStore.account.brand">Powered by {{appStore.account.brand}}</span>
+                    <span v-if="appStore.account && appStore.account.brand">Powered by {{appStore.account.brand}}</span>
                   </li>
                 </ul>
             </div>
@@ -75,6 +75,7 @@ const isFeedback = computed(() => {
 onBeforeMount(async()=>{
   if(route.params.tag){
     logo.value = await appStore.getCustomerLogo(route.params.tag)
+    console.log(logo.value)
   }
 });
 
