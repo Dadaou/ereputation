@@ -120,7 +120,6 @@ onBeforeMount(async () => {
 
   }
   initFlowbite();
-
 });
 
 onMounted(() => {
