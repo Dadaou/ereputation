@@ -119,6 +119,8 @@ const submit = async()=>{
                         category.value = '';
                         establishment.value = '';
                         showSpinner.value = false;
+                        type.value='add';
+                       
                 }
             }
 
