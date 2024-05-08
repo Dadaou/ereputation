@@ -24,19 +24,20 @@
                     <el-input v-model="search" size="small" placeholder="Type to search" />
                 </template>
                 <template #default="scope">
+                    <el-tooltip :content="`Click to enter ${scope.row.name}'s feedback formulary`" placement="top">
+                        <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
+                                class="uil uil-external-link-alt"></i></a>
+                    </el-tooltip>
                     <el-button size="small" @click="showModal = true, establishment = scope.row"><i
                             class="uil uil-qrcode-scan"></i></el-button>
                 </template>
             </el-table-column>
         </el-table>
     </div>
-    <QrCodeModalComponent v-if="establishment" :qrcodeValue="`${baseurl}/public/${route.params.tag}/establishment/${establishment.tag}/gates`" 
-    :showModal="showModal"
-    :filename="`${establishment.name}-gate-link`"
-    @close="showModal=false"
-    :customer="route.params.tag"
-    :establishment="establishment.tag"
-    />
+    <QrCodeModalComponent v-if="establishment"
+        :qrcodeValue="`${baseurl}/public/${route.params.tag}/establishment/${establishment.tag}/gates`"
+        :showModal="showModal" :filename="`${establishment.name}-gate-link`" @close="showModal = false"
+        :customer="route.params.tag" :establishment="establishment.tag" />
 </template>
 <script setup>
 import { computed, defineAsyncComponent, ref, onBeforeMount, watch } from 'vue'
@@ -107,7 +108,8 @@ const establishments = computed(() => {
                 zipcode: establishment.zipcode,
                 positionning: establishment.positionning,
                 id: establishment.id,
-                disable: establishment.disable
+                disable: establishment.disable,
+                link: `${baseurl}/public/${route.params.tag}/establishment/${establishment.competitor_tag}/gates`
             })
         });
     }

@@ -5,9 +5,20 @@
                 <h2>Trends</h2>
             </div>
         </div>
-        <div style="margin-top: 15px;">
+        <!--<div style="margin-top: 15px;">
             <Line :data="data" :options="options" />
+        </div>-->
+        <div style="margin-top: 15px;">
+            <div class="chart-container" >
+                <div v-if="isLoading" class="chart-loading">
+                    <svg class="spinner" viewBox="0 0 50 50">
+                        <circle class="path" cx="25" cy="25" r="10" fill="none" stroke-width="2"></circle>
+                    </svg>
+                </div>
+                <Line :data="data" :options="options" v-else />
+            </div>
         </div>
+
 
     </div>
 
@@ -171,6 +182,7 @@ ChartJS.register(
     Tooltip,
     Legend
 )
+const isLoading = ref(false)
 
 const appStore = useAppStore();
 const route = useRoute();
@@ -287,6 +299,7 @@ watch([date, selectedTimePeriod], () => {
 
 onBeforeMount(async () => {
     appStore.isLoading = true;
+    
     companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
 
         if (data == false) {
@@ -294,8 +307,8 @@ onBeforeMount(async () => {
             appStore.isLoading = false;
         }
         else {
+            isLoading.value = true;
             establishment.value = data;
-            
             appStore.setCurrentPage({
                 title1: "",
                 title2: "Trends",
@@ -322,6 +335,7 @@ onBeforeMount(async () => {
     });
 
     await loadFromServer('daily', companyId, start_date.value, end_date.value)
+    isLoading.value = false;
 
     // const response = await new Promise((resolve) => {
     //     services.get_Record(`establishment/${companyId}/rating`, (response) => {
@@ -437,3 +451,57 @@ function transformData(inputData) {
     return result;
 }
 </script>
+
+<style scoped>
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 500px; /* Ajustez la hauteur selon vos besoins */
+}
+
+.chart-loading {
+    position: absolute; /* Positionner de manière absolue par rapport au conteneur parent */
+    top: 30%; /* Centrer verticalement */
+    left: 50%; /* Centrer horizontalement */
+    transform: translate(-50%, -50%); /* Décaler de moitié de la taille du conteneur */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8); /* Vous pouvez personnaliser la couleur et la transparence */
+    border-radius: 50%;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    animation: rotate 2s linear infinite;
+    z-index: 1000;
+}
+
+.path {
+    stroke: #333;
+    stroke-linecap: round;
+    animation: dash 2s ease-in-out infinite; /* Ajustez la durée de l'animation ici */
+}
+
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes dash {
+    0% {
+        stroke-dasharray: 1, 150;
+        stroke-dashoffset: 0;
+    }
+    50% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -35;
+    }
+    100% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -124;
+    }
+}
+</style>
