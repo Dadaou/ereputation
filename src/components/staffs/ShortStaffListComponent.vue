@@ -19,18 +19,20 @@
           <el-input v-model="search" size="small" placeholder="Type to search" />
         </template>
         <template #default="scope">
+          <el-tooltip :content="`Click to enter ${scope.row.firstname} ${scope.row.lastname}'s feedback formulary`"
+            placement="top">
+            <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
+                class="uil uil-external-link-alt"></i></a>
+          </el-tooltip>
           <el-button size="small" @click="showQRCode(scope.row)"><i class="uil uil-qrcode-scan"></i></el-button>
         </template>
       </el-table-column>
     </el-table>
   </div>
-  <QrCodeModalComponent v-if="staff" :qrcodeValue="`${baseurl}/public/${tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`" 
-    :showModal="showModal"
-    :filename="`${staff.firstname} ${staff.lastname}-feedback-link`"
-    @close="showModal=false"
-    :customer="tag"
-    :establishment="staff.establishment_tag"
-    />
+  <QrCodeModalComponent v-if="staff"
+    :qrcodeValue="`${baseurl}/public/${tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`"
+    :showModal="showModal" :filename="`${staff.firstname} ${staff.lastname}-feedback-link`" @close="showModal = false"
+    :customer="tag" :establishment="staff.establishment_tag" />
 </template>
 
 <script setup>
@@ -46,7 +48,7 @@ import 'element-plus/es/components/input/style/css'
 import services from '@Services/services.js';
 
 const QrCodeModalComponent = defineAsyncComponent(() =>
-    import('@Components/utils/QrCodeModalComponent.vue')
+  import('@Components/utils/QrCodeModalComponent.vue')
 )
 
 const baseurl = window.location.origin;
@@ -68,6 +70,12 @@ const search = ref('')
 
 const filterTableData = computed(() => {
   let filterdata = tableData.value;
+
+  filterdata = filterdata.map((value) => {
+    value.link = `${baseurl}/public/${tag.value}/establishment/${value.establishment_tag}/staffs/${value.tag}/feedback`
+    return value
+  })
+
   filterdata = tableData.value.filter(
     (data) =>
       !search.value ||

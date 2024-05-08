@@ -7,9 +7,9 @@
           <el-select v-model="template" filterable placeholder="choose template" size="large">
             <el-option v-for="(item, index) in templates" :key="index" :label="item.name" :value="item" />
           </el-select>
-          <button class="btn downloads mt-2" @click="generatePdf">PDF Download</button>
+          <button v-if="template" class="btn downloads mt-2" @click="generatePdf">PDF Download</button>
         </div> <br>
-        <form class="my-form" @submit.prevent="submit">
+        <form v-if="template" class="my-form" @submit.prevent="submit">
           <label for="textGreeting" class="text-sm title">Text Greeting:</label>
           <input type="text" id="textGreeting" v-model="textGreeting">
 
@@ -31,33 +31,16 @@
         </form>
       </div>
     </div>
-    <div id="preview" style="font-family: Arial, sans-serif;">
-      <div v-if="template">
-        <p v-html="textGreeting"></p>
-        <p>
-          <span v-html="text1"></span>
-          <span v-html="text2"></span>
-        </p>
+    <div v-if="template">
+      <div id="preview" style="font-family: Arial, sans-serif;">
 
-        <qrcode-vue id="qrcode2" style="margin-inline: auto;" :value="qrStore.qrcodeValue" :size="150" level="L"
-          render-as="svg" />
-
-        <p v-html="text3"></p>
-        <p v-html="textClosing"></p>
-      </div>
-      <div v-else class="space-y-5 rounded-2xl bg-white/5 p-4 relative skeleton">
-        <div class="h-24 rounded-lg bg-gray-200 animate-pulse"></div>
-        <div class="space-y-3">
-          <div class="h-3 w-3/5 rounded-lg bg-gray-200 animate-pulse"></div>
-          <div class="h-3 w-4/5 rounded-lg bg-gray-200 animate-pulse"></div>
-          <div class="h-3 w-2/5 rounded-lg bg-gray-200 animate-pulse"></div>
-        </div>
-
-        <div
-          class="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-gray-200/10 to-transparent">
-        </div>
+        <div id="core" v-html="core"></div>
       </div>
     </div>
+    <div v-else>
+      Choose a template to preview and download.
+    </div>
+
   </div>
 </template>
 
@@ -71,10 +54,13 @@ import axios from 'axios';
 import QrcodeVue from 'qrcode.vue';
 import QRCode from 'qrcode';
 import DOMPurify from 'dompurify';
+import services from '@Services/services.js';
 // import he from 'he';
-import { ElOption, ElSelect } from 'element-plus';
+import { ElOption, ElSelect, ElMessage } from 'element-plus';
 import 'element-plus/es/components/option/style/css';
 import 'element-plus/es/components/select/style/css';
+import html2canvas from 'html2canvas';
+import { h } from 'vue'
 
 const appStore = useAppStore();
 appStore.setCurrentPage({
@@ -102,54 +88,21 @@ const text2 = ref('');
 const text3 = ref('');
 const core = ref('');
 
-// const previewData = async () => {
-//   // try {
-//   //   const response = await axios.get('https://api-dev.nexties.fr/api/customer/qrtemplates');
-//   //   const data = response.data;
+const submit = async () => {
+  try {
+    // Récupérer les valeurs des champs du formulaire
+    updateTemplate();
 
-//   //   // Assigner les données aux champs du formulaire
-//   //   textGreeting.value = data.textGreeting;
-//   //   textClosing.value = data.textClosing;
-//   //   text1.value = data.text1;
-//   //   text2.value = data.text2;
-//   //   text3.value = data.text3;
-//   // } catch (error) {
-//   //   console.error('Erreur lors de la récupération des données:', error);
-//   // }
-// };
-// const submit = async () => {
-//   try {
-//     // Récupérer les valeurs des champs du formulaire
-//     const formData = {
-//       textGreeting: textGreeting.value,
-//       textClosing: textClosing.value,
-//       text1: text1.value,
-//       text2: text2.value,
-//       text3: text3.value
-//     };
+  } catch (error) {
+    // Gérer les erreurs en cas d'échec de la requête
+    console.error('Error updating form:', error);
+  }
+};
 
-//     // Effectuer une requête HTTP POST vers votre API avec les données du formulaire
-//     const response = await axios.post('https://api-dev.nexties.fr/api/customer/qrtemplates', formData);
-
-//     // Vérifier si la requête a réussi
-//     if (response.status === 200) {
-//       // Traiter la réponse de l'API en fonction de votre logique métier
-//       console.log('Form updated successfully!');
-//     } else {
-//       // Gérer les erreurs en cas de réponse non attendue
-//       console.error('Error updating form:', response.data);
-//     }
-//   } catch (error) {
-//     // Gérer les erreurs en cas d'échec de la requête
-//     console.error('Error updating form:', error);
-//   }
-// };
-
-// const generatePdf = () => {
-//   generateQRCode();
-//   addContentToPdf();
-//   doc.save(`${filename.value}.pdf`);
-// };
+const generatePdf = () => {
+  addContentToPdf();
+  doc.save(`${filename.value}.pdf`);
+};
 
 const removeHtmlTags = (str) => {
   if (str) {
@@ -172,59 +125,24 @@ const removeHtmlTags = (str) => {
 //   return difference;
 // }
 
-const addContentToPdf = () => {
-  const greeting = removeHtmlTags(template.value.text_greeting);
-  const paragraph1 = removeHtmlTags(template.value.text1);
-  const paragraph2 = removeHtmlTags(template.value.text2);
-  const paragraph3 = removeHtmlTags(template.value.text3);
-  const closing = removeHtmlTags(template.value.text_closing);
-  const core = removeHtmlTags(template.value.core)
+const addContentToPdf = async () => {
+  const body = document.getElementsByClassName("content");
+  if (body.length) {
 
-  let content = `
-    ${greeting}\n\n
-    ${paragraph1}\n\n
-    ${paragraph2}\n\n
-    ${paragraph3}\n\n
-    ${core}\n\n
-    ${closing}
- `;
-
-  //this part is to get the name of the establishment by comparing the core inner html by its template
-  // let textTemplate = `
-  //   ${greeting}
-  //   ${paragraph1}
-  //   ${paragraph2}
-  //   ${paragraph3}`;
-
-  // textTemplate = textTemplate.replace(/\s+/g, ' ').trim();
-  // let textToCompare = removeHtmlTags(coreText.value);
-  // textToCompare = textToCompare.replace(/\s+/g, ' ').trim();
-  // let diff = findDifference(textTemplate, textToCompare)
-  // diff = diff.split(',')
-
-  // if (diff.length > 0) {
-  //   content = content.replace("{{establishment}}", diff[0])
-  //   filename.value = `${diff[0]} QrCode preview`
-  // }
-  //end here
-
-  // const text = `${paragraph3}\n`
-  doc.setFontSize(10);
-  const maxWidth = 140;
-  const lines = doc.splitTextToSize(content, maxWidth);
-
-  let y = 25;
-  for (let i = 0; i < lines.length; i++) {
-    doc.text(lines[i], 6, y);
-    y += 4;
+    let content = body[0];
+    let canvas = await html2canvas(content);
+    const imageData = canvas.toDataURL('image/png');
+    const aspectRatio = canvas.width / canvas.height;
+    const adjustedHeight = 0 || 130 / aspectRatio;
+    doc.addImage(imageData, 'PNG', 10, 10, 130, adjustedHeight);
   }
-  // const lines2 = doc.splitTextToSize(text, maxWidth)
-  // y += 30
-  // for (let i = 0; i < lines2.length; i++) {
-  //   doc.text(lines2[i], 6, y);
-  //   y += 3;
-  // }
-};
+
+  // html2canvas(body, { width: 1000, height: 1200 }).then(canvas => {
+  //   const imgData = canvas.toDataURL('image/png'); // Convert canvas to image data
+  //   doc.addImage(imgData, 'PNG', 7, 7, 250, 300);
+  //   doc.save('canvas.pdf');
+  // }).catch(error => { console.log(error) });
+}
 
 const generateQRCode = () => {
   const qrCodeData = qrStore.qrcodeValue;
@@ -232,32 +150,86 @@ const generateQRCode = () => {
   QRCode.toCanvas(document.getElementById('qrcodeContainer'), qrCodeData, { width: 100, height: 100 }, (error, canvas) => {
     if (!error) {
       const imageData = canvas.toDataURL('image/png');
-      doc.addImage(imageData, 'PNG', 55, 65, 35, 35);
+      console.log(canvas);
+      console.log(imageData);
+      // doc.addImage(imageData, 'PNG', 55, 65, 35, 35);
     } else {
       console.error('QR Code generation error:', error);
     }
   });
 };
 
-// const updatePreview = async () => {
+const updateTemplate = () => {
+  services.patchRecord('qrtemplates', template.value.id, {
+    text1: text1.value,
+    text2: text2.value,
+    text3: text3.value,
+    textGreeting: textGreeting.value,
+    textClosing: textClosing.value,
+  }, (response) => {
+    if (response.status == 200) {
+      template.value = response.data;
+      templates.value[templates.value.findIndex(el => el.id === template.value.id)] = response.data;
+      ElMessage({
+        message: h('p', null, [
+          h('h4', { style: "color: var(--el-color-primary); font-weight: bold;" }, 'Information:'),
+          h('span', { style: "font-size: 13px;" }, "Your template has been successfully updated!"),
+        ]),
+      })
+    }
+  })
+}
 
-//   let content = `
-//     <p>${textGreeting.value}</p><br>
-//     <p>${text1.value}</p>
-//     <p>${text2.value}</p><br>
-//     <img src="qrcodeimg.jpeg"><br>
-//     <p>${text3.value}</p>
-//     <p>${textClosing.value}</p>
-//  `;
+const imageUrlToBase64 = async (imageUrl) => {
+  try {
+    // Récupérer l'image depuis l'URL
+    const response = await fetch(imageUrl, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access')}`
+      }
+    });
+    const blob = await response.blob();
 
-//   console.log(content);
+    // Convertir l'image en base64
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    console.error('Erreur lors de la conversion de l\'URL d\'image en base64 :', error);
+    throw error;
+  }
+}
 
-//   content = content.replace(/<img src="qrcodeimg.jpeg".*?>/g, '<div id="qrcodeContainer" style="margin: 25px; margin-inline: auto;"></div>');
-//   coreText.value = DOMPurify.sanitize(content);
-//   // generateQRCode();
-//   await nextTick();
+const generateCore = async () => {
+  let tmp = template.value.core
+  tmp = tmp.replace('{{textgreeting}}', textGreeting.value);
+  tmp = tmp.replace('{{text1}}', text1.value);
+  tmp = tmp.replace('{{text2}}', text2.value);
+  tmp = tmp.replace('{{text3}}', text3.value);
+  tmp = tmp.replace('{{textclosing}}', textClosing.value);
+  const qrData = qrStore.qrcodeValue; // Data you want to encode
+  const canvas = document.createElement('canvas');
+  canvas.width = 10000;
+  canvas.height = 10000;
+  const qrCanvas = await QRCode.toCanvas(canvas, qrData);
+  const qrCodeDataURL = qrCanvas.toDataURL(); // Convert to base64
+  tmp = tmp.replace('{{qrcodeimg}}', `<img src="${qrCodeDataURL}" style="width: 100%;">`)
+  tmp = tmp.replace('{{logo}}', '');
 
-// }
+  // imageUrlToBase64(template.value.logo)
+  //   .then(base64Image => {
+  //     console.log('Image en base64 :', base64Image);
+  //     // Faites quelque chose avec l'image base64, comme l'afficher dans une balise <img>
+  //   })
+  //   .catch(error => {
+  //     console.error('Erreur :', error);
+  //   });
+
+  core.value = tmp;
+}
 
 onBeforeMount(async () => {
   appStore.setCurrentPage({
@@ -280,11 +252,15 @@ onBeforeMount(async () => {
   ])
   templates.value = await qrStore.getTemplates(route.params.tag, route.params.id);
 
-  if (templates.value.length > 0) {
-    template.value = templates.value[0];
-  }
+  // if (templates.value.length > 0) {
+  //   template.value = templates.value[0];
+  // }
 
 });
+
+watch([text1, text2, textGreeting, textClosing, text3], () => {
+  generateCore();
+})
 
 watch(template, () => {
   if (template.value) {
@@ -293,6 +269,7 @@ watch(template, () => {
     text1.value = removeHtmlTags(template.value.text1);
     text2.value = removeHtmlTags(template.value.text2);
     text3.value = removeHtmlTags(template.value.text3);
+    generateCore();
   }
 
 })
@@ -310,16 +287,18 @@ watch(template, () => {
 
 .document_preview {
   min-height: calc(90dvh - 140px);
-  margin: 0 auto;
+  margin: 0;
   margin-top: 5rem;
   padding: 0;
   display: flex;
   flex-direction: row;
   gap: 1rem;
+  justify-content: flex-start;
+  width: 100%;
 }
 
 .filter {
-  flex-basis: 800px;
+  flex-basis: 400px;
 }
 
 #preview>div {
@@ -329,7 +308,7 @@ watch(template, () => {
 }
 
 .skeleton {
-  width: 1000px !important;
+  width: 500px !important;
 }
 
 #qrcode {
@@ -422,12 +401,11 @@ watch(template, () => {
   /* Couleur du texte */
 }
 
-.my-form input {
+.my-form input,
+.my-form textarea {
   width: 100%;
   margin-bottom: 1rem;
   /* Ajoutez une marge inférieure de 2rem */
-  font-size: 1rem;
-  /* Taille de police */
   font-weight: 500;
   /* Épaisseur de police */
   color: #333;
@@ -438,6 +416,9 @@ watch(template, () => {
   /* Ajoutez une bordure */
   border-radius: 0.25rem;
   /* Ajoutez un rayon de bordure */
+  caret-color: var(--color-primary);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px !important;
 }
 
 .my-form button {

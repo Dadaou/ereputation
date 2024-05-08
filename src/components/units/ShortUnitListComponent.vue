@@ -10,18 +10,19 @@
           <el-input v-model="search" size="small" placeholder="Type to search" />
         </template>
         <template #default="scope">
+          <el-tooltip :content="`Click to enter ${scope.row.name}'s feedback formulary`" placement="top">
+            <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
+                class="uil uil-external-link-alt"></i></a>
+          </el-tooltip>
           <el-button size="small" @click="showQRCode(scope.row)"><i class="uil uil-qrcode-scan"></i></el-button>
         </template>
       </el-table-column>
     </el-table>
   </div>
-  <QrCodeModalComponent v-if="unit" :qrcodeValue="`${baseurl}/public/${tag}/establishment/${unit.establishment_competitor_tag}/units/${unit.tag}/feedback`" 
-    :showModal="showModal"
-    :filename="`${unit.category}-${unit.name}-feedback-link`"
-    @close="showModal=false"
-    :customer="tag"
-    :establishment="unit.establishment_competitor_tag"
-    />
+  <QrCodeModalComponent v-if="unit"
+    :qrcodeValue="`${baseurl}/public/${tag}/establishment/${unit.establishment_competitor_tag}/units/${unit.tag}/feedback`"
+    :showModal="showModal" :filename="`${unit.category}-${unit.name}-feedback-link`" @close="showModal = false"
+    :customer="tag" :establishment="unit.establishment_competitor_tag" />
 </template>
 <script setup>
 import { computed, ref, inject, defineAsyncComponent } from 'vue';
@@ -35,7 +36,7 @@ import 'element-plus/es/components/input/style/css'
 import services from '@Services/services.js';
 
 const QrCodeModalComponent = defineAsyncComponent(() =>
-    import('@Components/utils/QrCodeModalComponent.vue')
+  import('@Components/utils/QrCodeModalComponent.vue')
 )
 
 const units = inject('units')
@@ -53,6 +54,12 @@ const showQRCode = (value) => {
 
 const filterTableData = computed(() => {
   let filterdata = units.value;
+
+  filterdata = filterdata.map((value) => {
+    value.link = `${baseurl}/public/${tag.value}/establishment/${value.establishment_competitor_tag}/units/${value.tag}/feedback`
+    return value
+  })
+
   filterdata = units.value.filter(
     (data) =>
       !search.value ||
