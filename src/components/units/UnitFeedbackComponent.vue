@@ -1,6 +1,5 @@
 <template>
     <div class="main__container" v-if="exist">
-        <HeadComponent :page="page"></HeadComponent>
         <div class="feedback__form">
             <div class="tablet_mobile__head">
 
@@ -226,6 +225,13 @@ const iframeVisible = ref(false);
 const showSpinner = ref(false);
 
 onBeforeMount(async () => {
+
+    appStore.setCurrentPage({
+        title1: "Laissez",
+        title2: "vos commentaires",
+        icon: "uil-comment-alt"
+    });
+
     services.setToken(import.meta.env.VITE_APP_TOKEN);
 
     await services.get_Record(`establishment/${route.params.etab}/media`, (response) => {

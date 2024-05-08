@@ -251,6 +251,16 @@ const router = createRouter({
           path: '/public/:tag/establishment/:etab/:share/feedback-success',
           name: 'SuccessFeedback',
           component: () => import('@Views/SuccessMessageFeedback.vue')
+        },
+        {
+          path: '/public/:tag/establishment/:etab/advantagecontact/:discountTag/enable',
+          name: 'EnableAdvContact',
+          component: () => import('@Views/EnableAdvantagePageView.vue')
+        },
+        {
+          path: '/public/advantagecontact/:discountTag',
+          name: 'QRCodeAdvContact',
+          component: () => import('@Views/QRCodeAdvantagePageView.vue')
         }
       ]
     },
@@ -260,16 +270,6 @@ const router = createRouter({
       component: ProfileLayout,
       redirect: '/',
       children: [
-        {
-          path: '/public/advantagecontact/:discountTag',
-          name: 'QRCodeAdvContact',
-          component: () => import('@Views/QRCodeAdvantagePageView.vue')
-        },
-        {
-          path: '/public/:tag/establishment/:etab/advantagecontact/:discountTag/enable',
-          name: 'EnableAdvContact',
-          component: () => import('@Views/EnableAdvantagePageView.vue')
-        },
         {
           path: '/',
           name: 'DiscountValidation',

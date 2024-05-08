@@ -37,7 +37,7 @@ const select = () => {
     justify-content: center;
     width: 100%;
     height: 60px;
-    border-radius: 5px;
+    border-radius: 5px 5px 0 0;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     cursor: pointer;
     padding: 8px;
