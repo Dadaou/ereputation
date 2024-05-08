@@ -78,7 +78,7 @@ const chooseLanguage = (language)=>{
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+  transition: opacity 0.1s;
 }
 .fade-enter, .fade-leave-to {
   opacity:  0;

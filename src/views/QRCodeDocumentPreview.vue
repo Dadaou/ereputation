@@ -414,7 +414,7 @@ watch(template, () => {
   width: 100%;
   font-size: 1rem;
   /* Taille de police */
-  background-color: #0873DE;
+  background-color: #2F74E0;
   color: white;
   padding: 0.35rem 0.25rem;
   /* Ajoutez un remplissage pour le texte d'entrée */

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import moment from 'moment'
+import services from '@Services/services.js'
 
 export const useAppStore = defineStore('app', () => {
   const isLoading = ref(false)
@@ -10,6 +11,7 @@ export const useAppStore = defineStore('app', () => {
   const account = ref(null)
   const start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'))
   const end_date = ref(moment().format('YYYY-M-DD'))
+  const customerLogo = ref(null)
 
   const setBreadcrumbs = (values) => {
     breadcrumbs.value = values
@@ -41,6 +43,25 @@ export const useAppStore = defineStore('app', () => {
     r.style.setProperty(item, value)
   }
 
+  const setCustomerLogo = async(tag)=>{
+    const response = await new Promise((resolve) => {
+        services.get_Record(`customer/logo?tag=${tag}`, (response) => {
+          resolve(response)
+        });
+    });
+
+    console.log(response)
+    if(response.status = 200){
+      customerLogo.value = response.data;
+    }
+  }
+
+  const getCustomerLogo = async(tag)=>{
+    console.log(!customerLogo.value)
+    if(!customerLogo.value) await setCustomerLogo(tag);
+    return customerLogo.value
+  }
+
   const setAccount = (value) => {
     account.value = value
   }
@@ -50,6 +71,7 @@ export const useAppStore = defineStore('app', () => {
     end_date,
     isLoading,
     breadcrumbs,
+    customerLogo,
     isExist,
     currentPage,
     account,
@@ -59,6 +81,8 @@ export const useAppStore = defineStore('app', () => {
     setAccount,
     setCssVariable,
     getCssVariable,
-    setDatesValue
+    setDatesValue,
+    setCustomerLogo,
+    getCustomerLogo
   }
 })

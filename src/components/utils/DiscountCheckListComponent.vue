@@ -60,7 +60,7 @@ onMounted(async () => {
   });
   generateColors();
   if (discounts.value.length) {
-    selectDiscount(0, discounts.value[0]);
+    selectDiscount(1, discounts.value[1]);
   }
 });
 
