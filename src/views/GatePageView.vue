@@ -5,19 +5,16 @@
     <div class="establishment__info">
         <h1 class="society__name" style="font-family: 'Script MT Bold'; font-size: 40px; font-weight: bold;">{{ establishment.name }}</h1>
 
-        <!-- Bloc pour society__category -->
         <div class="society__category">
             <i :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
             <span class="ml-2" style="font-family: 'Arial'; font-size: 16px;">{{ establishment.category }}</span>
         </div>
 
-        <!-- Bloc pour society__country -->
         <div class="society__country" v-if="establishment.country != null">
             <i class="uil uil-map"></i>
             <span class="ml-2" style="font-family: 'Arial'; font-size: 16px;">{{ establishment.country }}</span>
         </div>
-
-        <!-- Bloc pour society__location -->
+        
         <div class="society__location">
             <i class="uil uil-location-point"></i>
             <span class="ml-2" style="font-family: 'Arial'; font-size: 16px;">{{ establishment.city }}</span>
@@ -339,37 +336,37 @@ const updateType = (value) => {
         margin-top: 1rem
     }
 }
-/* Styles pour society__category */
+
 .society__category {
         margin-top: 1px;
-        margin-bottom: 10px; /* Espace en bas du bloc */
-        border-bottom: 1px solid #ccc; /* Bordure en bas */
-        padding-bottom: 10px; /* Espace en bas de la bordure */
+        margin-bottom: 10px; 
+        border-bottom: 1px solid #ccc; 
+        padding-bottom: 10px; 
     }
 
-    /* Styles pour society__country */
+   
     .society__country {
-        margin-bottom: 10px; /* Espace en bas du bloc */
-        border-bottom: 1px solid #ccc; /* Bordure en bas */
-        padding-bottom: 10px; /* Espace en bas de la bordure */
+        margin-bottom: 10px; 
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 10px; 
     }
 
-    /* Styles pour society__location */
+  
     .society__location {
-        margin-bottom: 10px; /* Espace en bas du bloc */
-        border-bottom: 1px solid #ccc; /* Bordure en bas */
-        padding-bottom: 10px; /* Espace en bas de la bordure */
+        margin-bottom: 10px; 
+        border-bottom: 1px solid #ccc; 
+        padding-bottom: 10px; 
     }
     .society__name {
-        margin-top: -10px; /* Espace en bas du bloc */
+        margin-top: -10px; 
         margin-left: 20px;
     }
     .logo-mv {
-    width: auto; /* ou la taille souhaitée en pixels */
-    height: 120px; /* pour maintenir les proportions de l'image */
+    width: auto; 
+    height: 120px; 
     }
     .establishment__img {
-    width: 100%; /* ou la taille souhaitée en pixels */
-    height:10%; /* pour maintenir les proportions de l'image */
+    width: 100%;  
+    height:10%; 
     }
 </style>
