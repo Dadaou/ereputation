@@ -19,8 +19,7 @@
         <div v-if="logo && logo.logo" class="nav-logo">
             <img :src="logo.logo">
         </div>
-        <span v-else
-            class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
+        <span v-else-if="logo && logo.name" class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
               logo.name }}</span>
     </a>
 	  <div class="nav-dropdown">
