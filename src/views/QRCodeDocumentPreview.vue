@@ -31,11 +31,9 @@
         </form>
       </div>
     </div>
-    <div v-if="template">
-      <div id="preview" style="font-family: Arial, sans-serif;">
+    <div v-if="template" id="preview" style="font-family: Arial, sans-serif;">
 
-        <div id="core" v-html="core"></div>
-      </div>
+      <div id="core" v-html="core"></div>
     </div>
     <div v-else>
       Choose a template to preview and download.
@@ -280,6 +278,10 @@ watch(template, () => {
   margin: auto;
 }*/
 
+#preview {
+  margin-top: -24px;
+}
+
 
 #qrcodeContainer {
   width: 100% !important;
@@ -386,19 +388,6 @@ watch(template, () => {
   /* Ajustez cette valeur selon vos préférences */
   margin: 0 auto;
   /* Centrer horizontalement */
-}
-
-/* Styles supplémentaires pour le formulaire */
-.my-form label {
-  display: block;
-  margin-bottom: 1rem;
-  /* Ajoutez une marge inférieure de 2rem */
-  font-size: 1rem;
-  /* Taille de police */
-  font-weight: 500;
-  /* Épaisseur de police */
-  color: #333;
-  /* Couleur du texte */
 }
 
 .my-form input,
