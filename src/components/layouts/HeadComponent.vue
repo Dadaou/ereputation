@@ -33,7 +33,7 @@ const route = useRoute();
 .head__container {
     background-color: rgb(245, 245, 245);
     width: 100% !important;
-    height: 7rem;
+    height: 5rem;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -55,7 +55,7 @@ const route = useRoute();
 }
 
 .head__title {
-    padding-top: 5px;
+    padding-top: 1px;
     text-align: center;
 }
 .uil{
