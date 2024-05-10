@@ -51,15 +51,15 @@ const route = useRoute();
     color: var(--color-bg2);
     font-size: 18px;
     position: relative;
-    top: -7px;
+    top: -6px;
 }
 
 .head__title {
-    padding-top: 1px;
+    padding-top: 5px;
     text-align: center;
 }
 .uil{
-    margin-top: -13px;
+    margin-top: -9px;
 }
 @media screen and (max-width:1024px) {
     /*.head__container{
