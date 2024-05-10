@@ -3,12 +3,24 @@
         <li @click="viewFullscreen()"> <i class="uil uil-expand-arrows-alt"></i> Expand</li>
     </ul>
     <div class="establishments__comparison" ref="el" :style="{
-        'overflowX': 'auto'
+        'display': 'flex',
+        'width': '100%',
     }">
-        <GroupedBarChart class="chart" :plot-data="props.data" x-key="name" :width="custom_width"
-            :height="chartheight - 100" :margin="margin" :colors="colors" :x-axis-label="_timePeriod"
-            :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
-        </GroupedBarChart>
+        <div class="colSmall">
+            <GroupedBarChart class="chart" :plot-data="props.data" x-key="name" :width="custom_width"
+                :height="chartheight - 100" :margin="margin" :colors="colors" :x-axis-label="_timePeriod"
+                :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+            </GroupedBarChart>
+        </div>
+        
+        <div class="colLarge">
+            <div class="boxLarge">
+                <GroupedBarChart class="chart" :plot-data="props.data" x-key="name" :width="custom_width"
+                    :height="chartheight - 100" :margin="margin" :colors="colors" :x-axis-label="_timePeriod"
+                    :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
+                </GroupedBarChart>
+            </div>
+        </div>
     </div>
     <ModalComponent :showModal="showModal" @close="showModal = false">
         <template #content>
@@ -368,6 +380,58 @@ const get_Width = () => {
 @media screen and (max-width:900px) {
     .range__date {
         flex-direction: column;
+    }
+}
+
+.colLarge {
+        overflow-x: scroll;   
+    }
+
+@media screen and (min-width:976px) {
+    .colSmall {
+        max-width:56px;
+        overflow: hidden;
+    }
+
+    .boxLarge {
+        max-width:700px;
+        margin-left:-60px;
+    }
+}
+
+@media screen and (min-width:769px) and (max-width: 975px) {
+    .colSmall {
+        max-width:56px;
+        overflow: hidden;
+    }
+
+    .boxLarge {
+        max-width:90%;
+        margin-left:-60px;
+    }
+}
+
+@media screen and (min-width:469px) and (max-width: 768px) {
+    .colSmall {
+        max-width:56px;
+        overflow: hidden;
+    }
+
+    .boxLarge {
+        max-width:700px;
+        margin-left:-60px;
+    }
+}
+
+@media screen and (max-width:468px) {
+    .colSmall {
+        max-width:56px;
+        overflow: hidden;
+    }
+
+    .boxLarge {
+        max-width:700px;
+        margin-left:-60px;
     }
 }
 </style>
