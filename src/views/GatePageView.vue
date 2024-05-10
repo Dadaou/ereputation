@@ -1,120 +1,35 @@
 <template>
     <div v-if="exist" class="feedback__form">
-        <div class="tablet_mobile__head">
-            <div class="establishment__info">
-                <h1 class="society__name">{{ establishment.name }}</h1>
-                <div class="society__category">
-                    <i
-                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
-                    <span class="ml-2">{{ establishment.category }}</span>
-                </div>
-                <div class="society__country" v-if="establishment.country != null">
-                    <i class="uil uil-map"></i>
-                    <span class="ml-2">{{ establishment.country }}</span>
-                </div>
-                <div class="society__location">
-                    <i class="uil uil-location-point"></i>
-                    <span class="ml-2">{{ establishment.city }}</span>
-                </div>
-            </div>
-            <div class="photo">
-                <div v-if="establishment.url_source !== null" class="establishment__img">
-                    <img :src="establishment.url_source" alt="" />
-                </div>
-                <div v-else role="status"
-                    class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                    <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                        <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
-                        <path
-                            d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
-                    </svg>
-                    <span class="sr-only">Loading...</span>
-                </div>
-            </div>
-        </div>
         <div class="feedback">
-            <div class="grid gap-0 mt-6 grid-cols-4">
+            <div class="grid gap-0 grid-cols-4">
                 <GateMenuComponent v-for="item in categories" :item="item" :key="item.title" @select="openMenu(item)" />
             </div>
             <div class="gate__body">
-                <div v-if="category == 'reviews'">
-                    <div class="review-content" @click="toggleList" :title="appStore.account.brand || ''">
-                        <div v-if="appStore.account && appStore.account.logo" class="logo">
-                            <img :src="appStore.account.logo">
-                        </div>
-                        <h4 class="mr-5">{{ appStore.account.name }}</h4>
-                    </div>
-                    <div v-if="showList" class="card-container">
-                        <div class="card-item">
-                            <h4><i class="uil uil-link mr-1"></i>Establishment review</h4>
-                            <div class="card-item-list">
-                                <div v-for="(link, index) in filteredLinks" :key="index">
-                                    <div v-if="link.source === 'establishment'">
-                                        <a :href="link.value" target="_blank">
-                                            <div class="item-name">
-                                                {{ link.name }}
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-item">
-                            <h4><i class="uil uil-chat-bubble-user mr-1"></i>Staff review</h4>
-                            <div class="card-item-list">
-                                <div v-for="(link, index) in filteredLinks" :key="index">
-                                    <div v-if="link.source === 'staff'">
-                                        <a :href="link.value" target="_blank">
-                                            <div class="item-name">
-                                                {{ link.name }}
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-item">
-                            <h4><i class="uil uil-clipboard-notes mr-1"></i>Service review</h4>
-                            <div class="card-item-list">
-                                <div v-for="(link, index) in filteredLinks" :key="index">
-                                    <div v-if="link.source === 'unit'">
-                                        <a :href="link.value" target="_blank">
-                                            <div class="item-name">
-                                                {{ link.name }}
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div v-if="category == 'reviews'" class="list__container">
+                    <GateLinkComponent v-for="(item, index) in establishmentLink" :item="item" type="Establishment"
+                        :key="index" />
+                    <GateLinkComponent v-for="(item, index) in staffLinks" :item="item" type="Staff" :key="index" />
+                    <GateLinkComponent v-for="(item, index) in platformLinks" :item="item" type="Platform"
+                        :key="index" />
+                </div>
+                <div v-if="category == 'follow'" class="list__container">
+                    <GateLinkComponent v-for="(item, index) in followLinks" :item="item" type="Social" :key="index" />
                 </div>
             </div>
-
-            <!-- <div v-if="type !== 'reviews'" class="links">
-                <div v-for="(link, index) in filteredLinks" :key="index">
-                    <a :href="link.value" target="_blank">
-                        <div class="item-name">
-                            {{ link.name }}
-                        </div>
-                    </a>
-                </div>
-            </div> -->
         </div>
     </div>
     <EstablishmentNotFound v-else />
 </template>
 <script setup>
 import { ref, computed, onBeforeMount, defineAsyncComponent } from 'vue';
-import { ElOption, ElSelect } from 'element-plus';
 import 'element-plus/es/components/option/style/css';
 import 'element-plus/es/components/select/style/css';
 import services from '@Services/services.js';
 import { useRoute } from "vue-router";
-import { Icon } from '@iconify/vue';
 import { useAppStore } from "@Stores/app.js"
-import GateMenuComponent from '@Components/utils/GateMenuComponent.vue';
+import GateMenuComponent from '@Components/gate/GateMenuComponent.vue';
+import GateLinkComponent from '@Components/gate/GateLinkComponent.vue';
+
 
 const EstablishmentNotFound = defineAsyncComponent(() =>
     import("@Views/EstablishmentNotFound.vue")
@@ -125,25 +40,16 @@ const route = useRoute();
 const establishmentTag = route.params.id;
 const establishment = ref({});
 const appStore = useAppStore();
-const showList = ref(false);
-const category = ref('menus');
+const category = ref('reviews');
 let media = [];
+const baseurl = window.location.origin;
 
-const toggleList = () => {
-    showList.value = !showList.value;
-};
-
-const links = ref([
-    { name: "Lien 1", category: "menus", value: "https://example.com/link1" },
-    { name: "Lien 2", category: "Follow us", value: "https://example.com/link2" },
-    { name: "Lien 3", category: "reviews", value: "https://example.com/link3" },
-    { name: "Lien 4", category: "offers", value: "https://example.com/link4" }
-]);
+const links = ref(null);
 
 const categories = ref([
-    { value: "menus", label: "Menus", active: true, icon: "uim:th-large" },
+    { value: "menus", label: "Menus", active: false, icon: "uim:th-large" },
     { value: "follow", label: "Follow us", active: false, icon: "uil:info-circle" },
-    { value: "reviews", label: "Reviews", active: false, icon: "uil:star" },
+    { value: "reviews", label: "Reviews", active: true, icon: "uil:star" },
     { value: "offers", label: "Offers", active: false, icon: "bi:tags" }
 ]);
 
@@ -161,12 +67,6 @@ const openMenu = (item) => {
     category.value = item.value
 }
 
-const filteredLinks = computed(() => {
-    let data = links.value;
-
-    return data;
-});
-
 const loadLinks = async (tag) => {
     const uri = `/get/settings/category?tag=${tag}`
     const response = await new Promise((resolve) => {
@@ -175,37 +75,69 @@ const loadLinks = async (tag) => {
         });
     });
 
-    console.log(response)
     if (response.status == 200) {
-        links.value = response.data.links;
+        links.value = response.data;
     }
 };
 
+const establishmentLink = computed(() => {
+    if (links.value) {
+        return links.value['Establishment'].map((v) => {
+            return {
+                label: v["label"],
+                href: `${baseurl}${v['href']}`
+            }
+        })
+    }
+    return []
+})
+
+const staffLinks = computed(() => {
+    if (links.value) {
+        return links.value['Staff'].map((v) => {
+            return {
+                label: v["label"],
+                href: `${baseurl}${v['href']}`
+            }
+        })
+    }
+    return []
+})
+
+const platformLinks = computed(() => {
+    if (links.value) {
+        return links.value['Platform']
+    }
+    return []
+})
+
+const followLinks = computed(() => {
+    if (links.value) {
+        return links.value['Social']
+    }
+    return []
+})
+
 onBeforeMount(async () => {
 
-    appStore.setCurrentPage({
-        title1: "Laissez",
-        title2: "vos commentaires",
-        icon: "uil-comment-alt"
-    });
-    // await loadLinks(establishmentTag);
     services.setToken(import.meta.env.VITE_APP_TOKEN);
     await services.get_Record(`establishment/${route.params.id}/media`, (response) => {
         if (response.status == 200) {
             establishment.value = response['data'];
             media.value = response['data'].url_source == null ? [] : response['data'].url_source;
-            appStore.setCurrentCustomer({
-                name: establishment.value['name'],
-                logo: "https://api-dev.nexties.fr/uploads/mv-663b378e246a1.png",
-                description: establishment.value['city']
+
+            appStore.setCurrentPage({
+                title1: "",
+                title2: establishment.value['name'],
+                icon: "uil-estate"
             });
         }
     });
+
+    await loadLinks(establishmentTag);
+
 });
 
-const updateType = (value) => {
-    type.value = value;
-};
 </script>
 <style scoped>
 .feedback__form {
@@ -356,6 +288,16 @@ img {
     color: var(--color-danger);
     font-weight: 500;
     cursor: pointer;
+}
+
+.list__container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 24px;
 }
 
 @media screen and (max-width:1075px) {
