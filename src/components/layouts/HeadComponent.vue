@@ -33,7 +33,7 @@ const route = useRoute();
 .head__container {
     background-color: rgb(245, 245, 245);
     width: 100% !important;
-    height: 7.5em;
+    height: 7rem;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -55,10 +55,12 @@ const route = useRoute();
 }
 
 .head__title {
-    padding-top: 15px;
+    padding-top: 5px;
     text-align: center;
 }
-
+.uil{
+    margin-top: -13px;
+}
 @media screen and (max-width:1024px) {
     /*.head__container{
         position: absolute;
