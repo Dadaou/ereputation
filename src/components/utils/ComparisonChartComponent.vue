@@ -394,7 +394,7 @@ const get_Width = () => {
     }
 
     .boxLarge {
-        max-width:700px;
+        max-width:800px;
         margin-left:-60px;
     }
 }
