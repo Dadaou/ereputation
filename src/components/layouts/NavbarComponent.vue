@@ -1,69 +1,58 @@
 <template>
-<nav ref="nav__ref">
-  <div ref="nav__container__ref" class="max-w-screen-xl flex flex-wrap items-center mx-auto p-4">
-   <button v-if="showMenu" @click="toggleMobileMenu" class="menu-barre">
-          <span class="sr-only">Open main menu</span>
-          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
-          </svg>
-    </button>
-	  <a v-if="!isFeedback" :href="baseurl" class="flex items-center space-x-3 rtl:space-x-reverse">
-	      <div v-if="appStore.account && appStore.account.logo" class="nav-logo">
-	          <img :src="appStore.account.logo">
-	      </div>
-	      <span v-else-if="appStore.account && appStore.account.brand"
-	          class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
-	            appStore.account.brand }}</span>
-	  </a>
-    <a v-else :href="baseurl" class="flex items-center space-x-3 rtl:space-x-reverse">
+  <nav ref="nav__ref">
+    <div ref="nav__container__ref" class="max-w-screen-xl flex flex-wrap items-center mx-auto p-4">
+      <button v-if="showMenu" @click="toggleMobileMenu" class="menu-barre">
+        <span class="sr-only">Open main menu</span>
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M1 1h15M1 7h15M1 13h15" />
+        </svg>
+      </button>
+      <a v-if="!isFeedback" :href="baseurl" class="flex items-center space-x-3 rtl:space-x-reverse">
+        <div v-if="appStore.account && appStore.account.logo" class="nav-logo">
+          <img :src="appStore.account.logo">
+        </div>
+        <span v-else-if="appStore.account && appStore.account.brand"
+          class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
+            appStore.account.brand }}</span>
+      </a>
+      <div v-else class="flex items-center space-x-3 rtl:space-x-reverse">
         <div v-if="logo && logo.logo" class="nav-logo">
-            <img :src="logo.logo">
+          <img :src="logo.logo">
         </div>
         <span v-else-if="logo && logo.name" class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
-              logo.name }}</span>
-    </a>
-	  <div class="nav-dropdown">
-	      <LanguageMenuDropdown
-	        v-if="isFeedback"
-	      	:current="currentLanguage"
-	      	@select="(language)=>selectCurrentLanguage(language)"
-	      />
-	     <UserDropdownMenu 
-	        v-if="userStore.authenticated && !isFeedback"
-		  	:user="{
-		  		name: `${userStore.user.firstname} ${userStore.user.lastname}`,
-		  		initial: userStore.getInitials(userStore.user.firstname, userStore.user.lastname),
-		  		email: userStore.user.email
-		  	}"
-		  	:customer="userStore.user.customer"
-		  	@signOut="signOut"
-		  />
-	  </div>
-	   <transition 
-	        enter-active-class="animate__animated animate__zoomIn"
-  			leave-active-class="animate__animated animate__zoomOut" 
-	        >
-		  <div 
-		  v-if="show_menu && showMenu"
-		  class="items-center w-full" id="navbar-language">
-			    <ul class="menu font-medium">
-    			    <li v-for="menu in mainMenu" @click="closeDropdownMenu">
-                <RouterLink :to="{
-                    name: menu.routeName,
-                    params: {
-                      tag: customerTag,
-                      id: route.params.id,
-                    }
-                }">
-                 <i :class="`uil ${menu.icon}`"></i>
-                 <span>{{menu.name}}</span>
-                </RouterLink>
-              </li>
-			    </ul>
-		  </div>
-	</transition>
-  </div>
-</nav>
+          logo.name }}</span>
+      </div>
+      <div class="nav-dropdown">
+        <LanguageMenuDropdown v-if="isFeedback" :current="currentLanguage"
+          @select="(language) => selectCurrentLanguage(language)" />
+        <UserDropdownMenu v-if="userStore.authenticated && !isFeedback" :user="{
+          name: `${userStore.user.firstname} ${userStore.user.lastname}`,
+          initial: userStore.getInitials(userStore.user.firstname, userStore.user.lastname),
+          email: userStore.user.email
+        }" :customer="userStore.user.customer" @signOut="signOut" />
+      </div>
+      <transition enter-active-class="animate__animated animate__zoomIn"
+        leave-active-class="animate__animated animate__zoomOut">
+        <div v-if="show_menu && showMenu" class="items-center w-full" id="navbar-language">
+          <ul class="menu font-medium">
+            <li v-for="menu in mainMenu" @click="closeDropdownMenu">
+              <RouterLink :to="{
+                name: menu.routeName,
+                params: {
+                  tag: customerTag,
+                  id: route.params.id,
+                }
+              }">
+                <i :class="`uil ${menu.icon}`"></i>
+                <span>{{ menu.name }}</span>
+              </RouterLink>
+            </li>
+          </ul>
+        </div>
+      </transition>
+    </div>
+  </nav>
 </template>
 <script setup>
 import { useAppStore } from "@Stores/app.js";
@@ -78,11 +67,11 @@ import { mainMenu, publicUrls, privateUrls } from '@Services/routes.js';
 
 
 const UserDropdownMenu = defineAsyncComponent(
-	()=>import("@Components/utils/UserMenuDropdownComponent.vue")
+  () => import("@Components/utils/UserMenuDropdownComponent.vue")
 )
 
 const LanguageMenuDropdown = defineAsyncComponent(
-	()=>import("@Components/utils/LanguageMenuDropdownComponent.vue")
+  () => import("@Components/utils/LanguageMenuDropdownComponent.vue")
 )
 const appStore = useAppStore();
 const baseurl = window.location.origin;
@@ -171,14 +160,14 @@ onMounted(() => {
       i18n.locale = item.bb
       locale.value = item.bb
     }
-  } 
+  }
 });
 
-onBeforeMount(async()=>{
+onBeforeMount(async () => {
   if (width.value > 1000) show_menu.value = true;
   else show_menu.value = false;
 
-  if(route.params.tag){
+  if (route.params.tag) {
     logo.value = await appStore.getCustomerLogo(route.params.tag)
     console.log(logo.value)
   }
@@ -186,7 +175,6 @@ onBeforeMount(async()=>{
 
 </script>
 <style scoped>
-
 .animate__animated.animate__zoomIn {
   --animate-duration: 0.5s;
 }
@@ -196,18 +184,18 @@ onBeforeMount(async()=>{
 }
 
 
-.menu-barre{
-    display: none;
+.menu-barre {
+  display: none;
 }
 
-.nav-dropdown button{
-	display: none
+.nav-dropdown button {
+  display: none
 }
 
-ul a{
-	display: flex;
-	gap: 0.5rem;
-}	
+ul a {
+  display: flex;
+  gap: 0.5rem;
+}
 
 nav {
   width: 100vw;
@@ -219,19 +207,19 @@ nav {
   color: var(--color-white);
 }
 
-nav > div{
-	justify-content: space-between;
+nav>div {
+  justify-content: space-between;
 }
 
 a {
   color: var(--color-white);
 }
 
-ul.menu{
-	display: flex;
-	justify-content: center;
-	gap: 1.2rem;
-	margin-top: -2rem; 
+ul.menu {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  margin-top: -2rem;
 }
 
 ul.menu li {
@@ -265,7 +253,7 @@ ul.menu .router-link-exact-active {
 }
 
 .nav__onScroll button {
-	color: grey;
+  color: grey;
 }
 
 .nav__onScroll h4,
@@ -291,26 +279,26 @@ ul.menu .router-link-exact-active {
 
 @media screen and (max-width:1000px) {
 
-  .menu-barre{
+  .menu-barre {
     display: block;
   }
 
-  .navbar-language{
-  	z-index: 1;
+  .navbar-language {
+    z-index: 1;
   }
 
-  .nav-dropdown{
-	display: flex;
-	flex-direction: row-reverse ;
+  .nav-dropdown {
+    display: flex;
+    flex-direction: row-reverse;
   }
 
-  .nav-dropdown button{
-	display: inline;
+  .nav-dropdown button {
+    display: inline;
   }
 
   ul.menu {
-  	flex-direction: column;
-  	margin-top: 1rem;
+    flex-direction: column;
+    margin-top: 1rem;
     color: var(--color-bgp) !important;
     background: white;
     padding: 1rem;
@@ -325,34 +313,34 @@ ul.menu .router-link-exact-active {
 
   ul.menu li a:hover,
   ul.menu .router-link-exact-active:hover {
-	color: var(--light-color-danger);
+    color: var(--light-color-danger);
   }
 
   ul.menu .router-link-exact-active {
-  	background-color: var(--color-danger);
-	border-bottom: 2px solid var(--color-danger);
-	color: white;
+    background-color: var(--color-danger);
+    border-bottom: 2px solid var(--color-danger);
+    color: white;
   }
 
   .nav__onScroll a.router-link-exact-active,
   .nav__onScroll a.router-link-exact-active span {
-	  color: white;
-   }
+    color: white;
+  }
 }
 
 @media screen and (max-width:765px) {
 
-  .nav-logo{
+  .nav-logo {
     margin-right: 0px;
   }
 
-  .nav-dropdown{
-		display: flex;
-		flex-direction: row ;
+  .nav-dropdown {
+    display: flex;
+    flex-direction: row;
   }
 
-  nav > div.nav__login{
-  	justify-content: center;
+  nav>div.nav__login {
+    justify-content: center;
   }
 }
 </style>
