@@ -192,9 +192,10 @@ onMounted(async()=>{
 .search__icon.router-link-exact-active{
      color: var(--color-danger);
 }
-.main__container{
+
+/*.main__container{
      margin-top: 20px;
-}
+}*/
 
 
 @media screen and (max-width: 600px) {

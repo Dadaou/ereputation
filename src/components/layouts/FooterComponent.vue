@@ -95,7 +95,7 @@ footer {
   background-color: var(--color-bgp);
   color: #fff;
   padding: 3rem;
-  margin-top: 60px;
+  margin-top: 105px;
 }
 
 .footer-logo {

@@ -1,5 +1,5 @@
 <template>
-    <div class="main__container" v-if="exist">
+    <div class="main__container" style="margin: -2rem auto;" v-if="exist">
         <div class="feedback__form">
             <div class="tablet_mobile__head">
                 <div class="staff__card" v-if="staff !== null">

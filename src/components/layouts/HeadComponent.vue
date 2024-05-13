@@ -51,7 +51,7 @@ const route = useRoute();
     color: var(--color-bg2);
     font-size: 18px;
     position: relative;
-    top: -7px;
+    top: -6px;
 }
 
 .head__title {
@@ -59,7 +59,7 @@ const route = useRoute();
     text-align: center;
 }
 .uil{
-    margin-top: -13px;
+    margin-top: -12px;
 }
 @media screen and (max-width:1024px) {
     /*.head__container{

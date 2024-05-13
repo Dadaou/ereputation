@@ -272,7 +272,7 @@ watch(template, () => {
 
 })
 </script>
-<style scoped>
+<style>
 /*.content img#logo{
   height: 50px;
   margin: auto;
@@ -328,6 +328,11 @@ watch(template, () => {
   border-radius: 5px;
   padding: 5px;
 }
+body{
+  padding:0px !important; 
+ 
+}
+
 
 @media only screen and (max-width: 768px) {
   .document_preview {

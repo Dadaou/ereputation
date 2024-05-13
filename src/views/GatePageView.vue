@@ -1,7 +1,7 @@
 <template>
     <div v-if="exist" class="feedback__form">
         <div class="feedback">
-            <div class="grid gap-0 grid-cols-4">
+            <div class="grid gap-0 grid-cols-5">
                 <GateMenuComponent v-for="item in categories" :item="item" :key="item.title" @select="openMenu(item)" />
             </div>
             <div class="gate__body">
@@ -49,8 +49,9 @@ const links = ref(null);
 
 const categories = ref([
     { value: "menus", label: "Menus", active: false, icon: "uim:th-large" },
-    { value: "follow", label: "Follow us", active: false, icon: "uil:info-circle" },
+    { value: "info", label: "Info", active: false, icon: "uil:info-circle" },
     { value: "reviews", label: "Reviews", active: true, icon: "uil:star" },
+    { value: "follow", label: "Follow us", active: false, icon: "uil:heart-alt" },
     { value: "offers", label: "Offers", active: false, icon: "bi:tags" }
 ]);
 
