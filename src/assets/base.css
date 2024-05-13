@@ -78,7 +78,8 @@ body {
 }
 
 .main__container {
-  margin-top: 5rem;
+  padding-bottom: 50px;
+  margin-top: 3rem;
   min-height: calc(100dvh - 280px);
 }
 
