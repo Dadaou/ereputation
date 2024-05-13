@@ -351,7 +351,7 @@ const submit = async () => {
 <style scoped>
 .feedback__form {
     width: 50%;
-    margin: 3rem auto;
+    margin: 1rem auto;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     border: 1px solid var(--light-color-bg2);
     border-radius: 5px;
