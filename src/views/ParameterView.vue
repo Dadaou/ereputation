@@ -24,7 +24,7 @@
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="competitors" name="competitors">
+            <el-tab-pane label="Competitors" name="competitors">
                 <el-tabs v-model="activeCompetitorsTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
                     <el-tab-pane label="Competitors" name="competitor_list">
                         <CompetitorListComponent @edit="(establishment) => handleEdit(establishment, 'competitor')"
