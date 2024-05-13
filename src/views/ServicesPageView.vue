@@ -23,13 +23,25 @@
             <SpinnerComponent />
           </div>
           <div v-else class="chart" :style="{
-            'maxWidth': '100%', // Set a maximum width
-            'overflowX': isMobile ? 'scroll' : 'auto'
+            // 'maxWidth': '100%', // Set a maximum width
+            // 'overflowX': isMobile ? 'scroll' : 'auto'
+            'display': 'flex',
+            'width': '100%',
           }">
-            <GroupedBarChart :plot-data="plotdata" x-key="date" :width="custom_width" :height="200"
-              :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Reviews"
-              :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
-              :y-tick-format="d => `${d}`" />
+            <div class="colSmall">
+              <GroupedBarChart :plot-data="plotdata" x-key="date" :width="custom_width" :height="200"
+                :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Reviews"
+                :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
+                :y-tick-format="d => `${d}`" />
+            </div>
+            <div class="colLarge">
+              <div class="boxLarge">
+                <GroupedBarChart :plot-data="plotdata" x-key="date" :width="custom_width" :height="200"
+                :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Reviews"
+                :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
+                :y-tick-format="d => `${d}`" />
+              </div>
+            </div>
           </div>
           <div>
             <BaseLegend class="legend" style="margin-bottom: 50px;" :LegendData="legendData" :alignment="'horizontal'">
@@ -357,9 +369,67 @@ watch([date, type], async () => {
   }
 }
 
-.chart::-webkit-scrollbar {
+/* .chart::-webkit-scrollbar {
   width: 6px;
   height: 10px !important;
   background-color: white;
+} */
+
+@media screen and (max-width:900px) {
+    .range__date {
+        flex-direction: column;
+    }
+}
+
+.colLarge {
+        overflow-x: scroll;   
+    }
+
+@media screen and (min-width:976px) {
+    .colSmall {
+        max-width:56px;
+        overflow: hidden;
+    }
+
+    .boxLarge {
+        max-width:800px;
+        margin-left:-60px;
+    }
+}
+
+@media screen and (min-width:769px) and (max-width: 975px) {
+    .colSmall {
+        max-width:56px;
+        overflow: hidden;
+    }
+
+    .boxLarge {
+        max-width:90%;
+        margin-left:-60px;
+    }
+}
+
+@media screen and (min-width:469px) and (max-width: 768px) {
+    .colSmall {
+        max-width:56px;
+        overflow: hidden;
+    }
+
+    .boxLarge {
+        max-width:700px;
+        margin-left:-60px;
+    }
+}
+
+@media screen and (max-width:468px) {
+    .colSmall {
+        max-width:56px;
+        overflow: hidden;
+    }
+
+    .boxLarge {
+        max-width:700px;
+        margin-left:-60px;
+    }
 }
 </style>

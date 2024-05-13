@@ -24,6 +24,7 @@ import moment from 'moment';
 import { ElTabs, ElTabPane } from 'element-plus';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
+import { useAppStore } from "@Stores/app.js";
 import { useWindowSize } from '@vueuse/core';
 import { useRoute } from 'vue-router';
 import 'element-plus/es/components/tabs/style/css';
@@ -120,6 +121,8 @@ provide('reloadCompetitor', reloadCompetitor)
 const competitorsData = ref([])
 provide('competitorsData', competitorsData)
 
+const appStore = useAppStore();
+
 const handleEdit = (value, type) => {
   if (type == 'staff') {
     activeStaffTab.value = 'staff_form';
@@ -170,12 +173,11 @@ const setStatus = async (id, status) => {
   });
 
   userStore.user.customer.establishments = userStore.user.customer.establishments.filter((x) => x.disable == false);
-  const response = await new Promise((resolve) => {
+  await new Promise((resolve) => {
     services.post_Record(`/customer/establishment/${id}/${status}`, {}, (response) => {
       resolve(response)
     }, false);
   });
-  console.log(response)
 }
 
 const transformData = (data) => {
@@ -388,6 +390,13 @@ const filterCategory = (data) => {
 }
 
 onBeforeMount(async () => {
+
+  appStore.setCurrentPage({
+    title1: "My",
+    title2: "QRCodes",
+    icon: "uil-qrcode-scan"
+  });
+
   if (width.value < 800) {
     position.value = 'top'
   } else {

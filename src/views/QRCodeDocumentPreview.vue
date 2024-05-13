@@ -31,11 +31,9 @@
         </form>
       </div>
     </div>
-    <div v-if="template">
-      <div id="preview" style="font-family: Arial, sans-serif;">
+    <div v-if="template" id="preview" style="font-family: Arial, sans-serif;">
 
-        <div id="core" v-html="core"></div>
-      </div>
+      <div id="core" v-html="core"></div>
     </div>
     <div v-else>
       Choose a template to preview and download.
@@ -217,7 +215,7 @@ const generateCore = async () => {
   const qrCanvas = await QRCode.toCanvas(canvas, qrData);
   const qrCodeDataURL = qrCanvas.toDataURL(); // Convert to base64
   tmp = tmp.replace('{{qrcodeimg}}', `<img src="${qrCodeDataURL}" style="width: 100%;">`)
-  tmp = tmp.replace('{{logo}}', '');
+  tmp = tmp.replace('{{logo}}', `<img src="data:image/png;base64,${template.value.logo_base64}" style="width: 100%;">`);
 
   // imageUrlToBase64(template.value.logo)
   //   .then(base64Image => {
@@ -274,11 +272,15 @@ watch(template, () => {
 
 })
 </script>
-<style scoped>
+<style>
 /*.content img#logo{
   height: 50px;
   margin: auto;
 }*/
+
+#preview {
+  margin-top: -24px;
+}
 
 
 #qrcodeContainer {
@@ -326,6 +328,11 @@ watch(template, () => {
   border-radius: 5px;
   padding: 5px;
 }
+body{
+  padding:0px !important; 
+ 
+}
+
 
 @media only screen and (max-width: 768px) {
   .document_preview {
@@ -386,19 +393,6 @@ watch(template, () => {
   /* Ajustez cette valeur selon vos préférences */
   margin: 0 auto;
   /* Centrer horizontalement */
-}
-
-/* Styles supplémentaires pour le formulaire */
-.my-form label {
-  display: block;
-  margin-bottom: 1rem;
-  /* Ajoutez une marge inférieure de 2rem */
-  font-size: 1rem;
-  /* Taille de police */
-  font-weight: 500;
-  /* Épaisseur de police */
-  color: #333;
-  /* Couleur du texte */
 }
 
 .my-form input,

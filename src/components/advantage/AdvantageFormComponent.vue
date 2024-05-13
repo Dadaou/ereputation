@@ -58,15 +58,14 @@
                               <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount <span></span></label>
                               <input type="number" id="amount" v-model="amount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
                           </div>
-                          <div>
+                          <!--<div>
                               <label for="code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Code
                                 <Tooltip text="Use your own discount code recognized by your system"/>
                                </label>
                               <input type="text" id="code" v-model="code" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                          </div>
-                        </div>
-                        <div>
+                          </div>-->
+                          <div>
                             <label for="metric" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Metric <span></span></label>
                             <el-select v-model="metric" placeholder="Select metric" size="large">
                                 <el-option
@@ -77,6 +76,26 @@
                                 />
                             </el-select>
                         </div>
+                        </div>
+                        <!--<div>
+                            <label for="metric" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Metric <span></span></label>
+                            <el-select v-model="metric" placeholder="Select metric" size="large">
+                                <el-option
+                                v-for="metric in metrics"
+                                :key="metric"
+                                :label="metric"
+                                :value="metric"
+                                />
+                            </el-select>
+                        </div>-->
+                        <div>
+                            <label for="code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Code
+                            <Tooltip text="Use your own discount code recognized by your system"/>
+                            </label>
+                            <input type="text" id="code" v-model="code" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                        </div>
+
                         
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2">

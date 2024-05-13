@@ -8,9 +8,21 @@
                 </div>
                  <div>
                     <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span>*</span></label>
-                    <el-select v-model="establishment" placeholder="Choose establishment" size="large" filterable>
+                    <!--<el-select v-model="establishment" placeholder="Choose establishment" size="large" filterable :multiple="type!== 'edit'">
+                        
+                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name" :value="item.competitor_tag"/>
+                    </el-select>-->
+
+                    
+                    <el-select v-if="type=='edit'" v-model="establishment" placeholder="Choose establishment" size="large" filterable >
                         <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name" :value="`/api/establishments/${item.id}`"/>
                     </el-select>
+
+                    <el-select v-else v-model="establishment" placeholder="Choose establishment" size="large" filterable multiple>
+                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name" :value="item.competitor_tag"/>
+
+                    </el-select>
+                
                 </div>
             </div>
             <div class="flex items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
@@ -36,7 +48,7 @@ import 'element-plus/es/components/select/style/css'
 const userStore = useUserStore();
 const type = ref('add');
 const category = ref('');
-const establishment = ref('');
+const establishment = ref([]);
 const showSpinner = ref(false);
 const activeCategorizationTab = inject('categorization_activeTab');
 const category_to_update = inject('category_to_update');
@@ -51,37 +63,53 @@ watch(category_to_update, ()=>{
 })
 
 const submit = async()=>{
-	let data = {
-	  "category": category.value,
-	  "establishment": establishment.value
-	}
+	let data = {}
+    if (type.value == 'edit') {
+        data = {
+            "category": category.value,
+            "establishment":establishment.value
+        };
+    } else{
+        data = {
+            "category": category.value,
+            "establishment": establishment.value.join(','),
+        };
+    }
+    console.log("establishmentttttttttt",data.establishment);
 
 	try{
 		if(data.category !== '' && data.establishment !== ''){
+            console.log("huuuuuuuuuuuuuuuuuuuuu");
             showSpinner.value = true;
 			if(type.value == 'add'){
                 const response = await new Promise((resolve) => {
-                  services.createRecord('categories', data, (response) => {
+                  services.createRecord('post/category/establishments', data, (response) => {
                     resolve(response);
                   });
                 });
 
-                 if(response.status == 201){
+                console.log("response ",response);
+
+                 if(response.status == 200){
                         ElMessage({
                             message: 'category added successfully',
                             type: 'success',
                         })
                         loadData(establishment.value, response.data)
+                        console.log("alorsssssssssssssssssss");
                         category.value = '';
-                        establishment.value = '';
+                        establishment.value = [];
                         showSpinner.value = false;
+                        console.log("finiiiiiiiiiiiiiiiiii");
                     }
             }else{
+                console.log("ATOOOOOOOOOOOOOOOOOOOOOOOOOO ARY OOOOOOOOOOO")
                 const response = await new Promise((resolve) => {
                   services.putRecord('categories', category_to_update.value['id'], data, (response) => {
                     resolve(response);
                   });
                 });
+                console.log("update", response.data);
                 if(response.status == 200){
                         ElMessage({
                             message: 'category updated successfully',
@@ -91,6 +119,8 @@ const submit = async()=>{
                         category.value = '';
                         establishment.value = '';
                         showSpinner.value = false;
+                        type.value='add';
+                       
                 }
             }
 
@@ -103,10 +133,14 @@ const submit = async()=>{
 	}
 };
 
-const loadData = (establishmentTag, category)=>{
-    let establishment = userStore.user.customer.establishments.find(i=>establishmentTag == `/api/establishments/${i.id}`);
-    let newCategory = {}
-    if(establishment){
+//const loadData = (establishmentTag, category)=>{
+    //console.log("herreee",establishmentTag );
+   //let establishment = userStore.user.customer.establishments.find(i=>establishmentTag == `/api/establishments/${i.id}`);
+   // let establishment = userStore.user.customer.establishments.find(i=>establishmentTag == i.competitor_tag);
+    //let newCategory = {}
+    //console.log("establishment loaddata", establishment);
+    /*if(establishment){
+        console.log("atoo dray hoeeee");
         const {id, name} = establishment;
         newCategory = {
             id: category.id,
@@ -117,8 +151,30 @@ const loadData = (establishmentTag, category)=>{
             establishment_name: name
         }
         categories.value.push(newCategory)
+    }*/
+//};
+
+
+
+const loadData = (establishmentTags, category) => {
+    for (const cat of category) {
+        let newCategory = {};
+        newCategory = {
+                id: cat.id,
+                category: cat.category,
+                category_uri: `/api/category/`+cat.id,
+                establishment: `/api/establishments/`+cat.establishment.establishment_id,
+                establishment_id: cat.establishment.establishment_id,
+                establishment_name: cat.establishment.name
+        }
+        categories.value.push(newCategory)
+       
     }
+      
+    
 };
+
+
 
 const updateData = (establishmentTag, category)=>{
 

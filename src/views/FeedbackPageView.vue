@@ -1,6 +1,5 @@
 <template>
-    <div class="main__container" v-if="exist">
-        <HeadComponent :page="page"></HeadComponent>
+    <div v-if="exist">
         <div class="feedback__form">
             <div class="tablet_mobile__head">
                 <div class="establishment__info">
@@ -186,6 +185,11 @@ let randomAdvantage = ref(null);
 const showSpinner = ref(false);
 
 onBeforeMount(async () => {
+    appStore.setCurrentPage({
+        title1: "Laissez",
+        title2: "vos commentaires",
+        icon: "uil-comment-alt"
+    });
     services.setToken(import.meta.env.VITE_APP_TOKEN);
     await services.get_Record(`establishment/${route.params.id}/media`, (response) => {
         if (response.status == 200) {
@@ -345,6 +349,22 @@ const submit = async () => {
 </script>
 
 <style scoped>
+.feedback__form {
+    width: 50%;
+    margin: 3rem auto;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    border: 1px solid var(--light-color-bg2);
+    border-radius: 5px;
+    padding: 15px;
+    padding-top: 2rem;
+}
+
+.gate__body {
+    border-radius: 0 0 5px 5px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    padding: 8px;
+}
+
 .email {
     display: flex;
     flex-direction: column;
@@ -373,16 +393,6 @@ const submit = async () => {
 
 .checkbox-container {
     margin: 15px;
-}
-
-.feedback__form {
-    width: 50%;
-    margin: 3rem auto;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    border: 1px solid var(--light-color-bg2);
-    border-radius: 5px;
-    padding: 15px;
-    padding-top: 2rem;
 }
 
 input {
