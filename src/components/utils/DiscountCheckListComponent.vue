@@ -4,15 +4,17 @@
       <li v-for="(discount, index) in discounts" :key="index" @click="selectDiscount(index, discount)"
         :class="[isSelected(index) ? 'selected gradient-green' : 'gradient-violet', 'text-white text-center py-10 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative']">
         <div>
-          <span id="discount_name">
+          <div id="discount_name" class="truncate-content">
             <span :class="['icon', isSelected(index) ? 'icon-selected' : '']">
               {{ isSelected(index) ? '✔' : discount.icon }}
             </span>
-            {{ discount.name }}
+            <span class="truncate-content">
+              {{ discount.name }}
+            </span>
             <span :class="['icon', isSelected(index) ? 'icon-selected' : '']">
               {{ isSelected(index) ? '✔' : discount.icon }}
             </span>
-          </span>
+          </div>
           <div id="discount_establishment">{{ discount.establishment_name }}</div>
           <div id="discount_category" v-if="discount.validity">{{ discount.category }} advantage to be used within
             {{ discount.validity }} {{ discount.validity > 1 ? 'days' : 'day' }} </div>
@@ -95,6 +97,12 @@ const isSelected = (index) => {
 </script>
 
 <style scoped>
+.truncate-content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .gradient-green {
   background: linear-gradient(to right, #48bb78 0%, #009688 100%);
 }
@@ -142,7 +150,7 @@ ul {
   border-radius: 5px;
   cursor: pointer;
   height: 4rem;
-  width: 250px;
+ /* width: 250px;*/
 }
 
 .discount-list .icon {
