@@ -78,7 +78,11 @@ const customerTag = inject('tag');
     padding: 50px 0px;
 }
 
-.main__container,
+/*.main__container,
+.left__side {
+    overflow-x: hidden;
+}*/
+
 .left__side {
     overflow-x: hidden;
 }

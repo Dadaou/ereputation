@@ -78,6 +78,7 @@ body {
 }
 
 .main__container {
+  padding-bottom: 50px;
   margin-top: 5rem;
   min-height: calc(100dvh - 280px);
 }
