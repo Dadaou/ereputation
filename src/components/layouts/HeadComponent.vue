@@ -55,11 +55,11 @@ const route = useRoute();
 }
 
 .head__title {
-    padding-top: 5px;
+    padding-top: 1px;
     text-align: center;
 }
 .uil{
-    margin-top: -9px;
+    margin-top: -12px;
 }
 @media screen and (max-width:1024px) {
     /*.head__container{
