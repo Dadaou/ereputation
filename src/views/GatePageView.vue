@@ -1,7 +1,7 @@
 <template>
     <div v-if="exist" class="feedback__form">
         <div class="feedback">
-            <div class="grid gap-0 grid-cols-4">
+            <div class="grid gap-0 grid-cols-5">
                 <GateMenuComponent v-for="item in categories" :item="item" :key="item.title" @select="openMenu(item)" />
             </div>
             <div class="gate__body">
@@ -9,6 +9,7 @@
                     <GateLinkComponent v-for="(item, index) in establishmentLink" :item="item" type="Establishment"
                         :key="index" />
                     <GateLinkComponent v-for="(item, index) in staffLinks" :item="item" type="Staff" :key="index" />
+                    <GateLinkComponent v-for="(item, index) in unitLinks" :item="item" type="Unit" :key="index" />
                     <GateLinkComponent v-for="(item, index) in platformLinks" :item="item" type="Platform"
                         :key="index" />
                 </div>
@@ -48,8 +49,9 @@ const links = ref(null);
 
 const categories = ref([
     { value: "menus", label: "Menus", active: false, icon: "uim:th-large" },
-    { value: "follow", label: "Follow us", active: false, icon: "uil:info-circle" },
+    { value: "info", label: "Infos", active: false, icon: "uil:info-circle" },
     { value: "reviews", label: "Reviews", active: true, icon: "uil:star" },
+    { value: "follow", label: "Follow us", active: false, icon: "uil:heart-alt" },
     { value: "offers", label: "Offers", active: false, icon: "bi:tags" }
 ]);
 
@@ -103,6 +105,19 @@ const staffLinks = computed(() => {
     }
     return []
 })
+
+const unitLinks = computed(() => {
+    if (links.value) {
+        return links.value['Unit'].map((v) => {
+            return {
+                label: v["label"],
+                href: `${baseurl}${v['href']}`
+            }
+        })
+    }
+    return []
+})
+
 
 const platformLinks = computed(() => {
     if (links.value) {

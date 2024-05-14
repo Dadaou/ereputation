@@ -16,8 +16,8 @@
                                 {{ $t("staffFeedback.interne") }}
                             </li>
                         </ul>
-                        <button class="btn mt-2  btn-primary staffs__btn" @click="showModal = true">{{
-                            $t("staffFeedback.staffs_list") }} <i class="uil uil-users-alt"></i></button>
+                      <!--  <button class="btn mt-2  btn-primary staffs__btn" @click="showModal = true">{{
+                            $t("staffFeedback.staffs_list") }} <i class="uil uil-users-alt"></i></button> -->
                     </div>
                 </div>
                 <div class="photo">
