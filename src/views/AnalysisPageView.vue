@@ -32,9 +32,9 @@
                                 <Bar :data="ratingChart" id="rating" :options="options" />
                             </div>
                         </div>
-                        <BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData"
+                        <!--<BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData"
                             :alignment="'vertical'">
-                        </BaseLegend>
+                        </BaseLegend>-->
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
 
@@ -45,9 +45,9 @@
                                 <Line :data="confidenceChart" id="confidence" :options="newOptions" />
                             </div>
                         </div>
-                        <BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="dataLegend"
+                        <!--<BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="dataLegend"
                             :alignment="'vertical'">
-                        </BaseLegend>
+                        </BaseLegend>-->
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
                 </el-tab-pane>
@@ -286,6 +286,9 @@
                 <span> {{ desc.text }} </span>
             </template>
         </el-tooltip>
+        <BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData"
+            :alignment="'vertical'">
+        </BaseLegend>
     </div>
 </template>
 <script setup>
