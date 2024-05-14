@@ -9,6 +9,7 @@
                     <GateLinkComponent v-for="(item, index) in establishmentLink" :item="item" type="Establishment"
                         :key="index" />
                     <GateLinkComponent v-for="(item, index) in staffLinks" :item="item" type="Staff" :key="index" />
+                    <GateLinkComponent v-for="(item, index) in unitLinks" :item="item" type="Unit" :key="index" />
                     <GateLinkComponent v-for="(item, index) in platformLinks" :item="item" type="Platform"
                         :key="index" />
                 </div>
@@ -104,6 +105,19 @@ const staffLinks = computed(() => {
     }
     return []
 })
+
+const unitLinks = computed(() => {
+    if (links.value) {
+        return links.value['Unit'].map((v) => {
+            return {
+                label: v["label"],
+                href: `${baseurl}${v['href']}`
+            }
+        })
+    }
+    return []
+})
+
 
 const platformLinks = computed(() => {
     if (links.value) {
