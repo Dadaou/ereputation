@@ -100,7 +100,7 @@ const closeDropdown = () => {
 }
 
 .initial{
-	color: rgb(255, 255, 255);
+	color: rgb(84, 144, 223);
 }
 
 .animate__animated.animate__fadeInRight {
