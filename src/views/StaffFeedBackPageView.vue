@@ -355,7 +355,7 @@ const submit = async () => {
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,
-        establishment: `/api/establishments/${establishment.value.id}`
+        establishments: [`/api/establishments/${establishment.value.id}`]
     }
 
     try {
@@ -367,7 +367,9 @@ const submit = async () => {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
 
                             if (contactResponse.status == 201) {
-                                services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] })
+                                services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res)=>{
+                                    console.log(res)
+                                })
                                 let coupons = {
                                     advantage: randomAdvantage.value.id,
                                     establishment: route.params.etab,

@@ -135,7 +135,6 @@
     <EstablishmentNotFound v-else />
 </template>
 
-
 <script setup>
 
 import { ref, onBeforeMount, defineAsyncComponent, onMounted, watch, inject } from 'vue';
@@ -288,11 +287,10 @@ const submit = async () => {
     };
 
     let contactData = {
-        // gender: gender.value,
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,
-        establishment: `/api/establishments/${establishment.value.id}`
+        establishments: [`/api/establishments/${establishment.value.id}`]
     };
 
 
@@ -301,12 +299,15 @@ const submit = async () => {
             showSpinner.value = true;
 
             await feedbackStore.createReview(review, async (response) => {
-
+                console.log(response)
                 if (response.status == 201) {
                     if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
+                            console.log(contactData)
                             if (contactResponse.status == 201) {
-                                services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] })
+                                services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res)=>{
+                                    console.log(res)
+                                })
                                 let coupons = {
                                     advantage: randomAdvantage.value.id,
                                     establishment: route.params.id,
@@ -318,7 +319,8 @@ const submit = async () => {
                                     app_url: app_url.value,
                                     template: 'workflow_en'
                                 }
-                                await services.createRecord('workflow', coupons, () => {
+                                await services.createRecord('workflow', coupons, (res) => {
+                                    console.log(res)
                                     resetForm()
                                 });
                             }

@@ -110,6 +110,11 @@ const page = computed(() => {
       title1: "",
       title2: "Partnership",
       icon: "uil-users-alt",
+    },
+    "QRCodes": {
+      title1: "",
+      title2: "My QRCode",
+      icon: "uil-qrcode-scan",
     }
   }
 

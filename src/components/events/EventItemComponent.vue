@@ -12,21 +12,21 @@
             </ul>
              <div class="pie__chart">
                             <div>
-                                <h3 class="mb-2">-90 days to event (<span class="rating">{{calculateAverageRating(eventRatingDataset(event.data, 'beforeData'))}}</span>)</h3>
+                                <h3 class="mb-2">-90 days to event (<span class="rating">{{eventNote(event.data,'beforeRating')}}</span>)</h3>
                                 <Pie 
                                     :data="eventRatingDataset(event.data, 'beforeData')" 
                                     :options="options" 
                                 />
                             </div>
                             <div>
-                                <h3 class="mb-2">During event (<span class="rating">{{calculateAverageRating(eventRatingDataset(event.data, 'duringData'))}}</span>)</h3>
+                                <h3 class="mb-2">During event (<span class="rating">{{eventNote(event.data,'duringRating')}}</span>)</h3>
                                 <Pie 
                                     :data="eventRatingDataset(event.data, 'duringData')" 
                                     :options="options" 
                                 />
                             </div>
                             <div>
-                                <h3 class="mb-2">Event +90 days  (<span class="rating">{{calculateAverageRating(eventRatingDataset(event.data, 'afterData'))}}</span>)</h3>
+                                <h3 class="mb-2">Event +90 days  (<span class="rating">{{eventNote(event.data,'afterRating')}}</span>)</h3>
                                 <Pie 
                                     :data="eventRatingDataset(event.data, 'afterData')" 
                                     :options="options" 
@@ -43,53 +43,13 @@
         </div>
     </div>
     <div v-if="events.length==0">No Event</div>
-      <ModalComponent :showModal="showChart" @close="showChart=false">
-                    <template #content>
-                        <div class="modal__header">
-                            <div class="modal__title">
-                                <h3 class="font-semibold text-gray-900 dark:text-white">
-                                    <i class="uil uil-chart-pie-alt"></i> Graphic Chart
-                                </h3>
-                            </div>
-                            <div class="modal__close">
-                                <i class="uil uil-times-circle"  @click="showChart = false"></i>
-                            </div>
-                        </div>
-
-                       
-                        <div class="pie__chart">
-                            <div>
-                                <h3 class="mb-2">-90 days to event (<span class="rating">{{calculateAverageRating(eventRatingDataset(eventComparison, 'beforeData'))}}</span>)</h3>
-                                <Pie 
-                                    :data="eventRatingDataset(eventComparison, 'beforeData')" 
-                                    :options="options" 
-                                />
-                            </div>
-                            <div>
-                                <h3 class="mb-2">During event (<span class="rating">{{calculateAverageRating(eventRatingDataset(eventComparison, 'duringData'))}}</span>)</h3>
-                                <Pie 
-                                    :data="eventRatingDataset(eventComparison, 'duringData')" 
-                                    :options="options" 
-                                />
-                            </div>
-                            <div>
-                                <h3 class="mb-2">Event +90 days  (<span class="rating">{{calculateAverageRating(eventRatingDataset(eventComparison, 'afterData'))}}</span>)</h3>
-                                <Pie 
-                                    :data="eventRatingDataset(eventComparison, 'afterData')" 
-                                    :options="options" 
-                                />
-                            </div>
-                        </div>
-                        <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
-                        </BaseLegend>
-                    </template>
-    </ModalComponent>
 </template>
 <script setup>
 import {ref, inject, onBeforeMount, computed, defineAsyncComponent} from 'vue';
 import moment from 'moment';
 import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js'
 import { Pie } from 'vue-chartjs';
+import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import services from '@Services/services.js';
 
@@ -97,6 +57,7 @@ ChartJS.register(ArcElement, Tooltip)
 
 const companiesStore = useCompanyStore();
 const props = defineProps(['events'])
+const route = useRoute();
 // const events = inject('events');
 
 const establishment = inject('establishment');
@@ -144,35 +105,9 @@ const eventRatingDataset = (periods, type)=> {
       };
 };
 
-const calculateAverageRating = (data) =>  {
-  const starRatings = [1, 2, 3, 4, 5];
-  const ratingsData = data.datasets[0].data;
-
-  // Calcul de la somme pondérée des évaluations
-  let weightedSum = 0;
-  for (let i = 0; i < starRatings.length; i++) {
-    weightedSum += starRatings[i] * ratingsData[i];
-  }
-
-  // Calcul de la moyenne
-  const totalRatings = ratingsData.reduce((total, count) => total + count, 0);
-  const averageRating = weightedSum / totalRatings;
-  if(isNaN(averageRating.toFixed(1))) return 0;
-  return averageRating.toFixed(1);
+const eventNote = (periods, type)=> {
+      return periods[type]
 };
-
-const loadDataFromServer = async(id)=>{
-    const response = await new Promise((resolve, reject) => {
-        services.get_Record(`/event/periods?id=${id}`, (response) => {
-            resolve(response)
-        });
-    });
-
-    if (response.status == 200) {
-       eventComparison.value = response.data['data']
-       showChart.value = true;
-    }
-}
 
 const hashString = (inputString) => {
       let hash = 0;
@@ -196,7 +131,7 @@ const generateColor = (text) =>{
 const showEventChart = (event)=>{
     selectedEvent.value = event;
     showChart.value = true;
-    loadDataFromServer(event.id)
+    loadDataFromServer(event.id, route.params.tag)
 };
 
 </script>
