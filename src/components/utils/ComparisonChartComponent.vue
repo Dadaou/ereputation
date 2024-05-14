@@ -385,6 +385,7 @@ const get_Width = () => {
 
 .colLarge {
         overflow-x: scroll;   
+        width:inherit;
     }
 
 @media screen and (min-width:976px) {
