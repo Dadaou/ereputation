@@ -806,6 +806,15 @@ onBeforeMount(async () => {
     z-index: 1;
 }
 
+.legend {
+    border: 1px solid var(--light-color-bg2);
+    border-radius: 10px;
+    height: 100px;
+    padding: 15px;
+    margin: 15px auto;
+    margin-top: 15px !important;
+}
+
 .legend,
 p {
     color: black;
