@@ -4,7 +4,7 @@
 	          data-dropdown-placement="bottom">
 	          <span class="sr-only">Open user menu</span>
 	          <div class="relative w-8 h-8 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500">
-	            <span class="font-medium initial">{{ user.initial }}</span>
+	            <span class="font-medium initial" id="userinitial">{{ user.initial }}</span>
 	          </div>
 	        </button>
 	        <!-- Dropdown menu -->
@@ -100,9 +100,11 @@ const closeDropdown = () => {
 }
 
 .initial{
-	color: rgb(84, 144, 223);
+	color: rgb(253, 254, 255);
 }
-
+.initial_scroll{
+  color:  var(--color-bgp);
+}
 .animate__animated.animate__fadeInRight {
   --animate-duration: 0.5s;
 }
