@@ -52,13 +52,14 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="Staff" name="staff">
-                    <StaffRanking/>
+                    <StaffRanking />
                 </el-tab-pane>
                 <el-tab-pane label="Events & weather" name="events_weather">
                     Coming soon ...
                 </el-tab-pane>
                 <el-tab-pane label="Sales" name="sales">
-                    <div v-if="salesAnalysis">
+                    <div
+                        v-if="salesAnalysis && salesAnalysis.avgCustomerCard != 0 && salesAnalysis.current.avgBookings != 0 && salesAnalysis.current.avgTTV != 0 && salesAnalysis.current.score != '0'">
                         <p class="analysis-sales-title" style="margin-top: 1rem;">
                             From <span class="analysis-date">{{ salesAnalysis.startDate }}</span> to <span
                                 class="analysis-date"> {{ salesAnalysis.endDate }}
@@ -74,7 +75,7 @@
                             <li>
                                 Your average customer cart is <span class="analysis-value"> {{
                                     salesAnalysis.avgCustomerCard
-                                }} {{
+                                    }} {{
                                         salesAnalysis.currency }}</span>
                             </li>
                             <li>
@@ -499,8 +500,8 @@ const options = {
     maintainAspectRatio: false,
     layout: {
         padding: {
-        top: 10
-      }
+            top: 10
+        }
     },
     scales: {
         y: {
@@ -791,6 +792,7 @@ onBeforeMount(async () => {
     top: 0;
     z-index: 2;
 }
+
 .loaded {
     display: flex;
     justify-content: center;
