@@ -169,7 +169,6 @@
 import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, watch, inject } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
-// import { useUserStore } from "@Stores/user.js";
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
 import { useFeedbackStore } from '@Stores/feedback.js';
@@ -227,8 +226,8 @@ onBeforeMount(async () => {
     services.setToken(import.meta.env.VITE_APP_TOKEN);
 
     appStore.setCurrentPage({
-        title1: "Laissez",
-        title2: "vos commentaires",
+        title1: t("feedback.title1"),
+        title2: t("feedback.title2"),
         icon: "uil-comment-alt"
     });
 
@@ -250,8 +249,6 @@ onBeforeMount(async () => {
         if (response.status == 404) exist.value = false
     });
 
-    // randomAdvantage.value = await feedbackStore.getRandomAdvantage(route.params.tag, route.params.etab)
-
     try {
         const responseEstablishment = await new Promise((resolve) => {
             services.get_Record(`/establishment/${companyId}/staffs`, (response) => {
@@ -271,22 +268,16 @@ onMounted(() => {
     if (window.FingerprintG2A && window.FingerprintG2A.default && typeof window.FingerprintG2A.default.main === 'function') {
         window.FingerprintG2A.default.main();
     }
-    /** Charger le titre par defaut */
-    page.value = {
-        title1: t("feedback.title1"),
-        title2: t("feedback.title2"),
-        icon: "uil-comment-alt",
-    };
     requiredinput.value = t('staffFeedback.input_required')
 })
 
 watch(() => {
-    /** Mettre le titre en watch */
-    page.value = {
+   
+    appStore.setCurrentPage({
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),
-        icon: "uil-comment-alt",
-    };
+        icon: "uil-comment-alt"
+    });
     requiredinput.value = t('staffFeedback.input_required')
 })
 
@@ -296,21 +287,6 @@ const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
 const dateVisit = ref(moment().format('YYYY-MM-DD'));
-// const gender = ref('');
-// const genders = [
-//     {
-//         value: 'M',
-//         label: 'Male',
-//     },
-//     {
-//         value: 'F',
-//         label: 'Female',
-//     },
-//     {
-//         value: 'O',
-//         label: 'Other',
-//     }
-// ]
 
 const resetForm = () => {
     firstname.value = '';
@@ -351,7 +327,6 @@ const submit = async () => {
     }
 
     let contactData = {
-        // gender: gender.value,
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,
@@ -373,7 +348,6 @@ const submit = async () => {
                                 let coupons = {
                                     advantage: randomAdvantage.value.id,
                                     establishment: route.params.etab,
-                                    // gender: gender.value,
                                     firstname: firstname.value,
                                     lastname: lastname.value,
                                     email: email.value,

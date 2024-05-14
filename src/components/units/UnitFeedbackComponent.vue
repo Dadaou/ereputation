@@ -226,9 +226,9 @@ const showSpinner = ref(false);
 
 onBeforeMount(async () => {
 
-    appStore.setCurrentPage({
-        title1: "Laissez",
-        title2: "vos commentaires",
+   appStore.setCurrentPage({
+        title1: t("feedback.title1"),
+        title2: t("feedback.title2"),
         icon: "uil-comment-alt"
     });
 
@@ -257,22 +257,17 @@ onMounted(() => {
     if (window.FingerprintG2A && window.FingerprintG2A.default && typeof window.FingerprintG2A.default.main === 'function') {
         window.FingerprintG2A.default.main();
     }
-    /** Charger le titre par defaut */
-    page.value = {
-        title1: t("feedback.title1"),
-        title2: t("feedback.title2"),
-        icon: "uil-comment-alt",
-    };
     requiredinput.value = t('staffFeedback.input_required')
 })
 
 watch(() => {
     /** Mettre le titre en watch */
-    page.value = {
+   appStore.setCurrentPage({
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),
-        icon: "uil-comment-alt",
-    };
+        icon: "uil-comment-alt"
+    });
+
     requiredinput.value = t('staffFeedback.input_required')
 })
 
@@ -282,21 +277,6 @@ const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
 const dateVisit = ref(moment().format('YYYY-MM-DD'));
-// const gender = ref('');
-// const genders = [
-//     {
-//         value: 'M',
-//         label: 'Male',
-//     },
-//     {
-//         value: 'F',
-//         label: 'Female',
-//     },
-//     {
-//         value: 'O',
-//         label: 'Other',
-//     }
-// ]
 
 const resetForm = () => {
     firstname.value = '';
@@ -337,7 +317,6 @@ const submit = async () => {
     }
 
     let contactData = {
-        // gender: gender.value,
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,

@@ -185,8 +185,8 @@ const showSpinner = ref(false);
 
 onBeforeMount(async () => {
     appStore.setCurrentPage({
-        title1: "Laissez",
-        title2: "vos commentaires",
+        title1: t("feedback.title1"),
+        title2: t("feedback.title2"),
         icon: "uil-comment-alt"
     });
     services.setToken(import.meta.env.VITE_APP_TOKEN);
@@ -208,21 +208,14 @@ onMounted(() => {
     if (window.FingerprintG2A && window.FingerprintG2A.default && typeof window.FingerprintG2A.default.main === 'function') {
         window.FingerprintG2A.default.main();
     }
-    /** Charger le titre par defaut */
-    page.value = {
-        title1: t("feedback.title1"),
-        title2: t("feedback.title2"),
-        icon: "uil-comment-alt",
-    };
 })
 
 watch(() => {
-    /** Mettre le titre en watch */
-    page.value = {
+    appStore.setCurrentPage({
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),
-        icon: "uil-comment-alt",
-    };
+        icon: "uil-comment-alt"
+    });
 })
 
 const disabledDate = (time) => {
@@ -231,25 +224,10 @@ const disabledDate = (time) => {
 const app_url = inject('app_url')
 const firstname = ref('');
 const lastname = ref('');
-// const gender = ref('');
 const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
 const dateVisit = ref(moment().format('YYYY-MM-DD'));
-// const genders = [
-//     {
-//         value: 'M',
-//         label: 'Male',
-//     },
-//     {
-//         value: 'F',
-//         label: 'Female',
-//     },
-//     {
-//         value: 'O',
-//         label: 'Other',
-//     }
-// ]
 
 const resetForm = () => {
     firstname.value = '';
