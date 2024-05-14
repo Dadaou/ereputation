@@ -135,10 +135,13 @@ watch(y, () => {
   if (y.value > 0) {
     nav__ref.value.classList.add('nav__onScroll');
     isScrolling.value = true;
-    console.log(nav__ref)
+    document.getElementById("userinitial").classList.remove('initial')
+    document.getElementById("userinitial").classList.add('initial_scroll')
   } else if (y.value <= 1) {
     nav__ref.value.classList.remove('nav__onScroll');
     isScrolling.value = false;
+    document.getElementById("userinitial").classList.add('initial')
+    document.getElementById("userinitial").classList.remove('initial_scroll')
   }
 });
 
