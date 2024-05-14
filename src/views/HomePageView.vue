@@ -193,10 +193,9 @@ onMounted(async()=>{
      color: var(--color-danger);
 }
 
-/*.main__container{
+.main__container {
      margin-top: 20px;
-}*/
-
+    }
 
 @media screen and (max-width: 600px) {
     .header_navigation {

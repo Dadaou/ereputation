@@ -305,11 +305,6 @@ let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
 let endDate = moment().format('YYYY-M-DD');
 
 watch([start_date, end_date], async () => {
-    // if (start_date.value !== '' && end_date.value !== '') {
-    //     date.value = [start_date.value, end_date.value]
-    // } else {
-    //     date.value = [moment().subtract(30, 'days').format('YYYY-M-DD'), moment().format('YYYY-M-DD')];
-    // }
     date.value = [start_date.value, end_date.value]
 
     if(activeName.value == 'events'){

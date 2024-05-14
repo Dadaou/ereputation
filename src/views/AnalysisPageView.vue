@@ -32,9 +32,9 @@
                                 <Bar :data="ratingChart" id="rating" :options="options" />
                             </div>
                         </div>
-                        <BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData"
+                        <!--<BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData"
                             :alignment="'vertical'">
-                        </BaseLegend>
+                        </BaseLegend>-->
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
 
@@ -45,9 +45,9 @@
                                 <Line :data="confidenceChart" id="confidence" :options="newOptions" />
                             </div>
                         </div>
-                        <BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="dataLegend"
+                        <!--<BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="dataLegend"
                             :alignment="'vertical'">
-                        </BaseLegend>
+                        </BaseLegend>-->
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
                 </el-tab-pane>
@@ -287,6 +287,9 @@
                 <span> {{ desc.text }} </span>
             </template>
         </el-tooltip>
+        <BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData"
+            :alignment="'vertical'">
+        </BaseLegend>
     </div>
 </template>
 <script setup>
@@ -801,6 +804,15 @@ onBeforeMount(async () => {
     background: rgba(0, 0, 0, 0.1);
     opacity: 0.9;
     z-index: 1;
+}
+
+.legend {
+    border: 1px solid var(--light-color-bg2);
+    border-radius: 10px;
+    height: 100px;
+    padding: 15px;
+    margin: 15px auto;
+    margin-top: 15px !important;
 }
 
 .legend,

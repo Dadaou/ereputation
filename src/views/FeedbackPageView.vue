@@ -135,7 +135,6 @@
     <EstablishmentNotFound v-else />
 </template>
 
-
 <script setup>
 
 import { ref, onBeforeMount, defineAsyncComponent, onMounted, watch, inject } from 'vue';
@@ -186,8 +185,8 @@ const showSpinner = ref(false);
 
 onBeforeMount(async () => {
     appStore.setCurrentPage({
-        title1: "Laissez",
-        title2: "vos commentaires",
+        title1: t("feedback.title1"),
+        title2: t("feedback.title2"),
         icon: "uil-comment-alt"
     });
     services.setToken(import.meta.env.VITE_APP_TOKEN);
@@ -209,21 +208,14 @@ onMounted(() => {
     if (window.FingerprintG2A && window.FingerprintG2A.default && typeof window.FingerprintG2A.default.main === 'function') {
         window.FingerprintG2A.default.main();
     }
-    /** Charger le titre par defaut */
-    page.value = {
-        title1: t("feedback.title1"),
-        title2: t("feedback.title2"),
-        icon: "uil-comment-alt",
-    };
 })
 
 watch(() => {
-    /** Mettre le titre en watch */
-    page.value = {
+    appStore.setCurrentPage({
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),
-        icon: "uil-comment-alt",
-    };
+        icon: "uil-comment-alt"
+    });
 })
 
 const disabledDate = (time) => {
@@ -232,25 +224,10 @@ const disabledDate = (time) => {
 const app_url = inject('app_url')
 const firstname = ref('');
 const lastname = ref('');
-// const gender = ref('');
 const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
 const dateVisit = ref(moment().format('YYYY-MM-DD'));
-// const genders = [
-//     {
-//         value: 'M',
-//         label: 'Male',
-//     },
-//     {
-//         value: 'F',
-//         label: 'Female',
-//     },
-//     {
-//         value: 'O',
-//         label: 'Other',
-//     }
-// ]
 
 const resetForm = () => {
     firstname.value = '';
@@ -288,11 +265,10 @@ const submit = async () => {
     };
 
     let contactData = {
-        // gender: gender.value,
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,
-        establishment: `/api/establishments/${establishment.value.id}`
+        establishments: [`/api/establishments/${establishment.value.id}`]
     };
 
 
@@ -301,12 +277,15 @@ const submit = async () => {
             showSpinner.value = true;
 
             await feedbackStore.createReview(review, async (response) => {
-
+                console.log(response)
                 if (response.status == 201) {
                     if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
+                            console.log(contactData)
                             if (contactResponse.status == 201) {
-                                services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] })
+                                services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res)=>{
+                                    console.log(res)
+                                })
                                 let coupons = {
                                     advantage: randomAdvantage.value.id,
                                     establishment: route.params.id,
@@ -318,7 +297,8 @@ const submit = async () => {
                                     app_url: app_url.value,
                                     template: 'workflow_en'
                                 }
-                                await services.createRecord('workflow', coupons, () => {
+                                await services.createRecord('workflow', coupons, (res) => {
+                                    console.log(res)
                                     resetForm()
                                 });
                             }
