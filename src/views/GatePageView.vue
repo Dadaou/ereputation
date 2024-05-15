@@ -70,7 +70,7 @@ const openMenu = (item) => {
 }
 
 const loadLinks = async (tag) => {
-    const uri = `/get/settings/category?tag=${tag}`
+    const uri = `/get/settings/section?tag=${tag}`
     const response = await new Promise((resolve) => {
         services.get_Record(uri, (response) => {
             resolve(response);
