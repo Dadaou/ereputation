@@ -26,7 +26,7 @@
                     <el-input v-model="search" size="small" placeholder="Type to search" />
                 </template>
                 <template #default="scope">
-                    <el-button size="small" @click="showModal = true, establishment = scope.row"><i class="uil uil-qrcode-scan"></i></el-button>
+                   <!--  <el-button size="small" @click="showModal = true, establishment = scope.row"><i class="uil uil-qrcode-scan"></i></el-button> -->
                      <el-popconfirm title="Are you sure to delete this?"
                     @confirm="handleDisable(scope.$index, scope.row)"
                     >

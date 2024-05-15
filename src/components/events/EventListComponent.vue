@@ -84,37 +84,7 @@ const getURI = (data, entity, dataset) => {
   return uris;
 }
 
-// let tableData = computed(()=>{
-//   let establishments = userStore.user.customer !=null ? companiesStore.establishments: [];
-//   let data = []; 
-//   establishments.forEach(establishment => {
-//     let events = establishment.events;
-//     events.forEach(event_item => {
-//       let event = {
-//         id: event_item.id,
-//         name: event_item.name,
-//         category: event_item.category,
-//         datefrom: event_item.datefrom,
-//         dateto: event_item.dateto,
-//         establishmentName : getEstablishmentsName(event_item.establishment),
-//         event_establishment: getURI(event_item.establishment, 'establishments', establishments),
-//         establishment: event_item.establishment,
-//         date: `${moment(event_item.datefrom).format('YYYY-MM-DD')} to ${moment(event_item.dateto).format('YYYY-MM-DD')}` 
-//       }
-//       const exists = data.some(item => item.id === event.id);
-//       if(exists == false) data.push(event);
-//     });
-//   });
-//   return data;
-// });
 const search = ref('')
-// const filterTableData = computed(() =>
-//   tableData.value.filter(
-//     (data) =>
-//       !search.value ||
-//       data.name.toLowerCase().includes(search.value.toLowerCase())
-//   )
-// )
 
 const filterTableData = computed(() =>{
   let filteredData = tableData.value;
