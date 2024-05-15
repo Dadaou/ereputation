@@ -81,13 +81,14 @@ const arrondirRatio = (ratio)=>{
         flex-basis: 50px;
         background-color: var(--color-danger);
         color: white;
-        font-size: 12px;
+        font-size: 11px;
         padding: 4px 3px;
         border-radius: 5px 5px 5px 0px;
         display: flex;
         justify-content: center;
         align-content: center;
         gap: 3px;
+        margin-left: 15px;
     }
 
     .global__rating.red{
