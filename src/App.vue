@@ -26,14 +26,14 @@ const userStore = useUserStore()
 const route = useRoute()
 
 const tag = computed(() => {
-  if(userStore.user && userStore.user.customer){
+  if (userStore.user && userStore.user.customer) {
     return userStore.user.customer.tag
   }
 
-  if(userStore.user && userStore.user.partner && route.params.tag){
+  if (userStore.user && userStore.user.partner && route.params.tag) {
     return route.params.tag
   }
-  
+
   return '';
 })
 provide('tag', tag);
@@ -43,26 +43,26 @@ const end_date = ref(appStore.end_date);
 provide('start_date', start_date);
 provide('end_date', end_date);
 
-const setdate = ()=>{
-    appStore.setDatesValue(start_date.value, end_date.value)
-    start_date.value = appStore.start_date;
-    end_date.value = appStore.end_date;
+const setdate = () => {
+  appStore.setDatesValue(start_date.value, end_date.value)
+  start_date.value = appStore.start_date;
+  end_date.value = appStore.end_date;
 }
 
 watch([start_date, end_date], () => {
-    setdate()
+  setdate()
 })
 
-const isNotNull = (value)=>{
-  return value !== '' && value !== null && value !== undefined; 
+const isNotNull = (value) => {
+  return value !== '' && value !== null && value !== undefined;
 }
-const language = computed(()=>{
-  if(userStore.user && userStore.user.customer){
-    return isNotNull(userStore.user.customer.language)?userStore.user.customer.language:'fr'
+const language = computed(() => {
+  if (userStore.user && userStore.user.customer) {
+    return isNotNull(userStore.user.customer.language) ? userStore.user.customer.language : 'fr'
   }
 
-  if(userStore.user && userStore.user.partner){
-    return isNotNull(userStore.user.partner.language)?userStore.user.partner.language:'fr'
+  if (userStore.user && userStore.user.partner) {
+    return isNotNull(userStore.user.partner.language) ? userStore.user.partner.language : 'fr'
   }
 
   return 'fr'
@@ -74,25 +74,25 @@ const appConfig = ref({
   logo: ''
 })
 
-const config = computed(()=>{
+const config = computed(() => {
   return appConfig.value
 })
 
 useHead({
-  title: ()=> config.value.title,
-  link: ()=> [
-      { rel: 'icon', type: 'image/png', href: config.value.logo, class: 'link-rel' },
-   ],
+  title: () => config.value.title,
+  link: () => [
+    { rel: 'icon', type: 'image/png', href: config.value.logo, class: 'link-rel' },
+  ],
 })
 
 const initTheme = () => {
-  appStore.setCssVariable('--color-bgp', appStore.account.back_color);
-  appStore.setCssVariable('--color-danger', appStore.account.title_color);
-  appStore.setCssVariable('--color-bg2', appStore.account.font_color);
-  appStore.setCssVariable('--color-primary', appStore.account.back_color);
-  appStore.setCssVariable('--light-color-bg2', `color-mix(in srgb, ${appStore.account.back_color} 70%, white)`);
-  appStore.setCssVariable('--light-color-danger', `color-mix(in srgb, ${appStore.account.title_color} 25%, white)`);
-  appStore.setCssVariable('--el-color-primary', appStore.account.back_color);
+  appStore.setCssVariable('--color-bgp', userStore.customer.back_color || appStore.account.back_color);
+  appStore.setCssVariable('--color-danger', userStore.customer.title_color || appStore.account.title_color);
+  appStore.setCssVariable('--color-bg2', userStore.customer.font_color || appStore.account.font_color);
+  appStore.setCssVariable('--color-primary', userStore.customer.back_color || appStore.account.back_color);
+  appStore.setCssVariable('--light-color-bg2', `color-mix(in srgb, ${userStore.customer.back_color || appStore.account.back_color} 70%, white)`);
+  appStore.setCssVariable('--light-color-danger', `color-mix(in srgb, ${userStore.customer.title_color || appStore.account.title_color} 25%, white)`);
+  appStore.setCssVariable('--el-color-primary', userStore.customer.back_color || appStore.account.back_color);
 }
 
 onBeforeMount(async () => {

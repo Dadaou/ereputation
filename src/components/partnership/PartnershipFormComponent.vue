@@ -29,7 +29,7 @@
                     <el-select v-model="partnership" placeholder="Choose a partnership" size="large" filterable remote
                         reserve-keyword remote-show-suffix :loading="loading2" :remote-method="searchPartnership">
                         <el-option v-for="item in partnershipOptions" :key="item.id" :label="item.name"
-                            :value="item.tag">
+                            :value="item.id">
                             <span><strong>{{ item.name }}</strong>, </span>
                             <span style="color: var(--el-text-color-secondary);font-size: 13px;"> {{
                                 item.address1 }}, {{ item.zipcode }}, {{
@@ -221,7 +221,7 @@ const submit = async () => {
         "state": "pending",
         "enable": false,
         "advantage": advantage.value,
-        "partnership": partnership.value,
+        "partnership": "/api/establishments/" + partnership.value,
         "limite": limit.value,
         "expiredAt": expiredAt.value
     }

@@ -1,6 +1,6 @@
 <template>
 	<div class="color-picker">
-		 <el-color-picker v-model="color_value" show-alpha :predefine="colors"/>
+		<el-color-picker v-model="color_value" show-alpha :predefine="colors" />
 	</div>
 </template>
 <script setup>
@@ -16,59 +16,65 @@ const props = defineProps({
 		required: false,
 		default: null
 	},
-	predefineColors:{
+	predefineColors: {
 		type: Array,
 		required: false,
 		default: [
-		  '#ff4500',
-		  '#ff8c00',
-		  '#ffd700'
+			'#ff4500',
+			'#ff8c00',
+			'#ffd700'
 		]
 	}
 });
 
-const colors = computed(()=>{
+const colors = computed(() => {
 	return props.predefineColors;
 });
 
-const color = computed(()=>{
+const color = computed(() => {
 	return props.value
 })
 const color_value = ref(null)
 
-watch(color, ()=>{
+watch(color, () => {
 	color_value.value = color.value
 	emits('sync', color.value)
 })
 
 function rgbaStringToHex(rgbaString) {
 
-  if (!rgbaString.startsWith('rgba')) {
-    return rgbaString
-  }
+	if (!rgbaString.startsWith('rgba')) {
+		return rgbaString
+	}
 
-  const rgbaRegex = /rgba?\((\d+), (\d+), (\d+),? (\d*(?:\.\d+)?)?\)/;
-  const match = rgbaString.match(rgbaRegex);
-  
-  if (!match) {
-    throw new Error('Invalid RGBA string format');
-  }
-  
-  const [, r, g, b, a] = match.map(parseFloat);
+	const rgbaRegex = /rgba?\((\d+), (\d+), (\d+),? (\d*(?:\.\d+)?)?\)/;
+	const match = rgbaString.match(rgbaRegex);
 
-  const toHex = (value) => {
-    const hex = Math.round(value).toString(16);
-    return hex.length === 1 ? '0' + hex : hex;
-  };
+	if (!match) {
+		throw new Error('Invalid RGBA string format');
+	}
 
-  const hexR = toHex(r);
-  const hexG = toHex(g);
-  const hexB = toHex(b);
-  const hexA = a !== undefined ? Math.round(a * 255).toString(16) : 'FF';
-  return `#${hexR}${hexG}${hexB}${hexA}`;
+	const [, r, g, b, a] = match.map(parseFloat);
+
+	const toHex = (value) => {
+		const hex = Math.round(value).toString(16);
+		return hex.length === 1 ? '0' + hex : hex;
+	};
+
+	const hexR = toHex(r);
+	const hexG = toHex(g);
+	const hexB = toHex(b);
+	const hexA = a !== undefined ? Math.round(a * 255).toString(16) : 'FF';
+	return `#${hexR}${hexG}${hexB}${hexA}`;
 }
 
-watch(color_value, ()=>{
+watch(color_value, () => {
 	emits('sync', rgbaStringToHex(color_value.value));
 });
 </script>
+<style>
+.color-picker .el-color-picker,
+.color-picker .el-color-picker__trigger {
+	width: 100% !important;
+}
+</style>
