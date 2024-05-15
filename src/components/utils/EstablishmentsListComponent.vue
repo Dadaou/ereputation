@@ -209,7 +209,7 @@ const goToCompany = (establishment) => {
 .list__actions {
     display: flex;
     justify-content: flex-end;
-    margin-right: 15px;
+    margin-right: 10px;
 }
 
 .list__actions button {

@@ -74,6 +74,7 @@ const arrondirRatio = (ratio)=>{
         color: rgb(150, 150, 150);
         font-weight: 500 !important;
         font-size: 11px;
+        display: block;
     }
 
     .global__rating{
@@ -88,7 +89,7 @@ const arrondirRatio = (ratio)=>{
         justify-content: center;
         align-content: center;
         gap: 3px;
-        margin-left: 15px;
+        margin-left: 30px;
     }
 
     .global__rating.red{
