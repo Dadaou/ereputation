@@ -15,7 +15,7 @@
                         <li class="period"><span class="label">Period: </span> <span>{{ moment(staff.datefrom).format('DD MMMM YYYY') }}</span> <span v-if="staff.dateto != null">{{ `to ${moment(staff.dateto).format('DD MMMM YYYY')}` }}</span></li>
                     </ul>
                 </div>
-                <div>
+                <!-- <div>
                     <div id="qrcode__container mt-5" ref="qrcode">
                              <el-tooltip content="Click me to download The staff QRCode" placement="top">
                                  <vue-qrious
@@ -26,7 +26,7 @@
                                     />
                              </el-tooltip>
                     </div>   
-                </div>
+                </div> -->
             </div>
              <div class="pie__chart">
                             <div>
