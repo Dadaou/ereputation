@@ -16,6 +16,9 @@
                 <div v-if="category == 'follow'" class="list__container">
                     <GateLinkComponent v-for="(item, index) in followLinks" :item="item" type="Social" :key="index" />
                 </div>
+                <div v-if="category == 'offers'" class="list__container">
+                    <GateLinkComponent v-for="(item, index) in offerLinks" :item="item" type="Offer" :key="index" />
+                </div>
             </div>
         </div>
     </div>
@@ -129,6 +132,13 @@ const platformLinks = computed(() => {
 const followLinks = computed(() => {
     if (links.value) {
         return links.value['Social']
+    }
+    return []
+})
+
+const offerLinks = computed(() => {
+    if (links.value) {
+        return links.value['Offers']
     }
     return []
 })
