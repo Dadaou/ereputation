@@ -16,6 +16,7 @@ import { useUserStore } from "@Stores/user.js"
 import { RouterView, useRoute } from 'vue-router';
 import services from '@Services/services.js';
 import { useHead } from '@unhead/vue'
+import { refreshTheme } from '@Services/theme.js'
 
 const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
@@ -86,13 +87,11 @@ useHead({
 })
 
 const initTheme = () => {
-  appStore.setCssVariable('--color-bgp', (userStore.customer && userStore.customer.back_color) || appStore.account.back_color);
-  appStore.setCssVariable('--color-danger', (userStore.customer && userStore.customer.title_color) || appStore.account.title_color);
-  appStore.setCssVariable('--color-bg2', (userStore.customer && userStore.customer.font_color) || appStore.account.font_color);
-  appStore.setCssVariable('--color-primary', (userStore.customer && userStore.customer.back_color) || appStore.account.back_color);
-  appStore.setCssVariable('--light-color-bg2', `color-mix(in srgb, ${(userStore.customer && userStore.customer.back_color) || appStore.account.back_color} 70%, white)`);
-  appStore.setCssVariable('--light-color-danger', `color-mix(in srgb, ${(userStore.customer && userStore.customer.title_color) || appStore.account.title_color} 25%, white)`);
-  appStore.setCssVariable('--el-color-primary', (userStore.customer && userStore.customer.back_color) || appStore.account.back_color);
+  refreshTheme(
+    (userStore.customer && userStore.customer.back_color) || appStore.account.back_color,
+    (userStore.customer && userStore.customer.font_color) || appStore.account.font_color,
+    (userStore.customer && userStore.customer.title_color) || appStore.account.title_color
+  );
 }
 
 onBeforeMount(async () => {
