@@ -10,7 +10,14 @@
                 <div class="grid gap-6 mb-6 md:grid-cols-2">
                     <div>
                             <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span>*</span></label>
-                            <el-select v-model="establishment" placeholder="Choose establishment" size="large">
+                            <el-select 
+                            v-model="establishment" 
+                            placeholder="Choose establishment" 
+                            size="large" 
+                            :disabled="IsValueOkay(competitor)"
+                            clearable
+                            filterable
+                            >
                                 <el-option
                                 v-for="item in establishments"
                                 :key="item.tag"
@@ -18,7 +25,24 @@
                                 :value="item.uri"
                                 />
                             </el-select>
-                        </div>
+                    </div>
+                  <!--   <div>
+                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Competitors <span>*</span></label>
+                            <el-select v-model="competitor" 
+                            placeholder="Choose competitor" 
+                            size="large" 
+                            :disabled="IsValueOkay(establishment)"
+                            clearable
+                            filterable
+                            >
+                                <el-option
+                                v-for="item in competitors"
+                                :key="item.tag"
+                                :label="item.name"
+                                :value="item.uri"
+                                />
+                            </el-select>
+                    </div> -->
                     <div>
                         <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
                             <span>*</span></label>
@@ -34,6 +58,14 @@
                             <el-option v-for="item in filteredProviders" :key="item.uri" :label="item.name"
                                 :value="`${item.uri}${item.url}`" />
                         </el-select>
+                    </div>
+                     <div>
+                        <label for="caption" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Caption <span>*</span></label>
+                        <input type="text" id="section" v-model="caption" :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                    </div>
+                    <div>
+                        <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Section <span>*</span></label>
+                        <input type="text" id="section" v-model="section" :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
                     </div>
                 </div>
                 <div> 
@@ -94,6 +126,7 @@ const ModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/ModalComponent.vue')
 )
 
+const emit = defineEmits(['reload']);
 const userStore = useUserStore();
 const { width } = useWindowSize();
 const modalWidth = computed(() => {
@@ -112,16 +145,22 @@ const showSpinner = ref(false)
 const search = ref('')
 const searchLink = ref('')
 const link = ref('')
+const section = ref('')
+const caption = ref('')
 const isValidLink = ref(true)
-const establishment = ref('')
-const links = ref([])
+const establishment = ref(null)
+// const links = ref([])
 const allLinks = ref([])
 const isLoading = ref(false)
 const title = computed(()=>{
     return showLinkModal.value?'Links list': 'Links configuration'
 })
 const currentEstablishment = ref(null)
+const competitors = inject('competitorsData'); 
+const competitor = ref(null)
+const links = inject('links');
 
+const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 const isHashtag = computed(()=>{
     return category.value == 'Hashtag';
 })
@@ -274,6 +313,10 @@ const transformLinksData = (inputData, tag)=> {
     });
 }
 
+const LoadLinks = (link)=>{
+    links.value.push(link);
+}
+
 const loadLinksByEstablishment = async (etab) =>{
      showLinkModal.value = !showLinkModal.value
      isLoading.value = true
@@ -286,9 +329,7 @@ const loadLinksByEstablishment = async (etab) =>{
             });
         });
         if (response.status == 200) {
-           console.log(response.data)
            allLinks.value = transformLinksData(response.data.data, etab.tag)
-           console.log(allLinks.value)
            isLoading.value = false
         }
     } catch (error) {
@@ -309,12 +350,15 @@ const submit = async () => {
 
     const data = {
         value1: isHashtag.value?getHashtagValue(link.value):getValueUrl(link.value, urlObject.url),
-        establishment: establishment.value,
         provider: urlObject.uri,
-        enable: true
+        enable: true,
+        section: section.value,
+        caption: caption.value,
     }
 
-    console.log(data)
+    if(IsValueOkay(establishment.value)) data.establishment = establishment.value;
+    if(IsValueOkay(competitor.value)) data.establishment = competitor.value;
+
     if(isEdit.value){
         try {
             const response = await new Promise((resolve) => {
@@ -328,9 +372,9 @@ const submit = async () => {
                     message: `link updated successfully`,
                     type: 'success',
                 })
-                loadLinksByEstablishment(establishment.value)
                 showSpinner.value = false;
                 isEdit.value = false
+                emit('reload')
                 resetValue()
             }
         } catch (error) {
@@ -343,6 +387,7 @@ const submit = async () => {
                         resolve(response);
                     });
             });
+            console.log(response)
             if (response.status == 201) {
                 ElMessage({
                     message: `link added successfully`,
@@ -350,6 +395,7 @@ const submit = async () => {
                 })
                 showSpinner.value = false;
                 resetValue()
+                emit('reload')
             }
         } catch (error) {
             console.log(error)
@@ -362,6 +408,8 @@ const resetValue = () => {
     provider.value = null
     isValidLink.value = true
     link.value = ''
+    section.value = ''
+    caption.value = ''
     showModal.value = false
 }
 
@@ -375,13 +423,7 @@ const getURIbyName = (name)=>{
 }
 
 const handleEdit = async(data) => {
-    // showModal.value = true
     category.value = data.category
-
-    // id.value = data.id
-    // isEdit.value = true
-    // provider.value = getURIbyName(data.name)
-    console.log(data)
     establishment.value = data.establishment;
     setTimeout(function() {
       category.value = data.category;
