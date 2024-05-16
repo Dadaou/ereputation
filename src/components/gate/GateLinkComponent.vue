@@ -9,7 +9,7 @@
 <script setup>
 import { Icon } from '@iconify/vue';
 import { computed } from 'vue';
-import logos from '@/assets/images/logo/logos';
+
 
 const props = defineProps({
     item: {
