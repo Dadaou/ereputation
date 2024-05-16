@@ -46,7 +46,7 @@
                     <div>
                         <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
                             <span>*</span></label>
-                        <el-select id="category" v-model="category" placeholder="Choose category" size="large">
+                        <el-select id="category" v-model="category" placeholder="Choose category" size="large" clearable>
                             <el-option v-for="item in categories" :key="item" :label="item" :value="item" />
                         </el-select>
                     </div>
@@ -54,18 +54,20 @@
                         <label for="providers"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Providers
                             <span>*</span></label>
-                        <el-select id="providers" v-model="provider" placeholder="Choose provider" size="large" filterable>
+                        <el-select id="providers" v-model="provider" placeholder="Choose provider" size="large" filterable clearable>
                             <el-option v-for="item in filteredProviders" :key="item.uri" :label="item.name"
                                 :value="`${item.uri}${item.url}`" />
                         </el-select>
                     </div>
                      <div>
                         <label for="caption" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Caption <span>*</span></label>
-                        <input type="text" id="section" v-model="caption" :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                        <input type="text" id="caption" v-model="caption" :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
                     </div>
                     <div>
                         <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Section <span>*</span></label>
-                        <input type="text" id="section" v-model="section" :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                        <el-select id="section" v-model="section" placeholder="Choose section" size="large" clearable>
+                            <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
+                        </el-select>
                     </div>
                 </div>
                 <div> 
@@ -140,12 +142,13 @@ const showLinkModal = ref(false);
 const providers = ref([]);
 const provider = ref(null)
 const categories = ref(['Hashtag','Platform', 'Social'])
-const category = ref('Platform')
+const category = ref('')
+const sections = ref(['MENUS','INFOS','FOLLOW US','REVIEWS','OFFERS'])
+const section = ref ('')
 const showSpinner = ref(false)
 const search = ref('')
 const searchLink = ref('')
 const link = ref('')
-const section = ref('')
 const caption = ref('')
 const isValidLink = ref(true)
 const establishment = ref(null)
@@ -429,6 +432,8 @@ const handleEdit = async(data) => {
       category.value = data.category;
        link.value = data.link;
        provider.value = data.provider;
+       section.value = data.section;
+       caption.value = data.caption;
        id.value = data.id;
     }, 250);
    
