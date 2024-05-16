@@ -89,6 +89,8 @@ const date_to = ref(null);
 
 
 
+
+
 const listAdvantage = ref([]);
 
 watch(isCopied, () => {
@@ -158,6 +160,7 @@ onBeforeMount(async () => {
             code.value = advantages.value.code;
             dateExperied.value = advantages.value.expired_at;
             date_to.value = advantages.value.adv_date_to;
+            localStorage.setItem('nameAdvantage', advantages.value.adv_name);
             console.log("date_expiration" , dateExperied.value);
             console.log("date_Jour" ,dateJour);
             if( dateJour != null || date_to.value != null)

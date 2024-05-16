@@ -36,7 +36,7 @@ export const mainMenu = [
 	},
 ]
 
-export const publicUrls = ['FeedBack', 'UnitFeedBack', 'StaffFeedBack', 'SuccessFeedback', 'EnableAdvContact', 'QRCodeAdvContact','QRCodeAdvContactExpired','Gate', undefined]
+export const publicUrls = ['FeedBack', 'UnitFeedBack', 'StaffFeedBack', 'SuccessFeedback', 'EnableAdvContact', 'QRCodeAdvContact','QRCodeAdvContactExpired','DiscountAuthentication','Gate', undefined]
 
 export const privateUrls = [
     'Establishment',

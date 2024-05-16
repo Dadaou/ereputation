@@ -58,6 +58,7 @@
         "title":"Exclusive Offer Just for You!",
         "validation":"Valid Till:",
         "utilisation": "To be used between",
-        "et":"and"
+        "et":"and",
+        "validationcoupon":"Please enter the password to validate the coupon"
     }
 }
