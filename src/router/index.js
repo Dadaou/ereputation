@@ -105,9 +105,13 @@ const router = createRouter({
           component: SubscriptionPageView
         },
         {
-          path: '/:catchAll(.*)',
+          path: '/404',
           name: 'NotFound',
           component: () => import('@Views/NotFoundPageView.vue')
+        },
+        {
+          path: '/:catchAll(.*)',
+          redirect:'/404'
         },
         {
           path: '/customer/:tag/establishment/notFound',
@@ -258,9 +262,16 @@ const router = createRouter({
           component: () => import('@Views/EnableAdvantagePageView.vue')
         },
         {
-          path: '/public/advantagecontact/:discountTag',
+          //path: /public/advantagecontact/:discountTag',
+          path: '/public/:discountTag/advantagecontact',
           name: 'QRCodeAdvContact',
           component: () => import('@Views/QRCodeAdvantagePageView.vue')
+        },
+        {
+          //path: /public/advantagecontact/:discountTag',
+          path: '/public/:discountTag/advantagecontact',
+          name: 'QRCodeAdvContactExpired',
+          component: () => import('@Views/QRCodeAdvantagePageViewExpired.vue')
         }
       ]
     },
