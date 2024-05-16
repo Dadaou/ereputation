@@ -153,6 +153,12 @@ const goToCompany = (establishment) => {
     object-fit: cover;
 }
 
+.society__location span {
+    height: 35px;
+    width: 150px;
+}
+
+
 .list__main__content {
     width: 100%;
     transition: var(--transition);
@@ -196,12 +202,14 @@ const goToCompany = (establishment) => {
 }
 
 .rating__content {
-    align-self: center;
+   padding-top: 15px;
+   margin-right: 10px;
 }
 
 .list__actions {
     display: flex;
     justify-content: flex-end;
+    margin-right: 10px;
 }
 
 .list__actions button {

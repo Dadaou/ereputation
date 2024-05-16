@@ -77,7 +77,7 @@ function generateOffer(title, category, name, discountPercentage, validityDays =
 }
 
 const offers = [
-  generateOffer("Discount 20% off on bill next month",null, "20% off on bill", 20, null, null, null, null, null, null),
+  generateOffer("Discount 20% off on bill in the coming month",null, "20% off on bill", 20, null, null, null, null, null, null),
   generateOffer("Discount 5$ off on ticket within the next 7 days", null, "5$ off on ticket",7, 7, null, null, null, null, null),
   generateOffer("Free coffee", null, "Free coffee"),
   generateOffer("Free t-shirt with every order placed before 31/12/2024", "gift","Free t-shirt", null, null, "2024-12-31", null, null, null, null),

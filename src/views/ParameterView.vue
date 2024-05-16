@@ -17,10 +17,11 @@
             <el-tab-pane label="Links" name="links">
                 <el-tabs v-model="activeLinkTab" class="demo-tabs">
                     <el-tab-pane label="Links" name="link_list">
-                        <LinksConfComponent @edit="(link) => handleEdit(link, 'link')"/>
+                       <!--  <LinksConfComponent @edit="(link) => handleEdit(link, 'link')"/> -->
+                       <LinksListComponent @reload="reloadLink()" @edit="(link) => handleEdit(link, 'link')"/>
                     </el-tab-pane>
                     <el-tab-pane label="Add a new Links" name="link_form">
-                        <LinksFormComponent />
+                        <LinksFormComponent @reload="reloadLink()"/>
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
@@ -71,7 +72,6 @@
                         <CategorizationListComponent @edit="(category) => handleEdit(category, 'category')" />
                     </el-tab-pane>
                     <el-tab-pane label="Add a new category" name="categorization_form">
-
                         <CategorizationFormComponent />
                     </el-tab-pane>
                 </el-tabs>
@@ -154,6 +154,10 @@ const LinksConfComponent = defineAsyncComponent(() =>
     import("@Components/links/LinksConfComponent.vue")
 )
 
+const LinksListComponent = defineAsyncComponent(() =>
+    import("@Components/links/LinksListComponent.vue")
+)
+
 const LinksFormComponent = defineAsyncComponent(() =>
     import("@Components/links/LinksFormComponent.vue")
 )
@@ -229,6 +233,8 @@ const allAdvantages = ref([])
 const allCategories = ref([])
 const allUnits = ref([])
 const allPartnerships = ref({})
+const allLinks = ref([])
+const providers = ref([])
 
 provide('staffs', allStaffs)
 provide('events', allEvents)
@@ -236,6 +242,8 @@ provide('advantages', allAdvantages)
 provide('categories', allCategories)
 provide('units', allUnits)
 provide('partnerships', allPartnerships)
+provide('links', allLinks)
+provide('providers', providers)
 
 const activeEventTab = ref('event_list')
 provide('event_activeTab', activeEventTab)
@@ -541,6 +549,54 @@ const loadUnits = async () => {
     }
 }
 
+const reloadLink = async()=>{
+     try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`setting/list?tag=${route.params.tag}&categ=all`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            allLinks.value = response.data
+            console.log(allLinks.value)
+            
+        } else {
+            console.error('Error fetching links:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const loadProviders = async()=>{
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`providers`, (response) => {
+                resolve(response);
+            });
+        });
+
+        if (response.status === 200) {
+            const data = response.data['hydra:member'];
+
+            data.forEach(item => {
+                providers.value.push({
+                    id: item.id,
+                    category: item.category,
+                    name: item.name,
+                    url: item.url,
+                    uri: `/api/providers/${item.id}`
+                })
+            })
+
+        } else {
+            console.error('Error fetching advantages:', response);
+        }
+    } catch (error) {
+        console.error('Error in onBeforeMount:', error);
+    }
+}
+
 const filterCategory = (data) => {
     const establishments = userStore.user.customer.establishments;
     let categories = []
@@ -573,7 +629,8 @@ onBeforeMount(async () => {
     await reloadEventsList();
     await loadCategories();
     await loadUnits();
-    // await reloadPartnershipsData();
+    await loadProviders();
+    await reloadLink();
 });
 
 </script>

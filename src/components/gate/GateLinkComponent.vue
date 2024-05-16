@@ -1,8 +1,8 @@
 <template>
     <a class="gate__link" :href="item.href" target="_blank">
-        <Icon :icon="icon" class="mb-2" width="24px" color="grey" />
+        <Icon v-if="!item.logo && icon" :icon="icon" class="mb-2" width="24px" color="grey" />
+        <img v-if="item.logo && item.logo.length > 0" :src="item.logo[0]" class="gate__logo">
         <h4 class="mb-1">{{ item.label }}</h4>
-        <!-- <span>{{ item.type }}</span> -->
     </a>
 </template>
 <script setup>
@@ -34,8 +34,11 @@ const icon = computed(() => {
         case 'Unit':
             return 'mdi:service-toolbox'
 
-        default:
+        case 'Establishment':
             return 'carbon:home'
+
+        default:
+            return null
     }
 })
 
@@ -73,6 +76,13 @@ const icon = computed(() => {
 .gate__link span {
     font-size: .65rem;
     color: rgba(120, 160, 160, 1)
+}
+
+.gate__logo {
+    height: 70%;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    box-shadow: -1px -2px 2px 0 rgba(97, 94, 94, 0.2);
 }
 
 @media screen and (max-width:600px) {

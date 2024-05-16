@@ -1,23 +1,27 @@
 <template>
     <div class="main__container">
-      <!--   <HeadComponent :page="page"></HeadComponent> -->
+        <!--   <HeadComponent :page="page"></HeadComponent> -->
         <div class="container client__container">
             <div v-if="!dataLoading" class="header">
                 <div class="header_navigation">
-                    <RouterLink class="search__icon" :to="{ name: 'EstablishmentList', params: { tag: tag} }">
+                    <RouterLink class="search__icon" :to="{ name: 'EstablishmentList', params: { tag: tag } }">
                         <Icon :icon="'ion:list'" width="26"></Icon>
                     </RouterLink>
-                    <RouterLink v-if="show && establishments.length > 1" class="search__icon" :to="{ name: 'EstablishmentRanking', params: { tag: tag} }"> 
+                    <RouterLink v-if="show && establishments.length > 1" class="search__icon"
+                        :to="{ name: 'EstablishmentRanking', params: { tag: tag } }">
                         <Icon :icon="'solar:cup-first-bold'" width="25"></Icon>
                     </RouterLink>
-                    <RouterLink v-if="show && establishments.length > 1" class="search__icon" :to="{ name: 'EstablishmentListByTrend', params: { tag: tag} }"> 
+                    <RouterLink v-if="show && establishments.length > 1" class="search__icon"
+                        :to="{ name: 'EstablishmentListByTrend', params: { tag: tag } }">
                         <Icon :icon="'gg:trending'" width="25"></Icon>
                     </RouterLink>
                 </div>
-                <button v-if="userStore.user.partner && userStore.user.roles.includes('ROLE_PARTNER') && route.name !== 'CustomersList'" @click="backToCustomer">
-                <i class="uil uil-arrow-left"></i>Back</button>
+                <button
+                    v-if="userStore.user.partner && userStore.user.roles.includes('ROLE_PARTNER') && route.name !== 'CustomersList'"
+                    @click="backToCustomer">
+                    <i class="uil uil-arrow-left"></i>Back</button>
             </div>
-            <RouterView/>
+            <RouterView />
         </div>
     </div>
 </template>
@@ -25,12 +29,15 @@
 <script setup>
 import { ref, inject, computed, onMounted } from 'vue';
 import { useUserStore } from "@Stores/user.js";
+import { useAppStore } from "@Stores/app.js"
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import { useRouter, useRoute } from "vue-router";
 import { Icon } from '@iconify/vue';
 import { useCompanyStore } from "@Stores/company.js";
+import { refreshTheme } from '@Services/theme';
 
 const userStore = useUserStore();
+const appStore = useAppStore()
 const router = useRouter();
 const route = useRoute();
 const tag = inject("tag")
@@ -45,34 +52,42 @@ const page = ref({
     icon: "uil-estate",
 });
 
-const backToCustomer = ()=>{
-    router.push({name: "CustomersList"})
+const backToCustomer = () => {
+    router.push({ name: "CustomersList" })
 };
 
 const show = computed(() => {
-  let routeName = ['EstablishmentList', 'EstablishmentRanking', 'EstablishmentListByTrend', undefined];
-  return routeName.includes(route.name)
+    let routeName = ['EstablishmentList', 'EstablishmentRanking', 'EstablishmentListByTrend', undefined];
+    return routeName.includes(route.name)
 });
-onMounted(async()=>{
+
+onMounted(async () => {
     dataLoading.value = true;
-	if (userStore.user) {
+    if (userStore.user) {
         companiesStore.getEstablishments(customerTag.value).then((data) => {
             establishments.value = data;
             dataLoading.value = false;
         })
     }
+
+    setTimeout(() => {
+        if (appStore.mustRefresh) {
+            appStore.mustRefresh = false;
+            router.go();
+        }
+    }, 200)
+
 });
 </script>
 
 <style scoped>
-
-.header{
+.header {
     display: flex;
     justify-content: space-between;
 }
 
-.header button{
-   /* background-color: var(--color-primary);
+.header button {
+    /* background-color: var(--color-primary);
     color: white;*/
     font-weight: 500;
     font-size: 14px;
@@ -81,7 +96,7 @@ onMounted(async()=>{
     transition: var(--transition)
 }
 
-.header button:hover{
+.header button:hover {
     color: var(--color-secondary);
 }
 
@@ -99,7 +114,7 @@ onMounted(async()=>{
 .client__container {
     position: relative;
     top: 5rem;
-   /* height: inherit;*/
+    /* height: inherit;*/
     display: flex;
     gap: 1rem;
     width: 50%;
@@ -189,13 +204,13 @@ onMounted(async()=>{
     color: var(--color-danger);
 }
 
-.search__icon.router-link-exact-active{
-     color: var(--color-danger);
+.search__icon.router-link-exact-active {
+    color: var(--color-danger);
 }
 
 .main__container {
-     margin-top: 20px;
-    }
+    margin-top: 20px;
+}
 
 @media screen and (max-width: 600px) {
     .header_navigation {
