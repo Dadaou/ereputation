@@ -1,58 +1,57 @@
 {
     "title": "Conéctate a tu cuenta",
     "welcome": "Hola",
-    "login":{
-        "email":"Correo electrónico",
+    "login": {
+        "email": "Correo electrónico",
         "password": "Contraseña",
-        "forgot":"¿Has olvidado tu contraseña?",
-        "create":"¿No tienes una cuenta?",
-        "submit":"Entregar"
+        "forgot": "¿Has olvidado tu contraseña?",
+        "create": "¿No tienes una cuenta?",
+        "submit": "Entregar"
     },
-    "feedback":{
-        
-        "title1":"Deja ",
-        "title2":" tu retroalimentación",
-        "soustitle":"Retroalimentación de experiencias de clientes",
-        "rating":{
-            "title":"Calificación",
-            "evaluate":{
-                "terrible":"Terrible",
-                "bad":"Mal",
-                "okay":"Okay",
-                "good":"Bueno",
-                "amazing":"Maravilloso"
+    "feedback": {
+        "title1": "Deja ",
+        "title2": " tu retroalimentación",
+        "soustitle": "Retroalimentación de experiencias de clientes",
+        "rating": {
+            "title": "Calificación",
+            "evaluate": {
+                "terrible": "Terrible",
+                "bad": "Mal",
+                "okay": "Okay",
+                "good": "Bueno",
+                "amazing": "Maravilloso"
             }
         },
-        "firstname":"Primer nombre",
-        "lastname":"Apellido",
-        "gender":"Género",
-        "placeholder_gender":"Seleccionar género",
-        "datevisit":"Fecha de visita",
-        "placeholder_datevisit":"Seleccionar fecha y hora",
-        "indice1":" Si deseas obtener descuentos o beneficios, por favor proporciona tu dirección de correo electrónico a continuación.",
-        "email":"Correo electrónico",
-        "promotion_day":"Promoción del día",
-        "comment":"Por favor, deja un comentario",
-        "indice2":"Al utilizar nuestros servicios y marcar la casilla anterior, aceptas los términos descritos en esta Política de Privacidad",
-        "post":"Publicar comentario",
-        "thanks":{
-            "title1":"Gracias ",
-            "title2":" por tus comentarios",
-            "message":"Gracias por sus valiosos comentarios. Si has facilitado tu correo electrónico, pronto recibirás un beneficio para utilizar en nuestro establecimiento. Esperamos volver a verle pronto y le deseamos un agradable día."
+        "firstname": "Primer nombre",
+        "lastname": "Apellido",
+        "gender": "Género",
+        "placeholder_gender": "Seleccionar género",
+        "datevisit": "Fecha de visita",
+        "placeholder_datevisit": "Seleccionar fecha y hora",
+        "indice1": " Si deseas obtener descuentos o beneficios, por favor proporciona tu dirección de correo electrónico a continuación.",
+        "email": "Correo electrónico",
+        "promotion_day": "Promoción del día",
+        "comment": "Por favor, deja un comentario",
+        "indice2": "Al utilizar nuestros servicios y marcar la casilla anterior, aceptas los términos descritos en esta Política de Privacidad",
+        "post": "Publicar comentario",
+        "read_more": "Más información...",
+        "thanks": {
+            "title1": "Gracias ",
+            "title2": " por tus comentarios",
+            "message": "Gracias por sus valiosos comentarios. Si has facilitado tu correo electrónico, pronto recibirás un beneficio para utilizar en nuestro establecimiento. Esperamos volver a verle pronto y le deseamos un agradable día."
         }
-        
     },
-    "staffFeedback":{
-        "interne":"Solo para uso interno, su comentario no se publicará en las plataformas públicas.",
-        "departement":"Departamento",
-        "staffs_list":"Lista de personal",
-        "staffs_link":"Enlaces del personal para comentarios",
-        "input_required":"Campos requeridos"
+    "staffFeedback": {
+        "interne": "Solo para uso interno, su comentario no se publicará en las plataformas públicas.",
+        "departement": "Departamento",
+        "staffs_list": "Lista de personal",
+        "staffs_link": "Enlaces del personal para comentarios",
+        "input_required": "Campos requeridos"
     },
-    "success":"Gracias por sus valiosos comentarios. Esperamos volver a verle pronto y le deseamos un agradable día.",
-    "thanks_title1":"Gracias ",
-    "thanks_title2":" por tus comentarios",
-    "discount":{
+    "success": "Gracias por sus valiosos comentarios. Esperamos volver a verle pronto y le deseamos un agradable día.",
+    "thanks_title1": "Gracias ",
+    "thanks_title2": " por tus comentarios",
+    "discount": {
         "title": "¡Cupón de Descuento Activado!",
         "content": "¡Felicidades! Tu cupón de descuento ha sido activado con éxito. Disfruta de descuentos exclusivos en tu próxima compra. Usa el código de descuento durante el proceso de pago para ahorrar en tu pedido."
     }

@@ -2,22 +2,32 @@
   <div class="scroll-wrapper">
     <ul class="discount-list">
       <li v-for="(discount, index) in discounts" :key="index" @click="selectDiscount(index, discount)"
-        :class="[isSelected(index) ? 'selected gradient-green' : 'gradient-violet', 'text-white text-center py-10 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative']">
-        <div>
-          <div id="discount_name" class="truncate-content">
-            <span :class="['icon', isSelected(index) ? 'icon-selected' : '']">
-              {{ isSelected(index) ? '✔' : discount.icon }}
-            </span>
-            <span class="truncate-content">
-              {{ discount.name }}
-            </span>
-            <span :class="['icon', isSelected(index) ? 'icon-selected' : '']">
-              {{ isSelected(index) ? '✔' : discount.icon }}
-            </span>
+        :class="[isSelected(index) ? 'selected gradient-green' : 'gradient-violet', 'text-white text-center py-10 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative discount-item']">
+        <div class="w-full h-full flex flex-col items-center justify-start">
+          <div class="w-full inline-flex items-start justify-center">
+            <div class="discount-icon">
+              <span :class="['icon', isSelected(index) ? 'icon-selected' : '',]">
+                {{ isSelected(index) ? '✔' : discount.icon }}
+              </span>
+            </div>
+            <div id="discount_name">
+              <span class="wrap-word">
+                {{ discount.name }}
+              </span>
+            </div>
+
+            <div class="discount-icon">
+              <span :class="['icon', isSelected(index) ? 'icon-selected' : '']">
+                {{ isSelected(index) ? '✔' : discount.icon }}
+              </span>
+            </div>
+
           </div>
           <div id="discount_establishment">{{ discount.establishment_name }}</div>
-          <div id="discount_category" v-if="discount.validity">{{ discount.category }} advantage to be used within
-            {{ discount.validity }} {{ discount.validity > 1 ? 'days' : 'day' }} </div>
+          <div id="discount_category">{{ discount.category }} advantage <span v-if="discount.validity">to be used within
+              {{ discount.validity }} {{ discount.validity > 1 ? 'days' : 'day' }}</span></div>
+          <div class="w-full text-right read-more mt-auto" @click.stop="showMore(index)">En savoir
+            plus...</div>
         </div>
         <div class="w-4 h-4 bg-white rounded-full absolute top-1/2 transform -translate-y-1/2 left-0 -ml-3"></div>
         <div class="w-4 h-4 bg-white rounded-full absolute top-1/2 transform -translate-y-1/2 right-0 -mr-3"></div>
@@ -61,10 +71,14 @@ onMounted(async () => {
     return { ...discount, icon };
   });
   generateColors();
-  if (discounts.value.length) {
-    selectDiscount(1, discounts.value[1]);
-  }
+  // if (discounts.value.length) {
+  //   selectDiscount(1, discounts.value[1]);
+  // }
 });
+
+const showMore = () => {
+  alert("test")
+}
 
 const generateColors = () => {
   discountColors.value = discounts.value.map(generateColor);
@@ -134,14 +148,36 @@ ul {
 #discount_name {
   font-weight: 600;
   font-size: 13px;
-  text-align: left;
+  /* width: 60%; */
 }
 
-#discount_category,
+.discount-icon {
+  width: 10% !important;
+}
+
+.wrap-word {
+  word-wrap: normal;
+  white-space: pre-wrap;
+  text-align: center;
+}
+
 #discount_establishment {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+#discount_category {
   text-align: left;
   font-size: 9px;
   font-weight: 500;
+}
+
+.discount-list {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .discount-list li {
@@ -149,8 +185,8 @@ ul {
   padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
-  height: 4rem;
- /* width: 250px;*/
+  /* height: 4rem; */
+  /* width: 250px;*/
 }
 
 .discount-list .icon {
@@ -175,6 +211,21 @@ ul {
 
 .discount-list li.selected .icon-selected {
   display: inline-block;
+}
+
+.discount-item {
+  width: calc(50% - 12px);
+  min-width: 260px;
+  text-align: center;
+}
+
+.read-more {
+  font-size: 9px;
+  font-weight: 400;
+}
+
+.read-more:hover {
+  text-decoration: underline;
 }
 
 ul::-webkit-scrollbar {

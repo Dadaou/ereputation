@@ -36,6 +36,7 @@
         "indice2": "Al utilizar nuestros servicios y marcar esta casilla, aceptas los términos descritos en estas",
         "indice3": "condiciones generales de uso",
         "post": "Publicar comentario",
+        "read_more": "Más información...",
         "thanks": {
             "title1": "Gracias ",
             "title2": " por tus comentarios",
@@ -58,11 +59,11 @@
     },
     "success_text": "También puedes compartir tus opiniones en plataformas públicas",
     "success_text2": "Únete a nosotros en las redes sociales",
-    "coupon":{
+    "coupon": {
         "coupon_expirer": "Lo siento, parece que su cupón ha caducado",
-        "title":"Oferta exclusiva solo para ti * ",
-        "validation":"Válido hasta el:",
+        "title": "Oferta exclusiva solo para ti * ",
+        "validation": "Válido hasta el:",
         "utilisation": "Para utilizar entre el",
-        "et":"y el"
+        "et": "y el"
     }
 }
