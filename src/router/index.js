@@ -222,6 +222,31 @@ const router = createRouter({
       redirect: '/',
       children: [
         {
+          path: '/',
+          name: 'DiscountValidation',
+          redirect: { name: 'DiscountAuthentication' },
+          children: [
+            {
+              path: '/public/discount/auth',
+              name: 'DiscountAuthentication',
+              component: () => import('@Views/DiscountValidationAuthPageView.vue')
+            },
+            {
+              path: '/public/discount/validation/:discountTag',
+              name: 'DiscountQRCodeValidation',
+              component: () => import('@Views/EnableAdvantagePageView.vue'),
+              meta: {
+                requiresAuth: true
+              }
+            },
+            {
+              path: 'public/discount/code/validation',
+              name: 'DiscountCodeValidation',
+              component: () => import('@Views/DiscountValidationCodePageView.vue')
+            }
+          ]
+        },
+        {
           path: '/public/:tag/establishment/:id/gates',
           name: 'Gate',
           component: () => import('@Views/GatePageView.vue')
@@ -281,15 +306,15 @@ const router = createRouter({
       component: ProfileLayout,
       redirect: '/',
       children: [
-        {
-          path: '/',
-          name: 'DiscountValidation',
-          redirect: { name: 'DiscountAuthentication' },
-          children: [
+        /*{
+          //path: '/',
+          //name: 'DiscountValidation',
+          //redirect: { name: 'DiscountAuthentication' },
+          //children: [
             {
-              path: '/public/discount/auth',
-              name: 'DiscountAuthentication',
-              component: () => import('@Views/DiscountValidationAuthPageView.vue')
+             path: /public/discount/auth,
+              name: DiscountAuthentication,
+              component: () => import(@Views/DiscountValidationAuthPageView.vue)
             },
             {
               path: '/public/discount/validation/:discountTag',
@@ -305,7 +330,7 @@ const router = createRouter({
               component: () => import('@Views/DiscountValidationCodePageView.vue')
             }
           ]
-        },
+        },*/
         {
           path: '/user-confirmation/password/reset',
           name: 'ForgotPwd',

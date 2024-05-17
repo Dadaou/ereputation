@@ -121,7 +121,7 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="Trends" name="trends">
-                    Coming soon ...
+                    <AnalysisTrend/>
                 </el-tab-pane>
                 <el-tab-pane label="Alerts" name="alerts">
                     Coming soon ...
@@ -361,6 +361,10 @@ const StrengthWeakness = defineAsyncComponent(() =>
 
 const StaffRanking = defineAsyncComponent(() =>
     import('@Views/StaffRankingPageView.vue')
+)
+
+const AnalysisTrend = defineAsyncComponent(() =>
+    import('@Views/TrendsView.vue')
 )
 
 const companiesStore = useCompanyStore();

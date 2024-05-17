@@ -5,11 +5,11 @@
             v-on:close="isError = false" />
         <div class="login__container" ref="form__ref">
             <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="login__form">
-                <span>Connect to validate a discount</span>
+                <span>{{ $t("coupon.validationcoupon") }}<br>{{ nameAdvantage }}</span>
                 <input type="password" name="code" placeholder="code" v-model="code" required>
                 <button type="submit" :class="['btn btn__light2', showSpinner == true ? 'isLoaded' : '']">
                     <SpinnerComponent v-if="showSpinner == true" :color="'red'" />
-                    <span v-else>Submit</span>
+                    <span v-else>{{ $t("login.submit") }}</span>
                 </button>
             </form>
         </div>
@@ -17,14 +17,18 @@
     </div>
 </template>
 
+
+
 <script setup>
-import { ref, watch, onMounted, defineAsyncComponent } from 'vue'
+import { ref, watch, onMounted, defineAsyncComponent ,onBeforeMount} from 'vue'
 import HeadComponent from '@Components/layouts/HeadComponent.vue'
 import { useUserStore } from "@Stores/user.js"
 import { useRouter, useRoute } from "vue-router"
 import { useWindowSize } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
+
+
 
 
 const SpinnerComponent = defineAsyncComponent(() =>
@@ -37,6 +41,7 @@ const AlertComponent = defineAsyncComponent(() =>
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
+const nameAdvantage = localStorage.getItem('nameAdvantage');
 
 // const chatID = ref(import.meta.env.VITE_3CX_CHAT_ID);
 
@@ -55,6 +60,7 @@ const notification = ref({
 });
 
 const showSpinner = ref(false)
+
 
 const submit = async () => {
     showSpinner.value = true;
