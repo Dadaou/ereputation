@@ -26,20 +26,63 @@
           <div id="discount_establishment">{{ discount.establishment_name }}</div>
           <div id="discount_category">{{ discount.category }} advantage <span v-if="discount.validity">to be used within
               {{ discount.validity }} {{ discount.validity > 1 ? 'days' : 'day' }}</span></div>
-          <div class="w-full text-right read-more mt-auto" @click.stop="showMore(index)">En savoir
-            plus...</div>
+          <div class="w-full text-right read-more mt-auto" @click.stop="showMore(index)">
+            {{ $t("feedback.read_more") }}
+          </div>
         </div>
         <div class="w-4 h-4 bg-white rounded-full absolute top-1/2 transform -translate-y-1/2 left-0 -ml-3"></div>
         <div class="w-4 h-4 bg-white rounded-full absolute top-1/2 transform -translate-y-1/2 right-0 -mr-3"></div>
       </li>
     </ul>
   </div>
+  <transition name="modal-flip">
+    <div v-if="showModal" class="modal">
+      <div class="modal-content" style="width: 350px; padding: 0;">
+        <div class="modal-header">
+          <div v-if="currentDiscount.logo" class="modal-header__img">
+            <img :src="currentDiscount.logo">
+          </div>
+          <div class="modal__close">
+            <i class="uil uil-times-circle mb-8" @click="showModal = false"></i>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="inline-flex items-baseline gap-2">
+            <h4 class="modal-discount-name"><strong>{{ currentDiscount.name }}</strong></h4>
+            <span class="modal-discount-category">{{ currentDiscount.category }}</span>
+          </div>
+          <h6 class="modal-discount-establishment">
+            {{ currentDiscount.establishment_name }}
+          </h6>
+          <div class="inline-flex items-center gap-2 w-full mt-4">
+            <div class="flex flex-col items-center w-full">
+              <div v-if="info.value" class="modal-discount-offer">
+                <div>{{ info.value }}<span style="font-size: 1.75rem">{{ info.metric }}</span></div>
+              </div>
+              <ul class="modal-discount-other">
+                <li v-if="info.date_from">From {{ info.date_from }}</li>
+                <li v-if="info.date_to">To {{ info.date_to }}</li>
+                <li v-if="info.expired_at">Expired at {{ info.expired_at }}</li>
+                <li v-if="info.validity">Valid within {{ info.validity }} days</li>
+              </ul>
+            </div>
+            <span v-if="currentDiscount.description" class="modal-discount-description">
+              {{ currentDiscount.description }}
+            </span>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </transition>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import chroma from 'chroma-js';
 import { useAdvantageStore } from '@Stores/advantage.js';
+import { useWindowSize } from '@vueuse/core';
+import moment from 'moment';
 
 const selectedDiscount = ref(null);
 const discountColors = ref([]);
@@ -59,6 +102,61 @@ const props = defineProps({
 
 const emits = defineEmits(['select'])
 
+const currentDiscount = ref(null);
+
+const showModal = ref(false);
+
+const showMore = (index) => {
+  currentDiscount.value = discounts.value[index];
+  showModal.value = true;
+}
+
+const info = computed(() => {
+  const tmp = {};
+
+  switch (currentDiscount.value.category) {
+    case 'Gift':
+      return {
+        from: null,
+        to: null,
+        category: currentDiscount.value.category,
+        expired_at: moment(currentDiscount.value.expired_at).format('DD-MM-YYYY'),
+        value: null,
+        metric: null
+      }
+    case 'Lottery':
+      return {
+        from: moment(currentDiscount.value.date_from).format('DD-MM-YYYY'),
+        to: moment(currentDiscount.value.date_to).format('DD-MM-YYYY'),
+        category: currentDiscount.value.category,
+        expired_at: moment(currentDiscount.value.expired_at).format('DD-MM-YYYY'),
+        value: currentDiscount.value.advantage_limit,
+        metric: null
+      }
+    case 'Discount':
+      return {
+        from: null,
+        to: null,
+        category: currentDiscount.value.category,
+        expired_at: moment(currentDiscount.value.expired_at).format('DD-MM-YYYY'),
+        value: currentDiscount.value.amount,
+        metric: currentDiscount.value.metric == 'percent' ? '%' : '$',
+        validity: currentDiscount.value.validity
+      }
+    case 'Free':
+      return {
+        from: null,
+        to: null,
+        category: currentDiscount.value.category,
+        expired_at: moment(currentDiscount.value.expired_at).format('DD-MM-YYYY'),
+        value: currentDiscount.value.advantage_limit,
+        metric: 'free'
+      }
+  }
+
+  return tmp;
+})
+
 onMounted(async () => {
   let data = await advantageStore.getAdvantageAvailable(props.customer, props.establishment)
   discounts.value = data.map((discount, index) => {
@@ -75,10 +173,6 @@ onMounted(async () => {
   //   selectDiscount(1, discounts.value[1]);
   // }
 });
-
-const showMore = () => {
-  alert("test")
-}
 
 const generateColors = () => {
   discountColors.value = discounts.value.map(generateColor);
@@ -111,6 +205,46 @@ const isSelected = (index) => {
 </script>
 
 <style scoped>
+.modal__close i {
+  position: absolute;
+  top: 0;
+  right: 8px;
+  float: right;
+  font-size: 25px;
+  color: red;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.modal__close i:hover {
+  transform: rotate(360deg);
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 3;
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 6rem auto;
+  padding: 25px;
+  border-radius: 16px 16px 5px 5px;
+  /*overflow: auto; */
+  max-width: 90%;
+  min-width: 300px;
+  position: relative;
+}
+
+.modal-body {
+  padding: 1rem;
+}
+
 .truncate-content {
   white-space: nowrap;
   overflow: hidden;
@@ -123,6 +257,83 @@ const isSelected = (index) => {
 
 .gradient-violet {
   background: linear-gradient(to right, #6b46c1, #5a67d8);
+}
+
+.modal-header__img {
+  width: 100%;
+}
+
+.modal-header__img img {
+  border-radius: 16px 16px 0 0;
+  max-height: 240px;
+}
+
+.modal-discount-name {
+  text-transform: uppercase;
+  font-size: .9rem;
+}
+
+.modal-discount-category {
+  text-transform: uppercase;
+  font-size: .65rem;
+  padding: 4px 8px;
+  border-radius: 16px;
+  background: var(--color-primary);
+  height: 22px;
+  color: white;
+  font-weight: 600;
+}
+
+.modal-discount-establishment {
+  font-size: .7rem;
+  color: #707067;
+  font-weight: 500;
+}
+
+.modal-discount-offer {
+  text-transform: uppercase;
+  color: white;
+  font-size: 2.8rem;
+  padding: 16px;
+  border-radius: 100%;
+  max-width: 150px;
+  aspect-ratio: 1/1;
+  background: #D3B302;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.modal-discount-description {
+  font-size: .7rem;
+  color: var(--color-secondary);
+  font-weight: 500;
+  max-height: 200px;
+  min-height: 160px;
+  overflow-y: auto;
+  border: 0 1px solid var(--color-primary);
+  padding: 8px;
+  border-radius: 2px 12px 2px 12px;
+  box-shadow: 1px -1px 4px color-mix(in srgb, var(--color-primary) 50%, white 50%) inset;
+  background: color-mix(in srgb, var(--color-primary) 8%, white)
+}
+
+ul.modal-discount-other {
+  margin: 10px 0px;
+  padding: 0;
+  display: block;
+  white-space: nowrap;
+}
+
+.modal-discount-other li {
+  font-size: .7rem;
+  font-weight: 600;
+}
+
+.modal-discount-other li:before {
+  content: "\1F449";
 }
 
 .scroll-wrapper {
