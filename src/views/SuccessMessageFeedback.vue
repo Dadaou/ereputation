@@ -67,20 +67,13 @@ const route = useRoute();
 const companyStore = useCompanyStore();
 const userStore = useUserStore();
 const appStore = useAppStore();
-onMounted(() => {
-    /** Charger le titre par defaut */
-    page.value = {
-        title1: t("thanks_title1"),
-        title2: t("thanks_title2"),
-        icon: "uil-comment-alt",
-    };
-})
+
 
 onBeforeMount(async () => {
 
     appStore.setCurrentPage({
-        title1: "Laissez",
-        title2: "vos commentaires",
+        title1: t("thanks_title1"),
+        title2: t("thanks_title2"),
         icon: "uil-comment-alt"
     });
 
@@ -99,11 +92,11 @@ onBeforeMount(async () => {
 
 watch(() => {
     /** Mettre le titre en watch */
-    page.value = {
+    appStore.setCurrentPage({
         title1: t("thanks_title1"),
         title2: t("thanks_title2"),
-        icon: "uil-comment-alt",
-    };
+        icon: "uil-comment-alt"
+    });
 });
 
 </script>

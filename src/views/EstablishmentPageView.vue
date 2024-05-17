@@ -236,12 +236,12 @@
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[0]" />
             </div>
-            <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/trends`">
+           <!--  <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/trends`">
                 <button class="btn trends">
                     <i class="uil uil-trophy"></i>
                     <span class="ml-2">Trends</span>
                 </button>
-            </RouterLink>
+            </RouterLink> -->
         </div>
         <div class="rating__customers">
             <div class="title">Rating by Customers</div>
