@@ -58,6 +58,7 @@
         "title":"Offre exclusive * ",
         "validation":"Valide jusqu’au:",
         "utilisation": "A utiliser entre le",
-        "et":"et"
+        "et":"et",
+        "validationcoupon":"Veuillez entrer le mot de passe pour valider le coupon"
     }
 }

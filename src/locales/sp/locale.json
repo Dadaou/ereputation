@@ -63,6 +63,7 @@
         "title":"Oferta exclusiva solo para ti * ",
         "validation":"Válido hasta el:",
         "utilisation": "Para utilizar entre el",
-        "et":"y el"
+        "et":"y el",
+        "validationcoupon":"Por favor ingresa la contraseña para validar el cupón"
     }
 }

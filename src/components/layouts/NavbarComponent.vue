@@ -132,17 +132,22 @@ const toggleMobileMenu = () => {
 const currentLanguage = ref(current);
 
 watch(y, () => {
-  if (y.value > 0) {
-    nav__ref.value.classList.add('nav__onScroll');
-    isScrolling.value = true;
-    document.getElementById("userinitial").classList.remove('initial')
-    document.getElementById("userinitial").classList.add('initial_scroll')
-  } else if (y.value <= 1) {
-    nav__ref.value.classList.remove('nav__onScroll');
-    isScrolling.value = false;
-    document.getElementById("userinitial").classList.add('initial')
-    document.getElementById("userinitial").classList.remove('initial_scroll')
+  try{
+    if (y.value > 0) {
+      nav__ref.value.classList.add('nav__onScroll');
+      isScrolling.value = true;
+      document.getElementById("userinitial").classList.remove('initial')
+      document.getElementById("userinitial").classList.add('initial_scroll')
+    } else if (y.value <= 1) {
+      nav__ref.value.classList.remove('nav__onScroll');
+      isScrolling.value = false;
+      document.getElementById("userinitial").classList.add('initial')
+      document.getElementById("userinitial").classList.remove('initial_scroll')
+    }
+  }catch(exeption ){
+    // Do nothing 
   }
+ 
 });
 
 watch(width, () => {
@@ -170,7 +175,6 @@ onMounted(() => {
 onBeforeMount(async () => {
   if (width.value > 1000) show_menu.value = true;
   else show_menu.value = false;
-
   if (route.params.tag) {
     logo.value = await appStore.getCustomerLogo(route.params.tag)
     console.log(logo.value)

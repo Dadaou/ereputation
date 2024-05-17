@@ -355,11 +355,27 @@ const handleDeleteLink = async(index, link)=>{
     }
 }
 
-const urlPattern = (urlTemplate) => {
+// const urlPattern = (urlTemplate) => {
+//     let regexPattern = urlTemplate.replace(/[\-\[\]\/\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+//     regexPattern = regexPattern.replace(/{value1}/g, '(.+)');
+//     return new RegExp('^' + regexPattern);
+// }
+
+const urlPattern = (urlTemplate, extensions = ['fr', 'es', 'com']) => {
+    const url = new URL(urlTemplate);
+    
+    const domainParts = url.hostname.split('.');
+
     let regexPattern = urlTemplate.replace(/[\-\[\]\/\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+
     regexPattern = regexPattern.replace(/{value1}/g, '(.+)');
+    regexPattern = regexPattern.replace(/q=/g, '');
+
+    const extensionPattern = extensions.join('|');
+    regexPattern = regexPattern.replace(new RegExp(`\\.${domainParts[domainParts.length - 1]}`), `.(?:${extensionPattern})`);
+   
     return new RegExp('^' + regexPattern);
-}
+};
 
 // const splitUriAndUrl = (combinedString) => {
 //     if (combinedString !== '') {
