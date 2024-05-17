@@ -1,17 +1,20 @@
 <template>
     <div class="main__container">
-        <HeadComponent :page="page"></HeadComponent>
         <AlertComponent :alertType="notification.type" :message="notification.message" v-if="isError"
             v-on:close="isError = false" />
         <div class="login__container" ref="form__ref">
             <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="login__form">
                 <span>Set your password</span>
-               <div class="mb-3">
-			        <input type="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="New password" v-model="form.password" required>
-			    </div> 
-			    <div class="mb-3">
-			        <input type="password" id="confirm_password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Confim password" v-model="form.confirmation" required>
-			    </div> 
+                <div class="mb-3">
+                    <input type="password" id="password"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="New password" v-model="form.password" required>
+                </div>
+                <div class="mb-3">
+                    <input type="password" id="confirm_password"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Confim password" v-model="form.confirmation" required>
+                </div>
                 <button type="submit" :class="['btn btn__light2', showSpinner == true ? 'isLoaded' : '']">
                     <SpinnerComponent v-if="showSpinner == true" :color="'red'" />
                     <span v-else>Submit</span>
@@ -25,7 +28,6 @@
 
 <script setup>
 import { ref, watch, onMounted, defineAsyncComponent, inject } from 'vue'
-import HeadComponent from '@Components/layouts/HeadComponent.vue'
 import { useUserStore } from "@Stores/user.js"
 import { useRouter, useRoute } from "vue-router"
 import { useWindowSize } from '@vueuse/core'
@@ -66,27 +68,27 @@ const notification = ref({
 const showSpinner = ref(false)
 
 const submit = async () => {
-	showSpinner.value = true;
-	services.setURL(import.meta.env.VITE_APP_URL)
-	console.log(route.params.token)
-	await userStore.resetPassword(
-		form.value.password, 
-		form.value.confirmation,
-		route.params.token,
+    showSpinner.value = true;
+    services.setURL(import.meta.env.VITE_APP_URL)
+    console.log(route.params.token)
+    await userStore.resetPassword(
+        form.value.password,
+        form.value.confirmation,
+        route.params.token,
         app_url.value,
-		(response) => {
-			console.log(response)
-			isError.value = true;
-		    notification.value.message = response.data
-		    notification.value.type = (response.data == "the password and confirmation password does not have same value")?"warning":"success"
+        (response) => {
+            console.log(response)
+            isError.value = true;
+            notification.value.message = response.data
+            notification.value.type = (response.data == "the password and confirmation password does not have same value") ? "warning" : "success"
 
-			showSpinner.value = false
-			services.setURL(import.meta.env.VITE_APP_API_URL)
-			if(response.data !== "the password and confirmation password does not have same value"){
-				router.push("/");
-			}
-		}
-	)
+            showSpinner.value = false
+            services.setURL(import.meta.env.VITE_APP_API_URL)
+            if (response.data !== "the password and confirmation password does not have same value") {
+                router.push("/");
+            }
+        }
+    )
 }
 
 /**
@@ -185,13 +187,13 @@ button.isLoaded {
     transform: scale(0.95);
 }
 
-.back_to_login{
-	display: flex;
-	align-content: center;
-	align-items: center;
-	font-size: 16px !important;
-	font-weight: 500;
-	justify-content: center;
+.back_to_login {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    font-size: 16px !important;
+    font-weight: 500;
+    justify-content: center;
 }
 
 /* For tablets */

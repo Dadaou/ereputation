@@ -22,14 +22,14 @@
               <i class="uil uil-qrcode-scan"></i> <span>My QRCodes</span>
             </router-link>
           </li>
-           <li>
+          <li>
             <router-link :to="{ name: 'Advantage' }">
-               <i class="uil uil-bill"></i> <span>Advantages</span>
+              <i class="uil uil-bill"></i> <span>Advantages</span>
             </router-link>
           </li>
-           <li>
+          <li>
             <router-link :to="{ name: 'Partnership' }">
-               <i class="uil uil-users-alt"></i> <span>Partnership</span>
+              <i class="uil uil-users-alt"></i> <span>Partnership</span>
             </router-link>
           </li>
           <li>
@@ -59,7 +59,6 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
-import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 
 const route = useRoute();
@@ -186,7 +185,7 @@ const breadcrumbData = [
 
 .all__content {
   flex: auto;
-  width:65%;
+  width: 65%;
   padding-right: 8px;
   margin-top: 0px;
 }
@@ -238,7 +237,7 @@ const breadcrumbData = [
 @media screen and (max-width: 800px) {
   .all__content {
     margin-top: 0px;
-    width:115%;
+    width: 115%;
   }
 
   .admin__container {
