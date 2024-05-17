@@ -1,10 +1,10 @@
 <template>
   <button class="btn" @click="showExport = true">
-          <i class="uil uil-file-download"></i>
-          Export
-    </button>
-    <div class="overflow-x-auto">
-      <table class="w-full table-auto text-sm text-left text-gray-500 dark:text-gray-400">
+    <i class="uil uil-file-download"></i>
+    Export
+  </button>
+  <div class="overflow-x-auto">
+    <table class="w-full table-auto text-sm text-left text-gray-500 dark:text-gray-400">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
           <th scope="col" class="px-6 py-3">
@@ -25,7 +25,8 @@
         </tr>
       </thead>
       <tbody v-if="contacts.length > 0">
-        <tr v-for="contact in contacts" :key="contact.id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+        <tr v-for="contact in contacts" :key="contact.id"
+          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
           <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
             {{ contact.firstname }}
           </td>
@@ -39,8 +40,8 @@
             {{ contact.email }}
           </td>
           <td class="px-6 py-4">
-              {{ contact.establishment_name }}           
-           </td>
+            {{ contact.establishment_name }}
+          </td>
         </tr>
       </tbody>
       <tbody v-else>
@@ -53,9 +54,9 @@
         </tr>
       </tbody>
     </table>
-    </div>
-    <ExportcsvexcelComponent :showModal="showExport" :downloaded="downloaded"
-    @close="showExport = false, downloaded = false"  @submit="(data) => exportData(data.type, 'contacts')"/>
+  </div>
+  <ExportcsvexcelComponent :showModal="showExport" :downloaded="downloaded"
+    @close="showExport = false, downloaded = false" @submit="(data) => exportData(data.type, 'contacts')" />
 </template>
 
 <script setup>
@@ -66,20 +67,19 @@ import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
 import { useRoute, useRouter } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
-import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import StaffItemComponent from '@Components/staffs/StaffItemComponent.vue';
 import { useWindowSize } from '@vueuse/core';
 import {
-    ref, 
-    reactive, 
-    watch, 
-    onBeforeMount, 
-    computed, 
-    provide, 
-    onUpdated,
-    defineAsyncComponent
+  ref,
+  reactive,
+  watch,
+  onBeforeMount,
+  computed,
+  provide,
+  onUpdated,
+  defineAsyncComponent
 } from 'vue';
 
 const ExportcsvexcelComponent = defineAsyncComponent(() =>
@@ -99,7 +99,7 @@ const showExport = ref(false);
 const downloaded = ref(false);
 const exportData = (type, filename) => {
   csvXlsx.exportContact(type, filename, query.value,
-    ['Id','Name', 'Gender', 'Email', 'Establishment', 'Date']);
+    ['Id', 'Name', 'Gender', 'Email', 'Establishment', 'Date']);
   downloaded.value = true;
 }
 
@@ -128,8 +128,7 @@ onBeforeMount(async () => {
 });
 </script>
 <style scoped>
-
-button i{
+button i {
   color: var(--color-danger);
 }
 
@@ -143,7 +142,7 @@ button {
   margin-bottom: 10px;
 }
 
-button:hover{
+button:hover {
   background-color: var(--color-primary);
   color: white;
 }

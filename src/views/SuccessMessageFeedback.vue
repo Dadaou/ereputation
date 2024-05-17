@@ -39,8 +39,7 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, defineAsyncComponent, onMounted, watch  } from 'vue';
-import HeadComponent from '@Components/layouts/HeadComponent.vue';
+import { ref, onBeforeMount, defineAsyncComponent, onMounted, watch } from 'vue';
 import { useI18n } from "vue-i18n";
 import { Icon } from '@iconify/vue';
 import { useCompanyStore } from "@Stores/company.js";

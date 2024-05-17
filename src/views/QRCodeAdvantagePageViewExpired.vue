@@ -5,7 +5,7 @@
                 class="bg-gradient-to-br from-purple-600 to-indigo-600 text-white text-center py-10 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative">
                 <h3 class="text-xl font-semibold mb-4">🎉 {{ $t("coupon.title") }} 🎁</h3>
                 <h5 class="text-xl font-semibold mb-4">{{ $t("coupon.coupon_expirer") }}</h5>
-                
+
                 <br>
                 <h3 class="text-xl font-semibold mb-4 mt-4" v-if="advantages">{{ advantages.adv_name }} <br>{{
                     advantages.establishment_name }}</h3>
@@ -28,7 +28,7 @@
             </div>
         </div>
     </div>
-    
+
 </template>
 
 <script setup>
@@ -37,10 +37,9 @@ import VueQrious from 'vue-qrious';
 import moment from 'moment';
 import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from "@Stores/app.js";
-import { useRoute , useRouter} from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
 import { useClipboard } from '@vueuse/core'
-import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import 'element-plus/es/components/date-picker/style/css';
 
 
@@ -58,7 +57,7 @@ const page = ref({
 });
 
 const route = useRoute();
-const router =  useRouter();
+const router = useRouter();
 const baseurl = window.location.origin
 const base64Image = ref(null)
 const qrcode = ref(null)
@@ -105,7 +104,7 @@ onBeforeMount(async () => {
         icon: "uil-comment-alt"
     });*/
 
-    
+
     /* voir si le discounttag exit sinon redirection page 404 */
     const response = await new Promise((resolve) => {
         services.get_Record(`customer/establishments/advantagecontacts/list`, (response) => {
@@ -116,13 +115,13 @@ onBeforeMount(async () => {
         listAdvantage.value.push(obj.tag);
     });
 
-    if (!listAdvantage.value.includes(route.params.discountTag)){
-        router.push({name : 'NotFound'})
+    if (!listAdvantage.value.includes(route.params.discountTag)) {
+        router.push({ name: 'NotFound' })
     }
 
-       
-        
-   
+
+
+
     if (userStore.authenticated == null) services.setToken(import.meta.env.VITE_APP_TOKEN);
 
 
@@ -137,9 +136,9 @@ onBeforeMount(async () => {
             advantages.value = response.data[0];
             code.value = advantages.value.code;
             dateExperied.value = advantages.value.expired_at;
-            console.log("date_expiration" , dateExperied.value);
-            console.log("date_Jour" ,dateJour);
-            if( dateJour > dateExperied.value){
+            console.log("date_expiration", dateExperied.value);
+            console.log("date_Jour", dateJour);
+            if (dateJour > dateExperied.value) {
                 console.log("ouiiiiiiiiiii il est la ");
             }
 
@@ -154,10 +153,10 @@ onBeforeMount(async () => {
 </script>
 
 <style scoped>
-
-.head__container{
+.head__container {
     background-color: transparent !important;
 }
+
 .bg-gradient-to-br {
     background: linear-gradient(45deg, #f75842, #f96a57);
 }

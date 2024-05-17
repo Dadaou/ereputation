@@ -30,7 +30,6 @@
 import { ref, inject, computed, onMounted } from 'vue';
 import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from "@Stores/app.js"
-import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import { useRouter, useRoute } from "vue-router";
 import { Icon } from '@iconify/vue';
 import { useCompanyStore } from "@Stores/company.js";

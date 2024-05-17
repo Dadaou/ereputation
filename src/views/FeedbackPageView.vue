@@ -138,7 +138,6 @@
 <script setup>
 
 import { ref, onBeforeMount, defineAsyncComponent, onMounted, watch, inject } from 'vue';
-import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
@@ -283,7 +282,7 @@ const submit = async () => {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
                             console.log(contactData)
                             if (contactResponse.status == 201) {
-                                services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res)=>{
+                                services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
                                     console.log(res)
                                 })
                                 let coupons = {
