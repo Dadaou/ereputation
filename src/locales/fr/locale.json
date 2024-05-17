@@ -36,7 +36,8 @@
         "indice2": "En utilisant nos services et en cochant cette case, vous acceptez les conditions décrites dans nos",
         "indice3": "conditions générales d’utilisations",
         "post": "Poster un commentaire",
-        "requiredinputs": "Veuillez fournir toutes les informations nécessaires."
+        "requiredinputs": "Veuillez fournir toutes les informations nécessaires.",
+        "read_more": "En savoir plus..."
     },
     "staffFeedback": {
         "interne": "Usage interne uniquement, votre commentaire ne sera pas diffusé sur les plateformes publiques.",
@@ -53,12 +54,12 @@
     },
     "success_text": "Vous pouvez également partager vos retours sur les plateformes",
     "success_text2": "Rejoignez-nous sur les réseaux sociaux",
-    "coupon":{
+    "coupon": {
         "coupon_expirer": "Désolé, il semble que votre coupon ait expiré ",
-        "title":"Offre exclusive * ",
-        "validation":"Valide jusqu’au:",
+        "title": "Offre exclusive * ",
+        "validation": "Valide jusqu’au:",
         "utilisation": "A utiliser entre le",
-        "et":"et",
-        "validationcoupon":"Veuillez entrer le mot de passe pour valider le coupon"
+        "et": "et",
+        "validationcoupon": "Veuillez entrer le mot de passe pour valider le coupon"
     }
 }

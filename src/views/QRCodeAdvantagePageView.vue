@@ -14,13 +14,15 @@
                 <h3 class="text-xl font-semibold mb-4 mt-4" v-if="advantages">{{ advantages.adv_name }} <br>{{
                     advantages.establishment_name }}</h3>
                 <div v-if="advantages">
-                    <div v-if="advantages.adv_date_to !=null  && advantages.adv_date_from !=null">
-                        <h3 class="text-xl font-semibold mb-4 mt-4" v-if="advantages.adv_date_to && advantages.adv_date_from">
-                            {{ $t("coupon.utilisation") }} {{ advantages.adv_date_from }} {{ $t("coupon.et") }} {{ advantages.adv_date_to }}
+                    <div v-if="advantages.adv_date_to != null && advantages.adv_date_from != null">
+                        <h3 class="text-xl font-semibold mb-4 mt-4"
+                            v-if="advantages.adv_date_to && advantages.adv_date_from">
+                            {{ $t("coupon.utilisation") }} {{ advantages.adv_date_from }} {{ $t("coupon.et") }} {{
+                            advantages.adv_date_to }}
                         </h3>
                     </div>
                 </div>
-                
+
 
                 <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2 mb-6">
                     <!--<span id="cpnCode" class="border-dashed border text-white px-4 py-2 rounded-l">{{ code }}</span>-->
@@ -30,9 +32,9 @@
                             class="uil uil-qrcode-scan"></i></button>
                 </div>
 
-                
 
-                
+
+
                 <p class="text-sm" v-if="advantages">Valid Till: {{ moment(advantages.expired_at).format("DDMMM, YYYY")
                     }}</p>
 
@@ -44,7 +46,7 @@
         </div>
         <QRCodeAdvantagePageViewExpired v-else />
     </div>
-    
+
 </template>
 
 <script setup>
@@ -53,10 +55,9 @@ import VueQrious from 'vue-qrious';
 import moment from 'moment';
 import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from "@Stores/app.js";
-import { useRoute , useRouter} from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
 import { useClipboard } from '@vueuse/core'
-import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import 'element-plus/es/components/date-picker/style/css';
 
 
@@ -74,7 +75,7 @@ const page = ref({
 });
 
 const route = useRoute();
-const router =  useRouter();
+const router = useRouter();
 const baseurl = window.location.origin
 const base64Image = ref(null)
 const qrcode = ref(null)
@@ -126,7 +127,7 @@ onBeforeMount(async () => {
         icon: "uil-comment-alt"
     });
 
-    
+
     /* voir si le discounttag exit sinon redirection page 404 */
     const response = await new Promise((resolve) => {
         services.get_Record(`customer/establishments/advantagecontacts/list`, (response) => {
@@ -137,13 +138,13 @@ onBeforeMount(async () => {
         listAdvantage.value.push(obj.tag);
     });
 
-    if (!listAdvantage.value.includes(route.params.discountTag)){
-        router.push({name : 'NotFound'})
+    if (!listAdvantage.value.includes(route.params.discountTag)) {
+        router.push({ name: 'NotFound' })
     }
 
-       
-        
-   
+
+
+
     if (userStore.authenticated == null) services.setToken(import.meta.env.VITE_APP_TOKEN);
 
 
@@ -160,15 +161,14 @@ onBeforeMount(async () => {
             dateExperied.value = advantages.value.expired_at;
             date_to.value = advantages.value.adv_date_to;
             localStorage.setItem('nameAdvantage', advantages.value.adv_name);
-            console.log("date_expiration" , dateExperied.value);
-            console.log("date_Jour" ,dateJour);
-            if( dateJour != null || date_to.value != null)
-            {
-                if( dateJour > dateExperied.value || dateJour > date_to.value){
-                    isNotExpired.value= false;
+            console.log("date_expiration", dateExperied.value);
+            console.log("date_Jour", dateJour);
+            if (dateJour != null || date_to.value != null) {
+                if (dateJour > dateExperied.value || dateJour > date_to.value) {
+                    isNotExpired.value = false;
                 }
             }
-        
+
 
 
         } else {
@@ -181,10 +181,10 @@ onBeforeMount(async () => {
 </script>
 
 <style scoped>
-
-.head__container{
+.head__container {
     background-color: transparent !important;
 }
+
 .bg-gradient-to-br {
     background: linear-gradient(45deg, #f75842, #f96a57);
 }

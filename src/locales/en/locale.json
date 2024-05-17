@@ -36,7 +36,8 @@
         "indice2": "By using our services and checking this box, you agree to the",
         "indice3": "terms and conditions",
         "post": "Post comment",
-        "requiredinputs": "Please, provide all needed information."
+        "requiredinputs": "Please, provide all needed information.",
+        "read_more": "Find out more..."
     },
     "staffFeedback": {
         "interne": "Internal use only, your comment will not be posted on the public platforms.",
@@ -53,12 +54,12 @@
     },
     "success_text": "You can also share your feedback on public platforms",
     "success_text2": "Join us on social media",
-    "coupon":{
+    "coupon": {
         "coupon_expirer": "Sorry, it seems that your coupon has expired ",
-        "title":"Exclusive Offer Just for You!",
-        "validation":"Valid Till:",
+        "title": "Exclusive Offer Just for You!",
+        "validation": "Valid Till:",
         "utilisation": "To be used between",
-        "et":"and",
-        "validationcoupon":"Please enter the password to validate the coupon"
+        "et": "and",
+        "validationcoupon": "Please enter the password to validate the coupon"
     }
 }

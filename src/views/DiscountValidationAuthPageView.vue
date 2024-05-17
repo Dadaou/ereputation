@@ -1,6 +1,6 @@
 <template>
     <div class="main__container">
-       <!--  <HeadComponent :page="page"></HeadComponent> -->
+        <!--  <HeadComponent :page="page"></HeadComponent> -->
         <AlertComponent :alertType="notification.type" :message="notification.message" v-if="isError"
             v-on:close="isError = false" />
         <div class="login__container" ref="form__ref">
@@ -20,8 +20,7 @@
 
 
 <script setup>
-import { ref, watch, onMounted, defineAsyncComponent ,onBeforeMount} from 'vue'
-import HeadComponent from '@Components/layouts/HeadComponent.vue'
+import { ref, watch, onMounted, defineAsyncComponent, onBeforeMount } from 'vue'
 import { useUserStore } from "@Stores/user.js"
 import { useRouter, useRoute } from "vue-router"
 import { useWindowSize } from '@vueuse/core'
@@ -64,29 +63,29 @@ const showSpinner = ref(false)
 
 const submit = async () => {
     showSpinner.value = true;
-    try{
-    	if (code.value === '4321') {
-			console.log('seller authenticate')
-			localStorage.setItem('isSellerAuthenticated', 'true');
-			if(route.query.redirect !== undefined){
-				router.push(route.query.redirect)
-			}
-			else router.push({ name: 'DiscountCodeValidation' })
-	        
-	        showSpinner.value = false;
-	    } else {
-	       notification.value.message = "Please provide the right code";
-	       notification.value.type = "warning";
-	       showSpinner.value = false;
-	    }
-    }catch(error){
-    	console.log(error)
+    try {
+        if (code.value === '4321') {
+            console.log('seller authenticate')
+            localStorage.setItem('isSellerAuthenticated', 'true');
+            if (route.query.redirect !== undefined) {
+                router.push(route.query.redirect)
+            }
+            else router.push({ name: 'DiscountCodeValidation' })
+
+            showSpinner.value = false;
+        } else {
+            notification.value.message = "Please provide the right code";
+            notification.value.type = "warning";
+            showSpinner.value = false;
+        }
+    } catch (error) {
+        console.log(error)
     }
 };
 
 /**
  * Navbar Handler
- * useWindowScroll allows us to detect the scroll event on 
+ * useWindowScroll allows us to detect the scroll event on
  * the browser
  */
 // const { width, height } = useWindowSize();

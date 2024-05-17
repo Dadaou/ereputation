@@ -1,52 +1,52 @@
 {
     "title": "Connect to your account ",
     "welcome": "Welcome",
-    "login":{
-        "email":"Email adress",
+    "login": {
+        "email": "Email adress",
         "password": "Password",
-        "forgot":"Forgot Password?",
-        "create":"Don't have an account?",
-        "submit":"Submit"
+        "forgot": "Forgot Password?",
+        "create": "Don't have an account?",
+        "submit": "Submit"
     },
-    "feedback":{
-        "title1":"Leave ",
-        "title2":" your feedback",
-        "soustitle":"Customer experiences feedback",
-        "rating":{
-            "title":"Rating",
-            "evaluate":{
-                "terrible":"Terrible",
-                "bad":"Bad",
-                "okay":"Okay",
-                "good":"Good",
-                "amazing":"Amazing"
+    "feedback": {
+        "title1": "Leave ",
+        "title2": " your feedback",
+        "soustitle": "Customer experiences feedback",
+        "rating": {
+            "title": "Rating",
+            "evaluate": {
+                "terrible": "Terrible",
+                "bad": "Bad",
+                "okay": "Okay",
+                "good": "Good",
+                "amazing": "Amazing"
             }
         },
-        "firstname":"First name",
-        "lastname":"Last name",
-        "gender":"Gender",
-        "placeholder_gender":"Choose gender",
-        "datevisit":"Date visit",
-        "placeholder_datevisit":"Select date and time",
-        "indice1":" If you wish to obtain discounts or benefits, please provide your email address below.",
-        "email":"Email adress",
-        "promotion_day":"Promotion of the day",
-        "comment":"Please leave a comment",
-        "indice2":"By using our services and checking the box above, you agree to the terms outlined in this Privacy Policy",
-        "post":"Post comment"
-
+        "firstname": "First name",
+        "lastname": "Last name",
+        "gender": "Gender",
+        "placeholder_gender": "Choose gender",
+        "datevisit": "Date visit",
+        "placeholder_datevisit": "Select date and time",
+        "indice1": " If you wish to obtain discounts or benefits, please provide your email address below.",
+        "email": "Email adress",
+        "promotion_day": "Promotion of the day",
+        "comment": "Please leave a comment",
+        "indice2": "By using our services and checking the box above, you agree to the terms outlined in this Privacy Policy",
+        "post": "Post comment",
+        "read_more": "Find out more..."
     },
-    "staffFeedback":{
-        "interne":"Internal use only, your comment will not be posted on the public platforms.",
-        "departement":"Department",
-        "staffs_list":"Staffs list",
-        "staffs_link":"Staff's links for feedback",
-        "input_required":"Input field required"
+    "staffFeedback": {
+        "interne": "Internal use only, your comment will not be posted on the public platforms.",
+        "departement": "Department",
+        "staffs_list": "Staffs list",
+        "staffs_link": "Staff's links for feedback",
+        "input_required": "Input field required"
     },
-    "success":"Thank you for your valuable feedback. We look forward to seeing you again soon and wish you a pleasant day.",
-    "thanks_title1":"Thanks ",
-    "thanks_title2":"for your feedback",
-    "discount":{
+    "success": "Thank you for your valuable feedback. We look forward to seeing you again soon and wish you a pleasant day.",
+    "thanks_title1": "Thanks ",
+    "thanks_title2": "for your feedback",
+    "discount": {
         "title": "Discount Coupon Activated!",
         "content": "Congratulations! Your discount coupon has been successfully activated. Enjoy exclusive discounts on your next purchase. Use the discount code during checkout to save on your order."
     }

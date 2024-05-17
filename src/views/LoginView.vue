@@ -1,6 +1,5 @@
 <template>
     <div class="main__container">
-        <HeadComponent :page="page"></HeadComponent>
         <AlertComponent :alertType="notification.type" :message="notification.message" v-if="isError"
             v-on:close="isError = false" />
         <div class="login__container" ref="form__ref">
@@ -23,7 +22,6 @@
 
 <script setup>
 import { ref, watch, onMounted, defineAsyncComponent } from 'vue'
-import HeadComponent from '@Components/layouts/HeadComponent.vue'
 import { useUserStore } from "@Stores/user.js"
 import { useAppStore } from "@Stores/app.js"
 import { useRouter } from "vue-router"

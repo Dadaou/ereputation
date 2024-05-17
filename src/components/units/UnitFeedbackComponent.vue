@@ -170,7 +170,6 @@
 <script setup>
 
 import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, watch, inject } from 'vue';
-import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
@@ -226,7 +225,7 @@ const showSpinner = ref(false);
 
 onBeforeMount(async () => {
 
-   appStore.setCurrentPage({
+    appStore.setCurrentPage({
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),
         icon: "uil-comment-alt"
@@ -262,7 +261,7 @@ onMounted(() => {
 
 watch(() => {
     /** Mettre le titre en watch */
-   appStore.setCurrentPage({
+    appStore.setCurrentPage({
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),
         icon: "uil-comment-alt"
@@ -332,7 +331,7 @@ const submit = async () => {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
 
                             if (contactResponse.status == 201) {
-                                services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res)=>{
+                                services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
                                     console.log(res)
                                 })
 
