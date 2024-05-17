@@ -17,6 +17,7 @@ var lg = localStorage.getItem("langue")
 if(lg ==null)
     localStorage.setItem("langue","EN")
 
+localStorage.setItem("api_url",import.meta.env.VITE_APP_API_URL)
 const app = createApp(App)
 const head = createHead()
 const baseurl = ref(window.location.origin)
