@@ -22,15 +22,14 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, defineAsyncComponent, onBeforeMount } from 'vue'
+import { ref, watch, onMounted, defineAsyncComponent } from 'vue'
 import HeadComponent from '@Components/layouts/HeadComponent.vue'
 import { useUserStore } from "@Stores/user.js"
+import { useAppStore } from "@Stores/app.js"
 import { useRouter } from "vue-router"
 import { useWindowSize } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
-import { useAppStore } from "@Stores/app.js"
-import services from '@Services/services.js'
 
 
 const SpinnerComponent = defineAsyncComponent(() =>
@@ -42,7 +41,7 @@ const AlertComponent = defineAsyncComponent(() =>
 )
 const router = useRouter();
 const userStore = useUserStore();
-const appStore = useAppStore()
+const appStore = useAppStore();
 
 const chatID = ref(import.meta.env.VITE_3CX_CHAT_ID);
 
@@ -72,6 +71,7 @@ const submit = async () => {
         if (response.authenticated) {
             navigateUser(userStore.user)
             showSpinner.value = false;
+            appStore.mustRefresh = true;
         } else {
             isError.value = true;
             if (response.status == 401) {
@@ -93,7 +93,7 @@ const submit = async () => {
     })
 }
 
-const navigateUser = (user)=>{
+const navigateUser = (user) => {
     const roles = user.roles;
     let defaultRoute = { name: "Home" };
     router.push(defaultRoute).catch((e) => e);
@@ -120,6 +120,12 @@ const form__ref = ref(null)
 
 onMounted(() => {
     if (width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');
+    setTimeout(() => {
+        if (appStore.mustRefresh) {
+            appStore.mustRefresh = false;
+            router.go();
+        }
+    }, 200)
 });
 
 // onBeforeMount(async () => {

@@ -1,27 +1,14 @@
 <template>
     <div class="main__container" v-if="exist">
-
-        <div class="container mx-auto advantage__qrc_content" v-if="isNotExpired">
+        <div class="container mx-auto advantage__qrc_content">
             <div
                 class="bg-gradient-to-br from-purple-600 to-indigo-600 text-white text-center py-10 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative">
                 <h3 class="text-xl font-semibold mb-4">🎉 {{ $t("coupon.title") }} 🎁</h3>
-                <div id="qrcode__container" ref="qrcode">
-                    <vue-qrious class="qr__code mx-auto"
-                        :value="`${baseurl}/public/discount/validation/${route.params.discountTag}`"
-                        @change="onDataUrlChange" size="5000" />
-                </div>
-                <span id="cpnCode" class="border-dashed border text-white px-4 py-2 rounded-l">{{ code }}</span>
+                <h5 class="text-xl font-semibold mb-4">{{ $t("coupon.coupon_expirer") }}</h5>
+                
                 <br>
                 <h3 class="text-xl font-semibold mb-4 mt-4" v-if="advantages">{{ advantages.adv_name }} <br>{{
                     advantages.establishment_name }}</h3>
-                <div v-if="advantages">
-                    <div v-if="advantages.adv_date_to !=null  && advantages.adv_date_from !=null">
-                        <h3 class="text-xl font-semibold mb-4 mt-4" v-if="advantages.adv_date_to && advantages.adv_date_from">
-                            {{ $t("coupon.utilisation") }} {{ advantages.adv_date_from }} {{ $t("coupon.et") }} {{ advantages.adv_date_to }}
-                        </h3>
-                    </div>
-                </div>
-                
 
                 <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2 mb-6">
                     <!--<span id="cpnCode" class="border-dashed border text-white px-4 py-2 rounded-l">{{ code }}</span>-->
@@ -31,9 +18,6 @@
                             class="uil uil-qrcode-scan"></i></button>
                 </div>
 
-                
-
-                
                 <p class="text-sm" v-if="advantages">Valid Till: {{ moment(advantages.expired_at).format("DDMMM, YYYY")
                     }}</p>
 
@@ -43,7 +27,6 @@
                 </div>
             </div>
         </div>
-        <QRCodeAdvantagePageViewExpired v-else />
     </div>
     
 </template>
@@ -64,8 +47,8 @@ import 'element-plus/es/components/date-picker/style/css';
 const code = ref('')
 const { text, copy, copied, isSupported } = useClipboard()
 let exist = ref(true);
-const QRCodeAdvantagePageViewExpired = defineAsyncComponent(() =>
-    import("@Views/QRCodeAdvantagePageViewExpired.vue")
+const EstablishmentNotFound = defineAsyncComponent(() =>
+    import("@Views/EstablishmentNotFound.vue")
 )
 
 const page = ref({
@@ -83,11 +66,6 @@ const isCopied = ref(false)
 const appStore = useAppStore();
 const dateJour = moment().format('YYYY-MM-DD HH:mm:ss');
 const dateExperied = ref(null);
-const isNotExpired = ref(true);
-const date_to = ref(null);
-
-
-
 
 
 
@@ -159,17 +137,11 @@ onBeforeMount(async () => {
             advantages.value = response.data[0];
             code.value = advantages.value.code;
             dateExperied.value = advantages.value.expired_at;
-            date_to.value = advantages.value.adv_date_to;
-            localStorage.setItem('nameAdvantage', advantages.value.adv_name);
             console.log("date_expiration" , dateExperied.value);
             console.log("date_Jour" ,dateJour);
-            if( dateJour != null || date_to.value != null)
-            {
-                if( dateJour > dateExperied.value || dateJour > date_to.value){
-                    isNotExpired.value= false;
-                }
+            if( dateJour > dateExperied.value){
+                console.log("ouiiiiiiiiiii il est la ");
             }
-        
 
 
         } else {

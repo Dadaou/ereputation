@@ -52,5 +52,13 @@
         "content": "Congratulations! Your discount coupon has been successfully activated. Enjoy exclusive discounts on your next purchase. Use the discount code during checkout to save on your order."
     },
     "success_text": "You can also share your feedback on public platforms",
-    "success_text2": "Join us on social media"
+    "success_text2": "Join us on social media",
+    "coupon":{
+        "coupon_expirer": "Sorry, it seems that your coupon has expired ",
+        "title":"Exclusive Offer Just for You!",
+        "validation":"Valid Till:",
+        "utilisation": "To be used between",
+        "et":"and",
+        "validationcoupon":"Please enter the password to validate the coupon"
+    }
 }

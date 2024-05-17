@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import services from '@Services/services.js'
+import { useAppStore } from '@Stores/app.js'
 
 export const useUserStore = defineStore(
   'user',
@@ -14,14 +15,14 @@ export const useUserStore = defineStore(
       const response = await services.login(email, password)
       if (response.status == 200) {
         const _user = response.data['user']
-        const roles = _user?_user.roles:[];
-        if (roles.includes("ROLE_EREP")) {
-            authenticated.value = true
-            services.setUser()
-            user.value = _user
-            next({ authenticated: authenticated.value, status: 200 })
+        const roles = _user ? _user.roles : []
+        if (roles.includes('ROLE_EREP')) {
+          authenticated.value = true
+          services.setUser()
+          user.value = _user
+          next({ authenticated: authenticated.value, status: 200 })
         } else {
-            next({ authenticated: authenticated.value, status: 403 })
+          next({ authenticated: authenticated.value, status: 403 })
         }
       } else if (response.status == 401) {
         next({ authenticated: authenticated.value, status: 401 })
@@ -31,13 +32,19 @@ export const useUserStore = defineStore(
     }
 
     const signOut = () => {
+      const appStore = useAppStore()
+      appStore.mustRefresh = true
       services.logout()
     }
 
     const verifyPassword = async (email, app_url, next) => {
-      await services.post_Record('password/reset', { email: email, app_url: app_url }, (response) => {
-        next(response)
-      })
+      await services.post_Record(
+        'password/reset',
+        { email: email, app_url: app_url },
+        (response) => {
+          next(response)
+        }
+      )
     }
 
     const resetPassword = async (password, confirmation, token, app_url, next) => {
@@ -46,7 +53,7 @@ export const useUserStore = defineStore(
         {
           password: password,
           confirmation: confirmation,
-          app_url: app_url 
+          app_url: app_url
         },
         (response) => {
           next(response)

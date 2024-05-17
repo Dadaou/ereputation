@@ -193,6 +193,7 @@
 import { ref, onBeforeMount, defineAsyncComponent, computed } from 'vue';
 import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from '@Stores/app.js';
+import { useRouter } from "vue-router";
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css';
 import services from '@Services/services.js';
@@ -202,6 +203,7 @@ import { ElTabs, ElTabPane } from 'element-plus';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
 import { h } from 'vue'
+import { refreshTheme } from '@Services/theme.js'
 
 const VueCountryCode = defineAsyncComponent(() =>
     import("@Components/utils/CountryCodeComponent.vue")
@@ -230,6 +232,7 @@ const userStore = useUserStore();
 const appStore = useAppStore();
 const showModal = ref(false);
 const { width, height } = useWindowSize();
+const router = useRouter();
 const modalWidth = computed(() => {
     let windowSize = 1500;
     let gap = (windowSize - width.value) / 19;
@@ -307,22 +310,24 @@ const saveTheme = async (data) => {
                     h('span', { style: "font-size: 13px;" }, "Your template has been successfully updated!"),
                 ]),
             })
-            userStore.customer.back_color = response.data.back_color;
-            userStore.customer.font_color = response.data.font_color;
-            userStore.customer.title_color = response.data.title_color;
-            colorData.value = {
-                'back_color': userStore.customer.back_color || appStore.account.back_color,
-                'font_color': userStore.customer.font_color || appStore.account.font_color,
-                'title_color': userStore.customer.title_color || appStore.account.title_color
+            if (userStore.customer) {
+                userStore.customer.back_color = response.data.back_color;
+                userStore.customer.font_color = response.data.font_color;
+                userStore.customer.title_color = response.data.title_color;
+                colorData.value = {
+                    'back_color': userStore.customer.back_color || appStore.account.back_color,
+                    'font_color': userStore.customer.font_color || appStore.account.font_color,
+                    'title_color': userStore.customer.title_color || appStore.account.title_color
+                }
             }
 
-            appStore.setCssVariable('--color-bgp', userStore.customer.back_color || appStore.account.back_color);
-            appStore.setCssVariable('--color-danger', userStore.customer.title_color || appStore.account.title_color);
-            appStore.setCssVariable('--color-bg2', userStore.customer.font_color || appStore.account.font_color);
-            appStore.setCssVariable('--color-primary', userStore.customer.back_color || appStore.account.back_color);
-            appStore.setCssVariable('--light-color-bg2', `color-mix(in srgb, ${userStore.customer.back_color || appStore.account.back_color} 70%, white)`);
-            appStore.setCssVariable('--light-color-danger', `color-mix(in srgb, ${userStore.customer.title_color || appStore.account.title_color} 25%, white)`);
-            appStore.setCssVariable('--el-color-primary', userStore.customer.back_color || appStore.account.back_color);
+            refreshTheme(
+                (userStore.customer && userStore.customer.back_color) || appStore.account.back_color,
+                (userStore.customer && userStore.customer.font_color) || appStore.account.font_color,
+                (userStore.customer && userStore.customer.title_color) || appStore.account.title_color
+            );
+
+            router.go()
 
         } else {
             appStore.isLoading = false;
