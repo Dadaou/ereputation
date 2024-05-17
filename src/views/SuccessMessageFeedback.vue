@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { ref, defineAsyncComponent, onMounted, watch, onBeforeMount } from 'vue';
+import { ref, onBeforeMount, defineAsyncComponent, onMounted, watch  } from 'vue';
 import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import { useI18n } from "vue-i18n";
 import { Icon } from '@iconify/vue';
@@ -67,20 +67,12 @@ const route = useRoute();
 const companyStore = useCompanyStore();
 const userStore = useUserStore();
 const appStore = useAppStore();
-onMounted(() => {
-    /** Charger le titre par defaut */
-    page.value = {
-        title1: t("thanks_title1"),
-        title2: t("thanks_title2"),
-        icon: "uil-comment-alt",
-    };
-})
 
 onBeforeMount(async () => {
 
     appStore.setCurrentPage({
-        title1: "Laissez",
-        title2: "vos commentaires",
+        title1: t("feedback.title1"),
+        title2: t("feedback.title2"),
         icon: "uil-comment-alt"
     });
 
@@ -96,6 +88,16 @@ onBeforeMount(async () => {
     })
     console.log(links.value)
 })
+onMounted(() => {
+    /** Charger le titre par defaut */
+    page.value = {
+        title1: t("thanks_title1"),
+        title2: t("thanks_title2"),
+        icon: "uil-comment-alt",
+    };
+})
+
+
 
 watch(() => {
     /** Mettre le titre en watch */
@@ -104,6 +106,11 @@ watch(() => {
         title2: t("thanks_title2"),
         icon: "uil-comment-alt",
     };
+    appStore.setCurrentPage({
+        title1: t("feedback.title1"),
+        title2: t("feedback.title2"),
+        icon: "uil-comment-alt"
+    });
 });
 
 </script>

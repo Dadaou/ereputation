@@ -24,9 +24,6 @@ const props = defineProps({
 
 const icon = computed(() => {
     switch (props.type) {
-        case 'Platform':
-            return 'uil:external-link-alt';
-
         case 'Staff':
             return 'material-symbols:frame-person'
 
@@ -143,7 +140,6 @@ const logoSrc = computed(() => {
     width:40%;
     margin-bottom: 5px;
     border-radius: 6px;
-    box-shadow: -1px -2px 2px 0 rgba(97, 94, 94, 0.2);
 }
 
 @media screen and (max-width:600px) {
