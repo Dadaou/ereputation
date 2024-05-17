@@ -1,6 +1,5 @@
 <template>
     <div class="main__container" v-if="exist">
-
         <div class="container mx-auto advantage__qrc_content" v-if="isNotExpired">
             <div
                 class="bg-gradient-to-br from-purple-600 to-indigo-600 text-white text-center py-10 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative">
@@ -121,11 +120,11 @@ const onDataUrlChange = (dataUrl) => {
 
 onBeforeMount(async () => {
 
-    /*appStore.setCurrentPage({
-        title1: "Laissez",
-        title2: "vos commentaires",
+    appStore.setCurrentPage({
+        title1: "",
+        title2: "Advantages",
         icon: "uil-comment-alt"
-    });*/
+    });
 
     
     /* voir si le discounttag exit sinon redirection page 404 */

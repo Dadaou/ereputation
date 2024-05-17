@@ -32,9 +32,9 @@
                                 <Bar :data="ratingChart" id="rating" :options="options" />
                             </div>
                         </div>
-                        <BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData"
+                        <!--<BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData"
                             :alignment="'vertical'">
-                        </BaseLegend>
+                        </BaseLegend>-->
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
 
@@ -45,20 +45,21 @@
                                 <Line :data="confidenceChart" id="confidence" :options="newOptions" />
                             </div>
                         </div>
-                        <BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="dataLegend"
+                        <!--<BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="dataLegend"
                             :alignment="'vertical'">
-                        </BaseLegend>
+                        </BaseLegend>-->
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="Staff" name="staff">
-                    <StaffRanking/>
+                    <StaffRanking />
                 </el-tab-pane>
                 <el-tab-pane label="Events & weather" name="events_weather">
                     Coming soon ...
                 </el-tab-pane>
                 <el-tab-pane label="Sales" name="sales">
-                    <div v-if="salesAnalysis">
+                    <div
+                        v-if="salesAnalysis && salesAnalysis.avgCustomerCard != 0 && salesAnalysis.current.avgBookings != 0 && salesAnalysis.current.avgTTV != 0 && salesAnalysis.current.score != '0'">
                         <p class="analysis-sales-title" style="margin-top: 1rem;">
                             From <span class="analysis-date">{{ salesAnalysis.startDate }}</span> to <span
                                 class="analysis-date"> {{ salesAnalysis.endDate }}
@@ -74,7 +75,7 @@
                             <li>
                                 Your average customer cart is <span class="analysis-value"> {{
                                     salesAnalysis.avgCustomerCard
-                                }} {{
+                                    }} {{
                                         salesAnalysis.currency }}</span>
                             </li>
                             <li>
@@ -120,7 +121,7 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="Trends" name="trends">
-                <AnalysisTrend/>
+                    <AnalysisTrend/>
                 </el-tab-pane>
                 <el-tab-pane label="Alerts" name="alerts">
                     Coming soon ...
@@ -286,6 +287,9 @@
                 <span> {{ desc.text }} </span>
             </template>
         </el-tooltip>
+        <BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData"
+            :alignment="'vertical'">
+        </BaseLegend>
     </div>
 </template>
 <script setup>
@@ -503,8 +507,8 @@ const options = {
     maintainAspectRatio: false,
     layout: {
         padding: {
-        top: 10
-      }
+            top: 10
+        }
     },
     scales: {
         y: {
@@ -727,6 +731,7 @@ const transformData = (chartData) => {
 
     ratingChart.value = plotData2;
     confidenceChart.value = plotData1;
+    console.log(plotData2)
     score = score / datasets.length;
     avgScore.value = score;
 
@@ -794,6 +799,7 @@ onBeforeMount(async () => {
     top: 0;
     z-index: 2;
 }
+
 .loaded {
     display: flex;
     justify-content: center;
@@ -802,6 +808,15 @@ onBeforeMount(async () => {
     background: rgba(0, 0, 0, 0.1);
     opacity: 0.9;
     z-index: 1;
+}
+
+.legend {
+    border: 1px solid var(--light-color-bg2);
+    border-radius: 10px;
+    height: 100px;
+    padding: 15px;
+    margin: 15px auto;
+    margin-top: 15px !important;
 }
 
 .legend,
