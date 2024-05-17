@@ -71,7 +71,7 @@
                 <div> 
                     <div>
                         <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> {{!isHashtag?'Link':'Hashtag'}} <span>*</span></label>
-                        <p v-if="!isHashtag && provider" class="text-gray-900 text-sm">Url must start with {{splitUriAndUrl(provider).baseUrl}}</p>
+                        <p v-if="!isHashtag && provider" class="text-gray-900 text-sm">Url must start with {{splitUriAndUrl(provider).url}}</p>
                         <p v-if="!isValidLink && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
                         <p v-if="!isValidHashtag && isHashtag" class="text-red-500 text-sm">Invalid hashtag format</p>
                         <input v-if="isHashtag" type="text" id="link" v-model="link"
@@ -196,8 +196,6 @@ const establishments = computed(() => {
 
 const filteredLinks = computed(() => {
     let filteredData = allLinks.value;
-    console.log(filteredData)
-    console.log(searchLink.value)
     filteredData = filteredData.filter((data)=>{
         return !searchLink.value || 
         data.name.toLowerCase().includes(searchLink.value.toLowerCase()) || 
@@ -251,11 +249,22 @@ const handleDelete = async (index, link)=>{
     }
 }
 
-const urlPattern = (urlTemplate) => {
+
+const urlPattern = (urlTemplate, extensions = ['fr', 'es', 'com']) => {
+    const url = new URL(urlTemplate);
+    
+    const domainParts = url.hostname.split('.');
+
     let regexPattern = urlTemplate.replace(/[\-\[\]\/\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+
     regexPattern = regexPattern.replace(/{value1}/g, '(.+)');
+    regexPattern = regexPattern.replace(/q=/g, '');
+
+    const extensionPattern = extensions.join('|');
+    regexPattern = regexPattern.replace(new RegExp(`\\.${domainParts[domainParts.length - 1]}`), `.(?:${extensionPattern})`);
+   
     return new RegExp('^' + regexPattern);
-}
+};
 
 const splitUriAndUrl = (combinedString) => {
     if (combinedString !== '') {
