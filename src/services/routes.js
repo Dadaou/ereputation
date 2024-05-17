@@ -14,21 +14,21 @@ export const mainMenu = [
 		routeName: "Social",
 		icon: "uil-users-alt"
 	},
-	{
-		name: "Weather",
-		routeName: "Weather",
-		icon: "uil-cloud-sun"
-	},
+	// {
+	// 	name: "Weather",
+	// 	routeName: "Weather",
+	// 	icon: "uil-cloud-sun"
+	// },
 	{
 		name: "Reviews",
 		routeName: "Review",
 		icon: "uil-comment-alt-dots"
 	},
-	{
-		name: "Sales",
-		routeName: "Sales",
-		icon: "uil-arrow-growth"
-	},
+	// {
+	// 	name: "Sales",
+	// 	routeName: "Sales",
+	// 	icon: "uil-arrow-growth"
+	// },
 	{
 		name: "Analysis",
 		routeName: "Analysis",

@@ -297,6 +297,7 @@ const submit = async () => {
                                     app_url: app_url.value,
                                     template: 'workflow_en'
                                 }
+                                console.log(coupons)
                                 await services.createRecord('workflow', coupons, (res) => {
                                     console.log(res)
                                     resetForm()

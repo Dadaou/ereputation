@@ -152,7 +152,7 @@ const router = createRouter({
           path: '/customer/:tag/establishment/:id/events',
           name: 'Event',
           beforeEnter: [CheckAccess],
-          component: () => import('@Views/EventPageView.vue')
+          component: () => import('@Views/GlobalEventPageView.vue')
         },
         {
           path: '/customer/:tag/establishment/:id/social',
