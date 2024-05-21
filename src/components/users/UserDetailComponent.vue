@@ -203,7 +203,6 @@ import { ElTabs, ElTabPane } from 'element-plus';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
 import { h } from 'vue'
-import { refreshTheme } from '@Services/theme.js'
 
 const VueCountryCode = defineAsyncComponent(() =>
     import("@Components/utils/CountryCodeComponent.vue")
@@ -321,13 +320,6 @@ const saveTheme = async (data) => {
                 }
             }
 
-            refreshTheme(
-                (userStore.customer && userStore.customer.back_color) || appStore.account.back_color,
-                (userStore.customer && userStore.customer.font_color) || appStore.account.font_color,
-                (userStore.customer && userStore.customer.title_color) || appStore.account.title_color
-            );
-
-            router.go()
 
         } else {
             appStore.isLoading = false;

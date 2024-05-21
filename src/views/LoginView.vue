@@ -95,18 +95,6 @@ const navigateUser = (user) => {
     const roles = user.roles;
     let defaultRoute = { name: "Home" };
     router.push(defaultRoute).catch((e) => e);
-
-    // if (roles.includes("ROLE_EREP")) {
-    //     if ((roles.includes("ROLE_PARTNER") && (user.partner !== null || user.customer !== null))) {
-    //         router.push({ name: "CustomersList" }).catch((e) => e);
-    //     } else if (roles.includes("ROLE_CUSTOMER") && user.customer !== null) {
-    //         router.push({ name: "EstablishmentList", params: { tag: user.customer.tag } }).catch((e) => e);
-    //     } else {
-    //         router.push(defaultRoute).catch((e) => e);
-    //     }
-    // } else {
-    //     router.push(defaultRoute).catch((e) => e);
-    // }
 }
 /**
  * Navbar Handler
@@ -118,33 +106,7 @@ const form__ref = ref(null)
 
 onMounted(() => {
     if (width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');
-    setTimeout(() => {
-        if (appStore.mustRefresh) {
-            appStore.mustRefresh = false;
-            router.go();
-        }
-    }, 500)
 });
-
-// onBeforeMount(async () => {
-//     const response = await new Promise((resolve) => {
-//         services.get_Record(
-//             '/account/info',
-//             (response) => {
-//                 resolve(response)
-//                 if (response.status == 404) {
-//                     appStore.isLoading = false
-//                 }
-//             },
-//             true
-//         )
-//     })
-
-//     if (response.status == 200 && response.data) {
-//         const data = response.data
-//         if (data.length) appStore.setAccount(data[0])
-//     }
-// })
 
 watch([width, isError], () => {
     if (width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');

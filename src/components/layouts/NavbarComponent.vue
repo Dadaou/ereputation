@@ -9,7 +9,7 @@
         </svg>
       </button>
       <a v-if="!isFeedback" :href="baseurl" class="flex items-center space-x-3 rtl:space-x-reverse">
-        <div v-if="logo && logo.logo" class="nav-logo">
+        <div v-if="isPublic && logo && logo.logo" class="nav-logo">
           <img :src="logo.logo">
         </div>
         <div v-else-if="appStore.account && appStore.account.logo" class="nav-logo">
@@ -20,7 +20,7 @@
             appStore.account.brand }}</span>
       </a>
       <div v-else class="flex items-center space-x-3 rtl:space-x-reverse">
-        <div v-if="logo && logo.logo" class="nav-logo">
+        <div v-if="isPublic && logo && logo.logo" class="nav-logo">
           <img :src="logo.logo">
         </div>
         <span v-else-if="logo && logo.name" class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
@@ -90,6 +90,13 @@ const nav__container__ref = ref(null);
 const isScrolling = ref(false);
 const show_menu = ref(true);
 const logo = ref(null)
+
+const props = defineProps({
+  isPublic: {
+    type: Boolean,
+    default: false
+  }
+})
 
 const isFeedback = computed(() => {
   return publicUrls.includes(route.name)

@@ -3,7 +3,7 @@
     <div class="main__container" v-if="appStore.isExist">
         <HeadComponent :page="appStore.currentPage"></HeadComponent>
         <div class="breadcrumb__container">
-            <BreadcrumbComponent :data="appStore.breadcrumbs" :tag="customerTag"/>
+            <BreadcrumbComponent :data="appStore.breadcrumbs" :tag="customerTag" />
         </div>
         <div class="app__container">
             <router-view></router-view>
@@ -35,7 +35,7 @@ const customerTag = inject('tag');
 </script>
 
 <style>
-.dashboard_mobile{
+.dashboard_mobile {
     display: flex;
     justify-content: space-between;
     padding: 5px;
@@ -44,13 +44,13 @@ const customerTag = inject('tag');
     border-radius: 5px
 }
 
-.dashboard_mobile >div{
+.dashboard_mobile>div {
     padding: 7px 5px;
 }
 
 .app__container {
     margin-top: 5rem;
-    min-height:calc(90dvh - 140px);
+    min-height: calc(90dvh - 140px);
     width: var(--container-width-lg);
     margin: 0 auto;
     padding: 0;
@@ -70,7 +70,7 @@ const customerTag = inject('tag');
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    
+
 }
 
 .right__side {
@@ -150,6 +150,7 @@ const customerTag = inject('tag');
     margin: 15px auto;
     width: 100%;
 }
+
 .community__feedback .title {
     font-size: 15px;
     font-weight: 600;
@@ -176,10 +177,10 @@ const customerTag = inject('tag');
 }
 
 .no-comment {
-  margin-top: 10px;
-  color: #888; 
-  font-style: italic; 
-}   
+    margin-top: 10px;
+    color: #888;
+    font-style: italic;
+}
 
 .right__side .establishment .establishment__img {
     width: 100%;
@@ -195,11 +196,11 @@ const customerTag = inject('tag');
     max-height: 100%;
 }
 
-.right__side .establishment__info{
+.right__side .establishment__info {
     margin-bottom: 15px;
 }
 
-.right__side .date__filter{
+.right__side .date__filter {
     margin-top: 10px;
 }
 
@@ -297,7 +298,7 @@ const customerTag = inject('tag');
         border-radius: 5px;
     }
 
-    .tablet_mobile__filter > * {
+    .tablet_mobile__filter>* {
         flex-basis: 200px;
     }
 
@@ -365,7 +366,7 @@ const customerTag = inject('tag');
         padding: 5px 0px !important;
     }
 
-    .tablet_mobile__filter > * {
+    .tablet_mobile__filter>* {
         flex-basis: inherit !important;
         justify-content: center !important;
     }
@@ -373,8 +374,9 @@ const customerTag = inject('tag');
     .date__picker {
         margin: 5px 0 10px !important;
     }
-    .padlist{
-        padding:0 7px !important;
+
+    .padlist {
+        padding: 0 7px !important;
     }
 }
 
@@ -517,7 +519,7 @@ const customerTag = inject('tag');
     padding: 15px;
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
-    width:100%;
+    width: 100%;
 }
 
 .date__filter .title {

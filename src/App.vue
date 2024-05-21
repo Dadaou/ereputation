@@ -16,7 +16,7 @@ import { useUserStore } from "@Stores/user.js"
 import { RouterView, useRoute } from 'vue-router';
 import services from '@Services/services.js';
 import { useHead } from '@unhead/vue'
-import { refreshTheme } from '@Services/theme.js'
+import { refreshTheme } from '@Services/theme.js';
 
 const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
@@ -86,14 +86,6 @@ useHead({
   ],
 })
 
-const initTheme = () => {
-  refreshTheme(
-    (userStore.customer && userStore.customer.back_color) || appStore.account.back_color,
-    (userStore.customer && userStore.customer.font_color) || appStore.account.font_color,
-    (userStore.customer && userStore.customer.title_color) || appStore.account.title_color
-  );
-}
-
 onBeforeMount(async () => {
   appStore.isLoading = true;
 
@@ -112,10 +104,13 @@ onBeforeMount(async () => {
     appConfig.value.logo = data.logo
 
     appStore.setAccount(data);
-
-    userStore.updateCustomerTheme(() => {
-      setTimeout(() => initTheme(), 500);
-    });
+    setTimeout(() => {
+      refreshTheme(
+        appStore.account.back_color,
+        appStore.account.font_color,
+        appStore.account.title_color
+      );
+    }, 500);
 
     appStore.isLoading = false;
 

@@ -1,5 +1,5 @@
 <template>
-    <NavbarComponent></NavbarComponent>
+    <NavbarComponent :isPublic="true"></NavbarComponent>
     <div class="main__container">
         <HeadComponent class="head" :page="appStore.currentPage"></HeadComponent>
         <router-view></router-view>
@@ -8,7 +8,9 @@
 </template>
 <script setup>
 import { useAppStore } from "@Stores/app.js";
-import { defineAsyncComponent } from 'vue'
+import { useUserStore } from "@Stores/user.js"
+import { defineAsyncComponent, onMounted } from 'vue'
+import { refreshTheme } from '@Services/theme.js'
 
 const FooterComponent = defineAsyncComponent(() =>
     import('@Components/layouts/FooterComponent.vue')
@@ -22,4 +24,18 @@ const NavbarComponent = defineAsyncComponent(() =>
 );
 
 const appStore = useAppStore();
+const userStore = useUserStore()
+
+onMounted(() => {
+    userStore.updateCustomerTheme(() => {
+        setTimeout(() => {
+            console.log("là")
+            refreshTheme(
+                userStore.customer.back_color,
+                userStore.customer.font_color,
+                userStore.customer.title_color
+            );
+        }, 1000);
+    });
+})
 </script>
