@@ -7,7 +7,20 @@
                 <ul v-if="links.length > 0" class="mb-4 link socials">
                     <li v-for="link in links">
                         <a :href="link.url" target="_blank">
-                            {{ link.name }}
+                            <el-tooltip :content="`${$t('success_text')} ${link.name}`" placement="top">
+                <img v-if="link.name.toLowerCase().includes('booking')" src="@/assets/images/logo/Booking.svg" alt="Booking" width="24" height="24">
+                <img v-if="link.name.toLowerCase().includes('camping')" src="@/assets/images/logo/Camping.svg" alt="Camping" width="24" height="24">
+                <img v-if="link.name.toLowerCase().includes('expedia')" src="@/assets/images/logo/Expedia.svg" alt="Expedia" width="24" height="24">
+                <img v-if="link.name.toLowerCase().includes('google')" src="@/assets/images/logo/Google.svg" alt="Google" width="24" height="24">
+                <img v-if="link.name.toLowerCase().includes('hotel')" src="@/assets/images/logo/Hotel.svg" alt="Hotel" width="24" height="24">
+                <img v-if="link.name.toLowerCase().includes('maeva')" src="@/assets/images/logo/Maeva.svg" alt="Maeva" width="24" height="24">
+                <img v-if="link.name.toLowerCase().includes('opentable')" src="@/assets/images/logo/Opentable.svg" alt="Opentable" width="24" height="24">
+                <img v-if="link.name.toLowerCase().includes('thefork')" src="@/assets/images/logo/Thefork.svg" alt="Thefork" width="24" height="24">
+                <img v-if="link.name.toLowerCase().includes('tripadvisor')" src="@/assets/images/logo/Tripadvisor.svg" alt="Tripadvisor" width="24" height="24">
+                <img v-if="link.name.toLowerCase().includes('trustpilot')" src="@/assets/images/logo/Trustpilot.svg" alt="Trustpilot" width="24" height="24">
+                <img v-if="link.name.toLowerCase().includes('yelp')" src="@/assets/images/logo/Yelp.svg" alt="Yelp" width="24" height="24">
+            
+            </el-tooltip>
                         </a>
                     </li>
                 </ul>
@@ -120,9 +133,8 @@ p {
     padding: 5px 10px;
     border-radius: 5px;
     font-weight: 500;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     color: white;
-    background-color: var(--color-bgp);
+   
 }
 
 .link li:hover {

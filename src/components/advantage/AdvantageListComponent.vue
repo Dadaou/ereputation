@@ -5,8 +5,8 @@
     </div> -->
   </div>
   <div class="mt-5 erep_table table__container">
-    <el-table :data="filterTableData" style="width: 100%">
-      <el-table-column label="Name" fixed prop="name" width="200"/>
+    <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
+      <el-table-column label="Name" fixed prop="name" width="188"/>
       <el-table-column label="Establishment" prop="establishment_name" width="200"/>
       <el-table-column label="Amount" prop="amount" align="center" width="100"/>
       <el-table-column label="Category" prop="category" width="150"/>
@@ -153,9 +153,35 @@ button i.uil-edit {
   margin: 8px 0;
 }
 
+
+
+.table__container {
+  overflow-x: auto;
+}
+
+.responsive-table .el-table__header-wrapper,
+.responsive-table .el-table__body-wrapper {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
 @media screen and (max-width: 800px) {
-  .table__container{
-    width: 87%;
+  .table__container {
+    width: 96%;
+
+  }
+
+  .responsive-table .el-table__header-wrapper,
+  .responsive-table .el-table__body-wrapper {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .el-table-column {
+    min-width: 100px;
   }
 }
 </style>
