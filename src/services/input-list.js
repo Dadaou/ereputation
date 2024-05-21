@@ -251,4 +251,4 @@ export const competitor_countries = [
   { name: 'United States', code: 'US' }
 ]
 
-export const categories = ['Hotel', 'Residence', 'Chalet', 'Restaurant', 'Other']
+export const categories = ['Hotel', 'Residence', 'Chalet', 'Restaurant', 'Retail', 'Other']

@@ -1,8 +1,6 @@
 <template>
-    <div class="left__side">
         <div class="head">
             <div class="app__title">
-                <h2>Weather</h2>
             </div>
             <el-dropdown split-button type="primary">
                 {{ calculType }}
@@ -66,133 +64,6 @@
                 </table>
             </div>
         </div>
-    </div>
-    <div class="tablet_mobile__filter">
-        <div class="date__picker px-2">
-            <!-- <span class="block">Start date {{startDate}}</span> -->
-            <el-date-picker v-model="start_date" placeholder="Start date" :size="'large'" />
-        </div>
-        <div class="date__picker px-2">
-            <!-- <span class="block">End date {{endDate}}</span> -->
-            <el-date-picker v-model="end_date" placeholder="End date" :size="'large'" />
-        </div>
-    </div>
-    <div class="tablet_mobile__head">
-        <div class="establishment__info_tablet">
-            <label v-if="!dataLoading">{{ establishment.name }}</label>
-            <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
-            <div>
-                <i
-                    :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
-                <span v-if="!dataLoading">{{ establishment.category }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
-            </div>
-            <div class="society__location" v-if="establishment.country != null">
-                <i class="uil uil-map"></i>
-                <span v-if="!dataLoading">{{ establishment.country }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
-            <div class="society__location">
-                <i class="uil uil-location-point"></i>
-                <span v-if="!dataLoading">{{ establishment.city }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
-            <!-- <div class="society__location">
-                <i class="uil uil-favorite"></i>
-                <span v-if="!dataLoading" class="society__location">{{ all_items[0].value }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
-            <div class="society__location">
-                <i class="uil uil-comment-alt"></i>
-                <span v-if="!dataLoading">{{ all_items[1].value }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
-            <div class="society__location">
-                <i class="uil uil-building"></i>
-                <span v-if="!dataLoading">{{ all_items[2].value }} competitors</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div> -->
-        </div>
-        <div class="photo" v-if="!dataLoading">
-            <div v-if="establishment.url_source !== null" class="establishment__img">
-                <img :src="establishment.url_source" alt="" />
-            </div>
-            <div v-else role="status"
-                class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                    <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
-                    <path
-                        d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
-                </svg>
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-        <div class="photo" v-else>
-            <div role="status"
-                class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                    <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
-                    <path
-                        d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
-                </svg>
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-    </div>
-    <div class="right__side">
-        <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-            <a href="#" v-if="!dataLoading">
-                <div v-if="establishment.url_source !== null" class="establishment__img">
-                    <img :src="establishment.url_source" alt="" />
-                </div>
-                <div v-else role="status"
-                    class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                    <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                        <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
-                        <path
-                            d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
-                    </svg>
-                    <span class="sr-only">Loading...</span>
-                </div>
-            </a>
-            <a href="#" v-else>
-                <div role="status"
-                    class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                    <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                        <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
-                        <path
-                            d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
-                    </svg>
-                    <span class="sr-only">Loading...</span>
-                </div>
-            </a>
-            <div class="establishment__info">
-                <label class="society__name" v-if="!dataLoading">{{ establishment.name }}</label>
-                <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
-                <div class="society__location">
-                    <i
-                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
-                    <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
-                    <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                </div>
-                <div class="society__location">
-                    <i class="uil uil-location-point"></i>
-                    <span v-if="!dataLoading" class="society__location">{{
-                        establishment.city }}</span>
-                    <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-                </div>
-            </div>
-            <div class="date__filter">
-                <div class="text-sm title">Select a date range</div>
-                <el-date-picker v-model="start_date" placeholder="Start date" :size="'large'" />
-                <el-date-picker class="mt-2" v-model="end_date" placeholder="End date" :size="'large'" />
-            </div>
-        </div>
-    </div>
 </template>
 
 <script setup>
@@ -229,12 +100,6 @@ const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 const customerTag = inject('tag')
 
-appStore.setCurrentPage({
-    title1: "",
-    title2: "Weather",
-    icon: "uil-cloud-sun",
-})
-
 appStore.setIsExist(true);
 
 const WeatherChartComponent = defineAsyncComponent(() =>
@@ -247,19 +112,6 @@ const SpinnerComponent = defineAsyncComponent(() =>
 
 const route = useRoute();
 const companyId = route.params.id;
-
-appStore.setBreadcrumbs([
-    {
-        title: "Establishment",
-        path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
-        isCurrent: false,
-    },
-    {
-        title: "Weather",
-        path: `${route.path}`,
-        isCurrent: true
-    }
-])
 
 let data = ref([]);
 let weatherIcons = ref([]);
@@ -282,9 +134,6 @@ const all_items = ref([
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
 
-// const dateEnd = ref(new Date());
-// const datefrom = moment().subtract(30, 'days').format('YYYY-MM-DD')
-// const dateStart = ref(new Date(datefrom));
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 const colors = ref(['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']);
@@ -294,21 +143,11 @@ provide('chartWidth', chartWidth);
 onUpdated(() => {
     chartWidth.value = (el.value != null && el.value != undefined) ? Math.abs(el.value.offsetWidth - 50) : chartWidth.value;
 })
-// let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-// let endDate = moment().format('YYYY-M-DD');
-
-// const viewData = async () => {
-   
-//    startDate = moment(start_date.value).format('YYYY-MM-DD');
-//    endDate = moment(end_date.value).format('YYYY-MM-DD');
-  
-// }
 
 watch([start_date, end_date], async () => {
     load.value = true
     await loadWeatherFromServer(companyId, start_date.value,end_date.value, calculType.value);
     await loadConditionFromServer(companyId, start_date.value, end_date.value);
-    // viewData()
 })
 
 const generatedLegend = (colors, dataType) => {
@@ -365,7 +204,6 @@ const loadWeatherFromServer = async (tag, dateStart, dateEnd, unit) => {
         ({
             name: r['name'],
             reviews: r['rating'],
-            // temperature: r['temperature']
         }));
         weatherIcons.value = results.map(r =>
         ({
@@ -379,10 +217,7 @@ const loadWeatherFromServer = async (tag, dateStart, dateEnd, unit) => {
     }
 }
 const weatherRating = ref(null);
-// const nbDays = computed(()=>{
-//     console.log(getNbDays(dateEnd.value, dateStart.value))
-//     return getNbDays(dateEnd.value, dateStart.value)
-// })
+
 const getIcon = (weatherConditions)=>{
     switch (weatherConditions) {
             case 'Rain, Overcast':
@@ -419,7 +254,6 @@ const getIcon = (weatherConditions)=>{
 }
 
 const formattedWeatherRating = computed(() => {
-    // const unit = nbDays.value>1?'days':'day'
     const order = ['Clear', 'Partially cloudy', 'Overcast', 'Rain, Partially cloudy', 'Rain Partially cloudy', 'Rain, Overcast', 'Rain Overcast', 'Rain', 'Snow Rain Overcast']
     let conditions = []
     if (!weatherRating.value) return [];
@@ -455,14 +289,6 @@ const formattedWeatherRating = computed(() => {
     }
 })
 
-// const getNbDays = (date1, date2)=>{
-//     date1 = new Date(date1);
-//     date2 = new Date(date2);
-//     const differenceInTime = date1.getTime() - date2.getTime();
-
-//     return Math.round(differenceInTime / (1000 * 3600 * 24));
-// }
-
 const loadConditionFromServer = async (tag, dateStart, dateEnd) => {
     let apiBase = '/etablissement/conditions';
     let apiParams = `tag=${tag}`;
@@ -490,44 +316,7 @@ const loadConditionFromServer = async (tag, dateStart, dateEnd) => {
 }
 
 onBeforeMount(async () => {
-    appStore.isLoading = true;
     chartLoading.value = true;
-
-    companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
-
-        if (data == false) {
-            appStore.setIsExist(false);
-            appStore.isLoading = false;
-        }
-        else {
-            establishment.value = data;
-            appStore.setCurrentPage({
-                title1: "",
-                title2: "Weather",
-                icon: "uil-cloud-sun",
-            })
-
-            appStore.setBreadcrumbs([
-                {
-                    title: establishment.value.name,
-                    path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
-                    isCurrent: false,
-                },
-                {
-                    title: "Weather",
-                    path: `${route.path}`,
-                    isCurrent: true
-                }
-            ])
-
-            all_items.value[0].value = establishment.value.rating;
-            all_items.value[1].value = establishment.value.totalReviews;
-            appStore.isLoading = false;
-            dataLoading.value = false;
-            chartLoading.value = false;
-
-        }
-    })
 
     await loadWeatherFromServer(companyId, start_date.value, end_date.value, 'C');
     await loadConditionFromServer(companyId, start_date.value, end_date.value);

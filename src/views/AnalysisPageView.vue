@@ -23,8 +23,6 @@
                         :ratings="ratingsCondition3" condition='condition3' v-if="ratingsCondition3.length > 0"
                         class="mb-4" />
 
-                    <!-- <StrengthWeakness :weaknesses="ratingsCondition4" :strengths="ratingsCondition1"/> -->
-
                     <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']">
                         <div class="containerChart" ref="scrollContainer1"
                             @scroll="syncScroll('scrollContainer1', 'scrollContainer2')">
@@ -32,9 +30,7 @@
                                 <Bar :data="ratingChart" id="rating" :options="options" />
                             </div>
                         </div>
-                        <!--<BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData"
-                            :alignment="'vertical'">
-                        </BaseLegend>-->
+                      
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
 
@@ -45,9 +41,7 @@
                                 <Line :data="confidenceChart" id="confidence" :options="newOptions" />
                             </div>
                         </div>
-                        <!--<BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="dataLegend"
-                            :alignment="'vertical'">
-                        </BaseLegend>-->
+                        
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
                 </el-tab-pane>
@@ -168,21 +162,6 @@
                 <span v-if="!dataLoading">{{ establishment.city }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
             </div>
-            <!-- <div class="society__location">
-                <i class="uil uil-favorite"></i>
-                <span v-if="!dataLoading" class="society__location">{{ all_items[0].value }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
-            <div class="society__location">
-                <i class="uil uil-comment-alt"></i>
-                <span v-if="!dataLoading">{{ all_items[1].value }}</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div>
-            <div class="society__location">
-                <i class="uil uil-building"></i>
-                <span v-if="!dataLoading">{{ all_items[2].value }} competitors</span>
-                <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
-            </div> -->
         </div>
         <div class="photo" v-if="!dataLoading">
             <div v-if="establishment.url_source !== null" class="establishment__img">

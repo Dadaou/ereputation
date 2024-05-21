@@ -255,12 +255,6 @@ onBeforeMount(async()=>{
    loading.value = false;
 })
 
-// onMounted(()=>{
-// 	console.log("ito lasa aloha")
-//     deleteEvents()
-//     positionEvent()
-// })
-
 watch([date, type],async()=>{
   if(date.value !== null){
   	  loading.value = true;
@@ -293,7 +287,7 @@ watch([date, type],async()=>{
 	.chart::-webkit-scrollbar
 	{
 	    width: 6px;
-	    height: 10px !important; 
+	    height: 5px !important; 
 	    background-color: white;
 	}
 

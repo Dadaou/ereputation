@@ -386,9 +386,10 @@ ul {
 
 .discount-list {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  align-items: center;
   gap: 6px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .discount-list li {
@@ -425,8 +426,8 @@ ul {
 }
 
 .discount-item {
-  width: calc(50% - 12px);
-  min-width: 260px;
+  width: 100%;
+  max-width: 300px;
   text-align: center;
 }
 
@@ -441,5 +442,20 @@ ul {
 
 ul::-webkit-scrollbar {
   display: none;
+}
+
+/* Media query for larger screens */
+@media (min-width: 768px) {
+  .discount-list {
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+     /* Ajuster l'espace entre les éléments */
+  }
+
+  .discount-item {
+    flex: 1 1 calc(50% - 12px); /* Flex basis pour 50% avec ajustement pour l'espace */
+    max-width: calc(50% - 11px); /* Max-width ajustée pour deux colonnes */
+  }
 }
 </style>
