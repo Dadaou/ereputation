@@ -10,6 +10,7 @@
       <el-table-column label="Source" prop="source" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Category" prop="category" style="width: 10%; min-width: 200px;" />
       <el-table-column label="Url" prop="url" style="width: 25%; min-width: 200px;" />
+      <el-table-column label="Gate" prop="section" style="width: 25%; min-width: 200px;" />
       <!-- <el-table-column label="Caption" prop="caption" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Section" prop="section" style="width: 25%; min-width: 200px;" /> -->
       <el-table-column label="Operations" style="width: 25%; min-width: 200px;" align="right">
@@ -53,6 +54,7 @@ const filterTableData = computed(() =>{
         return !search.value ||
         (data.source && data.source.toLowerCase().includes(search.value.toLowerCase())) ||
         (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
+        (data.section && data.section.toLowerCase().includes(search.value.toLowerCase())) ||
         (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase()))
    })
   return filteredData; 

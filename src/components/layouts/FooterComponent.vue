@@ -15,11 +15,6 @@
                     <ul v-if="!isFeedback">
                       <li>Legal Notice</li>
                       <li>
-                        <RouterLink to="/contact" :class="{ 'active-link': isContactActive }">
-                          Contact
-                        </RouterLink>
-                      </li>
-                      <li>
                         <RouterLink to="/sign-up" :class="{ 'active-link': isSignUpActive }">
                           Pricing
                         </RouterLink>
