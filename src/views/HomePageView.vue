@@ -33,7 +33,7 @@ import { useAppStore } from "@Stores/app.js"
 import { useRouter, useRoute } from "vue-router";
 import { Icon } from '@iconify/vue';
 import { useCompanyStore } from "@Stores/company.js";
-import { refreshTheme } from '@Services/theme';
+import { refreshTheme } from '@Services/theme.js'
 
 const userStore = useUserStore();
 const appStore = useAppStore()
@@ -69,12 +69,21 @@ onMounted(async () => {
         })
     }
 
-    setTimeout(() => {
-        if (appStore.mustRefresh) {
-            appStore.mustRefresh = false;
-            router.go();
-        }
-    }, 200)
+    if (appStore.mustRefresh) {
+
+        userStore.updateCustomerTheme(() => {
+            setTimeout(() => {
+                refreshTheme(
+                    (userStore.customer && userStore.customer.back_color) || appStore.account.back_color,
+                    (userStore.customer && userStore.customer.font_color) || appStore.account.font_color,
+                    (userStore.customer && userStore.customer.title_color) || appStore.account.title_color
+                );
+            }, 500);
+        });
+
+        appStore.mustRefresh = false;
+        router.go();
+    }
 
 });
 </script>

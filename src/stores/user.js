@@ -77,6 +77,21 @@ export const useUserStore = defineStore(
       return `${firstInitial}${secondInitial}`
     }
 
+    const updateCustomerTheme = async (next) => {
+      if (customer.value) {
+        await services.get_Record(`customer/theme?tag=${customer.value.tag}`, (response) => {
+          if (response && response.status == 200) {
+            customer.value.back_color = response.data.back_color
+            customer.value.back_color = response.data.back_color
+            customer.value.back_color = response.data.back_color
+            next()
+          }
+        })
+      } else {
+        next()
+      }
+    }
+
     return {
       user,
       customer,
@@ -87,7 +102,8 @@ export const useUserStore = defineStore(
       getInitials,
       getInitialsV2,
       verifyPassword,
-      resetPassword
+      resetPassword,
+      updateCustomerTheme
     }
   },
   {
