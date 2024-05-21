@@ -123,7 +123,7 @@ onMounted(() => {
             appStore.mustRefresh = false;
             router.go();
         }
-    }, 200)
+    }, 500)
 });
 
 // onBeforeMount(async () => {

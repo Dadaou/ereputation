@@ -9,7 +9,10 @@
         </svg>
       </button>
       <a v-if="!isFeedback" :href="baseurl" class="flex items-center space-x-3 rtl:space-x-reverse">
-        <div v-if="appStore.account && appStore.account.logo" class="nav-logo">
+        <div v-if="logo && logo.logo" class="nav-logo">
+          <img :src="logo.logo">
+        </div>
+        <div v-else-if="appStore.account && appStore.account.logo" class="nav-logo">
           <img :src="appStore.account.logo">
         </div>
         <span v-else-if="appStore.account && appStore.account.brand"
@@ -132,7 +135,7 @@ const toggleMobileMenu = () => {
 const currentLanguage = ref(current);
 
 watch(y, () => {
-  try{
+  try {
     if (y.value > 0) {
       nav__ref.value.classList.add('nav__onScroll');
       isScrolling.value = true;
@@ -144,10 +147,10 @@ watch(y, () => {
       document.getElementById("userinitial").classList.add('initial')
       document.getElementById("userinitial").classList.remove('initial_scroll')
     }
-  }catch(exeption ){
+  } catch (exeption) {
     // Do nothing 
   }
- 
+
 });
 
 watch(width, () => {

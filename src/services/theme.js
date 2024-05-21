@@ -4,7 +4,6 @@ const setCssVariable = (item, value) => {
 }
 
 export const refreshTheme = (back_color, font_color, title_color) => {
-  console.log('test')
   setCssVariable('--color-bgp', back_color)
   setCssVariable('--color-danger', title_color)
   setCssVariable('--color-bg2', font_color)

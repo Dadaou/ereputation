@@ -113,7 +113,9 @@ onBeforeMount(async () => {
 
     appStore.setAccount(data);
 
-    initTheme();
+    userStore.updateCustomerTheme(() => {
+      setTimeout(() => initTheme(), 500);
+    });
 
     appStore.isLoading = false;
 
