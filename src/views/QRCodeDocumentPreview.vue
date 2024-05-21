@@ -4,8 +4,8 @@
       <div>
         <div class="template__filter">
           <div class="text-sm title">Choose a template</div>
-          <el-select v-model="template" filterable placeholder="choose template" size="large">
-            <el-option v-for="(item, index) in templates" :key="index" :label="item.name" :value="item" />
+          <el-select v-model="templateId" filterable placeholder="choose template" size="large">
+            <el-option v-for="(item, index) in templates" :key="index" :label="item.name" :value="item.id" @click="changeValue(item)"/>
           </el-select>
           <button v-if="template" class="btn downloads mt-2" @click="generatePdf">PDF Download</button>
         </div> <br>
@@ -53,7 +53,6 @@ import QrcodeVue from 'qrcode.vue';
 import QRCode from 'qrcode';
 import DOMPurify from 'dompurify';
 import services from '@Services/services.js';
-// import he from 'he';
 import { ElOption, ElSelect, ElMessage } from 'element-plus';
 import 'element-plus/es/components/option/style/css';
 import 'element-plus/es/components/select/style/css';
@@ -85,20 +84,18 @@ const text1 = ref('');
 const text2 = ref('');
 const text3 = ref('');
 const core = ref('');
+const templateId = ref(null)
 
 const submit = async () => {
   try {
-    // Récupérer les valeurs des champs du formulaire
     updateTemplate();
-
   } catch (error) {
-    // Gérer les erreurs en cas d'échec de la requête
     console.error('Error updating form:', error);
   }
 };
 
-const generatePdf = () => {
-  addContentToPdf();
+const generatePdf = async() => {
+  await addContentToPdf();
   doc.save(`${filename.value}.pdf`);
 };
 
@@ -108,20 +105,6 @@ const removeHtmlTags = (str) => {
   }
   return str
 }
-
-// const findDifference = (text1, text2) => {
-//   text1 = text1.split(' ');
-//   text2 = text2.split(' ');
-
-//   let difference = '';
-//   for (let i = 0; i < Math.min(text1.length, text2.length); i++) {
-//     if (text1[i] !== text2[i]) {
-//       difference = text2.slice(i, i + 3).join(' ');
-//       break;
-//     }
-//   }
-//   return difference;
-// }
 
 const addContentToPdf = async () => {
   const body = document.getElementsByClassName("content");
@@ -134,28 +117,26 @@ const addContentToPdf = async () => {
     const adjustedHeight = 0 || 130 / aspectRatio;
     doc.addImage(imageData, 'PNG', 10, 10, 130, adjustedHeight);
   }
-
-  // html2canvas(body, { width: 1000, height: 1200 }).then(canvas => {
-  //   const imgData = canvas.toDataURL('image/png'); // Convert canvas to image data
-  //   doc.addImage(imgData, 'PNG', 7, 7, 250, 300);
-  //   doc.save('canvas.pdf');
-  // }).catch(error => { console.log(error) });
 }
 
 const generateQRCode = () => {
   const qrCodeData = qrStore.qrcodeValue;
-  // console.log(qrStore.qrcodeValue)
+ 
   QRCode.toCanvas(document.getElementById('qrcodeContainer'), qrCodeData, { width: 100, height: 100 }, (error, canvas) => {
     if (!error) {
       const imageData = canvas.toDataURL('image/png');
       console.log(canvas);
       console.log(imageData);
-      // doc.addImage(imageData, 'PNG', 55, 65, 35, 35);
+      
     } else {
       console.error('QR Code generation error:', error);
     }
   });
 };
+
+const changeValue = (item)=>{
+  template.value = item
+}
 
 const updateTemplate = () => {
   services.patchRecord('qrtemplates', template.value.id, {
@@ -180,7 +161,6 @@ const updateTemplate = () => {
 
 const imageUrlToBase64 = async (imageUrl) => {
   try {
-    // Récupérer l'image depuis l'URL
     const response = await fetch(imageUrl, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access')}`
@@ -188,7 +168,6 @@ const imageUrlToBase64 = async (imageUrl) => {
     });
     const blob = await response.blob();
 
-    // Convertir l'image en base64
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => resolve(reader.result);
@@ -217,15 +196,6 @@ const generateCore = async () => {
   tmp = tmp.replace('{{qrcodeimg}}', `<img src="${qrCodeDataURL}" style="width: 100%;">`)
   tmp = tmp.replace('{{logo}}', `<img src="data:image/png;base64,${template.value.logo_base64}" style="width: 100%;">`);
 
-  // imageUrlToBase64(template.value.logo)
-  //   .then(base64Image => {
-  //     console.log('Image en base64 :', base64Image);
-  //     // Faites quelque chose avec l'image base64, comme l'afficher dans une balise <img>
-  //   })
-  //   .catch(error => {
-  //     console.error('Erreur :', error);
-  //   });
-
   core.value = tmp;
 }
 
@@ -249,11 +219,10 @@ onBeforeMount(async () => {
     }
   ])
   templates.value = await qrStore.getTemplates(route.params.tag, route.params.id);
-
-  // if (templates.value.length > 0) {
-  //   template.value = templates.value[0];
-  // }
-
+  if(templates.value.length>0){
+    template.value = templates.value[0]
+    templateId.value = template.value.id
+  }
 });
 
 watch([text1, text2, textGreeting, textClosing, text3], () => {
@@ -273,11 +242,6 @@ watch(template, () => {
 })
 </script>
 <style>
-/*.content img#logo{
-  height: 50px;
-  margin: auto;
-}*/
-
 #preview {
   margin-top: -24px;
 }

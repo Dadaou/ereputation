@@ -286,16 +286,6 @@ import 'element-plus/es/components/select/style/css';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
 
-// import {
-//   Chart as ChartJS,
-//   Title,
-//   Tooltip,
-//   Legend,
-//   BarElement,
-//   CategoryScale,
-//   LinearScale,
-//   ArcElement
-// } from 'chart.js'
 import {
     Chart as ChartJS,
     CategoryScale,
