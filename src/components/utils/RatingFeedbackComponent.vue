@@ -1,30 +1,30 @@
 <template>
     <div class="rating__feedback">
-        <div :class="[ratingCustomer.terrible.clicked?'clicked':'']" @click="selectRating('terrible')">
+        <div :class="[ratingCustomer.terrible.clicked ? 'clicked' : '']" @click="selectRating('terrible')">
             <i class="uil uil-angry"></i>
             <span>{{ $t("feedback.rating.evaluate.terrible") }}</span>
         </div>
 
-        <div :class="[ratingCustomer.bad.clicked?'clicked':'']" @click="selectRating('bad')">
+        <div :class="[ratingCustomer.bad.clicked ? 'clicked' : '']" @click="selectRating('bad')">
             <i class="uil uil-sad"></i>
             <span>{{ $t("feedback.rating.evaluate.bad") }}</span>
         </div>
 
-        <div :class="[ratingCustomer.okay.clicked?'clicked':'']" @click="selectRating('okay')">
+        <div :class="[ratingCustomer.okay.clicked ? 'clicked' : '']" @click="selectRating('okay')">
             <i class="uil uil-smile"></i>
             <span>{{ $t("feedback.rating.evaluate.okay") }}</span>
         </div>
 
-        <div :class="[ratingCustomer.good.clicked?'clicked':'']" @click="selectRating('good')">
+        <div :class="[ratingCustomer.good.clicked ? 'clicked' : '']" @click="selectRating('good')">
             <i class="uil uil-laughing"></i>
             <span>{{ $t("feedback.rating.evaluate.good") }}</span>
         </div>
 
-        <div :class="[ratingCustomer.amazing.clicked?'clicked':'']" @click="selectRating('amazing')">
+        <div :class="[ratingCustomer.amazing.clicked ? 'clicked' : '']" @click="selectRating('amazing')">
             <i class="uil uil-grin"></i>
             <span>{{ $t("feedback.rating.evaluate.amazing") }}</span>
         </div>
-          
+
     </div>
 </template>
 <script setup>
@@ -33,16 +33,16 @@ import { ref, inject } from 'vue';
 const emit = defineEmits(['updateValue']);
 
 const ratingCustomer = ref({
-    terrible: { note: 1, clicked: false, feeling: 'negative'},
-    bad: { note: 2, clicked: false, feeling: 'negative'},
-    okay: { note: 3, clicked: false, feeling: 'positive'},
-    good: { note: 4, clicked: false, feeling: 'positive'},
-    amazing: { note: 5, clicked: false, feeling: 'positive'},
+    terrible: { note: 1, clicked: false, feeling: 'negative' },
+    bad: { note: 2, clicked: false, feeling: 'negative' },
+    okay: { note: 3, clicked: false, feeling: 'neutral' },
+    good: { note: 4, clicked: false, feeling: 'positive' },
+    amazing: { note: 5, clicked: false, feeling: 'positive' },
 });
 
-const selectRating = (selectedRating)=>{
-    for(const key in ratingCustomer.value){
-        if(key == selectedRating){
+const selectRating = (selectedRating) => {
+    for (const key in ratingCustomer.value) {
+        if (key == selectedRating) {
             ratingCustomer.value[key].clicked = true;
             emit('updateValue', ratingCustomer.value[key])
         }
@@ -55,7 +55,7 @@ selectRating('okay');
 
 </script>
 <style scoped>
-.rating__feedback{
+.rating__feedback {
     display: flex;
     justify-content: space-between;
     width: 80%;
@@ -63,7 +63,7 @@ selectRating('okay');
     margin-top: 1rem;
 }
 
-.rating__feedback div{
+.rating__feedback div {
     display: flex;
     flex-direction: column;
     padding: 10px;
@@ -74,48 +74,49 @@ selectRating('okay');
     cursor: pointer;
 }
 
-.rating__feedback i{
+.rating__feedback i {
     font-size: 25px;
     color: var(--color-primary);
 }
 
-.rating__feedback span{
+.rating__feedback span {
     font-size: 14px;
     color: var(--color-primary);
 }
 
-.rating__feedback .clicked{
+.rating__feedback .clicked {
     border: 2px solid var(--color-primary);
 }
 
-.clicked i, .clicked span{
+.clicked i,
+.clicked span {
     color: var(--color-danger) !important;
 }
 
 @media screen and (max-width:1400px) {
-    .rating__feedback{
+    .rating__feedback {
         width: 90% !important;
 
     }
 }
 
 @media screen and (max-width:670px) {
-    .rating__feedback{
+    .rating__feedback {
         width: 100% !important;
-        gap:5px;
+        gap: 5px;
     }
 }
 
 @media screen and (max-width:600px) {
-    .rating__feedback div{
+    .rating__feedback div {
         width: 5rem !important;
     }
 
-    .rating__feedback i{
+    .rating__feedback i {
         font-size: 15px !important;
     }
 
-    .rating__feedback span{
+    .rating__feedback span {
         font-size: 10px !important;
         font-weight: 500;
     }

@@ -52,10 +52,11 @@ const links = ref(null);
 
 const categories = ref([
     { value: "menus", label: "Menus", active: false, icon: "uim:th-large" },
-    { value: "info", label: "Infos", active: false, icon: "uil:info-circle" },
     { value: "reviews", label: "Reviews", active: true, icon: "uil:star" },
-    { value: "follow", label: "Follow us", active: false, icon: "uil:heart-alt" },
-    { value: "offers", label: "Offers", active: false, icon: "bi:tags" }
+    { value: "offers", label: "Offers", active: false, icon: "bi:tags" },
+    { value: "info", label: "Infos", active: false, icon: "uil:info-circle" },
+    { value: "follow", label: "Follow us", active: false, icon: "uil:heart-alt" }
+    
 ]);
 
 const openMenu = (item) => {

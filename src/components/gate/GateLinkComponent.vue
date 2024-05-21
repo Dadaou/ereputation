@@ -62,7 +62,7 @@ const logoSrc = computed(() => {
         } else if (props.item.href.includes('camping.com')) {
             return new URL ('@/assets/images/logo/Camping.svg', import.meta.url).href; 
         } else if (props.item.href.includes('expedia.fr')) {
-            return new URL ('@/assets/images/logo/Expidia.svg', import.meta.url).href; 
+            return new URL ('@/assets/images/logo/Expedia.svg', import.meta.url).href; 
         } else if (props.item.href.includes('google.com')) {
             return new URL ('@/assets/images/logo/Google.svg', import.meta.url).href; 
         } else if (props.item.href.includes('google.fr')) {
@@ -82,6 +82,8 @@ const logoSrc = computed(() => {
         } else if (props.item.href.includes('tripadvisor.com')) {
             return new URL ('@/assets/images/logo/Tripadvisor.svg', import.meta.url).href;
         } else if (props.item.href.includes('tripadvisor.fr')) {
+            return new URL ('@/assets/images/logo/Tripadvisor.svg', import.meta.url).href; 
+        } else if (props.item.href.includes('tripadvisor.es')) {
             return new URL ('@/assets/images/logo/Tripadvisor.svg', import.meta.url).href; 
         } else if (props.item.href.includes('fr.trustpilot.com')) {
             return new URL ('@/assets/images/logo/Trustpilot.svg', import.meta.url).href; 
