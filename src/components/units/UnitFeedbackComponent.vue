@@ -312,7 +312,7 @@ const submit = async () => {
         "optin": true,
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
         "dateReview": moment(date_review, 'DD/MM/YYYY'),
-        "visitor": `/api/visitors/${visitorId}`
+        "visitor": visitorId ? `/api/visitors/${visitorId}`: null
     }
 
     let contactData = {
