@@ -4,16 +4,16 @@
             <p> {{ $t("success") }} </p>
             <div class="mt-6" v-if="route.params.share !== 'message'">
                 <h2 v-if="links.length > 0">{{ $t("success_text") }}</h2>
-                <ul v-if="links.length > 0" class="mb-4 link socials">
+                <ul v-if="links.length > 0" class="logoSrc">
                     <li v-for="link in links">
                         <a :href="link.url" target="_blank">
                             <el-tooltip :content="`${$t('success_text')} ${link.name}`" placement="top">
                 <img v-if="link.name.toLowerCase().includes('booking')" src="@/assets/images/logo/Booking.svg" alt="Booking" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('camping')" src="@/assets/images/logo/Camping.svg" alt="Camping" width="24" height="24">
+                <img v-if="link.name.toLowerCase().includes('camping')" src="@/assets/images/logo/Camping.png" alt="Camping" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('expedia')" src="@/assets/images/logo/Expedia.svg" alt="Expedia" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('google')" src="@/assets/images/logo/Google.svg" alt="Google" width="24" height="24">
+                <img v-if="link.name.toLowerCase().includes('google')" src="@/assets/images/logo/GoogleF.svg" alt="Google" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('hotel')" src="@/assets/images/logo/Hotel.svg" alt="Hotel" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('maeva')" src="@/assets/images/logo/Maeva.svg" alt="Maeva" width="24" height="24">
+                <img v-if="link.name.toLowerCase().includes('maeva')" src="@/assets/images/logo/Maeva.png" alt="Maeva" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('opentable')" src="@/assets/images/logo/Opentable.svg" alt="Opentable" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('thefork')" src="@/assets/images/logo/Thefork.svg" alt="Thefork" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('tripadvisor')" src="@/assets/images/logo/Tripadvisor.svg" alt="Tripadvisor" width="24" height="24">
@@ -126,6 +126,14 @@ watch(() => {
 p {
     /* text-align: center;*/
     font-weight: 500;
+}
+
+.logoSrc{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    /* justify-content: center;*/
+   
 }
 
 .link li {
