@@ -125,16 +125,16 @@ const customerTag = inject('tag')
 const loadFromServer = async (type, company, datefrom, dateto) => {
     switch (type) {
         case 'yearly':
-            datefrom = moment(datefrom).format('YYYY');
-            dateto = moment(dateto).format('YYYY');
+            datefrom = moment(new Date(datefrom)).format('YYYY');
+            dateto = moment(new Date(dateto)).format('YYYY');
             break;
         case 'monthly':
-            datefrom = moment(datefrom).format('YYYY-MM');
-            dateto = moment(dateto).format('YYYY-MM');
+            datefrom = moment(new Date(datefrom)).format('YYYY-MM');
+            dateto = moment(new Date(dateto)).format('YYYY-MM');
             break;
         default:
-            datefrom = moment(datefrom).format('YYYY-MM-DD');
-            dateto = moment(dateto).format('YYYY-MM-DD');
+            datefrom = moment(new Date(datefrom)).format('YYYY-MM-DD');
+            dateto = moment(new Date(dateto)).format('YYYY-MM-DD');
             break;
     }
 

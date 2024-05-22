@@ -310,8 +310,8 @@ watch(route_name, () => {
 
 const loadStaffs = async (tag, dateStart, dateEnd) => {
     staffLoading.value = true;
-    dateStart = moment(dateStart).format('YYYY-MM-DD')
-    dateEnd = moment(dateEnd).format('YYYY-MM-DD')
+    dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD')
+    dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD')
 
     const response = await new Promise((resolve) => {
         services.get_Record(`/establishment/${companyId}/staffs?dateFrom=${dateStart}&dateTo=${dateEnd}`, (response) => {

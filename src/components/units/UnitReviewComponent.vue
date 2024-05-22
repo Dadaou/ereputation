@@ -79,8 +79,8 @@ const loadReviews = async (unit, dateStart, dateEnd) => {
     let apiParams = `tag=${unit}`
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
         apiParams += `&from=${dateStart}&to=${dateEnd}`;
     }
 

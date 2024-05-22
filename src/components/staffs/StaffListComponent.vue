@@ -21,7 +21,6 @@
           <el-input v-model="search" size="small" placeholder="Type to search" />
         </template>
         <template #default="scope">
-          <el-button size="small" @click="showQRCode(scope.row)"><i class="uil uil-qrcode-scan"></i></el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
             <template #reference>
               <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
@@ -33,10 +32,6 @@
       </el-table-column>
     </el-table>
   </div>
-  <QrCodeModalComponent v-if="staff"
-    :qrcodeValue="`${baseurl}/public/${tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`"
-    :showModal="showModal" :filename="`${staff.firstname} ${staff.lastname}-feedback-link`" @close="showModal = false"
-    :customer="tag" :establishment="staff.establishment_tag" />
 </template>
 
 <script setup>
@@ -50,11 +45,6 @@ import 'element-plus/es/components/table-column/style/css'
 import 'element-plus/es/components/popconfirm/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
-import services from '@Services/services.js';
-
-const QrCodeModalComponent = defineAsyncComponent(() =>
-  import('@Components/utils/QrCodeModalComponent.vue')
-)
 
 const emit = defineEmits(['edit']);
 const staffStore = useStaffStore();

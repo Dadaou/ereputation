@@ -6,7 +6,7 @@ import services from '@Services/services.js'
 export const useAppStore = defineStore('app', () => {
   const isLoading = ref(false)
   const breadcrumbs = ref(null)
-  const currentPage = ref('')
+  const currentPage = ref({})
   const isExist = ref(true)
   const account = ref(null)
   const start_date = ref(moment().subtract(30, 'days').format('YYYY-M-DD'))
@@ -33,10 +33,10 @@ export const useAppStore = defineStore('app', () => {
 
   const setDatesValue = (startDate, endDate) => {
     start_date.value = IsValueOkay(startDate)
-      ? moment(startDate).format('YYYY-M-DD')
+      ? moment(new Date(startDate)).format('YYYY-M-DD')
       : moment().subtract(30, 'days').format('YYYY-M-DD')
     end_date.value = IsValueOkay(endDate)
-      ? moment(endDate).format('YYYY-M-DD')
+      ? moment(new Date(endDate)).format('YYYY-M-DD')
       : moment().format('YYYY-M-DD')
   }
 

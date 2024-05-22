@@ -469,8 +469,8 @@ const loadDatasets = async () => {
 const viewData = async (establishment, establishmentTag, dateStart, dateEnd, website, competitors, timePeriods) => {
     chartLoading.value = true
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
     }
 
     if (establishment && establishment['competitors']) {
@@ -563,8 +563,8 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     let apiParams = `tag=${tag}&page=${page}&limit=${limit}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
         apiParams += `&from=${dateStart}&to=${dateEnd}`;
     }
 
@@ -606,8 +606,8 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source) => {
     let apiParams = `tag=${tag}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
     } /*else {
         startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
         endDate = moment().format('YYYY-M-DD');
@@ -660,8 +660,8 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
     let apiParams = `tag=${tag}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
     } /*else {
         startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
         endDate = moment().format('YYYY-M-DD');
@@ -693,8 +693,8 @@ const loadIndiceData = async (tag, dateStart, dateEnd) => {
     let apiParams = "";
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
     } /*else {
         startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
         endDate = moment().format('YYYY-M-DD');

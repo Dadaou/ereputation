@@ -78,7 +78,7 @@
 </template>
 
 <script setup>
-import { ref, provide, onBeforeMount, defineAsyncComponent } from 'vue';
+import { ref, provide, onBeforeMount, defineAsyncComponent, onMounted } from 'vue';
 import { ElTabs, ElTabPane } from 'element-plus';
 import PlanCard from '@Components/subscription/PlanCard.vue';
 import SubscriptionSummary from '@Components/subscription/SubscriptionSummary.vue';
@@ -322,6 +322,17 @@ const loadPaymentForm = async () => {
     }
   })
 };
+
+onMounted(() => {
+  var w3cxDiv = document.createElement("div");
+  w3cxDiv.id = "w3cx";
+  document.getElementById("app").appendChild(w3cxDiv);
+  let w3cx = document.createElement("script");
+  w3cx.setAttribute("src", "https://downloads-global.3cx.com/downloads/livechatandtalk/v1/callus.js");
+  w3cx.setAttribute("id", "tcx-callus-js");
+  w3cx.setAttribute("charset", "utf-8");
+  document.getElementById("w3cx").appendChild(w3cx);
+})
 
 </script>
 <style>

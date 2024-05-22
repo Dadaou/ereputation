@@ -165,8 +165,8 @@ const getPlotData = async (period, rangedate, companyId, next) => {
     format = 'YYYY'
   }
 
-  const datefrom = moment(rangedate[0]).format(format);
-  const dateto = moment(rangedate[1]).format(format);
+  const datefrom = moment(new Date(rangedate[0])).format(format);
+  const dateto = moment(new Date(rangedate[1])).format(format);
 
   const response = await new Promise((resolve) => {
     services.get_Record(`/establishment/${companyId}/${period}/${datefrom}/${dateto}/staff`, (response) => {
@@ -280,8 +280,8 @@ const getUnitChartdata = async (tag, category, rangedate) => {
   let format = 'YYYY-MM-DD';
   chartUnitLoading.value = true
 
-  const dateStart = moment(rangedate[0]).format(format);
-  const dateEnd = moment(rangedate[1]).format(format);
+  const dateStart = moment(new Date(rangedate[0])).format(format);
+  const dateEnd = moment(new Date(rangedate[1])).format(format);
 
   if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
     apiParams += `&fromDate=${dateStart}&toDate=${dateEnd}`;

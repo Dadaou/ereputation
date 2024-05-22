@@ -134,29 +134,38 @@ const emit = defineEmits(['update']);
 const partnerships = inject('partnerships')
 
 const filterTableDataSent = computed(() => {
-  let filterdata = partnerships.value['sent'];
-  filterdata = filterdata.filter(
-    (data) =>
-      !searchSent.value ||
-      data.advantage_name.toLowerCase().includes(searchSent.value.toLowerCase()) ||
-      data.partnership_name.toLowerCase().includes(searchSent.value.toLowerCase()) ||
-      data.establishment_name.toLowerCase().includes(searchSent.value.toLowerCase()) ||
-      data.state.toLowerCase().includes(searchSent.value.toLowerCase())
-  )
-  return filterdata
+  if (partnerships.value && partnerships.value['sent']) {
+    let filterdata = partnerships.value['sent'];
+    filterdata = filterdata.filter(
+      (data) =>
+        !searchSent.value ||
+        data.advantage_name.toLowerCase().includes(searchSent.value.toLowerCase()) ||
+        data.partnership_name.toLowerCase().includes(searchSent.value.toLowerCase()) ||
+        data.establishment_name.toLowerCase().includes(searchSent.value.toLowerCase()) ||
+        data.state.toLowerCase().includes(searchSent.value.toLowerCase())
+    )
+    return filterdata
+  } else {
+    return []
+  }
+
 })
 
 const filterTableDataReceived = computed(() => {
-  let filterdata = partnerships.value['received'];
-  filterdata = filterdata.filter(
-    (data) =>
-      !searchReceived.value ||
-      data.advantage_name.toLowerCase().includes(searchReceived.value.toLowerCase()) ||
-      data.partnership_name.toLowerCase().includes(searchReceived.value.toLowerCase()) ||
-      data.establishment_name.toLowerCase().includes(searchReceived.value.toLowerCase()) ||
-      data.state.toLowerCase().includes(searchReceived.value.toLowerCase())
-  )
-  return filterdata
+  if (partnerships.value && partnerships.value['received']) {
+    let filterdata = partnerships.value['received'];
+    filterdata = filterdata.filter(
+      (data) =>
+        !searchReceived.value ||
+        data.advantage_name.toLowerCase().includes(searchReceived.value.toLowerCase()) ||
+        data.partnership_name.toLowerCase().includes(searchReceived.value.toLowerCase()) ||
+        data.establishment_name.toLowerCase().includes(searchReceived.value.toLowerCase()) ||
+        data.state.toLowerCase().includes(searchReceived.value.toLowerCase())
+    )
+    return filterdata
+  } else {
+    return []
+  }
 })
 
 const handleAccept = async (index, partnership) => {

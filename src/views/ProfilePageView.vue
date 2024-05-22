@@ -1,6 +1,5 @@
 <template>
   <div class="main__container">
-    <HeadComponent :page="page"></HeadComponent>
     <div class="breadcrumb__container">
       <BreadcrumbComponent :data="breadcrumbData" />
     </div>

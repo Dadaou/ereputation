@@ -1,37 +1,35 @@
 <template>
     <div class="filters">
         <div class="select_info">
-             <el-select v-model="type" size="large">
-                <el-option v-for="(item, index) in types" :key="index" :label="item.label"
-                            :value="item.value"/>
+            <el-select v-model="type" size="large">
+                <el-option v-for="(item, index) in types" :key="index" :label="item.label" :value="item.value" />
             </el-select>
-            <Tooltip :text="info_bulle_text"/>
+            <Tooltip :text="info_bulle_text" />
         </div>
         <el-select v-model="categoryFilters" size="large">
-            <el-option v-for="(item, index) in categories" :key="index" :label="item.label"
-                        :value="item.value"/>
+            <el-option v-for="(item, index) in categories" :key="index" :label="item.label" :value="item.value" />
         </el-select>
         <div>
-           <!--  <el-date-picker v-model="start_date" type="date" :size="'large'" /> -->
-           <el-input-number v-model="days" :min="1" size="large"/>         
+            <!--  <el-date-picker v-model="start_date" type="date" :size="'large'" /> -->
+            <el-input-number v-model="days" :min="1" size="large" />
         </div>
         <!-- <div>
             <el-date-picker v-model="end_date" type="date" :size="'large'" />
         </div> -->
     </div>
     <div class="society__list mt-5" v-if="establishments.length > 0">
-            <suspense>
-                <establishments-list-component :establishments="establishments" :tag='customerTag'/>
-                <template #fallback>
-                    <establishment-list-loaded-component :nb="3" />
-                </template>
-            </suspense>
+        <suspense>
+            <establishments-list-component :establishments="establishments" :tag='customerTag' />
+            <template #fallback>
+                <establishment-list-loaded-component :nb="3" />
+            </template>
+        </suspense>
     </div>
 </template>
 <script setup>
 import { ref, onBeforeMount, onMounted, defineAsyncComponent, inject, computed, watch } from 'vue';
 import EstablishmentListLoadedComponent from '@Components/utils/EstablishmentListLoadedComponent.vue';
-import { ElOption, ElSelect,  ElDatePicker, ElInputNumber } from 'element-plus';
+import { ElOption, ElSelect, ElDatePicker, ElInputNumber } from 'element-plus';
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
 import { useCompanyStore } from "@Stores/company.js";
@@ -60,16 +58,16 @@ const dataLoading = ref(true);
 const customerTag = inject('tag');
 
 const categories = ref([
-    {label: 'All', value: 'all'},
-    {label: 'Hotel', value: 'Hotel'},
-    {label: 'Restaurant', value: 'Restaurant'},
-    {label: 'Residence', value: 'Residence'},
-    {label: 'Other', value: 'Other'},
+    { label: 'All', value: 'all' },
+    { label: 'Hotel', value: 'Hotel' },
+    { label: 'Restaurant', value: 'Restaurant' },
+    { label: 'Residence', value: 'Residence' },
+    { label: 'Other', value: 'Other' },
 ]);
 
 const types = ref([
-    {label: 'Global', value: 'global'},
-    {label: 'Score', value: 'score'},
+    { label: 'Global', value: 'global' },
+    { label: 'Score', value: 'score' },
 ]);
 
 const type = ref('global')
@@ -95,37 +93,37 @@ const days = ref(60)
 //     return result;
 // })
 
-watch([type, categoryFilters, days],async()=>{
-     await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value)
+watch([type, categoryFilters, days], async () => {
+    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value)
 })
 
 const IsValueOkay = (value) => (value == '' || value == 0 || value == null || value == undefined) ? false : true;
-const loadEstablishment = async(tag, category, days, note)=>{
+const loadEstablishment = async (tag, category, days, note) => {
     let uri = 'get/establishment/trend'
     let params = `tag=${tag}&category=${category}&note=${note}&days=${days}`
 
     // if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-    //     dateStart = moment(dateStart).format('YYYY-MM-DD');
-    //     dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+    //     dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+    //     dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
     //     params += `&from=${dateStart}&to=${dateEnd}`;
     // }
 
     uri = `${uri}?${params}`
 
     const response = await new Promise((resolve) => {
-            services.get_Record(uri, (response) => {
-                resolve(response);
-            });
+        services.get_Record(uri, (response) => {
+            resolve(response);
+        });
     });
 
-    if(response.status == 200) {
-       establishments.value = response.data.map(objet => {
-        return {...objet, ratio: objet.ratio_value, ratio_text: objet.ratio, isTrends:true}
-      });
+    if (response.status == 200) {
+        establishments.value = response.data.map(objet => {
+            return { ...objet, ratio: objet.ratio_value, ratio_text: objet.ratio, isTrends: true }
+        });
     }
 }
 
-onMounted(async()=>{
+onMounted(async () => {
     // if (userStore.user) {
     //     companiesStore.getEstablishments(customerTag.value).then((data) => {
     //         establishments.value = data;
@@ -137,40 +135,40 @@ onMounted(async()=>{
     //     })
     // } else appStore.isLoading = false;
 
-    await loadEstablishment(customerTag.value,categoryFilters.value, days.value, type.value)
-        dataLoading.value = false
+    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value)
+    dataLoading.value = false
 });
-    
+
 </script>
 <style scoped>
 .filters {
- display: flex;
- flex-wrap: wrap;
- justify-content: space-between;
- align-items: center;
- padding: 10px;
- background-color: #f5f5f5;
- border-radius: 5px;
- box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.filters > * {
- margin: 2px;
- flex-grow: 1;
- max-width: 310px; /* Adjust based on your design needs */
+.filters>* {
+    margin: 2px;
+    flex-grow: 1;
+    max-width: 310px;
+    /* Adjust based on your design needs */
 }
 
-.select_info{
+.select_info {
     display: flex;
     align-items: center;
     align-content: center;
 }
 
 @media (max-width: 768px) {
- .filters > * {
-    flex-basis: 100%;
-    margin-bottom: 10px;
- }
+    .filters>* {
+        flex-basis: 100%;
+        margin-bottom: 10px;
+    }
 }
-
 </style>

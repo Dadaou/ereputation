@@ -149,18 +149,13 @@ const custom_width = computed(() => {
 })
 
 const viewData = async () => {
-    // date2, comparisonByEstablishments, selectedCompany, selectedTimePeriod
 
     let sDate = moment().subtract(6, 'months').format('YYYY-M-DD');
     let eDate = moment().format('YYYY-M-DD');
 
-    // if (start_date.value)
-    //     sDate = moment(start_date.value).format('YYYY-M-DD');
-    // if (end_date.value) eDate = moment(end_date.value).format('YYYY-M-DD');
-
     if (IsValueOkay(start_date.value) && IsValueOkay(end_date.value)) {
-        sDate = moment(start_date.value).format('YYYY-M-DD');
-        eDate = moment(end_date.value).format('YYYY-M-DD');
+        sDate = moment(new Date(start_date.value)).format('YYYY-M-DD');
+        eDate = moment(new Date(end_date.value)).format('YYYY-M-DD');
     }
     chart2Loading.value = true
 
@@ -223,8 +218,6 @@ const plotData = ref([]);
 
 const IsValueOkay = (value) => (value == '' || value == null || value == undefined) ? false : true;
 watch([start_date, end_date], () => {
-    // appStore.setDatesValue(start_date.value, end_date.value);
-    // emits('update')
     if (IsValueOkay(start_date.value) && IsValueOkay(end_date.value)) {
         date2.value = [start_date.value, end_date.value]
     } else {
@@ -232,20 +225,7 @@ watch([start_date, end_date], () => {
     }
 })
 
-// const viewDataByEstablishment = (establishments, timePeriod, startDate, endDate, colors) => {
-//     plotData.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, establishments);
-//     legendData.value = companiesStore.generateLegend(establishments, colors);
-// }
-
-// const viewDataBySource = (websites, establishment, timePeriod, startDate, endDate, colors) => {
-//     websites = companiesStore.getWebsites(websites);
-//     plotData.value = companiesStore.calculateReviewsBySources(establishment, websites, timePeriod, startDate, endDate);
-//     legendData.value = companiesStore.generateLegendV2(websites, colors);
-// }
-
 watch([start_date, end_date, comparisonByEstablishments, selectedCompany, selectedTimePeriod], () => {
-    // startDate = moment().startOf('year').format('YYYY-M-DD');
-    // endDate = moment().endOf('year').format('YYYY-M-DD');
     viewData();
 })
 
@@ -288,13 +268,6 @@ const getWidth = () => {
 };
 
 const get_Width = () => {
-    // const defaultWidth = 1400;
-    // if (width.value >= 1500) {
-    //     return `${defaultWidth}px`;
-    // }
-    // const percentage = 1;
-
-    // return `${Math.min(width.value * percentage, 850)}px`;
     return '100%'
 };
 

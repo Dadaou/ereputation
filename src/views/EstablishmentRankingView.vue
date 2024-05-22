@@ -89,8 +89,8 @@ const loadEstablishment = async (tag, category, dateStart, dateEnd, note) => {
 	let params = `tag=${tag}&category=${category}&note=${note}`
 
 	if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-		dateStart = moment(dateStart).format('YYYY-MM-DD');
-		dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+		dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+		dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
 		params += `&from=${dateStart}&to=${dateEnd}`;
 	}
 

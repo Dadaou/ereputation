@@ -224,8 +224,8 @@ const getPlotData = async (period, rangedate, next) => {
     format = 'YYYY'
   }
 
-  const datefrom = moment(rangedate[0]).format(format);
-  const dateto = moment(rangedate[1]).format(format);
+  const datefrom = moment(new Date(rangedate[0])).format(format);
+  const dateto = moment(new Date(rangedate[1])).format(format);
 
   const response = await new Promise((resolve, reject) => {
     services.get_Record(`/establishment/${companyId}/${period}/${datefrom}/${dateto}/events`, (response) => {

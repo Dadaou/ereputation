@@ -459,10 +459,10 @@ const dataLoading = ref(false);
 
 watch([start_date, end_date, selectedHashtag], async () => {
     if (activeName.value == 'socials') {
-        await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
+        await loadPostData(companyId, currentSocial.value, moment(new Date(start_date.value)).format('YYYY-MM-DD'), moment(new Date(end_date.value)).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
     } else {
         if (selectedHashtag.value !== null) {
-            await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
+            await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(new Date(start_date.value)).format('YYYY-MM-DD'), moment(new Date(end_date.value)).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
         } else {
             hashtagData.value = []
         }
@@ -471,16 +471,16 @@ watch([start_date, end_date, selectedHashtag], async () => {
 
 watch(activeName, async () => {
     selectedHashtag.value = 'All'
-    await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
+    await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(new Date(start_date.value)).format('YYYY-MM-DD'), moment(new Date(end_date.value)).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
 })
 
 watch([currentSocial, currentHashtagSocial], async () => {
     if (activeName.value == 'socials') {
-        await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
+        await loadPostData(companyId, currentSocial.value, moment(new Date(start_date.value)).format('YYYY-MM-DD'), moment(new Date(end_date.value)).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
     } else {
         selectedHashtag.value = 'All'
         await loadHashtags(companyId, currentHashtagSocial.value.id)
-        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
+        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(new Date(start_date.value)).format('YYYY-MM-DD'), moment(new Date(end_date.value)).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
     }
 })
 
@@ -749,9 +749,9 @@ onBeforeMount(async () => {
     }
 
     if (activeName.value == 'socials') {
-        await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
+        await loadPostData(companyId, currentSocial.value, moment(new Date(start_date.value)).format('YYYY-MM-DD'), moment(new Date(end_date.value)).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
     } else {
-        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), '', 1, options.value['rowLimit'], 1)
+        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(new Date(start_date.value)).format('YYYY-MM-DD'), moment(new Date(end_date.value)).format('YYYY-MM-DD'), '', 1, options.value['rowLimit'], 1)
     }
 
     const response = await new Promise((resolve) => {

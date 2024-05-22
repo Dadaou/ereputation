@@ -556,12 +556,12 @@ const loadAnalysisData = async (tag, dateStart, dateEnd, categories) => {
     let apiParams = `etablishment=${tag}`;
 
     if (IsValueOkay(dateStart)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD')
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD')
         apiParams += `&from=${dateStart}`;
     }
 
     if (IsValueOkay(dateEnd)) {
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD')
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD')
         apiParams += `&to=${dateEnd}`;
     }
 
@@ -606,12 +606,12 @@ const loadSalesAnalysisData = async (tag, dateStart, dateEnd) => {
     let apiParams = `tag=${tag}`;
 
     if (IsValueOkay(dateStart)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD')
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD')
         apiParams += `&dateFrom=${dateStart}`;
     }
 
     if (IsValueOkay(dateEnd)) {
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD')
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD')
         apiParams += `&dateTo=${dateEnd}`;
     }
 

@@ -170,7 +170,7 @@ const transformData = (data, start_date, end_date) => {
 }
 
 watch([start_date, end_date, type], async () => {
-    await loadSocialData(companyId, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), type.value)
+    await loadSocialData(companyId, moment(new Date(start_date.value)).format('YYYY-MM-DD'), moment(new Date(end_date.value)).format('YYYY-MM-DD'), type.value)
 })
 
 onBeforeMount(async () => {

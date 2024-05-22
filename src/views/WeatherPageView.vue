@@ -188,8 +188,8 @@ const loadWeatherFromServer = async (tag, dateStart, dateEnd, unit) => {
     legendData.value = generatedLegend(colors.value, dataType);
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
         apiParams += `&from=${dateStart}&to=${dateEnd}`;
     }
 
@@ -294,8 +294,8 @@ const loadConditionFromServer = async (tag, dateStart, dateEnd) => {
     let apiParams = `tag=${tag}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
         apiParams += `&from=${dateStart}&to=${dateEnd}`;
     }
 
