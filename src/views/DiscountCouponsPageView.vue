@@ -21,15 +21,6 @@
                   {{scope.row.expired_at?moment(scope.row.expired_at).format('YYYY-MM-DD'):''}}
          </template>
       </el-table-column>
-  <!--     <el-table-column label="Confirm" align="center" width="100">
-        <template #default="scope">
-            <span v-if="scope.row.confirm" @click="handleCancel(scope.row.id)" class="has-hover"><i
-                class="uil uil-check-square"  style="color: #777; font-size: 15px;"></i></span>
-
-            <span v-else @click="handleConfirm(scope.row.id)" class="has-hover"><i class="uil uil-square"
-                style="color: #777; font-size: 15px;"></i></span>
-        </template>
-      </el-table-column> -->
       <el-table-column label="Confirm" fixed="right" width="200">
         <template #header>
           <el-input v-model="search" size="small" placeholder="Type to search" />

@@ -131,11 +131,11 @@ watch(staff_to_update, ()=>{
         lastname.value = staff_to_update.value["lastname"];
         firstname.value = staff_to_update.value["firstname"];
         type.value = 'edit';
+        section.value = staff_to_update.value["section"];
     }
 })
 
 const loadData = (_staff, staff)=>{
-    console.log(staff)
     let new_staff = {
         id: _staff.id,
         datefrom : _staff.datefrom,
@@ -149,11 +149,12 @@ const loadData = (_staff, staff)=>{
         gender: _staff.gender,
         firstname: _staff.firstname,
         lastname: _staff.lastname,
+        section: staff.section
     }
     staffs.value.push(new_staff);
 }
 
-const updateData = (_staff)=>{
+const updateData = (_staff, staff)=>{
 
     let new_staff = {
         id: _staff.id,
@@ -168,6 +169,7 @@ const updateData = (_staff)=>{
         gender: _staff.gender,
         firstname: _staff.firstname,
         lastname: _staff.lastname,
+        section: staff.section
     }
 
      staffs.value.forEach((staff, index)=>{
@@ -211,6 +213,7 @@ const submit = async ()=>{
                         lastname.value = '';
                         firstname.value = '';
                         showSpinner.value = false;
+                        section.value = ''
                     }
             }else{
                  const response = await new Promise((resolve) => {
@@ -222,7 +225,7 @@ const submit = async ()=>{
                 if(response.status == 200){
                         let data = response.data;
                         console.log(data);
-                        updateData(data);
+                        updateData(data, staff);
                         ElMessage({
                             message: `Staff updated successfully`,
                             type: 'success',
@@ -236,6 +239,7 @@ const submit = async ()=>{
                         lastname.value = '';
                         firstname.value = '';
                         showSpinner.value = false;
+                        section.value = ''
                         type.value = 'add';
                         staff_to_update.value = null;
                     } 
