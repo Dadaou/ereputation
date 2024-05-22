@@ -179,7 +179,7 @@ onBeforeMount(async()=>{
 })
 
 window.onresize = () => {
-    if (lineChartContainer.value.clientWidth > 400) {
+    if (ineChartContainer.value && lineChartContainer.value.clientWidth > 400) {
         barChartWidth.value = lineChartContainer.value.clientWidth;
     } else {
         barChartWidth.value = 400;

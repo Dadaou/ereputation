@@ -20,19 +20,38 @@
                     'marginTop': '10px',
                     'marginBottom': '10px'
                 }">
-                    <SpinnerComponent />
-                </div>
-	 <GroupedBarChart 
-	        v-else
-			:plot-data="plotdata.notes"
+    <SpinnerComponent />
+    </div>
+    <div v-else class="chart" :style="{
+    'display': 'flex',
+    'width': '100%',
+    }">
+      <div class="colSmall">
+         <GroupedBarChart 
+      :plot-data="plotdata.notes"
             x-key="date"
             :width="custom_width.chart"
-            :height="250"
+            :height="200"
             :margin="{ top: 20, bottom: 35, left: 55, right: 20 }"
             y-axis-label="Reviews"
             :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
             :y-tick-format="d => `${d}`" />
-       <div id="chartEvents" style="min-height: 60px; width: 100%; position: relative;"></div>
+      </div>
+      <div class="colLarge">
+        <div class="boxLarge">
+           <GroupedBarChart 
+      :plot-data="plotdata.notes"
+            x-key="date"
+            :width="custom_width.chart"
+            :height="200"
+            :margin="{ top: 20, bottom: 35, left: 55, right: 20 }"
+            y-axis-label="Reviews"
+            :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
+            :y-tick-format="d => `${d}`" />
+             <div id="chartEvents" style="min-height: 60px; width: 100%; position: relative;"></div>
+        </div>
+      </div>
+    </div>
 	</div>
 	<div class="chartLegend">
 		<BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
@@ -299,4 +318,57 @@ watch([date, type],async()=>{
   rect.reconstituate{
     border: 5px solid red;
   }
+
+  .colLarge {
+  overflow-x: scroll; 
+  width: 100%;
+}
+
+@media screen and (min-width:976px) {
+    .colSmall {
+        max-width:56px;
+        overflow: hidden;
+    }
+
+    .boxLarge {
+        max-width:800px;
+        margin-left:-60px;
+    }
+}
+
+@media screen and (min-width:769px) and (max-width: 975px) {
+    .colSmall {
+        max-width:56px;
+        overflow: hidden;
+    }
+
+    .boxLarge {
+        max-width:90%;
+        margin-left:-60px;
+    }
+}
+
+@media screen and (min-width:469px) and (max-width: 768px) {
+    .colSmall {
+        max-width:56px;
+        overflow: hidden;
+    }
+
+    .boxLarge {
+        max-width:700px;
+        margin-left:-60px;
+    }
+}
+
+@media screen and (max-width:468px) {
+    .colSmall {
+        max-width:56px;
+        overflow: hidden;
+    }
+
+    .boxLarge {
+        max-width:700px;
+        margin-left:-60px;
+    }
+}
 </style>

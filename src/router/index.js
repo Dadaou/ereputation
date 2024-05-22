@@ -1,3 +1,4 @@
+
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@Views/LoginView.vue'
 import SubscriptionPageView from '@Views/SubscriptionPageView.vue'
@@ -404,9 +405,9 @@ const router = createRouter({
               component: () => import('@Components/users/UserDetailComponent.vue')
             },
             {
-              path: 'contact',
+              path: 'advantage_contact',
               name: 'Contact',
-              component: () => import('@Components/users/ContactComponent.vue')
+              component: () => import('@Components/advantage/AdvantageContactComponent.vue')
             },
             {
               path: 'subscriptions',

@@ -18,10 +18,26 @@
     }">
       <SpinnerComponent />
     </div>
-    <GroupedBarChart v-else :plot-data="data" x-key="name" :width="custom_width" :height="200"
-      :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
-      :x-tick-format="d => `${d}`" />
-    <div id="weatherIcons" style="height: 58px; width: 100%; position: relative;">
+    <div v-else class="chart" :style="{
+        'display': 'flex',
+        'width': '100%',
+     }">
+     <div class="colSmall">
+       <GroupedBarChart :plot-data="data" x-key="name" :width="custom_width" :height="200"
+        :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
+        :x-tick-format="d => `${d}`" :margin="{ top: 20, bottom: 35, left: 30, right: 20 }"/>
+        <!--  <div id="weatherIcons" style="height: 58px; width: 100%; position: relative;">
+         </div> -->
+     </div>
+     <div class="colLarge">
+      <div class="boxLarge">
+        <GroupedBarChart :plot-data="data" x-key="name" :width="custom_width" :height="200"
+        :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
+        :x-tick-format="d => `${d}`" :margin="{ top: 20, bottom: 35, left: 30, right: 20 }"/>
+        <div id="weatherIcons" style="height: 58px; width: 100%; position: relative;">
+        </div>
+      </div>
+     </div>
     </div>
     <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'"></BaseLegend>
   </div>
@@ -69,13 +85,13 @@ const getWidth = () => {
 
 const deleteIcons = () => {
   const weathers = document.getElementById("weatherIcons");
-  weathers.innerHTML = "";
+  if(weathers) weathers.innerHTML = "";
 }
 
 const positionIcons = () => {
   let positions = [];
 
-  const elements = document.querySelectorAll(".weather__chart .xaxis g.tick");
+  const elements = document.querySelectorAll(".weather__chart .boxLarge .xaxis g.tick");
 
 
   elements.forEach(e => {
@@ -116,5 +132,57 @@ watch(data, () => {
 </script>
 
 <style scoped>
-/* Add any additional styles if needed */
+.colLarge {
+  overflow-x: scroll; 
+  width: 100%;
+  margin-left: -25px;
+}
+
+@media screen and (min-width:976px) {
+    .colSmall {
+        max-width:56px;
+        overflow: hidden;
+    }
+
+    .boxLarge {
+        max-width:800px;
+        margin-left:-60px;
+    }
+}
+
+@media screen and (min-width:769px) and (max-width: 975px) {
+    .colSmall {
+        max-width:56px;
+        overflow: hidden;
+    }
+
+    .boxLarge {
+        max-width:90%;
+        margin-left:-60px;
+    }
+}
+
+@media screen and (min-width:469px) and (max-width: 768px) {
+    .colSmall {
+        max-width:56px;
+        overflow: hidden;
+    }
+
+    .boxLarge {
+        max-width:700px;
+        margin-left:-60px;
+    }
+}
+
+@media screen and (max-width:468px) {
+    .colSmall {
+        max-width:56px;
+        overflow: hidden;
+    }
+
+    .boxLarge {
+        max-width:700px;
+        margin-left:-60px;
+    }
+}
 </style>
