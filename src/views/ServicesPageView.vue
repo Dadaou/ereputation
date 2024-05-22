@@ -23,8 +23,6 @@
             <SpinnerComponent />
           </div>
           <div v-else class="chart" :style="{
-            // 'maxWidth': '100%', // Set a maximum width
-            // 'overflowX': isMobile ? 'scroll' : 'auto'
             'display': 'flex',
             'width': '100%',
           }">
@@ -360,7 +358,6 @@ watch([date, type], async () => {
 .chart {
   overflow-x: auto;
   margin-bottom: 0px;
-  /* margin bottom  */
 }
 
 @media (max-width: 768px) {
@@ -369,12 +366,6 @@ watch([date, type], async () => {
   }
 }
 
-/* .chart::-webkit-scrollbar {
-  width: 6px;
-  height: 10px !important;
-  background-color: white;
-} */
-
 @media screen and (max-width:900px) {
     .range__date {
         flex-direction: column;
@@ -382,8 +373,9 @@ watch([date, type], async () => {
 }
 
 .colLarge {
-        overflow-x: scroll;   
-    }
+  overflow-x: scroll; 
+  width: 100%;
+}
 
 @media screen and (min-width:976px) {
     .colSmall {
