@@ -82,7 +82,6 @@ const filterTableData = computed(() =>{
 });
 
 const reloadData = (advantageToRemove) => {
-  // Filtrer la liste d'avantages pour exclure celui qui doit être supprimé
   advantages.value = advantages.value.filter((item) => item.id !== advantageToRemove.id);
 };
 

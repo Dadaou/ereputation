@@ -1,105 +1,76 @@
 <template>
   <div class="overflow-x-auto">
-    <table class="w-full table-auto text-sm text-left text-gray-500 dark:text-gray-400">
-      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-        <tr>
-          <th scope="col" class="px-6 py-3">
-            Establishment
-          </th>
-          <th scope="col" class="px-6 py-3">
-            Customer email
-          </th>
-          <th scope="col" class="px-6 py-3">
-            Advantage name
-          </th>
-          <th scope="col" class="px-6 py-3">
-            Discount Code
-          </th>
-          <th scope="col" class="px-6 py-3">
-            Code
-          </th>
-          <th scope="col" class="px-6 py-3">
-            Amount
-          </th>
-          <th scope="col" class="px-6 py-3">
-            Validated at
-          </th>
-          <th scope="col" class="px-6 py-3">
-            Expired at
-          </th>
-          <th scope="col" class="px-6 py-3">
-            Confirm
-          </th>
-        </tr>
-      </thead>
-      <tbody v-if="discountData.length > 0">
-        <tr v-for="discount in discountData" :key="discount.id"
-          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-          <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-            {{ discount.establishment_name }}
-          </td>
-          <td class="px-6 py-4">
-            {{ discount.contact_email || '-' }}
-          </td>
-           <td class="px-6 py-4">
-            {{ discount.adv_name }}
-          </td>
-           <td class="px-6 py-4">
-            {{ discount.adv_code }}
-          </td>
-          <td class="px-6 py-4">
-            {{ discount.code }}
-          </td>
-          <td class="px-6 py-4">
-            {{ discount.adv_amount }}
-          </td>
-          <td class="px-6 py-4" v-if="discount.validated_at">
-            {{ moment(discount.validated_at).format('YYYY-MM-DD') }}
-          </td>
-           <td class="px-6 py-4" v-else>
-            -
-          </td>
-          <td class="px-6 py-4">
-            {{ moment(discount.expired_at).format('YYYY-MM-DD') }}
-          </td>
-          <td class="px-6 py-4 text-center">
-            <span v-if="discount.confirm" @click="handleCancel(discount.id)" class="has-hover"><i
+    <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
+      <el-table-column fixed label="Advantage name" prop="adv_name" width="250"/>
+      <el-table-column label="Establishment" prop="establishment_name" width="200"/>
+      <el-table-column label="Customer email" width="250">
+        <template #default="scope">
+            {{ scope.row.contact_email || '-' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="Discount Code" prop="adv_code" width="150"/>
+      <el-table-column label="Code" prop="code" width="100"/>
+      <el-table-column label="Amount" prop="adv_amount" width="100"/>
+      <el-table-column label="Validated at" align="center" width="200">
+        <template #default="scope">
+            {{ scope.row.validated_at?moment(scope.row.validated_at).format('YYYY-MM-DD'):'-' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="Expired At" width="200">
+         <template #default="scope">
+                  {{scope.row.expired_at?moment(scope.row.expired_at).format('YYYY-MM-DD'):''}}
+         </template>
+      </el-table-column>
+      <el-table-column label="Confirm" align="center" width="100">
+        <template #default="scope">
+            <span v-if="scope.row.confirm" @click="handleCancel(scope.row.id)" class="has-hover"><i
                 class="uil uil-check-square"  style="color: #777; font-size: 15px;"></i></span>
 
-            <span v-else @click="handleConfirm(discount.id)" class="has-hover"><i class="uil uil-square"
+            <span v-else @click="handleConfirm(scope.row.id)" class="has-hover"><i class="uil uil-square"
                 style="color: #777; font-size: 15px;"></i></span>
-          </td>
-        </tr>
-      </tbody>
-      <tbody v-else>
-        <tr class="no__contacts">
-          <td colspan="4">
-            <div style="text-align: center;">
-              <span>No Discount coupons available</span>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="Operations" fixed="right" width="200">
+        <template #header>
+          <el-input v-model="search" size="small" placeholder="Type to search" />
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
 <script setup>
 import moment from 'moment';
+import { ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import { useRoute } from "vue-router";
 import {
   ref,
-  onBeforeMount
+  onBeforeMount,
+  computed
 } from 'vue';
 
 
 const route = useRoute();
 const customer = route.params.tag;
 const userStore = useUserStore();
-
+const search = ref('');
 const discountData = ref([])
+
+const filterTableData = computed(() =>{
+  let filteredData = discountData.value;
+  filteredData = filteredData.filter((data)=>{
+        return !search.value || 
+        (data.adv_name && data.adv_name.toLowerCase().includes(search.value.toLowerCase())) || 
+        (data.code && data.code.toLowerCase().includes(search.value.toLowerCase())) ||
+        (data.adv_code && data.adv_code.toLowerCase().includes(search.value.toLowerCase())) ||
+        (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase())) ||
+        (data.contact_email && data.contact_email.toLowerCase().includes(search.value.toLowerCase()))
+    })
+  return filteredData
+})
 
 const handleConfirm = async (value) => {
   const response = await new Promise((resolve) => {
@@ -137,8 +108,6 @@ const handleCancel = async (value) => {
 onBeforeMount(async () => {
   try {
     const response = await new Promise((resolve) => {
-      // query.value = `customer/establishments/advantagecontacts?tag=${customer}`;
-
       services.get_Record(`customer/establishments/advantagecontacts?tag=${customer}`, (response) => {
         resolve(response);
         console.log(response);
