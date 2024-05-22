@@ -1,8 +1,5 @@
 <template>
   <div class="security__header border__bottom">
-    <!-- <div class="security__edit">
-      <h4><i class="uil uil-calender"></i> Advantage List</h4>
-    </div> -->
   </div>
   <div class="mt-5 erep_table table__container">
     <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
@@ -82,7 +79,6 @@ const filterTableData = computed(() =>{
 });
 
 const reloadData = (advantageToRemove) => {
-  // Filtrer la liste d'avantages pour exclure celui qui doit être supprimé
   advantages.value = advantages.value.filter((item) => item.id !== advantageToRemove.id);
 };
 
