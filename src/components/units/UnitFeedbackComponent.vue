@@ -253,8 +253,12 @@ onBeforeMount(async () => {
 })
 const requiredinput = ref('');
 onMounted(() => {
-    if (window.FingerprintG2A && window.FingerprintG2A.default && typeof window.FingerprintG2A.default.main === 'function') {
-        window.FingerprintG2A.default.main();
+    try {
+        if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
+        window.FingerprintApp.default.main();
+    }
+    } catch (error) {
+        console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
     }
     requiredinput.value = t('staffFeedback.input_required')
 })

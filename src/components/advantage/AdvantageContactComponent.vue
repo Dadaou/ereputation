@@ -4,56 +4,21 @@
     Export
   </button>
   <div class="overflow-x-auto">
-    <table class="w-full table-auto text-sm text-left text-gray-500 dark:text-gray-400">
-      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-        <tr>
-          <th scope="col" class="px-6 py-3">
-            First Name
-          </th>
-          <th scope="col" class="px-6 py-3">
-            Last Name
-          </th>
-          <th scope="col" class="px-6 py-3">
-            Gender
-          </th>
-          <th scope="col" class="px-6 py-3">
-            Email
-          </th>
-          <th scope="col" class="px-6 py-3">
-            Establishment
-          </th>
-        </tr>
-      </thead>
-      <tbody v-if="contacts.length > 0">
-        <tr v-for="contact in contacts" :key="contact.id"
-          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-          <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-            {{ contact.firstname }}
-          </td>
-          <td class="px-6 py-4">
-            {{ contact.lastname }}
-          </td>
-          <td class="px-6 py-4">
-            {{ contact.gender }}
-          </td>
-          <td class="px-6 py-4">
-            {{ contact.email }}
-          </td>
-          <td class="px-6 py-4">
-            {{ contact.establishment_name }}
-          </td>
-        </tr>
-      </tbody>
-      <tbody v-else>
-        <tr class="no__contacts">
-          <td colspan="4">
-            <div style="text-align: center;">
-              <span>No contacts</span>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
+      <el-table-column label="Name" width="400">
+      	<template #default="scope">
+      		{{ scope.row.firstname }} {{ scope.row.lastname }}
+        </template>
+      </el-table-column>
+      <el-table-column label="Gender" prop="gender" width="100"/>
+      <el-table-column label="Email" prop="email" align="center" width="300"/>
+      <el-table-column label="Establishment" prop="establishment_name" width="400"/>
+      <el-table-column label="Operations" fixed="right" width="200">
+        <template #header>
+          <el-input v-model="search" size="small" placeholder="Type to search" />
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
   <ExportcsvexcelComponent :showModal="showExport" :downloaded="downloaded"
     @close="showExport = false, downloaded = false" @submit="(data) => exportData(data.type, 'contacts')" />
@@ -71,16 +36,8 @@ import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import StaffItemComponent from '@Components/staffs/StaffItemComponent.vue';
 import { useWindowSize } from '@vueuse/core';
-import {
-  ref,
-  reactive,
-  watch,
-  onBeforeMount,
-  computed,
-  provide,
-  onUpdated,
-  defineAsyncComponent
-} from 'vue';
+import { ref, reactive, watch, onBeforeMount, computed, provide, onUpdated, defineAsyncComponent } from 'vue';
+import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 
 const ExportcsvexcelComponent = defineAsyncComponent(() =>
   import('@Components/utils/ExportcsvexcelComponent.vue')
@@ -92,6 +49,7 @@ const formatCreatedAt = (createdAt) => {
   return moment(createdAt).format('YYYY/MM/DD');
 };
 const query = ref('');
+const search = ref('');
 
 const contacts = ref([]);
 
@@ -103,6 +61,16 @@ const exportData = (type, filename) => {
   downloaded.value = true;
 }
 
+const filterTableData = computed(() =>{
+  let filteredData = contacts.value;
+  filteredData = filteredData.filter((data)=>{
+        return !search.value || 
+        (data.lastname && data.lastname.toLowerCase().includes(search.value.toLowerCase())) ||
+        (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase())) ||
+        (data.email && data.email.toLowerCase().includes(search.value.toLowerCase()))
+    })
+  return filteredData
+});
 
 onBeforeMount(async () => {
   try {
@@ -111,14 +79,11 @@ onBeforeMount(async () => {
 
       services.get_Record(`customer/establishments/contacts?tag=${customer}`, (response) => {
         resolve(response);
-        console.log(response);
       });
     });
 
     if (response.status === 200) {
       contacts.value = response.data;
-      console.log('Contacts:', contacts.value);
-      console.log(contacts.value);
     } else {
       console.error('Error fetching contacts:', response);
     }
@@ -140,6 +105,7 @@ button {
   border-radius: 5px;
   border: 1px solid grey;
   margin-bottom: 10px;
+  cursor: pointer;
 }
 
 button:hover {

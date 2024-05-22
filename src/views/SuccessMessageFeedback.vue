@@ -4,16 +4,16 @@
             <p> {{ $t("success") }} </p>
             <div class="mt-6" v-if="route.params.share !== 'message'">
                 <h2 v-if="links.length > 0">{{ $t("success_text") }}</h2>
-                <ul v-if="links.length > 0" class="mb-4 link socials">
+                <ul v-if="links.length > 0" class="logoSrc">
                     <li v-for="link in links">
                         <a :href="link.url" target="_blank">
                             <el-tooltip :content="`${$t('success_text')} ${link.name}`" placement="top">
                 <img v-if="link.name.toLowerCase().includes('booking')" src="@/assets/images/logo/Booking.svg" alt="Booking" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('camping')" src="@/assets/images/logo/Camping.svg" alt="Camping" width="24" height="24">
+                <img v-if="link.name.toLowerCase().includes('camping')" src="@/assets/images/logo/Camping.png" alt="Camping" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('expedia')" src="@/assets/images/logo/Expedia.svg" alt="Expedia" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('google')" src="@/assets/images/logo/Google.svg" alt="Google" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('hotel')" src="@/assets/images/logo/Hotel.svg" alt="Hotel" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('maeva')" src="@/assets/images/logo/Maeva.svg" alt="Maeva" width="24" height="24">
+                <img v-if="link.name.toLowerCase().includes('maeva')" src="@/assets/images/logo/Maeva.png" alt="Maeva" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('opentable')" src="@/assets/images/logo/Opentable.svg" alt="Opentable" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('thefork')" src="@/assets/images/logo/Thefork.svg" alt="Thefork" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('tripadvisor')" src="@/assets/images/logo/Tripadvisor.svg" alt="Tripadvisor" width="24" height="24">
@@ -25,22 +25,18 @@
                     </li>
                 </ul>
                 <h2 v-if="socials.length > 0">{{ $t("success_text2") }}</h2>
-                <ul v-if="socials.length > 0" class="socials">
+                <ul v-if="socials.length > 0" class="social">
                     <li v-for="link in socials">
                         <a :href="link.url" target="_blank">
                             <el-tooltip :content="`${$t('success_text2')} ${link.name}`" placement="top">
-                                <Icon icon="logos:facebook" width="1.6rem" height="1.6rem"
-                                    v-if="link.name.toLowerCase().includes('facebook')"></Icon>
-                                <Icon icon="logos:instagram-icon" width="1.5rem" height="1.5rem"
-                                    v-if="link.name.toLowerCase().includes('instagram')"></Icon>
-                                <Icon icon="logos:tiktok-icon" width="1.5rem" height="1.5rem"
-                                    v-if="link.name.toLowerCase().includes('tiktok')"></Icon>
-                                <Icon icon="logos:linkedin-icon" width="1.4rem" height="1.4rem"
-                                    v-if="link.name.toLowerCase().includes('linkedin')"></Icon>
-                                <Icon icon="logos:youtube-icon" width="2rem" height="2rem"
-                                    v-if="link.name.toLowerCase().includes('youtube')"></Icon>
-                                <Icon icon="devicon:twitter" width="1.3rem" height="1.3rem"
-                                    v-if="link.name.toLowerCase().includes('twitter')"></Icon>
+                
+                <img v-if="link.name.toLowerCase().includes('facebook')" src="@/assets/images/logo/Facebook.svg" alt="Facebook" >
+                <img v-if="link.name.toLowerCase().includes('instagram')" src="@/assets/images/logo/Instagram.svg" alt="Instagram" >
+                <img v-if="link.name.toLowerCase().includes('linkedin')" src="@/assets/images/logo/Linkedin.svg" alt="Linkedin">
+                <img v-if="link.name.toLowerCase().includes('twitter')" src="@/assets/images/logo/Twitter.svg" alt="Twitter" >
+                <img v-if="link.name.toLowerCase().includes('youtube')" src="@/assets/images/logo/Youtube.svg" alt="Youtube" >
+                <img v-if="link.name.toLowerCase().includes('tiktok')" src="@/assets/images/logo/Tiktok.svg" alt="Tiktok" >              
+                            
                             </el-tooltip>
                         </a>
                     </li>
@@ -126,6 +122,21 @@ watch(() => {
 p {
     /* text-align: center;*/
     font-weight: 500;
+}
+
+.logoSrc{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-top: 2%;
+    margin-bottom: 2%;
+   
+}
+.social{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-top: 2%;
 }
 
 .link li {
