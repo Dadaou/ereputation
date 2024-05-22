@@ -24,6 +24,12 @@
                         <el-option v-for="item in genders" :key="item.value" :label="item.label" :value="item.value"/>
                     </el-select>
                 </div>
+                 <div>
+                    <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span>*</span></label>
+                    <el-select v-model="establishment" placeholder="Choose establishment" size="large" filterable>
+                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name" :value="`/api/establishments/${item.id}`"/>
+                    </el-select>
+                </div>
             </div>
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
@@ -32,12 +38,12 @@
                         <el-option v-for="item in departments" :key="item" :label="item" :value="item"/>
                     </el-select>
                 </div>
-                <div>
-                    <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span>*</span></label>
-                    <el-select v-model="establishment" placeholder="Choose establishment" size="large" filterable>
-                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name" :value="`/api/establishments/${item.id}`"/>
-                    </el-select>
-                </div>
+                 <div>
+                        <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Section <span>*</span></label>
+                        <el-select id="section" v-model="section" placeholder="Choose section" size="large" clearable>
+                            <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
+                        </el-select>
+                    </div>
             </div>
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
@@ -55,10 +61,11 @@
                     />
                 </div>
             </div>
-            <div class="flex items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
+            <div class="flex items-center justify-between py-2 border-t border-b dark:border-gray-600">
                  <button type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
-                                <SpinnerComponent :show-spinner="showSpinner" :color="'gray'"/> <span v-if="showSpinner">Loading ...</span>
-                               <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} staff</span>
+                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'"/> 
+                    <span v-if="showSpinner">Loading ...</span>
+                    <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} staff</span>
                  </button>
             </div>
         </form>
@@ -109,7 +116,8 @@ const departments = [
     'Front Office', 'Housekeeping', 'Kitchen', 'Bar', 'Room service'
 ]
 const department = ref('');
-
+const sections = ref(['MENUS','INFOS','FOLLOW US','REVIEWS','OFFERS'])
+const section = ref ('')
 const staff_to_update = inject('staff_to_update');
 const type = ref('add');
 
@@ -176,6 +184,7 @@ const submit = async ()=>{
         "datefrom": moment(startDate.value).format('YYYY-MM-DD'),
         "dateto": (endDate.value==null ||endDate.value == "")?null:moment(endDate.value).format('YYYY-MM-DD'),
         "establishment": establishment.value,
+        "section": section.value
     }
     
     try {

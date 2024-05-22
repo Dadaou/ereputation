@@ -331,7 +331,7 @@ const submit = async () => {
             showSpinner.value = true;
             await feedbackStore.createReview(review, async (response) => {
                 if (response.status == 201) {
-                    if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
+                    if (email.value !== null || email.value !== '') {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
 
                             if (contactResponse.status == 201) {
@@ -339,21 +339,22 @@ const submit = async () => {
                                     console.log(res)
                                 })
 
-                                let coupons = {
-                                    advantage: randomAdvantage.value.id,
-                                    establishment: route.params.etab,
-                                    // gender: gender.value,
-                                    firstname: firstname.value,
-                                    lastname: lastname.value,
-                                    email: email.value,
-                                    language: (lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase(),
-                                    app_url: app_url.value,
-                                    template: `workflow_en`
+                                if(randomAdvantage.value){
+                                     let coupons = {
+                                        advantage: randomAdvantage.value.id,
+                                        establishment: route.params.etab,
+                                        firstname: firstname.value,
+                                        lastname: lastname.value,
+                                        email: email.value,
+                                        language: (lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase(),
+                                        app_url: app_url.value,
+                                        template: `workflow_en`
+                                    }
+                                    console.log(coupons)
+                                    await services.createRecord('workflow', coupons, () => {
+                                        resetForm()
+                                    });
                                 }
-                                console.log(coupons)
-                                await services.createRecord('workflow', coupons, () => {
-                                    resetForm()
-                                });
                             }
                         });
                     }
@@ -379,9 +380,6 @@ const submit = async () => {
 </script>
 
 <style scoped>
-/*************
-    Modal CSS
-**************/
 .modal__header {
     display: flex;
     justify-content: space-between;
