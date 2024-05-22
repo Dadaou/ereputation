@@ -17,11 +17,11 @@
             <el-tab-pane label="Links" name="links">
                 <el-tabs v-model="activeLinkTab" class="demo-tabs">
                     <el-tab-pane label="Links" name="link_list">
-                       <!--  <LinksConfComponent @edit="(link) => handleEdit(link, 'link')"/> -->
-                       <LinksListComponent @reload="reloadLink()" @edit="(link) => handleEdit(link, 'link')"/>
+                        <!--  <LinksConfComponent @edit="(link) => handleEdit(link, 'link')"/> -->
+                        <LinksListComponent @reload="reloadLink()" @edit="(link) => handleEdit(link, 'link')" />
                     </el-tab-pane>
                     <el-tab-pane label="Add a new Links" name="link_form">
-                        <LinksFormComponent @reload="reloadLink()"/>
+                        <LinksFormComponent @reload="reloadLink()" />
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
@@ -549,8 +549,8 @@ const loadUnits = async () => {
     }
 }
 
-const reloadLink = async()=>{
-     try {
+const reloadLink = async () => {
+    try {
         const response = await new Promise((resolve) => {
             services.get_Record(`setting/list?tag=${route.params.tag}&categ=all`, (response) => {
                 resolve(response);
@@ -558,8 +558,7 @@ const reloadLink = async()=>{
         });
         if (response.status === 200) {
             allLinks.value = response.data
-            console.log(allLinks.value)
-            
+
         } else {
             console.error('Error fetching links:', response);
         }
@@ -568,7 +567,7 @@ const reloadLink = async()=>{
     }
 }
 
-const loadProviders = async()=>{
+const loadProviders = async () => {
     try {
         const response = await new Promise((resolve) => {
             services.get_Record(`providers`, (response) => {

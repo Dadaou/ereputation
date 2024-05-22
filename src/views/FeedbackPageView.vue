@@ -206,8 +206,8 @@ onMounted(() => {
 
     try {
         if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
-        window.FingerprintApp.default.main();
-    }
+            window.FingerprintApp.default.main();
+        }
     } catch (error) {
         console.error("Une erreur s'est produite lors de l'exécution de FingerprintG2A :", error);
     }
@@ -264,7 +264,7 @@ const submit = async () => {
         "optin": true,
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
         "dateReview": moment(date_review, 'DD/MM/YYYY'),
-        "visitor": visitorId ? `/api/visitors/${visitorId}`: null
+        "visitor": visitorId ? `/api/visitors/${visitorId}` : null
     };
 
     let contactData = {
@@ -280,14 +280,12 @@ const submit = async () => {
             showSpinner.value = true;
 
             await feedbackStore.createReview(review, async (response) => {
-                console.log(response)
                 if (response.status == 201) {
                     if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
-                            console.log(contactData)
                             if (contactResponse.status == 201) {
                                 services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
-                                    console.log(res)
+                                    // Do nothing
                                 })
                                 let coupons = {
                                     advantage: randomAdvantage.value.id,
@@ -300,9 +298,7 @@ const submit = async () => {
                                     app_url: app_url.value,
                                     template: 'workflow_en'
                                 }
-                                console.log(coupons)
                                 await services.createRecord('workflow', coupons, (res) => {
-                                    console.log(res)
                                     resetForm()
                                 });
                             }

@@ -1,31 +1,33 @@
 <template>
-	<form id="editForm" @submit.prevent="upload">
-		<div class="md:order-2">
-            <div class="image-selector border-gray-300" :class="!previewImage && 'hover'" @click="selectImg" @mouseover="imageInputHover = true" @mouseleave="imageInputHover = false">
+    <form id="editForm" @submit.prevent="upload">
+        <div class="md:order-2">
+            <div class="image-selector border-gray-300" :class="!previewImage && 'hover'" @click="selectImg"
+                @mouseover="imageInputHover = true" @mouseleave="imageInputHover = false">
                 <img v-if="previewImage" :src="previewImage" class="uploading-image" />
                 <i v-else class="uil uil-image-plus"></i>
                 <div v-if="imageInputHover && previewImage" class="img-hover">
                     <i class="uil uil-image-edit"></i>
                 </div>
             </div>
-			<input id="imgInput" name="file" type="file" @change=updateImage style="display:none">
+            <input id="imgInput" name="file" type="file" @change=updateImage style="display:none">
         </div>
-         <div class="flex flex-wrap gap-3 items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600 mt-5">
-         	<button @click="resetForm"
-            class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-gray-700 rounded-lg focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-900 hover:bg-gray-800">
+        <div
+            class="flex flex-wrap gap-3 items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600 mt-5">
+            <button @click="resetForm"
+                class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-gray-700 rounded-lg focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-900 hover:bg-gray-800">
                 Cancel
             </button>
             <button type="submit"
-             class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                 Upload
             </button>
         </div>
-	</form>
+    </form>
 </template>
 <script setup>
 import { ref } from 'vue';
-const upload = ()=>{
-	console.log("upload images")
+const upload = () => {
+    // upload images 
 };
 
 const previewImage = ref(null);
@@ -51,7 +53,7 @@ const resetForm = () => {
     data.value = {};
     previewImage.value = null;
 };
-	
+
 </script>
 <style scoped>
 .image-selector {

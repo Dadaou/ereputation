@@ -65,7 +65,6 @@ const submit = async () => {
     showSpinner.value = true;
     try {
         if (code.value === '4321') {
-            console.log('seller authenticate')
             localStorage.setItem('isSellerAuthenticated', 'true');
             if (route.query.redirect !== undefined) {
                 router.push(route.query.redirect)

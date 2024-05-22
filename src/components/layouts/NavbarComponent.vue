@@ -187,7 +187,6 @@ onBeforeMount(async () => {
   else show_menu.value = false;
   if (route.params.tag) {
     logo.value = await appStore.getCustomerLogo(route.params.tag)
-    console.log(logo.value)
   }
 });
 

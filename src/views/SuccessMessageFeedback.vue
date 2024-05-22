@@ -8,19 +8,30 @@
                     <li v-for="link in links">
                         <a :href="link.url" target="_blank">
                             <el-tooltip :content="`${$t('success_text')} ${link.name}`" placement="top">
-                <img v-if="link.name.toLowerCase().includes('booking')" src="@/assets/images/logo/Booking.svg" alt="Booking" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('camping')" src="@/assets/images/logo/Camping.png" alt="Camping" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('expedia')" src="@/assets/images/logo/Expedia.svg" alt="Expedia" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('google')" src="@/assets/images/logo/Google.svg" alt="Google" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('hotel')" src="@/assets/images/logo/Hotel.svg" alt="Hotel" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('maeva')" src="@/assets/images/logo/Maeva.png" alt="Maeva" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('opentable')" src="@/assets/images/logo/Opentable.svg" alt="Opentable" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('thefork')" src="@/assets/images/logo/Thefork.svg" alt="Thefork" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('tripadvisor')" src="@/assets/images/logo/Tripadvisor.svg" alt="Tripadvisor" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('trustpilot')" src="@/assets/images/logo/Trustpilot.svg" alt="Trustpilot" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('yelp')" src="@/assets/images/logo/Yelp.svg" alt="Yelp" width="24" height="24">
-            
-            </el-tooltip>
+                                <img v-if="link.name.toLowerCase().includes('booking')"
+                                    src="@/assets/images/logo/Booking.svg" alt="Booking" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('camping')"
+                                    src="@/assets/images/logo/Camping.png" alt="Camping" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('expedia')"
+                                    src="@/assets/images/logo/Expedia.svg" alt="Expedia" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('google')"
+                                    src="@/assets/images/logo/Google.svg" alt="Google" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('hotel')"
+                                    src="@/assets/images/logo/Hotel.svg" alt="Hotel" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('maeva')"
+                                    src="@/assets/images/logo/Maeva.png" alt="Maeva" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('opentable')"
+                                    src="@/assets/images/logo/Opentable.svg" alt="Opentable" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('thefork')"
+                                    src="@/assets/images/logo/Thefork.svg" alt="Thefork" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('tripadvisor')"
+                                    src="@/assets/images/logo/Tripadvisor.svg" alt="Tripadvisor" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('trustpilot')"
+                                    src="@/assets/images/logo/Trustpilot.svg" alt="Trustpilot" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('yelp')" src="@/assets/images/logo/Yelp.svg"
+                                    alt="Yelp" width="24" height="24">
+
+                            </el-tooltip>
                         </a>
                     </li>
                 </ul>
@@ -29,14 +40,20 @@
                     <li v-for="link in socials">
                         <a :href="link.url" target="_blank">
                             <el-tooltip :content="`${$t('success_text2')} ${link.name}`" placement="top">
-                
-                <img v-if="link.name.toLowerCase().includes('facebook')" src="@/assets/images/logo/Facebook.svg" alt="Facebook" >
-                <img v-if="link.name.toLowerCase().includes('instagram')" src="@/assets/images/logo/Instagram.svg" alt="Instagram" >
-                <img v-if="link.name.toLowerCase().includes('linkedin')" src="@/assets/images/logo/Linkedin.svg" alt="Linkedin">
-                <img v-if="link.name.toLowerCase().includes('twitter')" src="@/assets/images/logo/Twitter.svg" alt="Twitter" >
-                <img v-if="link.name.toLowerCase().includes('youtube')" src="@/assets/images/logo/Youtube.svg" alt="Youtube" >
-                <img v-if="link.name.toLowerCase().includes('tiktok')" src="@/assets/images/logo/Tiktok.svg" alt="Tiktok" >              
-                            
+
+                                <img v-if="link.name.toLowerCase().includes('facebook')"
+                                    src="@/assets/images/logo/Facebook.svg" alt="Facebook">
+                                <img v-if="link.name.toLowerCase().includes('instagram')"
+                                    src="@/assets/images/logo/Instagram.svg" alt="Instagram">
+                                <img v-if="link.name.toLowerCase().includes('linkedin')"
+                                    src="@/assets/images/logo/Linkedin.svg" alt="Linkedin">
+                                <img v-if="link.name.toLowerCase().includes('twitter')"
+                                    src="@/assets/images/logo/Twitter.svg" alt="Twitter">
+                                <img v-if="link.name.toLowerCase().includes('youtube')"
+                                    src="@/assets/images/logo/Youtube.svg" alt="Youtube">
+                                <img v-if="link.name.toLowerCase().includes('tiktok')"
+                                    src="@/assets/images/logo/Tiktok.svg" alt="Tiktok">
+
                             </el-tooltip>
                         </a>
                     </li>
@@ -86,7 +103,6 @@ onBeforeMount(async () => {
 
     if (userStore.authenticated == null) services.setToken(import.meta.env.VITE_APP_TOKEN);
     links.value = await companyStore.loadLinksByEstablishment(route.params.etab)
-    console.log(links.value)
     socials.value = links.value.filter((link) => {
         return link.category == 'Social'
     })
@@ -94,7 +110,6 @@ onBeforeMount(async () => {
     links.value = links.value.filter((link) => {
         return link.category == 'Platform'
     })
-    console.log(links.value)
 })
 onMounted(() => {
     /** Charger le titre par defaut */
@@ -124,15 +139,16 @@ p {
     font-weight: 500;
 }
 
-.logoSrc{
+.logoSrc {
     display: flex;
     gap: 20px;
     align-items: center;
     margin-top: 2%;
     margin-bottom: 2%;
-   
+
 }
-.social{
+
+.social {
     display: flex;
     gap: 20px;
     align-items: center;
@@ -145,7 +161,7 @@ p {
     border-radius: 5px;
     font-weight: 500;
     color: white;
-   
+
 }
 
 .link li:hover {

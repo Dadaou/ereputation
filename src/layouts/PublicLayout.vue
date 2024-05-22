@@ -29,7 +29,6 @@ const userStore = useUserStore()
 onMounted(() => {
     userStore.updateCustomerTheme(() => {
         setTimeout(() => {
-            console.log("là")
             refreshTheme(
                 userStore.customer.back_color,
                 userStore.customer.font_color,

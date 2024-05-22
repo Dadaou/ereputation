@@ -70,14 +70,12 @@ const showSpinner = ref(false)
 const submit = async () => {
     showSpinner.value = true;
     services.setURL(import.meta.env.VITE_APP_URL)
-    console.log(route.params.token)
     await userStore.resetPassword(
         form.value.password,
         form.value.confirmation,
         route.params.token,
         app_url.value,
         (response) => {
-            console.log(response)
             isError.value = true;
             notification.value.message = response.data
             notification.value.type = (response.data == "the password and confirmation password does not have same value") ? "warning" : "success"

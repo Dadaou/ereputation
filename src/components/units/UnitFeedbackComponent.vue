@@ -255,8 +255,8 @@ const requiredinput = ref('');
 onMounted(() => {
     try {
         if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
-        window.FingerprintApp.default.main();
-    }
+            window.FingerprintApp.default.main();
+        }
     } catch (error) {
         console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
     }
@@ -316,7 +316,7 @@ const submit = async () => {
         "optin": true,
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
         "dateReview": moment(date_review, 'DD/MM/YYYY'),
-        "visitor": visitorId ? `/api/visitors/${visitorId}`: null
+        "visitor": visitorId ? `/api/visitors/${visitorId}` : null
     }
 
     let contactData = {
@@ -336,7 +336,7 @@ const submit = async () => {
 
                             if (contactResponse.status == 201) {
                                 services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
-                                    console.log(res)
+                                    // Do nothing
                                 })
 
                                 let coupons = {
@@ -350,7 +350,7 @@ const submit = async () => {
                                     app_url: app_url.value,
                                     template: `workflow_en`
                                 }
-                                console.log(coupons)
+
                                 await services.createRecord('workflow', coupons, () => {
                                     resetForm()
                                 });

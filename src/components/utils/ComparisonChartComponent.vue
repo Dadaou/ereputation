@@ -12,7 +12,7 @@
                 :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
             </GroupedBarChart>
         </div>
-        
+
         <div class="colLarge">
             <div class="boxLarge">
                 <GroupedBarChart class="chart" :plot-data="props.data" x-key="name" :width="custom_width"
@@ -132,12 +132,6 @@ let timePeriods = ref(['Days', 'Weeks', 'Months', 'Quarters', 'Semesters']);
 let establishmentDropdown = computed(() => comparisonByEstablishments.value ? props.competitors : props.establishment.websites.map(w => ({ name: w })));
 let selectedCompany = ref(establishmentDropdown.value[0]);
 
-// console.log(establishmentDropdown.value);
-
-// let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-// let endDate = moment().format('YYYY-M-DD');
-// let start_date = ref(appStore.start_date);
-// let end_date = ref(appStore.end_date);
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 let legendData = ref([]);
@@ -252,7 +246,6 @@ watch([start_date, end_date], () => {
 watch([start_date, end_date, comparisonByEstablishments, selectedCompany, selectedTimePeriod], () => {
     // startDate = moment().startOf('year').format('YYYY-M-DD');
     // endDate = moment().endOf('year').format('YYYY-M-DD');
-    console.log(selectedCompany.value)
     viewData();
 })
 
@@ -384,55 +377,55 @@ const get_Width = () => {
 }
 
 .colLarge {
-        overflow-x: scroll;   
-        width:inherit;
-    }
+    overflow-x: scroll;
+    width: inherit;
+}
 
 @media screen and (min-width:976px) {
     .colSmall {
-        max-width:56px;
+        max-width: 56px;
         overflow: hidden;
     }
 
     .boxLarge {
-        max-width:800px;
-        margin-left:-60px;
+        max-width: 800px;
+        margin-left: -60px;
     }
 }
 
 @media screen and (min-width:769px) and (max-width: 975px) {
     .colSmall {
-        max-width:56px;
+        max-width: 56px;
         overflow: hidden;
     }
 
     .boxLarge {
-        max-width:90%;
-        margin-left:-60px;
+        max-width: 90%;
+        margin-left: -60px;
     }
 }
 
 @media screen and (min-width:469px) and (max-width: 768px) {
     .colSmall {
-        max-width:56px;
+        max-width: 56px;
         overflow: hidden;
     }
 
     .boxLarge {
-        max-width:700px;
-        margin-left:-60px;
+        max-width: 700px;
+        margin-left: -60px;
     }
 }
 
 @media screen and (max-width:468px) {
     .colSmall {
-        max-width:56px;
+        max-width: 56px;
         overflow: hidden;
     }
 
     .boxLarge {
-        max-width:700px;
-        margin-left:-60px;
+        max-width: 700px;
+        margin-left: -60px;
     }
 }
 </style>

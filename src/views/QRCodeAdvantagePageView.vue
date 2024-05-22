@@ -18,7 +18,7 @@
                         <h3 class="text-xl font-semibold mb-4 mt-4"
                             v-if="advantages.adv_date_to && advantages.adv_date_from">
                             {{ $t("coupon.utilisation") }} {{ advantages.adv_date_from }} {{ $t("coupon.et") }} {{
-                            advantages.adv_date_to }}
+                                advantages.adv_date_to }}
                         </h3>
                     </div>
                 </div>
@@ -161,15 +161,12 @@ onBeforeMount(async () => {
             dateExperied.value = advantages.value.expired_at;
             date_to.value = advantages.value.adv_date_to;
             localStorage.setItem('nameAdvantage', advantages.value.adv_name);
-            console.log("date_expiration", dateExperied.value);
-            console.log("date_Jour", dateJour);
+
             if (dateJour != null || date_to.value != null) {
                 if (dateJour > dateExperied.value || dateJour > date_to.value) {
                     isNotExpired.value = false;
                 }
             }
-
-
 
         } else {
             console.error('Error fetching advantages:', response);

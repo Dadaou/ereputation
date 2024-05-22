@@ -47,14 +47,12 @@ export const useAppStore = defineStore('app', () => {
       })
     })
 
-    console.log(response)
     if ((response.status = 200)) {
       customerLogo.value = response.data
     }
   }
 
   const getCustomerLogo = async (tag) => {
-    console.log(!customerLogo.value)
     if (!customerLogo.value) await setCustomerLogo(tag)
     return customerLogo.value
   }

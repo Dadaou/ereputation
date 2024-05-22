@@ -12,7 +12,7 @@
           </div>
           <span v-else-if="appStore.account && appStore.account.brand"
             class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
-          appStore.account.brand }}</span>
+              appStore.account.brand }}</span>
         </a>
         <RouterLink :to="`/`" class="relative p-2 login-link">
           <span class="font-bolder"> Sign In</span>
@@ -313,7 +313,6 @@ const planInfo = ref({});
 const showSpinner = ref(false)
 const userCreated = ref(false)
 const app_url = inject('app_url');
-console.log(`app url : ${app_url.value}`)
 
 const submitUserForm = async () => {
   showSpinner.value = true;
@@ -511,7 +510,6 @@ onBeforeMount(async () => {
 
   if (response.status == 200 && response.data) {
     const data = response.data
-    console.log(data)
     plans.value = data.sort((a, b) => a.id - b.id);
   }
 })
@@ -672,21 +670,21 @@ button.isLoaded {
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
- form{
-  margin: 0 50px;
- }
+  form {
+    margin: 0 50px;
+  }
 }
 
 /* Ajustements pour les mobiles */
 @media (max-width: 768px) {
- form{
-  margin: 0 25px;
- }
+  form {
+    margin: 0 25px;
+  }
 }
 
 @media (max-width: 500px) {
- form{
-  margin: 0 10px;
- }
+  form {
+    margin: 0 10px;
+  }
 }
 </style>

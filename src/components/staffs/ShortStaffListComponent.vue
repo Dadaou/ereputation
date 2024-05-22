@@ -61,7 +61,6 @@ let tableData = computed(() => {
   let data = [];
   staffs.value.forEach(staff_item => {
     staff_item['period'] = staff_item.dateto != null ? `${moment(staff_item.datefrom).format('YYYY MMM DD')} to ${moment(staff_item.dateto).format('YYYY MMM DD')}` : `${moment(staff_item.datefrom).format('YYYY MMM DD')} to -`;
-    console.log(staff_item)
     data.push(staff_item);
   })
   return data;

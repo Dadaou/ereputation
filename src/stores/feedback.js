@@ -40,7 +40,6 @@ export const useFeedbackStore = defineStore('feedback', {
           : `${parameters}&old_category=${null}`
 
       api = `${api}?${parameters}`
-      console.log(api)
 
       const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {

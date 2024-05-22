@@ -266,8 +266,8 @@ const requiredinput = ref('');
 onMounted(() => {
     try {
         if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
-        window.FingerprintApp.default.main();
-    }
+            window.FingerprintApp.default.main();
+        }
     } catch (error) {
         console.error("Une erreur s'est produite lors de l'exécution de FingerprintG2A :", error);
     }
@@ -346,7 +346,7 @@ const submit = async () => {
 
                             if (contactResponse.status == 201) {
                                 services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
-                                    console.log(res)
+                                    // Do nothing
                                 })
                                 let coupons = {
                                     advantage: randomAdvantage.value.id,
@@ -640,4 +640,3 @@ span.label {
     }
 }
 </style>
-

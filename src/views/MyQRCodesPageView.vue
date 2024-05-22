@@ -143,7 +143,6 @@ const handleEdit = (value, type) => {
   if (type == 'competitor') {
     activeCompetitorsTab.value = 'competitor_form';
     establishment_to_update.value = value;
-    console.log(value)
   }
 
   if (type == 'event') {
@@ -183,7 +182,6 @@ const setStatus = async (id, status) => {
 const transformData = (data) => {
   const establishmentMap = new Map();
   let tag = ''
-  console.log(data)
   for (const [competitorName, establishments] of Object.entries(data)) {
     establishments.forEach(establishment => {
       const {
@@ -251,9 +249,7 @@ const reloadCompetitorList = async (type) => {
       });
     });
     if (response.status === 200) {
-      console.log(response.data)
       competitorsData.value = transformData(response.data);
-      console.log(competitorsData.value)
     }
 
     if (type == 'form') activeCompetitorsTab.value = 'competitor_list';
@@ -301,7 +297,6 @@ const reloadStaffsList = async (type) => {
       });
     });
     if (response.status === 200) {
-      console.log(response.data)
       allStaffs.value = response.data
     }
 
@@ -355,7 +350,6 @@ const loadUnits = async () => {
         resolve(response);
       });
     });
-    console.log(response)
     if (response.status === 200) {
       let data = response.data
       data = data.filter(i => i.units.length > 0);

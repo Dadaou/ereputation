@@ -1,4 +1,3 @@
-
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@Views/LoginView.vue'
 import SubscriptionPageView from '@Views/SubscriptionPageView.vue'
@@ -112,7 +111,7 @@ const router = createRouter({
         },
         {
           path: '/:catchAll(.*)',
-          redirect:'/404'
+          redirect: '/404'
         },
         {
           path: '/customer/:tag/establishment/notFound',
@@ -268,7 +267,6 @@ const router = createRouter({
           name: 'UnitFeedBack',
           component: () => import('@Components/units/UnitFeedbackComponent.vue'),
           beforeEnter: (to, from, next) => {
-            console.log('beforeEnter hook called')
             if (!to.params.rfuid) {
               const rfuid = generateRandomString(16)
               next({ name: 'UnitFeedBack', params: { ...to.params, rfuid } })

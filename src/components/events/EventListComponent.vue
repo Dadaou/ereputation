@@ -1,6 +1,6 @@
 <template>
   <div class="security__header border__bottom">
-   <!--  <div class="security__edit">
+    <!--  <div class="security__edit">
       <h4><i class="uil uil-calender"></i> Event List</h4>
     </div> -->
   </div>
@@ -27,7 +27,7 @@
     </el-table>
   </div>
 </template>
-  
+
 <script setup>
 import { computed, ref, inject, watch } from 'vue';
 import { useUserStore } from "@Stores/user.js";
@@ -86,15 +86,15 @@ const getURI = (data, entity, dataset) => {
 
 const search = ref('')
 
-const filterTableData = computed(() =>{
+const filterTableData = computed(() => {
   let filteredData = tableData.value;
-   filteredData = filteredData.filter((data)=>{
-        return !search.value || 
-        data.name.toLowerCase().includes(search.value.toLowerCase()) || 
-        (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
-        (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase()))
-    })
-  return filteredData; 
+  filteredData = filteredData.filter((data) => {
+    return !search.value ||
+      data.name.toLowerCase().includes(search.value.toLowerCase()) ||
+      (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
+      (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase()))
+  })
+  return filteredData;
 })
 
 const reloadData = (event) => {
@@ -109,7 +109,6 @@ const handleEdit = (index, event) => {
 }
 const handleDelete = async (index, event) => {
   await eventStore.removeEvent(event.id, (response) => {
-    console.log(response)
     if (response.status == 204) {
       reloadData(event);
       ElMessage({
@@ -163,4 +162,3 @@ button i.uil-edit {
   }
 }
 </style>
-  

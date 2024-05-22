@@ -220,14 +220,13 @@ const submit = async () => {
     const formData = new FormData(form);
 
     const establishmentData = { ...data.value };
-    console.log(establishmentData)
 
-    if (establishmentData.category 
+    if (establishmentData.category
         && establishmentData.country
-        && establishmentData.city 
+        && establishmentData.city
         && establishmentData.zipcode
         && establishmentData.category
-        && establishmentData.name 
+        && establishmentData.name
         && establishmentData.address1) {
 
         formData.append('category', establishmentData.category);
@@ -252,7 +251,6 @@ const submit = async () => {
                 resolve(response);
             });
         });
-        console.log(response)
 
         if (response.status == 201) {
             competitor.value = response.data
@@ -278,7 +276,7 @@ const submit = async () => {
             showSpinner.value = false;
             reloadCompetitorList()
         }
-    }else{
+    } else {
         ElMessage.error(`Please, provide all required information to add / update a competitor`);
     }
 
@@ -375,7 +373,7 @@ const submitCompetitor = () => {
                 resolve(response);
             });
         });
-        console.log(response)
+
         if (response.status == 201) created.push(1)
 
         if (created.length == establishments.value.length) {
