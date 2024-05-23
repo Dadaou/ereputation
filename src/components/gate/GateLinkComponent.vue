@@ -49,11 +49,10 @@ const logoSrc = computed(() => {
         } else if (props.item.href.includes('tiktok.com')) {
             return new URL('@/assets/images/logo/Tiktok.svg', import.meta.url).href;
         } else if (props.item.href.includes('linkedin.com')) {
-            return new URL('@/assets/images/logo/Linkedin.svg', import.meta.url).href;
+            return new URL('@/assets/images/logo/LinkedIn.svg', import.meta.url).href;
         } else if (props.item.href.includes('youtube.com')) {
             return new URL('@/assets/images/logo/Youtube.svg', import.meta.url).href;
         }
-        return null;
     }
 
     if (props.type === 'Platform') {
@@ -90,9 +89,8 @@ const logoSrc = computed(() => {
         } else if (props.item.href.includes('yelp.com')) {
             return new URL('@/assets/images/logo/Yelp.svg', import.meta.url).href;
         }
-
-        return null;
     }
+    return null
 })
 
 </script>
