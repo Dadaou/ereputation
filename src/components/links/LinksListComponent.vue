@@ -51,6 +51,7 @@ const search = ref('')
 const filterTableData = computed(() => {
   let filteredData = tableData.value;
   filteredData = filteredData.filter((data) => {
+    if (data.section === 'FOLLOW US' || data.section === 'REVIEWS') {
     return (
       !search.value ||
       (data.source && data.source.toLowerCase().includes(search.value.toLowerCase())) ||
@@ -58,6 +59,7 @@ const filterTableData = computed(() => {
       (data.section && data.section.toLowerCase().includes(search.value.toLowerCase())) ||
       (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase()))
     );
+  }
   });
   return filteredData;
 });
