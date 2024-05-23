@@ -34,7 +34,7 @@
                 <img v-if="link.name.toLowerCase().includes('twitter')" src="@/assets/images/logo/Twitter.svg" alt="Twitter" >
                 <img v-if="link.name.toLowerCase().includes('youtube')" src="@/assets/images/logo/Youtube.svg" alt="Youtube" >
                 <img v-if="link.name.toLowerCase().includes('tiktok')" src="@/assets/images/logo/Tiktok.svg" alt="Tiktok" >              
-                <Icon icon="logos:linkedin-icon" width="1.4rem" height="1.4rem"
+                <Icon icon="logos:linkedin-icon" width="1.6rem" height="1.6rem"
                  v-if="link.name.toLowerCase().includes('linkedin')"></Icon>    
                             </el-tooltip>
                         </a>
