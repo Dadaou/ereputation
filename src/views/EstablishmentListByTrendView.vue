@@ -170,6 +170,7 @@ onMounted(async()=>{
  .filters > * {
     flex-basis: 100%;
     margin-bottom: 10px;
+    max-width: 100%;
  }
 }
 

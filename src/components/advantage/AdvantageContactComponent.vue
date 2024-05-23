@@ -11,9 +11,9 @@
         </template>
       </el-table-column>
       <el-table-column label="Gender" prop="gender" width="100"/>
-      <el-table-column label="Email" prop="email" align="center" width="300"/>
-      <el-table-column label="Establishment" prop="establishment_name" width="400"/>
-      <el-table-column label="Operations" fixed="right" width="200">
+      <el-table-column label="Email" prop="email" width="300"/>
+      <el-table-column label="Establishment" prop="establishment_name" width="300"/>
+      <el-table-column label="Operations" width="200">
         <template #header>
           <el-input v-model="search" size="small" placeholder="Type to search" />
         </template>

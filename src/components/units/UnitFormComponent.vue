@@ -10,6 +10,12 @@
                     <label for="unit_code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Code <!-- <span>*</span> --></label>
                     <input type="text" id="unit_code" v-model="unit.code" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" placeholder="code">
                 </div>
+                 <div>
+                        <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Section <span>*</span></label>
+                        <el-select id="section" v-model="unit.section" placeholder="Choose section" size="large" clearable>
+                            <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
+                        </el-select>
+                    </div>
             </div>
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
@@ -25,10 +31,11 @@
                     </el-select>
                 </div>
             </div>
-            <div class="flex items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
+            <div class="flex items-center justify-between py-2 border-t border-b dark:border-gray-600">
                  <button type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
-                                <SpinnerComponent :show-spinner="showSpinner" :color="'gray'"/> <span v-if="showSpinner">Loading ...</span>
-                               <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} service</span>
+                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'"/> 
+                    <span v-if="showSpinner">Loading ...</span>
+                    <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} service</span>
                  </button>
             </div>
         </form>
@@ -49,10 +56,12 @@ const userStore = useUserStore();
 const type = ref('add');
 const unit = ref({});
 const categories = [{label: 'Bus', value: 'Bus'}, {label: 'Points of sale', value: 'Points of sale'}]
+
 const showSpinner = ref(false);
 const activeUnitTab = inject('unit_activeTab');
 const unit_to_update = inject('unit_to_update');
 const units = inject('units');
+const sections = ref(['MENUS','INFOS','FOLLOW US','REVIEWS','OFFERS'])
 
 watch(unit_to_update, ()=>{
     if(unit_to_update.value != null){
@@ -61,6 +70,7 @@ watch(unit_to_update, ()=>{
 		  "name": unit_to_update.value["name"],
 		  "category": unit_to_update.value["category"],
 		  "establishment": `/api/establishments/${unit_to_update.value["establishment_id"]}`,
+          "section":  unit_to_update.value["section"],
         }
         type.value = 'edit';
     }
@@ -73,6 +83,7 @@ const submit = async()=>{
 	  "name": unit.value?.name,
 	  "category": unit.value?.category,
 	  "establishment": unit.value?.establishment,
+      "section":unit.value?.section,
 	}
 	console.log(data)
 
@@ -91,7 +102,7 @@ const submit = async()=>{
                             message: 'unit added successfully',
                             type: 'success',
                         })
-                        loadData(response.data)
+                        loadData(response.data,data)
                         unit.value = {}
                         showSpinner.value = false;
                     }
@@ -107,7 +118,7 @@ const submit = async()=>{
                             message: 'unit updated successfully',
                             type: 'success',
                         })
-                        updateData(response.data)
+                        updateData(response.data, data)
                         unit.value = {}
                         showSpinner.value = false;
                 }
@@ -122,7 +133,7 @@ const submit = async()=>{
 	}
 };
 
-const loadData = (unit)=>{
+const loadData = (unit, _unit)=>{
     let establishment = userStore.user.customer.establishments.find(i=>unit.establishment == `/api/establishments/${i.id}`);
     let newUnit = {}
     if(establishment){
@@ -133,6 +144,7 @@ const loadData = (unit)=>{
         	"code": unit.code, 
         	"category": unit.category, 
         	"tag": unit.tag, 
+            "section": _unit.section,
         	"establishment_name": name, 
         	"establishment_competitor_tag": competitor_tag, 
         	"establishment_id": id 
@@ -141,7 +153,7 @@ const loadData = (unit)=>{
     }
 };
 
-const updateData = (unit)=>{
+const updateData = (unit, _unit)=>{
 
     let establishment = userStore.user.customer.establishments.find(i=>unit.establishment == `/api/establishments/${i.id}`);
     let currentUnit = {}
@@ -152,6 +164,7 @@ const updateData = (unit)=>{
         	"name": unit.name, 
         	"code": unit.code, 
         	"category": unit.category, 
+            "section": _unit.section,
         	"tag": unit.tag, 
         	"establishment_name": name, 
         	"establishment_competitor_tag": competitor_tag, 

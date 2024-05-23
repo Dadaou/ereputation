@@ -60,7 +60,7 @@ const { width, height } = useWindowSize();
 
 const custom_width = computed(() => {
   let nb = data.value.length;
-  let width = 1000;
+  let width = 800;
   if (nb > 9) {
     width = (width * nb) / 9;
   }

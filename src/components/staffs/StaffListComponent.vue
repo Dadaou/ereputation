@@ -1,8 +1,5 @@
 <template>
   <div class="security__header border__bottom">
-    <!-- <div class="security__edit">
-      <h4><i class="uil uil-users-alt"></i> Staff List</h4>
-    </div> -->
   </div>
   <div class="mt-5 table__container">
     <el-table :data="filterTableData">
@@ -15,13 +12,13 @@
       <el-table-column label="Gender" prop="gender" style="width: 10%; min-width: 300px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;" />
       <el-table-column label="Department" prop="department" style="width: 20%; min-width: 300px;" />
+       <el-table-column label="Section" prop="section" style="200" />
 
       <el-table-column style="width: 15%; min-width: 200px;" align="right">
         <template #header>
           <el-input v-model="search" size="small" placeholder="Type to search" />
         </template>
         <template #default="scope">
-          <el-button size="small" @click="showQRCode(scope.row)"><i class="uil uil-qrcode-scan"></i></el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
             <template #reference>
               <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
@@ -33,13 +30,6 @@
       </el-table-column>
     </el-table>
   </div>
-  <QrCodeModalComponent v-if="staff" :qrcodeValue="`${baseurl}/public/${tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`" 
-    :showModal="showModal"
-    :filename="`${staff.firstname} ${staff.lastname}-feedback-link`"
-    @close="showModal=false"
-    :customer="tag"
-    :establishment="staff.establishment_tag"
-    />
 </template>
   
 <script setup>
