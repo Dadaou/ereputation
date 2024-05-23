@@ -247,7 +247,10 @@ onBeforeMount(async () => {
         if (response.status == 200) {
             units.value = response.data;
             unit.value = response.data.filter(i => i.tag == route.params.id).length > 0 ? response.data.filter(i => i.tag == route.params.id)[0] : null
+
+            if(!unit.value) exist.value = false
         }
+        
         if (response.status == 404) exist.value = false
     });
 })
@@ -323,7 +326,7 @@ const submit = async () => {
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,
-        establishment: [`/api/establishments/${establishment.value.id}`]
+        establishments: [`/api/establishments/${establishment.value.id}`]
     }
 
     try {
@@ -333,7 +336,7 @@ const submit = async () => {
                 if (response.status == 201) {
                     if (email.value !== null || email.value !== '') {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
-
+                            console.log(contactResponse)
                             if (contactResponse.status == 201) {
                                 services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
                                     console.log(res)
