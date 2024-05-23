@@ -133,6 +133,12 @@ button i.uil-edit {
   width: 85%;
 }
 
+@media screen and (max-width: 768px) {
+  .table__container {
+    width: 75%;
+  }
+}
+
 /* Définissez une largeur maximale pour l'en-tête sur les grands écrans */
 @media screen and (min-width: 800px) {
   .security__header {

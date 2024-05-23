@@ -20,7 +20,7 @@
       </el-table-column>
       <el-table-column label="Operations" width="128">
         <template #header>
-          <el-input v-model="searchSent" size="small" placeholder="Type to search" />
+          <el-input v-model="search" size="small" placeholder="Type to search" />
         </template>
       </el-table-column>
     </el-table>

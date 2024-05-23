@@ -120,7 +120,7 @@ onMounted(() => {
 
 
 
-watch(() => {
+watch(links.value, () => {
     /** Mettre le titre en watch */
     appStore.setCurrentPage({
         title1: t("feedback.title1"),

@@ -24,12 +24,14 @@
                     <el-input v-model="search" size="small" placeholder="Type to search" />
                 </template>
                 <template #default="scope">
-                    <el-tooltip :content="`Click to enter ${scope.row.name}'s feedback formulary`" placement="top">
-                        <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
-                                class="uil uil-external-link-alt"></i></a>
-                    </el-tooltip>
-                    <el-button size="small" @click="showModal = true, establishment = scope.row"><i
-                            class="uil uil-qrcode-scan"></i></el-button>
+                    <div class="vertical-buttons">
+                        <el-tooltip :content="`Click to enter ${scope.row.name}'s feedback formulary`" placement="top">
+                            <a :href="scope.row.link" target="_blank" class="el-button el-button--small" ><i
+                                    class="uil uil-external-link-alt"></i></a>
+                        </el-tooltip>
+                        <el-button size="small" @click="showModal = true, establishment = scope.row"><i
+                                class="uil uil-qrcode-scan"></i></el-button>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
@@ -397,6 +399,17 @@ img.establishment_img {
     width: 85%;
 }
 
+@media screen and (max-width: 768px) {
+    .vertical-buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .el-button--small {
+        margin-bottom: 1px;
+        margin-left: 6px;
+    }
+}
 @media screen and (min-width: 800px) {
 
     .table__container {
