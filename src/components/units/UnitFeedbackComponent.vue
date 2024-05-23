@@ -336,7 +336,6 @@ const submit = async () => {
                 if (response.status == 201) {
                     if (email.value !== null || email.value !== '') {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
-                            console.log(contactResponse)
                             if (contactResponse.status == 201) {
                                 services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
                                     // Do nothing
@@ -353,7 +352,6 @@ const submit = async () => {
                                         app_url: app_url.value,
                                         template: `workflow_en`
                                     }
-                                    console.log(coupons)
                                     await services.createRecord('workflow', coupons, () => {
                                         resetForm()
                                     });

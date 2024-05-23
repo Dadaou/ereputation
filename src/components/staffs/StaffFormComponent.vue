@@ -232,7 +232,6 @@ const submit = async () => {
 
                 if (response.status == 200) {
                     let data = response.data;
-                    console.log(data);
                     updateData(data, staff);
                     ElMessage({
                         message: `Staff updated successfully`,

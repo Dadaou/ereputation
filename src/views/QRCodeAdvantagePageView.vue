@@ -154,7 +154,7 @@ onBeforeMount(async () => {
                 resolve(response);
             });
         });
-        console.log(response)
+
         if (response.status === 200) {
             advantages.value = response.data[0];
             code.value = advantages.value.code;
