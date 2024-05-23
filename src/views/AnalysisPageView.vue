@@ -30,7 +30,7 @@
                                 <Bar :data="ratingChart" id="rating" :options="options" />
                             </div>
                         </div>
-                      
+
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
 
@@ -41,7 +41,7 @@
                                 <Line :data="confidenceChart" id="confidence" :options="newOptions" />
                             </div>
                         </div>
-                        
+
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
                 </el-tab-pane>
@@ -69,7 +69,7 @@
                             <li>
                                 Your average customer cart is <span class="analysis-value"> {{
                                     salesAnalysis.avgCustomerCard
-                                    }} {{
+                                }} {{
                                         salesAnalysis.currency }}</span>
                             </li>
                             <li>
@@ -115,7 +115,7 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="Trends" name="trends">
-                    <AnalysisTrend/>
+                    <AnalysisTrend />
                 </el-tab-pane>
                 <el-tab-pane label="Alerts" name="alerts">
                     Coming soon ...
@@ -266,8 +266,7 @@
                 <span> {{ desc.text }} </span>
             </template>
         </el-tooltip>
-        <BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData"
-            :alignment="'vertical'">
+        <BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData" :alignment="'vertical'">
         </BaseLegend>
     </div>
 </template>
@@ -356,7 +355,6 @@ const _categories = computed(() => {
     categories.value.forEach(category => {
         data.push(category.category)
     })
-    console.log(categories.value)
     return data.join(',')
 })
 provide('_categories', _categories)
@@ -544,7 +542,6 @@ const loadCategories = async (tag) => {
     });
 
     if (response.status == 200) {
-        console.log(response.data)
         if (response.data && response.data.data) {
             categories.value = response.data.data
         }
@@ -559,12 +556,12 @@ const loadAnalysisData = async (tag, dateStart, dateEnd, categories) => {
     let apiParams = `etablishment=${tag}`;
 
     if (IsValueOkay(dateStart)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD')
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD')
         apiParams += `&from=${dateStart}`;
     }
 
     if (IsValueOkay(dateEnd)) {
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD')
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD')
         apiParams += `&to=${dateEnd}`;
     }
 
@@ -575,18 +572,16 @@ const loadAnalysisData = async (tag, dateStart, dateEnd, categories) => {
     }
 
     const api = `${apiBase}?${apiParams}`;
-    console.log(api)
 
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
     });
-    console.log(response)
+
     isLoading.value = false
 
     if (response.status == 200) {
-        console.log(response.data)
         const containerBody = document.querySelector('.containerBody');
         const containerBody2 = document.querySelector('.containerBody2');
 
@@ -606,34 +601,30 @@ const loadAnalysisData = async (tag, dateStart, dateEnd, categories) => {
 }
 
 const loadSalesAnalysisData = async (tag, dateStart, dateEnd) => {
-    console.log("Entrée ici...")
     isLoading.value = true
     let apiBase = `establishment/analysis/sales`;
     let apiParams = `tag=${tag}`;
 
     if (IsValueOkay(dateStart)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD')
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD')
         apiParams += `&dateFrom=${dateStart}`;
     }
 
     if (IsValueOkay(dateEnd)) {
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD')
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD')
         apiParams += `&dateTo=${dateEnd}`;
     }
 
     const api = `${apiBase}?${apiParams}`;
-    console.log(api)
 
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
     });
-    // console.log(response)
     isLoading.value = false
 
     if (response.status == 200) {
-        console.log(response.data)
         salesAnalysis.value = response.data
     }
 }
@@ -700,7 +691,6 @@ const transformData = (chartData) => {
 
     ratingChart.value = plotData2;
     confidenceChart.value = plotData1;
-    console.log(plotData2)
     score = score / datasets.length;
     avgScore.value = score;
 

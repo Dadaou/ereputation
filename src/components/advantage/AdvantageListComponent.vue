@@ -3,19 +3,19 @@
   </div>
   <div class="mt-5 erep_table table__container">
     <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
-      <el-table-column label="Name" fixed prop="name" width="188"/>
-      <el-table-column label="Establishment" prop="establishment_name" width="200"/>
-      <el-table-column label="Amount" prop="amount" align="center" width="100"/>
-      <el-table-column label="Category" prop="category" width="150"/>
-      <el-table-column label="Code" prop="code" width="100"/>
-      <el-table-column label="Metric" prop="metric" width="100"/>
-      <el-table-column label="Scope" prop="scope" width="100"/>
-      <el-table-column label="Validity" prop="validity" align="center" width="100"/>
-      <el-table-column label="Limit" prop="advantageLimit" align="center" width="100"/>
+      <el-table-column label="Name" fixed prop="name" width="188" />
+      <el-table-column label="Establishment" prop="establishment_name" width="200" />
+      <el-table-column label="Amount" prop="amount" align="center" width="100" />
+      <el-table-column label="Category" prop="category" width="150" />
+      <el-table-column label="Code" prop="code" width="100" />
+      <el-table-column label="Metric" prop="metric" width="100" />
+      <el-table-column label="Scope" prop="scope" width="100" />
+      <el-table-column label="Validity" prop="validity" align="center" width="100" />
+      <el-table-column label="Limit" prop="advantageLimit" align="center" width="100" />
       <el-table-column label="Expired At" width="150">
-         <template #default="scope">
-                  {{scope.row.expired_at?moment(scope.row.expired_at).format('YYYY-MM-DD'):''}}
-         </template>
+        <template #default="scope">
+          {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
+        </template>
       </el-table-column>
       <el-table-column label="Enable" align="center" width="100">
         <template #default="scope">
@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { computed, ref, inject} from 'vue';
+import { computed, ref, inject } from 'vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 import services from '@Services/services.js';
 import moment from 'moment';
@@ -57,24 +57,21 @@ const emit = defineEmits(['edit', 'setEnable', 'setDisable']);
 const advantages = inject('advantages');
 const search = ref('');
 const { width } = useWindowSize();
-const tableWidth= computed(()=>{
-    return width.value>800?`width: ${100}%`:`width: ${100}%`;
+const tableWidth = computed(() => {
+  return width.value > 800 ? `width: ${100}%` : `width: ${100}%`;
 });
 
-const filterTableData = computed(() =>{
+const filterTableData = computed(() => {
   let filteredData = advantages.value;
-  console.log(search.value)
-  console.log(filteredData)
-  filteredData = filteredData.filter((data)=>{
-        return !search.value || 
-        data.name.toLowerCase().includes(search.value.toLowerCase()) || 
-        (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
-        (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase())) ||
-        (data.metric && data.metric.toLowerCase().includes(search.value.toLowerCase())) ||
-        (data.scope && data.scope.toLowerCase().includes(search.value.toLowerCase()))
+  filteredData = filteredData.filter((data) => {
+    return !search.value ||
+      data.name.toLowerCase().includes(search.value.toLowerCase()) ||
+      (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
+      (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase())) ||
+      (data.metric && data.metric.toLowerCase().includes(search.value.toLowerCase())) ||
+      (data.scope && data.scope.toLowerCase().includes(search.value.toLowerCase()))
 
-    })
-  console.log(filteredData)
+  })
   return filteredData
 });
 
@@ -83,7 +80,6 @@ const reloadData = (advantageToRemove) => {
 };
 
 const handleEdit = (index, advantages) => {
-  console.log(advantages)
   emit('edit', advantages);
 };
 
@@ -96,10 +92,8 @@ const handleDisable = (index, advantages) => {
 };
 
 const handleDelete = async (index, advantages) => {
-  console.log('Handle Delete Called');
   try {
     await services.deleteRecord('advantages', advantages.id, (response) => {
-      console.log(response);
       if (response.status === 204) {
         reloadData(advantages);
         ElMessage({
@@ -120,17 +114,17 @@ const handleDelete = async (index, advantages) => {
 
 <style scoped>
 button {
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
 }
 
 button i.uil-trash-alt {
-    color: red !important;
+  color: red !important;
 }
 
 button i.uil-edit {
-    color: var(--color-danger) !important;
+  color: var(--color-danger) !important;
 }
 
 .security__header {
@@ -181,4 +175,3 @@ button i.uil-edit {
   }
 }
 </style>
-  

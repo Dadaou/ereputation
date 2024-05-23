@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full" >
+    <div class="w-full">
         <div v-if="lineData" class="chart__container w-full" ref="lineChartContainer">
             <Line :data="lineData" :options="options" />
         </div>
@@ -25,16 +25,16 @@ import { useRoute } from "vue-router";
 import { useSocialStore } from "@Stores/social.js";
 import moment from 'moment';
 import services from '@Services/services.js'
- ChartJS.register(
-        CategoryScale,
-        LinearScale,
-        PointElement,
-        LineElement,
-        Title,
-        Tooltip,
-        ArcElement,
-        Legend
-    )
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    ArcElement,
+    Legend
+)
 
 const route = useRoute();
 const companyId = route.params.id;
@@ -82,100 +82,99 @@ const options = ref({
 })
 
 
-const loadSocialData = async (tag, startDate, endDate, type)=>{
-    try{
+const loadSocialData = async (tag, startDate, endDate, type) => {
+    try {
         type = type.toLowerCase()
         const response = await new Promise((resolve) => {
-             services.get_Record(
+            services.get_Record(
                 `social/establishment/${companyId}/${type}/daily/${startDate}/${endDate}/new_statistique`,
                 (response) => {
-                resolve(response)
+                    resolve(response)
                 }
-              )
+            )
         });
 
         if (response.status == 200) {
-           lineData.value = response.data;
-        }   
-    }catch(error){
+            lineData.value = response.data;
+        }
+    } catch (error) {
         console.log(error)
     }
 }
 
-const getLabels = (data, endDate)=>{
- let labels = []
- endDate = new Date(endDate)
- for(const [key, value] of Object.entries(data)){
-     let date = new Date(key)
-    if(date < endDate) labels.push(key)
- }
- const datesObjects = labels.map(dateString => new Date(dateString));
- datesObjects.sort((a, b) => a - b);
- labels = datesObjects.map(dateObject => dateObject.toISOString().slice(0, 10));
- return labels
+const getLabels = (data, endDate) => {
+    let labels = []
+    endDate = new Date(endDate)
+    for (const [key, value] of Object.entries(data)) {
+        let date = new Date(key)
+        if (date < endDate) labels.push(key)
+    }
+    const datesObjects = labels.map(dateString => new Date(dateString));
+    datesObjects.sort((a, b) => a - b);
+    labels = datesObjects.map(dateObject => dateObject.toISOString().slice(0, 10));
+    return labels
 }
 
-const getData = (labels, data, social, type)=>{
- const today = new Date()
- let values = []
- for (var i = 0; i < labels.length; i++) {
-    let date = new Date(labels[i])
-  
-    if(date<=today){
-        if(data && data[`${labels[i]}`] && data[`${labels[i]}`][`${social}`] && data[`${labels[i]}`][`${social}`][`${type}`]){
-             values.push(data[`${labels[i]}`][`${social}`][`${type}`])
+const getData = (labels, data, social, type) => {
+    const today = new Date()
+    let values = []
+    for (var i = 0; i < labels.length; i++) {
+        let date = new Date(labels[i])
+
+        if (date <= today) {
+            if (data && data[`${labels[i]}`] && data[`${labels[i]}`][`${social}`] && data[`${labels[i]}`][`${social}`][`${type}`]) {
+                values.push(data[`${labels[i]}`][`${social}`][`${type}`])
+            }
         }
     }
- }
- return values
+    return values
 }
 
-const transformData = (data, start_date, end_date)=>{
- data = data[`${companyId}`]['daily']
+const transformData = (data, start_date, end_date) => {
+    data = data[`${companyId}`]['daily']
 
- let labels = getLabels(data, end_date)
- let datasets = {
-    followers: [],
-    likes: [],
-    shares: [],
- }
+    let labels = getLabels(data, end_date)
+    let datasets = {
+        followers: [],
+        likes: [],
+        shares: [],
+    }
 
- let chartDataset = {
-    labels: labels,
-    datasets: []
- }
+    let chartDataset = {
+        labels: labels,
+        datasets: []
+    }
 
- let type = "followers"; 
- const colors = {
+    let type = "followers";
+    const colors = {
         'facebook': '#1877F2',
         'instagram': '#E4405F',
         'linkedin': '#0A66C2',
         'tiktok': '#000000',
         'twitter': '#1DA1F2',
         'youtube': '#FF0000'
- };
+    };
 
- let socialsLabels = []
- for(const key in socials.value) socialsLabels.push(key)
- for (var i = 0; i < socialsLabels.length; i++) {
-     let social = socialsLabels[i];
-     chartDataset.datasets.push({
-         label: social,
-         backgroundColor: colors[social],
-         data: getData(labels, data, social, "followers")
-     })
- }
- 
- lineData.value = chartDataset
- console.log(chartDataset)
+    let socialsLabels = []
+    for (const key in socials.value) socialsLabels.push(key)
+    for (var i = 0; i < socialsLabels.length; i++) {
+        let social = socialsLabels[i];
+        chartDataset.datasets.push({
+            label: social,
+            backgroundColor: colors[social],
+            data: getData(labels, data, social, "followers")
+        })
+    }
+
+    lineData.value = chartDataset
 }
 
-watch([start_date, end_date, type], async()=>{
- await loadSocialData(companyId, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), type.value)
+watch([start_date, end_date, type], async () => {
+    await loadSocialData(companyId, moment(new Date(start_date.value)).format('YYYY-MM-DD'), moment(new Date(end_date.value)).format('YYYY-MM-DD'), type.value)
 })
 
-onBeforeMount(async()=>{
-     await loadSocialData(companyId, start_date.value, end_date.value, type.value)
+onBeforeMount(async () => {
+    await loadSocialData(companyId, start_date.value, end_date.value, type.value)
 })
 
 window.onresize = () => {
@@ -195,6 +194,7 @@ window.onresize = () => {
     max-height: 200px;
     overflow-y: auto;
 }
+
 @media screen and (max-width: 768px) {
     .w-full {
         width: 100%;
@@ -207,12 +207,12 @@ window.onresize = () => {
     .inline-flex {
         display: flex;
         justify-content: center;
-        gap: 10px; 
-        flex-wrap: wrap; 
+        gap: 10px;
+        flex-wrap: wrap;
     }
 
     .el-dropdown {
-        width: 48%; 
+        width: 48%;
         font-size: 14px;
     }
 

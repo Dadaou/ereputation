@@ -1,36 +1,36 @@
 <template>
   <div class="overflow-x-auto">
     <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
-      <el-table-column fixed label="Advantage name" prop="adv_name" width="250"/>
-      <el-table-column label="Establishment" prop="establishment_name" width="200"/>
+      <el-table-column fixed label="Advantage name" prop="adv_name" width="250" />
+      <el-table-column label="Establishment" prop="establishment_name" width="200" />
       <el-table-column label="Customer email" width="250">
         <template #default="scope">
-            {{ scope.row.contact_email || '-' }}
+          {{ scope.row.contact_email || '-' }}
         </template>
       </el-table-column>
-      <el-table-column label="Discount Code" prop="adv_code" width="150"/>
-      <el-table-column label="Code" prop="code" width="100"/>
-      <el-table-column label="Amount" prop="adv_amount" width="100"/>
+      <el-table-column label="Discount Code" prop="adv_code" width="150" />
+      <el-table-column label="Code" prop="code" width="100" />
+      <el-table-column label="Amount" prop="adv_amount" width="100" />
       <el-table-column label="Validated at" align="center" width="200">
         <template #default="scope">
-            {{ scope.row.validated_at?moment(scope.row.validated_at).format('YYYY-MM-DD'):'-' }}
+          {{ scope.row.validated_at ? moment(scope.row.validated_at).format('YYYY-MM-DD') : '-' }}
         </template>
       </el-table-column>
       <el-table-column label="Expired At" width="200">
-         <template #default="scope">
-                  {{scope.row.expired_at?moment(scope.row.expired_at).format('YYYY-MM-DD'):''}}
-         </template>
+        <template #default="scope">
+          {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
+        </template>
       </el-table-column>
       <el-table-column label="Confirm" fixed="right" width="200">
         <template #header>
           <el-input v-model="search" size="small" placeholder="Type to search" />
         </template>
-         <template #default="scope">
-            <span v-if="scope.row.confirm" @click="handleCancel(scope.row.id)" class="has-hover"><i
-                class="uil uil-check-square"  style="color: #777; font-size: 15px;"></i></span>
+        <template #default="scope">
+          <span v-if="scope.row.confirm" @click="handleCancel(scope.row.id)" class="has-hover"><i
+              class="uil uil-check-square" style="color: #777; font-size: 15px;"></i></span>
 
-            <span v-else @click="handleConfirm(scope.row.id)" class="has-hover"><i class="uil uil-square"
-                style="color: #777; font-size: 15px;"></i></span>
+          <span v-else @click="handleConfirm(scope.row.id)" class="has-hover"><i class="uil uil-square"
+              style="color: #777; font-size: 15px;"></i></span>
         </template>
       </el-table-column>
     </el-table>
@@ -39,9 +39,8 @@
 
 <script setup>
 import moment from 'moment';
-import { ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
+import { ElTable, ElTableColumn, ElInput } from 'element-plus';
 import services from '@Services/services.js';
-import { useUserStore } from "@Stores/user.js";
 import { useRoute } from "vue-router";
 import {
   ref,
@@ -52,20 +51,19 @@ import {
 
 const route = useRoute();
 const customer = route.params.tag;
-const userStore = useUserStore();
 const search = ref('');
 const discountData = ref([])
 
-const filterTableData = computed(() =>{
+const filterTableData = computed(() => {
   let filteredData = discountData.value;
-  filteredData = filteredData.filter((data)=>{
-        return !search.value || 
-        (data.adv_name && data.adv_name.toLowerCase().includes(search.value.toLowerCase())) || 
-        (data.code && data.code.toLowerCase().includes(search.value.toLowerCase())) ||
-        (data.adv_code && data.adv_code.toLowerCase().includes(search.value.toLowerCase())) ||
-        (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase())) ||
-        (data.contact_email && data.contact_email.toLowerCase().includes(search.value.toLowerCase()))
-    })
+  filteredData = filteredData.filter((data) => {
+    return !search.value ||
+      (data.adv_name && data.adv_name.toLowerCase().includes(search.value.toLowerCase())) ||
+      (data.code && data.code.toLowerCase().includes(search.value.toLowerCase())) ||
+      (data.adv_code && data.adv_code.toLowerCase().includes(search.value.toLowerCase())) ||
+      (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase())) ||
+      (data.contact_email && data.contact_email.toLowerCase().includes(search.value.toLowerCase()))
+  })
   return filteredData
 })
 
@@ -107,13 +105,11 @@ onBeforeMount(async () => {
     const response = await new Promise((resolve) => {
       services.get_Record(`customer/establishments/advantagecontacts?tag=${customer}`, (response) => {
         resolve(response);
-        console.log(response);
       });
     });
 
     if (response.status === 200) {
       discountData.value = response.data;
-      console.log(response.data)
 
     } else {
       console.error('Error fetching contacts:', response);

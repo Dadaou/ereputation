@@ -13,9 +13,10 @@
             </el-table-column>
             <el-table-column label="Name" prop="name" style="width: 25%; min-width: 200px;">
                 <template #default="scope">
-                  <el-tooltip :content="`Click to enter ${scope.row.name}'s page`" placement="top">
-                    <h1 class="establishment_name" @click="goToCompany(route.params.tag, scope.row.tag)">{{scope.row.name}}</h1>
-                  </el-tooltip>
+                    <el-tooltip :content="`Click to enter ${scope.row.name}'s page`" placement="top">
+                        <h1 class="establishment_name" @click="goToCompany(route.params.tag, scope.row.tag)">
+                            {{ scope.row.name }}</h1>
+                    </el-tooltip>
                 </template>
             </el-table-column>
             <el-table-column label="Category" prop="category" style="width: 15%; min-width: 200px;" />
@@ -26,10 +27,9 @@
                     <el-input v-model="search" size="small" placeholder="Type to search" />
                 </template>
                 <template #default="scope">
-                   <!--  <el-button size="small" @click="showModal = true, establishment = scope.row"><i class="uil uil-qrcode-scan"></i></el-button> -->
-                     <el-popconfirm title="Are you sure to delete this?"
-                    @confirm="handleDisable(scope.$index, scope.row)"
-                    >
+                    <!--  <el-button size="small" @click="showModal = true, establishment = scope.row"><i class="uil uil-qrcode-scan"></i></el-button> -->
+                    <el-popconfirm title="Are you sure to delete this?"
+                        @confirm="handleDisable(scope.$index, scope.row)">
                         <template #reference>
                             <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
                         </template>
@@ -40,13 +40,10 @@
             </el-table-column>
         </el-table>
     </div>
-    <QrCodeModalComponent v-if="establishment" :qrcodeValue="`${baseurl}/public/${route.params.tag}/establishment/${establishment.tag}/feedback`" 
-    :showModal="showModal"
-    :filename="`${establishment.name}-feedback-link`"
-    @close="showModal=false"
-    :customer="route.params.tag"
-    :establishment="establishment.tag"
-    />
+    <QrCodeModalComponent v-if="establishment"
+        :qrcodeValue="`${baseurl}/public/${route.params.tag}/establishment/${establishment.tag}/feedback`"
+        :showModal="showModal" :filename="`${establishment.name}-feedback-link`" @close="showModal = false"
+        :customer="route.params.tag" :establishment="establishment.tag" />
 </template>
 <script setup>
 import { computed, defineAsyncComponent, ref, onBeforeMount, watch } from 'vue'
@@ -125,13 +122,13 @@ const establishments = computed(() => {
                 region: establishment.region,
                 zipcode: establishment.zipcode,
                 positionning: establishment.positionning,
-                id:establishment.id,
+                id: establishment.id,
                 disable: establishment.disable
             })
         });
     }
-    filteredData = filteredData.filter((data)=>{
-        return !search.value || data.name.toLowerCase().includes(search.value.toLowerCase()) ||data.category.toLowerCase().includes(search.value.toLowerCase())
+    filteredData = filteredData.filter((data) => {
+        return !search.value || data.name.toLowerCase().includes(search.value.toLowerCase()) || data.category.toLowerCase().includes(search.value.toLowerCase())
             || data.address.toLowerCase().includes(search.value.toLowerCase()) || (data.country && data.country.toLowerCase().includes(search.value.toLowerCase()))
     })
 
@@ -240,16 +237,15 @@ const resetValue = () => {
 }
 
 const remove = (id) => {
-    console.log(id)
+    // Do nothing
 }
 
 const handleEnable = (index, establishment) => {
-  console.log(establishment)
-  emit('setEnable', establishment.id);
+    emit('setEnable', establishment.id);
 };
 
 const handleDisable = (index, establishment) => {
-  emit('setDisable', establishment.id);
+    emit('setDisable', establishment.id);
 };
 
 watch([provider, link], () => {
@@ -318,8 +314,7 @@ onBeforeMount(async () => {
 });
 </script>
 <style scoped>
-
-.establishment_name{
+.establishment_name {
     cursor: pointer;
     font-weight: 500;
 }

@@ -8,38 +8,40 @@
             <li v-if="data.additional_establishment != '0' && !data.name.toLowerCase().includes('business')">
                 <input v-model="enumber" type="number" name="enumber" min="1"> establishment(s)
             </li>
-            <li v-if="data.additional_establishment != '0'">+ {{ data.additional_establishment }} {{ data.currency }} per
+            <li v-if="data.additional_establishment != '0'">+ {{ data.additional_establishment }} {{ data.currency }}
+                per
                 additionnal establishment</li>
-            
+
             <li v-if="data.name.toLowerCase().includes('business')">Adjustable reviews limit</li>
             <li v-else>{{ data.review_limit || 'Illimited' }} Reviews / Year</li>
-            
+
             <li v-if="data.name.toLowerCase().includes('business')">Adjustable leads limit</li>
             <li v-else>{{ data.contact_limit || 'Illimited' }} leads / Year</li>
-            
+
             <li v-if="data.name.toLowerCase().includes('business')">Adjustable events limit</li>
             <li v-else>{{ data.event_limit || 'Illimited' }} events / Year</li>
 
             <li v-if="data.name.toLowerCase().includes('business')">Adjustable #hashtag limit</li>
             <li v-else>{{ data.hashtag_limit || 'Illimited' }} monitored #hashtag </li>
-            
+
             <li v-if="data.name.toLowerCase().includes('business')">Adjustable points of sale limit</li>
-            <li v-else>{{ data.pointofsale_limit || 'Illimited' }} monitored points of sale (1 QR Code by point of sale)</li>
-            
+            <li v-else>{{ data.pointofsale_limit || 'Illimited' }} monitored points of sale (1 QR Code by point of sale)
+            </li>
+
             <li v-if="data.name.toLowerCase().includes('business')">Adjustable monitored sources</li>
             <li v-else>{{ data.provider_limit || 'Illimited' }} monitored sources</li>
-            
+
             <li v-if="data.name.toLowerCase().includes('business')">Adjustable number of reviews categorization</li>
             <li v-else>{{ data.category_limit || 'Illimited' }} reviews categorization</li>
-            
+
             <li v-if="data.name.toLowerCase().includes('business')">Adjustable monitored competitors</li>
             <li v-else>{{ data.competitor_limit || 'Illimited' }} monitored competitors</li>
-            
+
             <li v-if="data.name.toLowerCase().includes('business')">Custom forms</li>
-            <li v-else>Standard forms</li> 
+            <li v-else>Standard forms</li>
 
             <li v-if="!data.name.toLowerCase().includes('basic')">Reviews history</li>
-            
+
             <li v-if="data.crm && data.name.toLowerCase().includes('business')">Leads integration in your CRM</li>
             <li v-if="data.sale && data.name.toLowerCase().includes('business')">Sales integration (API)</li>
         </ul>
@@ -63,8 +65,6 @@ const props = defineProps({
         required: true,
     }
 })
-
-console.log(props.data)
 
 const emits = defineEmits(['selected']);
 const fprice = ref(parseFloat(props.data.amount));
@@ -141,7 +141,7 @@ watch(enumber, () => {
 }
 
 .plan-card ul {
-   /* list-style-image: url('sqpurple.gif');*/
+    /* list-style-image: url('sqpurple.gif');*/
     text-align: left;
     justify-self: flex-start;
 }

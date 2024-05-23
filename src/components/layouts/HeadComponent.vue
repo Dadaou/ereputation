@@ -1,9 +1,10 @@
 <template>
-    <div class="head__container" v-if="isSearch == false">
-        <i class="uil" :class="page.icon"></i>
-        <div class="head__title">{{ page.title1 }} <b>{{ page.title2 }}</b></div>
+    <div class="head__container" v-if="isSearch == false && page">
+        <i v-if="page.icon" class="uil" :class="page.icon"></i>
+        <div v-if="page.title1 || page.title2" class="head__title">{{ page.title1 }} <b>{{ page.title2 }}</b></div>
     </div>
-    <div class="container head__container" v-else :style="isSearch ? { 'backgroundColor': '#f75842', 'height': '9rem' } : {}">
+    <div class="container head__container" v-else
+        :style="isSearch ? { 'backgroundColor': '#f75842', 'height': '9rem' } : {}">
         <slot name="content"></slot>
     </div>
 </template>
@@ -58,9 +59,11 @@ const route = useRoute();
     padding-top: 1px;
     text-align: center;
 }
-.uil{
+
+.uil {
     margin-top: -12px;
 }
+
 @media screen and (max-width:1024px) {
     /*.head__container{
         position: absolute;

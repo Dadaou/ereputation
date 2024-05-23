@@ -7,13 +7,8 @@
             <CommentPagination v-if="_reviews.length > 0" :config="paginationConfig" @updatePage="updatePage"
                 :color="'#6c63ff'" :nb="_reviews.length" :data="visibleData"></CommentPagination>
         </div>
-        <CommentComponent 
-            v-if="reviews_loader == false" 
-            :reviews="visibleData" 
-            :showEmoji="true" 
-            :showCategory="false"
-            :categories="categories"
-        />
+        <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true" :showCategory="false"
+            :categories="categories" />
         <div v-else role="status"
             class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
             v-for="index in 5" :key="index">
@@ -84,8 +79,8 @@ const loadReviews = async (unit, dateStart, dateEnd) => {
     let apiParams = `tag=${unit}`
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
         apiParams += `&from=${dateStart}&to=${dateEnd}`;
     }
 
@@ -96,12 +91,9 @@ const loadReviews = async (unit, dateStart, dateEnd) => {
         });
     });
 
-    console.log(api)
-
     if (response.status == 200) {
         reviews_loader.value = false;
         selectedUnit.value = response.data
-        console.log(selectedUnit.value)
         updateVisibleData(selectedUnit.value.reviews);
     }
 
@@ -125,7 +117,6 @@ const loadCategories = async (tag) => {
 }
 
 watch(date, async () => {
-    console.log(date.value)
     if (date.value.length > 1) {
         await loadReviews(route.params.unit, date.value[0], date.value[1])
     }
@@ -133,12 +124,8 @@ watch(date, async () => {
 
 onMounted(async () => {
     reviews_loader.value = true
-    console.log('Component onMounted')
     await loadReviews(route.params.unit, '', '')
     await loadCategories(companyId)
 });
 
-onUnmounted(() => {
-    console.log("Component unmounted");
-});
 </script>

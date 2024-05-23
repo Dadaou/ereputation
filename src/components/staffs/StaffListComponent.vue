@@ -5,9 +5,9 @@
     <el-table :data="filterTableData">
       <el-table-column label="Period" prop="period" style="width: 15%; min-width: 300px;" />
       <el-table-column label="Name" style="width: 20%; min-width: 300px;">
-         <template #default="scope">
-          {{`${scope.row.firstname} ${scope.row.lastname}`}}
-         </template>
+        <template #default="scope">
+          {{ `${scope.row.firstname} ${scope.row.lastname}` }}
+        </template>
       </el-table-column>
       <el-table-column label="Gender" prop="gender" style="width: 10%; min-width: 300px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;" />
@@ -31,7 +31,7 @@
     </el-table>
   </div>
 </template>
-  
+
 <script setup>
 import { computed, ref, defineAsyncComponent, inject } from 'vue';
 import moment from 'moment';
@@ -43,11 +43,6 @@ import 'element-plus/es/components/table-column/style/css'
 import 'element-plus/es/components/popconfirm/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
-import services from '@Services/services.js';
-
-const QrCodeModalComponent = defineAsyncComponent(() =>
-    import('@Components/utils/QrCodeModalComponent.vue')
-)
 
 const emit = defineEmits(['edit']);
 const staffStore = useStaffStore();
@@ -61,23 +56,22 @@ let tableData = computed(() => {
   let data = [];
   staffs.value.forEach(staff_item => {
     staff_item['period'] = staff_item.dateto != null ? `${moment(staff_item.datefrom).format('YYYY MMM DD')} to ${moment(staff_item.dateto).format('YYYY MMM DD')}` : `${moment(staff_item.datefrom).format('YYYY MMM DD')} to -`;
-    console.log(staff_item)
     data.push(staff_item);
   })
   return data;
 });
 
 const search = ref('')
-const filterTableData = computed(() =>{
+const filterTableData = computed(() => {
   let filterdata = tableData.value;
   filterdata = tableData.value.filter(
-     (data) =>
-       !search.value ||
-       data.lastname.toLowerCase().includes(search.value.toLowerCase()) ||
-       data.firstname.toLowerCase().includes(search.value.toLowerCase())||
-       data.department.toLowerCase().includes(search.value.toLowerCase())||
-       data.establishment_name.toLowerCase().includes(search.value.toLowerCase())
-   )
+    (data) =>
+      !search.value ||
+      data.lastname.toLowerCase().includes(search.value.toLowerCase()) ||
+      data.firstname.toLowerCase().includes(search.value.toLowerCase()) ||
+      data.department.toLowerCase().includes(search.value.toLowerCase()) ||
+      data.establishment_name.toLowerCase().includes(search.value.toLowerCase())
+  )
   return filterdata
 })
 
@@ -95,7 +89,6 @@ const handleEdit = (index, staff) => {
 
 const handleDelete = async (index, staff) => {
   await staffStore.removeStaff(staff.id, (response) => {
-    console.log(response)
     if (response.status == 204) {
       reloadData(staff);
       ElMessage({
@@ -185,8 +178,8 @@ button i.uil-edit {
   transform: rotate(360deg);
 }
 
-/* Appliquez une largeur de 100% aux éléments parents */c
-.security__header {
+/* Appliquez une largeur de 100% aux éléments parents */
+c .security__header {
   width: 100%;
 }
 
@@ -207,4 +200,3 @@ button i.uil-edit {
   }
 }
 </style>
-  

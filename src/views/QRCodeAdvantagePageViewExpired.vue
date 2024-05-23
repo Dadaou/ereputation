@@ -131,18 +131,11 @@ onBeforeMount(async () => {
                 resolve(response);
             });
         });
-        console.log(response)
+
         if (response.status === 200) {
             advantages.value = response.data[0];
             code.value = advantages.value.code;
             dateExperied.value = advantages.value.expired_at;
-            console.log("date_expiration", dateExperied.value);
-            console.log("date_Jour", dateJour);
-            if (dateJour > dateExperied.value) {
-                console.log("ouiiiiiiiiiii il est la ");
-            }
-
-
         } else {
             console.error('Error fetching advantages:', response);
         }

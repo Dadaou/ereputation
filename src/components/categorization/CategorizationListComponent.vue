@@ -1,23 +1,23 @@
 <template>
-	<div class="mt-5 table__container">
-	    <el-table :data="filterTableData">
-	      <el-table-column label="Category" prop="category" style="width: 15%; min-width: 300px;" />
-	      <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;" />
-	      <el-table-column style="width: 15%; min-width: 200px;" align="right">
-	        <template #header>
-	          <el-input v-model="search" size="small" placeholder="Type to search" />
-	        </template>
-	        <template #default="scope">
-	          <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
-	            <template #reference>
-	              <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
-	            </template>
-	          </el-popconfirm>
-	          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
-	        </template>
-	      </el-table-column>
-	    </el-table>
-	  </div>
+  <div class="mt-5 table__container">
+    <el-table :data="filterTableData">
+      <el-table-column label="Category" prop="category" style="width: 15%; min-width: 300px;" />
+      <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;" />
+      <el-table-column style="width: 15%; min-width: 200px;" align="right">
+        <template #header>
+          <el-input v-model="search" size="small" placeholder="Type to search" />
+        </template>
+        <template #default="scope">
+          <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
+            <template #reference>
+              <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
+            </template>
+          </el-popconfirm>
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 </template>
 <script setup>
 import { computed, ref, inject } from 'vue';
@@ -34,19 +34,19 @@ const emit = defineEmits(['edit']);
 const categories = inject('categories');
 const search = ref('')
 
-const filterTableData = computed(() =>{
+const filterTableData = computed(() => {
   let filterdata = categories.value;
   filterdata = categories.value.filter(
-     (data) =>
-       !search.value ||
-       data.category.toLowerCase().includes(search.value.toLowerCase()) ||
-       data.establishment_name.toLowerCase().includes(search.value.toLowerCase())
-   )
+    (data) =>
+      !search.value ||
+      data.category.toLowerCase().includes(search.value.toLowerCase()) ||
+      data.establishment_name.toLowerCase().includes(search.value.toLowerCase())
+  )
   return filterdata
 })
 
-const handleEdit = (index, category)=>{
-	emit('edit', category);
+const handleEdit = (index, category) => {
+  emit('edit', category);
 };
 
 const reloadData = (category) => {
@@ -57,36 +57,35 @@ const reloadData = (category) => {
   categories.value = data;
 }
 
-const handleDelete = async(index, category)=>{
-	const response = await new Promise((resolve) => {
-        services.deleteRecord('categories', category['id'], (response) => {
-            resolve(response);
-        });
+const handleDelete = async (index, category) => {
+  const response = await new Promise((resolve) => {
+    services.deleteRecord('categories', category['id'], (response) => {
+      resolve(response);
     });
-    console.log(response)
-    if (response.status == 204) {
-      reloadData(category);
-      ElMessage({
-        message: `category removed successfully.`,
-        type: 'success',
-      });
-    }
+  });
+
+  if (response.status == 204) {
+    reloadData(category);
+    ElMessage({
+      message: `category removed successfully.`,
+      type: 'success',
+    });
+  }
 };
-	
+
 </script>
 <style scoped>
 button {
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
 }
 
 button i.uil-trash-alt {
-    color: red !important;
+  color: red !important;
 }
 
 button i.uil-edit {
-    color: var(--color-danger) !important;
+  color: var(--color-danger) !important;
 }
-	
 </style>

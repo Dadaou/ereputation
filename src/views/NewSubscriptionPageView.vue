@@ -41,7 +41,8 @@
                     </tr>
                     <tr>
                       <td>Order Total</td>
-                      <td style="text-align:right;"><strong>{{ planInfo.total }}{{ planInfo.plan.currency }}</strong></td>
+                      <td style="text-align:right;"><strong>{{ planInfo.total }}{{ planInfo.plan.currency }}</strong>
+                      </td>
                     </tr>
                   </table>
                 </div>
@@ -51,7 +52,8 @@
                   <div class="app__title">
                     <h1>Payment information</h1>
                   </div>
-                  <label for="cardName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name on card
+                  <label for="cardName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name on
+                    card
                     <span>*</span></label>
                   <input v-model="planInfo.cardName" type="text" id="cardName"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
@@ -76,7 +78,7 @@
 </template>
 
 <script setup>
-import { ref, provide, onBeforeMount, defineAsyncComponent } from 'vue';
+import { ref, provide, onBeforeMount, defineAsyncComponent, onMounted } from 'vue';
 import { ElTabs, ElTabPane } from 'element-plus';
 import PlanCard from '@Components/subscription/PlanCard.vue';
 import SubscriptionSummary from '@Components/subscription/SubscriptionSummary.vue';
@@ -161,7 +163,6 @@ const setPlan = (data, eNumber, total) => {
 }
 
 const loadCustomerInfo = () => {
-  console.log(userStore.user);
 
   planInfo.value['uFName'] = userStore.user.firstname;
   planInfo.value['uLName'] = userStore.user.lastname;
@@ -283,7 +284,7 @@ onBeforeMount(async () => {
 
   if (response.status == 200 && response.data) {
     const data = response.data
-    plans.value = data.sort((a,b)=>a.id - b.id);
+    plans.value = data.sort((a, b) => a.id - b.id);
   }
 })
 
@@ -321,6 +322,17 @@ const loadPaymentForm = async () => {
     }
   })
 };
+
+onMounted(() => {
+  var w3cxDiv = document.createElement("div");
+  w3cxDiv.id = "w3cx";
+  document.getElementById("app").appendChild(w3cxDiv);
+  let w3cx = document.createElement("script");
+  w3cx.setAttribute("src", "https://downloads-global.3cx.com/downloads/livechatandtalk/v1/callus.js");
+  w3cx.setAttribute("id", "tcx-callus-js");
+  w3cx.setAttribute("charset", "utf-8");
+  document.getElementById("w3cx").appendChild(w3cx);
+})
 
 </script>
 <style>

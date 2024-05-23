@@ -176,8 +176,6 @@ const establishment = ref({});
 let media = [];
 const iframeVisible = ref(false);
 
-const page = ref({})
-
 let randomAdvantage = ref(null);
 
 const showSpinner = ref(false);
@@ -206,8 +204,8 @@ onMounted(() => {
 
     try {
         if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
-        window.FingerprintApp.default.main();
-    }
+            window.FingerprintApp.default.main();
+        }
     } catch (error) {
         console.error("Une erreur s'est produite lors de l'exécution de FingerprintG2A :", error);
     }
@@ -264,7 +262,7 @@ const submit = async () => {
         "optin": true,
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
         "dateReview": moment(date_review, 'DD/MM/YYYY'),
-        "visitor": visitorId ? `/api/visitors/${visitorId}`: null
+        "visitor": visitorId ? `/api/visitors/${visitorId}` : null
     };
 
     let contactData = {
@@ -280,17 +278,16 @@ const submit = async () => {
             showSpinner.value = true;
 
             await feedbackStore.createReview(review, async (response) => {
-                console.log(response)
                 if (response.status == 201) {
                     if (email.value !== null || email.value !== '') {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
                             if (contactResponse.status == 201) {
                                 services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
-                                    console.log(res)
+                                    // Do nothing
                                 })
 
-                                if(randomAdvantage.value){
-                                     let coupons = {
+                                if (randomAdvantage.value) {
+                                    let coupons = {
                                         advantage: randomAdvantage.value.id,
                                         establishment: route.params.id,
                                         firstname: firstname.value,
@@ -301,7 +298,6 @@ const submit = async () => {
                                         template: 'workflow_en'
                                     }
                                     await services.createRecord('workflow', coupons, (res) => {
-                                        console.log(res)
                                         resetForm()
                                     });
                                 }

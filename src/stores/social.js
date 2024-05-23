@@ -22,7 +22,6 @@ export const useSocialStore = defineStore('social', () => {
 
   const fetchHistogramDate = async (id, endDate, next) => {
     const startDate = `${new Date().getFullYear()}-01-01`
-    console.log('fetch histogram ...')
     await services.get_Record(
       `social/establishment/${id}/${startDate}/${endDate}/histogram`,
       (response) => {
@@ -58,8 +57,6 @@ export const useSocialStore = defineStore('social', () => {
   }
 
   const fetchGlobalStats = async (id, period, type, next) => {
-    console.log('fetch stats ...')
-    console.log(id)
     if (type == 'monthly') {
       await services.get_Record(
         `social/establishment/${id}/monthly/${period}/new_statistique`,
@@ -97,7 +94,6 @@ export const useSocialStore = defineStore('social', () => {
 
   const getHistogram = async (id, date) => {
     const bDate = moment(date).format('YYYY-MM-DD')
-    console.log(bDate)
     if (histogramByDate[`${id}`] && histogramByDate[`${id}`][`${bDate}`]) {
       return histogramByDate[`${id}`][`${bDate}`]
     } else {
@@ -117,7 +113,6 @@ export const useSocialStore = defineStore('social', () => {
     } else {
       await fetchGlobalStats(id, period, type)
       tmp = globalStats.value
-      console.log(tmp)
       if (tmp[`${id}`] && tmp[`${id}`][`${type}`] && tmp[`${id}`][`${type}`][`${period}`]) {
         return tmp[`${id}`][`${type}`][`${period}`]
       } else {

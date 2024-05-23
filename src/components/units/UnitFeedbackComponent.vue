@@ -247,7 +247,10 @@ onBeforeMount(async () => {
         if (response.status == 200) {
             units.value = response.data;
             unit.value = response.data.filter(i => i.tag == route.params.id).length > 0 ? response.data.filter(i => i.tag == route.params.id)[0] : null
+
+            if (!unit.value) exist.value = false
         }
+
         if (response.status == 404) exist.value = false
     });
 })
@@ -255,8 +258,8 @@ const requiredinput = ref('');
 onMounted(() => {
     try {
         if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
-        window.FingerprintApp.default.main();
-    }
+            window.FingerprintApp.default.main();
+        }
     } catch (error) {
         console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
     }
@@ -316,14 +319,14 @@ const submit = async () => {
         "optin": true,
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
         "dateReview": moment(date_review, 'DD/MM/YYYY'),
-        "visitor": visitorId ? `/api/visitors/${visitorId}`: null
+        "visitor": visitorId ? `/api/visitors/${visitorId}` : null
     }
 
     let contactData = {
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,
-        establishment: [`/api/establishments/${establishment.value.id}`]
+        establishments: [`/api/establishments/${establishment.value.id}`]
     }
 
     try {
@@ -333,14 +336,13 @@ const submit = async () => {
                 if (response.status == 201) {
                     if (email.value !== null || email.value !== '') {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
-
                             if (contactResponse.status == 201) {
                                 services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
-                                    console.log(res)
+                                    // Do nothing
                                 })
 
-                                if(randomAdvantage.value){
-                                     let coupons = {
+                                if (randomAdvantage.value) {
+                                    let coupons = {
                                         advantage: randomAdvantage.value.id,
                                         establishment: route.params.etab,
                                         firstname: firstname.value,
@@ -350,7 +352,6 @@ const submit = async () => {
                                         app_url: app_url.value,
                                         template: `workflow_en`
                                     }
-                                    console.log(coupons)
                                     await services.createRecord('workflow', coupons, () => {
                                         resetForm()
                                     });

@@ -38,7 +38,7 @@
 <script setup>
 import { computed, ref, inject, defineAsyncComponent } from 'vue';
 import moment from 'moment';
-import { ElTable, ElTableColumn, ElButton, ElInput } from 'element-plus';
+import { ElTable, ElTableColumn, ElButton, ElInput, ElTooltip } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
 import 'element-plus/es/components/table-column/style/css'
@@ -61,7 +61,6 @@ let tableData = computed(() => {
   let data = [];
   staffs.value.forEach(staff_item => {
     staff_item['period'] = staff_item.dateto != null ? `${moment(staff_item.datefrom).format('YYYY MMM DD')} to ${moment(staff_item.dateto).format('YYYY MMM DD')}` : `${moment(staff_item.datefrom).format('YYYY MMM DD')} to -`;
-    console.log(staff_item)
     data.push(staff_item);
   })
   return data;

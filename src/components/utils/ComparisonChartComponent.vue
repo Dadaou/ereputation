@@ -12,7 +12,7 @@
                 :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
             </GroupedBarChart>
         </div>
-        
+
         <div class="colLarge">
             <div class="boxLarge">
                 <GroupedBarChart class="chart" :plot-data="props.data" x-key="name" :width="custom_width"
@@ -132,12 +132,6 @@ let timePeriods = ref(['Days', 'Weeks', 'Months', 'Quarters', 'Semesters']);
 let establishmentDropdown = computed(() => comparisonByEstablishments.value ? props.competitors : props.establishment.websites.map(w => ({ name: w })));
 let selectedCompany = ref(establishmentDropdown.value[0]);
 
-// console.log(establishmentDropdown.value);
-
-// let startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-// let endDate = moment().format('YYYY-M-DD');
-// let start_date = ref(appStore.start_date);
-// let end_date = ref(appStore.end_date);
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 let legendData = ref([]);
@@ -155,18 +149,13 @@ const custom_width = computed(() => {
 })
 
 const viewData = async () => {
-    // date2, comparisonByEstablishments, selectedCompany, selectedTimePeriod
 
     let sDate = moment().subtract(6, 'months').format('YYYY-M-DD');
     let eDate = moment().format('YYYY-M-DD');
 
-    // if (start_date.value)
-    //     sDate = moment(start_date.value).format('YYYY-M-DD');
-    // if (end_date.value) eDate = moment(end_date.value).format('YYYY-M-DD');
-
     if (IsValueOkay(start_date.value) && IsValueOkay(end_date.value)) {
-        sDate = moment(start_date.value).format('YYYY-M-DD');
-        eDate = moment(end_date.value).format('YYYY-M-DD');
+        sDate = moment(new Date(start_date.value)).format('YYYY-M-DD');
+        eDate = moment(new Date(end_date.value)).format('YYYY-M-DD');
     }
     chart2Loading.value = true
 
@@ -229,8 +218,6 @@ const plotData = ref([]);
 
 const IsValueOkay = (value) => (value == '' || value == null || value == undefined) ? false : true;
 watch([start_date, end_date], () => {
-    // appStore.setDatesValue(start_date.value, end_date.value);
-    // emits('update')
     if (IsValueOkay(start_date.value) && IsValueOkay(end_date.value)) {
         date2.value = [start_date.value, end_date.value]
     } else {
@@ -238,21 +225,7 @@ watch([start_date, end_date], () => {
     }
 })
 
-// const viewDataByEstablishment = (establishments, timePeriod, startDate, endDate, colors) => {
-//     plotData.value = companiesStore.calculateReviewsV3(timePeriod, startDate, endDate, establishments);
-//     legendData.value = companiesStore.generateLegend(establishments, colors);
-// }
-
-// const viewDataBySource = (websites, establishment, timePeriod, startDate, endDate, colors) => {
-//     websites = companiesStore.getWebsites(websites);
-//     plotData.value = companiesStore.calculateReviewsBySources(establishment, websites, timePeriod, startDate, endDate);
-//     legendData.value = companiesStore.generateLegendV2(websites, colors);
-// }
-
 watch([start_date, end_date, comparisonByEstablishments, selectedCompany, selectedTimePeriod], () => {
-    // startDate = moment().startOf('year').format('YYYY-M-DD');
-    // endDate = moment().endOf('year').format('YYYY-M-DD');
-    console.log(selectedCompany.value)
     viewData();
 })
 
@@ -295,13 +268,6 @@ const getWidth = () => {
 };
 
 const get_Width = () => {
-    // const defaultWidth = 1400;
-    // if (width.value >= 1500) {
-    //     return `${defaultWidth}px`;
-    // }
-    // const percentage = 1;
-
-    // return `${Math.min(width.value * percentage, 850)}px`;
     return '100%'
 };
 
@@ -384,55 +350,55 @@ const get_Width = () => {
 }
 
 .colLarge {
-        overflow-x: scroll;   
-        width:inherit;
-    }
+    overflow-x: scroll;
+    width: inherit;
+}
 
 @media screen and (min-width:976px) {
     .colSmall {
-        max-width:56px;
+        max-width: 56px;
         overflow: hidden;
     }
 
     .boxLarge {
-        max-width:800px;
-        margin-left:-60px;
+        max-width: 800px;
+        margin-left: -60px;
     }
 }
 
 @media screen and (min-width:769px) and (max-width: 975px) {
     .colSmall {
-        max-width:56px;
+        max-width: 56px;
         overflow: hidden;
     }
 
     .boxLarge {
-        max-width:90%;
-        margin-left:-60px;
+        max-width: 90%;
+        margin-left: -60px;
     }
 }
 
 @media screen and (min-width:469px) and (max-width: 768px) {
     .colSmall {
-        max-width:56px;
+        max-width: 56px;
         overflow: hidden;
     }
 
     .boxLarge {
-        max-width:700px;
-        margin-left:-60px;
+        max-width: 700px;
+        margin-left: -60px;
     }
 }
 
 @media screen and (max-width:468px) {
     .colSmall {
-        max-width:56px;
+        max-width: 56px;
         overflow: hidden;
     }
 
     .boxLarge {
-        max-width:700px;
-        margin-left:-60px;
+        max-width: 700px;
+        margin-left: -60px;
     }
 }
 </style>

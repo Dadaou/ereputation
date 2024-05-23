@@ -6,8 +6,8 @@
             </div>
         </div>
         <div class="dashboard__content">
-            <DashboardComponent :is-loading="establishmentLoading" class="counter" v-for="item in all_items" :item="item"
-                :key="item" />
+            <DashboardComponent :is-loading="establishmentLoading" class="counter" v-for="item in all_items"
+                :item="item" :key="item" />
         </div>
         <div class="head">
             <div class="app__title">
@@ -17,7 +17,7 @@
 
         <ComparisonChartComponent :data="plotdata" :width="chart__width" :chartheight="chart__height"
             :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors"
-            :timePeriod="selectedTimePeriod" :colors="colors"/>
+            :timePeriod="selectedTimePeriod" :colors="colors" />
         <BaseLegend v-if="chartLoading == false" class="legend" :LegendData="legendData" :alignment="'horizontal'">
         </BaseLegend>
         <div class="head">
@@ -30,18 +30,14 @@
                     @click="gotoReviewPage(establishment.competitor_tag, $route.params.tag)">here</a> to access all
                 reviews.</p>
             <div class="reviews__pagination">
-                <PaginationComponent 
-                v-if="visibleData.length > 0" 
-                :options="options" 
-                @next="(option) => {
+                <PaginationComponent v-if="visibleData.length > 0" :options="options" @next="(option) => {
                     loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, language)
-                }" 
-                @prev="(option) => {
+                }" @prev="(option) => {
                     loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, language)
                 }" />
             </div>
             <CommentComponent v-if="reviewsLoading == false" :reviews="visibleData" :allReviews="establishment.reviews"
-                :showEmoji="true" :categories="categories"/>
+                :showEmoji="true" :categories="categories" />
             <div v-else role="status"
                 class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
                 v-for="index in 20" :key="index">
@@ -105,10 +101,10 @@
         </div>
         <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
     </div>
-    
+
     <div class="tablet_mobile__filter" v-if="currentFilter == 'filter'">
-        <DropdownComponent class="dropdown w-full" :showTitle="false" title="Compare to" placeholder="Select a competitor"
-            :data="computedCompetitors" @submit="(competitor) => {
+        <DropdownComponent class="dropdown w-full" :showTitle="false" title="Compare to"
+            placeholder="Select a competitor" :data="computedCompetitors" @submit="(competitor) => {
                 selectedCompetitors = competitor.name
             }" :defaultObj="computedCompetitors[0]" :isDataObject="true" />
         <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform"
@@ -149,13 +145,11 @@
         </div>
     </div>
 
-    <EstablishmentInfoMobile 
-    :establishment="establishment" 
-    :isLoading="establishmentLoading">
+    <EstablishmentInfoMobile :establishment="establishment" :isLoading="establishmentLoading">
         <template #dashboard>
-             <div class="dashboard_mobile mt-1">
-                 <DashboardMobile v-for="item in all_items" :item="item" :key="item" /> 
-             </div>
+            <div class="dashboard_mobile mt-1">
+                <DashboardMobile v-for="item in all_items" :item="item" :key="item" />
+            </div>
         </template>
         <template #btn>
             <div class="mobile__filter__btn">
@@ -167,7 +161,8 @@
                 <button :class="['btn', (currentFilter == 'star') ? 'isactive' : '']" @click="currentFilter = 'star'">
                     <i class="uis uil-star"></i> Stars
                 </button>
-                <button :class="['btn', (currentFilter == 'filter') ? 'isactive' : '']" @click="currentFilter = 'filter'">
+                <button :class="['btn', (currentFilter == 'filter') ? 'isactive' : '']"
+                    @click="currentFilter = 'filter'">
                     <i class="uil uil-filter"></i>Filters
                 </button>
             </div>
@@ -175,7 +170,8 @@
     </EstablishmentInfoMobile>
 
     <div class="right__side">
-        <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        <div
+            class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" v-if="!establishmentLoading">
                 <div v-if="establishment.url_source !== null" class="establishment__img">
                     <img :src="establishment.url_source" alt="" />
@@ -223,8 +219,8 @@
                 :data="computedCompetitors" @submit="(competitor) => {
                     selectedCompetitors = competitor.name
                 }" :defaultObj="computedCompetitors[0]" :isDataObject="true" />
-            <DropdownComponent class="dropdown" title="Filter by plateform" placeholder="Select a website" :data="websites"
-                @submit="(website) => {
+            <DropdownComponent class="dropdown" title="Filter by plateform" placeholder="Select a website"
+                :data="websites" @submit="(website) => {
                     selectedWebsites = website
                 }" :default="websites[0]" />
             <div class="date__filter">
@@ -236,7 +232,7 @@
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[0]" />
             </div>
-           <!--  <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/trends`">
+            <!--  <RouterLink :to="`/customer/${customerTag}/establishment/${$route.params.id}/trends`">
                 <button class="btn trends">
                     <i class="uil uil-trophy"></i>
                     <span class="ml-2">Trends</span>
@@ -295,11 +291,11 @@ import {
 import { Line } from 'vue-chartjs';
 
 const EstablishmentInfoMobile = defineAsyncComponent(
-    ()=> import("@Components/utils/EstablishmentInfoMobile.vue")
+    () => import("@Components/utils/EstablishmentInfoMobile.vue")
 )
 
 const DashboardMobile = defineAsyncComponent(
-    ()=> import("@Components/utils/DashboardMobileComponent.vue")
+    () => import("@Components/utils/DashboardMobileComponent.vue")
 )
 
 const options = ref({
@@ -473,15 +469,15 @@ const loadDatasets = async () => {
 const viewData = async (establishment, establishmentTag, dateStart, dateEnd, website, competitors, timePeriods) => {
     chartLoading.value = true
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-       dateStart = moment(dateStart).format('YYYY-MM-DD');
-       dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
     }
 
     if (establishment && establishment['competitors']) {
         let competitorInfo = establishment['competitors'].find(c => c.name === competitors)
         const tags = competitorInfo ? [establishmentTag, competitorInfo.tag] : [establishmentTag, ...establishment['competitors'].map(c => c.tag)]
         website = (website == 'App (Private)') ? website : website.toLowerCase()
-       
+
         //Global value to change
         plotdata.value = await chartsStore.loadData(tags, timePeriods, dateStart, dateEnd, website)
         legendData.value = companiesStore.generateLegend(plotdata.value, colors.value);
@@ -567,8 +563,8 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     let apiParams = `tag=${tag}&page=${page}&limit=${limit}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
         apiParams += `&from=${dateStart}&to=${dateEnd}`;
     }
 
@@ -582,7 +578,6 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     }
 
     const api = apiBase + '?' + apiParams;
-    console.log(api)
 
     loadDatasets();
     await loadFeelingData(tag, dateStart, dateEnd, source);
@@ -594,12 +589,9 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         });
     });
 
-    console.log(response)
-
     if (response.status == 200) {
         reviewsLoading.value = false;
         visibleData.value = response.data['data'];
-        console.log(response.data)
 
         if (response.data['count'] <= 100) options.value.max = response.data['count'];
         else options.value.max = 100;
@@ -614,8 +606,8 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source) => {
     let apiParams = `tag=${tag}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
     } /*else {
         startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
         endDate = moment().format('YYYY-M-DD');
@@ -668,8 +660,8 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
     let apiParams = `tag=${tag}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
     } /*else {
         startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
         endDate = moment().format('YYYY-M-DD');
@@ -701,8 +693,8 @@ const loadIndiceData = async (tag, dateStart, dateEnd) => {
     let apiParams = "";
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
     } /*else {
         startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
         endDate = moment().format('YYYY-M-DD');
@@ -770,7 +762,6 @@ onBeforeMount(async () => {
 </script>
 
 <style scoped>
-
 .btn.trends {
     width: 100%;
     background-color: var(--color-primary);
@@ -880,7 +871,7 @@ onBeforeMount(async () => {
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
     margin: 15px auto;
-    width:100%;
+    width: 100%;
 }
 
 .reviews__star {
@@ -932,7 +923,7 @@ onBeforeMount(async () => {
 
 .chart__rating {
     display: flex;
-   padding:5px;
+    padding: 5px;
 }
 
 .legend {
@@ -1037,7 +1028,7 @@ onBeforeMount(async () => {
 /* Css correction */
 
 img {
-    height: 200px ;
+    height: 200px;
 }
 
 @media screen and (max-width:1440px) {
@@ -1065,8 +1056,8 @@ img {
         display: block;
     }
 
-    img{
-        height:auto;
+    img {
+        height: auto;
     }
 
     .dashboard__content,

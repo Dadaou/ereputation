@@ -1,12 +1,7 @@
 <template>
-	<div class="offers-list">
+  <div class="offers-list">
     <span>Use a pre-formatted template</span>
-    <div
-      v-for="(offer, index) in offers"
-      :key="index"
-      class="offer-item"
-      @click="selectOffer(offer)"
-    >
+    <div v-for="(offer, index) in offers" :key="index" class="offer-item" @click="selectOffer(offer)">
       <div class="offer-title">{{ offer.Title }}</div>
     </div>
   </div>
@@ -14,12 +9,12 @@
 <script setup>
 
 function generateOffer(title, category, name, discountPercentage, validityDays = null, giftExpiredAt = null, lotteryFrom = null, lotteryTo = null, lotteryLimit = null, lotteryDescription = null) {
- const currentDate = new Date();
- const oneMonthLater = new Date();
- oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
+  const currentDate = new Date();
+  const oneMonthLater = new Date();
+  oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
 
- // Function to map synonyms to categories
- function mapSynonymToCategory(synonym) {
+  // Function to map synonyms to categories
+  function mapSynonymToCategory(synonym) {
     const synonymMap = {
       "discount": "discount",
       "off": "discount",
@@ -36,10 +31,10 @@ function generateOffer(title, category, name, discountPercentage, validityDays =
       "contest": "lottery"
     };
     return synonymMap[synonym.toLowerCase()] || "unknown";
- }
+  }
 
- // Function to extract category and name from title using synonyms
- function extractCategoryAndName(title) {
+  // Function to extract category and name from title using synonyms
+  function extractCategoryAndName(title) {
     const words = title.toLowerCase().split(" ");
     let categoryFromTitle = "unknown";
     let nameFromTitle = title.trim();
@@ -53,12 +48,12 @@ function generateOffer(title, category, name, discountPercentage, validityDays =
       }
     });
     return { "Category": categoryFromTitle, "Name": nameFromTitle };
- }
+  }
 
- const { Category: categoryFromTitle, Name: nameFromTitle } = extractCategoryAndName(title);
+  const { Category: categoryFromTitle, Name: nameFromTitle } = extractCategoryAndName(title);
 
- // Simplify the construction of offerData by using a more direct approach
- const offerData = {
+  // Simplify the construction of offerData by using a more direct approach
+  const offerData = {
     "Title": title,
     "Name": name || nameFromTitle,
     "Category": category || categoryFromTitle,
@@ -71,35 +66,33 @@ function generateOffer(title, category, name, discountPercentage, validityDays =
     "To": lotteryTo || null,
     "Limit": lotteryLimit || null,
     "description": lotteryDescription || null
- };
+  };
 
- return offerData;
+  return offerData;
 }
 
 const offers = [
-  generateOffer("Discount 20% off on bill in the coming month",null, "20% off on bill", 20, null, null, null, null, null, null),
-  generateOffer("Discount 5$ off on ticket within the next 7 days", null, "5$ off on ticket",7, 7, null, null, null, null, null),
+  generateOffer("Discount 20% off on bill in the coming month", null, "20% off on bill", 20, null, null, null, null, null, null),
+  generateOffer("Discount 5$ off on ticket within the next 7 days", null, "5$ off on ticket", 7, 7, null, null, null, null, null),
   generateOffer("Free coffee", null, "Free coffee"),
-  generateOffer("Free t-shirt with every order placed before 31/12/2024", "gift","Free t-shirt", null, null, "2024-12-31", null, null, null, null),
+  generateOffer("Free t-shirt with every order placed before 31/12/2024", "gift", "Free t-shirt", null, null, "2024-12-31", null, null, null, null),
   generateOffer("Win 3 free weekends in Paris in November 2024", "lottery", "Win 3 free weekends in Paris", null, null, null, "2024-11-01", "2024-11-30", 3, "Random draw on 2024-10-01 up to 3")
 ];
 
-console.log(JSON.stringify(offers, null, 2));
-
-const emits = defineEmits(['select']);	
+const emits = defineEmits(['select']);
 
 const selectOffer = (offer) => {
-    emits('select', offer)
+  emits('select', offer)
 };
 </script>
 <style scoped>
 .offers-list {
   max-height: 500px;
   overflow-y: auto;
-  margin-top: 10px; 
+  margin-top: 10px;
 }
 
-.offers-list span{
+.offers-list span {
   margin: auto;
 }
 
