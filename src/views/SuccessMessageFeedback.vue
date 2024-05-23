@@ -13,7 +13,7 @@
                 <img v-if="link.name.toLowerCase().includes('expedia')" src="@/assets/images/logo/Expedia.svg" alt="Expedia" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('google')" src="@/assets/images/logo/Google.svg" alt="Google" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('hotel')" src="@/assets/images/logo/Hotel.svg" alt="Hotel" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('maeva')" src="@/assets/images/logo/Maeva.png" alt="Maeva" width="24" height="24">
+                <img v-if="link.name.toLowerCase().includes('maeva')" src="@/assets/images/logo/Maeva.svg" alt="Maeva" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('opentable')" src="@/assets/images/logo/Opentable.svg" alt="Opentable" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('thefork')" src="@/assets/images/logo/Thefork.svg" alt="Thefork" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('tripadvisor')" src="@/assets/images/logo/Tripadvisor.svg" alt="Tripadvisor" width="24" height="24">

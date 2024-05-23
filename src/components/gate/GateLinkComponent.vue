@@ -60,7 +60,7 @@ const logoSrc = computed(() => {
         if (props.item.href.includes('booking.com')) {
             return new URL ('@/assets/images/logo/Booking.svg', import.meta.url).href; 
         } else if (props.item.href.includes('camping.com')) {
-            return new URL ('@/assets/images/logo/Camping.svg', import.meta.url).href; 
+            return new URL ('@/assets/images/logo/Camping.png', import.meta.url).href; 
         } else if (props.item.href.includes('expedia.fr')) {
             return new URL ('@/assets/images/logo/Expedia.svg', import.meta.url).href; 
         } else if (props.item.href.includes('google.com')) {
