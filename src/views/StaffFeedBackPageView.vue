@@ -75,8 +75,8 @@
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                                     $t("feedback.datevisit") }}</label>
                             <el-date-picker v-model="dateVisit" :placeholder="$t('feedback.placeholder_datevisit')"
-                                :size="'large'" :disabled-date="disabledDate" type="datetime"
-                                :default-time="Date(Date.now())" format="YYYY-MM-DD HH:mm" />
+                                :size="'large'" :disabled-date="disabledDate" type="datetime" :default-time="new Date()"
+                                format="YYYY-MM-DD HH:mm" />
                         </div>
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
@@ -166,7 +166,7 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, watch, inject } from 'vue';
+import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, inject } from 'vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
@@ -217,7 +217,6 @@ const modalWidth = computed(() => {
 })
 const establishment = ref({});
 const iframeVisible = ref(false);
-const page = ref();
 
 const showSpinner = ref(false);
 
@@ -271,17 +270,13 @@ onMounted(() => {
     } catch (error) {
         console.error("Une erreur s'est produite lors de l'exécution de FingerprintG2A :", error);
     }
-    requiredinput.value = t('staffFeedback.input_required')
-})
-
-watch(() => {
 
     appStore.setCurrentPage({
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),
         icon: "uil-comment-alt"
     });
-    requiredinput.value = t('staffFeedback.input_required')
+    requiredinput.value = t('feedback.requiredinputs')
 })
 
 const firstname = ref('');
@@ -289,7 +284,7 @@ const lastname = ref('');
 const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
-const dateVisit = ref(moment().format('YYYY-MM-DD'));
+const dateVisit = ref(new Date());
 
 const resetForm = () => {
     firstname.value = '';
@@ -341,7 +336,7 @@ const submit = async () => {
             showSpinner.value = true;
             await feedbackStore.createReview(review, async (response) => {
                 if (response.status == 201) {
-                    if (email.value !== null || email.value !== ''){
+                    if (email.value !== null || email.value !== '') {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
 
                             if (contactResponse.status == 201) {
@@ -349,7 +344,7 @@ const submit = async () => {
                                     // Do nothing
                                 })
 
-                                if(randomAdvantage.value){
+                                if (randomAdvantage.value) {
                                     let coupons = {
                                         advantage: randomAdvantage.value.id,
                                         establishment: route.params.etab,

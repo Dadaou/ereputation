@@ -74,8 +74,8 @@
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                                     $t("feedback.datevisit") }}<!-- <span>*</span> --></label>
                             <el-date-picker v-model="dateVisit" :placeholder="$t('feedback.placeholder_datevisit')"
-                                :size="'large'" :disabled-date="disabledDate" type="datetime"
-                                :default-time="Date(Date.now())" format="YYYY-MM-DD HH:mm" />
+                                :size="'large'" :disabled-date="disabledDate" type="datetime" :default-time="new Date()"
+                                format="YYYY-MM-DD HH:mm" />
                         </div>
 
                     </div>
@@ -137,7 +137,7 @@
 
 <script setup>
 
-import { ref, onBeforeMount, defineAsyncComponent, onMounted, watch, inject } from 'vue';
+import { ref, onBeforeMount, defineAsyncComponent, onMounted, inject } from 'vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
@@ -202,6 +202,12 @@ onBeforeMount(async () => {
 
 onMounted(() => {
 
+    appStore.setCurrentPage({
+        title1: t("feedback.title1"),
+        title2: t("feedback.title2"),
+        icon: "uil-comment-alt"
+    });
+
     try {
         if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
             window.FingerprintApp.default.main();
@@ -209,14 +215,7 @@ onMounted(() => {
     } catch (error) {
         console.error("Une erreur s'est produite lors de l'exécution de FingerprintG2A :", error);
     }
-})
 
-watch(() => {
-    appStore.setCurrentPage({
-        title1: t("feedback.title1"),
-        title2: t("feedback.title2"),
-        icon: "uil-comment-alt"
-    });
 })
 
 const disabledDate = (time) => {
@@ -228,7 +227,7 @@ const lastname = ref('');
 const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
-const dateVisit = ref(moment().format('YYYY-MM-DD'));
+const dateVisit = ref(new Date());
 
 const resetForm = () => {
     firstname.value = '';

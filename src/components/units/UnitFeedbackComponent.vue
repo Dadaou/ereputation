@@ -76,8 +76,8 @@
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                                     $t("feedback.datevisit") }}<!--  <span>*</span> --></label>
                             <el-date-picker v-model="dateVisit" :placeholder="$t('feedback.placeholder_datevisit')"
-                                :size="'large'" :disabled-date="disabledDate" type="datetime"
-                                :default-time="Date(Date.now())" :teleported="true" format="YYYY-MM-DD HH:mm" />
+                                :size="'large'" :disabled-date="disabledDate" type="datetime" :default-time="new Date()"
+                                :teleported="true" format="YYYY-MM-DD HH:mm" />
                         </div>
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
@@ -169,7 +169,7 @@
 
 <script setup>
 
-import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, watch, inject } from 'vue';
+import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, inject } from 'vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
@@ -219,7 +219,6 @@ const modalWidth = computed(() => {
 })
 const establishment = ref({});
 
-const page = ref();
 const iframeVisible = ref(false);
 const showSpinner = ref(false);
 
@@ -263,18 +262,13 @@ onMounted(() => {
     } catch (error) {
         console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
     }
-    requiredinput.value = t('staffFeedback.input_required')
-})
+    requiredinput.value = t('feedback.requiredinputs')
 
-watch(() => {
-    /** Mettre le titre en watch */
     appStore.setCurrentPage({
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),
         icon: "uil-comment-alt"
     });
-
-    requiredinput.value = t('staffFeedback.input_required')
 })
 
 const firstname = ref('');
@@ -282,7 +276,7 @@ const lastname = ref('');
 const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
-const dateVisit = ref(moment().format('YYYY-MM-DD'));
+const dateVisit = ref(new Date());
 
 const resetForm = () => {
     firstname.value = '';
