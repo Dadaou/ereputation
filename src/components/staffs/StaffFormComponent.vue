@@ -29,6 +29,15 @@
                         <el-option v-for="item in genders" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                 </div>
+                <div>
+                    <label for="countries"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
+                        <span>*</span></label>
+                    <el-select v-model="establishment" placeholder="Choose establishment" size="large" filterable>
+                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id"
+                            :label="item.name" :value="`/api/establishments/${item.id}`" />
+                    </el-select>
+                </div>
             </div>
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
@@ -40,12 +49,10 @@
                     </el-select>
                 </div>
                 <div>
-                    <label for="countries"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
+                    <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Section
                         <span>*</span></label>
-                    <el-select v-model="establishment" placeholder="Choose establishment" size="large" filterable>
-                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id"
-                            :label="item.name" :value="`/api/establishments/${item.id}`" />
+                    <el-select id="section" v-model="section" placeholder="Choose section" size="large" clearable>
+                        <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
                     </el-select>
                 </div>
             </div>
@@ -61,11 +68,11 @@
                     <el-date-picker v-model="endDate" :size="'large'" />
                 </div>
             </div>
-            <div class="flex items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
+            <div class="flex items-center justify-between py-2 border-t border-b dark:border-gray-600">
                 <button type="submit"
                     class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
-                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
-                        ...</span>
+                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" />
+                    <span v-if="showSpinner">Loading ...</span>
                     <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} staff</span>
                 </button>
             </div>
@@ -117,7 +124,8 @@ const departments = [
     'Front Office', 'Housekeeping', 'Kitchen', 'Bar', 'Room service'
 ]
 const department = ref('');
-
+const sections = ref(['MENUS', 'INFOS', 'FOLLOW US', 'REVIEWS', 'OFFERS'])
+const section = ref('')
 const staff_to_update = inject('staff_to_update');
 const type = ref('add');
 
@@ -131,6 +139,7 @@ watch(staff_to_update, () => {
         lastname.value = staff_to_update.value["lastname"];
         firstname.value = staff_to_update.value["firstname"];
         type.value = 'edit';
+        section.value = staff_to_update.value["section"];
     }
 })
 
@@ -148,11 +157,12 @@ const loadData = (_staff, staff) => {
         gender: _staff.gender,
         firstname: _staff.firstname,
         lastname: _staff.lastname,
+        section: staff.section
     }
     staffs.value.push(new_staff);
 }
 
-const updateData = (_staff) => {
+const updateData = (_staff, staff) => {
 
     let new_staff = {
         id: _staff.id,
@@ -167,6 +177,7 @@ const updateData = (_staff) => {
         gender: _staff.gender,
         firstname: _staff.firstname,
         lastname: _staff.lastname,
+        section: staff.section
     }
 
     staffs.value.forEach((staff, index) => {
@@ -183,6 +194,7 @@ const submit = async () => {
         "datefrom": moment(startDate.value).format('YYYY-MM-DD'),
         "dateto": (endDate.value == null || endDate.value == "") ? null : moment(endDate.value).format('YYYY-MM-DD'),
         "establishment": establishment.value,
+        "section": section.value
     }
 
     try {
@@ -209,6 +221,7 @@ const submit = async () => {
                     lastname.value = '';
                     firstname.value = '';
                     showSpinner.value = false;
+                    section.value = ''
                 }
             } else {
                 const response = await new Promise((resolve) => {
@@ -219,7 +232,8 @@ const submit = async () => {
 
                 if (response.status == 200) {
                     let data = response.data;
-                    updateData(data);
+                    console.log(data);
+                    updateData(data, staff);
                     ElMessage({
                         message: `Staff updated successfully`,
                         type: 'success',
@@ -233,6 +247,7 @@ const submit = async () => {
                     lastname.value = '';
                     firstname.value = '';
                     showSpinner.value = false;
+                    section.value = ''
                     type.value = 'add';
                     staff_to_update.value = null;
                 }

@@ -176,8 +176,6 @@ const establishment = ref({});
 let media = [];
 const iframeVisible = ref(false);
 
-const page = ref({})
-
 let randomAdvantage = ref(null);
 
 const showSpinner = ref(false);
@@ -281,26 +279,28 @@ const submit = async () => {
 
             await feedbackStore.createReview(review, async (response) => {
                 if (response.status == 201) {
-                    if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
+                    if (email.value !== null || email.value !== '') {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
                             if (contactResponse.status == 201) {
                                 services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
                                     // Do nothing
                                 })
-                                let coupons = {
-                                    advantage: randomAdvantage.value.id,
-                                    establishment: route.params.id,
-                                    // gender: gender.value,
-                                    firstname: firstname.value,
-                                    lastname: lastname.value,
-                                    email: email.value,
-                                    language: (lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase(),
-                                    app_url: app_url.value,
-                                    template: 'workflow_en'
+
+                                if (randomAdvantage.value) {
+                                    let coupons = {
+                                        advantage: randomAdvantage.value.id,
+                                        establishment: route.params.id,
+                                        firstname: firstname.value,
+                                        lastname: lastname.value,
+                                        email: email.value,
+                                        language: (lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase(),
+                                        app_url: app_url.value,
+                                        template: 'workflow_en'
+                                    }
+                                    await services.createRecord('workflow', coupons, (res) => {
+                                        resetForm()
+                                    });
                                 }
-                                await services.createRecord('workflow', coupons, (res) => {
-                                    resetForm()
-                                });
                             }
                         });
                     }

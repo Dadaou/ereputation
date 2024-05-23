@@ -5,6 +5,7 @@
       <el-table-column label="Code" prop="code" style="width: 20%; min-width: 300px;" />
       <el-table-column label="Category" prop="category" style="width: 20%; min-width: 300px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;" />
+      <el-table-column label="Section" prop="section" style="width: 20%; min-width: 300px;" />
       <el-table-column style="width: 15%; min-width: 200px;" align="right">
         <template #header>
           <el-input v-model="search" size="small" placeholder="Type to search" />

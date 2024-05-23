@@ -403,7 +403,7 @@ const router = createRouter({
               component: () => import('@Components/users/UserDetailComponent.vue')
             },
             {
-              path: 'advantage_contact',
+              path: 'contact',
               name: 'Contact',
               component: () => import('@Components/advantage/AdvantageContactComponent.vue')
             },

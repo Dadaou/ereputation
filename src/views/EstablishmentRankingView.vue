@@ -1,9 +1,5 @@
 <template>
 	<div class="filters">
-		<!-- <el-select v-model="type" size="large">
-            <el-option v-for="(item, index) in types" :key="index" :label="item.label"
-                        :value="item.value"/>
-        </el-select> -->
 		<div class="select_info">
 			<el-select v-model="type" size="large">
 				<el-option v-for="(item, index) in types" :key="index" :label="item.label" :value="item.value" />
@@ -30,12 +26,9 @@
 	</div>
 </template>
 <script setup>
-import { ref, onBeforeMount, onMounted, defineAsyncComponent, inject, computed, watch } from 'vue';
+import { ref, onMounted, defineAsyncComponent, inject, watch } from 'vue';
 import EstablishmentListLoadedComponent from '@Components/utils/EstablishmentListLoadedComponent.vue';
 import { ElOption, ElSelect, ElDatePicker } from 'element-plus';
-import { useAppStore } from "@Stores/app.js";
-import { useUserStore } from "@Stores/user.js";
-import { useCompanyStore } from "@Stores/company.js";
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
@@ -52,9 +45,6 @@ const Tooltip = defineAsyncComponent(() =>
 
 const info_bulle_text = `"global" means the average of the final grades displayed on the platforms.This grade typically covers the entire platform history, and it's this grade that consumers typically look at first.
 "score" means the average ratings of all comments within a defined date range.`
-const userStore = useUserStore();
-const appStore = useAppStore();
-const companiesStore = useCompanyStore();
 const establishments = ref([]);
 const dataLoading = ref(true);
 const customerTag = inject('tag');
@@ -151,6 +141,7 @@ onMounted(async () => {
 	.filters>* {
 		flex-basis: 100%;
 		margin-bottom: 10px;
+		max-width: 100%;
 	}
 }
 </style>

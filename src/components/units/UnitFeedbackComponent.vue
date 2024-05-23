@@ -247,7 +247,10 @@ onBeforeMount(async () => {
         if (response.status == 200) {
             units.value = response.data;
             unit.value = response.data.filter(i => i.tag == route.params.id).length > 0 ? response.data.filter(i => i.tag == route.params.id)[0] : null
+
+            if (!unit.value) exist.value = false
         }
+
         if (response.status == 404) exist.value = false
     });
 })
@@ -323,7 +326,7 @@ const submit = async () => {
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,
-        establishment: [`/api/establishments/${establishment.value.id}`]
+        establishments: [`/api/establishments/${establishment.value.id}`]
     }
 
     try {
@@ -331,29 +334,30 @@ const submit = async () => {
             showSpinner.value = true;
             await feedbackStore.createReview(review, async (response) => {
                 if (response.status == 201) {
-                    if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
+                    if (email.value !== null || email.value !== '') {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
-
+                            console.log(contactResponse)
                             if (contactResponse.status == 201) {
                                 services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
                                     // Do nothing
                                 })
 
-                                let coupons = {
-                                    advantage: randomAdvantage.value.id,
-                                    establishment: route.params.etab,
-                                    // gender: gender.value,
-                                    firstname: firstname.value,
-                                    lastname: lastname.value,
-                                    email: email.value,
-                                    language: (lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase(),
-                                    app_url: app_url.value,
-                                    template: `workflow_en`
+                                if (randomAdvantage.value) {
+                                    let coupons = {
+                                        advantage: randomAdvantage.value.id,
+                                        establishment: route.params.etab,
+                                        firstname: firstname.value,
+                                        lastname: lastname.value,
+                                        email: email.value,
+                                        language: (lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase(),
+                                        app_url: app_url.value,
+                                        template: `workflow_en`
+                                    }
+                                    console.log(coupons)
+                                    await services.createRecord('workflow', coupons, () => {
+                                        resetForm()
+                                    });
                                 }
-
-                                await services.createRecord('workflow', coupons, () => {
-                                    resetForm()
-                                });
                             }
                         });
                     }
@@ -379,9 +383,6 @@ const submit = async () => {
 </script>
 
 <style scoped>
-/*************
-    Modal CSS
-**************/
 .modal__header {
     display: flex;
     justify-content: space-between;
