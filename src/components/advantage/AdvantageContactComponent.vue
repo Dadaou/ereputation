@@ -5,17 +5,22 @@
   </button>
   <div class="overflow-x-auto">
     <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
-      <el-table-column label="Name" width="400">
+      <el-table-column label="Name" width="220">
       	<template #default="scope">
       		{{ scope.row.firstname }} {{ scope.row.lastname }}
         </template>
       </el-table-column>
-      <el-table-column label="Gender" prop="gender" width="100"/>
-      <el-table-column label="Email" prop="email" width="300"/>
-      <el-table-column label="Establishment" prop="establishment_name" width="300"/>
-      <el-table-column label="Operations" width="200">
+      <el-table-column label="Gender" prop="gender" width="88"/>
+      <el-table-column label="Email" prop="email" width="275"/>
+      <el-table-column label="Establishment" prop="establishment_name" width="190"/>
+      <el-table-column label="Created_at" width="110">
+        <template #default="scope">
+          {{ formatCreatedAt(scope.row.created_at) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="Operations" width="128">
         <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" />
+          <el-input v-model="searchSent" size="small" placeholder="Type to search" />
         </template>
       </el-table-column>
     </el-table>
