@@ -13,7 +13,7 @@
                 <img v-if="link.name.toLowerCase().includes('expedia')" src="@/assets/images/logo/Expedia.svg" alt="Expedia" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('google')" src="@/assets/images/logo/Google.svg" alt="Google" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('hotel')" src="@/assets/images/logo/Hotel.svg" alt="Hotel" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('maeva')" src="@/assets/images/logo/Maeva.png" alt="Maeva" width="24" height="24">
+                <img v-if="link.name.toLowerCase().includes('maeva')" src="@/assets/images/logo/Maeva.svg" alt="Maeva" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('opentable')" src="@/assets/images/logo/Opentable.svg" alt="Opentable" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('thefork')" src="@/assets/images/logo/Thefork.svg" alt="Thefork" width="24" height="24">
                 <img v-if="link.name.toLowerCase().includes('tripadvisor')" src="@/assets/images/logo/Tripadvisor.svg" alt="Tripadvisor" width="24" height="24">
@@ -29,14 +29,13 @@
                     <li v-for="link in socials">
                         <a :href="link.url" target="_blank">
                             <el-tooltip :content="`${$t('success_text2')} ${link.name}`" placement="top">
-                
                 <img v-if="link.name.toLowerCase().includes('facebook')" src="@/assets/images/logo/Facebook.svg" alt="Facebook" >
                 <img v-if="link.name.toLowerCase().includes('instagram')" src="@/assets/images/logo/Instagram.svg" alt="Instagram" >
-                <img v-if="link.name.toLowerCase().includes('linkedin')" src="@/assets/images/logo/Linkedin.svg" alt="Linkedin">
                 <img v-if="link.name.toLowerCase().includes('twitter')" src="@/assets/images/logo/Twitter.svg" alt="Twitter" >
                 <img v-if="link.name.toLowerCase().includes('youtube')" src="@/assets/images/logo/Youtube.svg" alt="Youtube" >
                 <img v-if="link.name.toLowerCase().includes('tiktok')" src="@/assets/images/logo/Tiktok.svg" alt="Tiktok" >              
-                            
+                <Icon icon="logos:linkedin-icon" width="1.4rem" height="1.4rem"
+                 v-if="link.name.toLowerCase().includes('linkedin')"></Icon>    
                             </el-tooltip>
                         </a>
                     </li>
