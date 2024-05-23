@@ -5,7 +5,7 @@
         <img v-if="logoSrc" :src="logoSrc" :alt="`${item.label} logo`" class="gate__logoSrc">
         <h4 class="mb-1">{{ item.label }}</h4>
     </a>
-  </template>
+</template>
 <script setup>
 import { Icon } from '@iconify/vue';
 import { computed } from 'vue';
@@ -19,7 +19,7 @@ const props = defineProps({
     type: {
         type: String,
         required: true,
-    }   
+    }
 })
 
 const icon = computed(() => {
@@ -41,58 +41,58 @@ const icon = computed(() => {
 const logoSrc = computed(() => {
     if (props.type === 'Social') {
         if (props.item.href.includes('facebook.com')) {
-            return new URL ('@/assets/images/logo/Facebook.svg', import.meta.url).href; 
+            return new URL('@/assets/images/logo/Facebook.svg', import.meta.url).href;
         } else if (props.item.href.includes('instagram.com')) {
-            return new URL ('@/assets/images/logo/Instagram.svg', import.meta.url).href; 
+            return new URL('@/assets/images/logo/Instagram.svg', import.meta.url).href;
         } else if (props.item.href.includes('twitter.com')) {
-            return new URL ('@/assets/images/logo/Twitter.svg', import.meta.url).href; 
+            return new URL('@/assets/images/logo/Twitter.svg', import.meta.url).href;
         } else if (props.item.href.includes('tiktok.com')) {
-            return new URL ('@/assets/images/logo/Tiktok.svg', import.meta.url).href; 
+            return new URL('@/assets/images/logo/Tiktok.svg', import.meta.url).href;
         } else if (props.item.href.includes('linkedin.com')) {
-            return new URL ('@/assets/images/logo/Linkedin.svg', import.meta.url).href; 
+            return new URL('@/assets/images/logo/LinkedIn.svg', import.meta.url).href;
         } else if (props.item.href.includes('youtube.com')) {
-            return new URL ('@/assets/images/logo/Youtube.svg', import.meta.url).href;
+            return new URL('@/assets/images/logo/Youtube.svg', import.meta.url).href;
+        }
+        return null;
     }
-    return null;
-}
-    
+
     if (props.type === 'Platform') {
         if (props.item.href.includes('booking.com')) {
-            return new URL ('@/assets/images/logo/Booking.svg', import.meta.url).href; 
+            return new URL('@/assets/images/logo/Booking.svg', import.meta.url).href;
         } else if (props.item.href.includes('camping.com')) {
-            return new URL ('@/assets/images/logo/Camping.png', import.meta.url).href; 
+            return new URL('@/assets/images/logo/Camping.png', import.meta.url).href;
         } else if (props.item.href.includes('expedia.fr')) {
-            return new URL ('@/assets/images/logo/Expedia.svg', import.meta.url).href; 
+            return new URL('@/assets/images/logo/Expedia.svg', import.meta.url).href;
         } else if (props.item.href.includes('google.com')) {
-            return new URL ('@/assets/images/logo/Google.svg', import.meta.url).href; 
+            return new URL('@/assets/images/logo/Google.svg', import.meta.url).href;
         } else if (props.item.href.includes('google.fr')) {
-            return new URL ('@/assets/images/logo/Google.svg', import.meta.url).href; 
+            return new URL('@/assets/images/logo/Google.svg', import.meta.url).href;
         } else if (props.item.href.includes('fr.hotel.com')) {
-            return new URL ('@/assets/images/logo/Hotel.svg', import.meta.url).href;
+            return new URL('@/assets/images/logo/Hotel.svg', import.meta.url).href;
         } else if (props.item.href.includes('maeva.com')) {
-            return new URL ('@/assets/images/logo/Maeva.svg', import.meta.url).href; 
+            return new URL('@/assets/images/logo/Maeva.svg', import.meta.url).href;
         } else if (props.item.href.includes('opentable.com')) {
-            return new URL ('@/assets/images/logo/Opentable.svg', import.meta.url).href; 
+            return new URL('@/assets/images/logo/Opentable.svg', import.meta.url).href;
         } else if (props.item.href.includes('opentable.co.uk')) {
-            return new URL ('@/assets/images/logo/Opentable.svg', import.meta.url).href;
+            return new URL('@/assets/images/logo/Opentable.svg', import.meta.url).href;
         } else if (props.item.href.includes('thefork.fr')) {
-            return new URL ('@/assets/images/logo/Thefork.svg', import.meta.url).href; 
+            return new URL('@/assets/images/logo/Thefork.svg', import.meta.url).href;
         } else if (props.item.href.includes('thefork.com')) {
-            return new URL ('@/assets/images/logo/Thefork.svg', import.meta.url).href; 
+            return new URL('@/assets/images/logo/Thefork.svg', import.meta.url).href;
         } else if (props.item.href.includes('tripadvisor.com')) {
-            return new URL ('@/assets/images/logo/Tripadvisor.svg', import.meta.url).href;
+            return new URL('@/assets/images/logo/Tripadvisor.svg', import.meta.url).href;
         } else if (props.item.href.includes('tripadvisor.fr')) {
-            return new URL ('@/assets/images/logo/Tripadvisor.svg', import.meta.url).href; 
+            return new URL('@/assets/images/logo/Tripadvisor.svg', import.meta.url).href;
         } else if (props.item.href.includes('tripadvisor.es')) {
-            return new URL ('@/assets/images/logo/Tripadvisor.svg', import.meta.url).href; 
+            return new URL('@/assets/images/logo/Tripadvisor.svg', import.meta.url).href;
         } else if (props.item.href.includes('fr.trustpilot.com')) {
-            return new URL ('@/assets/images/logo/Trustpilot.svg', import.meta.url).href; 
+            return new URL('@/assets/images/logo/Trustpilot.svg', import.meta.url).href;
         } else if (props.item.href.includes('yelp.com')) {
-            return new URL ('@/assets/images/logo/Yelp.svg', import.meta.url).href;
+            return new URL('@/assets/images/logo/Yelp.svg', import.meta.url).href;
         }
 
-    return null;
-}
+        return null;
+    }
 })
 
 </script>
@@ -137,9 +137,10 @@ const logoSrc = computed(() => {
     border-radius: 6px;
     box-shadow: -1px -2px 2px 0 rgba(97, 94, 94, 0.2);
 }
-.gate__logoSrc{
+
+.gate__logoSrc {
     margin-top: 13px;
-    width:40%;
+    width: 40%;
     margin-bottom: 5px;
     border-radius: 6px;
 }
