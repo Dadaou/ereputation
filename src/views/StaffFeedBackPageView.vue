@@ -340,9 +340,11 @@ const submit = async () => {
                         await services.createRecord('contacts', contactData, async (contactResponse) => {
 
                             if (contactResponse.status == 201) {
-                                services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
-                                    // Do nothing
-                                })
+                                if (visitorId) {
+                                    services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
+                                        // Do nothing
+                                    })
+                                }
 
                                 if (randomAdvantage.value) {
                                     let coupons = {
