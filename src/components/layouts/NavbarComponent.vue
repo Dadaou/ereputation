@@ -57,6 +57,7 @@
     </div>
   </nav>
 </template>
+
 <script setup>
 import { useAppStore } from "@Stores/app.js";
 import { ref, watch, computed, onMounted, inject, defineAsyncComponent, onBeforeMount } from 'vue';
@@ -68,7 +69,6 @@ import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import { languages, current } from '@Services/languages.js';
 import { mainMenu, publicUrls, privateUrls } from '@Services/routes.js';
 
-
 const UserDropdownMenu = defineAsyncComponent(
   () => import("@Components/utils/UserMenuDropdownComponent.vue")
 )
@@ -76,6 +76,7 @@ const UserDropdownMenu = defineAsyncComponent(
 const LanguageMenuDropdown = defineAsyncComponent(
   () => import("@Components/utils/LanguageMenuDropdownComponent.vue")
 )
+
 const appStore = useAppStore();
 const baseurl = window.location.origin;
 const customerTag = inject('tag');
@@ -88,7 +89,7 @@ const { width } = useWindowSize();
 const nav__ref = ref(null);
 const nav__container__ref = ref(null);
 const isScrolling = ref(false);
-const show_menu = ref(true);
+const show_menu = ref(false);
 const logo = ref(null)
 
 const props = defineProps({
@@ -162,7 +163,7 @@ watch(y, () => {
 
 watch(width, () => {
   if (width.value > 1000) show_menu.value = true;
-  else show_menu.value = true;
+  else show_menu.value = false;
 });
 
 onMounted(() => {
@@ -189,8 +190,8 @@ onBeforeMount(async () => {
     logo.value = await appStore.getCustomerLogo(route.params.tag)
   }
 });
-
 </script>
+
 <style scoped>
 .animate__animated.animate__zoomIn {
   --animate-duration: 0.5s;
