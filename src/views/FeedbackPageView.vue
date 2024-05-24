@@ -86,7 +86,11 @@
                             </span> -->
                             <!--  <p v-if="randomAdvantage">
                                 <b>{{ $t("feedback.promotion_day") }} </b> 
-                            </p> -->
+                            </p> choose_advantage-->
+                            <label for="email" v-if="randomAdvantage"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                <i class="uil uil-info-circle"></i>{{ $t("feedback.choose_advantage") }}
+                            </label>
                             <DiscountCheckList :establishment="route.params.id" :customer="route.params.tag"
                                 @select="(value) => randomAdvantage = value" />
                             <span v-if="randomAdvantage">
@@ -137,7 +141,7 @@
 
 <script setup>
 
-import { ref, onBeforeMount, defineAsyncComponent, onMounted, inject } from 'vue';
+import { ref, onBeforeMount, defineAsyncComponent, onMounted, inject,watch } from 'vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
@@ -216,6 +220,14 @@ onMounted(() => {
         console.error("Une erreur s'est produite lors de l'exécution de FingerprintG2A :", error);
     }
 
+})
+
+watch(()=>{
+    appStore.setCurrentPage({
+        title1: t("feedback.title1"),
+        title2: t("feedback.title2"),
+        icon: "uil-comment-alt"
+    });
 })
 
 const disabledDate = (time) => {

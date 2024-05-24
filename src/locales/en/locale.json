@@ -37,7 +37,8 @@
         "indice3": "terms and conditions",
         "post": "Post comment",
         "requiredinputs": "Please, provide all needed information.",
-        "read_more": "Find out more..."
+        "read_more": "Find out more...",
+        "choose_advantage":"Please choose your benefit"
     },
     "staffFeedback": {
         "interne": "Internal use only, your comment will not be posted on the public platforms.",

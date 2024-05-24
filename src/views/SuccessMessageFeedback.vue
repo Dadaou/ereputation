@@ -120,7 +120,7 @@ onMounted(() => {
 
 
 
-watch(links.value, () => {
+watch( () => {
     /** Mettre le titre en watch */
     appStore.setCurrentPage({
         title1: t("feedback.title1"),
@@ -128,6 +128,7 @@ watch(links.value, () => {
         icon: "uil-comment-alt"
     });
 });
+
 
 </script>
 
