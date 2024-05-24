@@ -51,6 +51,7 @@ const search = ref('')
 const filterTableData = computed(() => {
   let filteredData = tableData.value;
   filteredData = filteredData.filter((data) => {
+
     if(data.section == 'REVIEWS' || data.section == 'FOLLOW US'){
       return (
         !search.value ||
@@ -148,5 +149,14 @@ button i.uil-trash-alt {
 
 button i.uil-edit {
   color: var(--color-danger) !important;
+}
+.table__container {
+  width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+  .table__container {
+    width: 85%;
+  }
 }
 </style>
