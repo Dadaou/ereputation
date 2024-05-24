@@ -1,8 +1,13 @@
 <template>
-  <button class="btn" @click="showExport = true">
-    <i class="uil uil-file-download"></i>
-    Export
-  </button>
+  <div class="container">
+      <button class="btn" @click="showExport = true">
+        <i class="uil uil-file-download"></i>
+        Export
+      </button>
+    <div>
+      <el-input v-model="search" size="small" placeholder="Type to search" class="input_search"/>
+    </div>
+  </div>
   <div class="overflow-x-auto">
     <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
       <el-table-column label="Name" width="220">
@@ -20,7 +25,7 @@
       </el-table-column>
       <el-table-column label="Operations" width="128">
         <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" />
+          <el-input v-model="search" size="small" placeholder="Type to search" class="input_searchTab"/>
         </template>
       </el-table-column>
     </el-table>
@@ -116,5 +121,35 @@ button {
 button:hover {
   background-color: var(--color-primary);
   color: white;
+}
+.input_search {
+   display: none;
+}
+@media screen and (max-width: 768px) {
+  .container {
+    display: flex;
+    justify-content: space-between;
+  }
+  .input_search {
+    display: inline;
+    margin-right: 7rem;
+  }
+  .input_searchTab {
+    display: none;
+  }
+}
+@media screen and (max-width: 468px) {
+  .input_search {
+    display: inline;
+    margin-right: 3.2rem;
+    
+  }
+  .container {
+    display: flex;
+    justify-content: space-between;
+  }
+  .input_searchTab {
+    display: none;
+  }
 }
 </style>
