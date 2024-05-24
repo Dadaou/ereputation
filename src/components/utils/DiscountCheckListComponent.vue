@@ -47,7 +47,7 @@
           </div>
         </div>
         <div class="modal-body">
-          <div class="inline-flex items-baseline gap-2">
+          <div class="inline-flex items-baseline gap-2" style="max-width: calc(100% - 20px)">
             <h4 class="modal-discount-name"><strong>{{ currentDiscount.name }}</strong></h4>
             <span class="modal-discount-category">{{ currentDiscount.category }}</span>
           </div>
@@ -450,12 +450,14 @@ ul::-webkit-scrollbar {
     flex-direction: row;
     justify-content: space-between;
     flex-wrap: wrap;
-     /* Ajuster l'espace entre les éléments */
+    /* Ajuster l'espace entre les éléments */
   }
 
   .discount-item {
-    flex: 1 1 calc(50% - 12px); /* Flex basis pour 50% avec ajustement pour l'espace */
-    max-width: calc(50% - 11px); /* Max-width ajustée pour deux colonnes */
+    flex: 1 1 calc(50% - 12px);
+    /* Flex basis pour 50% avec ajustement pour l'espace */
+    max-width: calc(50% - 11px);
+    /* Max-width ajustée pour deux colonnes */
   }
 }
 </style>
