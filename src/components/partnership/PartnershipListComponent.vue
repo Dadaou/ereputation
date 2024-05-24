@@ -3,7 +3,7 @@
     <div class="table-description" style="margin-bottom: 16px;">
       <p>Partnerships requested by your establishment</p>
       <div>
-        <el-input v-model="searchSent" size="small" placeholder="Type to search" class="input_search"/>
+        <el-input v-model="searchSent" size="small" placeholder="Type to search" class="input_searchs"/>
       </div>
     </div>
     <el-table :data="filterTableDataSent" class="responsive-table">
@@ -246,10 +246,22 @@ button i.uil-edit {
   .responsive-table {
     width: 85%;
   }
+  .input_searchs,
+  .input_search {
+    display: inline;
+    margin-right: 7rem; 
+  }
+}
 
+@media screen and (max-width: 468px) {
   .input_search {
     display: inline;
     margin-right: 3.5rem; 
+  }
+
+  .input_searchs {
+    display: inline;
+    margin-right: 9rem; 
   }
 }
 </style>
