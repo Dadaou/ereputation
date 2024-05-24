@@ -3,6 +3,7 @@
     <div class="table-description" style="margin-bottom: 16px;">
       <p>Partnerships requested by your establishment</p>
     </div>
+    <el-input v-model="searchSent" size="small" placeholder="Type to search" class="search"/>
     <el-table :data="filterTableDataSent">
       <el-table-column label="Advantage" prop="advantage_name" style="width: 15%; min-width: 200px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 30%; min-width: 400px;" />
@@ -33,13 +34,14 @@
       </el-table-column>
       <el-table-column>
         <template #header>
-          <el-input v-model="searchSent" size="small" placeholder="Type to search" />
+          <el-input v-model="searchSent" size="small" placeholder="Type to search" class="searchTab"/>
         </template>
       </el-table-column>
     </el-table>
     <div class="table-description" style="margin-block: 32px 16px;">
       <p>Requests for partnerships</p>
     </div>
+    <el-input v-model="searchReceived" size="small" placeholder="Type to search" class="search"/>
     <el-table :data="filterTableDataReceived">
       <el-table-column label="Advantage" prop="advantage_name" style="width: 15%; min-width: 200px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 30%; min-width: 400px;" />
@@ -98,7 +100,7 @@
       </el-table-column>
       <el-table-column style="width: 15%; min-width: 200px;" align="right">
         <template #header>
-          <el-input v-model="searchReceived" size="small" placeholder="Type to search" />
+          <el-input v-model="searchReceived" size="small" placeholder="Type to search" class="searchTab"/>
         </template>
         <template #default="scope">
           <el-popconfirm v-if="scope.row.state == 'pending' && scope.row.enable == false"
@@ -225,5 +227,17 @@ button i.uil-edit {
   font-size: 14px;
   color: grey;
   font-weight: 500;
+}
+.search {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .search {
+    display: inline;
+  }
+  .searchTab {
+    display: none;
+  }
 }
 </style>

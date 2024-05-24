@@ -23,11 +23,6 @@
           {{ formatCreatedAt(scope.row.created_at) }}
         </template>
       </el-table-column>
-      <el-table-column label="Operations" style="width: 20%; min-width: 100px;">
-        <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" class="input_searchTab"/>
-        </template>
-      </el-table-column>
     </el-table>
   </div>
   <ExportcsvexcelComponent :showModal="showExport" :downloaded="downloaded"
@@ -135,16 +130,8 @@ button:hover {
   color: white;
 }
 
-.container {
-  max-width: 100%;
-}
-
 .overflow-x-auto {
   overflow-x: 100%;
-}
-
-.input_search {
-   display: none;
 }
 
 @media screen and (min-width: 1024px) {
@@ -154,6 +141,12 @@ button:hover {
   }
 }
 
+.container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 100%;
+  }
+  
 @media screen and (max-width: 768px) {
   .container {
     display: flex;
@@ -162,9 +155,6 @@ button:hover {
   .input_search {
     display: inline;
     margin-right: 7rem;
-  }
-  .input_searchTab {
-    display: none;
   }
 }
 @media screen and (max-width: 468px) {
@@ -176,9 +166,6 @@ button:hover {
   .container {
     display: flex;
     justify-content: space-between;
-  }
-  .input_searchTab {
-    display: none;
   }
 }
 </style>
