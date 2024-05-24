@@ -92,4 +92,14 @@ button i.uil-trash-alt {
 button i.uil-edit {
   color: var(--color-danger) !important;
 }
+
+.table__container {
+  width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+  .table__container {
+    width: 85%;
+  }
+}
 </style>
