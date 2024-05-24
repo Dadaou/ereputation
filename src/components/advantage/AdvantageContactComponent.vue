@@ -16,14 +16,14 @@
         </template>
       </el-table-column>
       <el-table-column label="Gender" prop="gender" width="88"/>
-      <el-table-column label="Email" prop="email" width="275"/>
-      <el-table-column label="Establishment" prop="establishment_name" width="190"/>
+      <el-table-column label="Email" prop="email" width="315"/>
+      <el-table-column label="Establishment" prop="establishment_name" width="220"/>
       <el-table-column label="Created_at" width="110">
         <template #default="scope">
           {{ formatCreatedAt(scope.row.created_at) }}
         </template>
       </el-table-column>
-      <el-table-column label="Operations" width="128">
+      <el-table-column label="Operations" style="width: 20%; min-width: 100px;">
         <template #header>
           <el-input v-model="search" size="small" placeholder="Type to search" class="input_searchTab"/>
         </template>
@@ -55,9 +55,12 @@ const ExportcsvexcelComponent = defineAsyncComponent(() =>
 
 const route = useRoute();
 const customer = route.params.tag;
+
+// Format date to YYYY/MM/DD
 const formatCreatedAt = (createdAt) => {
   return moment(createdAt).format('YYYY/MM/DD');
 };
+
 const query = ref('');
 const search = ref('');
 
@@ -65,21 +68,28 @@ const contacts = ref([]);
 
 const showExport = ref(false);
 const downloaded = ref(false);
+
 const exportData = (type, filename) => {
   csvXlsx.exportContact(type, filename, query.value,
     ['Id', 'Name', 'Gender', 'Email', 'Establishment', 'Date']);
   downloaded.value = true;
-}
+};
 
-const filterTableData = computed(() =>{
+const filterTableData = computed(() => {
   let filteredData = contacts.value;
-  filteredData = filteredData.filter((data)=>{
-        return !search.value || 
-        (data.lastname && data.lastname.toLowerCase().includes(search.value.toLowerCase())) ||
-        (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase())) ||
-        (data.email && data.email.toLowerCase().includes(search.value.toLowerCase()))
-    })
-  return filteredData
+  filteredData = filteredData.filter((data) => {
+    return !search.value || 
+      (data.lastname && data.lastname.toLowerCase().includes(search.value.toLowerCase())) ||
+      (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase())) ||
+      (data.email && data.email.toLowerCase().includes(search.value.toLowerCase()));
+  });
+
+  // Trier les données par date de création (de la plus récente à la plus ancienne)
+  filteredData.sort((a, b) => {
+    return moment(b.created_at).valueOf() - moment(a.created_at).valueOf();
+  });
+
+  return filteredData;
 });
 
 onBeforeMount(async () => {
@@ -102,7 +112,9 @@ onBeforeMount(async () => {
   }
 });
 </script>
+
 <style scoped>
+
 button i {
   color: var(--color-danger);
 }
@@ -122,9 +134,26 @@ button:hover {
   background-color: var(--color-primary);
   color: white;
 }
+
+.container {
+  max-width: 100%;
+}
+
+.overflow-x-auto {
+  overflow-x: 100%;
+}
+
 .input_search {
    display: none;
 }
+
+@media screen and (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+    margin: 0 auto; 
+  }
+}
+
 @media screen and (max-width: 768px) {
   .container {
     display: flex;
