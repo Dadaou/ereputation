@@ -1,5 +1,9 @@
 <template>
   <div class="scroll-wrapper">
+    <label for="email"  v-if="discounts"
+      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+      <i class="uil uil-info-circle"></i>{{ $t("feedback.choose_advantage") }}
+    </label>
     <ul class="discount-list">
       <li v-for="(discount, index) in discounts" :key="index" @click="selectDiscount(index, discount)"
         :class="[isSelected(index) ? 'selected gradient-green' : 'gradient-violet', 'text-white text-center py-10 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative discount-item']">

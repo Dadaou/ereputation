@@ -87,10 +87,7 @@
                             <!-- <p v-if="randomAdvantage">
                                 <b>{{ $t("feedback.promotion_day") }}</b>
                             </p> -->
-                            <label for="email"  
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                <i class="uil uil-info-circle"></i>{{ $t("feedback.choose_advantage") }}
-                            </label>
+                            
                             <DiscountCheckList :establishment="route.params.etab" :customer="route.params.tag"
                                 @select="(value) => randomAdvantage = value" />
                             <span v-if="randomAdvantage">
