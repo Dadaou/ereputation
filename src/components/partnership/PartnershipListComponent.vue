@@ -2,9 +2,11 @@
   <div class="mt-5 table__container">
     <div class="table-description" style="margin-bottom: 16px;">
       <p>Partnerships requested by your establishment</p>
+      <div>
+        <el-input v-model="searchSent" size="small" placeholder="Type to search" class="input_search"/>
+      </div>
     </div>
-    <el-input v-model="searchSent" size="small" placeholder="Type to search" class="search"/>
-    <el-table :data="filterTableDataSent">
+    <el-table :data="filterTableDataSent" class="responsive-table">
       <el-table-column label="Advantage" prop="advantage_name" style="width: 15%; min-width: 200px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 30%; min-width: 400px;" />
       <el-table-column label="Partnership" prop="partnership_name" style="width: 30%; min-width: 4%;" />
@@ -32,17 +34,20 @@
 
         </template>
       </el-table-column>
-      <el-table-column>
+      <!-- <el-table-column>
         <template #header>
           <el-input v-model="searchSent" size="small" placeholder="Type to search" class="searchTab"/>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <div class="table-description" style="margin-block: 32px 16px;">
       <p>Requests for partnerships</p>
+      <div>
+        <el-input v-model="searchReceived" size="small" placeholder="Type to search" class="input_search"/>
+      </div>
     </div>
-    <el-input v-model="searchReceived" size="small" placeholder="Type to search" class="search"/>
-    <el-table :data="filterTableDataReceived">
+   
+    <el-table :data="filterTableDataReceived" class="responsive-table">
       <el-table-column label="Advantage" prop="advantage_name" style="width: 15%; min-width: 200px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 30%; min-width: 400px;" />
       <el-table-column label="Partnership" prop="partnership_name" style="width: 30%; min-width: 4%;" />
@@ -99,9 +104,9 @@
         </template>
       </el-table-column>
       <el-table-column style="width: 15%; min-width: 200px;" align="right">
-        <template #header>
+        <!-- <template #header>
           <el-input v-model="searchReceived" size="small" placeholder="Type to search" class="searchTab"/>
-        </template>
+        </template> -->
         <template #default="scope">
           <el-popconfirm v-if="scope.row.state == 'pending' && scope.row.enable == false"
             title="Are you sure to accept this request?" @confirm="handleAccept(scope.$index, scope.row)">
@@ -222,22 +227,29 @@ button i.uil-trash-alt {
 button i.uil-edit {
   color: var(--color-danger) !important;
 }
+.table-description {
+  display: flex;
+  justify-content: space-between;
+}
 
 .table-description p {
   font-size: 14px;
   color: grey;
   font-weight: 500;
 }
-.search {
-  display: none;
+
+.responsive-table {
+  width: 100%
 }
 
 @media screen and (max-width: 768px) {
-  .search {
-    display: inline;
+  .responsive-table {
+    width: 85%;
   }
-  .searchTab {
-    display: none;
+
+  .input_search {
+    display: inline;
+    margin-right: 3.5rem; 
   }
 }
 </style>
