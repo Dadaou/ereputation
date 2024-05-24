@@ -60,16 +60,18 @@ import services from '@Services/services.js'
 import { useUserStore } from "@Stores/user.js"
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue'
 import { ElMessage, ElOption, ElSelect } from 'element-plus'
+import { useRoute, useRouter } from 'vue-router';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 
+const router = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
 const type = ref('add');
 const unit = ref({});
-const categories = [{ label: 'Bus', value: 'Bus' }, { label: 'Points of sale', value: 'Points of sale' }]
+const categories = [{ label: 'Points of sale', value: 'Points of sale' }, { label: 'Transport', value: 'Transport' }]
 const showSpinner = ref(false);
-const activeUnitTab = inject('unit_activeTab');
 const unit_to_update = inject('unit_to_update');
 const units = inject('units');
 const sections = ref(['MENUS', 'INFOS', 'FOLLOW US', 'REVIEWS', 'OFFERS'])
@@ -134,8 +136,7 @@ const submit = async () => {
                     showSpinner.value = false;
                 }
             }
-
-            activeUnitTab.value = 'unit_list'
+            router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'services_list'} });
         } else {
             ElMessage.error(`Please, fill the form correctly!`);
         }

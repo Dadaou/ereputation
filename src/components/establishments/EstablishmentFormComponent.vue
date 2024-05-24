@@ -65,12 +65,6 @@
                             :value="country.name" />
                     </el-select>
                 </div>
-                <!--   <div>
-                    <label for="gps" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gps
-                    </label>
-                    <input type="text" id="gps" name="gps" v-model="data.gps"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                </div> -->
                 <div>
                     <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
                         <span>*</span></label>
@@ -80,12 +74,6 @@
                 </div>
             </div>
             <div class="grid gap-6 mb-6 md:grid-cols-5">
-                <!--  <div>
-                    <label for="region" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Region
-                        <span>*</span></label>
-                    <input type="text" id="region" name="region" v-model="data.region"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                </div> -->
                 <div class="col-span-2">
                     <label for="gps" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Website
                     </label>
@@ -130,7 +118,7 @@
                 </div> -->
             </div>
             <div
-                class="flex flex-wrap gap-3 items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
+                class="flex flex-wrap gap-3 items-center justify-between py-2 border-t border-b dark:border-gray-600">
                 <button type="submit"
                     class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                     <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
@@ -159,9 +147,11 @@ import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { countries, categories, competitor_countries } from '@Services/input-list.js';
 
+const router = useRouter();
+const route = useRoute();
 const previewImage = ref(null);
 const imageInputHover = ref(false);
 const data = ref({});
@@ -170,8 +160,6 @@ const type = ref('Add');
 const userStore = useUserStore();
 const establishment_to_update = inject('establishment_to_update');
 const imgHasChanged = ref(false);
-const activeEstablishmentTab = inject('establishment_activeTab');
-
 const cleanEstablishmentForm = inject('clearEstablishmentForm');
 
 const resetForm = () => {
@@ -224,11 +212,9 @@ const submit = async () => {
         if (!imgHasChanged.value) formData.delete('file');
 
         if (type.value === 'Edit') {
-
             if (establishmentData.uri) {
                 formData.append('id', establishmentData.uri.split('/').pop());
             }
-
         }
 
         formData.delete('media');
@@ -265,8 +251,6 @@ const submit = async () => {
 };
 
 const loadData = (establishment, type) => {
-
-    // establishment.media = [{ url_source: establishment.media }]
     establishment.url_source = establishment.media
 
     if (type == 'new') {
@@ -281,11 +265,11 @@ const loadData = (establishment, type) => {
             }
         });
     }
-
-    activeEstablishmentTab.value = 'establishment_list';
+    router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'establishments_list'} });
 }
 
 watch(establishment_to_update, () => {
+    
     if (establishment_to_update.value != null) {
         data.value = establishment_to_update.value;
         data.value['address1'] = establishment_to_update.value.address || "";

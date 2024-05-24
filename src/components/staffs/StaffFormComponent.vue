@@ -90,10 +90,12 @@ import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
+import { useRoute, useRouter } from 'vue-router';
 
+const router = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
 const staffs = inject('staffs');
-const activeStaffTab = inject('staff_activeTab');
 
 const showSpinner = ref(false);
 
@@ -185,6 +187,20 @@ const updateData = (_staff, staff) => {
     })
 }
 
+const resetForm = ()=>{
+    gender.value = '';
+    department.value = '';
+    startDate.value = '';
+    endDate.value = '';
+    establishment.value = '';
+    lastname.value = '';
+    firstname.value = '';
+    showSpinner.value = false;
+    section.value = ''
+    type.value = 'add';
+    staff_to_update.value = null;
+}
+
 const submit = async () => {
     let staff = {
         "gender": gender.value,
@@ -213,15 +229,6 @@ const submit = async () => {
                         message: `${firstname.value} added successfully to staff member.`,
                         type: 'success',
                     })
-                    gender.value = '';
-                    department.value = '';
-                    startDate.value = '';
-                    endDate.value = '';
-                    establishment.value = '';
-                    lastname.value = '';
-                    firstname.value = '';
-                    showSpinner.value = false;
-                    section.value = ''
                 }
             } else {
                 const response = await new Promise((resolve) => {
@@ -237,20 +244,10 @@ const submit = async () => {
                         message: `Staff updated successfully`,
                         type: 'success',
                     })
-                    activeStaffTab.value = 'staff_list';
-                    gender.value = '';
-                    department.value = '';
-                    startDate.value = '';
-                    endDate.value = '';
-                    establishment.value = '';
-                    lastname.value = '';
-                    firstname.value = '';
-                    showSpinner.value = false;
-                    section.value = ''
-                    type.value = 'add';
-                    staff_to_update.value = null;
                 }
             }
+            resetForm()
+            router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'staffs_list'} });
         } else {
             ElMessage.error(`Please, provide all needed information to ${type.value} a staff`);
         }

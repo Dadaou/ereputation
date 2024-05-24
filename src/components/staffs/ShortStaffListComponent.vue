@@ -1,8 +1,8 @@
 <template>
   <div class="security__header border__bottom">
-    <!-- <div class="security__edit">
-      <h4><i class="uil uil-users-alt"></i> Staff List</h4>
-    </div> -->
+    <button @click="add" class="inline-flex items-center py-2 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+        staff <i class="uil uil-plus"></i>
+    </button>
   </div>
   <div class="mt-5 table__container">
     <el-table :data="filterTableData">
@@ -24,6 +24,7 @@
             <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
                 class="uil uil-external-link-alt"></i></a>
           </el-tooltip>
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
           <el-button size="small" @click="showQRCode(scope.row)"><i class="uil uil-qrcode-scan"></i></el-button>
         </template>
       </el-table-column>
@@ -46,15 +47,17 @@ import 'element-plus/es/components/popconfirm/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
 import services from '@Services/services.js';
-
+import { useRouter } from 'vue-router';
 const QrCodeModalComponent = defineAsyncComponent(() =>
   import('@Components/utils/QrCodeModalComponent.vue')
 )
 
+const router = useRouter()
 const baseurl = window.location.origin;
 const showModal = ref(false);
 const staff = ref(null);
 const staffs = inject('staffs')
+const staff_to_update = inject('staff_to_update')
 const tag = inject('tag');
 
 let tableData = computed(() => {
@@ -85,6 +88,16 @@ const filterTableData = computed(() => {
   )
   return filterdata
 })
+
+const add = ()=>{
+  router.push({ name: 'Parameters', params: { tab: 'staffs', sub_tab: 'staffs_form'} });
+}
+
+const handleEdit = (index, staff) => {
+  staff_to_update.value = staff
+  console.log(staff_to_update.value)
+  router.push({ name: 'Parameters', params: { tab: 'staffs', sub_tab: 'staffs_form'} });
+}
 
 const showQRCode = (value) => {
   staff.value = value;

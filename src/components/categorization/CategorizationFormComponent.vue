@@ -14,11 +14,6 @@
                     <label for="countries"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
                         <span>*</span></label>
-                    <!--<el-select v-model="establishment" placeholder="Choose establishment" size="large" filterable :multiple="type!== 'edit'">
-                        
-                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name" :value="item.competitor_tag"/>
-                    </el-select>-->
-
 
                     <el-select v-if="type == 'edit'" v-model="establishment" placeholder="Choose establishment"
                         size="large" filterable>
@@ -53,16 +48,18 @@ import services from '@Services/services.js'
 import { useUserStore } from "@Stores/user.js"
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue'
 import { ElMessage, ElOption, ElSelect } from 'element-plus'
+import { useRoute, useRouter } from 'vue-router'
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 
+const router = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
 const type = ref('add');
 const category = ref('');
 const establishment = ref([]);
 const showSpinner = ref(false);
-const activeCategorizationTab = inject('categorization_activeTab');
 const category_to_update = inject('category_to_update');
 const categories = inject('categories');
 
@@ -128,8 +125,8 @@ const submit = async () => {
 
                 }
             }
-
-            activeCategorizationTab.value = 'categorization_list'
+            router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'categories_list'} });
+            
         } else {
             ElMessage.error(`Please, fill the form correctly!`);
         }

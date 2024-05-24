@@ -14,10 +14,6 @@
           <input type="text" id="first_name" v-model="eventName"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
         </div>
-        <!-- <div>
-                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category <span>*</span></label>
-                            <input type="text" id="last_name" v-model="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                        </div> -->
         <div>
           <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
             <span>*</span></label>
@@ -49,7 +45,7 @@
           <el-date-picker v-model="dateTo" :size="'large'" />
         </div>
       </div>
-      <div class="flex items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
+      <div class="flex items-center justify-between py-2 border-t border-b dark:border-gray-600">
         <button type="submit"
           class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
           <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading ...</span>
@@ -67,6 +63,7 @@ import { useUserStore } from "@Stores/user.js";
 import { useEventStore } from "@Stores/event.js";
 import { useCompanyStore } from "@Stores/company.js";
 import { useAppStore } from "@Stores/app.js";
+import { useRouter, useRoute } from 'vue-router';
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
@@ -74,10 +71,13 @@ import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
 
+const router = useRouter();
+const route = useRoute();
 const companiesStore = useCompanyStore();
 const eventStore = useEventStore();
 const userStore = useUserStore();
 const appStore = useAppStore();
+const emit = defineEmits(['list'])
 const format = (date) => {
   const day = date.getDate();
   const month = date.getMonth() + 1;
@@ -86,9 +86,6 @@ const format = (date) => {
   return `${year}/${month}/${day}`;
 }
 const showSpinner = ref(false);
-/**
- * Event
- */
 const dateFrom = ref(null);
 const dateTo = ref(null);
 const category = ref('');
@@ -96,8 +93,7 @@ const eventName = ref('');
 const establishments = ref([]);
 const type = ref('add');
 const event_to_update = inject('event_to_update');
-const events = inject('events');
-const activeEventTab = inject('event_activeTab');
+const events = inject('events');;
 const categories = ['Breakdown', 'Happening', 'Incident', 'Misc']
 
 watch(event_to_update, () => {
@@ -178,6 +174,14 @@ const updateData = (_event) => {
   })
 }
 
+const resetForm = ()=>{
+  dateFrom.value = '';
+  dateTo.value = '';
+  category.value = '';
+  establishments.value = [];
+  eventName.value = '';
+}
+
 const submit = async () => {
   let event = {
     "name": eventName.value,
@@ -204,12 +208,6 @@ const submit = async () => {
             message: `Event added successfully.`,
             type: 'success',
           });
-          dateFrom.value = '';
-          dateTo.value = '';
-          category.value = '';
-          establishments.value = [];
-          eventName.value = '';
-          showSpinner.value = false;
         }
       } else {
         const response = await new Promise((resolve, reject) => {
@@ -224,17 +222,12 @@ const submit = async () => {
             message: `Event updated successfully.`,
             type: 'success',
           });
-          activeEventTab.value = 'event_list';
-
-          dateFrom.value = '';
-          dateTo.value = '';
-          category.value = '';
-          establishments.value = [];
-          eventName.value = '';
-          showSpinner.value = false;
           type.value = 'add'
         }
       }
+      resetForm()
+      router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'events_list'} });
+      showSpinner.value = false;
     } else {
       ElMessage.error(`Please, provide all needed information to ${type.value} an event`);
       showSpinner.value = false;

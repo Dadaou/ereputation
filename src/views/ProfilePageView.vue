@@ -56,7 +56,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, provide, watch } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 
@@ -126,7 +126,6 @@ const breadcrumbData = [
     isCurrent: true,
   },
 ];
-
 </script>
 <style scoped>
 /* Styles existants */
@@ -170,13 +169,13 @@ const breadcrumbData = [
   width: 200px;
 }
 
-.router-link-exact-active,
+.router-link-active,
 .active {
   background-color: var(--color-danger);
   color: var(--color-white) !important;
 }
 
-.admin__menu li .router-link-exact-active:hover,
+.admin__menu li .router-link-active:hover,
 .admin__menu li .active:hover {
   background-color: var(--color-danger);
   color: var(--color-white);
