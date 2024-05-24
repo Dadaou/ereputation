@@ -104,13 +104,7 @@
 <script setup>
 import { computed, defineAsyncComponent, ref, onBeforeMount, watch, inject } from 'vue'
 import { useUserStore } from "@Stores/user.js"
-import {
-    ElMessage,
-    ElTable,
-    ElTableColumn,
-    ElButton,
-    ElInput, ElOption, ElSelect, ElPopconfirm
-} from 'element-plus'
+import {ElMessage, ElTable, ElTableColumn, ElButton, ElInput, ElOption, ElSelect, ElPopconfirm } from 'element-plus'
 import { useWindowSize } from '@vueuse/core';
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import services from '@Services/services.js';
@@ -123,10 +117,14 @@ import 'element-plus/es/components/input/style/css'
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
+import { useRoute, useRouter } from 'vue-router';
 
 const ModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/ModalComponent.vue')
 )
+
+const router = useRouter();
+const route = useRoute();
 
 const emit = defineEmits(['reload']);
 const userStore = useUserStore();
@@ -152,7 +150,6 @@ const link = ref('')
 const caption = ref('')
 const isValidLink = ref(true)
 const establishment = ref(null)
-// const links = ref([])
 const allLinks = ref([])
 const isLoading = ref(false)
 const title = computed(() => {
@@ -191,9 +188,11 @@ const establishments = computed(() => {
             })
         });
     }
+    
     filteredData = filteredData.filter((data) => {
         return !search.value || data.name.toLowerCase().includes(search.value.toLowerCase())
     })
+
     return filteredData;
 });
 
@@ -377,7 +376,6 @@ const submit = async () => {
                 })
                 showSpinner.value = false;
                 isEdit.value = false
-                emit('reload')
                 resetValue()
             }
         } catch (error) {
@@ -398,12 +396,13 @@ const submit = async () => {
                 })
                 showSpinner.value = false;
                 resetValue()
-                emit('reload')
             }
         } catch (error) {
             console.log(error)
         }
     }
+    emit('reload')
+    router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'links_list'} });
 }
 
 const resetValue = () => {

@@ -398,7 +398,7 @@ const router = createRouter({
           beforeEnter: [CheckAccess],
           children: [
             {
-              path: '',
+              path: 'personal_details',
               name: 'Personal_details',
               component: () => import('@Components/users/UserDetailComponent.vue')
             },
@@ -435,7 +435,7 @@ const router = createRouter({
               component: () => import('@Views/MyQRCodesPageView.vue')
             },
             {
-              path: 'parameters',
+              path: 'parameters/:tab?/:sub_tab?',
               name: 'Parameters',
               component: () => import('@Views/ParameterView.vue')
             },

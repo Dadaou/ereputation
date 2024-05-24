@@ -1,4 +1,9 @@
 <template>
+   <div class="security__header border__bottom">
+    <button @click="add" class="inline-flex items-center py-2 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+        service <i class="uil uil-plus"></i>
+    </button>
+  </div>
   <div class="mt-5 table__container">
     <el-table :data="filterTableData">
       <el-table-column label="Name" prop="name" style="width: 15%; min-width: 300px;" />
@@ -27,6 +32,7 @@
 <script setup>
 import { computed, ref, inject, defineAsyncComponent } from 'vue';
 import { ElTable, ElTableColumn, ElButton, ElInput, ElTooltip } from 'element-plus';
+import { useRouter } from 'vue-router';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
 import 'element-plus/es/components/table-column/style/css'
@@ -38,7 +44,7 @@ import services from '@Services/services.js';
 const QrCodeModalComponent = defineAsyncComponent(() =>
   import('@Components/utils/QrCodeModalComponent.vue')
 )
-
+const router = useRouter()
 const units = inject('units')
 const search = ref('');
 const showModal = ref(false);
@@ -50,6 +56,10 @@ const unit = ref(null);
 const showQRCode = (value) => {
   unit.value = value;
   showModal.value = true;
+}
+
+const add = ()=>{
+  router.push({ name: 'Parameters', params: { tab: 'services', sub_tab: 'services_form'} });
 }
 
 const filterTableData = computed(() => {

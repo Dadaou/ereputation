@@ -51,15 +51,16 @@ const search = ref('')
 const filterTableData = computed(() => {
   let filteredData = tableData.value;
   filteredData = filteredData.filter((data) => {
-    if (data.section === 'FOLLOW US' || data.section === 'REVIEWS') {
-    return (
-      !search.value ||
-      (data.source && data.source.toLowerCase().includes(search.value.toLowerCase())) ||
-      (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
-      (data.section && data.section.toLowerCase().includes(search.value.toLowerCase())) ||
-      (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase()))
-    );
-  }
+
+    if(data.section == 'REVIEWS' || data.section == 'FOLLOW US'){
+      return (
+        !search.value ||
+        (data.source && data.source.toLowerCase().includes(search.value.toLowerCase())) ||
+        (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
+        (data.section && data.section.toLowerCase().includes(search.value.toLowerCase())) ||
+        (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase()))
+      );
+    }
   });
   return filteredData;
 });
