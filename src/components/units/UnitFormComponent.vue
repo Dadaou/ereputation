@@ -55,10 +55,11 @@
 </template>
 <script setup>
 import moment from 'moment';
-import { ref, inject, watch } from 'vue'
+import { ref, inject, watch, onBeforeMount } from 'vue'
 import services from '@Services/services.js'
 import { useUserStore } from "@Stores/user.js"
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue'
+import { useStaffStore } from "@Stores/staff.js";
 import { ElMessage, ElOption, ElSelect } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router';
 import 'element-plus/es/components/message/style/css'
@@ -67,7 +68,9 @@ import 'element-plus/es/components/select/style/css'
 
 const router = useRouter();
 const route = useRoute();
+const clearForm = inject('clearUnitForm')
 const userStore = useUserStore();
+const staffStore = useStaffStore();
 const type = ref('add');
 const unit = ref({});
 const categories = [{ label: 'Points of sale', value: 'Points of sale' }, { label: 'Transport', value: 'Transport' }]
@@ -78,16 +81,28 @@ const sections = ref(['MENUS', 'INFOS', 'FOLLOW US', 'REVIEWS', 'OFFERS'])
 
 watch(unit_to_update, () => {
     if (unit_to_update.value != null) {
-        unit.value = {
-            "code": unit_to_update.value["code"],
-            "name": unit_to_update.value["name"],
-            "category": unit_to_update.value["category"],
-            "establishment": `/api/establishments/${unit_to_update.value["establishment_id"]}`,
-            "section": unit_to_update.value["section"],
-        }
-        type.value = 'edit';
+        // unit.value = {
+        //     "code": unit_to_update.value["code"],
+        //     "name": unit_to_update.value["name"],
+        //     "category": unit_to_update.value["category"],
+        //     "establishment": `/api/establishments/${unit_to_update.value["establishment_id"]}`,
+        //     "section": unit_to_update.value["section"],
+        // }
+        // type.value = 'edit';
+        fillForm(unit_to_update.value)
     }
 })
+
+const fillForm = (data)=>{
+        unit.value = {
+            "code": data["code"],
+            "name": data["name"],
+            "category": data["category"],
+            "establishment": `/api/establishments/${data["establishment_id"]}`,
+            "section": data["section"],
+        }
+        type.value = 'edit';
+}
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 
@@ -188,7 +203,21 @@ const updateData = (unit, _unit) => {
     units.value.forEach((item, index) => {
         if (item.id == currentUnit.id) units.value[index] = currentUnit;
     })
-};	
+};
+
+onBeforeMount(()=>{
+    const data = staffStore.getUnit();
+
+    if(data){
+        fillForm(data)
+        staffStore.resetUnit()
+    }
+});
+
+watch(clearForm, ()=>{
+  if(clearForm.value) unit.value = {}
+});
+
 </script>
 <style scoped>
 form {

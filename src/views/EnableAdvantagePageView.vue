@@ -30,14 +30,6 @@
                       {{ capitalizeFirstLetter(advantages.contact_firstname, advantages.contact_lastname) }}
                     </td>
                   </tr>
-                  <!-- <tr class="border-b border-gray-200 dark:border-gray-700">
-                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
-                    Category
-                  </th>
-                  <td class="px-6 py-4">
-                    {{ advantages.adv_category }}
-                  </td>
-                </tr> -->
                   <tr class="border-b border-gray-200 dark:border-gray-700">
                     <th scope="row"
                       class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
@@ -75,8 +67,6 @@
       </div>
     </div>
   </div>
-
-
   <EstablishmentNotFound v-else />
 </template>
 
@@ -124,7 +114,7 @@ const submit = () => {
   localStorage.setItem('isSellerAuthenticated', 'true');
 }
 
-function capitalizeFirstLetter(firstname, lastname) {
+const capitalizeFirstLetter = (firstname, lastname)=> {
   const capitalizedFirstname = firstname.charAt(0).toUpperCase() + firstname.slice(1);
 
   let capitalizedLastname = lastname;
@@ -143,7 +133,7 @@ onBeforeMount(async () => {
 
   try {
     const response = await new Promise((resolve) => {
-      services.get_Record(`customer/establishments/advantagecontacts/list?tag=${route.params.discountTag}`, (response) => {
+      services.get_Record(`public/customer/establishments/advantagecontacts/list?tag=${route.params.discountTag}`, (response) => {
         resolve(response);
       });
     });

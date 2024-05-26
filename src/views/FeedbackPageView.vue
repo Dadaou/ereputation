@@ -59,15 +59,6 @@
                             <input type="text" id="last_name" v-model="lastname"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
-                        <!-- <div>
-                            <label for="countries"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                    $t("feedback.gender") }} </label>
-                            <el-select v-model="gender" :placeholder="$t('feedback.placeholder_gender')" size="large">
-                                <el-option v-for="item in genders" :key="item.value" :label="item.label"
-                                    :value="item.value" />
-                            </el-select>
-                        </div> -->
                         <div>
 
                             <label for="last_name"
@@ -81,13 +72,6 @@
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
                         <div class="author__email">
-                            <!--  <span v-if="randomAdvantage">
-                                <i class="uil uil-info-circle"></i>{{ $t("feedback.indice1") }}
-                            </span> -->
-                            <!--  <p v-if="randomAdvantage">
-                                <b>{{ $t("feedback.promotion_day") }} </b> 
-                            </p> choose_advantage-->
-                           
                             <DiscountCheckList :establishment="route.params.id" :customer="route.params.tag"
                                 @select="(value) => randomAdvantage = value" />
                             <span v-if="randomAdvantage">
@@ -188,7 +172,7 @@ onBeforeMount(async () => {
         icon: "uil-comment-alt"
     });
     services.setToken(import.meta.env.VITE_APP_TOKEN);
-    await services.get_Record(`establishment/${route.params.id}/media`, (response) => {
+    await services.get_Record(`public/establishment/${route.params.id}/media`, (response) => {
         if (response.status == 200) {
             establishment.value = response['data'];
             media.value = response['data'].url_source == null ? [] : response['data'].url_source;
@@ -307,7 +291,7 @@ const submit = async () => {
                                         app_url: app_url.value,
                                         template: 'workflow_en'
                                     }
-                                    await services.createRecord('workflow', coupons, (res) => {
+                                    await services.createRecord('public/workflow', coupons, (res) => {
                                         resetForm()
                                     });
                                 }

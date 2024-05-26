@@ -41,7 +41,7 @@ const submit = async () => {
     showSpinner.value = true;
     try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`customer/establishments/advantagecontacts/list?code=${couponCode.value}`, (response) => {
+            services.get_Record(`public/customer/establishments/advantagecontacts/list?code=${couponCode.value}`, (response) => {
                 resolve(response);
             });
         });

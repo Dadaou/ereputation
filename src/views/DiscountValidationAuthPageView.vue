@@ -13,7 +13,6 @@
                 </button>
             </form>
         </div>
-        <!-- <call-us-selector phonesystem-url="https://m-unit.on3cx.fr:5001" :party="chatID"></call-us-selector> -->
     </div>
 </template>
 
@@ -27,9 +26,6 @@ import { useWindowSize } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
 
-
-
-
 const SpinnerComponent = defineAsyncComponent(() =>
     import('@Components/utils/SpinnerComponent.vue')
 )
@@ -41,8 +37,6 @@ const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
 const nameAdvantage = localStorage.getItem('nameAdvantage');
-
-// const chatID = ref(import.meta.env.VITE_3CX_CHAT_ID);
 
 const form = ref({
     email: '',
@@ -82,22 +76,6 @@ const submit = async () => {
     }
 };
 
-/**
- * Navbar Handler
- * useWindowScroll allows us to detect the scroll event on
- * the browser
- */
-// const { width, height } = useWindowSize();
-// const form__ref = ref(null)
-
-// onMounted(() => {
-//     if (width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');
-// });
-
-// watch([width, isError], () => {
-//     if (width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');
-//     else if (isError.value == false) form__ref.value.classList.remove('custom__container');
-// });
 </script>
 
 <style scoped>

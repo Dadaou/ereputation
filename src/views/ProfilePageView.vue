@@ -3,49 +3,49 @@
     <div class="breadcrumb__container">
       <BreadcrumbComponent :data="breadcrumbData" />
     </div>
-    <div class="admin__container" :class="{ 'menu-open': isMenuOpen }">
+    <div class="admin__container">
       <button class="menu-toggle" @click="toggleMenu">
         <i class="uil uil-bars"></i>
       </button>
       <div class="admin__menu">
         <ul>
           <li>
-            <router-link :to="{ name: 'Personal_details' }" @click="closeMenu">
+            <router-link :to="{ name: 'Personal_details' }">
               <i class="uil uil-user"></i><span>Account</span>
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'Subscription' }" active-class="active" @click="closeMenu">
+            <router-link :to="{ name: 'Subscription' }" active-class="active">
               <i class="uil uil-book"></i> <span>Subscription</span>
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'QRCodes' }" active-class="active" @click="closeMenu">
+            <router-link :to="{ name: 'QRCodes' }" active-class="active">
               <i class="uil uil-qrcode-scan"></i> <span>My QRCodes</span>
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'Advantage' }" @click="closeMenu">
+            <router-link :to="{ name: 'Advantage' }">
               <i class="uil uil-bill"></i> <span>Advantages</span>
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'Partnership' }" @click="closeMenu">
+            <router-link :to="{ name: 'Partnership' }">
               <i class="uil uil-users-alt"></i> <span>Partnership</span>
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'Contact' }" @click="closeMenu">
+            <router-link :to="{ name: 'Contact' }">
               <i class="uil uil-envelope"></i> <span>Contacts</span>
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'Discount_coupons' }" @click="closeMenu">
+            <router-link :to="{ name: 'Discount_coupons' }">
               <i class="uil uil-bill"></i> <span>Discount coupons</span>
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'Parameters' }" @click="closeMenu">
+            <router-link :to="{ name: 'Parameters' }">
               <i class="uil uil-setting"></i> <span>Parameters</span>
             </router-link>
           </li>

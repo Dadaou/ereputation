@@ -10,15 +10,10 @@
                         </div>
                         <h1 class="society__name">{{ unit.name }}</h1>
                         <ul>
-                            <!-- <li><span class="label">Category: </span> <span>{{ unit.category }}</span></li> -->
                             <li class="Gender">
                                 {{ $t("staffFeedback.interne") }}
                             </li>
                         </ul>
-                        <!-- <button class="btn mt-2  btn-primary staffs__btn" @click="showModal = true"> 
-                            services list 
-                            <i class="uil uil-clipboard-notes"></i>
-                        </button> -->
                     </div>
                 </div>
                 <div class="photo">
@@ -63,14 +58,6 @@
                             <input type="text" id="last_name" v-model="lastname"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
-                        <!-- <div>
-                            <label for="genders" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                $t("feedback.gender") }} <span>*</span> </label>
-                            <el-select v-model="gender" :placeholder="$t('feedback.placeholder_gender')" size="large">
-                                <el-option v-for="item in genders" :key="item.value" :label="item.label"
-                                    :value="item.value" />
-                            </el-select>
-                        </div> -->
                         <div>
                             <label for="datevisit"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
@@ -82,13 +69,6 @@
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
                         <div class="author__email">
-                            <!-- <span v-if="randomAdvantage">
-                                <i class="uil uil-info-circle"></i> {{ $t("feedback.indice1") }}
-                            </span> -->
-                            <!-- <p v-if="randomAdvantage">
-                                <b>{{ $t("feedback.promotion_day") }}</b> 
-                            </p> -->
-                           
                             <DiscountCheckList :establishment="route.params.etab" :customer="route.params.tag"
                                 @select="(value) => randomAdvantage = value" />
                             <span v-if="randomAdvantage">
@@ -232,7 +212,7 @@ onBeforeMount(async () => {
 
     services.setToken(import.meta.env.VITE_APP_TOKEN);
 
-    await services.get_Record(`establishment/${route.params.etab}/media`, (response) => {
+    await services.get_Record(`public/establishment/${route.params.etab}/media`, (response) => {
         if (response !== undefined && response.status == 200) {
             establishment.value = response['data'];
         }
@@ -356,7 +336,7 @@ const submit = async () => {
                                         app_url: app_url.value,
                                         template: `workflow_en`
                                     }
-                                    await services.createRecord('workflow', coupons, () => {
+                                    await services.createRecord('public/workflow', coupons, () => {
                                         resetForm()
                                     });
                                 }

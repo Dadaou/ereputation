@@ -90,7 +90,7 @@ onBeforeMount(async () => {
   appStore.isLoading = true;
 
   const response = await new Promise((resolve) => {
-    services.get_Record(`/partner/info?code=${import.meta.env.VITE_PARTNER_CODE}`, (response) => {
+    services.get_Record(`partner/info?code=${import.meta.env.VITE_PARTNER_CODE}`, (response) => {
       resolve(response)
       if (response.status == 404) {
         appStore.isLoading = false;

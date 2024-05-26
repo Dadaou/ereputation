@@ -74,7 +74,7 @@ const openMenu = (item) => {
 }
 
 const loadLinks = async (tag) => {
-    const uri = `/get/settings/section?tag=${tag}`
+    const uri = `public/get/settings/section?tag=${tag}`
     const response = await new Promise((resolve) => {
         services.get_Record(uri, (response) => {
             resolve(response);
@@ -147,7 +147,7 @@ const offerLinks = computed(() => {
 onBeforeMount(async () => {
 
     services.setToken(import.meta.env.VITE_APP_TOKEN);
-    await services.get_Record(`establishment/${route.params.id}/media`, (response) => {
+    await services.get_Record(`public/establishment/${route.params.id}/media`, (response) => {
         if (response.status == 200) {
             establishment.value = response['data'];
             media.value = response['data'].url_source == null ? [] : response['data'].url_source;

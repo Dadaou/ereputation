@@ -522,11 +522,6 @@ const gotoReviewPage = (id, tag) => {
     }, 100);
 }
 
-// const setdate = ()=>{
-//     start_date.value = appStore.start_date;
-//     end_date.value = appStore.end_date;
-// }
-
 /**
  * Navbar Handler
  * useWindowScroll allows us to detect the scroll event on 
@@ -608,10 +603,7 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source) => {
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
         dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
-    } /*else {
-        startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-        endDate = moment().format('YYYY-M-DD');
-    }*/
+    } 
     apiParams += `&fromDate=${dateStart}&toDate=${dateEnd}`;
 
     if (IsValueOkay(source)) {
@@ -662,10 +654,7 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
         dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
-    } /*else {
-        startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-        endDate = moment().format('YYYY-M-DD');
-    }*/
+    }
     apiParams += `&fromDate=${dateStart}&toDate=${dateEnd}`;
 
     if (IsValueOkay(source)) {
@@ -695,10 +684,7 @@ const loadIndiceData = async (tag, dateStart, dateEnd) => {
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
         dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
-    } /*else {
-        startDate = moment().subtract(30, 'days').format('YYYY-M-DD');
-        endDate = moment().format('YYYY-M-DD');
-    }*/
+    } 
     apiParams += `&from=${dateStart}&to=${dateEnd}`;
 
     const api = apiBase + '?' + apiParams;
