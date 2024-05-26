@@ -21,7 +21,7 @@
           {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="Confirm" fixed="right" width="200">
+      <el-table-column label="Confirm" width="200">
         <template #header>
           <el-input v-model="search" size="small" placeholder="Type to search" />
         </template>
