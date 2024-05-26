@@ -306,4 +306,10 @@ label span {
 input {
     caret-color: var(--light-color-bg2);
 }
+
+@media screen and (max-width: 468px) {
+    form {
+        height: 775px !important;
+    }
+}
 </style>
