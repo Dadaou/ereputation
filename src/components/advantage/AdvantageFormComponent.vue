@@ -230,6 +230,7 @@ watch(advantage_to_update, () => {
         advantageName.value = advantage_to_update.value["name"];
         establishment.value = `/api/establishments/${advantage_to_update.value['establishment_id']},${advantage_to_update.value['establishment_name']}`
         advantageLimit.value = advantage_to_update.value["advantageLimit"];
+        description.value = advantage_to_update.value["description"];
         type.value = 'edit';
     }
 })
