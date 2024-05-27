@@ -24,8 +24,13 @@
             <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
                 class="uil uil-external-link-alt"></i></a>
           </el-tooltip>
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
           <el-button size="small" @click="showQRCode(scope.row)"><i class="uil uil-qrcode-scan"></i></el-button>
+           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
+          <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
+            <template #reference>
+              <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
+            </template>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -39,15 +44,17 @@
 <script setup>
 import { computed, ref, inject, defineAsyncComponent } from 'vue';
 import moment from 'moment';
-import { ElTable, ElTableColumn, ElButton, ElInput, ElTooltip } from 'element-plus';
+import { useStaffStore } from "@Stores/staff.js";
+import services from '@Services/services.js';
+import { useRouter } from 'vue-router';
+import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
 import 'element-plus/es/components/table-column/style/css'
 import 'element-plus/es/components/popconfirm/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
-import services from '@Services/services.js';
-import { useRouter } from 'vue-router';
+
 const QrCodeModalComponent = defineAsyncComponent(() =>
   import('@Components/utils/QrCodeModalComponent.vue')
 )
@@ -55,9 +62,9 @@ const QrCodeModalComponent = defineAsyncComponent(() =>
 const router = useRouter()
 const baseurl = window.location.origin;
 const showModal = ref(false);
+const staffStore = useStaffStore();
 const staff = ref(null);
-const staffs = inject('staffs')
-const staff_to_update = inject('staff_to_update')
+const staffs = inject('staffs');
 const tag = inject('tag');
 
 let tableData = computed(() => {
@@ -94,14 +101,34 @@ const add = ()=>{
 }
 
 const handleEdit = (index, staff) => {
-  staff_to_update.value = staff
-  console.log(staff_to_update.value)
+  staffStore.setStaff(staff);
   router.push({ name: 'Parameters', params: { tab: 'staffs', sub_tab: 'staffs_form'} });
 }
 
 const showQRCode = (value) => {
   staff.value = value;
   showModal.value = true;
+};
+
+const reloadData = (staff) => {
+  let data = [];
+  staffs.value.forEach(staff_item => {
+    if (staff_item.id !== staff.id) data.push(staff_item);
+  })
+  staffs.value = data;
+}
+
+
+const handleDelete = async (index, staff) => {
+  await staffStore.removeStaff(staff.id, (response) => {
+    if (response.status == 204) {
+      reloadData(staff);
+      ElMessage({
+        message: `Staff removed successfully.`,
+        type: 'success',
+      });
+    }
+  })
 };
 
 </script>

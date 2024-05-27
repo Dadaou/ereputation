@@ -60,7 +60,6 @@ const isExpired = (expiredDate) => {
     const now = new Date();
     const expiryDate = new Date(expiredDate);
     return now > expiryDate;
-    // return true;
 }
 
 onBeforeMount(async () => {

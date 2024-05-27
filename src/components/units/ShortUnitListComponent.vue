@@ -20,6 +20,12 @@
                 class="uil uil-external-link-alt"></i></a>
           </el-tooltip>
           <el-button size="small" @click="showQRCode(scope.row)"><i class="uil uil-qrcode-scan"></i></el-button>
+           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
+           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
+            <template #reference>
+              <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
+            </template>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -31,8 +37,9 @@
 </template>
 <script setup>
 import { computed, ref, inject, defineAsyncComponent } from 'vue';
-import { ElTable, ElTableColumn, ElButton, ElInput, ElTooltip } from 'element-plus';
+import { ElTable, ElPopconfirm, ElTableColumn, ElButton, ElInput, ElTooltip } from 'element-plus';
 import { useRouter } from 'vue-router';
+import { useStaffStore } from "@Stores/staff.js";
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
 import 'element-plus/es/components/table-column/style/css'
@@ -52,6 +59,7 @@ const tag = inject('tag');
 
 const baseurl = window.location.origin;
 const unit = ref(null);
+const staffStore = useStaffStore();
 
 const showQRCode = (value) => {
   unit.value = value;
@@ -64,7 +72,7 @@ const add = ()=>{
 
 const filterTableData = computed(() => {
   let filterdata = units.value;
-
+  console.log(units.value)
   filterdata = filterdata.map((value) => {
     value.link = `${baseurl}/public/${tag.value}/establishment/${value.establishment_competitor_tag}/units/${value.tag}/feedback`
     return value
@@ -79,6 +87,36 @@ const filterTableData = computed(() => {
   )
   return filterdata
 });
+
+const reloadData = (unit) => {
+  let data = [];
+  units.value.forEach(item => {
+    if (item.id !== unit.id) data.push(item);
+  })
+  units.value = data;
+}
+
+const handleDelete = async (index, unit) => {
+  const response = await new Promise((resolve) => {
+    services.deleteRecord('units', unit['id'], (response) => {
+      resolve(response);
+    });
+  });
+
+  if (response.status == 204) {
+    reloadData(unit);
+    ElMessage({
+      message: `Unit removed successfully.`,
+      type: 'success',
+    });
+  }
+};
+
+const handleEdit = (index, unit) => {
+  console.log(unit)
+  staffStore.setUnit(unit);
+  router.push({ name: 'Parameters', params: { tab: 'services', sub_tab: 'services_form'} });
+};
 
 </script>
 <style scoped>

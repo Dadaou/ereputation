@@ -36,7 +36,7 @@
                 </el-tabs>
             </el-tab-pane>
             <el-tab-pane label="Staff" name="staffs">
-                <el-tabs v-model="parametersUrlsConf.staffs" class="demo-tabs">
+                <el-tabs v-model="parametersUrlsConf.staffs" class="demo-tabs" @tab-click="() => clearStaffForm()">
                     <el-tab-pane label="Staffs" name="staffs_list">
                         <StaffListComponent @edit="(staff) => handleEdit(staff, 'staffs')" />
                     </el-tab-pane>
@@ -46,7 +46,7 @@
                 </el-tabs>
             </el-tab-pane>
             <el-tab-pane label="Services" name="services">
-                <el-tabs v-model="parametersUrlsConf.services" class="demo-tabs">
+                <el-tabs v-model="parametersUrlsConf.services" class="demo-tabs" @tab-click="() => clearUnitForm()">
                     <el-tab-pane label="Services" name="services_list">
                         <UnitListComponent @edit="(service) => handleEdit(service, 'services')" />
                     </el-tab-pane>
@@ -207,6 +207,14 @@ const clearEstablishmentForm = () => {
     cleanEstablishmentForm.value = !cleanEstablishmentForm.value
 }
 
+const clearStaffForm = () => {
+    cleanStaffForm.value = !cleanStaffForm.value
+}
+
+const clearUnitForm = () => {
+    cleanUnitForm.value = !cleanUnitForm.value
+}
+
 const appStore = useAppStore()
 const userStore = useUserStore()
 const activeName = ref('establishments')
@@ -224,6 +232,12 @@ const parametersUrlsConf = reactive({
 provide('parametersUrlsConf', parametersUrlsConf)
 const cleanEstablishmentForm = ref(false);
 provide('clearEstablishmentForm', cleanEstablishmentForm)
+
+const cleanStaffForm = ref(false);
+provide('clearStaffForm', cleanStaffForm)
+
+const cleanUnitForm = ref(false);
+provide('clearUnitForm', cleanUnitForm)
 
 const allEvents = ref([])
 const allStaffs = ref([])
@@ -258,8 +272,8 @@ provide('advantage_to_update', advantage_to_update)
 const category_to_update = ref(null)
 provide('category_to_update', category_to_update)
 
-// const unit_to_update = ref(null)
-// provide('unit_to_update', unit_to_update)
+const unit_to_update = ref(null)
+provide('unit_to_update', unit_to_update)
 
 const link_to_update = ref(null)
 provide('link_to_update', link_to_update)
@@ -615,6 +629,7 @@ onBeforeMount(async () => {
     parametersUrlsConf.tabs = (route.params.tab !== '')?route.params.tab:'establishments';
     parametersUrlsConf[parametersUrlsConf.tabs] = (route.params.sub_tab !== '')?route.params.sub_tab:'establishments_list';
     routeParameters(parametersUrlsConf)
+    console.log(parametersUrlsConf)
 
     if (width.value < 800) {
         position.value = 'top'

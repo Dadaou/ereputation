@@ -112,7 +112,7 @@ export const useCompanyStore = defineStore('company', () => {
     let data = []
      try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`establishment/url?tag=${tag}`, (response) => {
+            services.get_Record(`public/establishment/url?tag=${tag}`, (response) => {
                 resolve(response);
             });
         });

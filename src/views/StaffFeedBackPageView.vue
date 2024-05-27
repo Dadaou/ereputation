@@ -229,7 +229,7 @@ onBeforeMount(async () => {
         icon: "uil-comment-alt"
     });
 
-    await services.get_Record(`establishment/${route.params.etab}/media`, (response) => {
+    await services.get_Record(`public/establishment/${route.params.etab}/media`, (response) => {
         if (response !== undefined && response.status == 200) {
             establishment.value = response['data'];
         }
@@ -239,7 +239,7 @@ onBeforeMount(async () => {
         }
     });
 
-    await services.get_Record(`staffs/${route.params.id}/descriptions`, (response) => {
+    await services.get_Record(`public/staffs/${route.params.id}/descriptions`, (response) => {
         if (response.status == 200) {
             staff.value = response.data[0];
         }
@@ -249,7 +249,7 @@ onBeforeMount(async () => {
 
     try {
         const responseEstablishment = await new Promise((resolve) => {
-            services.get_Record(`/establishment/${companyId}/staffs`, (response) => {
+            services.get_Record(`public/establishment/${companyId}/staffs`, (response) => {
                 resolve(response)
             });
         });
@@ -357,7 +357,7 @@ const submit = async () => {
                                         app_url: app_url.value,
                                         template: 'workflow_en'
                                     }
-                                    await services.createRecord('workflow', coupons, () => {
+                                    await services.createRecord('public/workflow', coupons, () => {
                                         resetForm()
                                     });
                                 }

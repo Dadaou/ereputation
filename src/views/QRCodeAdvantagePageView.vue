@@ -25,16 +25,11 @@
 
 
                 <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2 mb-6">
-                    <!--<span id="cpnCode" class="border-dashed border text-white px-4 py-2 rounded-l">{{ code }}</span>-->
                     <button id="cpnBtn1" :class="[isCopied ? 'btn-copy2' : 'btn-copy']" @click="copyCode(code)"
                         v-if="isSupported">{{ isCopied ? 'Copied' : 'Copy' }} <i class="uil uil-copy"></i></button>
                     <button id="cpnBtn2" class="btn-copy" @click="downloadQrcode">Download <i
                             class="uil uil-qrcode-scan"></i></button>
                 </div>
-
-
-
-
                 <p class="text-sm" v-if="advantages">Valid Till: {{ moment(advantages.expired_at).format("DDMMM, YYYY")
                     }}</p>
 
@@ -86,11 +81,6 @@ const dateExperied = ref(null);
 const isNotExpired = ref(true);
 const date_to = ref(null);
 
-
-
-
-
-
 const listAdvantage = ref([]);
 
 watch(isCopied, () => {
@@ -130,7 +120,7 @@ onBeforeMount(async () => {
 
     /* voir si le discounttag exit sinon redirection page 404 */
     const response = await new Promise((resolve) => {
-        services.get_Record(`customer/establishments/advantagecontacts/list`, (response) => {
+        services.get_Record(`public/customer/establishments/advantagecontacts/list`, (response) => {
             resolve(response);
         });
     });
@@ -150,7 +140,7 @@ onBeforeMount(async () => {
 
     try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`customer/establishments/advantagecontacts/list?tag=${route.params.discountTag}`, (response) => {
+            services.get_Record(`public/customer/establishments/advantagecontacts/list?tag=${route.params.discountTag}`, (response) => {
                 resolve(response);
             });
         });
@@ -222,28 +212,8 @@ img {
     width: 100%;
 }
 
-/*.qr__code {
-    width: 150px;
-    height: 150px;
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: white;
-    margin-bottom: 20px;
-}*/
-
-/*.qr__code {
-    width: 12% !important;
-    padding: 10px;
-    margin: auto;
-    background-color: white;
-    border-radius: 5px;
-}*/
 #qrcode__container {
-    /*background-color: white;*/
     padding: 5px;
-    /* border-radius: 10px;
-    border: 1px solid black;*/
 }
 
 img.qr__code {

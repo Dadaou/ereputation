@@ -25,8 +25,6 @@
 
           <label for="text3" class="text-sm title">Text 3:</label>
           <textarea name="text3" rows="3" cols="30" v-model="text3"></textarea>
-
-          <!-- <button class="btn downloads mt-2" @click="updatePreview">Preview</button> -->
           <button class="btn btn-secondary mt-1" type="submit">Update</button>
 
         </form>
@@ -237,7 +235,7 @@ watch(template, () => {
     generateCore();
   }
 
-})
+});
 </script>
 <style>
 #preview {

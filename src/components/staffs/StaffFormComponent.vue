@@ -81,7 +81,8 @@
 </template>
 <script setup>
 import moment from 'moment';
-import { ref, inject, watch } from 'vue';
+import { ref, inject, watch, onBeforeMount } from 'vue';
+import { useStaffStore } from "@Stores/staff.js";
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
@@ -95,8 +96,9 @@ import { useRoute, useRouter } from 'vue-router';
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
+const staffStore = useStaffStore();
 const staffs = inject('staffs');
-
+const clearForm = inject('clearStaffForm')
 const showSpinner = ref(false);
 
 /**
@@ -133,17 +135,21 @@ const type = ref('add');
 
 watch(staff_to_update, () => {
     if (staff_to_update.value != null) {
-        gender.value = staff_to_update.value["gender"];
-        department.value = staff_to_update.value["department"];
-        startDate.value = new Date(staff_to_update.value["datefrom"]);
-        endDate.value = (staff_to_update.value["dateto"] == null) ? null : new Date(staff_to_update.value["dateto"]);
-        establishment.value = staff_to_update.value["establishment"];
-        lastname.value = staff_to_update.value["lastname"];
-        firstname.value = staff_to_update.value["firstname"];
-        type.value = 'edit';
-        section.value = staff_to_update.value["section"];
+        fillForm(staff_to_update.value)
     }
 })
+
+const fillForm = (staff)=>{
+    gender.value = staff["gender"];
+    department.value = staff["department"];
+    startDate.value = new Date(staff["datefrom"]);
+    endDate.value = (staff["dateto"] == null) ? null : new Date(staff["dateto"]);
+    establishment.value = staff["establishment"];
+    lastname.value = staff["lastname"];
+    firstname.value = staff["firstname"];
+    type.value = 'edit';
+    section.value = staff["section"];
+}
 
 const loadData = (_staff, staff) => {
     let new_staff = {
@@ -255,6 +261,18 @@ const submit = async () => {
         console.log(error);
     }
 };
+
+onBeforeMount(()=>{
+    const staff = staffStore.getStaff();
+    if(staff){
+        fillForm(staff)
+        staffStore.resetStaff()
+    }
+});
+
+watch(clearForm, ()=>{
+  if(clearForm.value) resetForm()
+});
 </script>
 <style scoped>
 form {

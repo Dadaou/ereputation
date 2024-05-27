@@ -5,8 +5,7 @@
                 <div class="flex items-center mb-1 space-x-4">
                     <div class="review__info space-y-1 dark:text-white info__reviews">
                         <div class="flex items-center mb-2 space-x-4">
-                            <img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full"
-                                :src="review.profile_photo" alt="">
+                            <img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full" :src="review.profile_photo" alt="">
                             <div v-else
                                 class="relative inline-flex items-center justify-center w-8 h-8 p-1 rounded author__initial">
                                 <span class="font-medium dark:text-white">{{ userStore.getInitialsV2(review.author) }}
