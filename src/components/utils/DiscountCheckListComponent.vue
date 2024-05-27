@@ -2,7 +2,7 @@
   <div class="scroll-wrapper">
     <label for="email"  v-if="discounts"
       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-      <i class="uil uil-info-circle"></i>{{ $t("feedback.choose_advantage") }}
+      {{ $t("feedback.choose_advantage") }}
     </label>
     <ul class="discount-list">
       <li v-for="(discount, index) in discounts" :key="index" @click="selectDiscount(index, discount)"
