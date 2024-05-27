@@ -25,7 +25,7 @@ export const useAdvantageStore = defineStore('advantage', {
     async getAdvantageAvailable(customer, establishment) {
       let data = []
       const response = await new Promise((resolve) => {
-        services.get_Record(`customer/establishments/advantages?tag=${customer}`, (response) => {
+        services.get_Record(`api/customer/establishments/advantages?tag=${customer}`, (response) => {
           resolve(response)
         })
       })
