@@ -12,6 +12,8 @@
       <el-table-column label="Scope" prop="scope" width="100" />
       <el-table-column label="Validity" prop="validity" align="center" width="100" />
       <el-table-column label="Limit" prop="advantageLimit" align="center" width="100" />
+      <el-table-column label="Received" prop="received" align="center" width="100" />
+      <el-table-column label="Used" prop="used" align="center" width="100" />
       <el-table-column label="Expired At" width="150">
         <template #default="scope">
           {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
