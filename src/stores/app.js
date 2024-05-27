@@ -42,9 +42,9 @@ export const useAppStore = defineStore('app', () => {
 
   const setCustomerLogo = async (tag) => {
     const response = await new Promise((resolve) => {
-      services.get_Record(`public/customer/logo?tag=${tag}`, (response) => {
+      services.get_Record(`customer/logo?tag=${tag}`, (response) => {
         resolve(response)
-      })
+      }, true)
     })
 
     if ((response.status = 200)) {

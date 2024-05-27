@@ -338,7 +338,7 @@ const setPlan = (data, eNumber, total) => {
 
 const createAccount = async () => {
   const response = await new Promise((resolve,) => {
-    services.post_Record('public/account/create', {
+    services.post_Record('account/create', {
       name: planInfo.value.cName,
       firstname: planInfo.value.uFName,
       lastname: planInfo.value.uLName,
@@ -396,7 +396,7 @@ const subscribe = async () => {
 
 const activateAccount = async (app_url) => {
   const response = await new Promise((resolve) => {
-    services.post_Record('public/subscription/create', {
+    services.post_Record('subscription/create', {
       customer: planInfo.value.customer,
       plan: planInfo.value.plan.tag,
       amount: planInfo.value.total,
@@ -436,7 +436,7 @@ const appStore = useAppStore();
 
 onBeforeMount(async () => {
   const response = await new Promise((resolve) => {
-    services.get_Record('public/plan/list', (response) => {
+    services.get_Record('plan/list', (response) => {
       resolve(response)
       if (response.status == 404) {
         appStore.isLoading = false;
