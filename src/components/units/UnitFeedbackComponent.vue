@@ -75,8 +75,7 @@
                                 <i class="uil uil-info-circle"></i> {{ $t("feedback.indice1") }}
                             </span>
                             <label for="email"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
-                                address <!-- <span>*</span> --></label>
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t("feedback.email") }} <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
                         </div>
@@ -150,7 +149,7 @@
 
 <script setup>
 
-import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, inject } from 'vue';
+import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, inject,watch } from 'vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
@@ -245,6 +244,14 @@ onMounted(() => {
     }
     requiredinput.value = t('feedback.requiredinputs')
 
+    appStore.setCurrentPage({
+        title1: t("feedback.title1"),
+        title2: t("feedback.title2"),
+        icon: "uil-comment-alt"
+    });
+})
+
+watch(()=>{
     appStore.setCurrentPage({
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),

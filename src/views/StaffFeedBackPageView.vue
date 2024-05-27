@@ -62,14 +62,6 @@
                             <input type="text" id="last_name" v-model="lastname"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
-                        <!-- <div>
-                            <label for="genders" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                $t("feedback.gender") }}</label>
-                            <el-select v-model="gender" :placeholder="$t('feedback.placeholder_gender')" size="large">
-                                <el-option v-for="item in genders" :key="item.value" :label="item.label"
-                                    :value="item.value" />
-                            </el-select>
-                        </div> -->
                         <div>
                             <label for="datevisit"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
@@ -81,20 +73,14 @@
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
                         <div class="author__email">
-                            <!-- <span v-if="randomAdvantage">
-                                <i class="uil uil-info-circle"></i> {{ $t("feedback.indice1") }}
-                            </span> -->
-                            <!-- <p v-if="randomAdvantage">
-                                <b>{{ $t("feedback.promotion_day") }}</b>
-                            </p> -->
+                            
                             <DiscountCheckList :establishment="route.params.etab" :customer="route.params.tag"
                                 @select="(value) => randomAdvantage = value" />
                             <span v-if="randomAdvantage">
                                 <i class="uil uil-info-circle"></i> {{ $t("feedback.indice1") }}
                             </span>
                             <label for="email"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
-                                address <!-- <span>*</span> --></label>
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t("feedback.email") }} <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
                         </div>
@@ -166,7 +152,7 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, inject } from 'vue';
+import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, watch,inject } from 'vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
@@ -277,6 +263,14 @@ onMounted(() => {
         icon: "uil-comment-alt"
     });
     requiredinput.value = t('feedback.requiredinputs')
+})
+
+watch(()=>{
+    appStore.setCurrentPage({
+        title1: t("feedback.title1"),
+        title2: t("feedback.title2"),
+        icon: "uil-comment-alt"
+    });
 })
 
 const firstname = ref('');

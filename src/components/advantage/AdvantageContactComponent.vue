@@ -53,7 +53,7 @@ const customer = route.params.tag;
 
 // Format date to YYYY/MM/DD
 const formatCreatedAt = (createdAt) => {
-  return moment(createdAt).format('YYYY/MM/DD');
+  return moment(createdAt).format('YYYY-MM-DD');
 };
 
 const query = ref('');

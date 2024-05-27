@@ -15,7 +15,7 @@ export const languages = [
     name: 'Spain',
     code: 'SP',
     bb: 'sp',
-    svg: '<svg aria-hidden="true" style="width: 1.875rem;height:1.875rem" class=" rounded-full me-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="#c60b1e" d="M0 0h512v153.6H0z"/><path fill="#c60b1e" d="M0 358.4h512V512H0z"/><path fill="#ffc400" d="M0 153.6h512v204.8H0z"/><circle cx="256" cy="256" r="50" fill="#0065A4"/><circle cx="256" cy="256" r="35" fill="#FFD700"/><path fill="#C60B1E" d="M246 241h20v30h-20z"/></svg>'
+    svg: '<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" style="width: 1.875rem;height:1.875rem"  class="rounded-full me-2"><rect width="50" height="7.5" fill="#c60b1e"/><rect width="50" height="15" fill="#ffc400" y="7.5"/><rect width="50" height="7.5" fill="#c60b1e" y="22.5"/></svg>'
   }
 ]
 

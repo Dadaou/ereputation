@@ -122,7 +122,7 @@
 
 <script setup>
 
-import { ref, onBeforeMount, defineAsyncComponent, onMounted, inject } from 'vue';
+import { ref, onBeforeMount, defineAsyncComponent, onMounted, inject,watch } from 'vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
@@ -201,6 +201,14 @@ onMounted(() => {
         console.error("Une erreur s'est produite lors de l'exécution de FingerprintG2A :", error);
     }
 
+})
+
+watch(()=>{
+    appStore.setCurrentPage({
+        title1: t("feedback.title1"),
+        title2: t("feedback.title2"),
+        icon: "uil-comment-alt"
+    });
 })
 
 const disabledDate = (time) => {

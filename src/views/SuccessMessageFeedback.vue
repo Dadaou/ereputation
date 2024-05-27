@@ -50,7 +50,7 @@
                                     src="@/assets/images/logo/Youtube.svg" alt="Youtube">
                                 <img v-if="link.name.toLowerCase().includes('tiktok')"
                                     src="@/assets/images/logo/Tiktok.svg" alt="Tiktok">
-                                <Icon icon="logos:linkedin-icon" width="1.6rem" height="1.6rem"
+                                <Icon icon="logos:linkedin-icon" width="2rem" height="2rem"
                                     v-if="link.name.toLowerCase().includes('linkedin')"></Icon>
                             </el-tooltip>
                         </a>
@@ -120,7 +120,7 @@ onMounted(() => {
 
 
 
-watch(links.value, () => {
+watch( () => {
     /** Mettre le titre en watch */
     appStore.setCurrentPage({
         title1: t("feedback.title1"),
@@ -128,6 +128,7 @@ watch(links.value, () => {
         icon: "uil-comment-alt"
     });
 });
+
 
 </script>
 
