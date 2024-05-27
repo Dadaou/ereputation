@@ -95,7 +95,7 @@ onBeforeMount(async () => {
       if (response.status == 404) {
         appStore.isLoading = false;
       }
-    }, true);
+    });
   });
 
   if (response.status == 200 && response.data) {
