@@ -3,6 +3,9 @@
     <button @click="add" class="inline-flex items-center py-2 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
         service <i class="uil uil-plus"></i>
     </button>
+    <div class="search">
+      <el-input v-model="search" size="small" placeholder="Type to search" />
+    </div>
   </div>
   <div class="mt-5 table__container">
     <el-table :data="filterTableData">
@@ -12,7 +15,7 @@
       <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;" />
       <el-table-column style="width: 15%; min-width: 200px;" align="right">
         <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" />
+          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>
         </template>
         <template #default="scope">
           <el-tooltip :content="`Click to enter ${scope.row.name}'s feedback formulary`" placement="top">
@@ -218,5 +221,22 @@ button i.uil-edit {
   .table__container {
     width: 100%;
   }
+}
+.search{
+    display: none;
+}
+
+@media screen and (max-width: 468px) { 
+    .search {
+      display: inline;
+      max-width: 220px;
+      margin-right: 100px;
+    }
+    .searchtab{
+      display: none;
+    }
+    .el-table--fit {
+      font-size: 11px !important;
+    }
 }
 </style>
