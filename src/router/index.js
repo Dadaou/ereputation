@@ -122,6 +122,11 @@ const router = createRouter({
           path: '/contact',
           name: 'ContactForm',
           component: () => import('@Views/ContactFormPageView.vue')
+        },
+        {
+          path: '/customer/:tag/boost/advantage',
+          name: 'BoostAdvantage',
+          component: () => import('@Views/BoostAdvantagePageView.vue')
         }
       ]
     },
