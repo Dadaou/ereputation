@@ -10,15 +10,15 @@
   </div>
   <div class="overflow-x-auto">
     <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
-      <el-table-column label="Name" style="width: 15%; min-width: 200px;">
+      <el-table-column label="Name" width="200">
       	<template #default="scope">
       		{{ scope.row.firstname }} {{ scope.row.lastname }}
         </template>
       </el-table-column>
-      <el-table-column label="Gender" prop="gender" width="88"/>
-      <el-table-column label="Email" prop="email" style="width: 10%; min-width: 100px;"/>
-      <el-table-column label="Establishment" prop="establishment_name" style="width: 10%; min-width: 100px;"/>
-      <el-table-column label="Created_at" style="width: 10%; min-width: 100px;">
+      <el-table-column label="Gender" prop="gender" width="150"/>
+      <el-table-column label="Email" prop="email" width="280"/>
+      <el-table-column label="Establishment" prop="establishment_name" width="220"/>
+      <el-table-column label="Created_at" width="200">
         <template #default="scope">
           {{ formatCreatedAt(scope.row.created_at) }}
         </template>
