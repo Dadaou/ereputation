@@ -1,4 +1,7 @@
 <template>
+  <div class="search mb-8">
+    <el-input v-model="search" size="small" placeholder="Type to search" />
+  </div>
   <div class="overflow-x-auto">
     <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
       <el-table-column fixed label="Advantage name" prop="adv_name" width="250" />
@@ -23,7 +26,7 @@
       </el-table-column>
       <el-table-column label="Confirm" width="200">
         <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" />
+          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>
         </template>
         <template #default="scope">
           <span v-if="scope.row.confirm" @click="handleCancel(scope.row.id)" class="has-hover"><i
@@ -141,5 +144,22 @@ button:hover {
 
 .has-hover:hover {
   cursor: pointer;
+}
+.search{
+    display: none;
+}
+
+@media screen and (max-width: 468px) { 
+    .search {
+      display: flex;
+      max-width: 220px;
+      float: right;
+    }
+    .searchtab{
+      display: none;
+    }
+    .el-table--fit {
+      font-size: 11px !important;
+    }
 }
 </style>
