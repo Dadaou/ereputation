@@ -13,11 +13,11 @@
         </el-dropdown>
     </div>
     <WeatherChartComponent />
-    <div class="head">
+    <!-- <div class="head">
         <div class="app__title">
             <h2>Weather's global impact</h2>
         </div>
-    </div>
+    </div> -->
     <div class="review__content">
         <div v-if="load == true" :style="{
             'width': '100%',

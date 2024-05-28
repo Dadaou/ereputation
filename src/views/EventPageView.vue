@@ -17,11 +17,6 @@
         </div>
         <EventChartComponent v-else :establishment="establishment" :width="chartWidth" />
     </div>
-    <div class="head mb-4">
-        <div class="app__title" style="margin-top: 50px;">
-            <h2>Events List</h2>
-        </div>
-    </div>
     <el-tabs v-model="activeName" type="card" class="demo-tabs">
         <el-tab-pane label="Private Events" name="events">
             <div class="reviews__content">
