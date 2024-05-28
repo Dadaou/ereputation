@@ -84,7 +84,6 @@
 import { ref, onMounted, computed } from 'vue';
 import chroma from 'chroma-js';
 import { useAdvantageStore } from '@Stores/advantage.js';
-import { useWindowSize } from '@vueuse/core';
 import moment from 'moment';
 
 const selectedDiscount = ref(null);
