@@ -79,7 +79,7 @@ const loadLinks = async (tag) => {
         services.get_Record(uri, (response) => {
             resolve(response);
         });
-    });
+    }, true);
 
     if (response.status == 200) {
         links.value = response.data;
@@ -145,8 +145,6 @@ const offerLinks = computed(() => {
 })
 
 onBeforeMount(async () => {
-
-    services.setToken(import.meta.env.VITE_APP_TOKEN);
     await services.get_Record(`public/establishment/${route.params.id}/media`, (response) => {
         if (response.status == 200) {
             establishment.value = response['data'];
@@ -158,7 +156,7 @@ onBeforeMount(async () => {
                 icon: "uil-estate"
             });
         }
-    });
+    }, true);
 
     await loadLinks(establishmentTag);
 

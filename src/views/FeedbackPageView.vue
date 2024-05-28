@@ -171,7 +171,6 @@ onBeforeMount(async () => {
         title2: t("feedback.title2"),
         icon: "uil-comment-alt"
     });
-    services.setToken(import.meta.env.VITE_APP_TOKEN);
     await services.get_Record(`public/establishment/${route.params.id}/media`, (response) => {
         if (response.status == 200) {
             establishment.value = response['data'];
@@ -181,7 +180,7 @@ onBeforeMount(async () => {
         if (response.status == 404) {
             exist.value = false;
         }
-    });
+    }, true);
 
 })
 
@@ -279,12 +278,12 @@ const submit = async () => {
             await feedbackStore.createReview(review, async (response) => {
                 if (response.status == 201) {
                     if (email.value !== null || email.value !== '') {
-                        await services.createRecord('contacts', contactData, async (contactResponse) => {
+                        await services.createRecord('public/contacts', contactData, async (contactResponse) => {
                             if (contactResponse.status == 201) {
                                 if (visitorId) {
-                                    services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
+                                    services.patchRecord('public/visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
                                         // Do nothing
-                                    })
+                                    }, true)
                                 }
 
                                 if (randomAdvantage.value) {
@@ -300,10 +299,10 @@ const submit = async () => {
                                     }
                                     await services.createRecord('public/workflow', coupons, (res) => {
                                         resetForm()
-                                    });
+                                    }, true);
                                 }
                             }
-                        });
+                        }, true);
                     }
                     router.push({
                         name: 'SuccessFeedback',

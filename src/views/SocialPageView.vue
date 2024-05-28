@@ -1,19 +1,19 @@
 <template>
     <div class="left__side">
-        <div class="head">
+       <!--  <div class="head">
             <div class="app__title">
                 <h2>Social</h2>
             </div>
-        </div>
+        </div> -->
         <div class="reviews__content">
             <social-statistics></social-statistics>
         </div>
-        <div class="head mb-4">
+      <!--   <div class="head mb-4">
             <div class="app__title" style="margin-top: 50px;">
                 <h2>Social List</h2>
             </div>
-        </div>
-        <el-tabs v-model="activeName" type="card" class="demo-tabs">
+        </div> -->
+        <el-tabs v-model="activeName" type="card" class="demo-tabs mt-4">
             <el-tab-pane label="Posts" name="socials">
                 <div class="reviews__content">
                     <socialPostFilterComponent :current="currentSocial" @update="(value) => currentSocial = value" />
@@ -771,6 +771,7 @@ onBeforeMount(async () => {
     });
 
     if (socialResponse.status == 200) {
+        console.log('socials response',socialResponse)
         establishment.value['socials'] = transformToSourceURL(socialResponse.data);
         socials.value = transformToSourceURL(socialResponse.data);
         // dataLoading.value = false;

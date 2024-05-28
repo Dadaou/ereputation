@@ -64,6 +64,7 @@ const checkNavigation = (to, from, next) => {
 const removeAccess = (to, from, next) => {
   localStorage.removeItem('user_authenticated')
   localStorage.removeItem('access')
+  localStorage.removeItem('token')
   localStorage.removeItem('user')
   localStorage.removeItem('user_role')
   next()
@@ -71,7 +72,7 @@ const removeAccess = (to, from, next) => {
 
 const CheckAccess = (to, from, next) => {
   const userStore = useUserStore()
-  if (localStorage.getItem('access') == null) {
+  if (localStorage.getItem('token') == null) {
     next('/sign-in')
   } else {
     if (userStore.user == null) {

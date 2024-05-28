@@ -209,6 +209,7 @@ onBeforeMount(()=>{
     const data = staffStore.getUnit();
 
     if(data){
+        unit_to_update.value = data;
         fillForm(data)
         staffStore.resetUnit()
     }

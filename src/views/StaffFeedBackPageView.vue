@@ -16,8 +16,6 @@
                                 {{ $t("staffFeedback.interne") }}
                             </li>
                         </ul>
-                        <!--  <button class="btn mt-2  btn-primary staffs__btn" @click="showModal = true">{{
-                            $t("staffFeedback.staffs_list") }} <i class="uil uil-users-alt"></i></button> -->
                     </div>
                 </div>
                 <div class="photo">
@@ -207,8 +205,6 @@ const iframeVisible = ref(false);
 const showSpinner = ref(false);
 
 onBeforeMount(async () => {
-    services.setToken(import.meta.env.VITE_APP_TOKEN);
-
     appStore.setCurrentPage({
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),
@@ -223,7 +219,7 @@ onBeforeMount(async () => {
         if (response !== undefined && response.status == 404) {
             exist.value = false;
         }
-    });
+    }, true);
 
     await services.get_Record(`public/staffs/${route.params.id}/descriptions`, (response) => {
         if (response.status == 200) {
@@ -231,14 +227,14 @@ onBeforeMount(async () => {
         }
 
         if (response.status == 404) exist.value = false
-    });
+    }, true);
 
     try {
         const responseEstablishment = await new Promise((resolve) => {
             services.get_Record(`public/establishment/${companyId}/staffs`, (response) => {
                 resolve(response)
             });
-        });
+        }, true);
 
         if (responseEstablishment.status == 200) {
             staffs.value = responseEstablishment.data
@@ -331,13 +327,13 @@ const submit = async () => {
             await feedbackStore.createReview(review, async (response) => {
                 if (response.status == 201) {
                     if (email.value !== null || email.value !== '') {
-                        await services.createRecord('contacts', contactData, async (contactResponse) => {
+                        await services.createRecord('public/contacts', contactData, async (contactResponse) => {
 
                             if (contactResponse.status == 201) {
                                 if (visitorId) {
-                                    services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
+                                    services.patchRecord('public/visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
                                         // Do nothing
-                                    })
+                                    }, true)
                                 }
 
                                 if (randomAdvantage.value) {
@@ -353,10 +349,10 @@ const submit = async () => {
                                     }
                                     await services.createRecord('public/workflow', coupons, () => {
                                         resetForm()
-                                    });
+                                    }, true);
                                 }
                             }
-                        });
+                        }, true);
                     }
                     router.push({
                         name: 'SuccessFeedback',
@@ -380,9 +376,6 @@ const submit = async () => {
 </script>
 
 <style scoped>
-/*************
-    Modal CSS
-**************/
 .modal__header {
     display: flex;
     justify-content: space-between;

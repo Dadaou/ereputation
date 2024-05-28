@@ -33,7 +33,7 @@
           name: `${userStore.user.firstname} ${userStore.user.lastname}`,
           initial: userStore.getInitials(userStore.user.firstname, userStore.user.lastname),
           email: userStore.user.email
-        }" :customer="userStore.user.customer" @signOut="signOut" />
+        }" :customer="userStore.customer" @signOut="signOut" />
       </div>
       <transition enter-active-class="animate__animated animate__zoomIn"
         leave-active-class="animate__animated animate__zoomOut">

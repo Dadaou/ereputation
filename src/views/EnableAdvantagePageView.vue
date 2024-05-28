@@ -98,7 +98,7 @@ const submit = () => {
   }
   showSpinner.value = true
   if (advantages.value) {
-    services.patchRecord('advantage_contacts', advantages.value.id, data, response => {
+    services.patchRecord('public/advantage_contacts', advantages.value.id, data, response => {
       if (response.status == 200) {
         ElMessage({
           message: `Advantage ${advantages.value.adv_name} validates to ${advantages.value.contact_firstname} ${advantages.value.contact_lastname}`,
@@ -109,12 +109,12 @@ const submit = () => {
         valid.value = true
         advantages.value.validated_at = moment().format('YYYY-MM-DD');
       }
-    })
+    }, true)
   }
   localStorage.setItem('isSellerAuthenticated', 'true');
 }
 
-const capitalizeFirstLetter = (firstname, lastname)=> {
+const capitalizeFirstLetter = (firstname, lastname) => {
   const capitalizedFirstname = firstname.charAt(0).toUpperCase() + firstname.slice(1);
 
   let capitalizedLastname = lastname;
@@ -128,15 +128,12 @@ const capitalizeFirstLetter = (firstname, lastname)=> {
 }
 
 onBeforeMount(async () => {
-  if (userStore.authenticated == null) services.setToken(import.meta.env.VITE_APP_TOKEN);
-
-
   try {
     const response = await new Promise((resolve) => {
       services.get_Record(`public/customer/establishments/advantagecontacts/list?tag=${route.params.discountTag}`, (response) => {
         resolve(response);
       });
-    });
+    }, true);
 
     if (response.status === 200) {
       advantages.value = response.data[0];

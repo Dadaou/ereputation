@@ -1,19 +1,5 @@
 <template>
     <div class="left__side">
-        <div class="head w-full">
-            <div class="app__title">
-                <h2>Reviews</h2>
-            </div>
-            <!-- <div class="category-selector">
-                <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
-                    :max-collapse-tags="3" placeholder="select categories" size="">
-                    <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
-                        :disabled="categoryFilters.length > 1 && !categoryFilters.includes('all')" />
-                    <el-option v-for="(item, index) in categories" :key="index" :label="item.category"
-                        :value="item.category" @click="handleCategoryDropdown('other')" />
-                </el-select>
-            </div> -->
-        </div>
         <div class="reviews__content">
             <div class="reviews__pagination">
                 <PaginationComponent :options="options" v-if="visibleData.length > 0" @next="(option) => {

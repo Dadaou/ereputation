@@ -7,6 +7,9 @@
             </div>
         </div>
     </div>
+    <div class="search">
+        <el-input v-model="search" size="small" placeholder="Type to search" />
+    </div>
     <div class="mt-5 table__container" v-if="!showLinkModal">
         <el-table :data="filteredCompetitor">
             <el-table-column label="Competitors" prop="name" style="width: 25%; min-width: 200px;" />
@@ -17,7 +20,7 @@
             </el-table-column>
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
                 <template #header>
-                    <el-input v-model="search" size="small" placeholder="Type to search" />
+                    <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>
                 </template>
                 <template #default="scope">
                     <el-button size="small" @click="showModal = !showModal, establishment = scope.row.uri"><i
@@ -25,14 +28,14 @@
 
                     <el-button size="small" @click="loadLinksByEstablishment(scope.row)"><i
                             class="uil uil-file-alt"></i></el-button>
+                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
+                            class="uil uil-edit"></i></el-button>
                     <el-popconfirm title="Are you sure to delete this?"
                         @confirm="handleDelete(scope.$index, scope.row)">
                         <template #reference>
                             <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
                         </template>
                     </el-popconfirm>
-                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
-                            class="uil uil-edit"></i></el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -792,6 +795,24 @@ img {
 
     .table__container {
         width: 100%;
+    }
+}
+
+.search{
+    display: none;
+}
+
+@media screen and (max-width: 468px) { 
+    .search {
+        display: flex;
+        max-width: 220px;
+        float: right;
+    }
+    .searchtab{
+        display: none;
+    }
+    .el-table--fit {
+            font-size: 11px !important;
     }
 }
 </style>

@@ -1,6 +1,9 @@
 <template>
   <div class="security__header border__bottom">
   </div>
+  <div class="search mb-8">
+    <el-input v-model="search" size="small" placeholder="Type to search" />
+  </div>
   <div class="mt-5 erep_table table__container">
     <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
       <el-table-column label="Name" fixed prop="name" width="188" />
@@ -32,7 +35,7 @@
       <el-table-column label="Operations" width="200">
 
         <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" />
+          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
         </template>
         <template #default="scope">
           <el-tooltip placement="top">
@@ -40,14 +43,12 @@
             <el-button size="small" @click="handleBoost(scope.$index, scope.row)"><i
                 class="uil uil-presentation"></i></el-button>
           </el-tooltip>
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
             <template #reference>
               <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
             </template>
           </el-popconfirm>
-
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
-
         </template>
       </el-table-column>
     </el-table>
@@ -189,6 +190,26 @@ button i.uil-edit {
 
   .el-table-column {
     min-width: 100px;
+  }
+}
+
+.search {
+  display: none;
+}
+
+@media screen and (max-width: 468px) {
+  .search {
+    display: flex;
+    max-width: 220px;
+    float: right;
+  }
+
+  .searchtab {
+    display: none;
+  }
+
+  .el-table--fit {
+    font-size: 11px !important;
   }
 }
 </style>

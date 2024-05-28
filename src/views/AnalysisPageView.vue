@@ -1,11 +1,6 @@
 <template>
     <div class="left__side">
-        <div class="head w-full">
-            <div class="app__title">
-                <h2>Analysis</h2>
-            </div>
-        </div>
-        <div id="ttv__container" style="margin-top: 25px;">
+        <div id="ttv__container">
             <el-tabs v-model="activeName" type="card" class="demo-tabs">
                 <el-tab-pane label="Categorization" name="categorization">
 

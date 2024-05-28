@@ -25,14 +25,38 @@
         </template>
       </el-table-column>
       <el-table-column label="Enable" prop="enable" align="center" style="width: 10%; min-width: 200px;">
-        <template #default="scope">
+        <!--<template #default="scope">
           <span style="text-transform: uppercase;">
             <i v-if="scope.row.enable" class="uil uil-check mr-1"
               style="color:var(--color-success); font-size: 16px;"></i>
             <i v-else class="uil uil-times mr-1" style="color:var(--color-danger2); font-size: 16px;"></i>
           </span>
 
+        </template>-->
+
+        <template #default="scope">
+          <el-popconfirm v-if="scope.row.enable == false" title='Are you sure to "ENABLE" this partnership?'
+            @confirm="handleEvent(scope.$index, scope.row, 'enable', true)">
+            <template #reference>
+              <el-button><i class="uil uil-times mr-1"
+                  style="color:var(--color-danger2); font-size: 16px;"></i></el-button>
+            </template>
+          </el-popconfirm>
+          <el-popconfirm v-if="scope.row.enable == true" title='Are you sure to "DISABLE" this partnership?'
+            @confirm="handleEvent(scope.$index, scope.row, 'enable', false)">
+            <template #reference>
+              <el-button><i class="uil uil-check mr-1"
+                  style="color:var(--color-success); font-size: 16px;"></i></el-button>
+            </template>
+          </el-popconfirm>
+          <!-- <span style="text-transform: uppercase;">
+            <i v-if="scope.row.enable" class="uil uil-check mr-1"
+              style="color:var(--color-success); font-size: 16px;"></i>
+            <i v-else class="uil uil-times mr-1" style="color:var(--color-danger2); font-size: 16px;"></i>
+          </span> -->
+
         </template>
+
       </el-table-column>
       <!-- <el-table-column>
         <template #header>

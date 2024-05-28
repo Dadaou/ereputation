@@ -417,4 +417,10 @@ img.establishment_img {
         width: 100%;
     }
 }
+
+@media screen and (max-width: 468px) { 
+    .el-table--fit {
+      font-size: 11px !important;
+    }
+}
 </style>

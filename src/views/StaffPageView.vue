@@ -36,14 +36,6 @@
                 <span v-if="!dataLoading">{{ establishment.city }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
             </div>
-            <!--  <RouterLink 
-            v-if="route.name !== 'StaffReview' && route.name !== 'UnitReview' && onglet == 'staffs'"
-            :to="`/customer/${customerTag}/establishment/${$route.params.id}/staffsranking`">
-                <button class="btn">
-                    <i class="uil uil-trophy" :style="{ 'color': 'white' }"></i>
-                    <span class="ml-2" :style="{ 'color': 'white' }">Staff Ranking</span>
-                </button>
-            </RouterLink> -->
         </div>
         <div class="photo" v-if="!dataLoading">
             <div v-if="establishment.url_source !== null" class="establishment__img">
@@ -129,13 +121,6 @@
                         selectedTimePeriod = timePeriod
                     }" :default="timePeriods[0]" />
             </div>
-            <!-- <RouterLink v-if="route.name !== 'StaffReview' && route.name !== 'UnitReview' && onglet == 'staffs'"
-                :to="`/customer/${customerTag}/establishment/${$route.params.id}/staffsranking`">
-                <button class="btn">
-                    <i class="uil uil-trophy"></i>
-                    <span class="ml-2">Staff Ranking</span>
-                </button>
-            </RouterLink> -->
         </div>
     </div>
 </template>

@@ -1,11 +1,11 @@
 <template>
   <el-tabs v-model="activeName" type="card" class="demo-tabs">
     <el-tab-pane label="Staff" name="staffs">
-      <div class="head">
+     <!--  <div class="head">
         <div class="app__title">
           <h2>Staffs Histogram</h2>
         </div>
-      </div>
+      </div> -->
       <div class="reviews__content" ref="el">
         <div v-if="chartLoading == true" :style="{
           'width': `100%`,
@@ -46,11 +46,11 @@
           </BaseLegend>
         </div>
       </div>
-      <div class="head">
+      <!-- <div class="head">
         <div class="app__title">
           <h2>Staffs</h2>
         </div>
-      </div>
+      </div> -->
       <div class="reviews__content">
         <StaffItemComponent v-if="staffLoading == false" />
         <div v-else role="status"
@@ -76,20 +76,20 @@
       </div>
     </el-tab-pane>
     <el-tab-pane v-for="category in categories" :label="category" :name="category">
-      <div class="head">
+     <!--  <div class="head">
         <div class="app__title">
           <h2>{{ category }} Histogram</h2>
         </div>
-      </div>
+      </div> -->
       <div class="reviews__content">
         <UnitChartComponent :category="category" :plotdata="unitData" :legendData="legendUnitData"
           :chartLoading="chartUnitLoading" />
       </div>
-      <div class="head">
+     <!--  <div class="head">
         <div class="app__title">
           <h2>{{ category }}</h2>
         </div>
-      </div>
+      </div> -->
       <div class="reviews__content">
         <UnitItemComponent :category="category" :units="unitByCategory[category]" />
       </div>

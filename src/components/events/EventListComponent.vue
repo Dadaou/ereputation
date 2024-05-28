@@ -4,6 +4,9 @@
       <h4><i class="uil uil-calender"></i> Event List</h4>
     </div> -->
   </div>
+  <div class="search">
+    <el-input v-model="search" size="small" placeholder="Type to search" />
+  </div>
   <div class="mt-5 erep_table table__container">
     <el-table :data="filterTableData">
       <el-table-column label="Name" prop="name" style="width: 15%; min-width: 200px;" />
@@ -12,16 +15,16 @@
       <el-table-column label="Date" prop="date" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Operations" style="width: 25%; min-width: 200px;" align="right">
         <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" />
+          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>
         </template>
         <template #default="scope">
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
             <template #reference>
               <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
             </template>
           </el-popconfirm>
 
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -160,5 +163,23 @@ button i.uil-edit {
   .table__container {
     width: 100%;
   }
+}
+
+.search{
+    display: none;
+}
+
+@media screen and (max-width: 468px) { 
+    .search {
+        display: flex;
+        max-width: 220px;
+        float: right;
+    }
+    .searchtab{
+        display: none;
+    }
+    .el-table--fit {
+            font-size: 11px !important;
+    }
 }
 </style>

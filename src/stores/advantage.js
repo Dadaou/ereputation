@@ -22,12 +22,12 @@ export const useAdvantageStore = defineStore('advantage', {
         next(response)
       })
     },
-    async getAdvantageAvailable(customer, establishment) {
+    async getAdvantageAvailable(customer, establishment, isPublic=false) {
       let data = []
       const response = await new Promise((resolve) => {
         services.get_Record(`public/customer/establishments/advantages?tag=${customer}`, (response) => {
           resolve(response)
-        })
+        }, isPublic)
       })
 
       const isDateNotExpired = (noteDate) => {

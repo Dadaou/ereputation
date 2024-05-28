@@ -352,7 +352,7 @@ const createAccount = async () => {
       plan: planInfo.value.plan.tag
     }, (response) => {
       resolve(response)
-    }, true);
+    }, true, true);
   });
 
   if (response) {
@@ -407,7 +407,7 @@ const activateAccount = async (app_url) => {
       app_url: app_url
     }, (response) => {
       resolve(response)
-    }, true);
+    }, true, true);
   });
 
   if (response.status == 200 && response.data) {
@@ -441,7 +441,7 @@ onBeforeMount(async () => {
       if (response.status == 404) {
         appStore.isLoading = false;
       }
-    }, true);
+    }, true, true);
   });
 
   if (response.status == 200 && response.data) {
