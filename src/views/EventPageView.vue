@@ -134,7 +134,7 @@ let events = ref([]);
 provide('events', events);
 let publics = ref([]);
 const timePeriods = ref(['Daily', 'Weekly', 'Monthly', 'Yearly']);
-const selectedTimePeriod = ref(timePeriods.value[1]);
+const selectedTimePeriod = ref(timePeriods.value[0]);
 
 const start_date = inject('start_date');
 const end_date = inject('end_date');

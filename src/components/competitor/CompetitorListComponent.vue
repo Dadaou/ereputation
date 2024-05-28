@@ -28,14 +28,14 @@
 
                     <el-button size="small" @click="loadLinksByEstablishment(scope.row)"><i
                             class="uil uil-file-alt"></i></el-button>
+                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
+                            class="uil uil-edit"></i></el-button>
                     <el-popconfirm title="Are you sure to delete this?"
                         @confirm="handleDelete(scope.$index, scope.row)">
                         <template #reference>
                             <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
                         </template>
                     </el-popconfirm>
-                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
-                            class="uil uil-edit"></i></el-button>
                 </template>
             </el-table-column>
         </el-table>

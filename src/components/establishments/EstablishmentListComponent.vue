@@ -31,14 +31,15 @@
                 </template>
                 <template #default="scope">
                     <!--  <el-button size="small" @click="showModal = true, establishment = scope.row"><i class="uil uil-qrcode-scan"></i></el-button> -->
+                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
+                            class="uil uil-edit"></i></el-button>
                     <el-popconfirm title="Are you sure to delete this?"
                         @confirm="handleDisable(scope.$index, scope.row)">
                         <template #reference>
                             <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
                         </template>
                     </el-popconfirm>
-                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
-                            class="uil uil-edit"></i></el-button>
+                   
                 </template>
             </el-table-column>
         </el-table>
