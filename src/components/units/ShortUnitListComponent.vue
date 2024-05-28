@@ -10,11 +10,12 @@
       <el-table-column label="Code" prop="code" style="width: 20%; min-width: 300px;" />
       <el-table-column label="Category" prop="category" style="width: 20%; min-width: 300px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;" />
-      <el-table-column style="width: 15%; min-width: 200px;" align="right">
+      <el-table-column style="width: 20%; min-width: 300px;" align="right">
         <template #header>
           <el-input v-model="search" size="small" placeholder="Type to search" />
         </template>
         <template #default="scope">
+          <div class="action-buttons">
           <el-tooltip :content="`Click to enter ${scope.row.name}'s feedback formulary`" placement="top">
             <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
                 class="uil uil-external-link-alt"></i></a>
@@ -26,6 +27,7 @@
               <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
             </template>
           </el-popconfirm>
+        </div>
         </template>
       </el-table-column>
     </el-table>
@@ -120,6 +122,20 @@ const handleEdit = (index, unit) => {
 
 </script>
 <style scoped>
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.el-table th {
+  text-align: center;
+}
+
+.el-table td {
+  text-align: center;
+}
+
 button {
   border: none;
   cursor: pointer;
@@ -206,6 +222,12 @@ button i.uil-edit {
   .table__container {
     width: 70%;
   }
+
+  .vertical-buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 }
 
 /* Définissez une largeur maximale pour l'en-tête sur les grands écrans */
