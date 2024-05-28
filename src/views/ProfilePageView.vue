@@ -45,7 +45,7 @@
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'Parameters' }">
+            <router-link :to="{ name: 'Parameters', params:{tab: 'establishments', sub_tab: 'establishments_list'} }">
               <i class="uil uil-setting"></i> <span>Parameters</span>
             </router-link>
           </li>

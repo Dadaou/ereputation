@@ -1,17 +1,13 @@
 import axios from 'axios'
-// import { pinia } from '@/main'
 
 var axiosInstance = null
 var publicAxiosInstance = null
 
-// const resetAllStores = () => {
-//   // Object.keys(pinia.state.value).forEach((storeId) => {
-//   //   const store = pinia.store(storeId)
-//   //   store.$reset()
-//   // })
-// }
-
 const setToken = (token) => {
+  localStorage.setItem('token', token)
+}
+
+const setAccess = (token)=>{
   localStorage.setItem('access', token)
 }
 
@@ -248,6 +244,7 @@ const login = async (email, password) => {
     const response = await axiosInstance.post('/login', { email: email, password: password })
     if (response.status == 200) {
       setToken(response.data['token'])
+      setAccess(response.data['token'])
     }
     return response
   } catch (error) {
@@ -458,6 +455,7 @@ const generateColor = (text) => {
 
 export default {
   setToken,
+  setAccess,
   setURL,
   getRecords,
   getRecord,

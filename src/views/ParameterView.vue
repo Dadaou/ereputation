@@ -629,7 +629,6 @@ onBeforeMount(async () => {
     parametersUrlsConf.tabs = (route.params.tab !== '')?route.params.tab:'establishments';
     parametersUrlsConf[parametersUrlsConf.tabs] = (route.params.sub_tab !== '')?route.params.sub_tab:'establishments_list';
     routeParameters(parametersUrlsConf)
-    console.log(parametersUrlsConf)
 
     if (width.value < 800) {
         position.value = 'top'

@@ -16,8 +16,6 @@
                                 {{ $t("staffFeedback.interne") }}
                             </li>
                         </ul>
-                        <!--  <button class="btn mt-2  btn-primary staffs__btn" @click="showModal = true">{{
-                            $t("staffFeedback.staffs_list") }} <i class="uil uil-users-alt"></i></button> -->
                     </div>
                 </div>
                 <div class="photo">
@@ -207,7 +205,7 @@ const iframeVisible = ref(false);
 const showSpinner = ref(false);
 
 onBeforeMount(async () => {
-    services.setToken(import.meta.env.VITE_APP_TOKEN);
+    services.setAccess(import.meta.env.VITE_APP_TOKEN);
 
     appStore.setCurrentPage({
         title1: t("feedback.title1"),
@@ -331,11 +329,11 @@ const submit = async () => {
             await feedbackStore.createReview(review, async (response) => {
                 if (response.status == 201) {
                     if (email.value !== null || email.value !== '') {
-                        await services.createRecord('contacts', contactData, async (contactResponse) => {
+                        await services.createRecord('public/contacts', contactData, async (contactResponse) => {
 
                             if (contactResponse.status == 201) {
                                 if (visitorId) {
-                                    services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
+                                    services.patchRecord('public/visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
                                         // Do nothing
                                     })
                                 }
@@ -380,9 +378,6 @@ const submit = async () => {
 </script>
 
 <style scoped>
-/*************
-    Modal CSS
-**************/
 .modal__header {
     display: flex;
     justify-content: space-between;
