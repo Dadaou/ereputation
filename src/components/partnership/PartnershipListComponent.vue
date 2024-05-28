@@ -287,5 +287,13 @@ button i.uil-edit {
     display: inline;
     margin-right: 9rem; 
   }
+
+  .el-table--fit {
+    font-size: 11px !important;
+  }
+
+  .table-description p {
+    font-size: 12px;
+  }
 }
 </style>
