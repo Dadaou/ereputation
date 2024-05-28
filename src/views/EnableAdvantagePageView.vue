@@ -114,7 +114,7 @@ const submit = () => {
   localStorage.setItem('isSellerAuthenticated', 'true');
 }
 
-const capitalizeFirstLetter = (firstname, lastname)=> {
+const capitalizeFirstLetter = (firstname, lastname) => {
   const capitalizedFirstname = firstname.charAt(0).toUpperCase() + firstname.slice(1);
 
   let capitalizedLastname = lastname;

@@ -64,6 +64,7 @@ const loadCustomer = async(partner)=>{
 
 onBeforeMount(async()=>{
 	const partner= userStore.user.partner
+    userStore.customer = null
 	if(partner){
 		await loadCustomer(partner.id);
 	}
