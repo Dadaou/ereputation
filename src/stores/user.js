@@ -12,23 +12,34 @@ export const useUserStore = defineStore(
     const customer = ref(null)
 
     const signIn = async (email, password, next) => {
+      
       const response = await services.login(email, password)
+
       if (response.status == 200) {
         const _user = response.data['user']
         const roles = _user ? _user.roles : []
+      
         if (roles.includes('ROLE_EREP')) {
+          
           authenticated.value = true
           services.setUser()
           user.value = _user
           next({ authenticated: authenticated.value, status: 200 })
+      
         } else {
           next({ authenticated: authenticated.value, status: 403 })
         }
+      
       } else if (response.status == 401) {
+      
         next({ authenticated: authenticated.value, status: 401 })
+      
       } else if (response.status == 500) {
+      
         next({ authenticated: authenticated.value, status: 500 })
+      
       }
+
     }
 
     const signOut = () => {

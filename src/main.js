@@ -30,6 +30,6 @@ app.use(head)
 app.use(router)
 app.use(Vuesalize)
 app.use(i18n)
-services.setURL(import.meta.env.VITE_APP_API_URL)
+services.setAccess(import.meta.env.VITE_APP_API_URL)
 
 app.mount('#app')

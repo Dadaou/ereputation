@@ -121,13 +121,6 @@
                         selectedTimePeriod = timePeriod
                     }" :default="timePeriods[0]" />
             </div>
-            <!-- <RouterLink v-if="route.name !== 'StaffReview' && route.name !== 'UnitReview' && onglet == 'staffs'"
-                :to="`/customer/${customerTag}/establishment/${$route.params.id}/staffsranking`">
-                <button class="btn">
-                    <i class="uil uil-trophy"></i>
-                    <span class="ml-2">Staff Ranking</span>
-                </button>
-            </RouterLink> -->
         </div>
     </div>
 </template>

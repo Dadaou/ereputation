@@ -45,9 +45,7 @@ export const useCompanyStore = defineStore('company', () => {
   }
 
   const getEstablishments = async (tag) => {
-    // if (!establishments.value) {
-    //   await fetchCustomerEstablishments()
-    // }
+   
     await fetchCustomerEstablishments(tag)
     appStore.isLoading = false
     return Object.values(establishments.value)
@@ -115,7 +113,7 @@ export const useCompanyStore = defineStore('company', () => {
             services.get_Record(`public/establishment/url?tag=${tag}`, (response) => {
                 resolve(response);
             });
-        });
+        }, true);
        
         if (response.status == 200) {
            data = transformLinksData(response.data.data, tag)

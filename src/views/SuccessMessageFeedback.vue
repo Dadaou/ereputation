@@ -81,9 +81,6 @@ const EstablishmentNotFound = defineAsyncComponent(() =>
 
 const { t } = useI18n();
 
-const page = ref({
-
-});
 const links = ref([])
 const socials = ref([])
 const route = useRoute();
@@ -99,7 +96,6 @@ onBeforeMount(async () => {
         icon: "uil-comment-alt"
     });
 
-    if (userStore.authenticated == null) services.setToken(import.meta.env.VITE_APP_TOKEN);
     links.value = await companyStore.loadLinksByEstablishment(route.params.etab)
     socials.value = links.value.filter((link) => {
         return link.category == 'Social'
@@ -109,18 +105,8 @@ onBeforeMount(async () => {
         return link.category == 'Platform'
     })
 })
-onMounted(() => {
-    /** Charger le titre par defaut */
-    page.value = {
-        title1: t("thanks_title1"),
-        title2: t("thanks_title2"),
-        icon: "uil-comment-alt",
-    };
-})
 
-
-
-watch( () => {
+watch(() => {
     /** Mettre le titre en watch */
     appStore.setCurrentPage({
         title1: t("feedback.title1"),

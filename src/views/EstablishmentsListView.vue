@@ -92,7 +92,7 @@ onMounted(async()=>{
             }
             dataLoading.value = false
         })
-    } // else appStore.isLoading = false;
+    } 
 });
 </script>
 <style scoped>
