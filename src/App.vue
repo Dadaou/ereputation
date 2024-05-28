@@ -17,7 +17,6 @@ import { RouterView, useRoute } from 'vue-router';
 import services from '@Services/services.js';
 import { useHead } from '@unhead/vue'
 import { refreshTheme } from '@Services/theme.js';
-import { publicUrls } from '@Services/routes.js';
 
 const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
@@ -53,17 +52,6 @@ const setdate = () => {
 
 watch([start_date, end_date], () => {
   setdate()
-})
-
-const currentUrlName = computed(()=> route.name)
-
-watch(currentUrlName, ()=>{
-  console.log('test token')
-  if(publicUrls.includes(currentUrlName.value)){
-    services.setAccess(import.meta.env.VITE_APP_TOKEN)
-  }else{
-    services.setAccess(localStorage.getItem('token'))
-  }
 })
 
 const isNotNull = (value) => {
@@ -107,7 +95,7 @@ onBeforeMount(async () => {
       if (response.status == 404) {
         appStore.isLoading = false;
       }
-    }, true);
+    }, true, true);
   });
 
   if (response.status == 200 && response.data) {

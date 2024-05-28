@@ -43,7 +43,7 @@ const submit = async () => {
         const response = await new Promise((resolve) => {
             services.get_Record(`public/customer/establishments/advantagecontacts/list?code=${couponCode.value}`, (response) => {
                 resolve(response);
-            });
+            }, true);
         });
 
         if (response.status === 200) {
@@ -66,10 +66,6 @@ const submit = async () => {
         console.error('Error in onBeforeMount:', error);
     }
 };
-
-onBeforeMount(async () => {
-    if (userStore.authenticated == null) services.setToken(import.meta.env.VITE_APP_TOKEN);
-});
 </script>
 
 <style scoped>

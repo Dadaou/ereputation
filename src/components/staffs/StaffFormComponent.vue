@@ -242,7 +242,7 @@ const submit = async () => {
                         resolve(response);
                     });
                 });
-
+                
                 if (response.status == 200) {
                     let data = response.data;
                     updateData(data, staff);
@@ -264,7 +264,10 @@ const submit = async () => {
 
 onBeforeMount(()=>{
     const staff = staffStore.getStaff();
+
     if(staff){
+        staff['establishment'] = `/api/establishments/${staff['establishment']}`
+        staff_to_update.value = staff;
         fillForm(staff)
         staffStore.resetStaff()
     }

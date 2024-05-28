@@ -4,8 +4,11 @@
             <h2>Establishments</h2>
         </div> -->
     </div>
+    <div class="search">
+        <el-input v-model="search" size="small" placeholder="Type to search" />
+    </div>
     <div class="mt-5 table__container">
-        <el-table :data="establishments">
+        <el-table :data="establishments" class="custom-header">
             <el-table-column width="100">
                 <template #default="scope">
                     <img class="establishment_img" :src="scope.row.media">
@@ -21,10 +24,10 @@
             </el-table-column>
             <el-table-column label="Category" prop="category" style="width: 15%; min-width: 200px;" />
             <el-table-column label="Address" prop="address" style="width: 25%; min-width: 200px;" />
-            <el-table-column label="Country" prop="country" style="width: 15%; min-width: 200px;" />
+            <el-table-column label="Country" prop="country" style="width: 15%; min-width: 200px;" :header-style="{ fontSize: '12px' }"/>
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
                 <template #header>
-                    <el-input v-model="search" size="small" placeholder="Type to search" />
+                    <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>
                 </template>
                 <template #default="scope">
                     <!--  <el-button size="small" @click="showModal = true, establishment = scope.row"><i class="uil uil-qrcode-scan"></i></el-button> -->
@@ -412,6 +415,23 @@ img.establishment_img {
     width: 85%;
 }
 
+.search{
+    display: none;
+}
+
+@media screen and (max-width: 468px) { 
+    .search {
+        display: flex;
+        max-width: 220px;
+        float: right;
+    }
+    .searchtab{
+        display: none;
+    }
+    .el-table--fit {
+            font-size: 11px !important;
+    }
+}
 @media screen and (min-width: 800px) {
 
     .table__container {

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-var axiosInstance = null
-var publicAxiosInstance = null
+// var axiosInstance = null
+// var publicAxiosInstance = null
 
 const setToken = (token) => {
   localStorage.setItem('token', token)
@@ -15,236 +15,368 @@ const setUser = () => {
   localStorage.setItem('user_authenticated', true)
 }
 
-const setURL = (baseURL) => {
-  axiosInstance = axios.create({
-    baseURL: baseURL,
+const getInstance = (isPublic=false, isNoAuth=false)=>{
+  const instance = axios.create({
     headers: {
       'Content-Type': 'application/json'
     }
   })
-  publicAxiosInstance = axios.create({
-    baseURL: baseURL.slice(0, baseURL.length - 3),
-    headers: {
-      'Content-Type': 'application/json'
+
+  const baseURL = import.meta.env.VITE_APP_API_URL
+
+  if(isNoAuth){
+     instance.defaults.baseURL = baseURL.slice(0, baseURL.length - 3);
+  }else{
+    instance.defaults.baseURL = baseURL
+    if(isPublic){
+      instance.defaults.headers['Authorization'] = `Bearer ${localStorage.getItem('access')}`;
+    }else{
+      instance.defaults.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
     }
-  })
+  }
+
+  return instance;
 }
+
+// const setURL = (baseURL) => {
+//   axiosInstance = axios.create({
+//     baseURL: baseURL,
+//     headers: {
+//       'Content-Type': 'application/json'
+//     }
+//   })
+//   publicAxiosInstance = axios.create({
+//     baseURL: baseURL.slice(0, baseURL.length - 3),
+//     headers: {
+//       'Content-Type': 'application/json'
+//     }
+//   })
+// }
 
 const logout = () => {
   localStorage.removeItem('access')
   localStorage.removeItem('user')
   localStorage.removeItem('user_authenticated')
-  delete axiosInstance.defaults.headers['Authorization']
-  // resetAllStores()
+  // delete axiosInstance.defaults.headers['Authorization']
 }
 
-const checkConnexionInfo = () => {
-  if (!axiosInstance || !axiosInstance.defaults['baseURL']) {
-    console.log(
-      'Request canceled! Please ensure that the URL to the API is configured using the setURL(baseURL) function and that you are connected to the server through login(username, password).'
-    )
-    return false
-  } else return true
-}
+// const checkConnexionInfo = () => {
+//   if (!axiosInstance || !axiosInstance.defaults['baseURL']) {
+//     console.log(
+//       'Request canceled! Please ensure that the URL to the API is configured using the setURL(baseURL) function and that you are connected to the server through login(username, password).'
+//     )
+//     return false
+//   } else return true
+// }
 
-const getRecords = async (entity, next) => {
-  const headers = {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${localStorage.getItem('access')}`
+const getRecords = async (entity, next, isPublic=false, isNoAuth=false) => {
+  // const headers = {
+  //   'Content-Type': 'application/json',
+  //   Authorization: `Bearer ${localStorage.getItem('access')}`
+  // }
+  // try {
+  //   let url = `/${entity}`
+  //   if (checkConnexionInfo()) {
+  //     await axiosInstance.get(`${url}`, { headers }).then((response) => {
+  //       return next(response)
+  //     })
+  //   }
+  // } catch (error) {
+  //   return next(error.response)
+  // }
+
+  try {
+    const axiosInstance = getInstance(isPublic, isNoAuth)
+    let url = `/${entity}`
+    await axiosInstance.get(`${url}`).then((response) => {
+      return next(response)
+    })
+  } catch (error) {
+    return next(error.response)
   }
+}
+
+const getRecordsByParams = async (entity, params, next, isPublic=false, isNoAuth=false) => {
+  // const headers = {
+  //   'Content-Type': 'application/json',
+  //   Authorization: `Bearer ${localStorage.getItem('access')}`
+  // }
+  // try {
+  //   let url = `/${entity}?${params}`
+  //   if (checkConnexionInfo()) {
+  //     await axiosInstance.get(`${url}`, { headers }).then((response) => {
+  //       return next(response)
+  //     })
+  //   }
+  // } catch (error) {
+  //   return next(error.response)
+  // }
+
+    //  const headers = {
+    //   'Content-Type': 'application/json',
+    //   Authorization: `Bearer ${localStorage.getItem('access')}`
+    // }
+    try {
+      const axiosInstance = getInstance(isPublic, isNoAuth)
+      let url = `/${entity}?${params}`
+      await axiosInstance.get(`${url}`).then((response) => {
+          return next(response)
+      })
+    } catch (error) {
+      return next(error.response)
+    }
+}
+
+const getRecord = async (entity, recordId, next, isPublic=false, isNoAuth=false) => {
+  // const headers = {
+  //   'Content-Type': 'application/json',
+  //   Authorization: `Bearer ${localStorage.getItem('access')}`
+  // }
+  // try {
+  //   let url = `/${entity}/${recordId}`
+  //   if (checkConnexionInfo()) {
+  //     await axiosInstance.get(`${url}`, { headers }).then((response) => {
+  //       next(response)
+  //     })
+  //   }
+  // } catch (error) {
+  //   return next(error.response)
+  // }
+
+  try {
+    const axiosInstance = getInstance(isPublic, isNoAuth)
+    let url = `/${entity}/${recordId}`
+    await axiosInstance.get(`${url}`).then((response) => {
+        next(response)
+    })
+  } catch (error) {
+    return next(error.response)
+  }
+}
+
+const get_Record = async (url, next, isPublic = false, isNoAuth=false) => {
+  // const headers = {
+  //   'Content-Type': 'application/json'
+  // }
+
+  // if (!isPublic) {
+  //   headers['Authorization'] = `Bearer ${localStorage.getItem('access')}`
+
+  //   try {
+  //     if (checkConnexionInfo()) {
+  //       await axiosInstance.get(`${url}`, { headers }).then((response) => {
+  //         next(response)
+  //       })
+  //     }
+  //   } catch (error) {
+  //     return next(error.response)
+  //   }
+  // } else {
+  //   try {
+  //     await publicAxiosInstance.get(`${url}`, { headers }).then((response) => {
+  //       next(response)
+  //     })
+  //   } catch (error) {
+  //     return next(error.response)
+  //   }
+  // }
+
+  try {
+    const axiosInstance = getInstance(isPublic, isNoAuth)
+    await axiosInstance.get(`${url}`).then((response) => {
+      next(response)
+    })
+  } catch (error) {
+      return next(error.response)
+  }
+}
+
+const post_Record = async (url, body, next, isPublic = false, isNoAuth=false) => {
+  // const headers = {
+  //   'Content-Type': 'application/json'
+  // }
+
+  // if (!isPublic) {
+  //   headers['Authorization'] = `Bearer ${localStorage.getItem('access')}`
+
+  //   try {
+  //     if (checkConnexionInfo()) {
+  //       await axiosInstance.post(`${url}`, body, { headers }).then((response) => {
+  //         next(response)
+  //       })
+  //     }
+  //   } catch (error) {
+  //     return next(error.response)
+  //   }
+  // } else {
+  //   try {
+  //     await publicAxiosInstance.post(`${url}`, body, { headers }).then((response) => {
+  //       next(response)
+  //     })
+  //   } catch (error) {
+  //     return next(error.response)
+  //   }
+  // }
+  try {
+    const axiosInstance = getInstance(isPublic, isNoAuth)
+    await axiosInstance.post(`${url}`, body).then((response) => {
+      next(response)
+    })
+  } catch (error) {
+    return next(error.response)
+  }
+}
+
+const createRecord = async (entity, value, next, isPublic = false, isNoAuth=false) => {
+  // const headers = {
+  //   'Content-Type': 'application/json',
+  //   Authorization: `Bearer ${localStorage.getItem('access')}`
+  // }
+  // if (checkConnexionInfo()) {
+  //   try {
+  //     let url = `/${entity}`
+  //     await axiosInstance.post(`${url}`, value, { headers }).then((response) => {
+  //       return next(response)
+  //     })
+  //   } catch (error) {
+  //     return next(error.response)
+  //   }
+  // }
+
   try {
     let url = `/${entity}`
-    if (checkConnexionInfo()) {
-      await axiosInstance.get(`${url}`, { headers }).then((response) => {
-        return next(response)
-      })
-    }
+    const axiosInstance = getInstance(isPublic, isNoAuth)
+    await axiosInstance.post(`${url}`, value).then((response) => {
+      return next(response)
+    })
   } catch (error) {
     return next(error.response)
   }
 }
 
-const getRecordsByParams = async (entity, params, next) => {
-  const headers = {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${localStorage.getItem('access')}`
-  }
-  try {
-    let url = `/${entity}?${params}`
-    if (checkConnexionInfo()) {
-      await axiosInstance.get(`${url}`, { headers }).then((response) => {
-        return next(response)
-      })
-    }
-  } catch (error) {
-    return next(error.response)
-  }
-}
-
-const getRecord = async (entity, recordId, next) => {
-  const headers = {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${localStorage.getItem('access')}`
-  }
+const deleteRecord = async (entity, recordId, next, isPublic = false, isNoAuth=false) => {
+  // const headers = {
+  //   'Content-Type': 'application/json',
+  //   Authorization: `Bearer ${localStorage.getItem('access')}`
+  // }
+  // if (checkConnexionInfo()) {
+  //   try {
+  //     let url = `/${entity}/${recordId}`
+  //     await axiosInstance.delete(`${url}`, { headers }).then((response) => {
+  //       return next(response)
+  //     })
+  //   } catch (error) {
+  //     return next(error.response)
+  //   }
+  // }
   try {
     let url = `/${entity}/${recordId}`
-    if (checkConnexionInfo()) {
-      await axiosInstance.get(`${url}`, { headers }).then((response) => {
-        next(response)
-      })
-    }
+    const axiosInstance = getInstance(isPublic, isNoAuth)
+    await axiosInstance.delete(`${url}`).then((response) => {
+        return next(response)
+    })
   } catch (error) {
     return next(error.response)
   }
 }
 
-const get_Record = async (url, next, isPublic = false) => {
-  const headers = {
-    'Content-Type': 'application/json'
-  }
+const patchRecord = async (entity, recordId, value, next, isPublic = false, isNoAuth=false) => {
+  // const headers = {
+  //   'Content-Type': 'application/merge-patch+json',
+  //   Authorization: `Bearer ${localStorage.getItem('access')}`
+  // }
+  // if (checkConnexionInfo()) {
+  //   try {
+  //     let url = `/${entity}/${recordId}`
+  //     await axiosInstance.patch(url, value, { headers }).then((response) => {
+  //       return next(response)
+  //     })
+  //   } catch (error) {
+  //     return next(error.response)
+  //   }
+  // }
+   try {
+      var axiosInstance = getInstance(isPublic, isNoAuth)
+      axiosInstance.defaults.headers['Content-Type'] = 'application/merge-patch+json';
 
-  if (!isPublic) {
-    headers['Authorization'] = `Bearer ${localStorage.getItem('access')}`
-
-    try {
-      if (checkConnexionInfo()) {
-        await axiosInstance.get(`${url}`, { headers }).then((response) => {
-          next(response)
-        })
-      }
-    } catch (error) {
-      return next(error.response)
-    }
-  } else {
-    try {
-      await publicAxiosInstance.get(`${url}`, { headers }).then((response) => {
-        next(response)
-      })
-    } catch (error) {
-      return next(error.response)
-    }
-  }
-}
-
-const post_Record = async (url, body, next, isPublic = false) => {
-  const headers = {
-    'Content-Type': 'application/json'
-  }
-
-  if (!isPublic) {
-    headers['Authorization'] = `Bearer ${localStorage.getItem('access')}`
-
-    try {
-      if (checkConnexionInfo()) {
-        await axiosInstance.post(`${url}`, body, { headers }).then((response) => {
-          next(response)
-        })
-      }
-    } catch (error) {
-      return next(error.response)
-    }
-  } else {
-    try {
-      await publicAxiosInstance.post(`${url}`, body, { headers }).then((response) => {
-        next(response)
-      })
-    } catch (error) {
-      return next(error.response)
-    }
-  }
-}
-
-const createRecord = async (entity, value, next) => {
-  const headers = {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${localStorage.getItem('access')}`
-  }
-  if (checkConnexionInfo()) {
-    try {
-      let url = `/${entity}`
-      await axiosInstance.post(`${url}`, value, { headers }).then((response) => {
-        return next(response)
-      })
-    } catch (error) {
-      return next(error.response)
-    }
-  }
-}
-
-const deleteRecord = async (entity, recordId, next) => {
-  const headers = {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${localStorage.getItem('access')}`
-  }
-  if (checkConnexionInfo()) {
-    try {
       let url = `/${entity}/${recordId}`
-      await axiosInstance.delete(`${url}`, { headers }).then((response) => {
+      await axiosInstance.patch(url, value).then((response) => {
         return next(response)
       })
     } catch (error) {
       return next(error.response)
     }
-  }
 }
 
-const patchRecord = async (entity, recordId, value, next) => {
-  const headers = {
-    'Content-Type': 'application/merge-patch+json',
-    Authorization: `Bearer ${localStorage.getItem('access')}`
-  }
-  if (checkConnexionInfo()) {
-    try {
+const putRecord = async (entity, recordId, value, next, isPublic = false, isNoAuth=false) => {
+  // const headers = {
+  //   'Content-Type': 'application/json',
+  //   Authorization: `Bearer ${localStorage.getItem('access')}`
+  // }
+  // if (checkConnexionInfo()) {
+  //   try {
+  //     let url = `/${entity}/${recordId}`
+  //     await axiosInstance.put(`${url}`, value, { headers }).then((response) => {
+  //       return next(response)
+  //     })
+  //   } catch (error) {
+  //     return next(error.response)
+  //   }
+  // }
+  // const headers = {
+  //   'Content-Type': 'application/json',
+  //   Authorization: `Bearer ${localStorage.getItem('access')}`
+  // }
+  try {
       let url = `/${entity}/${recordId}`
-      await axiosInstance.patch(url, value, { headers }).then((response) => {
+      const axiosInstance = getInstance(isPublic, isNoAuth)
+      await axiosInstance.put(`${url}`, value).then((response) => {
         return next(response)
       })
-    } catch (error) {
+  } catch (error) {
       return next(error.response)
-    }
-  }
-}
-
-const putRecord = async (entity, recordId, value, next) => {
-  const headers = {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${localStorage.getItem('access')}`
-  }
-  if (checkConnexionInfo()) {
-    try {
-      let url = `/${entity}/${recordId}`
-      await axiosInstance.put(`${url}`, value, { headers }).then((response) => {
-        return next(response)
-      })
-    } catch (error) {
-      return next(error.response)
-    }
   }
 }
 
 const postFormData = async (entity, value, next) => {
-  const headers = {
-    'Content-Type': 'multipart/form-data',
-    Authorization: `Bearer ${localStorage.getItem('access')}`
-  }
-  if (checkConnexionInfo()) {
-    try {
+  // const headers = {
+  //   'Content-Type': 'multipart/form-data',
+  //   Authorization: `Bearer ${localStorage.getItem('access')}`
+  // }
+  // if (checkConnexionInfo()) {
+  //   try {
+  //     let url = `/${entity}`
+  //     await axiosInstance.post(`${url}`, value, { headers }).then((response) => {
+  //       return next(response)
+  //     })
+  //   } catch (error) {
+  //     return next(error.response)
+  //   }
+  // }
+ 
+  try {
       let url = `/${entity}`
-      await axiosInstance.post(`${url}`, value, { headers }).then((response) => {
+      var axiosInstance = getInstance(isPublic, isNoAuth)
+      axiosInstance.defaults.headers['Content-Type'] = 'multipart/form-data';
+      await axiosInstance.post(`${url}`, value).then((response) => {
         return next(response)
       })
-    } catch (error) {
+  } catch (error) {
       return next(error.response)
-    }
   }
 }
 
 const login = async (email, password) => {
   try {
+    var axiosInstance = axios.create({
+      baseURL: import.meta.env.VITE_APP_API_URL,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
     const response = await axiosInstance.post('/login', { email: email, password: password })
     if (response.status == 200) {
       setToken(response.data['token'])
-      setAccess(response.data['token'])
     }
     return response
   } catch (error) {
@@ -254,11 +386,14 @@ const login = async (email, password) => {
 
 const login_2nd = async (email, password, next) => {
   try {
-    const headers = {
-      'Content-Type': 'application/json'
-    }
+    var axiosInstance = axios.create({
+      baseURL: import.meta.env.VITE_APP_API_URL,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
     await axiosInstance
-      .post('/login', { email: email, password: password }, { headers })
+      .post('/login', { email: email, password: password })
       .then((response) => {
         if (response.status == 200) {
           setToken(response.data['token'])
@@ -375,34 +510,6 @@ const downloadSVGQrcode = async (filename, elementID) => {
   }
 }
 
-// const downloadJPEGQrcode = async (filename, elementID, maxWidth, maxHeight) => {
-//   try {
-//     var canvas = document.createElement('canvas')
-//     canvas.width = maxWidth
-//     canvas.height = maxHeight
-
-//     // Ajout des marges
-//     var marginX = 20
-//     var marginY = 20
-//     var newCanvas = document.createElement('canvas')
-//     newCanvas.width = canvas.width + 2 * marginX
-//     newCanvas.height = canvas.height + 2 * marginY
-//     var newCtx = newCanvas.getContext('2d')
-//     newCtx.fillStyle = 'white'
-//     newCtx.fillRect(0, 0, newCanvas.width, newCanvas.height)
-//     newCtx.drawImage(canvas, marginX, marginY)
-
-//     var dataURL = newCanvas.toDataURL('image/jpeg')
-
-//     let link = document.createElement('a')
-//     link.download = `${filename}.jpeg`
-//     link.href = dataURL
-//     link.click()
-//   } catch (error) {
-//     console.error("Erreur lors du redimensionnement de l'image", error)
-//   }
-// }
-
 const downloadJPEGQrcode = async (filename, elementID, maxWidth, maxHeight) => {
   try {
     var svg = document.getElementById(elementID)
@@ -456,7 +563,6 @@ const generateColor = (text) => {
 export default {
   setToken,
   setAccess,
-  setURL,
   getRecords,
   getRecord,
   get_Record,

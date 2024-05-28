@@ -162,7 +162,7 @@ const info = computed(() => {
 })
 
 onMounted(async () => {
-  let data = await advantageStore.getAdvantageAvailable(props.customer, props.establishment)
+  let data = await advantageStore.getAdvantageAvailable(props.customer, props.establishment, true)
   discounts.value = data.map((discount, index) => {
     let icon = '';
     if (index % 2 === 0) {

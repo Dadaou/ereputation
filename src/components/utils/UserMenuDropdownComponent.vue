@@ -62,8 +62,7 @@ const props = defineProps({
 		required: true,	
 	},
 	customer: {
-		type: Object,
-		required: true
+		required: true,
 	}
 });
 
