@@ -177,4 +177,8 @@ const updateData = (establishmentTag, category) => {
 };
 
 </script>
-<style scoped></style>
+<style scoped>
+label span {
+    color: red;
+}
+</style>

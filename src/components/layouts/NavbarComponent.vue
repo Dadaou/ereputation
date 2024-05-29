@@ -107,10 +107,10 @@ const showMenu = computed(() => {
   return privateUrls.includes(route.name)
 })
 
-const signOut = () => {
-  userStore.signOut();
+const signOut = async () => {
+  await userStore.signOut();
   userStore.authenticated = false;
-  if (userStore.authenticated == false) router.push({ name: "Login" });
+  router.push({ name: "Login" });
 };
 
 const closeDropdownMenu = () => {
