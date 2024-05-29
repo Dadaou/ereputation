@@ -203,13 +203,13 @@ onBeforeMount(async () => {
 })
 
 onMounted(() => {
-
+    console.log(window.FingerprintApp)
     try {
         if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
         window.FingerprintApp.default.main();
     }
     } catch (error) {
-        console.error("Une erreur s'est produite lors de l'exécution de FingerprintG2A :", error);
+        console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
     }
 })
 
