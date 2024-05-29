@@ -158,7 +158,7 @@ import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { countries, competitor_countries, categories } from '@Services/input-list.js';
 
 const previewImage = ref(null);
@@ -169,8 +169,6 @@ const type = ref('Add');
 const userStore = useUserStore();
 const establishment_to_update = inject('establishment_to_update');
 const imgHasChanged = ref(false);
-const activeCompetitorsTab = inject('activeCompetitorsTab');
-
 const cleanEstablishmentForm = inject('clearEstablishmentForm');
 const showSecondStep = ref(false)
 const informationText = computed(() => {
@@ -182,6 +180,11 @@ const reloadCompetitor = inject('reloadCompetitor')
 const establishments = ref([])
 const competitor = ref(null)
 const emit = defineEmits(['reload']);
+const router = useRouter();
+const route = useRoute();
+
+const competitorsData = inject('competitorsData')
+
 
 const resetForm = () => {
     data.value = {};
@@ -189,15 +192,10 @@ const resetForm = () => {
     type.value = 'Add';
 }
 
-const route = useRoute();
-
-const competitorsData = inject('competitorsData')
 
 watch(cleanEstablishmentForm, () => {
     resetForm();
 })
-
-
 
 const updateImage = (e) => {
     const image = e.target.files[0];
@@ -220,14 +218,13 @@ const submit = async () => {
     const formData = new FormData(form);
 
     const establishmentData = { ...data.value };
-    console.log(establishmentData)
 
-    if (establishmentData.category 
+    if (establishmentData.category
         && establishmentData.country
-        && establishmentData.city 
+        && establishmentData.city
         && establishmentData.zipcode
         && establishmentData.category
-        && establishmentData.name 
+        && establishmentData.name
         && establishmentData.address1) {
 
         formData.append('category', establishmentData.category);
@@ -252,23 +249,24 @@ const submit = async () => {
                 resolve(response);
             });
         });
-        console.log(response)
 
         if (response.status == 201) {
             competitor.value = response.data
-            loadData(response.data, 'new')
+          
             ElMessage({
                 message: `Competitor added successfully.`,
                 type: 'success',
             });
+
             data.value = {}
             showSpinner.value = false;
-            showSecondStep.value = true
+            showSecondStep.value = true;
+
             reloadCompetitorList()
         }
 
         if (response.status == 200) {
-            loadData(response.data, 'edit')
+           
             ElMessage({
                 message: `Competitor updated successfully.`,
                 type: 'success',
@@ -278,7 +276,7 @@ const submit = async () => {
             showSpinner.value = false;
             reloadCompetitorList()
         }
-    }else{
+    } else {
         ElMessage.error(`Please, provide all required information to add / update a competitor`);
     }
 
@@ -375,36 +373,16 @@ const submitCompetitor = () => {
                 resolve(response);
             });
         });
-        console.log(response)
+
         if (response.status == 201) created.push(1)
 
         if (created.length == establishments.value.length) {
             showSpinner.value = false;
             emit('reload')
             showSecondStep.value = false;
-            // reloadCompetitor.value = true;
         }
+        router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'competitors_list'} });
     })
-}
-
-const loadData = (establishment, type) => {
-
-    // establishment.media = [{ url_source: establishment.media }]
-
-    // if (type == 'new') {
-    //     userStore.user.customer.establishments.push(establishment);
-    // }
-    // if (type == 'edit') {
-    //     userStore.user.customer.establishments = userStore.user.customer.establishments.map((x) => {
-    //         if (x.id == establishment.id) {
-    //             return establishment;
-    //         } else {
-    //             return x;
-    //         }
-    //     });
-    // }
-
-    // activeCompetitorsTab.value = 'competitor_list';
 }
 
 watch(establishment_to_update, () => {

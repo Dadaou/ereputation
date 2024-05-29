@@ -5,7 +5,8 @@
         <div class="template__filter">
           <div class="text-sm title">Choose a template</div>
           <el-select v-model="templateId" filterable placeholder="choose template" size="large">
-            <el-option v-for="(item, index) in templates" :key="index" :label="item.name" :value="item.id" @click="changeValue(item)"/>
+            <el-option v-for="(item, index) in templates" :key="index" :label="item.name" :value="item.id"
+              @click="changeValue(item)" />
           </el-select>
           <button v-if="template" class="btn downloads mt-2" @click="generatePdf">PDF Download</button>
         </div> <br>
@@ -24,8 +25,6 @@
 
           <label for="text3" class="text-sm title">Text 3:</label>
           <textarea name="text3" rows="3" cols="30" v-model="text3"></textarea>
-
-          <!-- <button class="btn downloads mt-2" @click="updatePreview">Preview</button> -->
           <button class="btn btn-secondary mt-1" type="submit">Update</button>
 
         </form>
@@ -94,7 +93,7 @@ const submit = async () => {
   }
 };
 
-const generatePdf = async() => {
+const generatePdf = async () => {
   await addContentToPdf();
   doc.save(`${filename.value}.pdf`);
 };
@@ -121,20 +120,17 @@ const addContentToPdf = async () => {
 
 const generateQRCode = () => {
   const qrCodeData = qrStore.qrcodeValue;
- 
+
   QRCode.toCanvas(document.getElementById('qrcodeContainer'), qrCodeData, { width: 100, height: 100 }, (error, canvas) => {
     if (!error) {
       const imageData = canvas.toDataURL('image/png');
-      console.log(canvas);
-      console.log(imageData);
-      
     } else {
       console.error('QR Code generation error:', error);
     }
   });
 };
 
-const changeValue = (item)=>{
+const changeValue = (item) => {
   template.value = item
 }
 
@@ -219,7 +215,7 @@ onBeforeMount(async () => {
     }
   ])
   templates.value = await qrStore.getTemplates(route.params.tag, route.params.id);
-  if(templates.value.length>0){
+  if (templates.value.length > 0) {
     template.value = templates.value[0]
     templateId.value = template.value.id
   }
@@ -239,7 +235,7 @@ watch(template, () => {
     generateCore();
   }
 
-})
+});
 </script>
 <style>
 #preview {
@@ -292,9 +288,10 @@ watch(template, () => {
   border-radius: 5px;
   padding: 5px;
 }
-body{
-  padding:0px !important; 
- 
+
+body {
+  padding: 0px !important;
+
 }
 
 

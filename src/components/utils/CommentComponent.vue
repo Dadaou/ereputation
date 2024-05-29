@@ -5,8 +5,7 @@
                 <div class="flex items-center mb-1 space-x-4">
                     <div class="review__info space-y-1 dark:text-white info__reviews">
                         <div class="flex items-center mb-2 space-x-4">
-                            <img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full"
-                                :src="review.profile_photo" alt="">
+                            <img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full" :src="review.profile_photo" alt="">
                             <div v-else
                                 class="relative inline-flex items-center justify-center w-8 h-8 p-1 rounded author__initial">
                                 <span class="font-medium dark:text-white">{{ userStore.getInitialsV2(review.author) }}
@@ -32,22 +31,21 @@
                 </div>
                 <div class="review__right mt-2">
                     <div style="height: 20px;" v-if="showCategory">
-                        <div v-if="review.category" class="review__category-container" @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review)">
-                            <span v-if="review.category.split(';').length>0" class="review__category">{{ review.category.split(';')[0] }}</span>
-                            
+                        <div v-if="review.category" class="review__category-container"
+                            @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review)">
+                            <span v-if="review.category.split(';').length > 0" class="review__category">{{
+                                review.category.split(';')[0] }}</span>
+
                         </div>
                         <div class="review__category-container" v-else>
                             <i class="uil uil-question-circle"
-                                  style="color: var(--color-warning); font-size: 18px; cursor: pointer"
-                                  @mouseover="(e) => {
-                                  buttonRef = e.currentTarget
-                                  visible = true
-                                  }"
-                                  @mouseleave="()=>visible = false"
-                                  @click="handleModal('Add review category', 'add', 'uil-add', 'category', review)"
-                            >
+                                style="color: var(--color-warning); font-size: 18px; cursor: pointer" @mouseover="(e) => {
+                                    buttonRef = e.currentTarget
+                                    visible = true
+                                }" @mouseleave="() => visible = false"
+                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review)">
                             </i>
-                             <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
+                            <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
                                 popper-class="singleton-tooltip" placement="top">
                                 <template #content>
                                     <span>Click to add category</span>
@@ -56,30 +54,28 @@
                         </div>
                     </div>
                     <div v-if="showEmoji">
-                        <span v-if="review.feeling" class="emoji mx-1" @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review)">
+                        <span v-if="review.feeling" class="emoji mx-1"
+                            @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review)">
                             <span v-if="review.feeling == 'positive'">😀</span>
                             <span v-if="review.feeling == 'neutre' || review.feeling == 'neutral'">😐</span>
                             <span v-if="review.feeling == 'negative'">😕</span>
                         </span>
                         <span class="emoji mx-1" v-else>
                             <i class="uil uil-question-circle"
-                                  style="color: var(--color-warning); font-size: 18px; cursor: pointer"
-                                  @mouseover="(e) => {
-                                  buttonRef2 = e.currentTarget
-                                  visible2 = true
-                                  }"
-                                  @mouseleave="()=>visible2 = false"
-                                  @click="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review)"
-                            >
+                                style="color: var(--color-warning); font-size: 18px; cursor: pointer" @mouseover="(e) => {
+                                    buttonRef2 = e.currentTarget
+                                    visible2 = true
+                                }" @mouseleave="() => visible2 = false"
+                                @click="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review)">
                             </i>
-                             <el-tooltip ref="tooltipRef2" :visible="visible2" :virtual-ref="buttonRef2" virtual-triggering
-                                popper-class="singleton-tooltip" placement="top">
+                            <el-tooltip ref="tooltipRef2" :visible="visible2" :virtual-ref="buttonRef2"
+                                virtual-triggering popper-class="singleton-tooltip" placement="top">
                                 <template #content>
                                     <span>Click to add feeling</span>
                                 </template>
                             </el-tooltip>
                         </span>
-                        
+
                         <p
                             class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center px-3 py-1 rounded dark:bg-yellow-200 dark:text-yellow-800">
                             {{ review.star | review.rating }}</p>
@@ -95,7 +91,7 @@
                 <div class="modal__header">
                     <div class="modal__title">
                         <h3 class="font-semibold text-gray-900 dark:text-white">
-                            <i class="uil uil-edit"></i> {{modal.text}}
+                            <i class="uil uil-edit"></i> {{ modal.text }}
                         </h3>
                     </div>
                     <div class="modal__close">
@@ -107,20 +103,16 @@
                         feel = feeling
                     }" />
 
-                    <el-select v-else
-                    v-model="category" 
-                    filterable
-                    placeholder="select categories" 
-                    size="large">
-                        <el-option key="0" label="" value=""/>
-                        <el-option v-for="(item, index) in categories" :key="index+1" :label="item.category"
-                            :value="item.category"/>
+                    <el-select v-else v-model="category" filterable placeholder="select categories" size="large">
+                        <el-option key="0" label="" value="" />
+                        <el-option v-for="(item, index) in categories" :key="index + 1" :label="item.category"
+                            :value="item.category" />
                     </el-select>
 
                 </div>
                 <div class="mt-5 download__qr_btn">
                     <button class="btn__light_secondary" @click="updateReview">
-                        <i class="uil uil-save"></i> {{modal.action=="edit"?'Save':'Add'}}
+                        <i class="uil uil-save"></i> {{ modal.action == "edit" ? 'Save' : 'Add' }}
                     </button>
                 </div>
             </template>
@@ -154,7 +146,7 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-    showCategory:{
+    showCategory: {
         type: Boolean,
         default: true
     },
@@ -230,13 +222,13 @@ const updateReview = async () => {
 
     try {
         showModal.value = false;
-        if(modal.value.type == 'feeling'){
+        if (modal.value.type == 'feeling') {
             await feedbackStore.updateReview(id.value, updatedValue, response => {
-                console.log(response);
+                // Do nothing
             })
-        }else{
-            await feedbackStore.updateReviewCategory(id.value, modal.value.action,selectedReview.value.category, category.value, false, response => {
-                console.log(response);
+        } else {
+            await feedbackStore.updateReviewCategory(id.value, modal.value.action, selectedReview.value.category, category.value, false, response => {
+                // Do nothing
             })
             selectedReview.value.category = category.value
         }
@@ -245,7 +237,7 @@ const updateReview = async () => {
     }
 };
 
-const handleModal = (text, action, icon, type, review)=>{
+const handleModal = (text, action, icon, type, review) => {
     showModal.value = true
     modal.value = {
         text: text,

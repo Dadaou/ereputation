@@ -1,69 +1,72 @@
 <template>
-        <div class="head">
-            <div class="app__title">
-            </div>
-            <el-dropdown split-button type="primary">
-                {{ calculType }}
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item @click="calculType = 'Fahrenheit °F'">Fahrenheit °F</el-dropdown-item>
-                        <el-dropdown-item @click="calculType = 'Celcius °C'">Celcius °C</el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
+    <div class="head">
+        <div class="app__title">
         </div>
-        <WeatherChartComponent />
-        <div class="head">
-            <div class="app__title">
-                <h2>Weather's global impact</h2>
-            </div>
+        <el-dropdown split-button type="primary">
+            {{ calculType }}
+            <template #dropdown>
+                <el-dropdown-menu>
+                    <el-dropdown-item @click="calculType = 'Fahrenheit °F'">Fahrenheit °F</el-dropdown-item>
+                    <el-dropdown-item @click="calculType = 'Celcius °C'">Celcius °C</el-dropdown-item>
+                </el-dropdown-menu>
+            </template>
+        </el-dropdown>
+    </div>
+    <WeatherChartComponent />
+    <!-- <div class="head">
+        <div class="app__title">
+            <h2>Weather's global impact</h2>
         </div>
-        <div class="review__content">
-            <div v-if="load == true" :style="{
-                'width': '100%',
-                'height': `350px`,
-                'display': 'flex',
-                'alignItems': 'center',
-                'background': 'rgba(0, 0, 0, 0.1)',
-                'opacity': 0.9,
-                'justifyContent': 'center',
-                'alignItems': 'center',
-                'zIndex': 1,
-                'marginTop': '10px',
-                'marginBottom': '10px'
-            }">
-                <SpinnerComponent />
-            </div>
+    </div> -->
+    <div class="review__content">
+        <div v-if="load == true" :style="{
+            'width': '100%',
+            'height': `350px`,
+            'display': 'flex',
+            'alignItems': 'center',
+            'background': 'rgba(0, 0, 0, 0.1)',
+            'opacity': 0.9,
+            'justifyContent': 'center',
+            'alignItems': 'center',
+            'zIndex': 1,
+            'marginTop': '10px',
+            'marginBottom': '10px'
+        }">
+            <SpinnerComponent />
+        </div>
 
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5" v-else>
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5" v-else>
 
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <tbody>
-                        <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
-                            v-for="conditionData in formattedWeatherRating" :key="conditionData.condition">
-                            <td class="px-6 py-4" :style="{
-                                'fontWeight': 'bold',
-                            }">
-                              <span v-html="conditionData.icon"></span> {{ conditionData.condition }} 
-                              
-                            </td>
-                            <td class="px-6 py-4 condition" :style="{
-                                'color': conditionData.color,
-                                'fontWeight': 'bold',
-                            }">
-                                <span> {{ conditionData.note}}</span>
-                                <span class="bg-gray-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-gray-700 dark:text-gray-400">
-                                <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <tbody>
+                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
+                        v-for="conditionData in formattedWeatherRating" :key="conditionData.condition">
+                        <td class="px-6 py-4" :style="{
+                            'fontWeight': 'bold',
+                        }">
+                            <span v-html="conditionData.icon"></span> {{ conditionData.condition }}
+
+                        </td>
+                        <td class="px-6 py-4 condition" :style="{
+                            'color': conditionData.color,
+                            'fontWeight': 'bold',
+                        }">
+                            <span> {{ conditionData.note }}</span>
+                            <span
+                                class="bg-gray-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-gray-700 dark:text-gray-400">
+                                <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                    fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
                                 </svg>
-                                {{conditionData.days}} {{conditionData.days>1?'days':'day'}}
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                                {{ conditionData.days }} {{ conditionData.days > 1 ? 'days' : 'day' }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+    </div>
 </template>
 
 <script setup>
@@ -146,7 +149,7 @@ onUpdated(() => {
 
 watch([start_date, end_date], async () => {
     load.value = true
-    await loadWeatherFromServer(companyId, start_date.value,end_date.value, calculType.value);
+    await loadWeatherFromServer(companyId, start_date.value, end_date.value, calculType.value);
     await loadConditionFromServer(companyId, start_date.value, end_date.value);
 })
 
@@ -185,8 +188,8 @@ const loadWeatherFromServer = async (tag, dateStart, dateEnd, unit) => {
     legendData.value = generatedLegend(colors.value, dataType);
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
         apiParams += `&from=${dateStart}&to=${dateEnd}`;
     }
 
@@ -218,38 +221,38 @@ const loadWeatherFromServer = async (tag, dateStart, dateEnd, unit) => {
 }
 const weatherRating = ref(null);
 
-const getIcon = (weatherConditions)=>{
+const getIcon = (weatherConditions) => {
     switch (weatherConditions) {
-            case 'Rain, Overcast':
-                return '&#x1F327;';
-                break;
-            case 'Rain, Partially cloudy':
-                return '&#x1F326;';
-                break;
-            case 'Partially cloudy':
-                return '&#x1F325;';
-                break;
-            case 'Clear':
-                return '&#x263C;';
-                break;
-            case 'Rain':
-                return '&#x2602;';
-                break;
-            case 'Rain Overcast':
-                return '&#x1F327;';
-                break;
-            case 'Overcast':
-                return'&#x2601;';
-                break;
-            case 'Rain Partially cloudy':
-                return '&#x1F326;';
-                break;
-            case 'Snow Rain Overcast':
-                return '&#x1F327;';
-                break;
-            default:
-                return '&#x1F324;';
-                break;
+        case 'Rain, Overcast':
+            return '&#x1F327;';
+            break;
+        case 'Rain, Partially cloudy':
+            return '&#x1F326;';
+            break;
+        case 'Partially cloudy':
+            return '&#x1F325;';
+            break;
+        case 'Clear':
+            return '&#x263C;';
+            break;
+        case 'Rain':
+            return '&#x2602;';
+            break;
+        case 'Rain Overcast':
+            return '&#x1F327;';
+            break;
+        case 'Overcast':
+            return '&#x2601;';
+            break;
+        case 'Rain Partially cloudy':
+            return '&#x1F326;';
+            break;
+        case 'Snow Rain Overcast':
+            return '&#x1F327;';
+            break;
+        default:
+            return '&#x1F324;';
+            break;
     }
 }
 
@@ -259,8 +262,7 @@ const formattedWeatherRating = computed(() => {
     if (!weatherRating.value) return [];
     else {
         let data = []
-        if(weatherRating.value.conditions){
-            console.log(weatherRating.value)
+        if (weatherRating.value.conditions) {
             data = weatherRating.value.conditions.map(condition => ({
                 condition,
                 icon: getIcon(condition),
@@ -270,20 +272,18 @@ const formattedWeatherRating = computed(() => {
             }));
         }
 
-        order.forEach(condition =>{
+        order.forEach(condition => {
             for (var i = 0; i < data.length; i++) {
-                if(condition == data[i].condition) conditions.push(data[i])
+                if (condition == data[i].condition) conditions.push(data[i])
             }
         })
 
-        conditions.unshift({ 
-            condition: 'Average rating', 
-            note: weatherRating.value['rating'], 
+        conditions.unshift({
+            condition: 'Average rating',
+            note: weatherRating.value['rating'],
             color: 'green',
             days: weatherRating.value['global_days']
         })
-
-        console.log(conditions)
 
         return conditions;
     }
@@ -294,13 +294,12 @@ const loadConditionFromServer = async (tag, dateStart, dateEnd) => {
     let apiParams = `tag=${tag}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
         apiParams += `&from=${dateStart}&to=${dateEnd}`;
     }
 
     const api = apiBase + '?' + apiParams;
-    console.log(api)
 
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
@@ -310,7 +309,6 @@ const loadConditionFromServer = async (tag, dateStart, dateEnd) => {
 
     if (response.status == 200) {
         weatherRating.value = response.data['data']
-        console.log(weatherRating.value)
         load.value = false;
     }
 }
@@ -324,7 +322,7 @@ onBeforeMount(async () => {
 </script>
 
 <style scoped>
-.condition{
+.condition {
     display: flex;
     justify-content: space-between;
 }

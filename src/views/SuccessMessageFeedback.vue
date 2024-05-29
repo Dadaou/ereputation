@@ -5,42 +5,53 @@
             <div class="mt-6" v-if="route.params.share !== 'message'">
                 <h2 v-if="links.length > 0">{{ $t("success_text") }}</h2>
                 <ul v-if="links.length > 0" class="logoSrc">
-                    <li v-for="link in links">
+                    <li v-for="link in links" :key="link.id">
                         <a :href="link.url" target="_blank">
                             <el-tooltip :content="`${$t('success_text')} ${link.name}`" placement="top">
-                <img v-if="link.name.toLowerCase().includes('booking')" src="@/assets/images/logo/Booking.svg" alt="Booking" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('camping')" src="@/assets/images/logo/Camping.png" alt="Camping" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('expedia')" src="@/assets/images/logo/Expedia.svg" alt="Expedia" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('google')" src="@/assets/images/logo/GoogleF.svg" alt="Google" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('hotel')" src="@/assets/images/logo/Hotel.svg" alt="Hotel" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('maeva')" src="@/assets/images/logo/Maeva.png" alt="Maeva" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('opentable')" src="@/assets/images/logo/Opentable.svg" alt="Opentable" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('thefork')" src="@/assets/images/logo/Thefork.svg" alt="Thefork" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('tripadvisor')" src="@/assets/images/logo/Tripadvisor.svg" alt="Tripadvisor" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('trustpilot')" src="@/assets/images/logo/Trustpilot.svg" alt="Trustpilot" width="24" height="24">
-                <img v-if="link.name.toLowerCase().includes('yelp')" src="@/assets/images/logo/Yelp.svg" alt="Yelp" width="24" height="24">
-            
-            </el-tooltip>
+                                <img v-if="link.name.toLowerCase().includes('booking')"
+                                    src="@/assets/images/logo/Booking.svg" alt="Booking" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('camping')"
+                                    src="@/assets/images/logo/Camping.png" alt="Camping" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('expedia')"
+                                    src="@/assets/images/logo/Expedia.svg" alt="Expedia" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('google')"
+                                    src="@/assets/images/logo/Google.svg" alt="Google" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('hotel')"
+                                    src="@/assets/images/logo/Hotel.svg" alt="Hotel" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('maeva')"
+                                    src="@/assets/images/logo/Maeva.svg" alt="Maeva" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('opentable')"
+                                    src="@/assets/images/logo/Opentable.svg" alt="Opentable" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('thefork')"
+                                    src="@/assets/images/logo/Thefork.svg" alt="Thefork" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('tripadvisor')"
+                                    src="@/assets/images/logo/Tripadvisor.svg" alt="Tripadvisor" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('trustpilot')"
+                                    src="@/assets/images/logo/Trustpilot.svg" alt="Trustpilot" width="24" height="24">
+                                <img v-if="link.name.toLowerCase().includes('yelp')" src="@/assets/images/logo/Yelp.svg"
+                                    alt="Yelp" width="24" height="24">
+
+                            </el-tooltip>
                         </a>
                     </li>
                 </ul>
                 <h2 v-if="socials.length > 0">{{ $t("success_text2") }}</h2>
-                <ul v-if="socials.length > 0" class="socials">
-                    <li v-for="link in socials">
+                <ul v-if="socials.length > 0" class="social">
+                    <li v-for="link in socials" :key="link.id">
                         <a :href="link.url" target="_blank">
                             <el-tooltip :content="`${$t('success_text2')} ${link.name}`" placement="top">
-                                <Icon icon="logos:facebook" width="1.6rem" height="1.6rem"
-                                    v-if="link.name.toLowerCase().includes('facebook')"></Icon>
-                                <Icon icon="logos:instagram-icon" width="1.5rem" height="1.5rem"
-                                    v-if="link.name.toLowerCase().includes('instagram')"></Icon>
-                                <Icon icon="logos:tiktok-icon" width="1.5rem" height="1.5rem"
-                                    v-if="link.name.toLowerCase().includes('tiktok')"></Icon>
-                                <Icon icon="logos:linkedin-icon" width="1.4rem" height="1.4rem"
+                                <img v-if="link.name.toLowerCase().includes('facebook')"
+                                    src="@/assets/images/logo/Facebook.svg" alt="Facebook">
+                                <img v-if="link.name.toLowerCase().includes('instagram')"
+                                    src="@/assets/images/logo/Instagram.svg" alt="Instagram">
+                                <img v-if="link.name.toLowerCase().includes('twitter')"
+                                    src="@/assets/images/logo/Twitter.svg" alt="Twitter">
+                                <img v-if="link.name.toLowerCase().includes('youtube')"
+                                    src="@/assets/images/logo/Youtube.svg" alt="Youtube">
+                                <img v-if="link.name.toLowerCase().includes('tiktok')"
+                                    src="@/assets/images/logo/Tiktok.svg" alt="Tiktok">
+                                <Icon icon="logos:linkedin-icon" width="2rem" height="2rem"
                                     v-if="link.name.toLowerCase().includes('linkedin')"></Icon>
-                                <Icon icon="logos:youtube-icon" width="2rem" height="2rem"
-                                    v-if="link.name.toLowerCase().includes('youtube')"></Icon>
-                                <Icon icon="devicon:twitter" width="1.3rem" height="1.3rem"
-                                    v-if="link.name.toLowerCase().includes('twitter')"></Icon>
                             </el-tooltip>
                         </a>
                     </li>
@@ -70,9 +81,6 @@ const EstablishmentNotFound = defineAsyncComponent(() =>
 
 const { t } = useI18n();
 
-const page = ref({
-
-});
 const links = ref([])
 const socials = ref([])
 const route = useRoute();
@@ -88,9 +96,7 @@ onBeforeMount(async () => {
         icon: "uil-comment-alt"
     });
 
-    if (userStore.authenticated == null) services.setToken(import.meta.env.VITE_APP_TOKEN);
     links.value = await companyStore.loadLinksByEstablishment(route.params.etab)
-    console.log(links.value)
     socials.value = links.value.filter((link) => {
         return link.category == 'Social'
     })
@@ -98,18 +104,7 @@ onBeforeMount(async () => {
     links.value = links.value.filter((link) => {
         return link.category == 'Platform'
     })
-    console.log(links.value)
 })
-onMounted(() => {
-    /** Charger le titre par defaut */
-    page.value = {
-        title1: t("thanks_title1"),
-        title2: t("thanks_title2"),
-        icon: "uil-comment-alt",
-    };
-})
-
-
 
 watch(() => {
     /** Mettre le titre en watch */
@@ -120,6 +115,7 @@ watch(() => {
     });
 });
 
+
 </script>
 
 <style scoped>
@@ -128,12 +124,20 @@ p {
     font-weight: 500;
 }
 
-.logoSrc{
+.logoSrc {
     display: flex;
     gap: 20px;
     align-items: center;
-    /* justify-content: center;*/
-   
+    margin-top: 2%;
+    margin-bottom: 2%;
+
+}
+
+.social {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-top: 2%;
 }
 
 .link li {
@@ -142,7 +146,7 @@ p {
     border-radius: 5px;
     font-weight: 500;
     color: white;
-   
+
 }
 
 .link li:hover {

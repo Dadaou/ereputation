@@ -1,24 +1,26 @@
 <template>
   <div class="security__header border__bottom">
-    <!-- <div class="security__edit">
-      <h4><i class="uil uil-calender"></i> Advantage List</h4>
-    </div> -->
+  </div>
+  <div class="search mb-8">
+    <el-input v-model="search" size="small" placeholder="Type to search" />
   </div>
   <div class="mt-5 erep_table table__container">
     <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
-      <el-table-column label="Name" fixed prop="name" width="188"/>
-      <el-table-column label="Establishment" prop="establishment_name" width="200"/>
-      <el-table-column label="Amount" prop="amount" align="center" width="100"/>
-      <el-table-column label="Category" prop="category" width="150"/>
-      <el-table-column label="Code" prop="code" width="100"/>
-      <el-table-column label="Metric" prop="metric" width="100"/>
-      <el-table-column label="Scope" prop="scope" width="100"/>
-      <el-table-column label="Validity" prop="validity" align="center" width="100"/>
-      <el-table-column label="Limit" prop="advantageLimit" align="center" width="100"/>
+      <el-table-column label="Name" fixed prop="name" width="188" />
+      <el-table-column label="Establishment" prop="establishment_name" width="200" />
+      <el-table-column label="Amount" prop="amount" align="center" width="100" />
+      <el-table-column label="Category" prop="category" width="150" />
+      <el-table-column label="Code" prop="code" width="100" />
+      <el-table-column label="Metric" prop="metric" width="100" />
+      <el-table-column label="Scope" prop="scope" width="100" />
+      <el-table-column label="Validity" prop="validity" align="center" width="100" />
+      <el-table-column label="Limit" prop="advantageLimit" align="center" width="100" />
+      <el-table-column label="Received" prop="received" align="center" width="100" />
+      <el-table-column label="Used" prop="used" align="center" width="100" />
       <el-table-column label="Expired At" width="150">
-         <template #default="scope">
-                  {{scope.row.expired_at?moment(scope.row.expired_at).format('YYYY-MM-DD'):''}}
-         </template>
+        <template #default="scope">
+          {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
+        </template>
       </el-table-column>
       <el-table-column label="Enable" align="center" width="100">
         <template #default="scope">
@@ -30,19 +32,18 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="Operations" fixed="right" width="150">
+      <el-table-column label="Operations" width="200">
 
         <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" />
+          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>
         </template>
         <template #default="scope">
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
             <template #reference>
               <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
             </template>
           </el-popconfirm>
-
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -50,7 +51,7 @@
 </template>
 
 <script setup>
-import { computed, ref, inject} from 'vue';
+import { computed, ref, inject } from 'vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 import services from '@Services/services.js';
 import moment from 'moment';
@@ -60,34 +61,29 @@ const emit = defineEmits(['edit', 'setEnable', 'setDisable']);
 const advantages = inject('advantages');
 const search = ref('');
 const { width } = useWindowSize();
-const tableWidth= computed(()=>{
-    return width.value>800?`width: ${100}%`:`width: ${100}%`;
+const tableWidth = computed(() => {
+  return width.value > 800 ? `width: ${100}%` : `width: ${100}%`;
 });
 
-const filterTableData = computed(() =>{
+const filterTableData = computed(() => {
   let filteredData = advantages.value;
-  console.log(search.value)
-  console.log(filteredData)
-  filteredData = filteredData.filter((data)=>{
-        return !search.value || 
-        data.name.toLowerCase().includes(search.value.toLowerCase()) || 
-        (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
-        (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase())) ||
-        (data.metric && data.metric.toLowerCase().includes(search.value.toLowerCase())) ||
-        (data.scope && data.scope.toLowerCase().includes(search.value.toLowerCase()))
+  filteredData = filteredData.filter((data) => {
+    return !search.value ||
+      data.name.toLowerCase().includes(search.value.toLowerCase()) ||
+      (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
+      (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase())) ||
+      (data.metric && data.metric.toLowerCase().includes(search.value.toLowerCase())) ||
+      (data.scope && data.scope.toLowerCase().includes(search.value.toLowerCase()))
 
-    })
-  console.log(filteredData)
+  })
   return filteredData
 });
 
 const reloadData = (advantageToRemove) => {
-  // Filtrer la liste d'avantages pour exclure celui qui doit être supprimé
   advantages.value = advantages.value.filter((item) => item.id !== advantageToRemove.id);
 };
 
 const handleEdit = (index, advantages) => {
-  console.log(advantages)
   emit('edit', advantages);
 };
 
@@ -100,10 +96,8 @@ const handleDisable = (index, advantages) => {
 };
 
 const handleDelete = async (index, advantages) => {
-  console.log('Handle Delete Called');
   try {
     await services.deleteRecord('advantages', advantages.id, (response) => {
-      console.log(response);
       if (response.status === 204) {
         reloadData(advantages);
         ElMessage({
@@ -124,17 +118,17 @@ const handleDelete = async (index, advantages) => {
 
 <style scoped>
 button {
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
 }
 
 button i.uil-trash-alt {
-    color: red !important;
+  color: red !important;
 }
 
 button i.uil-edit {
-    color: var(--color-danger) !important;
+  color: var(--color-danger) !important;
 }
 
 .security__header {
@@ -184,5 +178,22 @@ button i.uil-edit {
     min-width: 100px;
   }
 }
+
+.search{
+    display: none;
+}
+
+@media screen and (max-width: 468px) { 
+    .search {
+      display: flex;
+      max-width: 220px;
+      float: right;
+    }
+    .searchtab{
+      display: none;
+    }
+    .el-table--fit {
+      font-size: 11px !important;
+    }
+}
 </style>
-  

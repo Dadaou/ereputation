@@ -14,7 +14,7 @@ import { useUserStore } from '@Stores/user.js'
 const CheckAuthentication = (to, from, next) => {
   const user = useUserStore().user
   if (to.name == 'Login') {
-    if (localStorage.getItem('access')) {
+    if (localStorage.getItem('token')) {
       const roles = user ? user.roles : []
       let defaultRoute = { name: 'HomeViewForUserConnected' }
       if (roles.includes('ROLE_PARTNER') && (user.partner !== null || user.customer !== null)) {
@@ -64,6 +64,7 @@ const checkNavigation = (to, from, next) => {
 const removeAccess = (to, from, next) => {
   localStorage.removeItem('user_authenticated')
   localStorage.removeItem('access')
+  localStorage.removeItem('token')
   localStorage.removeItem('user')
   localStorage.removeItem('user_role')
   next()
@@ -71,7 +72,7 @@ const removeAccess = (to, from, next) => {
 
 const CheckAccess = (to, from, next) => {
   const userStore = useUserStore()
-  if (localStorage.getItem('access') == null) {
+  if (localStorage.getItem('token') == null) {
     next('/sign-in')
   } else {
     if (userStore.user == null) {
@@ -111,7 +112,7 @@ const router = createRouter({
         },
         {
           path: '/:catchAll(.*)',
-          redirect:'/404'
+          redirect: '/404'
         },
         {
           path: '/customer/:tag/establishment/notFound',
@@ -267,7 +268,6 @@ const router = createRouter({
           name: 'UnitFeedBack',
           component: () => import('@Components/units/UnitFeedbackComponent.vue'),
           beforeEnter: (to, from, next) => {
-            console.log('beforeEnter hook called')
             if (!to.params.rfuid) {
               const rfuid = generateRandomString(16)
               next({ name: 'UnitFeedBack', params: { ...to.params, rfuid } })
@@ -399,14 +399,14 @@ const router = createRouter({
           beforeEnter: [CheckAccess],
           children: [
             {
-              path: '',
+              path: 'personal_details',
               name: 'Personal_details',
               component: () => import('@Components/users/UserDetailComponent.vue')
             },
             {
               path: 'contact',
               name: 'Contact',
-              component: () => import('@Components/users/ContactComponent.vue')
+              component: () => import('@Components/advantage/AdvantageContactComponent.vue')
             },
             {
               path: 'subscriptions',
@@ -436,7 +436,7 @@ const router = createRouter({
               component: () => import('@Views/MyQRCodesPageView.vue')
             },
             {
-              path: 'parameters',
+              path: 'parameters/:tab?/:sub_tab?',
               name: 'Parameters',
               component: () => import('@Views/ParameterView.vue')
             },

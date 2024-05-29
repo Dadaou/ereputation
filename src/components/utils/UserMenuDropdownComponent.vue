@@ -21,7 +21,7 @@
 		          <ul class="py-2" aria-labelledby="user-menu-button">
 
 		            <li @click="closeDropdown" v-if="customer">
-		              <RouterLink :to="`/customer/${customer.tag}/account`"
+		              <RouterLink :to="`/customer/${customer.tag}/account/personal_details`"
 		                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
 		                <i class="uil uil-user-square"></i>
 		                Profile
@@ -62,8 +62,7 @@ const props = defineProps({
 		required: true,	
 	},
 	customer: {
-		type: Object,
-		required: true
+		required: true,
 	}
 });
 

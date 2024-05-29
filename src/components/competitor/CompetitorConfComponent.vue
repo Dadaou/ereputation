@@ -1,11 +1,11 @@
 <template>
     <div class="profile__header mt-2">
         <div class="profile__edit">
-           <!--  <h2 v-if="!showCompetitors">Competitors configuration</h2> -->
+            <!--  <h2 v-if="!showCompetitors">Competitors configuration</h2> -->
             <div class="competitor__head" v-if="showCompetitors">
-            	<h2>Competitors list for "{{selectedEstablishment.name}}"</h2>
-            	<button @click="showCompetitors = !showCompetitors">Back</button>
-        	</div>
+                <h2>Competitors list for "{{ selectedEstablishment.name }}"</h2>
+                <button @click="showCompetitors = !showCompetitors">Back</button>
+            </div>
         </div>
     </div>
     <div class="mt-5 table__container" v-if="!showCompetitors">
@@ -21,9 +21,12 @@
                     <el-input v-model="search" size="small" placeholder="Type to search" />
                 </template>
                 <template #default="scope">
-                    <el-button size="small" @click="showModal = !showModal, establishment = scope.row.uri, selectedEstablishment = scope.row"><i class="uil uil-plus"></i></el-button>
+                    <el-button size="small"
+                        @click="showModal = !showModal, establishment = scope.row.uri, selectedEstablishment = scope.row"><i
+                            class="uil uil-plus"></i></el-button>
 
-                    <el-button size="small" @click="showCompetitors = !showCompetitors, establishment = scope.row.uri, selectedEstablishment = scope.row"><i
+                    <el-button size="small"
+                        @click="showCompetitors = !showCompetitors, establishment = scope.row.uri, selectedEstablishment = scope.row"><i
                             class="uil uil-file-alt"></i></el-button>
                 </template>
             </el-table-column>
@@ -59,7 +62,7 @@
             <div class="modal__header">
                 <div class="modal__title">
                     <h3 class="font-semibold text-gray-900 dark:text-white">
-                        <i class="uil uil-link-add"></i> Add new Competitor for "{{selectedEstablishment.name}}"
+                        <i class="uil uil-link-add"></i> Add new Competitor for "{{ selectedEstablishment.name }}"
                     </h3>
                 </div>
                 <div class="modal__close">
@@ -68,8 +71,9 @@
             </div>
 
             <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
-            	<div>
-                    <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Competitor
+                <div>
+                    <label for="countries"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Competitor
                         <span>*</span></label>
                     <el-select v-model="competitor" placeholder="Choose competitor" size="large">
                         <el-option v-for="item in competitors" :key="item" :label="item.name" :value="item.uri" />
@@ -78,7 +82,8 @@
                 <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
                     <button type="submit"
                         :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800']">
-                        <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
+                        <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span
+                            v-if="showSpinner">Loading
                             ...</span>
                         <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
                     </button>
@@ -156,7 +161,7 @@ const showSpinner = ref(false)
 const search = ref('')
 const establishment = ref('')
 const selectedEstablishment = ref(null)
-const competitors = ref([]) 
+const competitors = ref([])
 const competitor = ref('')
 const showCompetitors = ref(false)
 
@@ -180,10 +185,10 @@ const establishments = computed(() => {
 
 const submit = async () => {
     showSpinner.value = true;
-    const data ={
-	   establishment: competitor.value,
-	   competitorTag: selectedEstablishment.value.tag
-	}
+    const data = {
+        establishment: competitor.value,
+        competitorTag: selectedEstablishment.value.tag
+    }
 
     try {
         const response = await new Promise((resolve, reject) => {
@@ -211,37 +216,35 @@ const resetValue = () => {
 }
 
 const remove = (id) => {
-    console.log(id)
+    // Do nothing
 }
 
 onBeforeMount(async () => {
-   
-     try {
+
+    try {
         const response = await new Promise((resolve, reject) => {
             services.get_Record(`establishments`, (response) => {
                 resolve(response);
             });
         });
 
-		if (response.status === 200) {
-			    const data = response.data['hydra:member'];
-			    let companies = [];
-			    if (userStore.user && userStore.user.customer) {
-			        companies = userStore.user.customer.establishments;
-			        console.log(companies)
-			        
-			        const dataIds = new Set(companies.map(establishment => establishment.id));
-			        console.log(dataIds)
+        if (response.status === 200) {
+            const data = response.data['hydra:member'];
+            let companies = [];
+            if (userStore.user && userStore.user.customer) {
+                companies = userStore.user.customer.establishments;
 
-			        const establishmentCompetitors = data.filter(competitor => !dataIds.has(competitor.id));
+                const dataIds = new Set(companies.map(establishment => establishment.id));
 
-			        competitors.value = establishmentCompetitors.map(competitor => ({
-			            id: competitor.id,
-			            name: competitor.name,
-			            uri: competitor['@id']
-			        }));
-			    }
-         
+                const establishmentCompetitors = data.filter(competitor => !dataIds.has(competitor.id));
+
+                competitors.value = establishmentCompetitors.map(competitor => ({
+                    id: competitor.id,
+                    name: competitor.name,
+                    uri: competitor['@id']
+                }));
+            }
+
         } else {
             console.error('Error fetching establishments:', response);
         }
@@ -251,18 +254,18 @@ onBeforeMount(async () => {
 });
 </script>
 <style scoped>
-.competitor__head{
-	display: flex;
-	justify-content: space-between;
+.competitor__head {
+    display: flex;
+    justify-content: space-between;
 }
 
-.competitor__head button{
-	font-weight: 500;
-	background-color: var(--color-primary);
-	color: white;
-	font-size: 14px;
-	padding: 3px 8px;
-	border-radius: 5px;
+.competitor__head button {
+    font-weight: 500;
+    background-color: var(--color-primary);
+    color: white;
+    font-size: 14px;
+    padding: 3px 8px;
+    border-radius: 5px;
 }
 
 .link-list {

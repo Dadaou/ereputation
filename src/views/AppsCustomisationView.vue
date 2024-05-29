@@ -91,7 +91,6 @@ const predefineColors = computed(() => {
     for (let key in data.value) {
         if (key != 'name' && key != 'logo' && key != 'partner') colors.push(data.value[key])
     }
-    console.log(colors)
     return colors;
 })
 const userStore = useUserStore();
@@ -123,7 +122,6 @@ const selectImg = () => {
 
 const updateData = (value, key) => {
     data.value[key] = value;
-    console.log(value)
 }
 
 watch(data, () => {
@@ -139,14 +137,13 @@ const loadTheme = async (partner) => {
     let apiParams = `partner=${partner}`;
 
     const api = apiBase + '?' + apiParams;
-    console.log(api)
 
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
     });
-    console.log(response)
+
     if (response.status == 200) {
         const { id, ...theme } = response.data
         data.value = {
@@ -166,9 +163,7 @@ const saveTheme = async (data) => {
         });
     });
 
-    console.log(response)
     if (response.status == 200) {
-        console.log('theme updated')
         showSpinner.value = false
     }
 };
@@ -176,7 +171,7 @@ const saveTheme = async (data) => {
 const submit = async () => {
     const form = document.querySelector('#themeForm');
     const formData = new FormData(form);
-    console.log(data.value)
+
     if (data.value) {
         formData.append('partner', data.value.partner);
         formData.append('backcolor', data.value.back_color);

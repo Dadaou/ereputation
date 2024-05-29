@@ -10,15 +10,10 @@
                         </div>
                         <h1 class="society__name">{{ unit.name }}</h1>
                         <ul>
-                            <!-- <li><span class="label">Category: </span> <span>{{ unit.category }}</span></li> -->
                             <li class="Gender">
                                 {{ $t("staffFeedback.interne") }}
                             </li>
                         </ul>
-                        <!-- <button class="btn mt-2  btn-primary staffs__btn" @click="showModal = true"> 
-                            services list 
-                            <i class="uil uil-clipboard-notes"></i>
-                        </button> -->
                     </div>
                 </div>
                 <div class="photo">
@@ -63,39 +58,24 @@
                             <input type="text" id="last_name" v-model="lastname"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
-                        <!-- <div>
-                            <label for="genders" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                $t("feedback.gender") }} <span>*</span> </label>
-                            <el-select v-model="gender" :placeholder="$t('feedback.placeholder_gender')" size="large">
-                                <el-option v-for="item in genders" :key="item.value" :label="item.label"
-                                    :value="item.value" />
-                            </el-select>
-                        </div> -->
                         <div>
                             <label for="datevisit"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                                     $t("feedback.datevisit") }}<!--  <span>*</span> --></label>
                             <el-date-picker v-model="dateVisit" :placeholder="$t('feedback.placeholder_datevisit')"
-                                :size="'large'" :disabled-date="disabledDate" type="datetime"
-                                :default-time="Date(Date.now())" :teleported="true" format="YYYY-MM-DD HH:mm" />
+                                :size="'large'" :disabled-date="disabledDate" type="datetime" :default-time="new Date()"
+                                :teleported="true" format="YYYY-MM-DD HH:mm" />
                         </div>
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
                         <div class="author__email">
-                            <!-- <span v-if="randomAdvantage">
-                                <i class="uil uil-info-circle"></i> {{ $t("feedback.indice1") }}
-                            </span> -->
-                            <!-- <p v-if="randomAdvantage">
-                                <b>{{ $t("feedback.promotion_day") }}</b> 
-                            </p> -->
                             <DiscountCheckList :establishment="route.params.etab" :customer="route.params.tag"
                                 @select="(value) => randomAdvantage = value" />
                             <span v-if="randomAdvantage">
                                 <i class="uil uil-info-circle"></i> {{ $t("feedback.indice1") }}
                             </span>
                             <label for="email"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
-                                address <!-- <span>*</span> --></label>
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t("feedback.email") }} <!-- <span>*</span> --></label>
                             <input type="email" v-model="email" id="email"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
                         </div>
@@ -169,7 +149,7 @@
 
 <script setup>
 
-import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, watch, inject } from 'vue';
+import { ref, onBeforeMount, defineAsyncComponent, computed, onMounted, inject,watch } from 'vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
@@ -219,7 +199,6 @@ const modalWidth = computed(() => {
 })
 const establishment = ref({});
 
-const page = ref();
 const iframeVisible = ref(false);
 const showSpinner = ref(false);
 
@@ -231,9 +210,7 @@ onBeforeMount(async () => {
         icon: "uil-comment-alt"
     });
 
-    services.setToken(import.meta.env.VITE_APP_TOKEN);
-
-    await services.get_Record(`establishment/${route.params.etab}/media`, (response) => {
+    await services.get_Record(`public/establishment/${route.params.etab}/media`, (response) => {
         if (response !== undefined && response.status == 200) {
             establishment.value = response['data'];
         }
@@ -241,37 +218,43 @@ onBeforeMount(async () => {
         if (response !== undefined && response.status == 404) {
             exist.value = false;
         }
-    });
+    }, true);
 
-    await services.get_Record(`/customer/establishment/unit?tag=${route.params.etab}`, (response) => {
+    await services.get_Record(`public/customer/establishment/unit?tag=${route.params.etab}`, (response) => {
         if (response.status == 200) {
             units.value = response.data;
             unit.value = response.data.filter(i => i.tag == route.params.id).length > 0 ? response.data.filter(i => i.tag == route.params.id)[0] : null
+
+            if (!unit.value) exist.value = false
         }
+
         if (response.status == 404) exist.value = false
-    });
+    }, true);
 })
 const requiredinput = ref('');
 onMounted(() => {
     try {
         if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
-        window.FingerprintApp.default.main();
-    }
+            window.FingerprintApp.default.main();
+        }
     } catch (error) {
         console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
     }
-    requiredinput.value = t('staffFeedback.input_required')
-})
+    requiredinput.value = t('feedback.requiredinputs')
 
-watch(() => {
-    /** Mettre le titre en watch */
     appStore.setCurrentPage({
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),
         icon: "uil-comment-alt"
     });
+})
 
-    requiredinput.value = t('staffFeedback.input_required')
+watch(()=>{
+    appStore.setCurrentPage({
+        title1: t("feedback.title1"),
+        title2: t("feedback.title2"),
+        icon: "uil-comment-alt"
+    });
 })
 
 const firstname = ref('');
@@ -279,7 +262,7 @@ const lastname = ref('');
 const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
-const dateVisit = ref(moment().format('YYYY-MM-DD'));
+const dateVisit = ref(new Date());
 
 const resetForm = () => {
     firstname.value = '';
@@ -316,14 +299,14 @@ const submit = async () => {
         "optin": true,
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
         "dateReview": moment(date_review, 'DD/MM/YYYY'),
-        "visitor": visitorId ? `/api/visitors/${visitorId}`: null
+        "visitor": visitorId ? `/api/visitors/${visitorId}` : null
     }
 
     let contactData = {
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,
-        establishment: [`/api/establishments/${establishment.value.id}`]
+        establishments: [`/api/establishments/${establishment.value.id}`]
     }
 
     try {
@@ -331,31 +314,32 @@ const submit = async () => {
             showSpinner.value = true;
             await feedbackStore.createReview(review, async (response) => {
                 if (response.status == 201) {
-                    if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
-                        await services.createRecord('contacts', contactData, async (contactResponse) => {
-
+                    if (email.value !== null || email.value !== '') {
+                        await services.createRecord('public/contacts', contactData, async (contactResponse) => {
                             if (contactResponse.status == 201) {
-                                services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
-                                    console.log(res)
-                                })
-
-                                let coupons = {
-                                    advantage: randomAdvantage.value.id,
-                                    establishment: route.params.etab,
-                                    // gender: gender.value,
-                                    firstname: firstname.value,
-                                    lastname: lastname.value,
-                                    email: email.value,
-                                    language: (lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase(),
-                                    app_url: app_url.value,
-                                    template: `workflow_en`
+                                if (visitorId) {
+                                    services.patchRecord('public/visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
+                                        // Do nothing
+                                    }, true)
                                 }
-                                console.log(coupons)
-                                await services.createRecord('workflow', coupons, () => {
-                                    resetForm()
-                                });
+
+                                if (randomAdvantage.value) {
+                                    let coupons = {
+                                        advantage: randomAdvantage.value.id,
+                                        establishment: route.params.etab,
+                                        firstname: firstname.value,
+                                        lastname: lastname.value,
+                                        email: email.value,
+                                        language: (lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase(),
+                                        app_url: app_url.value,
+                                        template: `workflow_en`
+                                    }
+                                    await services.createRecord('public/workflow', coupons, () => {
+                                        resetForm()
+                                    }, true);
+                                }
                             }
-                        });
+                        }, true);
                     }
                     router.push({
                         name: 'SuccessFeedback',
@@ -379,9 +363,6 @@ const submit = async () => {
 </script>
 
 <style scoped>
-/*************
-    Modal CSS
-**************/
 .modal__header {
     display: flex;
     justify-content: space-between;

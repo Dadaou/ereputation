@@ -1,103 +1,99 @@
 <template>
-  <el-tabs v-model="activeName" type="card" class="demo-tabs">    
-      <el-tab-pane label="Staff" name="staffs">
-        <div class="head">
-            <div class="app__title">
-              <h2>Staffs Histogram</h2>
-            </div>
+  <el-tabs v-model="activeName" type="card" class="demo-tabs">
+    <el-tab-pane label="Staff" name="staffs">
+     <!--  <div class="head">
+        <div class="app__title">
+          <h2>Staffs Histogram</h2>
+        </div>
+      </div> -->
+      <div class="reviews__content" ref="el">
+        <div v-if="chartLoading == true" :style="{
+          'width': `100%`,
+          'height': `200px`,
+          'display': 'flex',
+          'alignItems': 'center',
+          'background': 'rgba(0, 0, 0, 0.1)',
+          'opacity': 0.9,
+          'justifyContent': 'center',
+          'alignItems': 'center',
+          'zIndex': 1,
+          'marginTop': '10px',
+          'marginBottom': '10px'
+        }">
+          <SpinnerComponent />
+        </div>
+        <div v-else class="chart" :style="{
+          'display': 'flex',
+          'width': '100%',
+        }">
+          <div class="colSmall">
+            <GroupedBarChart :plot-data="plotdata" x-key="date" :width="custom_width" :height="200"
+              :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Reviews"
+              :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
+              :y-tick-format="d => `${d}`" />
           </div>
-        <div class="reviews__content" ref="el">
-          <div v-if="chartLoading == true" :style="{
-            'width': `100%`,
-            'height': `200px`,
-            'display': 'flex',
-            'alignItems': 'center',
-            'background': 'rgba(0, 0, 0, 0.1)',
-            'opacity': 0.9,
-            'justifyContent': 'center',
-            'alignItems': 'center',
-            'zIndex': 1,
-            'marginTop': '10px',
-            'marginBottom': '10px'
-          }">
-            <SpinnerComponent />
-          </div>
-          <div v-else class="chart" :style="{
-            'display': 'flex',
-            'width': '100%',
-          }">
-            <div class="colSmall">
+          <div class="colLarge">
+            <div class="boxLarge">
               <GroupedBarChart :plot-data="plotdata" x-key="date" :width="custom_width" :height="200"
                 :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Reviews"
                 :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
                 :y-tick-format="d => `${d}`" />
             </div>
-            <div class="colLarge">
-              <div class="boxLarge">
-                <GroupedBarChart :plot-data="plotdata" x-key="date" :width="custom_width" :height="200"
-                :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Reviews"
-                :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
-                :y-tick-format="d => `${d}`" />
-              </div>
-            </div>
           </div>
+        </div>
+        <div>
+          <BaseLegend class="legend" style="margin-bottom: 50px;" :LegendData="legendData" :alignment="'horizontal'">
+          </BaseLegend>
+        </div>
+      </div>
+      <!-- <div class="head">
+        <div class="app__title">
+          <h2>Staffs</h2>
+        </div>
+      </div> -->
+      <div class="reviews__content">
+        <StaffItemComponent v-if="staffLoading == false" />
+        <div v-else role="status"
+          class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
+          v-for="index in 2" :key="index">
           <div>
-            <BaseLegend class="legend" style="margin-bottom: 50px;" :LegendData="legendData" :alignment="'horizontal'">
-            </BaseLegend>
-          </div>
-        </div>
-        <div class="head">
-          <div class="app__title">
-            <h2>Staffs</h2>
-          </div>
-        </div>
-        <div class="reviews__content">
-          <StaffItemComponent v-if="staffLoading == false" />
-          <div v-else role="status"
-            class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
-            v-for="index in 2" :key="index">
-            <div>
-              <div class="flex items-center justify-between mb-4">
-                <div>
-                  <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                  <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
-                  <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-                </div>
-                <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
-              </div>
+            <div class="flex items-center justify-between mb-4">
               <div>
-                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-                <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
+                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
               </div>
+              <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
             </div>
-            <span class="sr-only">Loading...</span>
-          </div>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane v-for="category in categories" :label="category" :name="category">
-        <div class="head">
-            <div class="app__title">
-              <h2>{{category}} Histogram</h2>
+            <div>
+              <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+              <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+              <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
             </div>
-        </div>
-        <div class="reviews__content">
-          <UnitChartComponent 
-          :category="category"
-          :plotdata="unitData"
-          :legendData="legendUnitData"
-          :chartLoading="chartUnitLoading"
-          />
-        </div>
-        <div class="head">
-          <div class="app__title">
-            <h2>{{category}}</h2>
           </div>
+          <span class="sr-only">Loading...</span>
         </div>
-         <div class="reviews__content">
-         <UnitItemComponent :category="category" :units="unitByCategory[category]"/>
+      </div>
+    </el-tab-pane>
+    <el-tab-pane v-for="category in categories" :label="category" :name="category">
+     <!--  <div class="head">
+        <div class="app__title">
+          <h2>{{ category }} Histogram</h2>
         </div>
-      </el-tab-pane>
+      </div> -->
+      <div class="reviews__content">
+        <UnitChartComponent :category="category" :plotdata="unitData" :legendData="legendUnitData"
+          :chartLoading="chartUnitLoading" />
+      </div>
+     <!--  <div class="head">
+        <div class="app__title">
+          <h2>{{ category }}</h2>
+        </div>
+      </div> -->
+      <div class="reviews__content">
+        <UnitItemComponent :category="category" :units="unitByCategory[category]" />
+      </div>
+    </el-tab-pane>
   </el-tabs>
 </template>
 <script setup>
@@ -169,10 +165,9 @@ const getPlotData = async (period, rangedate, companyId, next) => {
     format = 'YYYY'
   }
 
-  const datefrom = moment(rangedate[0]).format(format);
-  const dateto = moment(rangedate[1]).format(format);
+  const datefrom = moment(new Date(rangedate[0])).format(format);
+  const dateto = moment(new Date(rangedate[1])).format(format);
 
-  console.log(`/establishment/${companyId}/${period}/${datefrom}/${dateto}/staff`)
   const response = await new Promise((resolve) => {
     services.get_Record(`/establishment/${companyId}/${period}/${datefrom}/${dateto}/staff`, (response) => {
       resolve(response)
@@ -182,37 +177,35 @@ const getPlotData = async (period, rangedate, companyId, next) => {
     data = response.data;
     chartLoading.value = false;
   }
-  console.log(chartLoading.value)
   next(data);
 }
 
-const getUnitServices = async(tag)=>{
-   const response = await new Promise((resolve) => {
+const getUnitServices = async (tag) => {
+  const response = await new Promise((resolve) => {
     services.get_Record(`/customer/establishment/unit?tag=${tag}`, (response) => {
       resolve(response)
     });
   });
   let units = {}
   if (response.status == 200) {
-    response.data.forEach(unit =>{
-      if(units[unit.category]){
+    response.data.forEach(unit => {
+      if (units[unit.category]) {
         units[unit.category].push(unit)
-      }else{
+      } else {
         units[unit.category] = []
         units[unit.category].push(unit)
       }
     })
     unitByCategory.value = units;
     categories.value = Object.keys(units)
-    console.log(unitByCategory.value)
   }
 }
 
 function reordonnerObjets(listeObjets) {
   return listeObjets.map(objet => {
-    const {Score, ...autresProprietes} = objet;
+    const { Score, ...autresProprietes } = objet;
 
-    let nouvelObjet = {Score };
+    let nouvelObjet = { Score };
 
     Object.keys(autresProprietes).forEach(propriete => {
       nouvelObjet[propriete] = autresProprietes[propriete];
@@ -281,14 +274,14 @@ const legendUnitData = computed(() => {
 });
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
-const getUnitChartdata = async(tag, category, rangedate)=>{
+const getUnitChartdata = async (tag, category, rangedate) => {
   let apiBase = '/customer/establishment/unit/chart';
   let apiParams = `tag=${tag}&by=daily`;
   let format = 'YYYY-MM-DD';
   chartUnitLoading.value = true
 
-  const dateStart = moment(rangedate[0]).format(format);
-  const dateEnd = moment(rangedate[1]).format(format);
+  const dateStart = moment(new Date(rangedate[0])).format(format);
+  const dateEnd = moment(new Date(rangedate[1])).format(format);
 
   if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
     apiParams += `&fromDate=${dateStart}&toDate=${dateEnd}`;
@@ -299,32 +292,28 @@ const getUnitChartdata = async(tag, category, rangedate)=>{
   }
 
   const api = apiBase + '?' + apiParams;
-  console.log(api)
   const response = await new Promise((resolve) => {
     services.get_Record(api, (response) => {
       resolve(response)
     });
   });
 
-  console.log(response)
-  
   if (response.status == 200) {
-    console.log(response.data)
     unitData.value = response.data.map(item => {
-      const {Score, ...data} = item
-      return{
-       Score: Score,
-       ...data
+      const { Score, ...data } = item
+      return {
+        Score: Score,
+        ...data
       }
     });
   }
   chartUnitLoading.value = false
 }
 
-watch(activeName, async()=>{
+watch(activeName, async () => {
   onglet.value = activeName.value
-  if(activeName.value !== 'staffs'){
-   await getUnitChartdata(companyId, activeName.value, date.value)
+  if (activeName.value !== 'staffs') {
+    await getUnitChartdata(companyId, activeName.value, date.value)
   }
 })
 
@@ -337,7 +326,7 @@ onMounted(async () => {
   plotdata.value = reordonnerObjets(response);
 });
 
-onBeforeMount(async()=>{
+onBeforeMount(async () => {
   await getUnitServices(companyId)
 })
 
@@ -367,61 +356,61 @@ watch([date, type], async () => {
 }
 
 @media screen and (max-width:900px) {
-    .range__date {
-        flex-direction: column;
-    }
+  .range__date {
+    flex-direction: column;
+  }
 }
 
 .colLarge {
-  overflow-x: scroll; 
+  overflow-x: scroll;
   width: 100%;
 }
 
 @media screen and (min-width:976px) {
-    .colSmall {
-        max-width:56px;
-        overflow: hidden;
-    }
+  .colSmall {
+    max-width: 56px;
+    overflow: hidden;
+  }
 
-    .boxLarge {
-        max-width:800px;
-        margin-left:-60px;
-    }
+  .boxLarge {
+    max-width: 800px;
+    margin-left: -60px;
+  }
 }
 
 @media screen and (min-width:769px) and (max-width: 975px) {
-    .colSmall {
-        max-width:56px;
-        overflow: hidden;
-    }
+  .colSmall {
+    max-width: 56px;
+    overflow: hidden;
+  }
 
-    .boxLarge {
-        max-width:90%;
-        margin-left:-60px;
-    }
+  .boxLarge {
+    max-width: 90%;
+    margin-left: -60px;
+  }
 }
 
 @media screen and (min-width:469px) and (max-width: 768px) {
-    .colSmall {
-        max-width:56px;
-        overflow: hidden;
-    }
+  .colSmall {
+    max-width: 56px;
+    overflow: hidden;
+  }
 
-    .boxLarge {
-        max-width:700px;
-        margin-left:-60px;
-    }
+  .boxLarge {
+    max-width: 700px;
+    margin-left: -60px;
+  }
 }
 
 @media screen and (max-width:468px) {
-    .colSmall {
-        max-width:56px;
-        overflow: hidden;
-    }
+  .colSmall {
+    max-width: 56px;
+    overflow: hidden;
+  }
 
-    .boxLarge {
-        max-width:700px;
-        margin-left:-60px;
-    }
+  .boxLarge {
+    max-width: 700px;
+    margin-left: -60px;
+  }
 }
 </style>

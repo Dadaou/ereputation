@@ -59,34 +59,19 @@
                             <input type="text" id="last_name" v-model="lastname"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
-                        <!-- <div>
-                            <label for="countries"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                    $t("feedback.gender") }} </label>
-                            <el-select v-model="gender" :placeholder="$t('feedback.placeholder_gender')" size="large">
-                                <el-option v-for="item in genders" :key="item.value" :label="item.label"
-                                    :value="item.value" />
-                            </el-select>
-                        </div> -->
                         <div>
 
                             <label for="last_name"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                                     $t("feedback.datevisit") }}<!-- <span>*</span> --></label>
                             <el-date-picker v-model="dateVisit" :placeholder="$t('feedback.placeholder_datevisit')"
-                                :size="'large'" :disabled-date="disabledDate" type="datetime"
-                                :default-time="Date(Date.now())" format="YYYY-MM-DD HH:mm" />
+                                :size="'large'" :disabled-date="disabledDate" type="datetime" :default-time="new Date()"
+                                format="YYYY-MM-DD HH:mm" />
                         </div>
 
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
                         <div class="author__email">
-                            <!--  <span v-if="randomAdvantage">
-                                <i class="uil uil-info-circle"></i>{{ $t("feedback.indice1") }}
-                            </span> -->
-                            <!--  <p v-if="randomAdvantage">
-                                <b>{{ $t("feedback.promotion_day") }} </b> 
-                            </p> -->
                             <DiscountCheckList :establishment="route.params.id" :customer="route.params.tag"
                                 @select="(value) => randomAdvantage = value" />
                             <span v-if="randomAdvantage">
@@ -137,7 +122,7 @@
 
 <script setup>
 
-import { ref, onBeforeMount, defineAsyncComponent, onMounted, watch, inject } from 'vue';
+import { ref, onBeforeMount, defineAsyncComponent, onMounted, inject,watch } from 'vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
@@ -176,8 +161,6 @@ const establishment = ref({});
 let media = [];
 const iframeVisible = ref(false);
 
-const page = ref({})
-
 let randomAdvantage = ref(null);
 
 const showSpinner = ref(false);
@@ -188,8 +171,7 @@ onBeforeMount(async () => {
         title2: t("feedback.title2"),
         icon: "uil-comment-alt"
     });
-    services.setToken(import.meta.env.VITE_APP_TOKEN);
-    await services.get_Record(`establishment/${route.params.id}/media`, (response) => {
+    await services.get_Record(`public/establishment/${route.params.id}/media`, (response) => {
         if (response.status == 200) {
             establishment.value = response['data'];
             media.value = response['data'].url_source == null ? [] : response['data'].url_source;
@@ -198,22 +180,29 @@ onBeforeMount(async () => {
         if (response.status == 404) {
             exist.value = false;
         }
-    });
+    }, true);
 
 })
 
 onMounted(() => {
-    console.log(window.FingerprintApp)
+
+    appStore.setCurrentPage({
+        title1: t("feedback.title1"),
+        title2: t("feedback.title2"),
+        icon: "uil-comment-alt"
+    });
+
     try {
         if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
-        window.FingerprintApp.default.main();
-    }
+            window.FingerprintApp.default.main();
+        }
     } catch (error) {
         console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
     }
+
 })
 
-watch(() => {
+watch(()=>{
     appStore.setCurrentPage({
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),
@@ -230,7 +219,7 @@ const lastname = ref('');
 const ratingCustomer = ref(null);
 const comment = ref('');
 const email = ref('');
-const dateVisit = ref(moment().format('YYYY-MM-DD'));
+const dateVisit = ref(new Date());
 
 const resetForm = () => {
     firstname.value = '';
@@ -264,7 +253,7 @@ const submit = async () => {
         "optin": true,
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
         "dateReview": moment(date_review, 'DD/MM/YYYY'),
-        "visitor": visitorId ? `/api/visitors/${visitorId}`: null
+        "visitor": visitorId ? `/api/visitors/${visitorId}` : null
     };
 
     let contactData = {
@@ -280,33 +269,33 @@ const submit = async () => {
             showSpinner.value = true;
 
             await feedbackStore.createReview(review, async (response) => {
-                console.log(response)
                 if (response.status == 201) {
-                    if (randomAdvantage.value && (email.value !== null || email.value !== '')) {
-                        await services.createRecord('contacts', contactData, async (contactResponse) => {
-                            console.log(contactData)
+                    if (email.value !== null || email.value !== '') {
+                        await services.createRecord('public/contacts', contactData, async (contactResponse) => {
                             if (contactResponse.status == 201) {
-                                services.patchRecord('visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
-                                    console.log(res)
-                                })
-                                let coupons = {
-                                    advantage: randomAdvantage.value.id,
-                                    establishment: route.params.id,
-                                    // gender: gender.value,
-                                    firstname: firstname.value,
-                                    lastname: lastname.value,
-                                    email: email.value,
-                                    language: (lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase(),
-                                    app_url: app_url.value,
-                                    template: 'workflow_en'
+                                if (visitorId) {
+                                    services.patchRecord('public/visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
+                                        // Do nothing
+                                    }, true)
                                 }
-                                console.log(coupons)
-                                await services.createRecord('workflow', coupons, (res) => {
-                                    console.log(res)
-                                    resetForm()
-                                });
+
+                                if (randomAdvantage.value) {
+                                    let coupons = {
+                                        advantage: randomAdvantage.value.id,
+                                        establishment: route.params.id,
+                                        firstname: firstname.value,
+                                        lastname: lastname.value,
+                                        email: email.value,
+                                        language: (lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase(),
+                                        app_url: app_url.value,
+                                        template: 'workflow_en'
+                                    }
+                                    await services.createRecord('public/workflow', coupons, (res) => {
+                                        resetForm()
+                                    }, true);
+                                }
                             }
-                        });
+                        }, true);
                     }
                     router.push({
                         name: 'SuccessFeedback',

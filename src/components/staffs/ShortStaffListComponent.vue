@@ -1,8 +1,11 @@
 <template>
   <div class="security__header border__bottom">
-    <!-- <div class="security__edit">
-      <h4><i class="uil uil-users-alt"></i> Staff List</h4>
-    </div> -->
+    <button @click="add" class="inline-flex items-center py-2 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+        staff <i class="uil uil-plus"></i>
+    </button>
+    <div class="search">
+      <el-input v-model="search" size="small" placeholder="Type to search" />
+    </div>
   </div>
   <div class="mt-5 table__container">
     <el-table :data="filterTableData">
@@ -16,7 +19,7 @@
 
       <el-table-column style="width: 15%; min-width: 200px;" align="right">
         <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" />
+          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>
         </template>
         <template #default="scope">
           <el-tooltip :content="`Click to enter ${scope.row.firstname} ${scope.row.lastname}'s feedback formulary`"
@@ -25,6 +28,12 @@
                 class="uil uil-external-link-alt"></i></a>
           </el-tooltip>
           <el-button size="small" @click="showQRCode(scope.row)"><i class="uil uil-qrcode-scan"></i></el-button>
+           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
+          <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
+            <template #reference>
+              <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
+            </template>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -38,30 +47,33 @@
 <script setup>
 import { computed, ref, inject, defineAsyncComponent } from 'vue';
 import moment from 'moment';
-import { ElTable, ElTableColumn, ElButton, ElInput } from 'element-plus';
+import { useStaffStore } from "@Stores/staff.js";
+import services from '@Services/services.js';
+import { useRouter } from 'vue-router';
+import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
 import 'element-plus/es/components/table-column/style/css'
 import 'element-plus/es/components/popconfirm/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
-import services from '@Services/services.js';
 
 const QrCodeModalComponent = defineAsyncComponent(() =>
   import('@Components/utils/QrCodeModalComponent.vue')
 )
 
+const router = useRouter()
 const baseurl = window.location.origin;
 const showModal = ref(false);
+const staffStore = useStaffStore();
 const staff = ref(null);
-const staffs = inject('staffs')
+const staffs = inject('staffs');
 const tag = inject('tag');
 
 let tableData = computed(() => {
   let data = [];
   staffs.value.forEach(staff_item => {
     staff_item['period'] = staff_item.dateto != null ? `${moment(staff_item.datefrom).format('YYYY MMM DD')} to ${moment(staff_item.dateto).format('YYYY MMM DD')}` : `${moment(staff_item.datefrom).format('YYYY MMM DD')} to -`;
-    console.log(staff_item)
     data.push(staff_item);
   })
   return data;
@@ -87,9 +99,39 @@ const filterTableData = computed(() => {
   return filterdata
 })
 
+const add = ()=>{
+  router.push({ name: 'Parameters', params: { tab: 'staffs', sub_tab: 'staffs_form'} });
+}
+
+const handleEdit = (index, staff) => {
+  staffStore.setStaff(staff);
+  router.push({ name: 'Parameters', params: { tab: 'staffs', sub_tab: 'staffs_form'} });
+}
+
 const showQRCode = (value) => {
   staff.value = value;
   showModal.value = true;
+};
+
+const reloadData = (staff) => {
+  let data = [];
+  staffs.value.forEach(staff_item => {
+    if (staff_item.id !== staff.id) data.push(staff_item);
+  })
+  staffs.value = data;
+}
+
+
+const handleDelete = async (index, staff) => {
+  await staffStore.removeStaff(staff.id, (response) => {
+    if (response.status == 204) {
+      reloadData(staff);
+      ElMessage({
+        message: `Staff removed successfully.`,
+        type: 'success',
+      });
+    }
+  })
 };
 
 </script>
@@ -101,11 +143,11 @@ button {
 }
 
 button i.uil-trash-alt {
-  color: var(--color-danger) !important;
+  color: red;
 }
 
 button i.uil-edit {
-  color: var(--color-primary) !important;
+  color: var(--color-danger);
 }
 
 .security__header {
@@ -134,6 +176,12 @@ button i.uil-edit {
   width: 85%;
 }
 
+@media screen and (max-width: 768px) {
+  .table__container {
+    width: 75%;
+  }
+}
+
 /* Définissez une largeur maximale pour l'en-tête sur les grands écrans */
 @media screen and (min-width: 800px) {
   .security__header {
@@ -144,5 +192,23 @@ button i.uil-edit {
   .table__container {
     width: 100%;
   }
+}
+
+.search{
+    display: none;
+}
+
+@media screen and (max-width: 468px) { 
+    .search {
+      display: inline;
+      max-width: 220px;
+      margin-right: 100px;
+    }
+    .searchtab{
+      display: none;
+    }
+    .el-table--fit {
+      font-size: 11px !important;
+    }
 }
 </style>

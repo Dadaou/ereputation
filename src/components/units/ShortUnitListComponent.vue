@@ -1,20 +1,36 @@
 <template>
+   <div class="security__header border__bottom">
+    <button @click="add" class="inline-flex items-center py-2 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+        service <i class="uil uil-plus"></i>
+    </button>
+    <div class="search">
+      <el-input v-model="search" size="small" placeholder="Type to search" />
+    </div>
+  </div>
   <div class="mt-5 table__container">
     <el-table :data="filterTableData">
       <el-table-column label="Name" prop="name" style="width: 15%; min-width: 300px;" />
       <el-table-column label="Code" prop="code" style="width: 20%; min-width: 300px;" />
       <el-table-column label="Category" prop="category" style="width: 20%; min-width: 300px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;" />
-      <el-table-column style="width: 15%; min-width: 200px;" align="right">
+      <el-table-column style="width: 20%; min-width: 300px;" align="right">
         <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" />
+          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>
         </template>
         <template #default="scope">
+          <div class="action-buttons">
           <el-tooltip :content="`Click to enter ${scope.row.name}'s feedback formulary`" placement="top">
             <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
                 class="uil uil-external-link-alt"></i></a>
           </el-tooltip>
           <el-button size="small" @click="showQRCode(scope.row)"><i class="uil uil-qrcode-scan"></i></el-button>
+           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
+           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
+            <template #reference>
+              <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
+            </template>
+          </el-popconfirm>
+        </div>
         </template>
       </el-table-column>
     </el-table>
@@ -26,7 +42,9 @@
 </template>
 <script setup>
 import { computed, ref, inject, defineAsyncComponent } from 'vue';
-import { ElTable, ElTableColumn, ElButton, ElInput } from 'element-plus';
+import { ElTable, ElPopconfirm, ElTableColumn, ElButton, ElInput, ElTooltip } from 'element-plus';
+import { useRouter } from 'vue-router';
+import { useStaffStore } from "@Stores/staff.js";
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
 import 'element-plus/es/components/table-column/style/css'
@@ -38,7 +56,7 @@ import services from '@Services/services.js';
 const QrCodeModalComponent = defineAsyncComponent(() =>
   import('@Components/utils/QrCodeModalComponent.vue')
 )
-
+const router = useRouter()
 const units = inject('units')
 const search = ref('');
 const showModal = ref(false);
@@ -46,15 +64,20 @@ const tag = inject('tag');
 
 const baseurl = window.location.origin;
 const unit = ref(null);
+const staffStore = useStaffStore();
 
 const showQRCode = (value) => {
   unit.value = value;
   showModal.value = true;
 }
 
+const add = ()=>{
+  router.push({ name: 'Parameters', params: { tab: 'services', sub_tab: 'services_form'} });
+}
+
 const filterTableData = computed(() => {
   let filterdata = units.value;
-
+  console.log(units.value)
   filterdata = filterdata.map((value) => {
     value.link = `${baseurl}/public/${tag.value}/establishment/${value.establishment_competitor_tag}/units/${value.tag}/feedback`
     return value
@@ -70,8 +93,52 @@ const filterTableData = computed(() => {
   return filterdata
 });
 
+const reloadData = (unit) => {
+  let data = [];
+  units.value.forEach(item => {
+    if (item.id !== unit.id) data.push(item);
+  })
+  units.value = data;
+}
+
+const handleDelete = async (index, unit) => {
+  const response = await new Promise((resolve) => {
+    services.deleteRecord('units', unit['id'], (response) => {
+      resolve(response);
+    });
+  });
+
+  if (response.status == 204) {
+    reloadData(unit);
+    ElMessage({
+      message: `Unit removed successfully.`,
+      type: 'success',
+    });
+  }
+};
+
+const handleEdit = (index, unit) => {
+  console.log(unit)
+  staffStore.setUnit(unit);
+  router.push({ name: 'Parameters', params: { tab: 'services', sub_tab: 'services_form'} });
+};
+
 </script>
 <style scoped>
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.el-table th {
+  text-align: center;
+}
+
+.el-table td {
+  text-align: center;
+}
+
 button {
   border: none;
   cursor: pointer;
@@ -79,11 +146,11 @@ button {
 }
 
 button i.uil-trash-alt {
-  color: var(--color-danger) !important;
+  color: red;
 }
 
 button i.uil-edit {
-  color: var(--color-primary) !important;
+  color: var(--color-danger);
 }
 
 .security__header {
@@ -154,6 +221,18 @@ button i.uil-edit {
   width: 85%;
 }
 
+@media screen and (max-width: 768px) {
+  .table__container {
+    width: 70%;
+  }
+
+  .vertical-buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
 /* Définissez une largeur maximale pour l'en-tête sur les grands écrans */
 @media screen and (min-width: 800px) {
   .security__header {
@@ -164,5 +243,22 @@ button i.uil-edit {
   .table__container {
     width: 100%;
   }
+}
+.search{
+    display: none;
+}
+
+@media screen and (max-width: 468px) { 
+    .search {
+      display: inline;
+      max-width: 220px;
+      margin-right: 100px;
+    }
+    .searchtab{
+      display: none;
+    }
+    .el-table--fit {
+      font-size: 11px !important;
+    }
 }
 </style>

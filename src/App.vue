@@ -90,12 +90,12 @@ onBeforeMount(async () => {
   appStore.isLoading = true;
 
   const response = await new Promise((resolve) => {
-    services.get_Record(`/partner/info?code=${import.meta.env.VITE_PARTNER_CODE}`, (response) => {
+    services.get_Record(`partner/info?code=${import.meta.env.VITE_PARTNER_CODE}`, (response) => {
       resolve(response)
       if (response.status == 404) {
         appStore.isLoading = false;
       }
-    }, true);
+    }, true, true);
   });
 
   if (response.status == 200 && response.data) {
@@ -117,17 +117,6 @@ onBeforeMount(async () => {
   }
   initFlowbite();
 });
-
-onMounted(() => {
-  var w3cxDiv = document.createElement("div");
-  w3cxDiv.id = "w3cx";
-  document.getElementById("app").appendChild(w3cxDiv);
-  let w3cx = document.createElement("script");
-  w3cx.setAttribute("src", "https://downloads-global.3cx.com/downloads/livechatandtalk/v1/callus.js");
-  w3cx.setAttribute("id", "tcx-callus-js");
-  w3cx.setAttribute("charset", "utf-8");
-  document.getElementById("w3cx").appendChild(w3cx);
-})
 
 const { width } = useWindowSize();
 const loaderStyle = ref({

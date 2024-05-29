@@ -1,77 +1,76 @@
 <template>
     <div class="user__main__container">
-        <el-tabs v-model="activeName" type="card" class="demo-tabs">
+        <el-tabs v-model="parametersUrlsConf.tabs" type="card" class="demo-tabs">
             <el-tab-pane label="Establishments" name="establishments">
-                <el-tabs v-model="activeEstablishmentTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
-                    <el-tab-pane label="Establishments" name="establishment_list">
+                <el-tabs v-model="parametersUrlsConf.establishments" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
+                    <el-tab-pane label="Establishments" name="establishments_list">
                         <EstablishmentListComponent
-                            @edit="(establishment) => handleEdit(establishment, 'establishment')"
+                            @edit="(establishment) => handleEdit(establishment, 'establishments')"
                             @setEnable="(id) => setStatus(id, 'enable')"
                             @setDisable="(id) => setStatus(id, 'disable')" />
                     </el-tab-pane>
-                    <el-tab-pane label="Add a new establishment" name="establishment_form">
+                    <el-tab-pane label="Add a new establishment" name="establishments_form">
                         <EstablishmentFormComponent />
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
             <el-tab-pane label="Links" name="links">
-                <el-tabs v-model="activeLinkTab" class="demo-tabs">
-                    <el-tab-pane label="Links" name="link_list">
-                       <!--  <LinksConfComponent @edit="(link) => handleEdit(link, 'link')"/> -->
-                       <LinksListComponent @reload="reloadLink()" @edit="(link) => handleEdit(link, 'link')"/>
+                <el-tabs v-model="parametersUrlsConf.links" class="demo-tabs">
+                    <el-tab-pane label="Links" name="links_list">
+                        <LinksListComponent @reload="reloadLink()" @edit="(link) => handleEdit(link, 'links')" />
                     </el-tab-pane>
-                    <el-tab-pane label="Add a new Links" name="link_form">
-                        <LinksFormComponent @reload="reloadLink()"/>
+                    <el-tab-pane label="Add a new Links" name="links_form">
+                        <LinksFormComponent @reload="reloadLink()" />
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
             <el-tab-pane label="Competitors" name="competitors">
-                <el-tabs v-model="activeCompetitorsTab" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
-                    <el-tab-pane label="Competitors" name="competitor_list">
-                        <CompetitorListComponent @edit="(establishment) => handleEdit(establishment, 'competitor')"
+                <el-tabs v-model="parametersUrlsConf.competitors" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
+                    <el-tab-pane label="Competitors" name="competitors_list">
+                        <CompetitorListComponent @edit="(establishment) => handleEdit(establishment, 'competitors')"
                             @reload="reloadCompetitorList('list')" />
                     </el-tab-pane>
-                    <el-tab-pane label="Add a new competitor" name="competitor_form">
+                    <el-tab-pane label="Add a new competitor" name="competitors_form">
                         <CompetitorFormComponent @reload="reloadCompetitorList('form')" />
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="Staff" name="staff">
-                <el-tabs v-model="activeStaffTab" class="demo-tabs">
-                    <el-tab-pane label="Staffs" name="staff_list">
-                        <StaffListComponent @edit="(staff) => handleEdit(staff, 'staff')" />
+            <el-tab-pane label="Staff" name="staffs">
+                <el-tabs v-model="parametersUrlsConf.staffs" class="demo-tabs" @tab-click="() => clearStaffForm()">
+                    <el-tab-pane label="Staffs" name="staffs_list">
+                        <StaffListComponent @edit="(staff) => handleEdit(staff, 'staffs')" />
                     </el-tab-pane>
-                    <el-tab-pane label="Add a new staff member" name="staff_form">
+                    <el-tab-pane label="Add a new staff member" name="staffs_form">
                         <StaffFormComponent />
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="Services" name="service">
-                <el-tabs v-model="activeUnitTab" class="demo-tabs">
-                    <el-tab-pane label="Services" name="unit_list">
-                        <UnitListComponent @edit="(service) => handleEdit(service, 'service')" />
+            <el-tab-pane label="Services" name="services">
+                <el-tabs v-model="parametersUrlsConf.services" class="demo-tabs" @tab-click="() => clearUnitForm()">
+                    <el-tab-pane label="Services" name="services_list">
+                        <UnitListComponent @edit="(service) => handleEdit(service, 'services')" />
                     </el-tab-pane>
-                    <el-tab-pane label="Add a new service" name="unit_form">
+                    <el-tab-pane label="Add a new service" name="services_form">
                         <UnitFormComponent />
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="Events" name="event">
-                <el-tabs v-model="activeEventTab" class="demo-tabs">
-                    <el-tab-pane label="Events" name="event_list">
-                        <EventListComponent @edit="(event) => handleEdit(event, 'event')" />
+            <el-tab-pane label="Events" name="events">
+                <el-tabs v-model="parametersUrlsConf.events" class="demo-tabs">
+                    <el-tab-pane label="Events" name="events_list">
+                        <EventListComponent @edit="(event) => handleEdit(event, 'events')" />
                     </el-tab-pane>
-                    <el-tab-pane label="Add a new event" name="event_form">
+                    <el-tab-pane label="Add a new event" name="events_form">
                         <EventFormComponent />
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="AI categorizations" name="categorization">
-                <el-tabs v-model="activeCategorizationTab" class="demo-tabs">
-                    <el-tab-pane label="Categories" name="categorization_list">
-                        <CategorizationListComponent @edit="(category) => handleEdit(category, 'category')" />
+            <el-tab-pane label="AI categorizations" name="categories">
+                <el-tabs v-model="parametersUrlsConf.categories" class="demo-tabs">
+                    <el-tab-pane label="Categories" name="categories_list">
+                        <CategorizationListComponent @edit="(category) => handleEdit(category, 'categories')" />
                     </el-tab-pane>
-                    <el-tab-pane label="Add a new category" name="categorization_form">
+                    <el-tab-pane label="Add a new category" name="categories_form">
                         <CategorizationFormComponent />
                     </el-tab-pane>
                 </el-tabs>
@@ -102,20 +101,21 @@
     </div>
 </template>
 <script setup>
-import { ref, provide, defineAsyncComponent, onBeforeMount, watch } from 'vue';
+import { ref, reactive, provide, defineAsyncComponent, onBeforeMount, watch, computed } from 'vue';
 import moment from 'moment';
 import { ElTabs, ElTabPane } from 'element-plus';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
 import { useWindowSize } from '@vueuse/core';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
 
 
 const { width } = useWindowSize();
 const route = useRoute();
+const router = useRouter();
 
 
 const StaffFormComponent = defineAsyncComponent(() =>
@@ -207,25 +207,37 @@ const clearEstablishmentForm = () => {
     cleanEstablishmentForm.value = !cleanEstablishmentForm.value
 }
 
+const clearStaffForm = () => {
+    cleanStaffForm.value = !cleanStaffForm.value
+}
+
+const clearUnitForm = () => {
+    cleanUnitForm.value = !cleanUnitForm.value
+}
+
 const appStore = useAppStore()
 const userStore = useUserStore()
 const activeName = ref('establishments')
-const activeStaffTab = ref('staff_list')
-const activeLinkTab = ref('link_list')
+const parametersUrlsConf = reactive({
+    tabs: 'establishments',
+    establishments : 'establishments_list',
+    links: 'links_list',
+    competitors: 'competitors_list',
+    staffs: 'staffs_list',
+    events: 'events_list',
+    services: 'services_list',
+    categories: 'categories_list' 
+})
 
-const establishment_to_update = ref(null)
-const activeEstablishmentTab = ref('establishment_list')
-provide('establishment_to_update', establishment_to_update)
-provide('establishment_activeTab', activeEstablishmentTab)
+provide('parametersUrlsConf', parametersUrlsConf)
 const cleanEstablishmentForm = ref(false);
 provide('clearEstablishmentForm', cleanEstablishmentForm)
 
-const activeCompetitorsTab = ref('competitor_list')
-provide('activeCompetitorsTab', activeCompetitorsTab)
+const cleanStaffForm = ref(false);
+provide('clearStaffForm', cleanStaffForm)
 
-const staff_to_update = ref(null);
-provide('staff_to_update', staff_to_update)
-provide('staff_activeTab', activeStaffTab)
+const cleanUnitForm = ref(false);
+provide('clearUnitForm', cleanUnitForm)
 
 const allEvents = ref([])
 const allStaffs = ref([])
@@ -245,20 +257,11 @@ provide('partnerships', allPartnerships)
 provide('links', allLinks)
 provide('providers', providers)
 
-const activeEventTab = ref('event_list')
-provide('event_activeTab', activeEventTab)
+const establishment_to_update = ref(null)
+provide('establishment_to_update', establishment_to_update)
 
-const activeAdvantageTab = ref('advantage_list')
-provide('advantage_activeTab', activeAdvantageTab)
-
-const activeCategorizationTab = ref('categorization_list')
-provide('categorization_activeTab', activeCategorizationTab)
-
-const activePartnershipTab = ref('partnership_list')
-provide('partnership_activeTab', activePartnershipTab)
-
-const activeUnitTab = ref('unit_list')
-provide('unit_activeTab', activeUnitTab)
+const staff_to_update = ref(null);
+provide('staff_to_update', staff_to_update)
 
 const event_to_update = ref(null)
 provide('event_to_update', event_to_update)
@@ -281,49 +284,40 @@ const competitorsData = ref([])
 provide('competitorsData', competitorsData)
 
 const handleEdit = (value, type) => {
-    if (type == 'staff') {
-        activeStaffTab.value = 'staff_form';
+    parametersUrlsConf[type] = `${type}_form`;
+    if (type == 'staffs') {
         staff_to_update.value = value;
         staff_to_update.value['establishment'] = `/api/establishments/${value.establishment}`
     }
 
-    if (type == 'advantage') {
-        activeAdvantageTab.value = 'advantage_form';
-        advantage_to_update.value = value;
-    }
+    // if (type == 'advantage') {
+    //     advantage_to_update.value = value;
+    // }
 
-    if (type == 'establishment') {
-        activeEstablishmentTab.value = 'establishment_form';
+    if (type == 'establishments') {
         establishment_to_update.value = value;
     }
 
-    if (type == 'competitor') {
-        activeCompetitorsTab.value = 'competitor_form';
+    if (type == 'competitors') {
         establishment_to_update.value = value;
     }
 
-    if (type == 'event') {
-        activeEventTab.value = 'event_form';
+    if (type == 'events') {
         event_to_update.value = value;
     }
 
-    if (type == 'category') {
-        activeCategorizationTab.value = 'categorization_form'
+    if (type == 'categories') {
         category_to_update.value = value;
     }
 
-    if (type == 'service') {
-        activeUnitTab.value = 'unit_form'
+    if (type == 'services') {
         unit_to_update.value = value;
     }
 
-    if (type == 'link') {
-        activeLinkTab.value = 'link_form'
+    if (type == 'links') {
         link_to_update.value = value;
     }
 };
-
-
 
 const handleEnable = async (value, type) => {
     const response = await new Promise((resolve) => {
@@ -489,7 +483,7 @@ const reloadEventsList = async (type) => {
             })
         }
 
-        if (type == 'form') activeEventTab.value = 'event_list';
+        // if (type == 'form') activeEventTab.value = 'event_list';
     } catch (error) {
         console.error(error);
     }
@@ -506,7 +500,7 @@ const reloadStaffsList = async (type) => {
             allStaffs.value = response.data
         }
 
-        if (type == 'form') activeStaffTab.value = 'staff_list';
+        // if (type == 'form') activeStaffTab.value = 'staff_list';
     } catch (error) {
         console.error(error);
     }
@@ -549,8 +543,8 @@ const loadUnits = async () => {
     }
 }
 
-const reloadLink = async()=>{
-     try {
+const reloadLink = async () => {
+    try {
         const response = await new Promise((resolve) => {
             services.get_Record(`setting/list?tag=${route.params.tag}&categ=all`, (response) => {
                 resolve(response);
@@ -558,8 +552,7 @@ const reloadLink = async()=>{
         });
         if (response.status === 200) {
             allLinks.value = response.data
-            console.log(allLinks.value)
-            
+
         } else {
             console.error('Error fetching links:', response);
         }
@@ -568,7 +561,7 @@ const reloadLink = async()=>{
     }
 }
 
-const loadProviders = async()=>{
+const loadProviders = async () => {
     try {
         const response = await new Promise((resolve) => {
             services.get_Record(`providers`, (response) => {
@@ -617,7 +610,26 @@ const filterCategory = (data) => {
     return categories
 }
 
+const routeParameters = (conf)=>{
+    router.push({ name: route.name, params: { ...route.params, tab: conf.tabs, sub_tab: conf[conf.tabs] } });
+}
+
+watch(parametersUrlsConf, (newValue, oldValue)=>{
+    routeParameters(newValue)
+})
+
+const params = computed(()=> route.params)
+
+watch(params, ()=>{
+    parametersUrlsConf.tabs = route.params.tab;
+    parametersUrlsConf[parametersUrlsConf.tabs] = route.params.sub_tab; 
+})
+
 onBeforeMount(async () => {
+    parametersUrlsConf.tabs = (route.params.tab !== '')?route.params.tab:'establishments';
+    parametersUrlsConf[parametersUrlsConf.tabs] = (route.params.sub_tab !== '')?route.params.sub_tab:'establishments_list';
+    routeParameters(parametersUrlsConf)
+
     if (width.value < 800) {
         position.value = 'top'
     } else {
@@ -635,11 +647,6 @@ onBeforeMount(async () => {
 
 </script>
 <style scoped>
-/*@media screen and (max-width: 800px) {
-    .user__main__container {
-        width: 100%;
-    }
-}*/
 
 * {
     overflow: hidden;

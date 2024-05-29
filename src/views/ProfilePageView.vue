@@ -1,10 +1,12 @@
 <template>
   <div class="main__container">
-    <HeadComponent :page="page"></HeadComponent>
     <div class="breadcrumb__container">
       <BreadcrumbComponent :data="breadcrumbData" />
     </div>
     <div class="admin__container">
+      <button class="menu-toggle" @click="toggleMenu">
+        <i class="uil uil-bars"></i>
+      </button>
       <div class="admin__menu">
         <ul>
           <li>
@@ -43,7 +45,7 @@
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'Parameters' }">
+            <router-link :to="{ name: 'Parameters', params:{tab: 'establishments', sub_tab: 'establishments_list'} }">
               <i class="uil uil-setting"></i> <span>Parameters</span>
             </router-link>
           </li>
@@ -57,7 +59,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, provide, watch } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 
@@ -127,7 +129,6 @@ const breadcrumbData = [
     isCurrent: true,
   },
 ];
-
 </script>
 <style scoped>
 /* Styles existants */
@@ -171,13 +172,13 @@ const breadcrumbData = [
   width: 200px;
 }
 
-.router-link-exact-active,
+.router-link-active,
 .active {
   background-color: var(--color-danger);
   color: var(--color-white) !important;
 }
 
-.admin__menu li .router-link-exact-active:hover,
+.admin__menu li .router-link-active:hover,
 .admin__menu li .active:hover {
   background-color: var(--color-danger);
   color: var(--color-white);

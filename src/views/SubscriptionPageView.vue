@@ -2,17 +2,13 @@
   <div class="subscription__container">
     <div class="subscription-page-header">
       <div class="container" style="padding-inline: 16px;">
-        <!-- <a :href="'/'" class="flex items-center">
-          <span class="self-center text-xl font-bold whitespace-nowrap dark:text-white"
-            style="color: var(--color-danger)">eReputation</span>
-        </a> -->
         <a :href="baseurl" class="flex items-center">
           <div v-if="appStore.account && appStore.account.logo" class="nav-logo">
             <img :src="appStore.account.logo">
           </div>
           <span v-else-if="appStore.account && appStore.account.brand"
             class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
-          appStore.account.brand }}</span>
+              appStore.account.brand }}</span>
         </a>
         <RouterLink :to="`/`" class="relative p-2 login-link">
           <span class="font-bolder"> Sign In</span>
@@ -29,32 +25,7 @@
         </div>
         <div v-if="plans" class="plan-container" ref="planContainer">
           <plan-card v-for="item in plans" :key="item.tag" :data="item" @selected="setPlan"></plan-card>
-          <!-- <plan-card name="Basic 1-Year" :price="9.99" devise="$" :active="selectedPlan == 'basic-1'" :items="[
-            '1 establishement (1 QR CODE by establishment)',
-            'Illimited intern reviews',
-            'Illimited leads',
-            'Illimited events',
-            '3 monitored points of sale (1 QR Code by point of sale)']" @click="selectedPlan = 'basic-1'"
-            @selected="setPlan"></plan-card>
-          <plan-card name="Custom Basic 1-Year" :active="selectedPlan == 'c-basic-1'" :hasinput="true" :price="9.99"
-            :addprice="4.99" devise="$" :items="[
-              'Illimited intern reviews',
-              'Illimited leads',
-              'Illimited events',
-              '3 monitored points of sale (1 QR Code by point of sale)']" @click="selectedPlan = 'c-basic-1'"
-            @selected="setPlan"></plan-card>
-          <plan-card name="Premium 1-Year" :active="selectedPlan == 'premium'" :premium="true" :items="[
-            'Illimited intern reviews',
-            'Illimited leads',
-            'Illimited events',
-            'Illimited monitored points of sale (QR Codes illimited)',
-            'Leads integration in your CRM',
-            'Sales integration (API)']" @click="selectedPlan = 'premium'" @selected="setPlan"></plan-card> -->
         </div>
-        <!-- <div class="navigation-container">
-          <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-            @click="activeName = 'user-info'">Next</button>
-        </div> -->
       </el-tab-pane>
       <el-tab-pane name="user-info">
         <div class="tab-pane-header">
@@ -71,36 +42,24 @@
                 name <span>*</span></label>
               <input v-model="planInfo.uFName" type="text" id="first_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-              <!-- <span v-for="error in v$User.uFName.$errors" :key="error.$uid" class="field-msg">
-                {{ error.$message }}
-              </span> -->
             </div>
             <div class="w-full">
               <label for="ulast_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last
                 name <span>*</span></label>
               <input v-model="planInfo.uLName" type="text" id="ulast_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-              <!-- <span v-for="error in v$User.uLName.$errors" :key="error.$uid" class="field-msg">
-                {{ error.$message }}
-              </span> -->
             </div>
             <div class="w-full">
               <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
                 <span>*</span></label>
               <input v-model="planInfo.uEmail" type="email" id="email"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-              <!-- <span v-for="error in v$User.uEmail.$errors" :key="error.$uid" class="field-msg">
-                {{ error.$message }}
-              </span> -->
             </div>
             <div class="w-full">
               <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password
                 <span>*</span></label>
               <input v-model="planInfo.uPassword" type="password" id="password"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-              <!-- <span v-for="error in v$User.uPassword.$errors" :key="error.$uid" class="field-msg">
-                {{ error.$message }}
-              </span> -->
             </div>
             <div class="w-full">
               <label for="cpassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm
@@ -108,17 +67,11 @@
                 <span>*</span></label>
               <input v-model="planInfo.uCPassword" type="password" id="cpassword"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-              <!-- <span v-for="error in v$User.uCPassword.$errors" :key="error.$uid" class="field-msg">
-                {{ error.$message }}
-              </span> -->
             </div>
-            <!-- <span v-for="error in v$User.$errors" :key="error.uid">{{ error.$property }} - {{ error.$message }}</span> -->
           </div>
           <div class="navigation-container">
             <button type="button" class="btn btn-primary-3 btn-navigation" style="margin-top: 12px; border-radius: 2px;"
               @click="activeName = 'plan'">Previous</button>
-            <!-- <button class="btn btn-primary btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-              @click="activeName = 'company-info'">Next</button> -->
             <button type="submit" class="btn btn-primary-3 btn-navigation"
               :class="showSpinner == true ? 'isLoaded' : ''" style="margin-top: 12px; border-radius: 2px;">
               <SpinnerComponent v-if="showSpinner == true" :color="'red'" /> <span v-else>Next</span>
@@ -141,18 +94,12 @@
                 name <span>*</span></label>
               <input v-model="planInfo.cName" type="text" id="company_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-              <!-- <span v-for="error in v$Company.cName.$errors" :key="error.$uid" class="field-msg">
-                {{ error.$message }}
-              </span> -->
             </div>
             <div class="w-full">
               <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address
                 <span>*</span></label>
               <input v-model="planInfo.cAdress" type="text" id="address"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-              <!-- <span v-for="error in v$Company.cAdress.$errors" :key="error.$uid" class="field-msg">
-                {{ error.$message }}
-              </span> -->
             </div>
             <div class="w-full">
               <label for="saddress" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Secondary
@@ -167,18 +114,12 @@
                     <span>*</span></label>
                   <input v-model="planInfo.cZip" type="text" id="zip"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-                  <!-- <span v-for="error in v$Company.cZip.$errors" :key="error.$uid" class="field-msg">
-                    {{ error.$message }}
-                  </span> -->
                 </div>
                 <div>
                   <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City
                     <span>*</span></label>
                   <input v-model="planInfo.cCity" type="text" id="city"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-                  <!-- <span v-for="error in v$Company.cCity.$errors" :key="error.$uid" class="field-msg">
-                    {{ error.$message }}
-                  </span> -->
                 </div>
                 <div class="md:col-span-2 mb-4">
                   <label for="country"
@@ -187,9 +128,6 @@
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                     <option v-for="(country, index) in countries" :key="index">{{ country.name }}</option>
                   </select>
-                  <!-- <span v-for="error in v$Company.cCountry.$errors" :key="error.$uid" class="field-msg">
-                    {{ error.$message }}
-                  </span> -->
                 </div>
               </div>
               <div class="w-full inline-flex items-center gap-2 mt-5">
@@ -276,10 +214,8 @@
             </div>
           </div>
         </div>
-        <!-- <div class="navigation-container"> -->
         <button class="btn btn-primary-3 btn-navigation" style="margin-top: 12px; border-radius: 2px;"
           @click="activeName = 'company-info'">Previous</button>
-        <!-- </div> -->
       </el-tab-pane>
     </el-tabs>
     <call-us-selector phonesystem-url="https://m-unit.on3cx.fr:5001" :party="chatID"></call-us-selector>
@@ -313,7 +249,6 @@ const planInfo = ref({});
 const showSpinner = ref(false)
 const userCreated = ref(false)
 const app_url = inject('app_url');
-console.log(`app url : ${app_url.value}`)
 
 const submitUserForm = async () => {
   showSpinner.value = true;
@@ -403,7 +338,7 @@ const setPlan = (data, eNumber, total) => {
 
 const createAccount = async () => {
   const response = await new Promise((resolve,) => {
-    services.post_Record('/account/create', {
+    services.post_Record('account/create', {
       name: planInfo.value.cName,
       firstname: planInfo.value.uFName,
       lastname: planInfo.value.uLName,
@@ -417,7 +352,7 @@ const createAccount = async () => {
       plan: planInfo.value.plan.tag
     }, (response) => {
       resolve(response)
-    }, true);
+    }, true, true);
   });
 
   if (response) {
@@ -461,7 +396,7 @@ const subscribe = async () => {
 
 const activateAccount = async (app_url) => {
   const response = await new Promise((resolve) => {
-    services.post_Record('/subscription/create', {
+    services.post_Record('subscription/create', {
       customer: planInfo.value.customer,
       plan: planInfo.value.plan.tag,
       amount: planInfo.value.total,
@@ -472,7 +407,7 @@ const activateAccount = async (app_url) => {
       app_url: app_url
     }, (response) => {
       resolve(response)
-    }, true);
+    }, true, true);
   });
 
   if (response.status == 200 && response.data) {
@@ -501,17 +436,16 @@ const appStore = useAppStore();
 
 onBeforeMount(async () => {
   const response = await new Promise((resolve) => {
-    services.get_Record('/plan/list', (response) => {
+    services.get_Record('plan/list', (response) => {
       resolve(response)
       if (response.status == 404) {
         appStore.isLoading = false;
       }
-    }, true);
+    }, true, true);
   });
 
   if (response.status == 200 && response.data) {
     const data = response.data
-    console.log(data)
     plans.value = data.sort((a, b) => a.id - b.id);
   }
 })
@@ -550,13 +484,10 @@ const loadPaymentForm = async () => {
     }
   })
 };
-
-
-
 </script>
 <style>
+
 .nav-logo {
-  /* height: 28px; */
   height: 48px;
   margin-right: 24px;
   padding: 8px 16px;
@@ -672,21 +603,21 @@ button.isLoaded {
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
- form{
-  margin: 0 50px;
- }
+  form {
+    margin: 0 50px;
+  }
 }
 
 /* Ajustements pour les mobiles */
 @media (max-width: 768px) {
- form{
-  margin: 0 25px;
- }
+  form {
+    margin: 0 25px;
+  }
 }
 
 @media (max-width: 500px) {
- form{
-  margin: 0 10px;
- }
+  form {
+    margin: 0 10px;
+  }
 }
 </style>

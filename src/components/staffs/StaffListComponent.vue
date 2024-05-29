@@ -1,47 +1,39 @@
 <template>
   <div class="security__header border__bottom">
-    <!-- <div class="security__edit">
-      <h4><i class="uil uil-users-alt"></i> Staff List</h4>
-    </div> -->
+  </div>
+  <div class="search">
+    <el-input v-model="search" size="small" placeholder="Type to search" />
   </div>
   <div class="mt-5 table__container">
     <el-table :data="filterTableData">
       <el-table-column label="Period" prop="period" style="width: 15%; min-width: 300px;" />
       <el-table-column label="Name" style="width: 20%; min-width: 300px;">
-         <template #default="scope">
-          {{`${scope.row.firstname} ${scope.row.lastname}`}}
-         </template>
+        <template #default="scope">
+          {{ `${scope.row.firstname} ${scope.row.lastname}` }}
+        </template>
       </el-table-column>
       <el-table-column label="Gender" prop="gender" style="width: 10%; min-width: 300px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;" />
       <el-table-column label="Department" prop="department" style="width: 20%; min-width: 300px;" />
+       <el-table-column label="Section" prop="section" style="200" />
 
       <el-table-column style="width: 15%; min-width: 200px;" align="right">
         <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" />
+          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>
         </template>
         <template #default="scope">
-          <el-button size="small" @click="showQRCode(scope.row)"><i class="uil uil-qrcode-scan"></i></el-button>
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
             <template #reference>
               <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
             </template>
           </el-popconfirm>
-
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
         </template>
       </el-table-column>
     </el-table>
   </div>
-  <QrCodeModalComponent v-if="staff" :qrcodeValue="`${baseurl}/public/${tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`" 
-    :showModal="showModal"
-    :filename="`${staff.firstname} ${staff.lastname}-feedback-link`"
-    @close="showModal=false"
-    :customer="tag"
-    :establishment="staff.establishment_tag"
-    />
 </template>
-  
+
 <script setup>
 import { computed, ref, defineAsyncComponent, inject } from 'vue';
 import moment from 'moment';
@@ -53,11 +45,6 @@ import 'element-plus/es/components/table-column/style/css'
 import 'element-plus/es/components/popconfirm/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
-import services from '@Services/services.js';
-
-const QrCodeModalComponent = defineAsyncComponent(() =>
-    import('@Components/utils/QrCodeModalComponent.vue')
-)
 
 const emit = defineEmits(['edit']);
 const staffStore = useStaffStore();
@@ -71,23 +58,22 @@ let tableData = computed(() => {
   let data = [];
   staffs.value.forEach(staff_item => {
     staff_item['period'] = staff_item.dateto != null ? `${moment(staff_item.datefrom).format('YYYY MMM DD')} to ${moment(staff_item.dateto).format('YYYY MMM DD')}` : `${moment(staff_item.datefrom).format('YYYY MMM DD')} to -`;
-    console.log(staff_item)
     data.push(staff_item);
   })
   return data;
 });
 
 const search = ref('')
-const filterTableData = computed(() =>{
+const filterTableData = computed(() => {
   let filterdata = tableData.value;
   filterdata = tableData.value.filter(
-     (data) =>
-       !search.value ||
-       data.lastname.toLowerCase().includes(search.value.toLowerCase()) ||
-       data.firstname.toLowerCase().includes(search.value.toLowerCase())||
-       data.department.toLowerCase().includes(search.value.toLowerCase())||
-       data.establishment_name.toLowerCase().includes(search.value.toLowerCase())
-   )
+    (data) =>
+      !search.value ||
+      data.lastname.toLowerCase().includes(search.value.toLowerCase()) ||
+      data.firstname.toLowerCase().includes(search.value.toLowerCase()) ||
+      data.department.toLowerCase().includes(search.value.toLowerCase()) ||
+      data.establishment_name.toLowerCase().includes(search.value.toLowerCase())
+  )
   return filterdata
 })
 
@@ -105,7 +91,6 @@ const handleEdit = (index, staff) => {
 
 const handleDelete = async (index, staff) => {
   await staffStore.removeStaff(staff.id, (response) => {
-    console.log(response)
     if (response.status == 204) {
       reloadData(staff);
       ElMessage({
@@ -195,8 +180,8 @@ button i.uil-edit {
   transform: rotate(360deg);
 }
 
-/* Appliquez une largeur de 100% aux éléments parents */c
-.security__header {
+/* Appliquez une largeur de 100% aux éléments parents */
+c .security__header {
   width: 100%;
 }
 
@@ -216,5 +201,22 @@ button i.uil-edit {
     width: 100%;
   }
 }
+
+.search{
+    display: none;
+}
+
+@media screen and (max-width: 468px) { 
+    .search {
+        display: flex;
+        max-width: 220px;
+        float: right;
+    }
+    .searchtab{
+        display: none;
+    }
+    .el-table--fit {
+            font-size: 11px !important;
+    }
+}
 </style>
-  

@@ -1,41 +1,30 @@
 <template>
     <div class="left__side">
-        <div class="head">
+       <!--  <div class="head">
             <div class="app__title">
                 <h2>Social</h2>
             </div>
-        </div>
+        </div> -->
         <div class="reviews__content">
             <social-statistics></social-statistics>
         </div>
-        <div class="head mb-4">
+      <!--   <div class="head mb-4">
             <div class="app__title" style="margin-top: 50px;">
                 <h2>Social List</h2>
             </div>
-        </div>
-        <el-tabs
-            v-model="activeName"
-            type="card"
-            class="demo-tabs"
-          >
+        </div> -->
+        <el-tabs v-model="activeName" type="card" class="demo-tabs mt-4">
             <el-tab-pane label="Posts" name="socials">
                 <div class="reviews__content">
-                    <socialPostFilterComponent
-                        :current="currentSocial"
-                        @update="(value)=> currentSocial = value"
-                    />
+                    <socialPostFilterComponent :current="currentSocial" @update="(value) => currentSocial = value" />
                     <div class="reviews__pagination mb-4">
-                            <PaginationComponent 
-                            v-if="posts.length > 0"
-                            :options="options" 
-                            @next="(option) => {
+                        <PaginationComponent v-if="posts.length > 0" :options="options" @next="(option) => {
                             loadPostData(companyId, currentSocial, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), option.page, option.limit, option.current)
-                            }" 
-                            @prev="(option) => {
+                        }" @prev="(option) => {
                             loadPostData(companyId, currentSocial, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), option.page, option.limit, option.current)
-                            }" />
+                        }" />
                     </div>
-                    <SocialPostComponent v-for="post in posts" :post="post" v-if="!postLoaded"/>
+                    <SocialPostComponent v-for="post in posts" :post="post" v-if="!postLoaded" />
                     <div class="publication-container" v-for="index in 5" v-if="postLoaded">
                         <div class="publication bg-gray-200 animate-pulse">
                             <div class="post-info">
@@ -54,22 +43,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="no-comment" v-if="posts.length==0 && !postLoaded">
+                    <div class="no-comment" v-if="posts.length == 0 && !postLoaded">
                         no social post available
                     </div>
-                    <PaginationComponent 
-                            v-if="posts.length > 0"
-                            :options="options" 
-                            @next="(option) => {
-                            loadPostData(companyId, currentSocial, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), option.page, option.limit, option.current)
-                            }" 
-                            @prev="(option) => {
-                            loadPostData(companyId, currentSocial, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), option.page, option.limit, option.current)
-                            }" />
+                    <PaginationComponent v-if="posts.length > 0" :options="options" @next="(option) => {
+                        loadPostData(companyId, currentSocial, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), option.page, option.limit, option.current)
+                    }" @prev="(option) => {
+                        loadPostData(companyId, currentSocial, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), option.page, option.limit, option.current)
+                    }" />
                 </div>
             </el-tab-pane>
             <el-tab-pane label="Hashtags" name="social_tag">
-               <!--  <div class="tag_header">
+                <!--  <div class="tag_header">
                      <el-select v-model="selectedHashtag" placeholder="#hashtag" size="large" filterable>
                         <el-option v-for="(hashtag, index) in hashtags" :key="index" :label="hashtag.value"
                             :value="hashtag.id" />
@@ -83,69 +68,61 @@
                 <div class="tag_header">
                     <div class="select_container">
                         <el-select v-model="selectedHashtag" placeholder="#hashtag" size="large" filterable>
-                            <el-option v-for="(hashtag, index) in hashtags" :key="index" :label="hashtag.value" :value="hashtag.value" />
+                            <el-option v-for="(hashtag, index) in hashtags" :key="index" :label="hashtag.value"
+                                :value="hashtag.value" />
                         </el-select>
                     </div>
                     <div class="social_post_filter_container">
                         <socialPostFilterComponent :socials="filteredProviders" :currentHashtag="currentHashtagSocial"
-                            @updateHashtag="(value)=> currentHashtagSocial = value" />
+                            @updateHashtag="(value) => currentHashtagSocial = value" />
                     </div>
                 </div>
-                 <div class="reviews__pagination mb-4">
-                            <PaginationComponent 
-                            v-if="hashtagData.length > 0"
-                            :options="options" 
-                            @next="(option) => {
-                            loadPostHashtagData(companyId, currentHashtagSocial.name, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), selectedHashtag, option.page, option.limit, option.current)
-                            }" 
-                            @prev="(option) => {
-                            loadPostHashtagData(companyId, currentHashtagSocial.name, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), selectedHashtag, option.page, option.limit, option.current)
-                            }" />
-                    </div>
+                <div class="reviews__pagination mb-4">
+                    <PaginationComponent v-if="hashtagData.length > 0" :options="options" @next="(option) => {
+                        loadPostHashtagData(companyId, currentHashtagSocial.name, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), selectedHashtag, option.page, option.limit, option.current)
+                    }" @prev="(option) => {
+                        loadPostHashtagData(companyId, currentHashtagSocial.name, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), selectedHashtag, option.page, option.limit, option.current)
+                    }" />
+                </div>
 
-               
-                <SocialPostComponent v-for="post in hashtagData" :post="post" v-if="!postLoaded" :showEmoji="true" :showCategory="true" :categories="categories"
-                @reloadData="(post) => reloadData(post)"
-                />
-                    <div class="publication-container" v-for="index in 5" v-if="postLoaded">
-                        <div class="publication bg-gray-200 animate-pulse">
-                            <div class="post-info">
-                                <div class="post-head flex justify-between">
-                                    <span class="post-source h-4 bg-gray-300 rounded w-1/4"></span>
-                                    <span class="post-date h-4 bg-gray-300 rounded w-1/4"></span>
-                                </div>
-                                <div class="post-title h-4 bg-gray-300 rounded w-full mt-4"></div>
-                                <div class="post-footer flex justify-end text-sm mt-4">
-                                    <ul class="flex gap-2">
-                                        <li class="h-4 bg-gray-300 rounded w-1/4"></li>
-                                        <li class="h-4 bg-gray-300 rounded w-1/4"></li>
-                                        <li class="h-4 bg-gray-300 rounded w-1/4"></li>
-                                    </ul>
-                                </div>
+
+                <SocialPostComponent v-for="post in hashtagData" :post="post" v-if="!postLoaded" :showEmoji="true"
+                    :showCategory="true" :categories="categories" @reloadData="(post) => reloadData(post)" />
+                <div class="publication-container" v-for="index in 5" v-if="postLoaded">
+                    <div class="publication bg-gray-200 animate-pulse">
+                        <div class="post-info">
+                            <div class="post-head flex justify-between">
+                                <span class="post-source h-4 bg-gray-300 rounded w-1/4"></span>
+                                <span class="post-date h-4 bg-gray-300 rounded w-1/4"></span>
+                            </div>
+                            <div class="post-title h-4 bg-gray-300 rounded w-full mt-4"></div>
+                            <div class="post-footer flex justify-end text-sm mt-4">
+                                <ul class="flex gap-2">
+                                    <li class="h-4 bg-gray-300 rounded w-1/4"></li>
+                                    <li class="h-4 bg-gray-300 rounded w-1/4"></li>
+                                    <li class="h-4 bg-gray-300 rounded w-1/4"></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                    <div class="no-comment" v-if="hashtagData.length==0 && !postLoaded">
-                        no social tag data available
-                    </div>
-                    <PaginationComponent 
-                            v-if="hashtagData.length > 0"
-                            :options="options" 
-                            @next="(option) => {
-                            loadPostHashtagData(companyId, currentHashtagSocial.name, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), selectedHashtag, option.page, option.limit, option.current)
-                            }" 
-                            @prev="(option) => {
-                            loadPostHashtagData(companyId, currentHashtagSocial.name, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), selectedHashtag, option.page, option.limit, option.current)
-                            }" />
+                </div>
+                <div class="no-comment" v-if="hashtagData.length == 0 && !postLoaded">
+                    no social tag data available
+                </div>
+                <PaginationComponent v-if="hashtagData.length > 0" :options="options" @next="(option) => {
+                    loadPostHashtagData(companyId, currentHashtagSocial.name, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), selectedHashtag, option.page, option.limit, option.current)
+                }" @prev="(option) => {
+                    loadPostHashtagData(companyId, currentHashtagSocial.name, moment(start_date).format('YYYY-MM-DD'), moment(end_date).format('YYYY-MM-DD'), selectedHashtag, option.page, option.limit, option.current)
+                }" />
             </el-tab-pane>
-          </el-tabs>
+        </el-tabs>
     </div>
 
     <StatSlider v-if="establishment && establishment.socials" class="stat__cards_mobile" :items="trends"
         :websites="establishment.socials[0]"></StatSlider>
     <div class="tablet_mobile__filter">
-         <el-date-picker v-model="start_date" placeholder="Start date" :size="'large'" />
-                <el-date-picker v-model="end_date" placeholder="End date" :size="'large'" />
+        <el-date-picker v-model="start_date" placeholder="Start date" :size="'large'" />
+        <el-date-picker v-model="end_date" placeholder="End date" :size="'large'" />
     </div>
     <div class="tablet_mobile__head">
         <div class="establishment__info_tablet">
@@ -153,7 +130,7 @@
             <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
             <div>
                 <i
-                    :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '',establishment.category == 'Other' ? 'uil-home' : '']"></i>
+                    :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '', establishment.category == 'Other' ? 'uil-home' : '']"></i>
                 <span v-if="!dataLoading">{{ establishment.category }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
             </div>
@@ -212,7 +189,8 @@
         </div>
     </div>
     <div class="right__side">
-        <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        <div
+            class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" v-if="!dataLoading">
                 <div v-if="establishment.url_source !== null" class="establishment__img">
                     <img :src="establishment.url_source" alt="" />
@@ -245,7 +223,7 @@
                 <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
                 <div class="society__location">
                     <i
-                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '',establishment.category == 'Other' ? 'uil-home' : '']"></i>
+                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '', establishment.category == 'Other' ? 'uil-home' : '']"></i>
                     <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
                     <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                 </div>
@@ -262,16 +240,17 @@
                 <el-date-picker class="mt-2" v-model="end_date" type="date" placeholder="Select the end date"
                     :size="'large'" />
             </div>
-             <DropdownComponent :showTitle="false" placeholder="" :data="types" @submit="(type) => {
-                    selectedType = type
-                }" :default="types[0]" />
+            <DropdownComponent :showTitle="false" placeholder="" :data="types" @submit="(type) => {
+                selectedType = type
+            }" :default="types[0]" />
         </div>
         <div v-if="establishment && socials && trends && trends.length > 0"
             class="stat__cards bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 py-4">
             <div class="stat__cards_default" v-if="establishment && socials">
-                <StatComponent v-for="(slide, index) in trends" :key="index" :color="slide.color" :bgColor="slide.bgColor"
-                    :value="slide.value" :description="slide.description" :icon="slide.icon" :iconStyle="slide.iconStyle"
-                    :percentage="slide.percentage" :trend="slide.trend" :websites="socials" :site="slide.site">
+                <StatComponent v-for="(slide, index) in trends" :key="index" :color="slide.color"
+                    :bgColor="slide.bgColor" :value="slide.value" :description="slide.description" :icon="slide.icon"
+                    :iconStyle="slide.iconStyle" :percentage="slide.percentage" :trend="slide.trend" :websites="socials"
+                    :site="slide.site">
                 </StatComponent>
             </div>
         </div>
@@ -350,7 +329,7 @@ const types = ref(["Followers", "Shares", "likes"])
 const customerTag = inject('tag')
 
 const filteredProviders = computed(() => {
-    let data = providers.value.slice(); 
+    let data = providers.value.slice();
     data.sort((a, b) => {
         const nameA = a.name.toLowerCase();
         const nameB = b.name.toLowerCase();
@@ -359,24 +338,24 @@ const filteredProviders = computed(() => {
         return 0;
     });
     data = data.filter(item => item.category === 'Hashtag');
-    data =  data.map(value => ({
+    data = data.map(value => ({
         name: value.name.split(' ')[0].toLowerCase(),
-        id: value.uri.split('/').slice(-1)[0] 
+        id: value.uri.split('/').slice(-1)[0]
     }));
-    data.unshift({name: 'all', id: 'all'})
-   
+    data.unshift({ name: 'all', id: 'all' })
+
     return data;
 });
 
-const socialsHashtag = computed(()=>{
-    let data = filteredProviders.value.filter(provider=>provider.name == 'all');
-    return data.length>0? data[0]: {id: '', name: ''}
+const socialsHashtag = computed(() => {
+    let data = filteredProviders.value.filter(provider => provider.name == 'all');
+    return data.length > 0 ? data[0] : { id: '', name: '' }
 })
-const currentHashtagSocial = ref({id: 'all', name: 'all'})
+const currentHashtagSocial = ref({ id: 'all', name: 'all' })
 const selectedHashtag = ref('')
 const hashtags = ref([])
 
-watch(socialsHashtag, async()=>{
+watch(socialsHashtag, async () => {
     currentHashtagSocial.value = socialsHashtag.value
     await loadHashtags(companyId, currentHashtagSocial.value.id)
 })
@@ -433,7 +412,7 @@ const calculType = ref('Followers')
 const establishment = ref({});
 const socialPages = ref([]);
 const socials = ref(['']);
-provide('socials',socials )
+provide('socials', socials)
 const postData = ref({
     data: {
         facebook: {
@@ -478,30 +457,30 @@ const all_items = ref([
 const dataLoading = ref(false);
 
 
-watch([start_date, end_date, selectedHashtag], async()=>{
-    if(activeName.value == 'socials'){
-        await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
-    }else{
-        if(selectedHashtag.value !== null){
-            await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
-        }else{
+watch([start_date, end_date, selectedHashtag], async () => {
+    if (activeName.value == 'socials') {
+        await loadPostData(companyId, currentSocial.value, moment(new Date(start_date.value)).format('YYYY-MM-DD'), moment(new Date(end_date.value)).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
+    } else {
+        if (selectedHashtag.value !== null) {
+            await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(new Date(start_date.value)).format('YYYY-MM-DD'), moment(new Date(end_date.value)).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
+        } else {
             hashtagData.value = []
         }
     }
 })
 
-watch(activeName, async()=>{
-selectedHashtag.value = 'All'
-await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
+watch(activeName, async () => {
+    selectedHashtag.value = 'All'
+    await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(new Date(start_date.value)).format('YYYY-MM-DD'), moment(new Date(end_date.value)).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
 })
 
-watch([currentSocial, currentHashtagSocial], async()=>{ 
-  if(activeName.value == 'socials'){
-         await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
-    }else{
+watch([currentSocial, currentHashtagSocial], async () => {
+    if (activeName.value == 'socials') {
+        await loadPostData(companyId, currentSocial.value, moment(new Date(start_date.value)).format('YYYY-MM-DD'), moment(new Date(end_date.value)).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
+    } else {
         selectedHashtag.value = 'All'
         await loadHashtags(companyId, currentHashtagSocial.value.id)
-        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
+        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(new Date(start_date.value)).format('YYYY-MM-DD'), moment(new Date(end_date.value)).format('YYYY-MM-DD'), selectedHashtag.value, 1, options.value['rowLimit'], 1)
     }
 })
 
@@ -550,7 +529,7 @@ const getFollowers = (datasets, type) => {
     return dataChart;
 }
 
-const transformToSourceURL = (obj) =>{
+const transformToSourceURL = (obj) => {
     const result = {};
     for (const key in obj) {
         const arr = obj[key];
@@ -560,8 +539,8 @@ const transformToSourceURL = (obj) =>{
     }
     return result;
 }
-const IsValueOkay = (value) => (value == ''|| value == 0 || value == null || value == undefined) ? false : true;
-const loadPostData = async(tag, source, dateStart, dateEnd, page, limit, current)=>{
+const IsValueOkay = (value) => (value == '' || value == 0 || value == null || value == undefined) ? false : true;
+const loadPostData = async (tag, source, dateStart, dateEnd, page, limit, current) => {
     options.value.current = current;
     options.value.page = page;
     let apiBase = 'establishment/socials/posts';
@@ -581,30 +560,29 @@ const loadPostData = async(tag, source, dateStart, dateEnd, page, limit, current
     }
 
     const api = apiBase + '?' + apiParams;
-    console.log(api)
 
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
     });
-    console.log(response)
+
     if (response.status == 200) {
-       posts.value = response.data.data
-       options.value.max = response.data['length'];
-       setTimeout(()=>{
-         postLoaded.value = false
-       }, 5000)
+        posts.value = response.data.data
+        options.value.max = response.data['length'];
+        setTimeout(() => {
+            postLoaded.value = false
+        }, 5000)
     }
 
 }
 
-const loadPostHashtagData = async(tag, source, dateStart, dateEnd, hashtag, page, limit, current)=>{
+const loadPostHashtagData = async (tag, source, dateStart, dateEnd, hashtag, page, limit, current) => {
     options.value.current = current;
     options.value.page = page;
     let apiBase = 'establishment/socials/posts';
     let apiParams = `tag=${tag}&page=${page}&limit=${limit}`;
-   
+
     postLoaded.value = true;
 
     if (IsValueOkay(source) && source !== 'all') {
@@ -624,18 +602,16 @@ const loadPostHashtagData = async(tag, source, dateStart, dateEnd, hashtag, page
     }
 
     const api = apiBase + '?' + apiParams;
-    console.log(api)
 
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
     });
-    console.log(response)
     if (response.status == 200) {
-       hashtagData.value = response.data.data
-       options.value.max = response.data['length'];
-       postLoaded.value = false
+        hashtagData.value = response.data.data
+        options.value.max = response.data['length'];
+        postLoaded.value = false
     }
 }
 
@@ -650,18 +626,17 @@ const reloadData = (postUpdated) => {
 function removeDuplicates(array) {
     let data = [];
     for (var i = 0; i < array.length; i++) {
-        if(!checkExist(data, array[i].value)){
+        if (!checkExist(data, array[i].value)) {
             data.push(array[i])
         }
     }
     return data;
 }
 
-function checkExist(array, value){
+function checkExist(array, value) {
     let exist = false;
     for (var i = 0; i < array.length; i++) {
-        console.log(array[i].value, value)
-        if(array[i].value === value){
+        if (array[i].value === value) {
             exist = true;
             break;
         }
@@ -670,7 +645,7 @@ function checkExist(array, value){
     return exist;
 }
 
-const loadHashtags = async(tag, source)=>{
+const loadHashtags = async (tag, source) => {
     let apiBase = '/get/settings/by/provider';
     let apiParams = `establishment=${tag}&category=hashtag`;
 
@@ -679,18 +654,17 @@ const loadHashtags = async(tag, source)=>{
     }
 
     const api = apiBase + '?' + apiParams;
-    console.log(api)
 
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
         });
     });
-   
+
     if (response.status == 200) {
 
-       hashtags.value = removeDuplicates(response.data);
-       hashtags.value.unshift({id: 0, value: 'All'})
+        hashtags.value = removeDuplicates(response.data);
+        hashtags.value.unshift({ id: 0, value: 'All' })
     }
 }
 
@@ -774,10 +748,10 @@ onBeforeMount(async () => {
         console.error('Error in onBeforeMount:', error);
     }
 
-    if(activeName.value == 'socials'){
-         await loadPostData(companyId, currentSocial.value, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
-    }else{
-         await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(start_date.value).format('YYYY-MM-DD'), moment(end_date.value).format('YYYY-MM-DD'), '', 1, options.value['rowLimit'], 1)
+    if (activeName.value == 'socials') {
+        await loadPostData(companyId, currentSocial.value, moment(new Date(start_date.value)).format('YYYY-MM-DD'), moment(new Date(end_date.value)).format('YYYY-MM-DD'), 1, options.value['rowLimit'], 1)
+    } else {
+        await loadPostHashtagData(companyId, currentHashtagSocial.value.name, moment(new Date(start_date.value)).format('YYYY-MM-DD'), moment(new Date(end_date.value)).format('YYYY-MM-DD'), '', 1, options.value['rowLimit'], 1)
     }
 
     const response = await new Promise((resolve) => {
@@ -797,9 +771,9 @@ onBeforeMount(async () => {
     });
 
     if (socialResponse.status == 200) {
+        console.log('socials response',socialResponse)
         establishment.value['socials'] = transformToSourceURL(socialResponse.data);
         socials.value = transformToSourceURL(socialResponse.data);
-        console.log(socials.value)
         // dataLoading.value = false;
     }
     if (!socialStore.trendsByEstablishment[`${companyId}`]) {
@@ -926,7 +900,6 @@ watch([trendsByEstablishment, calculType], () => {
 </script>
 
 <style scoped>
-
 /*.tag_header{
     display: flex;
     justify-content: space-between;
@@ -940,20 +913,24 @@ watch([trendsByEstablishment, calculType], () => {
 
 .select_container,
 .social_post_filter_container {
-    flex: 1; 
-    margin-right: 10px; 
+    flex: 1;
+    margin-right: 10px;
 }
 
 @media screen and (max-width: 600px) {
     .tag_header {
-        flex-direction: column; /* Change la direction du flux pour une disposition en colonne sur les écrans étroits */
+        flex-direction: column;
+        /* Change la direction du flux pour une disposition en colonne sur les écrans étroits */
     }
 
     .select_container,
     .social_post_filter_container {
-        flex: none; /* Annule la flexibilité pour revenir à la largeur par défaut */
-        width: 100%; /* Les éléments prennent maintenant toute la largeur sur les écrans étroits */
-        margin-bottom: 20px; /* Augmente la marge en bas pour espacer davantage les éléments sur mobile */
+        flex: none;
+        /* Annule la flexibilité pour revenir à la largeur par défaut */
+        width: 100%;
+        /* Les éléments prennent maintenant toute la largeur sur les écrans étroits */
+        margin-bottom: 20px;
+        /* Augmente la marge en bas pour espacer davantage les éléments sur mobile */
     }
 }
 
@@ -1197,66 +1174,66 @@ li:nth-child(odd) {
 }
 
 .publication {
-   margin-bottom: 20px;
-   padding: 10px;
-   transition: var(--transition);
-   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-   border-radius: 5px;
+    margin-bottom: 20px;
+    padding: 10px;
+    transition: var(--transition);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    border-radius: 5px;
 }
 
 .comments {
-  max-height: 500px; 
-  overflow-y: auto; 
-  transition: max-height 0.5s ease; 
+    max-height: 500px;
+    overflow-y: auto;
+    transition: max-height 0.5s ease;
 }
 
 .publication-container {
-  max-width:  95%;
-  margin:  0 auto;
- /* padding:  20px;*/
+    max-width: 95%;
+    margin: 0 auto;
+    /* padding:  20px;*/
 }
 
 .publication {
-  display: flex;
-  flex-direction: column;
-  margin-bottom:  20px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
 }
 
-.post-title{
-     background-color: #f7fbff;
-     padding: 15px;
-     margin-top: 10px;
-     font-size: 14px;
-     border-radius: 5px;
+.post-title {
+    background-color: #f7fbff;
+    padding: 15px;
+    margin-top: 10px;
+    font-size: 14px;
+    border-radius: 5px;
 }
 
-.post-head{
+.post-head {
     display: flex;
     justify-content: space-between;
 }
 
-.post-footer{
+.post-footer {
     display: flex;
     justify-content: flex-end;
     font-size: 13px;
 }
 
-.post-footer ul{
+.post-footer ul {
     display: flex;
     gap: 0.5rem;
 }
 
-.post-date{
+.post-date {
     font-size: 14px;
     font-weight: 600;
     color: var(--color-primary)
 }
 
-.post-btn-comment{
+.post-btn-comment {
     cursor: pointer;
 }
 
-.post-info{
+.post-info {
     z-index: 1
 }
 </style>

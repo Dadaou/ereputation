@@ -1,6 +1,6 @@
 <template>
     <div class="security__header border__bottom mt-10">
-       <!--  <div class="security__edit">
+        <!--  <div class="security__edit">
             <h4><i class="uil uil-company"></i> Establishment</h4>
             <p>Please provide the necessary information to add a new establishment.</p>
         </div> -->
@@ -22,19 +22,22 @@
                 </div>
                 <div class="md:order-1">
                     <div class="mb-6">
-                        <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name
+                        <label for="company_name"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name
                             <span>*</span></label>
                         <input type="text" id="company_name" name="name" v-model="data.name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                     </div>
                     <div class="mb-6">
-                        <label for="address1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address 1
+                        <label for="address1"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address 1
                             <span>*</span></label>
                         <input type="text" id="address1" name="address1" v-model="data.address1"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                     </div>
                     <div>
-                        <label for="address2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address
+                        <label for="address2"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address
                             2</label>
                         <input type="text" id="address2" name="address2" v-model="data.address2"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
@@ -62,13 +65,7 @@
                             :value="country.name" />
                     </el-select>
                 </div>
-               <!--   <div>
-                    <label for="gps" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gps
-                    </label>
-                    <input type="text" id="gps" name="gps" v-model="data.gps"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                </div> -->
-                 <div>
+                <div>
                     <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
                         <span>*</span></label>
                     <el-select v-model="data.category" placeholder="" size="large" filterable>
@@ -77,12 +74,6 @@
                 </div>
             </div>
             <div class="grid gap-6 mb-6 md:grid-cols-5">
-               <!--  <div>
-                    <label for="region" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Region
-                        <span>*</span></label>
-                    <input type="text" id="region" name="region" v-model="data.region"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                </div> -->
                 <div class="col-span-2">
                     <label for="gps" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Website
                     </label>
@@ -105,7 +96,7 @@
             </div>
             <div class="grid gap-6 mb-6 md:grid-cols-4">
 
-               <!--  <div class="col-span-2">
+                <!--  <div class="col-span-2">
                     <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
                         <span>*</span></label>
                     <el-select v-model="data.category" placeholder="" size="large">
@@ -126,7 +117,8 @@
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div> -->
             </div>
-            <div class="flex flex-wrap gap-3 items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600">
+            <div
+                class="flex flex-wrap gap-3 items-center justify-between py-2 border-t border-b dark:border-gray-600">
                 <button type="submit"
                     class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                     <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
@@ -155,9 +147,11 @@ import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { countries, categories, competitor_countries } from '@Services/input-list.js';
 
+const router = useRouter();
+const route = useRoute();
 const previewImage = ref(null);
 const imageInputHover = ref(false);
 const data = ref({});
@@ -166,8 +160,6 @@ const type = ref('Add');
 const userStore = useUserStore();
 const establishment_to_update = inject('establishment_to_update');
 const imgHasChanged = ref(false);
-const activeEstablishmentTab = inject('establishment_activeTab');
-
 const cleanEstablishmentForm = inject('clearEstablishmentForm');
 
 const resetForm = () => {
@@ -203,14 +195,13 @@ const submit = async () => {
     const formData = new FormData(form);
 
     const establishmentData = { ...data.value, customer: `${userStore.user.customer.tag}` };
-    console.log(data.value);
 
-    if (establishmentData.category 
+    if (establishmentData.category
         && establishmentData.country
-        && establishmentData.city 
+        && establishmentData.city
         && establishmentData.zipcode
         && establishmentData.category
-        && establishmentData.name 
+        && establishmentData.name
         && establishmentData.address1) {
 
         formData.append('category', establishmentData.category);
@@ -221,11 +212,9 @@ const submit = async () => {
         if (!imgHasChanged.value) formData.delete('file');
 
         if (type.value === 'Edit') {
-
             if (establishmentData.uri) {
                 formData.append('id', establishmentData.uri.split('/').pop());
             }
-
         }
 
         formData.delete('media');
@@ -255,16 +244,14 @@ const submit = async () => {
             data.value = {}
             showSpinner.value = false;
         }
-    }else{
+    } else {
         ElMessage.error(`Please, provide all required information to add / update an establishment`);
     }
 
 };
 
 const loadData = (establishment, type) => {
-
-    // establishment.media = [{ url_source: establishment.media }]
-    establishment.url_source = establishment.media 
+    establishment.url_source = establishment.media
 
     if (type == 'new') {
         userStore.user.customer.establishments.push(establishment);
@@ -278,11 +265,11 @@ const loadData = (establishment, type) => {
             }
         });
     }
-
-    activeEstablishmentTab.value = 'establishment_list';
+    router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'establishments_list'} });
 }
 
 watch(establishment_to_update, () => {
+    
     if (establishment_to_update.value != null) {
         data.value = establishment_to_update.value;
         data.value['address1'] = establishment_to_update.value.address || "";
@@ -290,24 +277,6 @@ watch(establishment_to_update, () => {
         type.value = 'Edit';
     }
 });
-
-// onMounted(()=>{
-//     console.log(selectCountry.value)
-//    var elSelect = document.querySelector('.el-input__inner');
-//     console.log(elSelect)
-//     elSelect.setAttribute("required", true)
-//     elSelect.addEventListener('invalid', function(event) {
-//         // Vérifiez si l'élément est invalide
-//         if (selectElement.validity.valueMissing) {
-//             // Définissez un message de validation personnalisé
-//             event.target.setCustomValidity('Veuillez sélectionner un pays.');
-//         } else {
-//             // Si aucune erreur, réinitialisez le message de validation
-//             event.target.setCustomValidity('');
-//         }
-//     });
-// });
-
 
 </script>
 <style scoped>

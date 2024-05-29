@@ -10,7 +10,7 @@
     },
     "feedback": {
         "title1": "Deja ",
-        "title2": " tu retroalimentación",
+        "title2": " tu comentario",
         "soustitle": "¿Cómo fue tu experiencia en nuestro establecimiento ?",
         "alreadysend": "Ya has enviado tu reseña hoy.",
         "rating": {
@@ -37,6 +37,7 @@
         "indice3": "condiciones generales de uso",
         "post": "Publicar comentario",
         "read_more": "Más información...",
+        "choose_advantage":"Por favor, elija su beneficio",
         "thanks": {
             "title1": "Gracias ",
             "title2": " por tus comentarios",

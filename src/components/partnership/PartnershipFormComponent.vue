@@ -328,4 +328,13 @@ const loadAdvantage = async () => {
     color: grey;
     font-weight: 500;
 }
+@media screen and (max-width: 468px) {
+    .profile__header {
+        padding-right: .5rem;
+        max-width: 380px;
+    }
+    .profile__header p {
+        font-size: 13px;
+    }
+}
 </style>

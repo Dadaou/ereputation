@@ -16,8 +16,12 @@
 import { useAppStore } from "@Stores/app.js";
 import { defineAsyncComponent, inject } from 'vue'
 
-import HeadComponent from '@Components/layouts/HeadComponent.vue';
+// import HeadComponent from '@Components/layouts/HeadComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
+
+const HeadComponent = defineAsyncComponent(() =>
+    import('@Components/layouts/HeadComponent.vue')
+)
 
 const FooterComponent = defineAsyncComponent(() =>
     import('@Components/layouts/FooterComponent.vue')

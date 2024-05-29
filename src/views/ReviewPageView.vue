@@ -1,34 +1,15 @@
 <template>
     <div class="left__side">
-        <div class="head w-full">
-            <div class="app__title">
-                <h2>Reviews</h2>
-            </div>
-            <!-- <div class="category-selector">
-                <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
-                    :max-collapse-tags="3" placeholder="select categories" size="">
-                    <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
-                        :disabled="categoryFilters.length > 1 && !categoryFilters.includes('all')" />
-                    <el-option v-for="(item, index) in categories" :key="index" :label="item.category"
-                        :value="item.category" @click="handleCategoryDropdown('other')" />
-                </el-select>
-            </div> -->
-        </div>
         <div class="reviews__content">
             <div class="reviews__pagination">
                 <PaginationComponent :options="options" v-if="visibleData.length > 0" @next="(option) => {
                     loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
                 }" @prev="(option) => {
-                loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
-            }" />
+                    loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
+                }" />
             </div>
-            <CommentComponent 
-            v-if="reviews_loader == false" 
-            :reviews="visibleData" 
-            :showEmoji="true"
-            @reloadData="(review) => reloadData(review)"
-            :categories="categories" 
-            />
+            <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
+                @reloadData="(review) => reloadData(review)" :categories="categories" />
             <div v-else role="status"
                 class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
                 v-for="index in 5" :key="index">
@@ -50,14 +31,14 @@
                 <span class="sr-only">Loading...</span>
             </div>
             <div class="no-comment" v-if="visibleData.length == 0">
-                 No reviews meet to the current filters
+                No reviews meet to the current filters
             </div>
             <div class="reviews__pagination">
                 <PaginationComponent :options="options" v-if="visibleData.length > 0" @next="(option) => {
                     loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
                 }" @prev="(option) => {
-    loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
-}" />
+                    loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
+                }" />
             </div>
         </div>
     </div>
@@ -94,8 +75,8 @@
                 :max-collapse-tags="3" placeholder="select categories" size="large">
                 <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
                     :disabled="categoryFilters.length > 1 && !categoryFilters.includes('all')" />
-                <el-option v-for="(item, index) in categories" :key="index" :label="item.category" :value="item.category"
-                    @click="handleCategoryDropdown('other')" />
+                <el-option v-for="(item, index) in categories" :key="index" :label="item.category"
+                    :value="item.category" @click="handleCategoryDropdown('other')" />
             </el-select>
         </div>
     </div>
@@ -116,9 +97,7 @@
             </div>
         </div>
     </div>
-    <EstablishmentInfoMobile 
-    :establishment="establishment" 
-    :isLoading="dataLoading">
+    <EstablishmentInfoMobile :establishment="establishment" :isLoading="dataLoading">
         <template #btn>
             <div class="mobile__filter__btn">
                 <button :class="['btn', (currentFilter == 'feedback') ? 'isactive' : '']"
@@ -129,14 +108,16 @@
                 <button :class="['btn', (currentFilter == 'star') ? 'isactive' : '']" @click="currentFilter = 'star'">
                     <i class="uis uil-star"></i> Stars
                 </button>
-                <button :class="['btn', (currentFilter == 'filter') ? 'isactive' : '']" @click="currentFilter = 'filter'">
+                <button :class="['btn', (currentFilter == 'filter') ? 'isactive' : '']"
+                    @click="currentFilter = 'filter'">
                     <i class="uil uil-filter"></i>Filters
                 </button>
             </div>
         </template>
     </EstablishmentInfoMobile>
     <div class="right__side">
-        <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        <div
+            class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" v-if="!dataLoading">
                 <div v-if="establishment.url_source !== null" class="establishment__img">
                     <img :src="establishment.url_source" alt="" />
@@ -234,7 +215,7 @@ import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 
 const EstablishmentInfoMobile = defineAsyncComponent(
-    ()=> import("@Components/utils/EstablishmentInfoMobile.vue")
+    () => import("@Components/utils/EstablishmentInfoMobile.vue")
 )
 
 const companiesStore = useCompanyStore();
@@ -365,8 +346,8 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     let apiParams = `tag=${tag}&page=${page}&limit=${limit}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
         apiParams += `&from=${dateStart}&to=${dateEnd}`;
     }
 
@@ -384,7 +365,7 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     }
 
     if (selectedFeeling.value && selectedFeeling.value != 'All') {
-        selectedFeeling.value = selectedFeeling.value=='neutral'?'neutre': selectedFeeling.value
+        selectedFeeling.value = selectedFeeling.value == 'neutral' ? 'neutre' : selectedFeeling.value
         apiParams += `&feeling=${selectedFeeling.value.toLowerCase()}`
     }
 
@@ -393,7 +374,6 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     // }
 
     const api = apiBase + '?' + apiParams;
-    console.log(api)
 
     await loadFeelingData(tag, dateStart, dateEnd, source);
     await loadStarData(tag, dateStart, dateEnd, source);
@@ -419,7 +399,6 @@ const feedbackLoading = ref(false)
 
 const formatStarsData = (data) => {
     let tmp = []
-    console.log(data)
     const total = Object.keys(data).reduce(function (previous, key) {
         return previous + data[key];
     }, 0);
@@ -440,8 +419,8 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source) => {
     let apiParams = `tag=${tag}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
     } else {
         dateStart = moment().subtract(30, 'days').format('YYYY-M-DD');
         dateEnd = moment().format('YYYY-M-DD');
@@ -454,7 +433,6 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source) => {
     }
 
     const api = apiBase + '?' + apiParams;
-    console.log(api)
 
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
@@ -497,8 +475,8 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
     let apiParams = `tag=${tag}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(dateStart).format('YYYY-MM-DD');
-        dateEnd = moment(dateEnd).format('YYYY-MM-DD');
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
     } else {
         dateStart = moment().subtract(30, 'days').format('YYYY-M-DD');
         dateEnd = moment().format('YYYY-M-DD');
@@ -511,7 +489,6 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
     }
 
     const api = apiBase + '?' + apiParams;
-    console.log(api)
 
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {

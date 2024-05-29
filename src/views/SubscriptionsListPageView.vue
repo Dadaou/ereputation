@@ -15,7 +15,8 @@
                 </div>
                 <div class="subscription-content">
                     <div class="content">
-                        <p><strong>Payment Date:</strong> {{ moment(subscription.payement_date).format('YYYY-MM-DD') }}</p>
+                        <p><strong>Payment Date:</strong> {{ moment(subscription.payement_date).format('YYYY-MM-DD') }}
+                        </p>
                         <p><strong>Expires On:</strong> {{ moment(subscription.expired_at).format('YYYY-MM-DD') }}</p>
                         <p v-if="subscription.discount > 0"><strong>Discount:</strong> {{ subscription.discount }}%</p>
                         <p><strong>Periodicity:</strong> {{ subscription.periodicity }} months</p>
@@ -59,7 +60,6 @@ const isExpired = (expiredDate) => {
     const now = new Date();
     const expiryDate = new Date(expiredDate);
     return now > expiryDate;
-    // return true;
 }
 
 onBeforeMount(async () => {
@@ -68,13 +68,11 @@ onBeforeMount(async () => {
         const response = await new Promise((resolve) => {
             services.get_Record(`customer/${route.params.tag}/subscriptions`, (response) => {
                 resolve(response);
-                console.log(response)
             });
         });
 
         if (response.status === 200) {
             subscriptions.value = response.data;
-            console.log(response.data)
         } else {
             console.error('Error fetching subscriptions:', response);
         }

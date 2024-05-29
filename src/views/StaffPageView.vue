@@ -7,11 +7,11 @@
             selectedTimePeriod = timePeriod
         }" :default="timePeriods[0]" />
         <div class="date__picker px-2">
-           
+
             <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
         </div>
         <div class="date__picker px-2">
-            
+
             <el-date-picker v-model="end_date" type="date" placeholder="Select the end date" :size="'large'" />
         </div>
     </div>
@@ -22,7 +22,7 @@
             <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
             <div>
                 <i
-                    :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '',establishment.category == 'Other' ? 'uil-home' : '']"></i>
+                    :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '', establishment.category == 'Other' ? 'uil-home' : '']"></i>
                 <span v-if="!dataLoading">{{ establishment.category }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-48 mb-4"></span>
             </div>
@@ -36,14 +36,6 @@
                 <span v-if="!dataLoading">{{ establishment.city }}</span>
                 <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
             </div>
-           <!--  <RouterLink 
-            v-if="route.name !== 'StaffReview' && route.name !== 'UnitReview' && onglet == 'staffs'"
-            :to="`/customer/${customerTag}/establishment/${$route.params.id}/staffsranking`">
-                <button class="btn">
-                    <i class="uil uil-trophy" :style="{ 'color': 'white' }"></i>
-                    <span class="ml-2" :style="{ 'color': 'white' }">Staff Ranking</span>
-                </button>
-            </RouterLink> -->
         </div>
         <div class="photo" v-if="!dataLoading">
             <div v-if="establishment.url_source !== null" class="establishment__img">
@@ -74,7 +66,8 @@
         </div>
     </div>
     <div class="right__side">
-        <div class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        <div
+            class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" v-if="!dataLoading">
                 <div v-if="establishment.url_source !== null" class="establishment__img">
                     <img :src="establishment.url_source" alt="" />
@@ -107,7 +100,7 @@
                 <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
                 <div class="society__location">
                     <i
-                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '',establishment.category == 'Other' ? 'uil-home' : '']"></i>
+                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '', establishment.category == 'Other' ? 'uil-home' : '']"></i>
                     <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
                     <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                 </div>
@@ -123,18 +116,11 @@
                 <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
                 <el-date-picker class="mt-2" v-model="end_date" type="date" placeholder="Select the end date"
                     :size="'large'" />
-                <DropdownComponent v-if="route.name !== 'StaffReview' && route.name !== 'UnitReview'" :showTitle="false" placeholder="" :data="timePeriods"
-                    @submit="(timePeriod) => {
+                <DropdownComponent v-if="route.name !== 'StaffReview' && route.name !== 'UnitReview'" :showTitle="false"
+                    placeholder="" :data="timePeriods" @submit="(timePeriod) => {
                         selectedTimePeriod = timePeriod
                     }" :default="timePeriods[0]" />
             </div>
-            <!-- <RouterLink v-if="route.name !== 'StaffReview' && route.name !== 'UnitReview' && onglet == 'staffs'"
-                :to="`/customer/${customerTag}/establishment/${$route.params.id}/staffsranking`">
-                <button class="btn">
-                    <i class="uil uil-trophy"></i>
-                    <span class="ml-2">Staff Ranking</span>
-                </button>
-            </RouterLink> -->
         </div>
     </div>
 </template>
@@ -195,7 +181,6 @@ appStore.setBreadcrumbs([
 ]);
 
 const route_name = computed(() => {
-    console.log(breadcrumbData.value);
     return route.name;
 })
 
@@ -235,14 +220,13 @@ const all_items = ref([
 const { width } = useWindowSize();
 
 
-watch([start_date, end_date], async() => {
+watch([start_date, end_date], async () => {
     if (start_date.value !== '' && end_date.value !== '') {
-        console.log(start_date.value)
         date.value = [start_date.value, end_date.value]
-        
+
     } else {
         date.value = [startDate, endDate];
-       
+
     }
     // appStore.setDatesValue(start_date.value, end_date.value);
     await loadStaffs(companyId, start_date.value, end_date.value)
@@ -309,10 +293,10 @@ watch(route_name, () => {
 
 })
 
-const loadStaffs = async (tag, dateStart, dateEnd)=>{
+const loadStaffs = async (tag, dateStart, dateEnd) => {
     staffLoading.value = true;
-    dateStart = moment(dateStart).format('YYYY-MM-DD')
-    dateEnd = moment(dateEnd).format('YYYY-MM-DD')
+    dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD')
+    dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD')
 
     const response = await new Promise((resolve) => {
         services.get_Record(`/establishment/${companyId}/staffs?dateFrom=${dateStart}&dateTo=${dateEnd}`, (response) => {
@@ -326,7 +310,6 @@ const loadStaffs = async (tag, dateStart, dateEnd)=>{
 
     if (response.status == 200) {
         staffs.value = response.data;
-        console.log(staffs.value)
         staffLoading.value = false;
     }
 }

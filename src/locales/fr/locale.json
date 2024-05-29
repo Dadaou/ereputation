@@ -37,7 +37,8 @@
         "indice3": "conditions générales d’utilisations",
         "post": "Poster un commentaire",
         "requiredinputs": "Veuillez fournir toutes les informations nécessaires.",
-        "read_more": "En savoir plus..."
+        "read_more": "En savoir plus...",
+        "choose_advantage":"Veuillez svp choisir votre avantage"
     },
     "staffFeedback": {
         "interne": "Usage interne uniquement, votre commentaire ne sera pas diffusé sur les plateformes publiques.",
