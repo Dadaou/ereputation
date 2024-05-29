@@ -55,6 +55,7 @@ const getInstance = (isPublic=false, isNoAuth=false)=>{
 
 const logout = () => {
   localStorage.removeItem('access')
+  localStorage.removeItem('token')
   localStorage.removeItem('user')
   localStorage.removeItem('user_authenticated')
   // delete axiosInstance.defaults.headers['Authorization']
