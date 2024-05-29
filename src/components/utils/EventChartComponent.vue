@@ -147,8 +147,6 @@ const changeColor = () => {
   })
 }
 
-
-
 const legendData = computed(() => {
   let dates = plotdata.value.events_per_date;
   let nameSet = new Set();

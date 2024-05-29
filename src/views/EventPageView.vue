@@ -125,7 +125,7 @@ const chartLoading = ref(false);
 provide('chartLoading', chartLoading);
 const eventLoading = ref(false);
 const customerTag = inject('tag');
-const activeName = ref('events'); // ou public event
+const activeName = ref('events'); 
 
 const companyId = route.params.id;
 let establishment = ref({});
@@ -133,14 +133,11 @@ provide('establishment', establishment)
 let events = ref([]);
 provide('events', events);
 let publics = ref([]);
-const timePeriods = ref(['Daily', 'Weekly', 'Monthly', 'Yearly']);
-const selectedTimePeriod = ref(timePeriods.value[0]);
 
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 const date = ref([start_date.value, end_date.value])
 provide('date', date);
-provide('type', selectedTimePeriod);
 
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
@@ -167,6 +164,7 @@ watch(activeName, async () => {
         await loadEvents(companyId, start_date.value, end_date.value, establishment.value.locality_id)
     }
 })
+
 
 const IsValueOkay = (value) => (value == '' || value == null || value == undefined || value == []) ? false : true;
 const loadEvents = async (tag, dateStart, dateEnd, locality) => {
