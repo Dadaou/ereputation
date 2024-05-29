@@ -14,7 +14,7 @@ import { useUserStore } from '@Stores/user.js'
 const CheckAuthentication = (to, from, next) => {
   const user = useUserStore().user
   if (to.name == 'Login') {
-    if (localStorage.getItem('access')) {
+    if (localStorage.getItem('token')) {
       const roles = user ? user.roles : []
       let defaultRoute = { name: 'HomeViewForUserConnected' }
       if (roles.includes('ROLE_PARTNER') && (user.partner !== null || user.customer !== null)) {
