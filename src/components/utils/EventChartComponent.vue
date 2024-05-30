@@ -215,7 +215,7 @@ const getPlotData = async (period, rangedate, next) => {
   let data = [];
 
   if (period == 'monthly') {
-    format = 'MM-YYYY'
+    format = 'YYYY-MM'
   }
 
   if (period == 'yearly') {

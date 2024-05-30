@@ -9,7 +9,7 @@ export const useFeedbackStore = defineStore('feedback', {
     async createReview(review, next) {
       await services.createRecord('public/review/feedback', review, (response) => {
         next(response)
-      })
+      }, true)
     },
 
     async updateReview(id, review, next) {
@@ -27,7 +27,6 @@ export const useFeedbackStore = defineStore('feedback', {
     async updateReviewCategory(id, type, old, current, ishashtag, next) {
       let api = '/modify/classification'
 
-      //comment if comment, review if review and post if hashtag
       let parameters = ishashtag
         ? `type=${type}&post=${id}&current_category=${current}`
         : `type=${type}&review=${id}&current_category=${current}`
