@@ -13,7 +13,7 @@
             </div>
             <div v-if="discount" class="inline-flex items-center justify-around w-full"
                 style="margin-top: 20px; gap: 24px">
-                <div v-if="discount.quantity > 0 && moment(discount.expired_at) > moment()">
+                <div v-if="discount.quantity > 0 && moment(discount.expired_at) >= moment()">
                     <h1 class="boost__name">
                         {{ discount.name }}
                     </h1>
