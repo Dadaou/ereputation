@@ -99,6 +99,8 @@ footer {
   background-color: var(--color-white);
   border-radius: 16px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
 }
 
 .footer-logo img {
