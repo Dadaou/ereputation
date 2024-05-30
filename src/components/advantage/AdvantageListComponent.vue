@@ -35,9 +35,14 @@
       <el-table-column label="Operations" width="200">
 
         <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>
+          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
         </template>
         <template #default="scope">
+          <el-tooltip placement="top">
+            <template #content> Boost this advantage </template>
+            <el-button size="small" @click="handleBoost(scope.$index, scope.row)"><i
+                class="uil uil-presentation"></i></el-button>
+          </el-tooltip>
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
             <template #reference>
@@ -52,10 +57,11 @@
 
 <script setup>
 import { computed, ref, inject } from 'vue';
-import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
+import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput, ElTooltip } from 'element-plus';
 import services from '@Services/services.js';
 import moment from 'moment';
 import { useWindowSize } from '@vueuse/core';
+import { useRoute, useRouter } from "vue-router";
 
 const emit = defineEmits(['edit', 'setEnable', 'setDisable']);
 const advantages = inject('advantages');
@@ -64,6 +70,8 @@ const { width } = useWindowSize();
 const tableWidth = computed(() => {
   return width.value > 800 ? `width: ${100}%` : `width: ${100}%`;
 });
+const route = useRoute();
+const router = useRouter();
 
 const filterTableData = computed(() => {
   let filteredData = advantages.value;
@@ -85,6 +93,11 @@ const reloadData = (advantageToRemove) => {
 
 const handleEdit = (index, advantages) => {
   emit('edit', advantages);
+};
+
+const handleBoost = (index, advantages) => {
+  const link = router.resolve(`/customer/${route.params.tag}/establishment/${advantages.establishment_tag}/boost?q=${advantages.id}`);
+  window.open(link.href, '_blank');
 };
 
 const handleEnable = (index, advantages) => {
@@ -179,21 +192,23 @@ button i.uil-edit {
   }
 }
 
-.search{
-    display: none;
+.search {
+  display: none;
 }
 
-@media screen and (max-width: 468px) { 
-    .search {
-      display: flex;
-      max-width: 220px;
-      float: right;
-    }
-    .searchtab{
-      display: none;
-    }
-    .el-table--fit {
-      font-size: 11px !important;
-    }
+@media screen and (max-width: 468px) {
+  .search {
+    display: flex;
+    max-width: 220px;
+    float: right;
+  }
+
+  .searchtab {
+    display: none;
+  }
+
+  .el-table--fit {
+    font-size: 11px !important;
+  }
 }
 </style>

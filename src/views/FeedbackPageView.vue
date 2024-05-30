@@ -73,7 +73,7 @@
                     <div class="grid gap-6 mb-6 md:grid-cols-2 email">
                         <div class="author__email">
                             <DiscountCheckList :establishment="route.params.id" :customer="route.params.tag"
-                                @select="(value) => randomAdvantage = value" />
+                                @select="(value) => randomAdvantage = value" :discount="discount" />
                             <span v-if="randomAdvantage">
                                 <i class="uil uil-info-circle"></i>{{ $t("feedback.indice1") }}
                             </span>
@@ -122,7 +122,7 @@
 
 <script setup>
 
-import { ref, onBeforeMount, defineAsyncComponent, onMounted, inject,watch } from 'vue';
+import { ref, onBeforeMount, defineAsyncComponent, onMounted, inject, watch, computed } from 'vue';
 import RatingFeedbackComponent from '@Components/utils/RatingFeedbackComponent.vue';
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
@@ -184,6 +184,13 @@ onBeforeMount(async () => {
 
 })
 
+const discount = computed(() => {
+    if (route.query.adv) {
+        return Number(route.query.adv)
+    }
+    return null
+})
+
 onMounted(() => {
 
     appStore.setCurrentPage({
@@ -202,7 +209,7 @@ onMounted(() => {
 
 })
 
-watch(()=>{
+watch(() => {
     appStore.setCurrentPage({
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),
