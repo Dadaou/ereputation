@@ -1,30 +1,30 @@
 <template>
     <div class="left__side">
-        <div class="head dashboard">
+        <!-- <div class="head dashboard">
             <div class="app__title">
                 <h1>Dashboard</h1>
             </div>
-        </div>
+        </div> -->
         <div class="dashboard__content">
             <DashboardComponent :is-loading="establishmentLoading" class="counter" v-for="item in all_items"
                 :item="item" :key="item" />
         </div>
-        <div class="head">
+        <!-- <div class="head">
             <div class="app__title">
                 <h2>Comparison</h2>
             </div>
-        </div>
+        </div> -->
 
         <ComparisonChartComponent :data="plotdata" :width="chart__width" :chartheight="chart__height"
             :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors"
             :timePeriod="selectedTimePeriod" :colors="colors" />
         <BaseLegend v-if="chartLoading == false" class="legend" :LegendData="legendData" :alignment="'horizontal'">
         </BaseLegend>
-        <div class="head">
+        <!-- <div class="head">
             <div class="app__title">
                 <h2>Last reviews</h2>
             </div>
-        </div>
+        </div> -->
         <div class="reviews__content">
             <p>Discover the latest feedback about your establishment. Click <a
                     @click="gotoReviewPage(establishment.competitor_tag, $route.params.tag)">here</a> to access all
