@@ -164,12 +164,15 @@ const info = computed(() => {
 })
 
 onMounted(async () => {
-  let data = await advantageStore.getAdvantageAvailable(props.customer, props.establishment)
 
+  let data = await advantageStore.getAdvantageAvailable(props.customer, props.establishment, true)
   if (props.discount) {
     let d = data.find((d) => d.id == props.discount)
-    discounts.value = [{ ...d, icon: "🎉" }]
-    selectDiscount(1, discounts.value[1])
+    if (d) {
+      discounts.value = [{ ...d, icon: "🎉" }]
+      selectDiscount(0, discounts.value[0])
+    }
+
   } else {
     discounts.value = data.map((discount, index) => {
       let icon = '';
@@ -181,7 +184,6 @@ onMounted(async () => {
       return { ...discount, icon };
     });
   }
-
   generateColors();
   // if (discounts.value.length) {
   //   selectDiscount(1, discounts.value[1]);

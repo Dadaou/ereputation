@@ -96,8 +96,7 @@ const handleEdit = (index, advantages) => {
 };
 
 const handleBoost = (index, advantages) => {
-
-  const link = router.resolve(`/customer/${route.params.tag}/boost/advantage?q=${advantages.id}`);
+  const link = router.resolve(`/customer/${route.params.tag}/establishment/${advantages.establishment_tag}/boost?q=${advantages.id}`);
   window.open(link.href, '_blank');
 };
 

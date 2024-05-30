@@ -185,8 +185,8 @@ onBeforeMount(async () => {
 })
 
 const discount = computed(() => {
-    if (route.params.adv) {
-        return parseInt(discount)
+    if (route.query.adv) {
+        return Number(route.query.adv)
     }
     return null
 })

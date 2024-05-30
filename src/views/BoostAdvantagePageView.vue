@@ -13,7 +13,7 @@
             </div>
             <div v-if="discount" class="inline-flex items-center justify-around w-full"
                 style="margin-top: 20px; gap: 24px">
-                <div>
+                <div v-if="discount.quantity > 0 && moment(discount.expired_at) > moment()">
                     <h1 class="boost__name">
                         {{ discount.name }}
                     </h1>
@@ -30,10 +30,20 @@
                         <img :src="logo.logo">
                     </div>
                 </div>
+                <div v-else style="margin-top: 220px">
+                    <h2 class="boost_quantity">
+                        This benefit is sold out
+                    </h2>
+                    <div style="margin-top: 32px">
+                        <h4 class="boost_comment">Stay tuned, new benefits are coming soon!</h4>
+                    </div>
+                    <div v-if="logo && logo.logo" class="customer__logo">
+                        <img :src="logo.logo">
+                    </div>
+                </div>
                 <div class="boost__qrcode">
-                    <!-- http://localhost:5173/public/652f8b33787bd/establishment/6527ada6c536c/feedback -->
                     <qrcode-vue
-                        :value="`/public/${route.params.tag}/establishment/6527ada6c536c/feedback?adv=${route.query.q}`"
+                        :value="`${baseurl}/public/${route.params.tag}/establishment/${route.params.id}/feedback?adv=${route.query.q}`"
                         :size="550" level="H" />
                 </div>
             </div>
@@ -43,12 +53,15 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, onMounted } from 'vue';
+import { ref, onBeforeMount, onMounted, onBeforeUnmount } from 'vue';
 import QrcodeVue from 'qrcode.vue'
 import { useRoute } from 'vue-router';
 import { useAppStore } from "@Stores/app.js";
 import services from '@Services/services.js';
 import { alertProps } from 'element-plus';
+import moment from 'moment';
+
+const baseurl = window.location.origin
 
 const iconSrc = ref(new URL('@/assets/images/boostIcon.svg', import.meta.url).href)
 const icon2Src = ref(new URL('@/assets/images/discount.svg', import.meta.url).href)
@@ -58,12 +71,35 @@ const logo = ref(null);
 
 const discount = ref(null);
 
+const interval = ref(null);
+
+const updateInfo = () => {
+    interval.value = setInterval(async () => {
+        try {
+            if (route.query.q) {
+                const response = await new Promise((resolve, reject) => {
+                    services.get_Record(`/customer/establishments/advantages/quantity?id=${route.query.q}`, (response) => {
+                        resolve(response);
+                    });
+                });
+
+                if (response.status === 200) {
+                    discount.value = response.data
+                } else {
+                    console.error('Error fetching advantage:', response);
+                }
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }, 10000)
+}
+
 onMounted(async () => {
+    appStore.isLoading = true;
     try {
         if (route.query.q) {
-            // /api/customer/establishments/advantages/quantity?id=1
             const response = await new Promise((resolve, reject) => {
-
                 services.get_Record(`/customer/establishments/advantages/quantity?id=${route.query.q}`, (response) => {
                     resolve(response);
                 });
@@ -78,13 +114,22 @@ onMounted(async () => {
     } catch (e) {
         console.log(e)
     }
+    updateInfo();
+    appStore.isLoading = false;
 })
 
 onBeforeMount(async () => {
+    appStore.isLoading = true;
     if (route.params.tag) {
         logo.value = await appStore.getCustomerLogo(route.params.tag)
     }
+    appStore.isLoading = false;
 });
+
+onBeforeUnmount(() => {
+    clearInterval(interval.value)
+    interval.value = null
+})
 </script>
 <style>
 .screen__container {
