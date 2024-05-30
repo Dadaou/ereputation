@@ -117,12 +117,10 @@ onBeforeMount(async () => {
         icon: "uil-comment-alt"
     });
 
-
-    /* voir si le discounttag exit sinon redirection page 404 */
     const response = await new Promise((resolve) => {
         services.get_Record(`public/customer/establishments/advantagecontacts/list`, (response) => {
             resolve(response);
-        });
+        }, true);
     });
     response.data.forEach(obj => {
         listAdvantage.value.push(obj.tag);
@@ -132,17 +130,11 @@ onBeforeMount(async () => {
         router.push({ name: 'NotFound' })
     }
 
-
-
-
-    if (userStore.authenticated == null) services.setToken(import.meta.env.VITE_APP_TOKEN);
-
-
     try {
         const response = await new Promise((resolve) => {
             services.get_Record(`public/customer/establishments/advantagecontacts/list?tag=${route.params.discountTag}`, (response) => {
                 resolve(response);
-            });
+            }, true);
         });
 
         if (response.status === 200) {
@@ -159,7 +151,7 @@ onBeforeMount(async () => {
             }
 
         } else {
-            console.error('Error fetching advantages:', response);
+            console.error('Error fetching advantages: 1', response);
         }
     } catch (error) {
         console.error('Error in onBeforeMount:', error);

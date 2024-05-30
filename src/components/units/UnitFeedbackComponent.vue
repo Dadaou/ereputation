@@ -306,7 +306,7 @@ const submit = async () => {
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,
-        establishments: [`/api/establishments/${establishment.value.id}`]
+        establishment: establishment.value.id
     }
 
     try {
@@ -318,8 +318,13 @@ const submit = async () => {
                         await services.createRecord('public/contacts', contactData, async (contactResponse) => {
                             if (contactResponse.status == 201) {
                                 if (visitorId) {
-                                    services.patchRecord('public/visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
-                                        // Do nothing
+                                    const visitor = { 
+                                        visitor: visitorId, 
+                                        contact: contactResponse.data.data['@id'],
+                                    }
+
+                                    services.post_Record('public/visitors', visitor , (res) => {
+                                       console.log(res)
                                     }, true)
                                 }
 
@@ -334,6 +339,7 @@ const submit = async () => {
                                         app_url: app_url.value,
                                         template: `workflow_en`
                                     }
+                                    console.log(coupons)
                                     await services.createRecord('public/workflow', coupons, () => {
                                         resetForm()
                                     }, true);

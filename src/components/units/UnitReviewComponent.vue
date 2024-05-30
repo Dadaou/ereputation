@@ -1,7 +1,7 @@
 <template>
-    <div class="app__title">
+   <!--  <div class="app__title">
         <h2 v-if="selectedUnit">{{ selectedUnit.name }} intern feedbacks</h2>
-    </div>
+    </div> -->
     <div class="reviews__content" v-if="_reviews.length > 0">
         <div class="reviews__pagination">
             <CommentPagination v-if="_reviews.length > 0" :config="paginationConfig" @updatePage="updatePage"
