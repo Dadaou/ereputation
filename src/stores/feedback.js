@@ -7,7 +7,7 @@ export const useFeedbackStore = defineStore('feedback', {
   }),
   actions: {
     async createReview(review, next) {
-      await services.createRecord('review/feedback', review, (response) => {
+      await services.createRecord('public/review/feedback', review, (response) => {
         next(response)
       })
     },
