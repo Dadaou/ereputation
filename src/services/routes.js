@@ -45,6 +45,7 @@ export const publicUrls = ['FeedBack',
 	'QRCodeAdvContactExpired',
 	'DiscountAuthentication',
 	'Gate', 
+	'DiscountQRCodeValidation',
 	undefined
 ]
 

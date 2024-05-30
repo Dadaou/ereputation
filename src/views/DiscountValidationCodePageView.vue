@@ -25,7 +25,8 @@ import { ref, defineAsyncComponent, onBeforeMount } from 'vue';
 import services from '@Services/services.js';
 import { useRouter } from "vue-router"
 import { useUserStore } from "@Stores/user.js";
-import { ElMessage } from 'element-plus'
+import { useAppStore } from "@Stores/app.js";
+import { ElMessage } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 
 const SpinnerComponent = defineAsyncComponent(() =>
@@ -35,6 +36,7 @@ const SpinnerComponent = defineAsyncComponent(() =>
 const couponCode = ref('');
 const showSpinner = ref(false);
 const userStore = useUserStore();
+const appStore = useAppStore();
 const router = useRouter();
 
 const submit = async () => {
@@ -66,6 +68,14 @@ const submit = async () => {
         console.error('Error in onBeforeMount:', error);
     }
 };
+
+onBeforeMount(()=>{
+     appStore.setCurrentPage({
+        title1: t("feedback.title1"),
+        title2: t("feedback.title2"),
+        icon: "uil-comment-alt"
+    });
+ });
 </script>
 
 <style scoped>

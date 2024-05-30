@@ -132,8 +132,8 @@ onBeforeMount(async () => {
     const response = await new Promise((resolve) => {
       services.get_Record(`public/customer/establishments/advantagecontacts/list?tag=${route.params.discountTag}`, (response) => {
         resolve(response);
-      });
-    }, true);
+      }, true);
+    });
 
     if (response.status === 200) {
       advantages.value = response.data[0];

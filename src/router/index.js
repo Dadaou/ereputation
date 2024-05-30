@@ -233,12 +233,12 @@ const router = createRouter({
           redirect: { name: 'DiscountAuthentication' },
           children: [
             {
-              path: '/public/discount/auth',
+              path: '/public/customer/:tag/discount/auth',
               name: 'DiscountAuthentication',
               component: () => import('@Views/DiscountValidationAuthPageView.vue')
             },
             {
-              path: '/public/discount/validation/:discountTag',
+              path: '/public/customer/:tag/discount/validation/:discountTag',
               name: 'DiscountQRCodeValidation',
               component: () => import('@Views/EnableAdvantagePageView.vue'),
               meta: {
@@ -292,14 +292,12 @@ const router = createRouter({
           component: () => import('@Views/EnableAdvantagePageView.vue')
         },
         {
-          //path: /public/advantagecontact/:discountTag',
-          path: '/public/:discountTag/advantagecontact',
+          path: '/public/customer/:tag/advantagecontact/:discountTag',
           name: 'QRCodeAdvContact',
           component: () => import('@Views/QRCodeAdvantagePageView.vue')
         },
         {
-          //path: /public/advantagecontact/:discountTag',
-          path: '/public/:discountTag/advantagecontact',
+          path: '/public/customer/:tag/advantagecontact/:discountTag',
           name: 'QRCodeAdvContactExpired',
           component: () => import('@Views/QRCodeAdvantagePageViewExpired.vue')
         }
@@ -311,31 +309,6 @@ const router = createRouter({
       component: ProfileLayout,
       redirect: '/',
       children: [
-        /*{
-          //path: '/',
-          //name: 'DiscountValidation',
-          //redirect: { name: 'DiscountAuthentication' },
-          //children: [
-            {
-             path: /public/discount/auth,
-              name: DiscountAuthentication,
-              component: () => import(@Views/DiscountValidationAuthPageView.vue)
-            },
-            {
-              path: '/public/discount/validation/:discountTag',
-              name: 'DiscountQRCodeValidation',
-              component: () => import('@Views/EnableAdvantagePageView.vue'),
-              meta: {
-                requiresAuth: true
-              }
-            },
-            {
-              path: 'public/discount/code/validation',
-              name: 'DiscountCodeValidation',
-              component: () => import('@Views/DiscountValidationCodePageView.vue')
-            }
-          ]
-        },*/
         {
           path: '/user-confirmation/password/reset',
           name: 'ForgotPwd',
@@ -464,12 +437,16 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    const isAuthenticated = checkAuthentication() // Votre logique d'authentification
+    const isAuthenticated = checkAuthentication()
     if (!isAuthenticated) {
       next({
         name: 'DiscountAuthentication',
+        params: {
+          tag: to.params.tag
+        },
         query: { redirect: to.fullPath }
       })
+      localStorage.setItem('isSellerAuthenticated', false)
     } else {
       next()
     }

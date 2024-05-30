@@ -6,7 +6,7 @@
                 <h3 class="text-xl font-semibold mb-4">🎉 {{ $t("coupon.title") }} 🎁</h3>
                 <div id="qrcode__container" ref="qrcode">
                     <vue-qrious class="qr__code mx-auto"
-                        :value="`${baseurl}/public/discount/validation/${route.params.discountTag}`"
+                        :value="`${baseurl}/public/customer/${route.params.tag}/discount/validation/${route.params.discountTag}`"
                         @change="onDataUrlChange" size="5000" />
                 </div>
                 <span id="cpnCode" class="border-dashed border text-white px-4 py-2 rounded-l">{{ code }}</span>
@@ -126,9 +126,9 @@ onBeforeMount(async () => {
         listAdvantage.value.push(obj.tag);
     });
 
-    if (!listAdvantage.value.includes(route.params.discountTag)) {
-        router.push({ name: 'NotFound' })
-    }
+    // if (!listAdvantage.value.includes(route.params.discountTag)) {
+    //     router.push({ name: 'NotFound' })
+    // }
 
     try {
         const response = await new Promise((resolve) => {
@@ -136,7 +136,7 @@ onBeforeMount(async () => {
                 resolve(response);
             }, true);
         });
-
+        
         if (response.status === 200) {
             advantages.value = response.data[0];
             code.value = advantages.value.code;
