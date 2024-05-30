@@ -6,7 +6,7 @@
                 <h3 class="text-xl font-semibold mb-4">🎉 {{ $t("coupon.title") }} 🎁</h3>
                 <div id="qrcode__container" ref="qrcode">
                     <vue-qrious class="qr__code mx-auto"
-                        :value="`${baseurl}/public/discount/validation/${route.params.discountTag}`"
+                        :value="`${baseurl}/public/customer/${route.params.tag}/discount/validation/${route.params.discountTag}`"
                         @change="onDataUrlChange" size="5000" />
                 </div>
                 <span id="cpnCode" class="border-dashed border text-white px-4 py-2 rounded-l">{{ code }}</span>
@@ -117,34 +117,26 @@ onBeforeMount(async () => {
         icon: "uil-comment-alt"
     });
 
-
-    /* voir si le discounttag exit sinon redirection page 404 */
     const response = await new Promise((resolve) => {
         services.get_Record(`public/customer/establishments/advantagecontacts/list`, (response) => {
             resolve(response);
-        });
+        }, true);
     });
     response.data.forEach(obj => {
         listAdvantage.value.push(obj.tag);
     });
 
-    if (!listAdvantage.value.includes(route.params.discountTag)) {
-        router.push({ name: 'NotFound' })
-    }
-
-
-
-
-    if (userStore.authenticated == null) services.setToken(import.meta.env.VITE_APP_TOKEN);
-
+    // if (!listAdvantage.value.includes(route.params.discountTag)) {
+    //     router.push({ name: 'NotFound' })
+    // }
 
     try {
         const response = await new Promise((resolve) => {
             services.get_Record(`public/customer/establishments/advantagecontacts/list?tag=${route.params.discountTag}`, (response) => {
                 resolve(response);
-            });
+            }, true);
         });
-
+        
         if (response.status === 200) {
             advantages.value = response.data[0];
             code.value = advantages.value.code;
@@ -159,7 +151,7 @@ onBeforeMount(async () => {
             }
 
         } else {
-            console.error('Error fetching advantages:', response);
+            console.error('Error fetching advantages: 1', response);
         }
     } catch (error) {
         console.error('Error in onBeforeMount:', error);

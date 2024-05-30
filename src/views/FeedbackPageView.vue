@@ -267,7 +267,7 @@ const submit = async () => {
         firstname: firstname.value,
         lastname: lastname.value,
         email: email.value,
-        establishments: [`/api/establishments/${establishment.value.id}`]
+        establishment: establishment.value.id
     };
 
 
@@ -281,8 +281,12 @@ const submit = async () => {
                         await services.createRecord('public/contacts', contactData, async (contactResponse) => {
                             if (contactResponse.status == 201) {
                                 if (visitorId) {
-                                    services.patchRecord('public/visitors', visitorId, { 'contact': contactResponse.data['@id'] }, (res) => {
-                                        // Do nothing
+                                    services.post_Record('public/visitors', 
+                                    { 
+                                        'visitor': visitorId, 
+                                        'contact': contactResponse.data.data['@id'],
+                                    }, (res) => {
+                                       console.log(res)
                                     }, true)
                                 }
 

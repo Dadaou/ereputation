@@ -25,7 +25,7 @@ const getInstance = (isPublic=false, isNoAuth=false)=>{
      instance.defaults.baseURL = baseURL.slice(0, baseURL.length - 3);
   }else{
     instance.defaults.baseURL = baseURL
-    if(isPublic){
+    if(isPublic == true){
       instance.defaults.headers['Authorization'] = `Bearer ${localStorage.getItem('access')}`;
     }else{
       instance.defaults.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
