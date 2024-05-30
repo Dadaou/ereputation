@@ -1,12 +1,12 @@
 <template>
     <div class="screen__container">
         <div class="bg__circle"></div>
-        <div class="container flex flex-col items-center justify-start screen__content">
+        <div v-if="discount" class="container flex flex-col items-center justify-start screen__content">
             <div class="inline-flex items-start justify-center w-full" style="margin-top: 100px; gap: 24px;">
                 <div class="icon__container">
                     <img v-if="icon2Src" :src="icon2Src" :alt="`icon`">
                 </div>
-                <h1 class="boost__title"><strong>Happy Hour</strong></h1>
+                <h1 v-if="discount.name" class="boost__title"><strong>{{ discount.name }}</strong></h1>
                 <div class="icon__container">
                     <img v-if="iconSrc" :src="icon2Src" :alt="`icon`">
                 </div>
@@ -14,8 +14,8 @@
             <div v-if="discount" class="inline-flex items-center justify-around w-full"
                 style="margin-top: 20px; gap: 24px">
                 <div v-if="discount.quantity > 0 && moment(discount.expired_at) >= moment()">
-                    <h1 class="boost__name">
-                        {{ discount.name }}
+                    <h1 v-if="discount.description" class="boost__name">
+                        {{ discount.description }}
                     </h1>
                     <!-- <p class="boost__description">
                         test
@@ -157,8 +157,8 @@ onBeforeUnmount(() => {
 }
 
 .boost__title {
-    font-family: brush script mt, cursive;
-    font-size: 8rem;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 5.5rem;
     color: var(--color-bg2);
 }
 
@@ -173,7 +173,8 @@ onBeforeUnmount(() => {
 }
 
 .boost__name {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Inter, sans-serif;
+    ;
     font-size: 4rem;
     font-weight: 600;
     margin-top: 68px;
@@ -181,14 +182,16 @@ onBeforeUnmount(() => {
 }
 
 .boost_quantity {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Inter, sans-serif;
+    ;
     font-size: 4rem;
     font-weight: 400;
     margin-top: 14px;
 }
 
 .boost__quantity-nb {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Inter, sans-serif;
+    ;
     font-size: 5rem;
     font-weight: 600;
     color: #db0113;
@@ -207,14 +210,16 @@ onBeforeUnmount(() => {
 .boost_comment {
     font-size: 2rem;
     font-weight: 400;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Inter, sans-serif;
+    ;
     color: var(--color-secondary);
 }
 
 .boost__description {
     font-size: 2rem;
     font-weight: 400;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Inter, sans-serif;
+    ;
     color: var(--color-bg2);
 }
 
