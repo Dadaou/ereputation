@@ -19,8 +19,9 @@
 
 
 <script setup>
-import { ref, watch, onMounted, defineAsyncComponent, onBeforeMount } from 'vue'
+import { ref, defineAsyncComponent, onBeforeMount } from 'vue'
 import { useUserStore } from "@Stores/user.js"
+import { useAppStore } from "@Stores/app.js";
 import { useRouter, useRoute } from "vue-router"
 import { useWindowSize } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
@@ -35,6 +36,7 @@ const AlertComponent = defineAsyncComponent(() =>
 )
 const router = useRouter()
 const route = useRoute()
+const appStore = useAppStore()
 const userStore = useUserStore()
 const nameAdvantage = localStorage.getItem('nameAdvantage');
 
@@ -75,6 +77,10 @@ const submit = async () => {
         console.log(error)
     }
 };
+
+onBeforeMount(()=>{
+    appStore.header = false;
+ });
 
 </script>
 

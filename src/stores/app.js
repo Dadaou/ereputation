@@ -13,6 +13,7 @@ export const useAppStore = defineStore('app', () => {
   const end_date = ref(moment().format('YYYY-M-DD'))
   const customerLogo = ref(null)
   const mustRefresh = ref(false)
+  const header = ref(true)
 
   const setBreadcrumbs = (values) => {
     breadcrumbs.value = values
@@ -64,6 +65,7 @@ export const useAppStore = defineStore('app', () => {
   return {
     start_date,
     end_date,
+    header,
     isLoading,
     breadcrumbs,
     customerLogo,

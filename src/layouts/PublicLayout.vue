@@ -1,7 +1,7 @@
 <template>
     <NavbarComponent :isPublic="true"></NavbarComponent>
     <div class="main__container">
-        <HeadComponent class="head" :page="appStore.currentPage"></HeadComponent>
+        <HeadComponent class="head" :page="appStore.currentPage" v-if="appStore.header"></HeadComponent>
         <router-view></router-view>
     </div>
     <FooterComponent></FooterComponent>

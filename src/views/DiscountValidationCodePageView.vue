@@ -70,6 +70,7 @@ const submit = async () => {
 };
 
 onBeforeMount(()=>{
+    appStore.header = false;
      appStore.setCurrentPage({
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),

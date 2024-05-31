@@ -73,6 +73,7 @@
 <script setup>
 import { ref, defineAsyncComponent, onBeforeMount } from 'vue'
 import { useUserStore } from "@Stores/user.js"
+import { useAppStore } from "@Stores/app.js"
 import { useRoute } from "vue-router"
 import services from '@Services/services.js'
 import moment from 'moment';
@@ -89,6 +90,7 @@ const code = ref('')
 const route = useRoute()
 const advantages = ref(null)
 const userStore = useUserStore()
+const appStore = useAppStore()
 const valid = ref(true)
 
 const submit = () => {
@@ -128,6 +130,7 @@ const capitalizeFirstLetter = (firstname, lastname) => {
 }
 
 onBeforeMount(async () => {
+  appStore.header = false;
   try {
     const response = await new Promise((resolve) => {
       services.get_Record(`public/customer/establishments/advantagecontacts/list?tag=${route.params.discountTag}`, (response) => {

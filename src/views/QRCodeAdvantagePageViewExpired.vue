@@ -94,7 +94,7 @@ const onDataUrlChange = (dataUrl) => {
 };
 
 onBeforeMount(async () => {
-
+    appStore.header = false;
     /* voir si le discounttag exit sinon redirection page 404 */
     const response = await new Promise((resolve) => {
         services.get_Record(`public/customer/establishments/advantagecontacts/list`, (response) => {
