@@ -4,7 +4,7 @@ const setToken = (token) => {
   localStorage.setItem('token', token)
 }
 
-const setAccess = (token)=>{
+const setAccess = (token) => {
   localStorage.setItem('access', token)
 }
 
@@ -12,7 +12,7 @@ const setUser = () => {
   localStorage.setItem('user_authenticated', true)
 }
 
-const getInstance = (isPublic=false, isNoAuth=false)=>{
+const getInstance = (isPublic = false, isNoAuth = false) => {
   const instance = axios.create({
     headers: {
       'Content-Type': 'application/json'
@@ -21,18 +21,18 @@ const getInstance = (isPublic=false, isNoAuth=false)=>{
 
   const baseURL = import.meta.env.VITE_APP_API_URL
 
-  if(isNoAuth){
-     instance.defaults.baseURL = baseURL.slice(0, baseURL.length - 3);
-  }else{
+  if (isNoAuth) {
+    instance.defaults.baseURL = baseURL.slice(0, baseURL.length - 3)
+  } else {
     instance.defaults.baseURL = baseURL
-    if(isPublic == true){
-      instance.defaults.headers['Authorization'] = `Bearer ${localStorage.getItem('access')}`;
-    }else{
-      instance.defaults.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+    if (isPublic == true) {
+      instance.defaults.headers['Authorization'] = `Bearer ${localStorage.getItem('access')}`
+    } else {
+      instance.defaults.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`
     }
   }
 
-  return instance;
+  return instance
 }
 
 const logout = () => {
@@ -42,7 +42,7 @@ const logout = () => {
   localStorage.removeItem('user_authenticated')
 }
 
-const getRecords = async (entity, next, isPublic=false, isNoAuth=false) => {
+const getRecords = async (entity, next, isPublic = false, isNoAuth = false) => {
   try {
     const axiosInstance = getInstance(isPublic, isNoAuth)
     let url = `/${entity}`
@@ -54,42 +54,42 @@ const getRecords = async (entity, next, isPublic=false, isNoAuth=false) => {
   }
 }
 
-const getRecordsByParams = async (entity, params, next, isPublic=false, isNoAuth=false) => {
-    try {
-      const axiosInstance = getInstance(isPublic, isNoAuth)
-      let url = `/${entity}?${params}`
-      await axiosInstance.get(`${url}`).then((response) => {
-          return next(response)
-      })
-    } catch (error) {
-      return next(error.response)
-    }
-}
-
-const getRecord = async (entity, recordId, next, isPublic=false, isNoAuth=false) => {
+const getRecordsByParams = async (entity, params, next, isPublic = false, isNoAuth = false) => {
   try {
     const axiosInstance = getInstance(isPublic, isNoAuth)
-    let url = `/${entity}/${recordId}`
+    let url = `/${entity}?${params}`
     await axiosInstance.get(`${url}`).then((response) => {
-        next(response)
+      return next(response)
     })
   } catch (error) {
     return next(error.response)
   }
 }
 
-const get_Record = async (url, next, isPublic = false, isNoAuth=false) => {
+const getRecord = async (entity, recordId, next, isPublic = false, isNoAuth = false) => {
+  try {
+    const axiosInstance = getInstance(isPublic, isNoAuth)
+    let url = `/${entity}/${recordId}`
+    await axiosInstance.get(`${url}`).then((response) => {
+      next(response)
+    })
+  } catch (error) {
+    return next(error.response)
+  }
+}
+
+const get_Record = async (url, next, isPublic = false, isNoAuth = false) => {
   try {
     const axiosInstance = getInstance(isPublic, isNoAuth)
     await axiosInstance.get(`${url}`).then((response) => {
       next(response)
     })
   } catch (error) {
-      return next(error.response)
+    return next(error.response)
   }
 }
 
-const post_Record = async (url, body, next, isPublic = false, isNoAuth=false) => {
+const post_Record = async (url, body, next, isPublic = false, isNoAuth = false) => {
   try {
     const axiosInstance = getInstance(isPublic, isNoAuth)
     await axiosInstance.post(`${url}`, body).then((response) => {
@@ -100,7 +100,7 @@ const post_Record = async (url, body, next, isPublic = false, isNoAuth=false) =>
   }
 }
 
-const createRecord = async (entity, value, next, isPublic = false, isNoAuth=false) => {
+const createRecord = async (entity, value, next, isPublic = false, isNoAuth = false) => {
   try {
     let url = `/${entity}`
     const axiosInstance = getInstance(isPublic, isNoAuth)
@@ -112,66 +112,70 @@ const createRecord = async (entity, value, next, isPublic = false, isNoAuth=fals
   }
 }
 
-const deleteRecord = async (entity, recordId, next, isPublic = false, isNoAuth=false) => {
+const deleteRecord = async (entity, recordId, next, isPublic = false, isNoAuth = false) => {
   try {
     let url = `/${entity}/${recordId}`
     const axiosInstance = getInstance(isPublic, isNoAuth)
     await axiosInstance.delete(`${url}`).then((response) => {
-        return next(response)
+      return next(response)
     })
   } catch (error) {
     return next(error.response)
   }
 }
 
-const patchRecord = async (entity, recordId, value, next, isPublic = false, isNoAuth=false) => {
-   try {
-      var axiosInstance = getInstance(isPublic, isNoAuth)
-      axiosInstance.defaults.headers['Content-Type'] = 'application/merge-patch+json';
+const patchRecord = async (entity, recordId, value, next, isPublic = false, isNoAuth = false) => {
+  try {
+    var axiosInstance = getInstance(isPublic, isNoAuth)
+    axiosInstance.defaults.headers['Content-Type'] = 'application/merge-patch+json'
 
-      let url = `/${entity}/${recordId}`
-      await axiosInstance.patch(url, value).then((response) => {
-        return next(response)
-      })
-    } catch (error) {
-      return next(error.response)
-    }
+    let url = `/${entity}/${recordId}`
+    await axiosInstance.patch(url, value).then((response) => {
+      return next(response)
+    })
+  } catch (error) {
+    return next(error.response)
+  }
 }
 
-const putRecord = async (entity, recordId, value, next, isPublic = false, isNoAuth=false) => {
+const putRecord = async (entity, recordId, value, next, isPublic = false, isNoAuth = false) => {
   try {
-      let url = `/${entity}/${recordId}`
-      const axiosInstance = getInstance(isPublic, isNoAuth)
-      await axiosInstance.put(`${url}`, value).then((response) => {
-        return next(response)
-      })
+    let url = `/${entity}/${recordId}`
+    const axiosInstance = getInstance(isPublic, isNoAuth)
+    await axiosInstance.put(`${url}`, value).then((response) => {
+      return next(response)
+    })
   } catch (error) {
-      return next(error.response)
+    return next(error.response)
   }
 }
 
 const postFormData = async (entity, value, next) => {
   try {
-      let url = `/${entity}`
-      var axiosInstance = getInstance(isPublic, isNoAuth)
-      axiosInstance.defaults.headers['Content-Type'] = 'multipart/form-data';
-      await axiosInstance.post(`${url}`, value).then((response) => {
-        return next(response)
-      })
+    let url = `/${entity}`
+    var axiosInstance = getInstance(isPublic, isNoAuth)
+    axiosInstance.defaults.headers['Content-Type'] = 'multipart/form-data'
+    await axiosInstance.post(`${url}`, value).then((response) => {
+      return next(response)
+    })
   } catch (error) {
-      return next(error.response)
+    return next(error.response)
   }
 }
 
 const login = async (email, password) => {
+  const baseURL = import.meta.env.VITE_APP_API_URL
+
   try {
     var axiosInstance = axios.create({
-      baseURL: import.meta.env.VITE_APP_API_URL,
+      baseURL: baseURL.slice(0, baseURL.length - 3),
       headers: {
         'Content-Type': 'application/json'
       }
     })
-    const response = await axiosInstance.post('/login', { email: email, password: password })
+
+    const response = await axiosInstance.post('/erep/login', { email: email, password: password })
+
     if (response.status == 200) {
       setToken(response.data['token'])
     }
@@ -189,14 +193,12 @@ const login_2nd = async (email, password, next) => {
         'Content-Type': 'application/json'
       }
     })
-    await axiosInstance
-      .post('/login', { email: email, password: password })
-      .then((response) => {
-        if (response.status == 200) {
-          setToken(response.data['token'])
-        }
-        next(response)
-      })
+    await axiosInstance.post('/login', { email: email, password: password }).then((response) => {
+      if (response.status == 200) {
+        setToken(response.data['token'])
+      }
+      next(response)
+    })
   } catch (error) {
     return next(error.response)
   }
