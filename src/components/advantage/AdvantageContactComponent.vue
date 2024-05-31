@@ -15,12 +15,17 @@
       		{{ scope.row.firstname }} {{ scope.row.lastname }}
         </template>
       </el-table-column>
-      <el-table-column label="Gender" prop="gender" width="150"/>
+      <el-table-column label="Gender" prop="gender" width="88"/>
       <el-table-column label="Email" prop="email" width="280"/>
-      <el-table-column label="Establishment" prop="establishment_name" width="220"/>
-      <el-table-column label="Created_at" width="200">
+      <el-table-column label="Establishment" prop="establishment_name" width="180"/>
+      <el-table-column label="Created_at" width="103">
         <template #default="scope">
           {{ formatCreatedAt(scope.row.created_at) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="Update_at" width="103">
+        <template #default="scope">
+            {{ scope.row.updates_at ? formatUpdatesAt(scope.row.updates_at) : ''}}
         </template>
       </el-table-column>
     </el-table>
@@ -56,6 +61,9 @@ const formatCreatedAt = (createdAt) => {
   return moment(createdAt).format('YYYY-MM-DD');
 };
 
+const formatUpdatesAt = (updatesAt) => {
+  return moment(updatesAt).format('YYYY-MM-DD');
+};
 const query = ref('');
 const search = ref('');
 
