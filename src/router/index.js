@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory} from 'vue-router'
 import LoginView from '@Views/LoginView.vue'
 import SubscriptionPageView from '@Views/SubscriptionPageView.vue'
 import ForgotPwdPageView from '@Views/ForgotPwdPageView.vue'
@@ -10,6 +10,9 @@ import ProfileLayout from '@Layouts/ProfileLayout.vue'
 import PublicLayout from '../layouts/PublicLayout.vue'
 
 import { useUserStore } from '@Stores/user.js'
+
+
+
 
 const CheckAuthentication = (to, from, next) => {
   const user = useUserStore().user
@@ -436,6 +439,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  window.scrollTo(0, 0);
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     const isAuthenticated = checkAuthentication()
     if (!isAuthenticated) {
