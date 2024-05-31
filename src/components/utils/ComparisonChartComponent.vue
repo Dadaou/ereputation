@@ -8,7 +8,7 @@
     }">
         <div class="colSmall">
             <GroupedBarChart class="chart" :plot-data="props.data" x-key="name" :width="custom_width"
-                :height="chartheight - 100" :margin="margin" :colors="colors" :x-axis-label="_timePeriod"
+                :height="200" :margin="{top: 20, bottom: 35, left: 55, right: 20 }" :colors="colors" :x-axis-label="_timePeriod"
                 :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
             </GroupedBarChart>
         </div>
@@ -16,7 +16,7 @@
         <div class="colLarge">
             <div class="boxLarge">
                 <GroupedBarChart class="chart" :plot-data="props.data" x-key="name" :width="custom_width"
-                    :height="chartheight - 100" :margin="margin" :colors="colors" :x-axis-label="_timePeriod"
+                    :height="200" :margin="{top: 20, bottom: 35, left: 55, right: 270 } " :colors="colors" :x-axis-label="_timePeriod"
                     :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
                 </GroupedBarChart>
             </div>
