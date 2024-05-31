@@ -118,8 +118,8 @@
         </el-tabs>
     </div>
 
-    <StatSlider v-if="establishment && establishment.socials" class="stat__cards_mobile" :items="trends"
-        :websites="establishment.socials[0]"></StatSlider>
+    <StatSlider v-if="establishment && socials" class="stat__cards_mobile" :items="trends"
+        :websites="socials"></StatSlider>
     <div class="tablet_mobile__filter">
         <el-date-picker v-model="start_date" placeholder="Start date" :size="'large'" />
         <el-date-picker v-model="end_date" placeholder="End date" :size="'large'" />
