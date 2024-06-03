@@ -14,7 +14,7 @@
       <el-table-column label="Discount Code" prop="adv_code" width="150" />
       <el-table-column label="Code" prop="code" width="100" />
       <el-table-column label="Amount" prop="adv_amount" width="100" />
-      <el-table-column label="Created_at" width="103">
+      <el-table-column label="Created at" width="120">
         <template #default="scope">
           {{ formatCreatedAt(scope.row.created_at) }}
         </template>
