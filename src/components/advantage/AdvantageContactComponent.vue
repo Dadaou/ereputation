@@ -9,21 +9,21 @@
     </div>
   </div>
   <div class="overflow-x-auto">
-    <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
-      <el-table-column label="Name" width="200">
+    <el-table :data="filterTableData" class="responsive-table full-width" style="width: 100%;">
+      <el-table-column label="Name" fixed width="250">
       	<template #default="scope">
       		{{ scope.row.firstname }} {{ scope.row.lastname }}
         </template>
       </el-table-column>
-      <el-table-column label="Gender" prop="gender" width="88"/>
+      <el-table-column label="Gender" prop="gender" width="100"/>
       <el-table-column label="Email" prop="email" width="280"/>
-      <el-table-column label="Establishment" prop="establishment_name" width="180"/>
-      <el-table-column label="Created_at" width="103">
+      <el-table-column label="Establishment" prop="establishment_name" width="200"/>
+      <el-table-column label="Created at" width="150">
         <template #default="scope">
           {{ formatCreatedAt(scope.row.created_at) }}
         </template>
       </el-table-column>
-      <el-table-column label="Updated_at" width="110">
+      <el-table-column label="Updated at" width="150">
         <template #default="scope">
             {{ formatUpdatedAt(scope.row.updated_at)}}
         </template>
