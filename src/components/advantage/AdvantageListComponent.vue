@@ -1,7 +1,7 @@
 <template>
   <div class="security__header border__bottom">
   </div>
-  <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
+  <el-input v-model="search" size="small" placeholder="Type to search" class="search"/>
   <div class="mt-5 erep_table table__container">
     <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
       <el-table-column label="Name" fixed prop="name" width="188" />
@@ -188,7 +188,9 @@ button i.uil-edit {
 }
 
 .search {
-  display: none;
+    display: flex;
+    max-width: 150px;
+    float: right;
 }
 
 @media screen and (max-width: 468px) {
@@ -196,10 +198,6 @@ button i.uil-edit {
     display: flex;
     max-width: 220px;
     float: right;
-  }
-
-  .searchtab {
-    display: none;
   }
 
   .el-table--fit {
