@@ -61,7 +61,7 @@
                 <div>
                     <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Section
                     </label>
-                    <el-select id="section" v-model="section" placeholder="" size="large" clearable>
+                    <el-select id="section" v-model="section" placeholder="" size="large">
                         <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
                     </el-select>
                 </div>
@@ -141,7 +141,7 @@ const providers = ref([]);
 const provider = ref(null)
 const categories = ref(['Hashtag', 'Platform', 'Social'])
 const category = ref('Platform')
-const sections = ref(['No section','MENUS', 'REVIEWS', 'OFFERS', 'INFOS', 'FOLLOW US',])
+const sections = ref(['','MENUS', 'REVIEWS', 'OFFERS', 'INFOS', 'FOLLOW US',])
 const section = ref('')
 const showSpinner = ref(false)
 const search = ref('')

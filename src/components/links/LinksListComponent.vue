@@ -14,10 +14,7 @@
       <el-table-column label="Category" prop="category" style="width: 10%; min-width: 200px;" />
       <el-table-column label="Url" prop="url" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Gate" prop="section" style="width: 25%; min-width: 200px;" >
-      <template #default="scope">
-          <span v-if="scope.row.section !== 'No section'">{{ scope.row.section }}</span>
-          <span v-else></span>
-        </template>
+      
       </el-table-column>
       <!-- <el-table-column label="Caption" prop="caption" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Section" prop="section" style="width: 25%; min-width: 200px;" /> -->
@@ -60,17 +57,15 @@ const filterTableData = computed(() => {
   let filteredData = tableData.value;
   filteredData = filteredData.filter((data) => {
 
-    if(data.section === 'No section') {
-      data.section = '';
-    }
+    if(data.section == 'REVIEWS' || data.section == 'FOLLOW US' || data.section == ''){
       return (
         !search.value ||
-        (data.section == 'REVIEWS' || data.section == 'FOLLOW US' || data.section == '') ||
         (data.source && data.source.toLowerCase().includes(search.value.toLowerCase())) ||
         (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
         (data.section && data.section.toLowerCase().includes(search.value.toLowerCase())) ||
         (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase()))
       );
+    }
   });
   return filteredData;
 });
