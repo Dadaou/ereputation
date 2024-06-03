@@ -60,8 +60,8 @@
                 </div>
                 <div>
                     <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Section
-                        <span>*</span></label>
-                    <el-select id="section" v-model="section" placeholder="Choose section" size="large" clearable>
+                    </label>
+                    <el-select id="section" v-model="section"  size="large" clearable>
                         <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
                     </el-select>
                 </div>
