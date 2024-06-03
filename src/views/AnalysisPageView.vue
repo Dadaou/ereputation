@@ -758,16 +758,18 @@ onBeforeMount(async () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 200px;
+    height: 400px;
     background: rgba(0, 0, 0, 0.1);
     opacity: 0.9;
     z-index: 1;
+    position: relative;
+    flex-direction: column;
 }
 
 .legend {
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
-    height: 100px;
+    height:auto;
     padding: 15px;
     margin: 15px auto;
     margin-top: 15px !important;

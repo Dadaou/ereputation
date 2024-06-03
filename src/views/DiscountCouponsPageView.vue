@@ -1,7 +1,5 @@
 <template>
-  <div class="search mb-8">
-    <el-input v-model="search" size="small" placeholder="Type to search" />
-  </div>
+   <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>     
   <div class="overflow-x-auto">
     <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
       <el-table-column fixed label="Advantage name" prop="adv_name" width="250" />
@@ -14,6 +12,11 @@
       <el-table-column label="Discount Code" prop="adv_code" width="150" />
       <el-table-column label="Code" prop="code" width="100" />
       <el-table-column label="Amount" prop="adv_amount" width="100" />
+      <el-table-column label="Created_at" width="103">
+        <template #default="scope">
+          {{ formatCreatedAt(scope.row.created_at) }}
+        </template>
+      </el-table-column>
       <el-table-column label="Validated at" align="center" width="200">
         <template #default="scope">
           {{ scope.row.validated_at ? moment(scope.row.validated_at).format('YYYY-MM-DD') : '-' }}
@@ -25,9 +28,8 @@
         </template>
       </el-table-column>
       <el-table-column label="Confirm" width="200">
-        <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>
-        </template>
+   
+         
         <template #default="scope">
           <span v-if="scope.row.confirm" @click="handleCancel(scope.row.id)" class="has-hover"><i
               class="uil uil-check-square" style="color: #777; font-size: 15px;"></i></span>
@@ -56,7 +58,17 @@ const route = useRoute();
 const customer = route.params.tag;
 const search = ref('');
 const discountData = ref([])
+const formatCreatedAt = (createdAt) => {
+  return moment(createdAt).format('YYYY-MM-DD');
+};
 
+const compareDatesDesc = (a, b) => {
+  const dateA = moment(a.created_at);
+  const dateB = moment(b.created_at);
+  if (dateA.isBefore(dateB)) return 1;
+  if (dateA.isAfter(dateB)) return -1;
+  return 0;
+};
 const filterTableData = computed(() => {
   let filteredData = discountData.value;
   filteredData = filteredData.filter((data) => {
@@ -66,7 +78,10 @@ const filterTableData = computed(() => {
       (data.adv_code && data.adv_code.toLowerCase().includes(search.value.toLowerCase())) ||
       (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase())) ||
       (data.contact_email && data.contact_email.toLowerCase().includes(search.value.toLowerCase()))
+      
+      
   })
+  filteredData.sort(compareDatesDesc);
   return filteredData
 })
 

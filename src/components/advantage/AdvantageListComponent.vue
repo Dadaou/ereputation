@@ -1,9 +1,7 @@
 <template>
   <div class="security__header border__bottom">
   </div>
-  <div class="search mb-8">
-    <el-input v-model="search" size="small" placeholder="Type to search" />
-  </div>
+  <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
   <div class="mt-5 erep_table table__container">
     <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
       <el-table-column label="Name" fixed prop="name" width="188" />
@@ -34,9 +32,6 @@
 
       <el-table-column label="Operations" width="200">
 
-        <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
-        </template>
         <template #default="scope">
           <el-tooltip placement="top">
             <template #content> Boost this advantage </template>
