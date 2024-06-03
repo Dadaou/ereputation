@@ -13,7 +13,12 @@
       <el-table-column label="Source" prop="source" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Category" prop="category" style="width: 10%; min-width: 200px;" />
       <el-table-column label="Url" prop="url" style="width: 25%; min-width: 200px;" />
-      <el-table-column label="Gate" prop="section" style="width: 25%; min-width: 200px;" />
+      <el-table-column label="Gate" prop="section" style="width: 25%; min-width: 200px;" >
+      <template #default="scope">
+          <span v-if="scope.row.section !== 'No section'">{{ scope.row.section }}</span>
+          <span v-else></span>
+        </template>
+      </el-table-column>
       <!-- <el-table-column label="Caption" prop="caption" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Section" prop="section" style="width: 25%; min-width: 200px;" /> -->
       <el-table-column label="Operations" style="width: 25%; min-width: 200px;" align="right">
@@ -55,15 +60,17 @@ const filterTableData = computed(() => {
   let filteredData = tableData.value;
   filteredData = filteredData.filter((data) => {
 
-    if(data.section == 'REVIEWS' || data.section == 'FOLLOW US' || data.section == ''){
+    if(data.section === 'No section') {
+      data.section = '';
+    }
       return (
         !search.value ||
+        (data.section == 'REVIEWS' || data.section == 'FOLLOW US' || data.section == '') ||
         (data.source && data.source.toLowerCase().includes(search.value.toLowerCase())) ||
         (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
         (data.section && data.section.toLowerCase().includes(search.value.toLowerCase())) ||
         (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase()))
       );
-    }
   });
   return filteredData;
 });
@@ -125,7 +132,9 @@ const handleEdit = async (data) => {
     link: (data.category == 'Hashtag') ? getValueUrl(data.url, provider.url) : data.url,
     provider: getURIbyName(data.idprovider),
     id: data.id,
-    establishment: `/api/establishments/${data.establishment_id}`
+    establishment: `/api/establishments/${data.establishment_id}`,
+    section: data.section,
+    caption: data.caption
   }
 
   setTimeout(function () {

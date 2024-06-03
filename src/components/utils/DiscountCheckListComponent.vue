@@ -92,10 +92,6 @@ const advantageStore = useAdvantageStore();
 const discounts = ref([])
 
 const props = defineProps({
-  customer: {
-    type: String,
-    required: true
-  },
   establishment: {
     type: String,
     required: true
@@ -165,7 +161,7 @@ const info = computed(() => {
 
 onMounted(async () => {
 
-  let data = await advantageStore.getAdvantageAvailable(props.customer, props.establishment, true)
+  let data = await advantageStore.getAdvantageAvailable(props.establishment, true)
   if (props.discount) {
     let d = data.find((d) => d.id == props.discount)
     if (d) {

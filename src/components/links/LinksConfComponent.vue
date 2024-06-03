@@ -88,6 +88,19 @@
                                 :value="`${item.uri}${item.url}`" />
                         </el-select>
                     </div>
+                    <div>
+                    <label for="caption" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Caption
+                        <span>*</span></label>
+                    <input type="text" id="caption" v-model="caption"
+                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                </div>
+                <div>
+                    <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Section
+                    </label>
+                    <el-select id="section" v-model="section"  size="large" clearable>
+                        <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
+                    </el-select>
+                </div>
                 </div>
                 <div>
                     <div>
@@ -167,6 +180,8 @@ const providers = ref([]);
 const provider = ref(null)
 const categories = ref(['Hashtag', 'Platform', 'Social'])
 const category = ref('Platform')
+const sections = ref(['No Section','MENUS', 'REVIEWS', 'OFFERS', 'INFOS', 'FOLLOW US',])
+const section = ref('')
 const showSpinner = ref(false)
 const search = ref('')
 const searchLink = ref('')
@@ -376,6 +391,7 @@ const submit = async () => {
     const data = {
         value1: isHashtag.value ? getHashtagValue(link.value) : getValueUrl(link.value, urlObject.url),
         establishment: establishment.value,
+        section: sections.value,
         provider: urlObject.uri,
         enable: true
     }
@@ -427,6 +443,8 @@ const resetValue = () => {
     provider.value = null
     isValidLink.value = true
     link.value = ''
+    section.value = ''
+    caption.value = ''
     showModal.value = false
 }
 
@@ -446,6 +464,8 @@ const handleEdit = async (data) => {
         link: link.value,
         provider: provider.value,
         id: data.id,
+        section: section.value,
+        caption: caption.value,
         establishment: establishment.value
     }
 
