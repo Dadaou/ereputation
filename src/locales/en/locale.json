@@ -38,7 +38,8 @@
         "post": "Post comment",
         "requiredinputs": "Please, provide all needed information.",
         "read_more": "Find out more...",
-        "choose_advantage":"Please choose your benefit"
+        "choose_advantage":"Please choose your benefit",
+        "description":"Description"
     },
     "staffFeedback": {
         "interne": "Internal use only, your comment will not be posted on the public platforms.",
