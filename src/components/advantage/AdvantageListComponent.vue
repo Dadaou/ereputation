@@ -3,9 +3,9 @@
   </div>
   <el-input v-model="search" size="small" placeholder="Type to search" class="search"/>
   <div class="mt-5 erep_table table__container">
-    <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
-      <el-table-column label="Name" fixed prop="name" width="188" />
-      <el-table-column label="Establishment" prop="establishment_name" width="200" />
+    <el-table :data="filterTableData" class="responsive-table" :row-class-name="rowClassName" style="width: 100%">
+      <el-table-column label="Name" fixed prop="name" width="188"/>
+      <el-table-column label="Establishment" prop="establishment_name" width="200"/>
       <el-table-column label="Amount" prop="amount" align="center" width="100" />
       <el-table-column label="Category" prop="category" width="150" />
       <el-table-column label="Code" prop="code" width="100" />
@@ -122,6 +122,14 @@ const handleDelete = async (index, advantages) => {
     });
   }
 };
+const rowClassName = ({ row }) => {
+  if (!row.enable) {
+    return 'red-background';
+  } else if (row.limit_atteinte) {
+    return 'orange-background';
+  }
+  return '';
+};
 </script>
 
 <style scoped>
@@ -167,6 +175,26 @@ button i.uil-edit {
   overflow-x: auto;
   white-space: nowrap;
 }
+
+::v-deep .el-table__row.red-background .el-table-fixed-column--left,
+::v-deep .el-table__row.red-background {
+  color: white;
+  background-color: red !important;
+}
+
+::v-deep .el-table__row.orange-background .el-table-fixed-column--left,
+::v-deep .el-table__row.orange-background {
+  color: white;
+  background-color: orange !important;
+}
+
+::v-deep .el-table__row.red-background .el-table-fixed-column--left:hover,
+::v-deep .el-table__row.red-background:hover,
+::v-deep .el-table__row.orange-background .el-table-fixed-column--left:hover,
+::v-deep .el-table__row.orange-background:hover {
+  color: black;
+}
+
 
 @media screen and (max-width: 800px) {
   .table__container {

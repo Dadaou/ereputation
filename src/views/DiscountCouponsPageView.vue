@@ -1,6 +1,8 @@
 <template>
-   <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>     
-  <div class="overflow-x-auto">
+  <div>
+    <el-input v-model="search" size="small" placeholder="Type to search" class="search"/>  
+  </div>
+  <div class="overflow-x-auto mt-5">
     <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
       <el-table-column fixed label="Advantage name" prop="adv_name" width="250" />
       <el-table-column label="Establishment" prop="establishment_name" width="200" />
@@ -161,17 +163,16 @@ button:hover {
   cursor: pointer;
 }
 .search{
-    display: none;
+  display: flex;
+  max-width: 150px;
+  float: right;
 }
 
-@media screen and (max-width: 468px) { 
+@media screen and (max-width: 768px) { 
     .search {
       display: flex;
       max-width: 220px;
       float: right;
-    }
-    .searchtab{
-      display: none;
     }
     .el-table--fit {
       font-size: 11px !important;
