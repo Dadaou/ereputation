@@ -16,9 +16,16 @@
           </div>
           <div class="post-emoji-category">
             <div style="height: 20px;" v-if="showCategory">
-              <div v-if="post.category" class="review__category-container"
-                @click="handleModal('Edit review category', 'modify', 'uil-edit', 'category', post)">
-                <span v-for="item in post.category.split(';')" :key="item" class="review__category">{{ item }}</span>
+              <div v-if="post.category && post.category.split(';').length > 0">
+                <div v-for="categ in post.category.split(';')" :key="categ" class="inline-flex">
+                  <div v-if="categ != ''" class="review__category-container ml-1"
+                    @click="handleModal('Edit post category', 'edit', 'uil-edit', 'category', post)">
+                    <span class="review__category">{{
+                      categ }}</span>
+
+                  </div>
+                </div>
+
               </div>
               <div class="review__category-container" v-else>
                 <i class="uil uil-question-circle" style="color: var(--color-warning); font-size: 18px; cursor: pointer"

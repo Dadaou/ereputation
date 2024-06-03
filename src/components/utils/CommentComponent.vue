@@ -5,7 +5,8 @@
                 <div class="flex items-center mb-1 space-x-4">
                     <div class="review__info space-y-1 dark:text-white info__reviews">
                         <div class="flex items-center mb-2 space-x-4">
-                            <img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full" :src="review.profile_photo" alt="">
+                            <img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full"
+                                :src="review.profile_photo" alt="">
                             <div v-else
                                 class="relative inline-flex items-center justify-center w-8 h-8 p-1 rounded author__initial">
                                 <span class="font-medium dark:text-white">{{ userStore.getInitialsV2(review.author) }}
@@ -31,12 +32,18 @@
                 </div>
                 <div class="review__right mt-2">
                     <div style="height: 20px;" v-if="showCategory">
-                        <div v-if="review.category" class="review__category-container"
-                            @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review)">
-                            <span v-if="review.category.split(';').length > 0" class="review__category">{{
-                                review.category.split(';')[0] }}</span>
+                        <div v-if="review.category && review.category.split(';').length > 0">
+                            <div v-for="categ in review.category.split(';')" :key="categ" class="inline-flex">
+                                <div v-if="categ != ''" class="review__category-container ml-1"
+                                    @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review)">
+                                    <span class="review__category">{{
+                                        categ }}</span>
+
+                                </div>
+                            </div>
 
                         </div>
+
                         <div class="review__category-container" v-else>
                             <i class="uil uil-question-circle"
                                 style="color: var(--color-warning); font-size: 18px; cursor: pointer" @mouseover="(e) => {
