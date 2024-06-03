@@ -23,9 +23,9 @@
           {{ formatCreatedAt(scope.row.created_at) }}
         </template>
       </el-table-column>
-      <el-table-column label="Update_at" width="103">
+      <el-table-column label="Updated_at" width="110">
         <template #default="scope">
-            {{ scope.row.updates_at ? formatUpdatesAt(scope.row.updates_at) : ''}}
+            {{ formatUpdatedAt(scope.row.updated_at)}}
         </template>
       </el-table-column>
     </el-table>
@@ -61,8 +61,8 @@ const formatCreatedAt = (createdAt) => {
   return moment(createdAt).format('YYYY-MM-DD');
 };
 
-const formatUpdatesAt = (updatesAt) => {
-  return moment(updatesAt).format('YYYY-MM-DD');
+const formatUpdatedAt = (updatedAt) => {
+  return updatedAt ? moment(updatedAt).format('YYYY-MM-DD'): '';
 };
 const query = ref('');
 const search = ref('');
