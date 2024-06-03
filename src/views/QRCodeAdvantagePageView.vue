@@ -9,6 +9,9 @@
                         :value="`${baseurl}/public/customer/${route.params.tag}/discount/validation/${route.params.discountTag}`"
                         @change="onDataUrlChange" size="5000" />
                 </div>
+                  
+                
+                
                 <span id="cpnCode" class="border-dashed border text-white px-4 py-2 rounded-l">{{ code }}</span>
                 <br>
                 <h3 class="text-xl font-semibold mb-4 mt-4" v-if="advantages">{{ advantages.adv_name }} <br>{{
@@ -22,7 +25,7 @@
                         </h3>
                     </div>
                 </div>
-
+                <h7 class="text-xl read-more " @click.stop="showMore(index)"> {{ $t("feedback.read_more") }}  </h7>
 
                 <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2 mb-6">
                     <button id="cpnBtn1" :class="[isCopied ? 'btn-copy2' : 'btn-copy']" @click="copyCode(code)"
@@ -32,11 +35,29 @@
                 </div>
                 <p class="text-sm" v-if="advantages">Valid Till: {{ moment(advantages.expired_at).format("DDMMM, YYYY")
                     }}</p>
+                
 
                 <div class="w-12 h-12 bg-white rounded-full absolute top-1/2 transform -translate-y-1/2 left-0 -ml-6">
                 </div>
                 <div class="w-12 h-12 bg-white rounded-full absolute top-1/2 transform -translate-y-1/2 right-0 -mr-6">
                 </div>
+                <transition name="modal-flip">
+                    <div v-if="showModal" class="modal">
+                        <div class="modal-content" style="width: 350px; padding: 1rem;">
+                            <div class="modal-header" style="color: black !important ">
+                                <h2><strong>{{ $t("feedback.description") }}</strong></h2>
+                                <div class="modal__close">
+                                    <i class="uil uil-times-circle mb-8" @click="showModal = false"></i>
+                                </div>
+                            </div>
+                            <div class="modal-body">
+                                <div class="inline-flex items-baseline gap-2" style="max-width: calc(100% - 20px)">
+                                    <h4 style="color: black !important"> {{ adv_description }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </transition>
             </div>
         </div>
         <QRCodeAdvantagePageViewExpired v-else />
@@ -80,8 +101,15 @@ const dateJour = moment().format('YYYY-MM-DD HH:mm:ss');
 const dateExperied = ref(null);
 const isNotExpired = ref(true);
 const date_to = ref(null);
+const adv_description = ref('')
 
 const listAdvantage = ref([]);
+
+const showModal = ref(false);
+
+const showMore = () => {
+  showModal.value = true;
+}
 
 watch(isCopied, () => {
     if (isCopied.value == true) {
@@ -142,6 +170,7 @@ onBeforeMount(async () => {
             code.value = advantages.value.code;
             dateExperied.value = advantages.value.expired_at;
             date_to.value = advantages.value.adv_date_to;
+            adv_description.value = advantages.value.adv_description;
             localStorage.setItem('nameAdvantage', advantages.value.adv_name);
 
             if (dateJour != null || date_to.value != null) {
@@ -160,6 +189,53 @@ onBeforeMount(async () => {
 </script>
 
 <style scoped>
+.read-more:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.modal__close i {
+  position: absolute;
+  top: 0;
+  right: 8px;
+  float: right;
+  font-size: 25px;
+  color: red;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.modal__close i:hover {
+  transform: rotate(360deg);
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 3;
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 6rem auto;
+  padding: 25px;
+  border-radius: 16px 16px 5px 5px;
+  /*overflow: auto; */
+  max-width: 90%;
+  min-width: 300px;
+  position: relative;
+}
+
+.modal-body {
+  padding: 1rem;
+}
+.read-more {
+  font-size: 9px;
+  font-weight: 400;
+}
 .qrcontainer{
     margin-top: 8rem; 
 }
