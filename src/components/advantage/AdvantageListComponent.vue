@@ -3,7 +3,7 @@
   </div>
   <el-input v-model="search" size="small" placeholder="Type to search" class="search" />
   <div class="mt-5 erep_table table__container">
-    <el-table :data="filterTableData" class="responsive-table" :row-class-name="rowClassName" style="width: 100%">
+    <el-table v-if="advantageLoading == false" :data="filterTableData" class="responsive-table" :row-class-name="rowClassName" style="width: 100%">
       <el-table-column label="Name" fixed prop="name" width="188" />
       <el-table-column label="Establishment" prop="establishment_name" width="200" />
       <el-table-column label="Amount" prop="amount" align="center" width="100" />
@@ -47,17 +47,25 @@
         </template>
       </el-table-column>
     </el-table>
+    <div v-else role="status" class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" v-for="index in 2" :key="index">
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+      <span class="sr-only">Loading...</span>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { computed, ref, inject } from 'vue';
+import { computed, ref, inject, watchEffect } from 'vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput, ElTooltip } from 'element-plus';
 import services from '@Services/services.js';
 import moment from 'moment';
 import { useWindowSize } from '@vueuse/core';
 import { useRoute, useRouter } from "vue-router";
 
+const advantageLoading = ref(false);
 const emit = defineEmits(['edit', 'setEnable', 'setDisable']);
 const advantages = inject('advantages');
 const search = ref('');
@@ -68,8 +76,11 @@ const tableWidth = computed(() => {
 const route = useRoute();
 const router = useRouter();
 
-const filterTableData = computed(() => {
+let filterTableData = [];
+
+watchEffect(()  => {
   let filteredData = advantages.value;
+
   filteredData = filteredData.filter((data) => {
     return !search.value ||
       data.name.toLowerCase().includes(search.value.toLowerCase()) ||
@@ -77,9 +88,19 @@ const filterTableData = computed(() => {
       (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase())) ||
       (data.metric && data.metric.toLowerCase().includes(search.value.toLowerCase())) ||
       (data.scope && data.scope.toLowerCase().includes(search.value.toLowerCase()))
-
   })
-  return filteredData
+ 
+  if (advantages.value.length > 0 ) {
+     // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      advantageLoading.value = false;
+  }
+  else {
+    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+    advantageLoading.value = true;
+  }
+
+  // eslint-disable-next-line no-const-assign
+  filterTableData = filteredData; 
 });
 
 const reloadData = (advantageToRemove) => {
@@ -223,7 +244,7 @@ button i.uil-edit {
   float: right;
 }
 
-@media screen and (max-width: 468px) {
+@media screen and (max-width: 768px) {
   .search {
     display: flex;
     max-width: 220px;
@@ -232,6 +253,11 @@ button i.uil-edit {
 
   .el-table--fit {
     font-size: 11px !important;
+  }
+
+  .table__container {
+    width: 95%;
+
   }
 }
 </style>

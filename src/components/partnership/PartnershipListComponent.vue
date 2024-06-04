@@ -6,7 +6,7 @@
         <el-input v-model="searchSent" size="small" placeholder="Type to search" class="input_searchs"/>
       </div>
     </div>
-    <el-table :data="filterTableDataSent" class="responsive-table">
+    <el-table v-if="datasentLoading == false" :data="filterTableDataSent" class="responsive-table">
       <el-table-column label="Advantage" prop="advantage_name" style="width: 15%; min-width: 200px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 30%; min-width: 400px;" />
       <el-table-column label="Partnership" prop="partnership_name" style="width: 30%; min-width: 4%;" />
@@ -64,6 +64,13 @@
         </template>
       </el-table-column> -->
     </el-table>
+    <div v-else role="status" class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" v-for="index in 2" :key="index">
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+      <span class="sr-only">Loading...</span>
+    </div>
     <div class="table-description" style="margin-block: 32px 16px;">
       <p>Requests for partnerships</p>
       <div>
@@ -71,7 +78,7 @@
       </div>
     </div>
    
-    <el-table :data="filterTableDataReceived" class="responsive-table">
+    <el-table v-if="datareceivedLoading == false" :data="filterTableDataReceived" class="responsive-table">
       <el-table-column label="Advantage" prop="advantage_name" style="width: 15%; min-width: 200px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 30%; min-width: 400px;" />
       <el-table-column label="Partnership" prop="partnership_name" style="width: 30%; min-width: 4%;" />
@@ -142,10 +149,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <div v-else role="status" class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" v-for="index in 2" :key="index">
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+      <span class="sr-only">Loading...</span>
+    </div>
   </div>
 </template>
 <script setup>
-import { computed, ref, inject } from 'vue';
+import { computed, ref, inject, watchEffect } from 'vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
@@ -158,13 +172,17 @@ import services from '@Services/services.js';
 import moment from "moment";
 // const categories = inject('categories');
 
+const datasentLoading = ref(false);
+const datareceivedLoading = ref(false);
 const searchSent = ref('')
 const searchReceived = ref('')
 const emit = defineEmits(['update']);
 // const userStore = useUserStore()
 const partnerships = inject('partnerships')
 
-const filterTableDataSent = computed(() => {
+let filterTableDataSent = [];
+
+watchEffect(()  =>  {
   if (partnerships.value && partnerships.value['sent']) {
     let filterdata = partnerships.value['sent'];
     filterdata = filterdata.filter(
@@ -175,14 +193,18 @@ const filterTableDataSent = computed(() => {
         data.establishment_name.toLowerCase().includes(searchSent.value.toLowerCase()) ||
         data.state.toLowerCase().includes(searchSent.value.toLowerCase())
     )
-    return filterdata
+   
+    datasentLoading.value = false;
+    filterTableDataSent = filterdata;
   } else {
-    return []
+    return  datasentLoading.value = true;
   }
 
 })
 
-const filterTableDataReceived = computed(() => {
+let filterTableDataReceived = [];
+
+watchEffect(()  =>{
   if (partnerships.value && partnerships.value['received']) {
     let filterdata = partnerships.value['received'];
     filterdata = filterdata.filter(
@@ -193,9 +215,11 @@ const filterTableDataReceived = computed(() => {
         data.establishment_name.toLowerCase().includes(searchReceived.value.toLowerCase()) ||
         data.state.toLowerCase().includes(searchReceived.value.toLowerCase())
     )
-    return filterdata
+
+    datareceivedLoading.value = false;
+    filterTableDataReceived = filterdata
   } else {
-    return []
+    return datareceivedLoading.value = true;
   }
 })
 
