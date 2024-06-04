@@ -125,7 +125,7 @@ const handleDelete = async (index, advantages) => {
 const rowClassName = ({ row }) => {
   if (!row.enable) {
     return 'red-background';
-  } else if (row.limit_atteinte) {
+  } else if (row.limit_atteinte || row.advantage_limit <= row.received || moment(row.expired_at) <= moment()) {
     return 'orange-background';
   }
   return '';
