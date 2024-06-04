@@ -15,7 +15,7 @@
       <el-table-column label="Gender" prop="gender" style="width: 10%; min-width: 300px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;" />
       <el-table-column label="Department" prop="department" style="width: 20%; min-width: 300px;" />
-       <el-table-column label="Section" prop="section" style="200" />
+       <el-table-column label="Section" prop="section" style="width: 15%; min-width: 300px;" />
 
       <el-table-column style="width: 15%; min-width: 200px;" align="right">
         <template #header>
@@ -72,6 +72,7 @@ const filterTableData = computed(() => {
       data.lastname.toLowerCase().includes(search.value.toLowerCase()) ||
       data.firstname.toLowerCase().includes(search.value.toLowerCase()) ||
       data.department.toLowerCase().includes(search.value.toLowerCase()) ||
+      data.section.toLowerCase().includes(search.value.toLowerCase()) ||
       data.establishment_name.toLowerCase().includes(search.value.toLowerCase())
   )
   return filterdata
