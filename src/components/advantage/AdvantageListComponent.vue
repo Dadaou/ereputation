@@ -1,11 +1,11 @@
 <template>
   <div class="security__header border__bottom">
   </div>
-  <el-input v-model="search" size="small" placeholder="Type to search" class="search"/>
+  <el-input v-model="search" size="small" placeholder="Type to search" class="search" />
   <div class="mt-5 erep_table table__container">
     <el-table :data="filterTableData" class="responsive-table" :row-class-name="rowClassName" style="width: 100%">
-      <el-table-column label="Name" fixed prop="name" width="188"/>
-      <el-table-column label="Establishment" prop="establishment_name" width="200"/>
+      <el-table-column label="Name" fixed prop="name" width="188" />
+      <el-table-column label="Establishment" prop="establishment_name" width="200" />
       <el-table-column label="Amount" prop="amount" align="center" width="100" />
       <el-table-column label="Category" prop="category" width="150" />
       <el-table-column label="Code" prop="code" width="100" />
@@ -176,24 +176,35 @@ button i.uil-edit {
   white-space: nowrap;
 }
 
-::v-deep .el-table__row.red-background .el-table-fixed-column--left,
-::v-deep .el-table__row.red-background {
-  color: white;
-  background-color: red !important;
+:deep(.el-table__row.red-background .el-table-fixed-column--left),
+:deep(.el-table__row.red-background) {
+  color: black;
+  background-color: rgb(221, 122, 113) !important;
 }
 
-::v-deep .el-table__row.orange-background .el-table-fixed-column--left,
-::v-deep .el-table__row.orange-background {
-  color: white;
-  background-color: orange !important;
+:deep(.el-table__row.orange-background .el-table-fixed-column--left),
+:deep(.el-table__row.orange-background) {
+  color: black;
+  background-color: rgb(212, 139, 65) !important;
 }
 
+/* 
 ::v-deep .el-table__row.red-background .el-table-fixed-column--left:hover,
 ::v-deep .el-table__row.red-background:hover,
 ::v-deep .el-table__row.orange-background .el-table-fixed-column--left:hover,
 ::v-deep .el-table__row.orange-background:hover {
   color: black;
 }
+
+::v-deep .el-table__row.red-background .el-table-fixed-column--left:hover,
+::v-deep .el-table__row.red-background:hover {
+  background-color: rgb(221, 122, 113) !important;
+}
+
+::v-deep .el-table__row.orange-background .el-table-fixed-column--left:hover,
+::v-deep .el-table__row.orange-background:hover {
+  background-color: rgb(212, 139, 65) !important;
+} */
 
 
 @media screen and (max-width: 800px) {
@@ -216,9 +227,9 @@ button i.uil-edit {
 }
 
 .search {
-    display: flex;
-    max-width: 150px;
-    float: right;
+  display: flex;
+  max-width: 150px;
+  float: right;
 }
 
 @media screen and (max-width: 468px) {
