@@ -238,7 +238,7 @@ const submit = async () => {
                 }
             } else {
                 const response = await new Promise((resolve) => {
-                    services.putRecord('staff', staff_to_update.value['id'], staff, (response) => {
+                    services.patchRecord('staff', staff_to_update.value['id'], staff, (response) => {
                         resolve(response);
                     });
                 });
