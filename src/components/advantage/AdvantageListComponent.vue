@@ -1,17 +1,17 @@
 <template>
   <div class="security__header border__bottom">
   </div>
-  <el-input v-model="search" size="small" placeholder="Type to search" class="search"/>
+  <el-input v-model="search" size="small" placeholder="Type to search" class="search" />
   <div class="mt-5 erep_table table__container">
     <el-table :data="filterTableData" class="responsive-table" :row-class-name="rowClassName" style="width: 100%">
-      <el-table-column label="Name" fixed prop="name" width="188"/>
-      <el-table-column label="Establishment" prop="establishment_name" width="200"/>
+      <el-table-column label="Name" fixed prop="name" width="188" />
+      <el-table-column label="Establishment" prop="establishment_name" width="200" />
       <el-table-column label="Amount" prop="amount" align="center" width="100" />
       <el-table-column label="Category" prop="category" width="150" />
       <el-table-column label="Code" prop="code" width="100" />
       <el-table-column label="Metric" prop="metric" width="100" />
       <el-table-column label="Scope" prop="scope" width="100" />
-      <el-table-column label="Validity" prop="validity" align="center" width="100" />
+      <!-- <el-table-column label="Validity" prop="validity" align="center" width="100" /> -->
       <el-table-column label="Limit" prop="advantageLimit" align="center" width="100" />
       <el-table-column label="Received" prop="received" align="center" width="100" />
       <el-table-column label="Used" prop="used" align="center" width="100" />
@@ -125,7 +125,7 @@ const handleDelete = async (index, advantages) => {
 const rowClassName = ({ row }) => {
   if (!row.enable) {
     return 'red-background';
-  } else if (row.limit_atteinte) {
+  } else if (row.limit_atteinte || row.advantage_limit <= row.received || moment(row.expired_at) <= moment()) {
     return 'orange-background';
   }
   return '';
@@ -176,25 +176,27 @@ button i.uil-edit {
   white-space: nowrap;
 }
 
-::v-deep .el-table__row.red-background .el-table-fixed-column--left,
-::v-deep .el-table__row.red-background {
-  color: white;
-  background-color: red !important;
-}
-
-::v-deep .el-table__row.orange-background .el-table-fixed-column--left,
-::v-deep .el-table__row.orange-background {
-  color: white;
-  background-color: orange !important;
-}
-
-::v-deep .el-table__row.red-background .el-table-fixed-column--left:hover,
-::v-deep .el-table__row.red-background:hover,
-::v-deep .el-table__row.orange-background .el-table-fixed-column--left:hover,
-::v-deep .el-table__row.orange-background:hover {
+:deep(.el-table__row.red-background .el-table-fixed-column--left),
+:deep(.el-table__row.red-background) {
   color: black;
+  background-color: rgb(255, 216, 216) !important;
 }
 
+:deep(.el-table__row.orange-background .el-table-fixed-column--left),
+:deep(.el-table__row.orange-background) {
+  color: black;
+  background-color: rgb(255, 226, 193) !important;
+}
+
+:deep(.el-table__row.red-background.hover-row),
+:deep(.el-table__row.red-background.hover-row .el-table__cell) {
+  background-color: rgb(252, 164, 157) !important;
+}
+
+:deep(.el-table__row.orange-background.hover-row),
+:deep(.el-table__row.orange-background.hover-row .el-table__cell) {
+  background-color: rgb(247, 183, 120) !important;
+}
 
 @media screen and (max-width: 800px) {
   .table__container {
@@ -216,9 +218,9 @@ button i.uil-edit {
 }
 
 .search {
-    display: flex;
-    max-width: 150px;
-    float: right;
+  display: flex;
+  max-width: 150px;
+  float: right;
 }
 
 @media screen and (max-width: 468px) {

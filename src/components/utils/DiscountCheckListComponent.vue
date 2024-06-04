@@ -1,6 +1,6 @@
 <template>
   <div class="scroll-wrapper">
-    <label for="email" v-if="discounts" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+    <label for="email" v-if="discounts.length > 0" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
       {{ $t("feedback.choose_advantage") }}
     </label>
     <ul class="discount-list">
@@ -162,14 +162,17 @@ const info = computed(() => {
 onMounted(async () => {
 
   let data = await advantageStore.getAdvantageAvailable(props.establishment, true)
+
   if (props.discount) {
+    
     let d = data.find((d) => d.id == props.discount)
     if (d) {
       discounts.value = [{ ...d, icon: "🎉" }]
       selectDiscount(0, discounts.value[0])
     }
-
+   
   } else {
+   
     discounts.value = data.map((discount, index) => {
       let icon = '';
       if (index % 2 === 0) {
