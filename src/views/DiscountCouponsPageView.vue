@@ -3,7 +3,7 @@
     <el-input v-model="search" size="small" placeholder="Type to search" class="search"/>  
   </div>
   <div class="overflow-x-auto mt-5">
-    <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
+    <el-table v-if="discountLoading == false" :data="filterTableData" class="responsive-table" style="width: 100%">
       <el-table-column fixed label="Advantage name" prop="adv_name" width="250" />
       <el-table-column label="Establishment" prop="establishment_name" width="200" />
       <el-table-column label="Customer email" width="250">
@@ -41,6 +41,13 @@
         </template>
       </el-table-column>
     </el-table>
+    <div v-else role="status" class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" v-for="index in 2" :key="index">
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+      <span class="sr-only">Loading...</span>
+    </div>
   </div>
 </template>
 
@@ -52,10 +59,11 @@ import { useRoute } from "vue-router";
 import {
   ref,
   onBeforeMount,
-  computed
+  computed,
+  watchEffect
 } from 'vue';
 
-
+const discountLoading = ref(false);
 const route = useRoute();
 const customer = route.params.tag;
 const search = ref('');
@@ -71,7 +79,8 @@ const compareDatesDesc = (a, b) => {
   if (dateA.isAfter(dateB)) return -1;
   return 0;
 };
-const filterTableData = computed(() => {
+let filterTableData = [];
+watchEffect(()  => {
   let filteredData = discountData.value;
   filteredData = filteredData.filter((data) => {
     return !search.value ||
@@ -84,7 +93,16 @@ const filterTableData = computed(() => {
       
   })
   filteredData.sort(compareDatesDesc);
-  return filteredData
+
+  if (discountData.value.length > 0 ) {
+     // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      discountLoading.value = false;
+  }
+  else {
+    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+    discountLoading.value = true;
+  }
+  filterTableData = filteredData
 })
 
 const handleConfirm = async (value) => {
