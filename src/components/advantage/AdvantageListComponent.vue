@@ -179,33 +179,24 @@ button i.uil-edit {
 :deep(.el-table__row.red-background .el-table-fixed-column--left),
 :deep(.el-table__row.red-background) {
   color: black;
-  background-color: rgb(221, 122, 113) !important;
+  background-color: rgb(255, 216, 216) !important;
 }
 
 :deep(.el-table__row.orange-background .el-table-fixed-column--left),
 :deep(.el-table__row.orange-background) {
   color: black;
-  background-color: rgb(212, 139, 65) !important;
+  background-color: rgb(255, 226, 193) !important;
 }
 
-/* 
-::v-deep .el-table__row.red-background .el-table-fixed-column--left:hover,
-::v-deep .el-table__row.red-background:hover,
-::v-deep .el-table__row.orange-background .el-table-fixed-column--left:hover,
-::v-deep .el-table__row.orange-background:hover {
-  color: black;
+:deep(.el-table__row.red-background.hover-row),
+:deep(.el-table__row.red-background.hover-row .el-table__cell) {
+  background-color: rgb(252, 164, 157) !important;
 }
 
-::v-deep .el-table__row.red-background .el-table-fixed-column--left:hover,
-::v-deep .el-table__row.red-background:hover {
-  background-color: rgb(221, 122, 113) !important;
+:deep(.el-table__row.orange-background.hover-row),
+:deep(.el-table__row.orange-background.hover-row .el-table__cell) {
+  background-color: rgb(247, 183, 120) !important;
 }
-
-::v-deep .el-table__row.orange-background .el-table-fixed-column--left:hover,
-::v-deep .el-table__row.orange-background:hover {
-  background-color: rgb(212, 139, 65) !important;
-} */
-
 
 @media screen and (max-width: 800px) {
   .table__container {
