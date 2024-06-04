@@ -50,7 +50,7 @@
                 </div>
                 <div>
                     <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Section
-                        <span>*</span></label>
+                        </label>
                     <el-select id="section" v-model="section" placeholder="Choose section" size="large" clearable>
                         <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
                     </el-select>
@@ -128,7 +128,7 @@ const departments = [
     'Front Office', 'Housekeeping', 'Kitchen', 'Bar', 'Room service'
 ]
 const department = ref('');
-const sections = ref(['MENUS', 'INFOS', 'FOLLOW US', 'REVIEWS', 'OFFERS'])
+const sections = ref(['','MENUS', 'INFOS', 'FOLLOW US', 'REVIEWS', 'OFFERS'])
 const section = ref('')
 const staff_to_update = inject('staff_to_update');
 const type = ref('add');
@@ -147,8 +147,8 @@ const fillForm = (staff)=>{
     establishment.value = staff["establishment"];
     lastname.value = staff["lastname"];
     firstname.value = staff["firstname"];
-    type.value = 'edit';
     section.value = staff["section"];
+     type.value = 'edit';
 }
 
 const loadData = (_staff, staff) => {

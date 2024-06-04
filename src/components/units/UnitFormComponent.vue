@@ -16,8 +16,8 @@
                 </div>
                 <div>
                     <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Section
-                        <span>*</span></label>
-                    <el-select id="section" v-model="unit.section" placeholder="Choose section" size="large" clearable>
+                        </label>
+                    <el-select id="section" v-model="unit.section" placeholder="Choose section" size="large" >
                         <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
                     </el-select>
                 </div>
@@ -77,7 +77,7 @@ const categories = [{ label: 'Points of sale', value: 'Points of sale' }, { labe
 const showSpinner = ref(false);
 const unit_to_update = inject('unit_to_update');
 const units = inject('units');
-const sections = ref(['MENUS', 'INFOS', 'FOLLOW US', 'REVIEWS', 'OFFERS'])
+const sections = ref(['','MENUS', 'INFOS', 'FOLLOW US', 'REVIEWS', 'OFFERS'])
 
 watch(unit_to_update, () => {
     if (unit_to_update.value != null) {

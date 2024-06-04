@@ -290,7 +290,7 @@ const submit = async () => {
         "validity": validity.value,
         "description": description.value,
         "expiredAt": expiredAt.value,
-        "advantageLimit": advantageLimit.value,
+        "advantageLimit": (advantageLimit.value=="") ? null : advantageLimit.value,
         "dateFrom": dateFrom.value,
         "dateTo": dateEnd.value,
     }
