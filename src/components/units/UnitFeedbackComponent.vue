@@ -290,6 +290,7 @@ const submit = async () => {
         "source": "App (Private)",
         "catering": null,
         "feeling": ratingCustomer.value.feeling,
+        "establishment": `/api/establishments/${establishment.value.id}`,
         "score": 0,
         "confidence": 0,
         "authorUrl": null,

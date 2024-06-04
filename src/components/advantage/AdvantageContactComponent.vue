@@ -9,7 +9,7 @@
     </div>
   </div>
   <div class="overflow-x-auto">
-    <el-table :data="filterTableData" class="responsive-table full-width" style="width: 100%;">
+    <el-table v-if="contactLoading == false" :data="filterTableData" class="responsive-table full-width" style="width: 100%;">
       <el-table-column label="Name" fixed width="250">
       	<template #default="scope">
       		{{ scope.row.firstname }} {{ scope.row.lastname }}
@@ -29,6 +29,13 @@
         </template>
       </el-table-column>
     </el-table>
+    <div v-else role="status" class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" v-for="index in 2" :key="index">
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+      <span class="sr-only">Loading...</span>
+    </div>
   </div>
   <ExportcsvexcelComponent :showModal="showExport" :downloaded="downloaded"
     @close="showExport = false, downloaded = false" @submit="(data) => exportData(data.type, 'contacts')" />
@@ -46,13 +53,14 @@ import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import StaffItemComponent from '@Components/staffs/StaffItemComponent.vue';
 import { useWindowSize } from '@vueuse/core';
-import { ref, reactive, watch, onBeforeMount, computed, provide, onUpdated, defineAsyncComponent } from 'vue';
+import { ref, reactive, watch, onBeforeMount, computed, provide, onUpdated, defineAsyncComponent,watchEffect } from 'vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 
 const ExportcsvexcelComponent = defineAsyncComponent(() =>
   import('@Components/utils/ExportcsvexcelComponent.vue')
 )
 
+const contactLoading = ref(false);
 const route = useRoute();
 const customer = route.params.tag;
 
@@ -78,7 +86,8 @@ const exportData = (type, filename) => {
   downloaded.value = true;
 };
 
-const filterTableData = computed(() => {
+let filterTableData = [];
+watchEffect(()  => {
   let filteredData = contacts.value;
   filteredData = filteredData.filter((data) => {
     return !search.value || 
@@ -92,7 +101,15 @@ const filterTableData = computed(() => {
     return moment(b.created_at).valueOf() - moment(a.created_at).valueOf();
   });
 
-  return filteredData;
+  if (contacts.value.length > 0 ) {
+     // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      contactLoading.value = false;
+  }
+  else {
+    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+    contactLoading.value = true;
+  }
+  filterTableData = filteredData;
 });
 
 onBeforeMount(async () => {
