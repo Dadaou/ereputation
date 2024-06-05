@@ -136,7 +136,7 @@ const submit = async () => {
                 }
             } else {
                 const response = await new Promise((resolve) => {
-                    services.putRecord('units', unit_to_update.value['id'], data, (response) => {
+                    services.patchRecord('units', unit_to_update.value['id'], data, (response) => {
                         resolve(response);
                     });
                 });
