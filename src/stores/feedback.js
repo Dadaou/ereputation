@@ -60,7 +60,7 @@ export const useFeedbackStore = defineStore('feedback', {
 
     async getRandomAdvantage(tag, id) {
       const response = await new Promise((resolve) => {
-        services.get_Record(`/api/public/customer/establishment/advantages?tag=${tag}`, (response) => {
+        services.get_Record(`public/customer/establishment/advantages?tag=${tag}`, (response) => {
           resolve(response)
         })
       })
