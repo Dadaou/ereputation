@@ -57,7 +57,7 @@ const filterTableData = computed(() => {
   let filteredData = tableData.value;
   filteredData = filteredData.filter((data) => {
 
-    if(data.section == 'REVIEWS' || data.section == 'FOLLOW US' || data.section == ''){
+    if(data.section == 'REVIEWS' || data.section == 'FOLLOW US' || data.section == '' || data.section == null){
       return (
         !search.value ||
         (data.source && data.source.toLowerCase().includes(search.value.toLowerCase())) ||
