@@ -1,6 +1,6 @@
 <template>
   <div class="scroll-wrapper">
-    <label for="email" v-if="discounts.length > 0" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+    <label for="email" v-if="discounts.length > 0" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">
       {{ $t("feedback.choose_advantage") }}
     </label>
     <ul class="discount-list">
