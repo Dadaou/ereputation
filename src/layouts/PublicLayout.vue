@@ -1,7 +1,7 @@
 <template>
     <NavbarComponent :isPublic="true"></NavbarComponent>
     <div class="main__container">
-        <HeadComponent class="head" :page="appStore.currentPage" v-if="appStore.header"></HeadComponent>
+        <HeadComponent class="head" :page="appStore.currentPage" v-if="appStore.header && !shouldHideHeadComponent"></HeadComponent>
         <router-view></router-view>
     </div>
     <FooterComponent></FooterComponent>
@@ -9,8 +9,9 @@
 <script setup>
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js"
-import { defineAsyncComponent, onMounted } from 'vue'
+import { defineAsyncComponent, onMounted, computed } from 'vue'
 import { refreshTheme } from '@Services/theme.js'
+import { useRoute } from 'vue-router';
 
 const FooterComponent = defineAsyncComponent(() =>
     import('@Components/layouts/FooterComponent.vue')
@@ -25,6 +26,10 @@ const NavbarComponent = defineAsyncComponent(() =>
 
 const appStore = useAppStore();
 const userStore = useUserStore()
+const route = useRoute();
+const shouldHideHeadComponent = computed(() => {
+    return route.name === 'SuccessFeedback';
+});
 
 onMounted(() => {
     userStore.updateCustomerTheme(() => {
