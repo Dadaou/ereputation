@@ -98,13 +98,14 @@ onBeforeMount(async () => {
 
     links.value = await companyStore.loadLinksByEstablishment(route.params.etab)
     socials.value = links.value.filter((link) => {
-        return link.category == 'Social'
-    })
+        return link.category == 'Social' || link.section == 'FOLLOW US';
+    });
 
     links.value = links.value.filter((link) => {
-        return link.category == 'Platform'
-    })
-})
+        return link.category == 'Platform' || link.section == 'REVIEWS';
+    });
+
+});
 
 watch(() => {
     /** Mettre le titre en watch */
