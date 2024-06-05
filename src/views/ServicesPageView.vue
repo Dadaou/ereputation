@@ -1,5 +1,24 @@
 <template>
   <el-tabs v-model="activeName" type="card" class="demo-tabs">
+    <el-tab-pane v-for="category in categories" :label="category" :name="category">
+     <!--  <div class="head">
+        <div class="app__title">
+          <h2>{{ category }} Histogram</h2>
+        </div>
+      </div> -->
+      <div class="reviews__content">
+        <UnitChartComponent :category="category" :plotdata="unitData" :legendData="legendUnitData"
+          :chartLoading="chartUnitLoading" />
+      </div>
+     <!--  <div class="head">
+        <div class="app__title">
+          <h2>{{ category }}</h2>
+        </div>
+      </div> -->
+      <div class="reviews__content">
+        <UnitItemComponent :category="category" :units="unitByCategory[category]" />
+      </div>
+    </el-tab-pane>
     <el-tab-pane label="Staff" name="staffs">
      <!--  <div class="head">
         <div class="app__title">
@@ -75,25 +94,7 @@
         </div>
       </div>
     </el-tab-pane>
-    <el-tab-pane v-for="category in categories" :label="category" :name="category">
-     <!--  <div class="head">
-        <div class="app__title">
-          <h2>{{ category }} Histogram</h2>
-        </div>
-      </div> -->
-      <div class="reviews__content">
-        <UnitChartComponent :category="category" :plotdata="unitData" :legendData="legendUnitData"
-          :chartLoading="chartUnitLoading" />
-      </div>
-     <!--  <div class="head">
-        <div class="app__title">
-          <h2>{{ category }}</h2>
-        </div>
-      </div> -->
-      <div class="reviews__content">
-        <UnitItemComponent :category="category" :units="unitByCategory[category]" />
-      </div>
-    </el-tab-pane>
+    
   </el-tabs>
 </template>
 <script setup>

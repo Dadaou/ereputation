@@ -70,14 +70,14 @@
                         </div>
 
                     </div>
-                    <div class="grid gap-6 mb-6 md:grid-cols-2 email">
+                    <div class="grid gap-6 mb-8 md:grid-cols-2 email">
                         <div class="author__email">
                             <DiscountCheckList :establishment="route.params.id" :customer="route.params.tag"
                                 @select="(value) => randomAdvantage = value" :discount="discount" />
                             <span v-if="randomAdvantage">
                                 <i class="uil uil-info-circle"></i>{{ $t("feedback.indice1") }}
                             </span>
-                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white mt-2">
                                 {{ $t("feedback.email") }}
                             </label>
                             <input type="email" v-model="email" id="email"

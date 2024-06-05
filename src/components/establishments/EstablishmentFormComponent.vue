@@ -117,8 +117,7 @@
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div> -->
             </div>
-            <div
-                class="flex flex-wrap gap-3 items-center justify-between py-2 border-t border-b dark:border-gray-600">
+            <div class="flex flex-wrap gap-3 items-center justify-between py-2 border-t border-b dark:border-gray-600">
                 <button type="submit"
                     class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                     <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
@@ -225,7 +224,7 @@ const submit = async () => {
             });
         });
 
-        if (response.status == 201) {
+        if (response && response.status == 201) {
             loadData(response.data, 'new')
             ElMessage({
                 message: `Establishment added successfully.`,
@@ -235,7 +234,7 @@ const submit = async () => {
             showSpinner.value = false;
         }
 
-        if (response.status == 200) {
+        if (response && response.status == 200) {
             loadData(response.data, 'edit')
             ElMessage({
                 message: `Establishment updated successfully.`,
@@ -265,11 +264,11 @@ const loadData = (establishment, type) => {
             }
         });
     }
-    router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'establishments_list'} });
+    router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'establishments_list' } });
 }
 
 watch(establishment_to_update, () => {
-    
+
     if (establishment_to_update.value != null) {
         data.value = establishment_to_update.value;
         data.value['address1'] = establishment_to_update.value.address || "";

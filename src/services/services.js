@@ -150,7 +150,7 @@ const putRecord = async (entity, recordId, value, next, isPublic = false, isNoAu
   }
 }
 
-const postFormData = async (entity, value, next) => {
+const postFormData = async (entity, value, next, isPublic = false, isNoAuth = false) => {
   try {
     let url = `/${entity}`
     var axiosInstance = getInstance(isPublic, isNoAuth)
