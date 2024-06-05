@@ -50,17 +50,20 @@ export const useUserStore = defineStore(
 
     const verifyPassword = async (email, app_url, next) => {
       await services.post_Record(
-        'password/reset',
-        { email: email, app_url: app_url },
+        '/public/password/reset',
+        { email: email,
+          app_url: app_url 
+        },
         (response) => {
           next(response)
-        }
-      )
+        },
+        true)
+      
     }
 
     const resetPassword = async (password, confirmation, token, app_url, next) => {
       await services.post_Record(
-        `/reinitialiser-mot-de-pass/${token}`,
+        `/public/reinitialiser-mot-de-pass/${token}`,
         {
           password: password,
           confirmation: confirmation,
@@ -68,8 +71,8 @@ export const useUserStore = defineStore(
         },
         (response) => {
           next(response)
-        }
-      )
+        },
+      true)
     }
 
     const getInitials = (firstName, lastName) => {
