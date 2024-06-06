@@ -1,7 +1,7 @@
 <template>
   <div class="security__header border__bottom">
     <button @click="add" class="inline-flex items-center py-2 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
-        staff <i class="uil uil-plus"></i>
+        Staff <i class="uil uil-plus"></i>
     </button>
     <div class="search">
       <el-input v-model="search" size="small" placeholder="Type to search" />
@@ -9,12 +9,22 @@
   </div>
   <div class="mt-5 table__container">
     <el-table :data="filterTableData">
+      <el-table-column width="100">
+        <template #default="scope">
+          <img :src="scope.row.url_source" alt="Establishment Image" class="establishment-image" />
+        </template>
+      </el-table-column>
+      <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;">
+        <template #default="scope">
+          
+      </template>
+      </el-table-column>
       <el-table-column label="Name" style="width: 20%; min-width: 300px;">
         <template #default="scope">
           {{ `${scope.row.firstname} ${scope.row.lastname}` }}
         </template>
       </el-table-column>
-      <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;" />
+
       <el-table-column label="Department" prop="department" style="width: 20%; min-width: 300px;" />
 
       <el-table-column style="width: 15%; min-width: 200px;" align="right">
@@ -136,6 +146,22 @@ const handleDelete = async (index, staff) => {
 
 </script>
 <style scoped>
+.establishment-info {
+  display: flex;
+  align-items: center;
+}
+
+.establishment_name {
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.establishment_img {
+    height: 50px;
+    object-fit: cover;
+    width: 100%;
+}
+
 button {
   border: none;
   cursor: pointer;
@@ -197,9 +223,7 @@ button i.uil-edit {
 .search{
     display: none;
 }
-.searchtab {
-  max-width: 150px;
-}
+
 @media screen and (max-width: 468px) { 
     .search {
       display: inline;
