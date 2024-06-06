@@ -582,4 +582,7 @@ onBeforeMount(async () => {
         margin-top: 8px;
     }
 }
+.reviews__content {
+    margin: 0
+}
 </style>
