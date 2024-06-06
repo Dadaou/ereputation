@@ -1,4 +1,13 @@
 <template>
+    <div class="establishement pt-4">
+        <div>
+            <div v-if="establishment.url_source !== null" class="establishment__img">
+                <img :src="establishment.url_source" alt="" />
+            </div>
+        </div>
+
+        <h1 class="head__title">{{ establishment.name }}</h1>
+    </div>
     <div class="main__container" v-if="exist">
         <div class="feedback__form">
             <p> {{ $t("success") }} </p>
@@ -81,6 +90,8 @@ const EstablishmentNotFound = defineAsyncComponent(() =>
 
 const { t } = useI18n();
 
+const establishment = ref({});
+let media = [];
 const links = ref([])
 const socials = ref([])
 const route = useRoute();
@@ -89,7 +100,6 @@ const userStore = useUserStore();
 const appStore = useAppStore();
 
 onBeforeMount(async () => {
-
     appStore.setCurrentPage({
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),
@@ -294,6 +304,24 @@ span.label {
     font-size: 14px;
 }
 
+.establishement {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    text-align: center;
+    background-color: rgb(245, 245, 245);
+}
+
+.establishment__img img {
+    width: 100px;
+    border-radius: 5px;
+}
+
+.head__title {
+    color: var(--color-bg2);
+    margin-top: 2px;
+    font-weight: bold;
+}
 @media screen and (max-width:1075px) {
     .feedback__form {
         width: 60%;
