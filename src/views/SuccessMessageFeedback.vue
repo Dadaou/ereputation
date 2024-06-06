@@ -1,18 +1,9 @@
 <template>
-<<<<<<< HEAD
-    <div class="establishement pt-4">
-        <div>
-            <div v-if="establishment.url_source !== null" class="establishment__img">
-                <img :src="establishment.url_source" alt="" />
-            </div>
-        </div>
-        <h1 class="head__title">{{ establishment.name }}</h1>
-=======
     <div class="establishement">
         <div class="establishement_title">
             <h1 class="head__title">{{ establishment.name }}</h1>
         </div>
->>>>>>> 2a5b5c77efb4bf403d8021d8a859dcd8d76df482
+
     </div>
     <div class="main__container" v-if="exist">
         <div class="feedback__form">
@@ -120,9 +111,8 @@ onBeforeMount(async () => {
     links.value = links.value.filter((link) => {
         return link.category == 'Platform' 
     });
-
 });
-
+  
 watch(() => {
     /** Mettre le titre en watch */
     appStore.setCurrentPage({
