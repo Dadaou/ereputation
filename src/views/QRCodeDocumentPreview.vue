@@ -10,7 +10,7 @@
           </el-select>
           <button v-if="template" class="btn downloads mt-2" @click="generatePdf">PDF Download</button>
         </div> <br>
-        <form v-if="template" class="my-form" @submit.prevent="submit">
+        <form v-if="template && establishmentId !== null" class="my-form" @submit.prevent="submit">
           <label for="textGreeting" class="text-sm title">Text Greeting:</label>
           <input type="text" id="textGreeting" v-model="textGreeting">
 
@@ -84,6 +84,7 @@ const text2 = ref('');
 const text3 = ref('');
 const core = ref('');
 const templateId = ref(null)
+const establishmentId = ref(route.params.id);
 
 const submit = async () => {
   try {
@@ -134,13 +135,15 @@ const changeValue = (item) => {
   template.value = item
 }
 
+const customer = route.params.tag;
 const updateTemplate = () => {
-  services.patchRecord('qrtemplates', template.value.id, {
+  services.patchRecord('customer/qrtemplates/{id}', template.value.id, {
     text1: text1.value,
     text2: text2.value,
     text3: text3.value,
     textGreeting: textGreeting.value,
     textClosing: textClosing.value,
+    customer: customer,
   }, (response) => {
     if (response.status == 200) {
       template.value = response.data;

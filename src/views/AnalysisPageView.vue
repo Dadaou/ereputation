@@ -584,7 +584,7 @@ const loadAnalysisData = async (tag, dateStart, dateEnd, categories) => {
         let totalLabels = response.data.labels.length;
 
         if (totalLabels > 11 && containerBody2 && containerBody) {
-            let new_width = totalLabels * 75 * response.data.datasets.length
+            let new_width = totalLabels * 30 * response.data.datasets.length
             containerBody.style.width = `${new_width}px`
             containerBody2.style.width = `${new_width}px`
         } else {
