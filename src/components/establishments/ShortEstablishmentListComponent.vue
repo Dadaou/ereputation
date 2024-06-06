@@ -21,7 +21,7 @@
             </el-table-column>
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
                 <template #header>
-                    <el-input v-model="search" size="small" placeholder="Type to search" />
+                    <el-input v-model="search" size="small" placeholder="Type to search" class="search"/>
                 </template>
                 <template #default="scope">
                     <div class="vertical-buttons">
@@ -399,6 +399,10 @@ img.establishment_img {
     width: 85%;
 }
 
+.search {
+  max-width: 150px;
+}
+
 @media screen and (max-width: 768px) {
     .vertical-buttons {
         display: flex;
@@ -408,6 +412,9 @@ img.establishment_img {
     .el-button--small {
         margin-bottom: 1px;
         margin-left: 6px;
+    }
+    .search {
+        max-width: 300px;
     }
 }
 

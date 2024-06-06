@@ -106,6 +106,10 @@ button i.uil-edit {
     display: none;
 }
 
+.searchtab { 
+  max-width: 150px;
+}
+
 @media screen and (max-width: 468px) { 
     .search {
         display: flex;

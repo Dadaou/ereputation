@@ -254,7 +254,7 @@ let reviews_loader = ref(true);
 let visibleData = ref([])
 let paginationConfig = ref({
     current: 0,
-    size: 5,
+    size: 20,
     data: [],
     _data: []
 });

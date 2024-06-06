@@ -8,7 +8,7 @@
     <el-input v-model="search" size="small" placeholder="Type to search" />
   </div>
   <div class="mt-5 erep_table table__container">
-    <el-table :data="filterTableData">
+    <el-table v-if="linksLoading == false" :data="filterTableData">
       <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Source" prop="source" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Category" prop="category" style="width: 10%; min-width: 200px;" />
@@ -33,10 +33,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <div v-else role="status" class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" v-for="index in 2" :key="index">
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+      <span class="sr-only">Loading...</span>
+    </div>
   </div>
 </template>
 <script setup>
-import { computed, ref, inject, watch } from 'vue';
+import { computed, ref, inject, watch, watchEffect} from 'vue';
 import { useUserStore } from "@Stores/user.js";
 import { useWindowSize } from '@vueuse/core';
 import { useEventStore } from "@Stores/event.js";
@@ -53,7 +60,9 @@ import 'element-plus/es/components/input/style/css'
 const emit = defineEmits(['reload', 'edit']);
 const tableData = inject('links');
 const search = ref('')
-const filterTableData = computed(() => {
+const linksLoading = ref(false);
+let filterTableData = [];
+watchEffect(()  =>  {
   let filteredData = tableData.value;
   filteredData = filteredData.filter((data) => {
 
@@ -67,7 +76,16 @@ const filterTableData = computed(() => {
       );
     }
   });
-  return filteredData;
+    if (tableData.value.length > 0 ) {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        linksLoading.value = false;
+    }
+    else {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      linksLoading.value = true;
+    }
+
+    filterTableData = filteredData
 });
 
 const providers = inject('providers');
