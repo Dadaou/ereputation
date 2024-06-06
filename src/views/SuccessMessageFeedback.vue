@@ -1,18 +1,16 @@
 <template>
-    <div class="establishement">
-        <div class="establishement_title">
-            <h1 class="head__title">{{ establishment.name }}</h1>
-        </div>
-        <div class="image__container">
+    <div class="establishement pt-4">
+        <div>
             <div v-if="establishment.url_source !== null" class="establishment__img">
                 <img :src="establishment.url_source" alt="" />
             </div>
         </div>
+        <h1 class="head__title">{{ establishment.name }}</h1>
     </div>
     <div class="main__container" v-if="exist">
         <div class="feedback__form">
             <p> {{ $t("success") }} </p>
-            <div class="mt-2" v-if="route.params.share !== 'message'">
+            <div class="mt-6" v-if="route.params.share !== 'message'">
                 <h2 v-if="links.length > 0">{{ $t("success_text") }}</h2>
                 <ul v-if="links.length > 0" class="logoSrc">
                     <li v-for="link in links" :key="link.id">
@@ -109,11 +107,11 @@ onBeforeMount(async () => {
 
     links.value = await companyStore.loadLinksByEstablishment(route.params.etab)
     socials.value = links.value.filter((link) => {
-        return link.category == 'Social' || link.section == 'FOLLOW US';
+        return link.category == 'Social' 
     });
 
     links.value = links.value.filter((link) => {
-        return link.category == 'Platform' || link.section == 'REVIEWS';
+        return link.category == 'Platform' 
     });
 
 });
@@ -187,8 +185,8 @@ h2 {
     /* box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;*/
     /* border: 1px solid var(--light-color-bg2);*/
     border-radius: 5px;
-    /* padding: 15px; */
-    /* padding-top: 2rem; */
+    padding: 15px;
+    padding-top: 2rem;
 }
 
 input {
@@ -310,28 +308,18 @@ span.label {
     flex-direction: column;
     align-items: center; 
     text-align: center;
-}
-.establishement_title {
-    width: 100%;
-    height: 5rem;
     background-color: rgb(245, 245, 245);
 }
+
 .establishment__img img {
-    margin-top: 1rem;
-    width: 200px;
+    width: 100px;
     border-radius: 5px;
-    align-items: center; 
-    display: flex;
 }
 
 .head__title {
-    margin-top: 1.7rem;
-    font-weight: bold;
     color: var(--color-bg2);
-}
-
-.image__container{
-    background-color: none;
+    margin-top: 2px;
+    font-weight: bold;
 }
 @media screen and (max-width:1075px) {
     .feedback__form {
