@@ -3,11 +3,6 @@
         <div class="establishement_title">
             <h1 class="head__title">{{ establishment.name }}</h1>
         </div>
-        <div class="image__container">
-            <div v-if="establishment.url_source !== null" class="establishment__img">
-                <img :src="establishment.url_source" alt="" />
-            </div>
-        </div>
     </div>
     <div class="main__container" v-if="exist">
         <div class="feedback__form">
