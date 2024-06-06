@@ -304,10 +304,6 @@ button i.uil-edit {
     text-decoration: none;
 }
 
-.delete-icon {
-    /* Optional: You might want to add some specific style for the delete icon */
-}
-
 input {
     caret-color: var(--color-primary) !important;
 }
