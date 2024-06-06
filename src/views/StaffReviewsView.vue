@@ -31,6 +31,10 @@
         </div>
     </div>
     <div v-else>No Reviews</div>
+    <div class="reviews__pagination">
+        <CommentPagination v-if="_reviews.length > 0" :config="paginationConfig" @updatePage="updatePage"
+            :color="'#6c63ff'" :nb="_reviews.length" :data="visibleData"></CommentPagination>
+    </div>
 </template>
 <script setup>
 import {
