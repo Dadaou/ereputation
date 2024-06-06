@@ -51,7 +51,7 @@ const companyId = route.params.id;
 const _reviews = ref([])
 const paginationConfig = ref({
     current: 0,
-    size: 5,
+    size: 20,
     data: [],
     _data: []
 })

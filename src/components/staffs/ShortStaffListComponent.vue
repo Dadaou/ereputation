@@ -197,7 +197,9 @@ button i.uil-edit {
 .search{
     display: none;
 }
-
+.searchtab {
+  max-width: 150px;
+}
 @media screen and (max-width: 468px) { 
     .search {
       display: inline;
