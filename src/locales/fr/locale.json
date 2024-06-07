@@ -38,7 +38,7 @@
         "post": "Poster un commentaire",
         "requiredinputs": "Veuillez fournir toutes les informations nécessaires.",
         "read_more": "En savoir plus...",
-        "choose_advantage":"Veuillez svp choisir votre avantage",
+        "choose_advantage":"Bénéficiez d'un avantage en cliquant ci dessous sur la vignette de votre choix",
         "description":"Description"
     },
     "staffFeedback": {
