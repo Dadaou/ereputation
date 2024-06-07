@@ -46,7 +46,7 @@
                 <el-tab-pane label="Events & weather" name="events_weather">
                     Coming soon ...
                 </el-tab-pane>
-                <el-tab-pane label="Sales" name="sales">
+              <!--  <el-tab-pane label="Sales" name="sales">
                     <div
                         v-if="salesAnalysis && salesAnalysis.avgCustomerCard != 0 && salesAnalysis.current.avgBookings != 0 && salesAnalysis.current.avgTTV != 0 && salesAnalysis.current.score != '0'">
                         <p class="analysis-sales-title" style="margin-top: 1rem;">
@@ -108,7 +108,7 @@
                             </ul>
                         </div>
                     </div>
-                </el-tab-pane>
+                </el-tab-pane> -->
                 <el-tab-pane label="Trends" name="trends">
                     <AnalysisTrend />
                 </el-tab-pane>
@@ -584,7 +584,7 @@ const loadAnalysisData = async (tag, dateStart, dateEnd, categories) => {
         let totalLabels = response.data.labels.length;
 
         if (totalLabels > 11 && containerBody2 && containerBody) {
-            let new_width = totalLabels * 30 * response.data.datasets.length
+            let new_width = totalLabels * 17 * response.data.datasets.length
             containerBody.style.width = `${new_width}px`
             containerBody2.style.width = `${new_width}px`
         } else {
