@@ -16,7 +16,7 @@
         <div class="colLarge">
             <div class="boxLarge">
                 <GroupedBarChart class="chart" :plot-data="props.data" x-key="name" :width="custom_width"
-                    :height="200" :margin="{top: 20, bottom: 35, left: 55, right: 270 } " :colors="colors" :x-axis-label="_timePeriod"
+                    :height="200" :margin="{top: 20, bottom: 35, left: 55, right: 25 } " :colors="colors" :x-axis-label="_timePeriod"
                     :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
                 </GroupedBarChart>
             </div>
