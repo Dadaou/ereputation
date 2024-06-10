@@ -295,7 +295,7 @@ const submit = async () => {
     let date_review = new Date();
     let review = {
         "author": `${firstname.value} ${lastname.value}`,
-        "language": null,
+        "language": lg.toLowerCase(),
         "rating": `${ratingCustomer.value.note}`,
         "comment": comment.value,
         "translated": null,
@@ -308,6 +308,7 @@ const submit = async () => {
         "profilePhoto": null,
         "email": email.value,
         "staff": `/api/staff/${staff.value.id}`,
+        "establishment": `/api/establishments/${establishment.value.id}`,
         "optin": true,
         "dateVisit": moment(dateVisit.value, 'DD/MM/YYYY'),
         "dateReview": moment(date_review, 'DD/MM/YYYY'),
