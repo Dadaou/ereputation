@@ -199,6 +199,13 @@ const getUnitServices = async (tag) => {
     })
     unitByCategory.value = units;
     categories.value = Object.keys(units)
+    console.log(categories.value)
+      // Définir la valeur initiale de activeName après avoir récupéré les catégories
+    if (categories.value.includes('Points of sale')) {
+      activeName.value = 'Points of sale'
+    } else {
+      activeName.value = categories.value[0]
+    }
   }
 }
 
