@@ -3,7 +3,7 @@
     <div class="filter">
       <div>
         <div class="template__filter">
-          <div class="text-sm title">Choose a template</div>
+          <div class="text-sm title"> Choose a template </div>
           <el-select v-model="templateId" filterable placeholder="choose template" size="large">
             <el-option v-for="(item, index) in templates" :key="index" :label="item.name" :value="item.id"
               @click="changeValue(item)" />
