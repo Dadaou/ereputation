@@ -483,7 +483,7 @@ onBeforeMount(async () => {
 
     try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`setting/list`, (response) => {
+            services.get_Record(`setting/list?tag=${route.params.tag}&categ=all`, (response) => {
                 resolve(response);
             });
         });

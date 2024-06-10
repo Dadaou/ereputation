@@ -61,8 +61,8 @@ const emit = defineEmits(['reload', 'edit']);
 const tableData = inject('links');
 const search = ref('')
 const linksLoading = ref(false);
-let filterTableData = [];
-watchEffect(()  =>  {
+
+const filterTableData = computed (() => {
   let filteredData = tableData.value;
   filteredData = filteredData.filter((data) => {
 
@@ -76,7 +76,9 @@ watchEffect(()  =>  {
       );
     }
   });
-    if (tableData.value.length > 0 ) {
+  return filteredData;
+});
+   /* if (tableData.value.length > 0 ) {
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         linksLoading.value = false;
     }
@@ -87,7 +89,7 @@ watchEffect(()  =>  {
 
     filterTableData = filteredData
 });
-
+*/
 const providers = inject('providers');
 
 const getURIbyName = (id) => {
