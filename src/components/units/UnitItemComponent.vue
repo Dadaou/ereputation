@@ -42,16 +42,13 @@
                     </div>
                 </div>
             </div>
-		</div>
-	</div>
-<div v-if="units.length==0">No units</div>
-    <QrCodeModalComponent v-if="selectedUnit" :qrcodeValue="`${baseurl}/public/${tag}/establishment/${selectedUnit.establishment_competitor_tag}/units/${selectedUnit.tag}/feedback`" 
-    :showModal="showModal"
-    :filename="`${selectedUnit.name}-feedback-link`"
-    @close="showModal=false"
-    :customer="tag"
-    :establishment="selectedUnit.establishment_competitor_tag"
-    />
+        </div>
+    </div>
+    <div v-if="units.length == 0">No units</div>
+    <QrCodeModalComponent v-if="selectedUnit"
+        :qrcodeValue="`${baseurl}/public/${tag}/establishment/${selectedUnit.establishment_competitor_tag}/units/${selectedUnit.tag}/feedback`"
+        :showModal="showModal" :filename="`${selectedUnit.name}-feedback-link`" @close="showModal = false" :customer="tag"
+        :establishment="selectedUnit.establishment_competitor_tag" type="Services" />
 </template>
 <script setup>
 import { ref, inject, computed, defineAsyncComponent } from 'vue';

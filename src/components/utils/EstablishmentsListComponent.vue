@@ -11,8 +11,8 @@
                 :space-between="10" :virtual="true">
                 <swiper-slide>
                     <div role="status" class="society__logo bg-gray-300 rounded-sm">
-                        <svg class="text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor" viewBox="0 0 16 20">
+                        <svg class="text-gray-200 dark:text-gray-600" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                             <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
                             <path
                                 d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
@@ -27,15 +27,17 @@
                             <div class="item__head">
                                 <div class="society__info">
                                     <a class="establishment__link" @click="goToCompany(company)">
-                                        <label class="society__name">{{ company.name }} {{ company.score?`(${company.score})`:'' }}</label>
+                                        <label class="society__name">{{ company.name }} {{
+                                            company.score ? `(${company.score})` : '' }}</label>
                                     </a>
                                     <div class="society__category">
                                         <i
-                                            :class="['uil', company.category == 'Restaurant' ? 'uil-restaurant' : '', company.category == 'Hotel' ? 'uil-bed-double' : '', company.category == 'Residence' ? 'uil-home' : '',company.category == 'Other' ? 'uil-home ': '']">
+                                            :class="['uil', company.category == 'Restaurant' ? 'uil-restaurant' : '', company.category == 'Hotel' ? 'uil-bed-double' : '', company.category == 'Residence' ? 'uil-home' : '', company.category == 'Other' ? 'uil-home ' : '']">
                                         </i>
                                         <span>{{ company.category }}</span>
                                     </div>
-                                    <div class="society__location" v-if="company.address1 != null && company.city != null">
+                                    <div class="society__location"
+                                        v-if="company.address1 != null && company.city != null">
                                         <i class="uil uil-location-point"></i>
                                         <span>{{ company.address1 }}, {{ company.city }}</span>
                                     </div>
@@ -44,7 +46,8 @@
                         </div>
                     </div>
                     <RatingComponent class="rating__content" :reviews="company.totalReviews"
-                        :rating="Number(company.rating).toFixed(1)" :score="company.score" :feeling="company.feeling" :company="company"/>
+                        :rating="Number(company.rating).toFixed(1)" :score="company.score" :feeling="company.feeling"
+                        :company="company" />
                 </div>
                 <div class="list__actions">
                     <!-- <button class="btn mr-2 qrcode" @click="showModal = true, establishment = company">QR Code <i
@@ -54,13 +57,10 @@
             </div>
         </div>
     </div>
-    <QrCodeModalComponent v-if="establishment" :qrcodeValue="`${baseurl}/public/${tag}/establishment/${establishment.competitor_tag}/feedback`" 
-    :showModal="showModal"
-    :filename="`${establishment.name}-feedback-link`"
-    @close="showModal=false"
-    :customer="tag"
-    :establishment="establishment.competitor_tag"
-    />
+    <QrCodeModalComponent v-if="establishment"
+        :qrcodeValue="`${baseurl}/public/${tag}/establishment/${establishment.competitor_tag}/feedback`"
+        :showModal="showModal" :filename="`${establishment.name}-feedback-link`" @close="showModal = false"
+        :customer="tag" :establishment="establishment.competitor_tag" type="Establishments" />
 </template>
 <script setup>
 import { ref, defineAsyncComponent, computed, inject } from 'vue';
@@ -202,8 +202,8 @@ const goToCompany = (establishment) => {
 }
 
 .rating__content {
-   padding-top: 15px;
-   margin-right: 10px;
+    padding-top: 15px;
+    margin-right: 10px;
 }
 
 .list__actions {

@@ -21,12 +21,12 @@
             </el-table-column>
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
                 <template #header>
-                    <el-input v-model="search" size="small" placeholder="Type to search" class="search"/>
+                    <el-input v-model="search" size="small" placeholder="Type to search" class="search" />
                 </template>
                 <template #default="scope">
                     <div class="vertical-buttons">
                         <el-tooltip :content="`Click to enter ${scope.row.name}'s feedback formulary`" placement="top">
-                            <a :href="scope.row.link" target="_blank" class="el-button el-button--small" ><i
+                            <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
                                     class="uil uil-external-link-alt"></i></a>
                         </el-tooltip>
                         <el-button size="small" @click="showModal = true, establishment = scope.row"><i
@@ -39,7 +39,7 @@
     <QrCodeModalComponent v-if="establishment"
         :qrcodeValue="`${baseurl}/public/${route.params.tag}/establishment/${establishment.tag}/gates`"
         :showModal="showModal" :filename="`${establishment.name}-gate-link`" @close="showModal = false"
-        :customer="route.params.tag" :establishment="establishment.tag" />
+        :customer="route.params.tag" :establishment="establishment.tag" type="Gates" />
 </template>
 <script setup>
 import { computed, defineAsyncComponent, ref, onBeforeMount, watch } from 'vue'
@@ -401,6 +401,7 @@ img.establishment_img {
         flex-direction: column;
         align-items: center;
     }
+
     .el-button--small {
         margin-bottom: 1px;
         margin-left: 6px;
@@ -408,7 +409,7 @@ img.establishment_img {
 }
 
 .search {
-  max-width: 150px;
+    max-width: 150px;
 }
 
 @media screen and (min-width: 800px) {
@@ -417,14 +418,15 @@ img.establishment_img {
     }
 }
 
-@media screen and (max-width: 768px) { 
+@media screen and (max-width: 768px) {
     .search {
         max-width: 300px;
     }
 }
-@media screen and (max-width: 468px) { 
+
+@media screen and (max-width: 468px) {
     .el-table--fit {
-      font-size: 11px !important;
+        font-size: 11px !important;
     }
 }
 </style>

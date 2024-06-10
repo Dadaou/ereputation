@@ -1,6 +1,7 @@
 <template>
   <div class="security__header border__bottom">
-    <button @click="add" class="inline-flex items-center py-2 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+    <button @click="add"
+      class="inline-flex items-center py-2 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
       Service <i class="uil uil-plus"></i>
     </button>
     <div class="search">
@@ -16,23 +17,25 @@
       </el-table-column>
       <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;">
         <template #default="scope">
-            
+
         </template>
       </el-table-column>
       <el-table-column label="Name" prop="name" style="width: 15%; min-width: 300px;" />
       <el-table-column label="Code" prop="code" style="width: 20%; min-width: 300px;" />
-      <el-table-column label="Category" prop="category" width="117"/>
+      <el-table-column label="Category" prop="category" width="117" />
       <el-table-column style="width: 20%; min-width: 300px;" align="right">
         <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>
+          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
         </template>
         <template #default="scope">
           <div class="action-buttons">
             <el-tooltip :content="`Click to enter ${scope.row.name}'s feedback formulary`" placement="top">
-              <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i class="uil uil-external-link-alt"></i></a>
+              <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
+                  class="uil uil-external-link-alt"></i></a>
             </el-tooltip>
             <el-button size="small" @click="showQRCode(scope.row)"><i class="uil uil-qrcode-scan"></i></el-button>
-            <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
+            <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
+                class="uil uil-edit"></i></el-button>
             <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
               <template #reference>
                 <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
@@ -46,7 +49,7 @@
   <QrCodeModalComponent v-if="unit"
     :qrcodeValue="`${baseurl}/public/${tag}/establishment/${unit.establishment_competitor_tag}/units/${unit.tag}/feedback`"
     :showModal="showModal" :filename="`${unit.category}-${unit.name}-feedback-link`" @close="showModal = false"
-    :customer="tag" :establishment="unit.establishment_competitor_tag" />
+    :customer="tag" :establishment="unit.establishment_competitor_tag" type="Services" />
 </template>
 
 <script setup>
@@ -113,7 +116,7 @@ const showQRCode = (value) => {
 };
 
 const add = () => {
-  router.push({ name: 'Parameters', params: { tab: 'services', sub_tab: 'services_form'} });
+  router.push({ name: 'Parameters', params: { tab: 'services', sub_tab: 'services_form' } });
 };
 
 const filterTableData = computed(() => {
@@ -150,27 +153,27 @@ const handleDelete = async (index, unit) => {
 
 const handleEdit = (index, unit) => {
   staffStore.setUnit(unit);
-  router.push({ name: 'Parameters', params: { tab: 'services', sub_tab: 'services_form'} });
+  router.push({ name: 'Parameters', params: { tab: 'services', sub_tab: 'services_form' } });
 };
 </script>
 
 <style scoped>
 .establishment_name {
-    cursor: pointer;
-    font-weight: 500;
+  cursor: pointer;
+  font-weight: 500;
 }
 
 img.establishment_img {
-    height: 50px;
-    object-fit: cover;
-    width: 100%;
+  height: 50px;
+  object-fit: cover;
+  width: 100%;
 }
 
 .action-buttons {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  
+
 }
 
 .el-table th {
@@ -269,10 +272,10 @@ button i.uil-edit {
   }
 
   .vertical-buttons {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 /* Définissez une largeur maximale pour l'en-tête sur les grands écrans */
@@ -286,21 +289,24 @@ button i.uil-edit {
     width: 100%;
   }
 }
-.search{
-    display: none;
+
+.search {
+  display: none;
 }
 
-@media screen and (max-width: 468px) { 
-    .search {
-      display: inline;
-      max-width: 220px;
-      margin-right: 100px;
-    }
-    .searchtab{
-      display: none;
-    }
-    .el-table--fit {
-      font-size: 11px !important;
-    }
+@media screen and (max-width: 468px) {
+  .search {
+    display: inline;
+    max-width: 220px;
+    margin-right: 100px;
+  }
+
+  .searchtab {
+    display: none;
+  }
+
+  .el-table--fit {
+    font-size: 11px !important;
+  }
 }
 </style>

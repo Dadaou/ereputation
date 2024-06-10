@@ -76,6 +76,11 @@ const props = defineProps({
   showModal: {
     type: Boolean,
     default: false
+  },
+  type: {
+    type: String,
+    required: false,
+    default: 'Establishment'
   }
 });
 
@@ -118,6 +123,9 @@ const print = (customer_tag, establishment_tag) => {
     params: {
       tag: customer_tag,
       id: establishment_tag,
+    },
+    query: {
+      section: props.type
     }
   })
   downloaded.value = true;

@@ -205,11 +205,29 @@ onBeforeMount(async () => {
     icon: "uil-qrcode-scan"
   });
 
+  // appStore.setBreadcrumbs([
+  //   {
+  //     title: "establishment",
+  //     path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+  //     isCurrent: false,
+  //   },
+  //   {
+  //     title: "Document preview",
+  //     path: `${route.path}`,
+  //     isCurrent: true
+  //   }
+  // ])
+
   appStore.setBreadcrumbs([
+    // {
+    //   title: "My QR Codes",
+    //   path: `/customer/${route.params.tag}/account/my_qrcodes`,
+    //   isCurrent: false,
+    // },
     {
-      title: "establishment",
-      path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
-      isCurrent: false,
+      title: route.query.section,
+      path: `/customer/${route.params.tag}/account/my_qrcodes`,
+      isCurrent: false
     },
     {
       title: "Document preview",

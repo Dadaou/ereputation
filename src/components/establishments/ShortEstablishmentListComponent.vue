@@ -21,7 +21,7 @@
             </el-table-column>
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
                 <template #header>
-                    <el-input v-model="search" size="small" placeholder="Type to search" class="search"/>
+                    <el-input v-model="search" size="small" placeholder="Type to search" class="search" />
                 </template>
                 <template #default="scope">
                     <div class="vertical-buttons">
@@ -30,7 +30,7 @@
                                     class="uil uil-external-link-alt"></i></a>
                         </el-tooltip>
                         <el-button size="small" @click="showModal = true, establishment = scope.row"><i
-                            class="uil uil-qrcode-scan"></i></el-button>
+                                class="uil uil-qrcode-scan"></i></el-button>
                     </div>
                 </template>
             </el-table-column>
@@ -39,7 +39,7 @@
     <QrCodeModalComponent v-if="establishment"
         :qrcodeValue="`${baseurl}/public/${route.params.tag}/establishment/${establishment.tag}/feedback`"
         :showModal="showModal" :filename="`${establishment.name}-feedback-link`" @close="showModal = false"
-        :customer="route.params.tag" :establishment="establishment.tag" />
+        :customer="route.params.tag" :establishment="establishment.tag" type="Establishments" />
 </template>
 <script setup>
 import { computed, defineAsyncComponent, ref, onBeforeMount, watch } from 'vue'
@@ -400,7 +400,7 @@ img.establishment_img {
 }
 
 .search {
-  max-width: 150px;
+    max-width: 150px;
 }
 
 @media screen and (max-width: 768px) {
@@ -409,10 +409,12 @@ img.establishment_img {
         flex-direction: column;
         align-items: center;
     }
+
     .el-button--small {
         margin-bottom: 1px;
         margin-left: 6px;
     }
+
     .search {
         max-width: 300px;
     }
@@ -425,9 +427,9 @@ img.establishment_img {
     }
 }
 
-@media screen and (max-width: 468px) { 
+@media screen and (max-width: 468px) {
     .el-table--fit {
-      font-size: 11px !important;
+        font-size: 11px !important;
     }
 }
 </style>

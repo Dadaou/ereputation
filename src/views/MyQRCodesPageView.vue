@@ -403,6 +403,7 @@ onBeforeMount(async () => {
   await loadAdvantage();
   await loadCategories();
   await loadUnits();
+  appStore.isLoading = false;
 });
 
 </script>

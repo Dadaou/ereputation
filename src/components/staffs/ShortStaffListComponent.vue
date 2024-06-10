@@ -1,7 +1,8 @@
 <template>
   <div class="security__header border__bottom">
-    <button @click="add" class="inline-flex items-center py-2 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
-        Staff <i class="uil uil-plus"></i>
+    <button @click="add"
+      class="inline-flex items-center py-2 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+      Staff <i class="uil uil-plus"></i>
     </button>
     <div class="search">
       <el-input v-model="search" size="small" placeholder="Type to search" />
@@ -16,8 +17,8 @@
       </el-table-column>
       <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;">
         <template #default="scope">
-          
-      </template>
+
+        </template>
       </el-table-column>
       <el-table-column label="Name" style="width: 20%; min-width: 300px;">
         <template #default="scope">
@@ -29,7 +30,7 @@
 
       <el-table-column style="width: 15%; min-width: 200px;" align="right">
         <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>
+          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
         </template>
         <template #default="scope">
           <el-tooltip :content="`Click to enter ${scope.row.firstname} ${scope.row.lastname}'s feedback formulary`"
@@ -38,7 +39,7 @@
                 class="uil uil-external-link-alt"></i></a>
           </el-tooltip>
           <el-button size="small" @click="showQRCode(scope.row)"><i class="uil uil-qrcode-scan"></i></el-button>
-           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
             <template #reference>
               <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
@@ -51,7 +52,7 @@
   <QrCodeModalComponent v-if="staff"
     :qrcodeValue="`${baseurl}/public/${tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`"
     :showModal="showModal" :filename="`${staff.firstname} ${staff.lastname}-feedback-link`" @close="showModal = false"
-    :customer="tag" :establishment="staff.establishment_tag" />
+    :customer="tag" :establishment="staff.establishment_tag" type="Staff" />
 </template>
 
 <script setup>
@@ -60,7 +61,7 @@ import moment from 'moment';
 import { useStaffStore } from "@Stores/staff.js";
 import services from '@Services/services.js';
 import { useRouter } from 'vue-router';
-import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
+import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput, ElTooltip } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
 import 'element-plus/es/components/table-column/style/css'
@@ -109,13 +110,13 @@ const filterTableData = computed(() => {
   return filterdata
 })
 
-const add = ()=>{
-  router.push({ name: 'Parameters', params: { tab: 'staffs', sub_tab: 'staffs_form'} });
+const add = () => {
+  router.push({ name: 'Parameters', params: { tab: 'staffs', sub_tab: 'staffs_form' } });
 }
 
 const handleEdit = (index, staff) => {
   staffStore.setStaff(staff);
-  router.push({ name: 'Parameters', params: { tab: 'staffs', sub_tab: 'staffs_form'} });
+  router.push({ name: 'Parameters', params: { tab: 'staffs', sub_tab: 'staffs_form' } });
 }
 
 const showQRCode = (value) => {
@@ -152,14 +153,14 @@ const handleDelete = async (index, staff) => {
 }
 
 .establishment_name {
-    cursor: pointer;
-    font-weight: 500;
+  cursor: pointer;
+  font-weight: 500;
 }
 
 .establishment_img {
-    height: 50px;
-    object-fit: cover;
-    width: 100%;
+  height: 50px;
+  object-fit: cover;
+  width: 100%;
 }
 
 button {
@@ -220,21 +221,23 @@ button i.uil-edit {
   }
 }
 
-.search{
-    display: none;
+.search {
+  display: none;
 }
 
-@media screen and (max-width: 468px) { 
-    .search {
-      display: inline;
-      max-width: 220px;
-      margin-right: 100px;
-    }
-    .searchtab{
-      display: none;
-    }
-    .el-table--fit {
-      font-size: 11px !important;
-    }
+@media screen and (max-width: 468px) {
+  .search {
+    display: inline;
+    max-width: 220px;
+    margin-right: 100px;
+  }
+
+  .searchtab {
+    display: none;
+  }
+
+  .el-table--fit {
+    font-size: 11px !important;
+  }
 }
 </style>

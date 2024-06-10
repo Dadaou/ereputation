@@ -24,10 +24,11 @@
             </el-table-column>
             <el-table-column label="Category" prop="category" style="width: 15%; min-width: 200px;" />
             <el-table-column label="Address" prop="address" style="width: 25%; min-width: 200px;" />
-            <el-table-column label="Country" prop="country" style="width: 15%; min-width: 200px;" :header-style="{ fontSize: '12px' }"/>
+            <el-table-column label="Country" prop="country" style="width: 15%; min-width: 200px;"
+                :header-style="{ fontSize: '12px' }" />
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
                 <template #header>
-                    <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>
+                    <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
                 </template>
                 <template #default="scope">
                     <!--  <el-button size="small" @click="showModal = true, establishment = scope.row"><i class="uil uil-qrcode-scan"></i></el-button> -->
@@ -39,7 +40,7 @@
                             <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
                         </template>
                     </el-popconfirm>
-                   
+
                 </template>
             </el-table-column>
         </el-table>
@@ -47,7 +48,7 @@
     <QrCodeModalComponent v-if="establishment"
         :qrcodeValue="`${baseurl}/public/${route.params.tag}/establishment/${establishment.tag}/feedback`"
         :showModal="showModal" :filename="`${establishment.name}-feedback-link`" @close="showModal = false"
-        :customer="route.params.tag" :establishment="establishment.tag" />
+        :customer="route.params.tag" :establishment="establishment.tag" type="Establishments" />
 </template>
 <script setup>
 import { computed, defineAsyncComponent, ref, onBeforeMount, watch } from 'vue'
@@ -415,23 +416,26 @@ img.establishment_img {
     width: 85%;
 }
 
-.search{
+.search {
     display: none;
 }
 
-@media screen and (max-width: 468px) { 
+@media screen and (max-width: 468px) {
     .search {
         display: flex;
         max-width: 220px;
         float: right;
     }
-    .searchtab{
+
+    .searchtab {
         display: none;
     }
+
     .el-table--fit {
-            font-size: 11px !important;
+        font-size: 11px !important;
     }
 }
+
 @media screen and (min-width: 800px) {
 
     .table__container {
