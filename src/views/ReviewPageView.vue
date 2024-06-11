@@ -197,8 +197,6 @@
         </div>
         <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
     </div>
-    <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
-    @reloadData="(review) => reloadData(review)" :categories="categories" />
 </template>
 
 <script setup>
