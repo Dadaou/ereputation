@@ -84,7 +84,8 @@ const text1 = ref('');
 const text2 = ref('');
 const text3 = ref('');
 const core = ref('');
-const templateId = ref(null)
+const templateId = ref(null);
+const establishment = ref(null);
 
 
 const submit = async () => {
@@ -202,9 +203,20 @@ const generateCore = async () => {
 
 
 onBeforeMount(async () => {
+
+  const response = await new Promise((resolve) => {
+    services.get_Record(`/establishment/info?tag=${route.params.id}`, (response) => {
+      resolve(response)
+    });
+  });
+
+  if (response.status == 200) {
+    establishment.value = response.data.length && response.data[0]
+  }
+
   appStore.setCurrentPage({
     title1: "",
-    title2: "Doc Preview",
+    title2: establishment.value ? establishment.value.name : "Doc Preview",
     icon: "uil-qrcode-scan"
   });
 
