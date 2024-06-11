@@ -10,7 +10,7 @@
           </el-select>
           <button v-if="template" class="btn downloads mt-2" @click="generatePdf">PDF Download</button>
         </div> <br>
-        <form v-if="template && establishment_id" class="my-form" @submit.prevent="submit">
+        <form v-if="template && editable" class="my-form" @submit.prevent="submit">
           <label for="textGreeting" class="text-sm title">Text Greeting:</label>
           <input type="text" id="textGreeting" v-model="textGreeting">
 
@@ -72,7 +72,7 @@ const doc = new jsPDF({
 const qrStore = useQrStore();
 const htmlContainer = ref(null);
 const template = ref(null);
-const establishment_id = ref(null);
+const editable = ref(false);
 
 const templates = ref([]);
 const coreText = ref(null);
@@ -134,6 +134,7 @@ const generateQRCode = () => {
 
 const changeValue = (item) => {
   template.value = item
+  editable.value = item.establishment_tag == route.params.id
 }
 
 const customer = route.params.tag;
@@ -243,14 +244,11 @@ onBeforeMount(async () => {
   ])
   const res = await qrStore.getTemplates(route.params.tag, route.params.id)
   if (res.length > 0) {
-    console.log(res)
-    templates.value = res.filter((item) => item.category == route.query.section);
+    templates.value = res.filter((item) => item.category == route.query.section && (item.establishment_tag == null || item.establishment_tag == route.params.id));
     template.value = templates.value[0]
     templateId.value = template.value.id
   }
 
-  const establishment = await services.getEstablishmentDetails(route.params.tag);
-  establishment_id.value = establishment ? establishment.id : null;
 });
 
 watch([text1, text2, textGreeting, textClosing, text3], () => {
@@ -264,6 +262,7 @@ watch(template, () => {
     text1.value = removeHtmlTags(template.value.text1);
     text2.value = removeHtmlTags(template.value.text2);
     text3.value = removeHtmlTags(template.value.text3);
+    editable.value = template.value.establishment_tag == route.params.id
     generateCore();
   }
 
