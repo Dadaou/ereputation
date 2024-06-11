@@ -199,6 +199,7 @@ const generateCore = async () => {
   core.value = tmp;
 }
 
+
 onBeforeMount(async () => {
   appStore.setCurrentPage({
     title1: "",
@@ -219,14 +220,18 @@ onBeforeMount(async () => {
   //   }
   // ])
 
+  let section = route.query.section
+  section = section.charAt(0).toUpperCase() + section.slice(1)
+
   appStore.setBreadcrumbs([
     // {
     //   title: "My QR Codes",
     //   path: `/customer/${route.params.tag}/account/my_qrcodes`,
     //   isCurrent: false,
     // },
+
     {
-      title: route.query.section,
+      title: section,
       path: `/customer/${route.params.tag}/account/my_qrcodes`,
       isCurrent: false
     },
@@ -236,13 +241,15 @@ onBeforeMount(async () => {
       isCurrent: true
     }
   ])
-  templates.value = await qrStore.getTemplates(route.params.tag, route.params.id);
-  if (templates.value.length > 0) {
+  const res = await qrStore.getTemplates(route.params.tag, route.params.id)
+  if (res.length > 0) {
+    console.log(res)
+    templates.value = res.filter((item) => item.category == route.query.section);
     template.value = templates.value[0]
     templateId.value = template.value.id
   }
 
-const establishment = await services.getEstablishmentDetails(route.params.tag);
+  const establishment = await services.getEstablishmentDetails(route.params.tag);
   establishment_id.value = establishment ? establishment.id : null;
 });
 
