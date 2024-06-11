@@ -7,7 +7,7 @@
                     <RouterLink class="search__icon" :to="{ name: 'EstablishmentList', params: { tag: tag } }">
                         <Icon :icon="'ion:list'" width="26"></Icon>
                     </RouterLink>
-                    <RouterLink v-if="show && establishments.length > 1" class="search__icon"
+                    <RouterLink class="search__icon"
                         :to="{ name: 'EstablishmentRanking', params: { tag: tag } }">
                         <Icon :icon="'solar:cup-first-bold'" width="25"></Icon>
                     </RouterLink>
