@@ -10,7 +10,7 @@
           </el-select>
           <button v-if="template" class="btn downloads mt-2" @click="generatePdf">PDF Download</button>
         </div> <br>
-        <form v-if="template && establishmentId !== null" class="my-form" @submit.prevent="submit">
+        <form v-if="template && establishment_id" class="my-form" @submit.prevent="submit">
           <label for="textGreeting" class="text-sm title">Text Greeting:</label>
           <input type="text" id="textGreeting" v-model="textGreeting">
 
@@ -72,6 +72,7 @@ const doc = new jsPDF({
 const qrStore = useQrStore();
 const htmlContainer = ref(null);
 const template = ref(null);
+const establishment_id = ref(null);
 
 const templates = ref([]);
 const coreText = ref(null);
@@ -84,7 +85,7 @@ const text2 = ref('');
 const text3 = ref('');
 const core = ref('');
 const templateId = ref(null)
-const establishmentId = ref(route.params.id);
+
 
 const submit = async () => {
   try {
@@ -240,6 +241,9 @@ onBeforeMount(async () => {
     template.value = templates.value[0]
     templateId.value = template.value.id
   }
+
+const establishment = await services.getEstablishmentDetails(route.params.tag);
+  establishment_id.value = establishment ? establishment.id : null;
 });
 
 watch([text1, text2, textGreeting, textClosing, text3], () => {
