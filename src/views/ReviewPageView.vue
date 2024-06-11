@@ -197,6 +197,8 @@
         </div>
         <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
     </div>
+    <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
+    @reloadData="(review) => reloadData(review)" :categories="categories" />
 </template>
 
 <script setup>
@@ -214,6 +216,27 @@ import { ElDatePicker, ElOption, ElSelect } from 'element-plus';
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 
+export default {
+    props: {
+        reviews: {
+            type: Array,
+            required: true
+        },
+        showEmoji: {
+            type: Boolean,
+            default: false
+        },
+        categories: {
+            type: Array,
+            default: () => []
+        }
+    },
+    methods: {
+        reloadData(review) {
+            this.$emit('reloadData', review);
+        }
+    }
+}
 const EstablishmentInfoMobile = defineAsyncComponent(
     () => import("@Components/utils/EstablishmentInfoMobile.vue")
 )
