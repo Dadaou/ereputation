@@ -3,52 +3,54 @@ import services from '@Services/services.js'
 import { ref } from 'vue'
 import moment from 'moment'
 
-export const useQrStore = defineStore('qr', () => {
-  const templates = ref(null)
-  const qrcodeValue = ref(null);
-  const last_request = ref(null)
+export const useQrStore = defineStore(
+  'qr',
+  () => {
+    const templates = ref(null)
+    const qrcodeValue = ref(null)
+    const last_request = ref(null)
 
-  const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
-  const getTemplates = async (customer, establishment)=>{
-  	let api = 'customer/qrtemplates'
-  	let params = `tag=${customer}`
-  	
-  	if(IsValueOkay(establishment)){
-  		params += `&establishment=${establishment}`
-  	}
+    //   const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
+    const getTemplates = async (customer, establishment) => {
+      let api = 'customer/qrtemplates'
+      let params = `tag=${customer}`
 
-  	api += `?${params}`
+      // if(IsValueOkay(establishment)){
+      // 	params += `&establishment=${establishment}`
+      // }
 
-  	if(last_request.value || last_request.value !== api){
-  		last_request.value = api
+      api += `?${params}`
 
-  		const response = await new Promise((resolve) => {
-	        services.get_Record(api, (response) => {
-	            resolve(response);
-	        });
-	    });
+      if (last_request.value || last_request.value !== api) {
+        last_request.value = api
 
-	    if(response.status == 200){
-	    	templates.value = response.data;
-	    }
-  	}
+        const response = await new Promise((resolve) => {
+          services.get_Record(api, (response) => {
+            resolve(response)
+          })
+        })
 
- 	return templates.value
-  }
+        if (response.status == 200) {
+          templates.value = response.data
+        }
+      }
 
-  const setQrCodeValue = (value)=>{
-  	if(qrcodeValue.value || qrcodeValue.value !== value){
-  		qrcodeValue.value = value
-  	}
-  }
+      return templates.value
+    }
 
-  return {
-    templates,
-    qrcodeValue,
-    getTemplates,
-    setQrCodeValue
-  }
- },
+    const setQrCodeValue = (value) => {
+      if (qrcodeValue.value || qrcodeValue.value !== value) {
+        qrcodeValue.value = value
+      }
+    }
+
+    return {
+      templates,
+      qrcodeValue,
+      getTemplates,
+      setQrCodeValue
+    }
+  },
   {
     persist: true
   }

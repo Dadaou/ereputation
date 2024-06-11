@@ -39,7 +39,7 @@
     <QrCodeModalComponent v-if="establishment"
         :qrcodeValue="`${baseurl}/public/${route.params.tag}/establishment/${establishment.tag}/gates`"
         :showModal="showModal" :filename="`${establishment.name}-gate-link`" @close="showModal = false"
-        :customer="route.params.tag" :establishment="establishment.tag" type="Gates" />
+        :customer="route.params.tag" :establishment="establishment.tag" type="gate" />
 </template>
 <script setup>
 import { computed, defineAsyncComponent, ref, onBeforeMount, watch } from 'vue'

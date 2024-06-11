@@ -37,19 +37,20 @@
             </div>
             <div class="pie__chart">
                 <div>
-                    <h3 class="mb-2">Before (<span
-                            class="rating">{{ calculateAverageRating(staffRatingDataset(staff.data,
+                    <h3 class="mb-2">Before (<span class="rating">{{
+                        calculateAverageRating(staffRatingDataset(staff.data,
                             'beforeData'))}}</span>)</h3>
                     <Pie :data="staffRatingDataset(staff.data, 'beforeData')" :options="options" />
                 </div>
                 <div>
-                    <h3 class="mb-2">During (<span
-                            class="rating">{{ calculateAverageRating(staffRatingDataset(staff.data,
+                    <h3 class="mb-2">During (<span class="rating">{{
+                        calculateAverageRating(staffRatingDataset(staff.data,
                             'duringData'))}}</span>)</h3>
                     <Pie :data="staffRatingDataset(staff.data, 'duringData')" :options="options" />
                 </div>
                 <div>
-                    <h3 class="mb-2">After (<span class="rating">{{ calculateAverageRating(staffRatingDataset(staff.data,
+                    <h3 class="mb-2">After (<span class="rating">{{
+                        calculateAverageRating(staffRatingDataset(staff.data,
                             'afterData'))}}</span>)</h3>
                     <Pie :data="staffRatingDataset(staff.data, 'afterData')" :options="options" />
                 </div>
@@ -67,7 +68,7 @@
     <QrCodeModalComponent v-if="staf"
         :qrcodeValue="`${baseurl}/public/${tag}/establishment/${staf.establishment_tag}/staffs/${staf.tag}/feedback`"
         :showModal="showModal" :filename="`${staf.firstname} ${staf.lastname}-feedback-link`" @close="showModal = false"
-        :customer="tag" :establishment="staf.establishment_tag" type="Staff" />
+        :customer="tag" :establishment="staf.establishment_tag" type="staff" />
 </template>
 <script setup>
 import { ref, inject, computed, defineAsyncComponent } from 'vue';
