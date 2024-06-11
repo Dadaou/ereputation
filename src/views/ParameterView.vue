@@ -1,6 +1,6 @@
 <template>
     <div class="user__main__container">
-        <el-tabs v-model="parametersUrlsConf.tabs" type="card" class="demo-tabs">
+        <el-tabs v-model="activeName" type="card" class="demo-tabs">
             <el-tab-pane label="Establishments" name="establishments">
                 <el-tabs v-model="parametersUrlsConf.establishments" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
                     <el-tab-pane label="Establishments" name="establishments_list">
