@@ -8,7 +8,7 @@
                 <div v-if="category == 'reviews'" class="list__container">
                     <GateLinkComponent v-for="(item, index) in establishmentLink" :item="item" type="Establishment"
                         :key="index" />
-                    <GateLinkComponent v-for="(item, index) in staffLinks" :item="item" type="Staff" :key="index" />
+                    <GateLinkComponent v-for="(item, index) in staffLinks" :item="item" type="staff" :key="index" />
                     <GateLinkComponent v-for="(item, index) in unitLinks" :item="item" type="Unit" :key="index" />
                     <GateLinkComponent v-for="(item, index) in platformLinks" :item="item" type="Platform"
                         :key="index" />
@@ -56,7 +56,7 @@ const categories = ref([
     { value: "offers", label: "Offers", active: false, icon: "bi:tags" },
     { value: "info", label: "Infos", active: false, icon: "uil:info-circle" },
     { value: "follow", label: "Follow us", active: false, icon: "uil:heart-alt" }
-    
+
 ]);
 
 const openMenu = (item) => {

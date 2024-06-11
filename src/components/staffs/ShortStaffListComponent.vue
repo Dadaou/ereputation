@@ -52,7 +52,7 @@
   <QrCodeModalComponent v-if="staff"
     :qrcodeValue="`${baseurl}/public/${tag}/establishment/${staff.establishment_tag}/staffs/${staff.tag}/feedback`"
     :showModal="showModal" :filename="`${staff.firstname} ${staff.lastname}-feedback-link`" @close="showModal = false"
-    :customer="tag" :establishment="staff.establishment_tag" type="Staff" />
+    :customer="tag" :establishment="staff.establishment_tag" type="staff" />
 </template>
 
 <script setup>
