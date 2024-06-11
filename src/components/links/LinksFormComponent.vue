@@ -9,58 +9,29 @@
         <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
-                    <label for="countries"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
-                        <span>*</span></label>
-                    <el-select v-model="establishment" placeholder="Choose establishment" size="large"
-                        :disabled="IsValueOkay(competitor)" clearable filterable>
-                        <el-option v-for="item in establishments" :key="item.tag" :label="item.name"
-                            :value="item.uri" />
+                    <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span>*</span></label>
+                    <el-select v-model="establishment" placeholder="Choose establishment" size="large" :disabled="IsValueOkay(competitor)" clearable filterable>
+                        <el-option v-for="item in establishments" :key="item.tag" :label="item.name" :value="item.uri" />
                     </el-select>
                 </div>
-                <!--   <div>
-                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Competitors <span>*</span></label>
-                            <el-select v-model="competitor" 
-                            placeholder="Choose competitor" 
-                            size="large" 
-                            :disabled="IsValueOkay(establishment)"
-                            clearable
-                            filterable
-                            >
-                                <el-option
-                                v-for="item in competitors"
-                                :key="item.tag"
-                                :label="item.name"
-                                :value="item.uri"
-                                />
-                            </el-select>
-                    </div> -->
                 <div>
-                    <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
-                        <span>*</span></label>
+                    <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
                     <el-select id="category" v-model="category" placeholder="Choose category" size="large" clearable>
                         <el-option v-for="item in categories" :key="item" :label="item" :value="item" />
                     </el-select>
                 </div>
                 <div>
-                    <label for="providers"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Providers
-                        <span>*</span></label>
-                    <el-select id="providers" v-model="provider" placeholder="Choose provider" size="large" filterable
-                        clearable>
-                        <el-option v-for="item in filteredProviders" :key="item.uri" :label="item.name"
-                            :value="`${item.uri}${item.url}`" />
+                    <label for="providers" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Providers</label>
+                    <el-select id="providers" v-model="provider" placeholder="Choose provider" size="large" filterable clearable>
+                        <el-option v-for="item in filteredProviders" :key="item.uri" :label="item.name" :value="`${item.uri}${item.url}`" />
                     </el-select>
                 </div>
                 <div>
-                    <label for="caption" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Caption
-                        <span>*</span></label>
-                    <input type="text" id="caption" v-model="caption"
-                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                    <label for="caption" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Caption</label>
+                    <input type="text" id="caption" v-model="caption" :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
                 </div>
                 <div>
-                    <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Section
-                    </label>
+                    <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
                     <el-select id="section" v-model="section" placeholder="" size="large">
                         <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
                     </el-select>
@@ -68,39 +39,28 @@
             </div>
             <div>
                 <div>
-                    <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                        {{ !isHashtag ? 'Link' : 'Hashtag' }} <span>*</span></label>
-                    <p v-if="!isHashtag && provider" class="text-gray-900 text-sm">Url must start with
-                        {{ splitUriAndUrl(provider).url }}</p>
+                    <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ !isHashtag ? 'Link' : 'Hashtag' }} <span>*</span></label>
+                    <p v-if="!isHashtag && provider" class="text-gray-900 text-sm">Url must start with {{ splitUriAndUrl(provider).url }}</p>
                     <p v-if="!isValidLink && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
                     <p v-if="!isValidHashtag && isHashtag" class="text-red-500 text-sm">Invalid hashtag format</p>
-                    <input v-if="isHashtag" type="text" id="link" v-model="link"
-                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']"
-                        placeholder="#hashtag" required>
-                    <input v-else type="text" id="link" v-model="link"
-                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']"
-                        required>
-
+                    <input v-if="isHashtag" type="text" id="link" v-model="link" :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']" placeholder="#hashtag" required>
+                    <input v-else type="text" id="link" v-model="link" :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']" required>
                 </div>
             </div>
             <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
-
-                <button v-if="!isHashtag" type="submit" :disabled="!isValidLink || !provider"
-                    :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink || !provider ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
-                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
-                        ...</span>
+                <button v-if="!isHashtag" type="submit" :disabled="!isValidLink" :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading ...</span>
                     <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
                 </button>
-                <button v-else type="submit" :disabled="!isValidHashtag || !provider"
-                    :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidHashtag || !provider ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
-                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
-                        ...</span>
+                <button v-else type="submit" :disabled="!isValidHashtag" :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidHashtag ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading ...</span>
                     <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
                 </button>
             </div>
         </form>
     </div>
 </template>
+
 <script setup>
 import { computed, defineAsyncComponent, ref, onBeforeMount, watch, inject } from 'vue'
 import { useUserStore } from "@Stores/user.js"
@@ -139,7 +99,7 @@ const showModal = ref(false);
 const showLinkModal = ref(false);
 const providers = ref([]);
 const provider = ref(null)
-const categories = ref(['Hashtag', 'Platform', 'Social'])
+const categories = ref(['','Hashtag', 'Platform', 'Social'])
 const category = ref('Platform')
 const sections = ref(['','MENUS', 'REVIEWS', 'OFFERS', 'INFOS', 'FOLLOW US'])
 const section = ref('')
@@ -348,15 +308,19 @@ const getHashtagValue = (value) => {
 
 const submit = async () => {
     showSpinner.value = true;
-    let urlObject = splitUriAndUrl(provider.value)
+
+    let urlObject = null;
+    if (provider.value) {
+        urlObject = splitUriAndUrl(provider.value);
+    }
 
     const data = {
-        value1: isHashtag.value ? getHashtagValue(link.value) : getValueUrl(link.value, urlObject.url),
-        provider: urlObject.uri,
+        value1: isHashtag.value ? getHashtagValue(link.value) : (urlObject ? getValueUrl(link.value, urlObject.url) : link.value),
+        provider: urlObject ? urlObject.uri : null,
         enable: true,
         section: section.value,
         caption: caption.value,
-    }
+    };
 
     if (IsValueOkay(establishment.value)) data.establishment = establishment.value;
     if (IsValueOkay(competitor.value)) data.establishment = competitor.value;
@@ -377,6 +341,7 @@ const submit = async () => {
                 showSpinner.value = false;
                 isEdit.value = false
                 resetValue()
+                emit('reload');
             }
         } catch (error) {
             console.log(error)
@@ -396,12 +361,13 @@ const submit = async () => {
                 })
                 showSpinner.value = false;
                 resetValue()
+                emit('reload');
             }
         } catch (error) {
             console.log(error)
         }
     }
-    emit('reload')
+  
     router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'links_list'} });
 }
 
@@ -483,7 +449,7 @@ onBeforeMount(async () => {
 
     try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`setting/list?tag=${route.params.tag}&categ=all`, (response) => {
+            services.get_Record(`customer/setting/list?tag=${route.params.tag}&categ=all`, (response) => {
                 resolve(response);
             });
         });

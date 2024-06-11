@@ -546,7 +546,7 @@ const loadUnits = async () => {
 const reloadLink = async () => {
     try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`setting/list?tag=${route.params.tag}&categ=all`, (response) => {
+            services.get_Record(`customer/setting/list?tag=${route.params.tag}&categ=all`, (response) => {
                 resolve(response);
             });
         });
