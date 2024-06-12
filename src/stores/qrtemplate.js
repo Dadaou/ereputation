@@ -10,14 +10,14 @@ export const useQrStore = defineStore(
     const qrcodeValue = ref(null)
     const last_request = ref(null)
 
-    //   const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
+    // const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
     const getTemplates = async (customer, establishment) => {
       let api = 'customer/qrtemplates'
       let params = `tag=${customer}`
 
-      // if(IsValueOkay(establishment)){
-      // 	params += `&establishment=${establishment}`
-      // }
+      if (establishment) {
+        params += `&establishment=${establishment}`
+      }
 
       api += `?${params}`
 
