@@ -1,6 +1,6 @@
 <template>
-	<div class="flex items-center md:order-2">
-	        <button type="button" @click="show" class="flex mr-3" id="user-menu-button" aria-expanded="false"
+	<div class="flex items-center md:order-2" ref="menuContainer">
+	        <button type="button" @click="toggleDropdown" class="flex mr-3" id="user-menu-button" aria-expanded="false"
 	          data-dropdown-placement="bottom">
 	          <span class="sr-only">Open user menu</span>
 	          <div class="relative w-8 h-8 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500">
@@ -13,13 +13,12 @@
 	        enter-active-class="animate__animated animate__fadeInRight"
   			leave-active-class="animate__animated animate__fadeOutRight" 
 	        >
-			  <div v-if="showDropdown == true" id="user-dropdown">
+			  <div v-if="showDropdown" id="user-dropdown">
 		          <div class="px-4 py-3">
 		            <span class="block text-sm text-gray-900 dark:text-white">{{ user.name }}</span>
 		            <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ user.email }}</span>
 		          </div>
 		          <ul class="py-2" aria-labelledby="user-menu-button">
-
 		            <li @click="closeDropdown" v-if="customer">
 		              <RouterLink :to="`/customer/${customer.tag}/account/personal_details`"
 		                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
@@ -59,9 +58,10 @@
 			</transition>
     </div>
 </template>
+
 <script setup>
 import { useUserStore } from "@Stores/user.js";
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 const userStore = useUserStore();
 const props = defineProps({
 	user: {
@@ -76,18 +76,32 @@ const props = defineProps({
 const emits = defineEmits(['signOut'])
 
 const showDropdown = ref(false);
+const menuContainer = ref(null);
 
-const show = () => {
-  showDropdown.value = !showDropdown.value
+const toggleDropdown = () => {
+  showDropdown.value = !showDropdown.value;
 };
 
 const closeDropdown = () => {
   showDropdown.value = false;
 };
-	
-</script>
-<style scoped>
 
+const handleClickOutside = (event) => {
+  if (menuContainer.value && !menuContainer.value.contains(event.target)) {
+    closeDropdown();
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
+</script>
+
+<style scoped>
 #user-dropdown {
   position: absolute;
   top: 3.9rem;
@@ -118,5 +132,4 @@ const closeDropdown = () => {
 .animate__animated.animate__fadeOutRight {
   --animate-duration: 1s;
 }
-	
 </style>

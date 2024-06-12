@@ -3,49 +3,49 @@
     <div class="breadcrumb__container">
       <BreadcrumbComponent :data="breadcrumbData" />
     </div>
-    <div class="admin__container">
+    <div class="admin__container" >
       <button class="menu-toggle" @click="toggleMenu">
         <i class="uil uil-bars"></i>
       </button>
-      <div class="admin__menu">
+      <div class="admin__menu" :class="{ 'menu-open': isMenuOpen }">
         <ul>
           <li>
-            <router-link :to="{ name: 'Personal_details' }">
+            <router-link :to="{ name: 'Personal_details' }"  @click.native="closeMenu">
               <i class="uil uil-user"></i><span>Account</span>
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'Subscription' }" active-class="active">
+            <router-link :to="{ name: 'Subscription' }" active-class="active"  @click.native="closeMenu">
               <i class="uil uil-book"></i> <span>Subscription</span>
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'QRCodes' }" active-class="active">
+            <router-link :to="{ name: 'QRCodes' }" active-class="active"  @click.native="closeMenu">
               <i class="uil uil-qrcode-scan"></i> <span>My QRCodes</span>
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'Advantage' }">
+            <router-link :to="{ name: 'Advantage' }"  @click.native="closeMenu">
               <i class="uil uil-bill"></i> <span>Advantages</span>
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'Partnership' }">
+            <router-link :to="{ name: 'Partnership' }"  @click.native="closeMenu">
               <i class="uil uil-users-alt"></i> <span>Partnership</span>
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'Contact' }">
+            <router-link :to="{ name: 'Contact' }"  @click.native="closeMenu">
               <i class="uil uil-envelope"></i> <span>Contacts</span>
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'Discount_coupons' }">
+            <router-link :to="{ name: 'Discount_coupons' }"  @click.native="closeMenu">
               <i class="uil uil-bill"></i> <span>Discount coupons</span>
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'Parameters' }" active-class="active">
+            <router-link :to="{ name: 'Parameters' }" active-class="active"  @click.native="closeMenu">
               <i class="uil uil-setting"></i> <span>Parameters</span>
             </router-link>
           </li>
@@ -62,6 +62,16 @@
 import { ref, computed, provide, watch } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
+
+const isMenuOpen = ref(false);
+
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value;
+};
+
+const closeMenu = () => {
+  isMenuOpen.value = true;
+};
 
 const route = useRoute();
 
@@ -129,6 +139,7 @@ const breadcrumbData = [
     isCurrent: true,
   },
 ];
+
 </script>
 <style scoped>
 /* Styles existants */
@@ -140,6 +151,7 @@ const breadcrumbData = [
   width: 95% !important;
   margin: auto;
   overflow-x: hidden;
+  position: relative;
 }
 
 .breadcrumb__container {
@@ -224,7 +236,7 @@ const breadcrumbData = [
   cursor: pointer;
 }
 
-.menu-open .admin__menu ul {
+.menu-open  {
   display: block;
   /* Affiche toujours la liste du menu sur les petits écrans */
 }
@@ -236,6 +248,27 @@ const breadcrumbData = [
 
 /* Pour les petits écrans (par exemple, les téléphones mobiles) */
 @media screen and (max-width: 800px) {
+  
+  .admin__menu {
+    position: auto;
+    padding-bottom: 1%;
+    margin-top: -10%;
+}
+
+  .admin__menu.menu-open {
+    display: none; 
+   
+   
+  }
+
+  .menu-toggle {
+  display: block; 
+  cursor: pointer;
+  margin-top: 10%;
+  margin-right: 100%;
+
+  }
+
   .all__content {
     margin-top: 0px;
     width: 115%;
@@ -243,6 +276,9 @@ const breadcrumbData = [
 
   .admin__container {
     flex-direction: column;
+    margin-bottom: 20%;
+    
+    
   }
 
   .admin__menu li a span {
