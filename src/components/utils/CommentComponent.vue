@@ -24,10 +24,14 @@
                             <li v-else class="flex items-center"><i class="uil uil-calender"></i><span>
                                     {{ moment(review.created_at).format('D MMMM YYYY') }}
                                 </span></li>
-                            <li class="flex items-center"><i class="uil uil-map-pin-alt"></i>
-                                <span>{{ review.source }}</span>
-                                <span v-if="review.source === 'App (Private)' && review.unit_name">&nbsp;&nbsp;<em>{{ review.unit_name }}</em></span>
-                            </li>
+                                <li class="flex items-center">
+                                    <i class="uil uil-map-pin-alt"></i>
+                                    <span>{{ review.source }}</span>
+                                    <span v-if="review.source === 'App (Private)'">
+                                    &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
+                                                <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
+                                    </span>
+                                    </li>
                         </ul>
                     </div>
                 </div>
