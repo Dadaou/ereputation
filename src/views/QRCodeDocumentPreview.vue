@@ -47,10 +47,7 @@ import { useAppStore } from "@Stores/app.js";
 import { useQrStore } from "@Stores/qrtemplate.js";
 import { useRoute } from "vue-router";
 import jsPDF from 'jspdf';
-import axios from 'axios';
-import QrcodeVue from 'qrcode.vue';
 import QRCode from 'qrcode';
-import DOMPurify from 'dompurify';
 import services from '@Services/services.js';
 import { ElOption, ElSelect, ElMessage } from 'element-plus';
 import 'element-plus/es/components/option/style/css';
@@ -70,12 +67,10 @@ const doc = new jsPDF({
   format: 'a5',
 });
 const qrStore = useQrStore();
-const htmlContainer = ref(null);
 const template = ref(null);
 const editable = ref(false);
 
 const templates = ref([]);
-const coreText = ref(null);
 const filename = ref('preview')
 
 const textGreeting = ref('');
@@ -101,13 +96,6 @@ const generatePdf = async () => {
   doc.save(`${filename.value}.pdf`);
 };
 
-const removeHtmlTags = (str) => {
-  if (str) {
-    return str.replace(/<[^>]*>/g, '');
-  }
-  return str
-}
-
 const addContentToPdf = async () => {
   const body = document.getElementsByClassName("content");
   if (body.length) {
@@ -120,18 +108,6 @@ const addContentToPdf = async () => {
     doc.addImage(imageData, 'PNG', 10, 10, 130, adjustedHeight);
   }
 }
-
-const generateQRCode = () => {
-  const qrCodeData = qrStore.qrcodeValue;
-
-  QRCode.toCanvas(document.getElementById('qrcodeContainer'), qrCodeData, { width: 100, height: 100 }, (error, canvas) => {
-    if (!error) {
-      const imageData = canvas.toDataURL('image/png');
-    } else {
-      console.error('QR Code generation error:', error);
-    }
-  });
-};
 
 const changeValue = (item) => {
   template.value = item
@@ -159,27 +135,6 @@ const updateTemplate = () => {
       })
     }
   })
-}
-
-const imageUrlToBase64 = async (imageUrl) => {
-  try {
-    const response = await fetch(imageUrl, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('access')}`
-      }
-    });
-    const blob = await response.blob();
-
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  } catch (error) {
-    console.error('Erreur lors de la conversion de l\'URL d\'image en base64 :', error);
-    throw error;
-  }
 }
 
 const generateCore = async () => {
@@ -250,11 +205,11 @@ watch([text1, text2, textGreeting, textClosing, text3], () => {
 
 watch(template, () => {
   if (template.value) {
-    textGreeting.value = removeHtmlTags(template.value.text_greeting);
-    textClosing.value = removeHtmlTags(template.value.text_closing);
-    text1.value = removeHtmlTags(template.value.text1);
-    text2.value = removeHtmlTags(template.value.text2);
-    text3.value = removeHtmlTags(template.value.text3);
+    textGreeting.value = template.value.text_greeting;
+    textClosing.value = template.value.text_closing;
+    text1.value = template.value.text1;
+    text2.value = template.value.text2;
+    text3.value = template.value.text3;
     editable.value = template.value.establishment_tag == route.params.id
     generateCore();
   }
