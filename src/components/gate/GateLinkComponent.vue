@@ -24,7 +24,7 @@ const props = defineProps({
 
 const icon = computed(() => {
     switch (props.type) {
-        case 'Staff':
+        case 'staff':
             return 'material-symbols:frame-person'
 
         case 'Unit':
@@ -66,7 +66,7 @@ const logoSrc = computed(() => {
             return new URL('@/assets/images/logo/Google.svg', import.meta.url).href;
         } else if (props.item.href.includes('google.fr')) {
             return new URL('@/assets/images/logo/Google.svg', import.meta.url).href;
-        } else if (props.item.href.includes('fr.hotel.com')) {
+        } else if (props.item.href.includes('hotels.com')) {
             return new URL('@/assets/images/logo/Hotel.svg', import.meta.url).href;
         } else if (props.item.href.includes('maeva.com')) {
             return new URL('@/assets/images/logo/Maeva.svg', import.meta.url).href;

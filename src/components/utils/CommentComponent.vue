@@ -26,7 +26,7 @@
                                 </span></li>
                             <li class="flex items-center"><i class="uil uil-map-pin-alt"></i>
                                 <span>{{ review.source }}</span>
-                                <span v-if="review.source === 'App (Private)' && review.unit_name">&nbsp;&nbsp;{{ review.unit_name }}</span>
+                                <span v-if="review.source === 'App (Private)' && review.unit_name">&nbsp;&nbsp;<em>{{ review.unit_name }}</em></span>
                             </li>
                         </ul>
                     </div>
