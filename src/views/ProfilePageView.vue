@@ -143,7 +143,6 @@ const breadcrumbData = [
 </script>
 <style scoped>
 /* Styles existants */
-
 .admin__container {
   height: inherit;
   display: flex;
@@ -151,7 +150,7 @@ const breadcrumbData = [
   width: 95% !important;
   margin: auto;
   overflow-x: hidden;
-  position: relative;
+  
 }
 
 .breadcrumb__container {
