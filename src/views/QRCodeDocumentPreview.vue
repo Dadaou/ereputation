@@ -116,7 +116,7 @@ const changeValue = (item) => {
 
 const customer = route.params.tag;
 const updateTemplate = () => {
-  services.patchRecord('customer/qrtemplates/{id}', template.value.id, {
+  services.patchRecord('customer/qrtemplates/', template.value.id, {
     text1: text1.value,
     text2: text2.value,
     text3: text3.value,
