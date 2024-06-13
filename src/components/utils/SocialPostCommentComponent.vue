@@ -26,12 +26,23 @@
     </div>
     <div class="comment-meta">
       <span class="comment-likes"><i class="uil uil-thumbs-up"></i> {{ comment.likes }}</span>
+      <el-tooltip placement="top">
+        <template #content> Reply </template>
+        <a :href="comment.url ? comment.url : '#'" target="_blank">
+          <!-- <Icon icon="basil:reply-outline" width="24px"
+                                        :style="{ 'color': comment.url ? 'var(--color-danger)' : 'lightgrey' }">
+                                    </Icon> -->
+          <Icon icon="basil:reply-outline" width="20px" :style="{ 'color': '#111' }">
+          </Icon>
+        </a>
+      </el-tooltip>
     </div>
   </div>
 </template>
 <script setup>
 import { Minus, Plus } from '@element-plus/icons-vue';
-import { ElProgress } from 'element-plus';
+import { ElProgress, ElTooltip } from 'element-plus';
+import { Icon } from '@iconify/vue';
 import 'element-plus/es/components/progress/style/css'
 import moment from 'moment';
 
@@ -81,10 +92,21 @@ const customColorMethod = (percentage) => {
 
 .comment-meta {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-wrap: wrap;
   font-size: 0.8rem;
   margin-top: 5px;
+}
+
+.reviews__content a {
+  text-decoration: none;
+  border-bottom: none;
+  margin-bottom: 5px;
+}
+
+.reviews__content a:hover {
+  color: var(--color-primary);
+  background-color: transparent;
 }
 
 .comment-meta>span {
