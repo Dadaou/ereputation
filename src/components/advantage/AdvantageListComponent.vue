@@ -5,22 +5,22 @@
   <div class="mt-5 erep_table table__container">
     <el-table v-if="advantageLoading == false" :data="filterTableData" class="responsive-table" :row-class-name="rowClassName" style="width: 100%">
       <el-table-column label="Name" fixed prop="name" width="188" />
-      <el-table-column label="Establishment" prop="establishment_name" width="200" />
+      <el-table-column label="Establishment" prop="establishment_name" width="190" />
       <el-table-column label="Amount" prop="amount" align="center" width="100" />
-      <el-table-column label="Category" prop="category" width="150" />
-      <el-table-column label="Code" prop="code" width="100" />
-      <el-table-column label="Metric" prop="metric" width="100" />
+      <el-table-column label="Category" prop="category" width="120" />
+      <el-table-column label="Code" prop="code" width="85" />
+  <!--   <el-table-column label="Metric" prop="metric" width="100" />
       <el-table-column label="Scope" prop="scope" width="100" />
-      <!-- <el-table-column label="Validity" prop="validity" align="center" width="100" /> -->
-      <el-table-column label="Limit" prop="advantageLimit" align="center" width="100" />
-      <el-table-column label="Received" prop="received" align="center" width="100" />
-      <el-table-column label="Used" prop="used" align="center" width="100" />
-      <el-table-column label="Expired At" width="150">
+       <el-table-column label="Validity" prop="validity" align="center" width="100" /> -->
+      <el-table-column label="Limit" prop="advantageLimit" align="center" width="70" />
+      <el-table-column label="Received" prop="received" align="center" width="90" />
+      <el-table-column label="Used" prop="used" align="center" width="80" />
+      <el-table-column label="Expired At" width="110">
         <template #default="scope">
           {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="Enable" align="center" width="100">
+      <el-table-column label="Enable" align="center" width="80">
         <template #default="scope">
           <el-button v-if="scope.row.enable" size="small" @click="handleDisable(scope.$index, scope.row)"><i
               class="uil uil-check-square" style="color: #777; font-size: 15px;"></i></el-button>
