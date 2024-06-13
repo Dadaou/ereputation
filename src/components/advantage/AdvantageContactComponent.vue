@@ -9,7 +9,7 @@
     </div>
   </div>
   <div class="overflow-x-auto">
-    <el-table v-if="contactLoading == false" :data="filterTableData" class="responsive-table full-width" style="width: 100%;">
+    <el-table :data="filterTableData" class="responsive-table full-width" style="width: 100%;">
       <el-table-column label="Name" fixed width="250">
       	<template #default="scope">
       		{{ scope.row.firstname }} {{ scope.row.lastname }}
@@ -29,13 +29,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <div v-else role="status" class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" v-for="index in 2" :key="index">
-          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-      <span class="sr-only">Loading...</span>
-    </div>
   </div>
   <ExportcsvexcelComponent :showModal="showExport" :downloaded="downloaded"
     @close="showExport = false, downloaded = false" @submit="(data) => exportData(data.type, 'contacts')" />
@@ -86,8 +79,7 @@ const exportData = (type, filename) => {
   downloaded.value = true;
 };
 
-let filterTableData = [];
-watchEffect(()  => {
+const filterTableData = computed (() => {
   let filteredData = contacts.value;
   filteredData = filteredData.filter((data) => {
     return !search.value || 
@@ -97,8 +89,8 @@ watchEffect(()  => {
   });
 
   // Trier les données par date de création (de la plus récente à la plus ancienne)
-  filteredData.sort((a, b) => {
-    return moment(b.created_at).valueOf() - moment(a.created_at).valueOf();
+  return filteredData.sort((a, b) => {
+     moment(b.created_at).valueOf() - moment(a.created_at).valueOf();
   });
 
   if (contacts.value.length > 0 ) {

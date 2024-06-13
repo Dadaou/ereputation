@@ -6,7 +6,7 @@
         <el-input v-model="searchSent" size="small" placeholder="Type to search" class="input_searchs"/>
       </div>
     </div>
-    <el-table v-if="datasentLoading == false" :data="filterTableDataSent" class="responsive-table">
+    <el-table :data="filterTableDataSent" class="responsive-table">
       <el-table-column label="Advantage" prop="advantage_name" style="width: 15%; min-width: 200px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 30%; min-width: 400px;" />
       <el-table-column label="Partnership" prop="partnership_name" style="width: 30%; min-width: 4%;" />
@@ -64,13 +64,6 @@
         </template>
       </el-table-column> -->
     </el-table>
-    <div v-else role="status" class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" v-for="index in 2" :key="index">
-          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-      <span class="sr-only">Loading...</span>
-    </div>
     <div class="table-description" style="margin-block: 32px 16px;">
       <p>Requests for partnerships</p>
       <div>
@@ -78,7 +71,7 @@
       </div>
     </div>
    
-    <el-table v-if="datareceivedLoading == false" :data="filterTableDataReceived" class="responsive-table">
+    <el-table :data="filterTableDataReceived" class="responsive-table">
       <el-table-column label="Advantage" prop="advantage_name" style="width: 15%; min-width: 200px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 30%; min-width: 400px;" />
       <el-table-column label="Partnership" prop="partnership_name" style="width: 30%; min-width: 4%;" />
@@ -149,13 +142,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <div v-else role="status" class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" v-for="index in 2" :key="index">
-          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-      <span class="sr-only">Loading...</span>
-    </div>
   </div>
 </template>
 <script setup>
@@ -179,10 +165,10 @@ const searchReceived = ref('')
 const emit = defineEmits(['update']);
 // const userStore = useUserStore()
 const partnerships = inject('partnerships')
+let filterTableDataSent = ref([]);
+let filterTableDataReceived = ref([]);
 
-let filterTableDataSent = [];
-
-watchEffect(()  =>  {
+watchEffect(() => {
   if (partnerships.value && partnerships.value['sent']) {
     let filterdata = partnerships.value['sent'];
     filterdata = filterdata.filter(
@@ -192,19 +178,13 @@ watchEffect(()  =>  {
         data.partnership_name.toLowerCase().includes(searchSent.value.toLowerCase()) ||
         data.establishment_name.toLowerCase().includes(searchSent.value.toLowerCase()) ||
         data.state.toLowerCase().includes(searchSent.value.toLowerCase())
-    )
-   
-    datasentLoading.value = false;
-    filterTableDataSent = filterdata;
-  } else {
-    return  datasentLoading.value = true;
+    );
+    
+    filterTableDataSent.value = filterdata;
   }
+});
 
-})
-
-let filterTableDataReceived = [];
-
-watchEffect(()  =>{
+watchEffect(() => {
   if (partnerships.value && partnerships.value['received']) {
     let filterdata = partnerships.value['received'];
     filterdata = filterdata.filter(
@@ -214,14 +194,10 @@ watchEffect(()  =>{
         data.partnership_name.toLowerCase().includes(searchReceived.value.toLowerCase()) ||
         data.establishment_name.toLowerCase().includes(searchReceived.value.toLowerCase()) ||
         data.state.toLowerCase().includes(searchReceived.value.toLowerCase())
-    )
-
-    datareceivedLoading.value = false;
-    filterTableDataReceived = filterdata
-  } else {
-    return datareceivedLoading.value = true;
+    );
+    filterTableDataReceived.value = filterdata;
   }
-})
+});
 
 const handleAccept = async (index, partnership) => {
   const response = await new Promise((resolve) => {
@@ -243,8 +219,8 @@ const handleAccept = async (index, partnership) => {
 };
 
 const handleEvent = async (index, partnership, column, value) => {
-  let body = {}
-  body[`${column}`] = value
+  let body = {};
+  body[`${column}`] = value;
 
   const response = await new Promise((resolve) => {
     services.patchRecord('partnerships', partnership['id'], body, (response) => {
@@ -259,7 +235,6 @@ const handleEvent = async (index, partnership, column, value) => {
     });
   }
 };
-
 </script>
 <style scoped>
 button {
