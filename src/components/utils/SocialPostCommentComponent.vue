@@ -101,7 +101,7 @@ const customColorMethod = (percentage) => {
 .reviews__content a {
   text-decoration: none;
   border-bottom: none;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
 .reviews__content a:hover {
