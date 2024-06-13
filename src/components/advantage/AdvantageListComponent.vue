@@ -30,7 +30,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="Operations" width="200">
+      <el-table-column label="Actions" width="200">
 
         <template #default="scope">
           <el-tooltip placement="top">
