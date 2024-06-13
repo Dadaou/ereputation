@@ -15,6 +15,18 @@
                             <div class="font-medium dark:text-white">
                                 <p id="author__name">{{ review.author }}</p>
                             </div>
+                            <el-tooltip placement="top">
+                                <template #content> Reply </template>
+                                <a :href="review.url ? review.url : '#'" target="_blank">
+                                    <!-- <Icon icon="basil:reply-outline" width="24px"
+                                        :style="{ 'color': review.url ? 'var(--color-danger)' : 'lightgrey' }">
+                                    </Icon> -->
+                                    <Icon icon="basil:reply-outline" width="24px"
+                                        :style="{ 'color': 'var(--color-danger)' }">
+                                    </Icon>
+                                </a>
+                            </el-tooltip>
+
                         </div>
                         <ul class="space-y-1 text-gray-500 dark:text-gray-400">
                             <li v-if="review.date_review != null" class="flex items-center"><i
@@ -24,14 +36,14 @@
                             <li v-else class="flex items-center"><i class="uil uil-calender"></i><span>
                                     {{ moment(review.created_at).format('D MMMM YYYY') }}
                                 </span></li>
-                                <li class="flex items-center">
-                                    <i class="uil uil-map-pin-alt"></i>
-                                    <span>{{ review.source }}</span>
-                                    <span v-if="review.source === 'App (Private)'">
+                            <li class="flex items-center">
+                                <i class="uil uil-map-pin-alt"></i>
+                                <span>{{ review.source }}</span>
+                                <span v-if="review.source === 'App (Private)'">
                                     &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
-                                                <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
-                                    </span>
-                                    </li>
+                                    <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
+                                </span>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -143,6 +155,7 @@ import { useWindowSize } from '@vueuse/core';
 import { ElDatePicker, ElOption, ElSelect, ElTooltip } from 'element-plus';
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
+import { Icon } from '@iconify/vue';
 
 const props = defineProps({
     reviews: {
@@ -264,6 +277,20 @@ const handleModal = (text, action, icon, type, review) => {
 
 </script>
 <style scoped>
+.reviews__content a {
+    text-decoration: none;
+    border-bottom: none;
+}
+
+.reviews__content a:hover {
+    color: var(--color-primary);
+    background-color: transparent;
+}
+
+.reviews__content a[disabled] {
+    pointer-events: none;
+}
+
 .modal__header {
     display: flex;
     justify-content: space-between;
