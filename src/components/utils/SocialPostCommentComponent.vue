@@ -26,7 +26,7 @@
     </div>
     <div class="comment-meta">
       <span class="comment-likes"><i class="uil uil-thumbs-up"></i> {{ comment.likes }}</span>
-      <el-tooltip placement="top">
+      <el-tooltip placement="top" v-if="comment.url">
         <template #content> Reply </template>
         <a :href="comment.url ? comment.url : '#'" target="_blank">
           <!-- <Icon icon="basil:reply-outline" width="24px"
