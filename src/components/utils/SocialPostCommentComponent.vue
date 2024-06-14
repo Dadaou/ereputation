@@ -29,9 +29,6 @@
       <el-tooltip placement="top" v-if="comment.url">
         <template #content> Reply </template>
         <a :href="comment.url ? comment.url : '#'" target="_blank">
-          <!-- <Icon icon="basil:reply-outline" width="24px"
-                                        :style="{ 'color': comment.url ? 'var(--color-danger)' : 'lightgrey' }">
-                                    </Icon> -->
           <Icon icon="basil:reply-outline" width="20px" :style="{ 'color': '#111' }">
           </Icon>
         </a>

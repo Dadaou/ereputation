@@ -18,9 +18,6 @@
                             <el-tooltip placement="top" v-if="review.url">
                                 <template #content> Reply </template>
                                 <a :href="review.url ? review.url : '#'" target="_blank">
-                                    <!-- <Icon icon="basil:reply-outline" width="24px"
-                                        :style="{ 'color': review.url ? 'var(--color-danger)' : 'lightgrey' }">
-                                    </Icon> -->
                                     <Icon icon="basil:reply-outline" width="24px"
                                         :style="{ 'color': 'var(--color-danger)' }">
                                     </Icon>
