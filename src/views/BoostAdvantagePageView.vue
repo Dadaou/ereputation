@@ -159,7 +159,7 @@ onBeforeUnmount(() => {
 .boost__title {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     font-size: 5.5rem;
-    color: var(--color-bg2);
+    color: var(--el-color-primary);
 }
 
 .icon__container {
@@ -173,7 +173,7 @@ onBeforeUnmount(() => {
 }
 
 .boost__name {
-    font-family: Inter, sans-serif;
+    font-family: Montserrat, sans-serif;
     ;
     font-size: 4rem;
     font-weight: 600;
@@ -182,7 +182,7 @@ onBeforeUnmount(() => {
 }
 
 .boost_quantity {
-    font-family: Inter, sans-serif;
+    font-family: Montserrat, sans-serif;
     ;
     font-size: 4rem;
     font-weight: 400;
@@ -190,7 +190,7 @@ onBeforeUnmount(() => {
 }
 
 .boost__quantity-nb {
-    font-family: Inter, sans-serif;
+    font-family: Montserrat, sans-serif;
     ;
     font-size: 5rem;
     font-weight: 600;
@@ -210,7 +210,7 @@ onBeforeUnmount(() => {
 .boost_comment {
     font-size: 2rem;
     font-weight: 400;
-    font-family: Inter, sans-serif;
+    font-family: Montserrat, sans-serif;
     ;
     color: var(--color-secondary);
 }
@@ -218,7 +218,7 @@ onBeforeUnmount(() => {
 .boost__description {
     font-size: 2rem;
     font-weight: 400;
-    font-family: Inter, sans-serif;
+    font-family: Montserrat, sans-serif;
     ;
     color: var(--color-bg2);
 }
