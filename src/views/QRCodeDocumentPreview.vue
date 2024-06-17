@@ -151,9 +151,30 @@ const generateCore = async () => {
   const qrCanvas = await QRCode.toCanvas(canvas, qrData);
   const qrCodeDataURL = qrCanvas.toDataURL(); // Convert to base64
   tmp = tmp.replace('{{qrcodeimg}}', `<img src="${qrCodeDataURL}" style="width: 100%;">`)
-  tmp = tmp.replace('{{logo}}', `<img src="data:image/png;base64,${template.value.logo_base64}" style="width: 100%;">`);
+  // tmp = tmp.replace('{{logo}}', `<img src="data:image/png;base64,${template.value.logo_base64}" style="width: 100%;">`);
 
-  core.value = tmp;
+  // const response = await fetch(template.value.logo);
+  // if (!response.ok) {
+  //   throw new Error(`HTTP error! status: ${response.status}`);
+  // } else {
+  //   console.log(response)
+  // }
+
+  try {
+    const response = await fetch(template.value.logo)
+    if (!response.ok) {
+      throw new Error('image not found')
+    }
+    const blob = await response.blob()
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      tmp = tmp.replace('{{logo}}', `<img src="${reader.result}" style="width: 100%;">`);
+      core.value = tmp;
+    }
+    reader.readAsDataURL(blob)
+  } catch (error) {
+    console.error('Error encoding image:', error)
+  }
 }
 
 
@@ -176,7 +197,8 @@ onBeforeMount(async () => {
   });
 
   let section = route.query.section
-  section = section.charAt(0).toUpperCase() + section.slice(1)
+  if (section)
+    section = section.charAt(0).toUpperCase() + section.slice(1)
 
   appStore.setBreadcrumbs([
     {

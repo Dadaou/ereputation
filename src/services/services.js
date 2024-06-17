@@ -381,5 +381,6 @@ export default {
   downloadQrcode,
   downloadSVGQrcode,
   generateColor,
-  downloadJPEGQrcode
+  downloadJPEGQrcode,
+  fetchFile
 }
