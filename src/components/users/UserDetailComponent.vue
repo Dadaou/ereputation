@@ -263,7 +263,6 @@ let user = ref({
 
 const updateColorData = (value, key) => {
     newColorData.value[key] = value;
-    colorData.value[key] = value;
 }
 
 const updateUser = () => {
@@ -302,10 +301,11 @@ const saveTheme = async (data) => {
 
     services.post_Record('customer/update/colors', data, (response) => {
 
+        console.log(response)
+
         if (response.status == 200) {
             appStore.isLoading = false;
             customerEditing.value = false;
-            // newColorData.value = {};
             ElMessage({
                 message: h('p', null, [
                     h('h4', { style: "color: var(--el-color-primary); font-weight: bold;" }, 'Information:'),
@@ -317,9 +317,9 @@ const saveTheme = async (data) => {
                 userStore.customer.font_color = response.data.font_color;
                 userStore.customer.title_color = response.data.title_color;
                 colorData.value = {
-                    'back_color': userStore.customer.back_color || appStore.account.back_color,
-                    'font_color': userStore.customer.font_color || appStore.account.font_color,
-                    'title_color': userStore.customer.title_color || appStore.account.title_color
+                    'back_color': response.data.back_color || appStore.account.back_color,
+                    'font_color': response.data.font_color || appStore.account.font_color,
+                    'title_color': response.data.title_color || appStore.account.title_color
                 }
             }
 
@@ -338,7 +338,7 @@ const saveTheme = async (data) => {
 
 const resetColors = async () => {
     try {
-     
+
         const response = await new Promise((resolve, reject) => {
             services.post_Record('customer/reset/colors', { tag: userStore.customer.tag }, (response) => {
                 if (response.status === 200) {
@@ -349,18 +349,20 @@ const resetColors = async () => {
             });
         });
 
-        const data = response.data;
-
-            userStore.customer.back_color = data.back_color || appStore.account.back_color;
-            userStore.customer.font_color = data.font_color || appStore.account.font_color;
-            userStore.customer.title_color = data.title_color || appStore.account.title_color;
-
+        // const data = response.data;
+        if (response.status == 200) {
             colorData.value = {
-                back_color: data.back_color || appStore.account.back_color,
-                font_color: data.font_color || appStore.account.font_color,
-                title_color: data.title_color || appStore.account.title_color,
+                back_color: appStore.account.back_color,
+                font_color: appStore.account.font_color,
+                title_color: appStore.account.title_color,
             };
-            newColorData.value = { ...colorData.value };
+        }
+
+        userStore.customer.back_color = null;
+        userStore.customer.font_color = null;
+        userStore.customer.title_color = null;
+
+
         ElMessage({
             message: h('p', null, [
                 h('h4', { style: "color: var(--el-color-primary); font-weight: bold;" }, 'Information:'),
@@ -526,7 +528,7 @@ input {
     margin-left: 1%;
     transition: var(--transition);
     border-radius: 5px;
-    
+
 }
 
 .edit__actions .cancel {
@@ -539,20 +541,24 @@ input {
     background-color: var(--color-primary);
     color: var(--color-white);
 }
+
 .edit__actions .cancel:hover {
     background-color: var(--color-primary);
     color: var(--color-white);
     border-radius: 5px;
     padding: 2px 8px;
 
-}.edit__actions .reset:hover {
+}
+
+.edit__actions .reset:hover {
     color: red;
     margin-left: 1%;
     transition: var(--transition);
     border-radius: 5px;
     padding: 2px 6px;
-    
+
 }
+
 .forgot__password {
     background-color: var(--color-danger);
     color: white;
