@@ -30,9 +30,9 @@ onMounted(() => {
     userStore.updateCustomerTheme(() => {
         setTimeout(() => {
             refreshTheme(
-                userStore.customer.back_color,
-                userStore.customer.font_color,
-                userStore.customer.title_color
+                userStore.customer.back_color || appStore.account.back_color,
+                userStore.customer.font_color || appStore.account.font_color,
+                userStore.customer.title_color || appStore.account.title_color,
             );
         }, 1000);
     });
