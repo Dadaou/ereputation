@@ -59,7 +59,6 @@
                             <div class="info__content">
                                 <div class="info__container">
                                     <div class="info__edit">{{ userStore.user.firstname }} {{ userStore.user.lastname }}
-
                                     </div>
                                 </div>
                             </div>
@@ -183,6 +182,9 @@
                         <i class="uil uil-edit"></i>
                         Edit
                     </span>
+                    <button class="reset" v-if="!customerEditing" @click="resetColors">
+                        <i class="uil uil-refresh mr-1"></i>Reset Colors
+                    </button>
                 </div>
             </el-tab-pane>
         </el-tabs>
@@ -261,6 +263,7 @@ let user = ref({
 
 const updateColorData = (value, key) => {
     newColorData.value[key] = value;
+    colorData.value[key] = value;
 }
 
 const updateUser = () => {
@@ -279,7 +282,7 @@ const updateUser = () => {
 
 const submitCustomer = async () => {
     const formData = {
-        id: userStore.customer.id
+        tag: userStore.customer.tag
     };
     if (newColorData.value) {
         if (newColorData.value.back_color)
@@ -333,6 +336,48 @@ const saveTheme = async (data) => {
     }, false);
 };
 
+const resetColors = async () => {
+    try {
+     
+        const response = await new Promise((resolve, reject) => {
+            services.post_Record('customer/reset/colors', { tag: userStore.customer.tag }, (response) => {
+                if (response.status === 200) {
+                    resolve(response);
+                } else {
+                    reject(new Error('Échec de la réinitialisation des couleurs'));
+                }
+            });
+        });
+
+        const data = response.data;
+
+            userStore.customer.back_color = data.back_color || appStore.account.back_color;
+            userStore.customer.font_color = data.font_color || appStore.account.font_color;
+            userStore.customer.title_color = data.title_color || appStore.account.title_color;
+
+            colorData.value = {
+                back_color: data.back_color || appStore.account.back_color,
+                font_color: data.font_color || appStore.account.font_color,
+                title_color: data.title_color || appStore.account.title_color,
+            };
+            newColorData.value = { ...colorData.value };
+        ElMessage({
+            message: h('p', null, [
+                h('h4', { style: "color: var(--el-color-primary); font-weight: bold;" }, 'Information:'),
+                h('span', { style: "font-size: 13px;" }, "Les couleurs ont été réinitialisées avec succès !"),
+            ]),
+        });
+    } catch (error) {
+
+        ElMessage({
+            message: h('p', null, [
+                h('h4', { style: "color: var(--el-color-warning); font-weight: bold;" }, 'Erreur:'),
+                h('span', { style: "font-size: 13px;" }, "Une erreur est survenue lors de la réinitialisation des couleurs !"),
+            ]),
+        });
+    }
+};
+
 onBeforeMount(() => {
     user.value.firstname = userStore.user.firstname;
     user.value.lastname = userStore.user.lastname;
@@ -343,6 +388,7 @@ onBeforeMount(() => {
         'font_color': userStore.customer.font_color || appStore.account.font_color,
         'title_color': userStore.customer.title_color || appStore.account.title_color
     }
+    newColorData.value = { ...colorData.value };
 });
 
 function toggleEdit() {
@@ -475,6 +521,14 @@ input {
     border-radius: 5px;
 }
 
+.edit__actions .reset {
+    color: red;
+    margin-left: 1%;
+    transition: var(--transition);
+    border-radius: 5px;
+    
+}
+
 .edit__actions .cancel {
     color: var(--color-primary);
     font-weight: 500;
@@ -485,7 +539,20 @@ input {
     background-color: var(--color-primary);
     color: var(--color-white);
 }
+.edit__actions .cancel:hover {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border-radius: 5px;
+    padding: 2px 8px;
 
+}.edit__actions .reset:hover {
+    color: red;
+    margin-left: 1%;
+    transition: var(--transition);
+    border-radius: 5px;
+    padding: 2px 6px;
+    
+}
 .forgot__password {
     background-color: var(--color-danger);
     color: white;
