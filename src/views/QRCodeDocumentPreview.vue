@@ -167,6 +167,9 @@ const generateCore = async () => {
   } catch (error) {
     console.error('Error encoding image:', error)
   }
+
+  // tmp = tmp.replace('{{logo}}', `<img src="data:image/png;base64,${template.value.logo_base64}" style="width: 100%;">`);
+  // core.value = tmp;
 }
 
 onBeforeMount(async () => {
