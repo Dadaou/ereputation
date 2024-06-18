@@ -115,6 +115,11 @@ watch([width, isError], () => {
 </script>
 
 <style scoped>
+html,body{
+    height: 100%;
+    overflow-y: hidden;
+}
+
 input {
     caret-color: var(--color-primary) !important;
 }
@@ -134,12 +139,15 @@ button.isLoaded {
     height: inherit;
     display: flex;
     justify-content: center;
+    margin-bottom: -169px;
+    margin-top: -77px; 
 }
 
 .login__form {
     height: 50%;
     width: 25%;
-    margin-top: 60px;
+    margin-top: 100px;
+    margin-bottom: 50px;
     padding: 40px;
     display: flex;
     flex-direction: column;
