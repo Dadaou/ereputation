@@ -344,7 +344,7 @@ const resetColors = async () => {
                 if (response.status === 200) {
                     resolve(response);
                 } else {
-                    reject(new Error('Échec de la réinitialisation des couleurs'));
+                    reject(new Error('An error has occured!'));
                 }
             });
         });
@@ -366,7 +366,7 @@ const resetColors = async () => {
         ElMessage({
             message: h('p', null, [
                 h('h4', { style: "color: var(--el-color-primary); font-weight: bold;" }, 'Information:'),
-                h('span', { style: "font-size: 13px;" }, "Les couleurs ont été réinitialisées avec succès !"),
+                h('span', { style: "font-size: 13px;" }, "Your template has been successfully reseted !"),
             ]),
         });
     } catch (error) {
@@ -374,7 +374,7 @@ const resetColors = async () => {
         ElMessage({
             message: h('p', null, [
                 h('h4', { style: "color: var(--el-color-warning); font-weight: bold;" }, 'Erreur:'),
-                h('span', { style: "font-size: 13px;" }, "Une erreur est survenue lors de la réinitialisation des couleurs !"),
+                h('span', { style: "font-size: 13px;" }, "An error occurred while resetting colors !"),
             ]),
         });
     }
