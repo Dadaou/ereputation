@@ -146,10 +146,10 @@ const generateCore = async () => {
   tmp = tmp.replace('{{textclosing}}', textClosing.value);
   const qrData = qrStore.qrcodeValue; // Data you want to encode
   const canvas = document.createElement('canvas');
-  canvas.width = 10000;
-  canvas.height = 10000;
-  const qrCanvas = await QRCode.toCanvas(canvas, qrData);
-  const qrCodeDataURL = qrCanvas.toDataURL(); // Convert to base64
+  canvas.width = 500;
+  canvas.height = 500;
+  const qrCanvas = await QRCode.toCanvas(canvas, qrData, { width: 500, errorCorrectionLevel: 'H' });
+  const qrCodeDataURL = qrCanvas.toDataURL('image/png', 1.0); // Convert to base64
   tmp = tmp.replace('{{qrcodeimg}}', `<img src="${qrCodeDataURL}" style="width: 100%;">`)
 
   try {
