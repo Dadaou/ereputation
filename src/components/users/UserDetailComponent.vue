@@ -366,7 +366,7 @@ const resetColors = async () => {
         ElMessage({
             message: h('p', null, [
                 h('h4', { style: "color: var(--el-color-primary); font-weight: bold;" }, 'Information:'),
-                h('span', { style: "font-size: 13px;" }, "Your template has been successfully reseted !"),
+                h('span', { style: "font-size: 13px;" }, "Your template has been reseted !"),
             ]),
         });
     } catch (error) {
