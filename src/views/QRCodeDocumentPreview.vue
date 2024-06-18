@@ -64,7 +64,7 @@ appStore.setCurrentPage({
 const route = useRoute();
 const doc = new jsPDF({
   orientation: 'portrait',
-  format: 'a5',
+  format: 'a5'
 });
 const qrStore = useQrStore();
 const template = ref(null);
@@ -101,11 +101,11 @@ const addContentToPdf = async () => {
   if (body.length) {
 
     let content = body[0];
-    let canvas = await html2canvas(content);
-    const imageData = canvas.toDataURL('image/png');
+    let canvas = await html2canvas(content, { scale: 4, useCORS: true });
+    const imageData = canvas.toDataURL('image/jpeg', 1.0);
     const aspectRatio = canvas.width / canvas.height;
     const adjustedHeight = 0 || 130 / aspectRatio;
-    doc.addImage(imageData, 'PNG', 10, 10, 130, adjustedHeight);
+    doc.addImage(imageData, 'PNG', 10, 10, 130, adjustedHeight, undefined, 'SLOW');
   }
 }
 
@@ -146,19 +146,11 @@ const generateCore = async () => {
   tmp = tmp.replace('{{textclosing}}', textClosing.value);
   const qrData = qrStore.qrcodeValue; // Data you want to encode
   const canvas = document.createElement('canvas');
-  canvas.width = 10000;
-  canvas.height = 10000;
-  const qrCanvas = await QRCode.toCanvas(canvas, qrData);
-  const qrCodeDataURL = qrCanvas.toDataURL(); // Convert to base64
+  canvas.width = 500;
+  canvas.height = 500;
+  const qrCanvas = await QRCode.toCanvas(canvas, qrData, { width: 500, errorCorrectionLevel: 'H' });
+  const qrCodeDataURL = qrCanvas.toDataURL('image/png', 1.0); // Convert to base64
   tmp = tmp.replace('{{qrcodeimg}}', `<img src="${qrCodeDataURL}" style="width: 100%;">`)
-  // tmp = tmp.replace('{{logo}}', `<img src="data:image/png;base64,${template.value.logo_base64}" style="width: 100%;">`);
-
-  // const response = await fetch(template.value.logo);
-  // if (!response.ok) {
-  //   throw new Error(`HTTP error! status: ${response.status}`);
-  // } else {
-  //   console.log(response)
-  // }
 
   try {
     const response = await fetch(template.value.logo)
@@ -176,7 +168,6 @@ const generateCore = async () => {
     console.error('Error encoding image:', error)
   }
 }
-
 
 onBeforeMount(async () => {
 
