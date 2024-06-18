@@ -152,24 +152,24 @@ const generateCore = async () => {
   const qrCodeDataURL = qrCanvas.toDataURL('image/png', 1.0); // Convert to base64
   tmp = tmp.replace('{{qrcodeimg}}', `<img src="${qrCodeDataURL}" style="width: 100%;">`)
 
-  // try {
-  //   const response = await fetch(template.value.logo)
-  //   if (!response.ok) {
-  //     throw new Error('image not found')
-  //   }
-  //   const blob = await response.blob()
-  //   const reader = new FileReader()
-  //   reader.onloadend = () => {
-  //     tmp = tmp.replace('{{logo}}', `<img src="${reader.result}" style="width: 100%;">`);
-  //     core.value = tmp;
-  //   }
-  //   reader.readAsDataURL(blob)
-  // } catch (error) {
-  //   console.error('Error encoding image:', error)
-  // }
+  try {
+    const response = await fetch(template.value.logo)
+    if (!response.ok) {
+      throw new Error('image not found')
+    }
+    const blob = await response.blob()
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      tmp = tmp.replace('{{logo}}', `<img src="${reader.result}" style="width: 100%;">`);
+      core.value = tmp;
+    }
+    reader.readAsDataURL(blob)
+  } catch (error) {
+    console.error('Error encoding image:', error)
+  }
 
-  tmp = tmp.replace('{{logo}}', `<img src="data:image/png;base64,${template.value.logo_base64}" style="width: 100%;">`);
-  core.value = tmp;
+  // tmp = tmp.replace('{{logo}}', `<img src="data:image/png;base64,${template.value.logo_base64}" style="width: 100%;">`);
+  // core.value = tmp;
 }
 
 onBeforeMount(async () => {
