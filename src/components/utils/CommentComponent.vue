@@ -15,9 +15,9 @@
                             <div class="font-medium dark:text-white">
                                 <p id="author__name">{{ review.author }}</p>
                             </div>
-                            <el-tooltip placement="top" v-if="review.url">
+                            <el-tooltip placement="top" v-if="review.review_url">
                                 <template #content> Reply </template>
-                                <a :href="review.url ? review.url : '#'" target="_blank">
+                                <a :href="review.review_url ? review.review_url : '#'" target="_blank">
                                     <Icon icon="basil:reply-outline" width="24px"
                                         :style="{ 'color': 'var(--color-danger)' }">
                                     </Icon>
