@@ -21,7 +21,17 @@
         </template>
       </el-table-column>
       <el-table-column label="Name" prop="name" style="width: 15%; min-width: 300px;" />
-      <el-table-column label="Code" prop="code" style="width: 20%; min-width: 300px;" />
+      <el-table-column label="Reviews" prop="reviews" style="width: 20%; min-width: 300px;">
+        <template #default="scope">
+          <div class="reviews-link">
+            <el-tooltip :content="'Reviews ' + scope.row.name" placement="top">
+              <a
+                :href="`/customer/${tag}/establishment/${scope.row.establishment_competitor_tag}/services/unit/${scope.row.tag}/reviews`">{{
+                  scope.row.reviews }}</a>
+            </el-tooltip>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="Category" prop="category" width="117" />
       <el-table-column style="width: 20%; min-width: 300px;" align="right">
         <template #header>
