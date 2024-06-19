@@ -25,18 +25,9 @@
         <template #default="scope">
           <div class="reviews-link">
             <el-tooltip :content="'Reviews ' + scope.row.name" placement="top">
-              <RouterLink 
-                :to="{
-                  name: 'UnitReview',
-                  params: {
-                    tag: tag,
-                    id: scope.row.establishment_competitor_tag,
-                    unit: scope.row.tag
-                  }
-                }" 
-                @click="selectedUnit = scope.row">
-                {{ scope.row.reviews }}
-              </RouterLink>
+              <a
+                :href="`/customer/${tag}/establishment/${scope.row.establishment_competitor_tag}/services/unit/${scope.row.tag}/reviews`">{{
+                  scope.row.reviews }}</a>
             </el-tooltip>
           </div>
         </template>
