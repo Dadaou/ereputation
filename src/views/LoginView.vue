@@ -139,8 +139,8 @@ button.isLoaded {
     height: inherit;
     display: flex;
     justify-content: center;
-    margin-bottom: -169px;
-    margin-top: -77px; 
+    margin-bottom: -20%;
+    margin-top: -60px; 
 }
 
 .login__form {
