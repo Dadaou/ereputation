@@ -26,7 +26,7 @@
           <div class="reviews-link">
             <el-tooltip :content="'Reviews ' + scope.row.name" placement="top">
               <a
-                :href="`/customer/${tag}/establishment/${scope.row.establishment_competitor_tag}/services/unit/${scope.row.tag}/reviews`">{{
+                :href="`/customer/${tag}/establishment/${scope.row.establishment_competitor_tag}/services/units/${scope.row.tag}/reviews`">{{
                   scope.row.reviews }}</a>
             </el-tooltip>
           </div>
