@@ -19,6 +19,25 @@
                     </el-tooltip>
                 </template>
             </el-table-column>
+            <el-table-column label="Reviews" prop="totalReviews" style="width: 20%; min-width: 300px;">
+           <template #default="scope">
+          <div class="reviews-link">
+           <el-tooltip :content="'Reviews ' + scope.row.name" placement="top">
+                <RouterLink 
+                :to="{
+                  name: 'Review',
+                  params: {
+                    tag: customer_tag,
+                    id: scope.row.establishment_id,
+                  }
+                }" 
+                @click="selectedEstablishment = scope.row">
+                {{ scope.row.totalReviews }}
+              </RouterLink>
+            </el-tooltip> 
+          </div>
+          </template> 
+        </el-table-column>
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
                 <template #header>
                     <el-input v-model="search" size="small" placeholder="Type to search" class="search" />
@@ -111,6 +130,7 @@ const establishments = computed(() => {
                 positionning: establishment.positionning,
                 id: establishment.id,
                 disable: establishment.disable,
+                totalReviews: establishment.totalReviews,
                 link: `${baseurl}/public/${route.params.tag}/establishment/${establishment.competitor_tag}/feedback`
             })
         });

@@ -25,7 +25,26 @@
           {{ `${scope.row.firstname} ${scope.row.lastname}` }}
         </template>
       </el-table-column>
-
+      <el-table-column label="Reviews" prop="reviews" style="width: 20%; min-width: 300px;">
+            <template #default="scope">
+          <div class="reviews-link">
+              <el-tooltip :content="'Reviews ' + scope.row.firstname + scope.row.lastname" placement="top">
+                <RouterLink 
+                :to="{
+                  name: 'StaffReview',
+                  params: {
+                    tag: customer_tag,
+                    id: scope.row.establishment_tag,
+                    staff_tag: scope.row.tag
+                  }
+                }" 
+                @click="selectedStaff = scope.row">
+                {{ scope.row.reviews }}
+              </RouterLink>
+            </el-tooltip>
+          </div>
+          </template> 
+        </el-table-column>
       <el-table-column label="Department" prop="department" style="width: 20%; min-width: 300px;" />
 
       <el-table-column style="width: 15%; min-width: 200px;" align="right">
