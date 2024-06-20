@@ -1,23 +1,58 @@
 <template>
     <div v-if="exist" class="feedback__form">
         <div class="feedback">
-            <div class="grid gap-0 grid-cols-5">
-                <GateMenuComponent v-for="item in categories" :item="item" :key="item.title" @select="openMenu(item)" />
+            <div class="desktop">
+                <div class="grid gap-0 grid-cols-5">
+                    <GateMenuComponent v-for="item in categories" :item="item" :key="item.title"
+                        @select="openMenu(item)" />
+                </div>
+                <div class="gate__body">
+                    <div v-if="category == 'reviews'" class="list__container">
+                        <GateLinkComponent v-for="(item, index) in establishmentLink" :item="item" type="Establishment"
+                            :key="index" />
+                        <GateLinkComponent v-for="(item, index) in staffLinks" :item="item" type="staff" :key="index" />
+                        <GateLinkComponent v-for="(item, index) in unitLinks" :item="item" type="Unit" :key="index" />
+                        <GateLinkComponent v-for="(item, index) in platformLinks" :item="item" type="Platform"
+                            :key="index" />
+                    </div>
+                    <div v-if="category == 'follow'" class="list__container">
+                        <GateLinkComponent v-for="(item, index) in followLinks" :item="item" type="Social"
+                            :key="index" />
+                    </div>
+                    <div v-if="category == 'offers'" class="list__container">
+                        <GateLinkComponent v-for="(item, index) in offerLinks" :item="item" type="Offer" :key="index" />
+                    </div>
+                </div>
             </div>
-            <div class="gate__body">
-                <div v-if="category == 'reviews'" class="list__container">
-                    <GateLinkComponent v-for="(item, index) in establishmentLink" :item="item" type="Establishment"
-                        :key="index" />
-                    <GateLinkComponent v-for="(item, index) in staffLinks" :item="item" type="staff" :key="index" />
-                    <GateLinkComponent v-for="(item, index) in unitLinks" :item="item" type="Unit" :key="index" />
-                    <GateLinkComponent v-for="(item, index) in platformLinks" :item="item" type="Platform"
-                        :key="index" />
-                </div>
-                <div v-if="category == 'follow'" class="list__container">
-                    <GateLinkComponent v-for="(item, index) in followLinks" :item="item" type="Social" :key="index" />
-                </div>
-                <div v-if="category == 'offers'" class="list__container">
-                    <GateLinkComponent v-for="(item, index) in offerLinks" :item="item" type="Offer" :key="index" />
+            <div class="mobile">
+                <div v-for="(item, index) in categories" :key="index">
+                    <button class="accordion gate__menu" :class="[item.active ? 'clicked' : '']"
+                        @click="toggleMenu(item)">
+                        <span class="icon-container">
+                            <Icon :icon="item.icon" width="14px" />
+                        </span>
+                        <span>{{ item.label }}</span>
+                    </button>
+                    <div class="panel" v-if="item.active">
+                        <div v-if="category == 'reviews'" class="list__container">
+                            <GateLinkComponent v-for="(element, index) in establishmentLink" :item="element"
+                                type="Establishment" :key="index" />
+                            <GateLinkComponent v-for="(element, index) in staffLinks" :item="element" type="staff"
+                                :key="index" />
+                            <GateLinkComponent v-for="(element, index) in unitLinks" :item="element" type="Unit"
+                                :key="index" />
+                            <GateLinkComponent v-for="(element, index) in platformLinks" :item="element" type="Platform"
+                                :key="index" />
+                        </div>
+                        <div v-if="category == 'follow'" class="list__container">
+                            <GateLinkComponent v-for="(element, index) in followLinks" :item="element" type="Social"
+                                :key="index" />
+                        </div>
+                        <div v-if="category == 'offers'" class="list__container">
+                            <GateLinkComponent v-for="(element, index) in offerLinks" :item="element" type="Offer"
+                                :key="index" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -33,6 +68,7 @@ import { useRoute } from "vue-router";
 import { useAppStore } from "@Stores/app.js"
 import GateMenuComponent from '@Components/gate/GateMenuComponent.vue';
 import GateLinkComponent from '@Components/gate/GateLinkComponent.vue';
+import { Icon } from '@iconify/vue';
 
 
 const EstablishmentNotFound = defineAsyncComponent(() =>
@@ -56,8 +92,20 @@ const categories = ref([
     { value: "offers", label: "Offers", active: false, icon: "bi:tags" },
     { value: "info", label: "Infos", active: false, icon: "uil:info-circle" },
     { value: "follow", label: "Follow us", active: false, icon: "uil:heart-alt" }
-
 ]);
+
+const toggleMenu = (item) => {
+    category.value = item.value
+    categories.value = categories.value.map(v => {
+        if (v.value == item.value) {
+            v.active = !item.active
+            return v
+        } else {
+            v.active = false
+            return v
+        }
+    })
+}
 
 const openMenu = (item) => {
     categories.value = categories.value.map(v => {
@@ -324,6 +372,26 @@ img {
     margin-top: 24px;
 }
 
+@media screen and (min-width: 751px) {
+    .feedback .desktop {
+        display: block !important;
+    }
+
+    .feedback .mobile {
+        display: none !important;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .feedback .desktop {
+        display: none !important;
+    }
+
+    .feedback .mobile {
+        display: block !important;
+    }
+}
+
 @media screen and (max-width:1075px) {
     .feedback__form {
         width: 60%;
@@ -346,7 +414,71 @@ img {
 
 @media screen and (max-width:750px) {
     .feedback__form {
-        width: 90%;
+        width: 100%;
+        margin: 0;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+    }
+
+    .gate__body {
+        box-shadow: none;
+        padding: 8px;
+    }
+
+    .accordion {
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        text-align: left;
+        outline: none;
+        transition: 0.4s;
+    }
+
+    .panel {
+        padding: 0 18px;
+        background-color: white;
+        overflow: hidden;
+    }
+
+    .gate__menu {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        /* height: 60px; */
+        border-radius: 5px 5px 0 0;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 4px 12px;
+        cursor: pointer;
+        padding: 24px;
+        gap: 24px;
+    }
+
+    .gate__menu span {
+        font-size: 1rem;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .gate__menu .clicked {
+        border-left: 1px solid var(--color-primary);
+    }
+
+    .clicked span {
+        color: var(--color-danger) !important;
+    }
+
+    .gate__menu .icon-container {
+        padding: auto;
+        border: var(--color-primary) solid 1px;
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
     }
 }
 </style>

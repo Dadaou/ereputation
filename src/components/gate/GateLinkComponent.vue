@@ -1,5 +1,5 @@
 <template>
-    <a class="gate__link" :href="item.href" target="_blank">
+    <a v-if="item.label" class="gate__link" :href="item.href" target="_blank">
         <Icon v-if="!item.logo && icon" :icon="icon" class="mb-2" width="24px" color="grey" />
         <img v-if="item.logo && item.logo.length > 0" :src="item.logo[0]" class="gate__logo">
         <img v-if="logoSrc" :src="logoSrc" :alt="`${item.label} logo`" class="gate__logoSrc">
