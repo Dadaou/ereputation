@@ -117,7 +117,7 @@
                                 <i class="uil uil-times-circle" @click="showModal = false"></i>
                             </div>
                         </div>
-                        <EditCustomerEdit />
+                        <EditCustomerEdit @close-modal="showModal = false"/>
                     </template>
                 </ModalComponent>
                 
@@ -278,6 +278,7 @@ let user = ref({
 const updateColorData = (value, key) => {
     newColorData.value[key] = value;
 }
+
 
 const updateUser = () => {
     editing.value = true;

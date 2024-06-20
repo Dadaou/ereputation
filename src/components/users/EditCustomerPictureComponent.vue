@@ -36,9 +36,11 @@ const userStore = useUserStore();
 const previewImage = ref(null);
 const imageInputHover = ref(false);
 const imgHasChanged = ref(false);
-
+const selectedLogo = ref(null);
+const emit = defineEmits(['close-modal']);
 const updateImage = (e) => {
     const image = e.target.files[0];
+    selectedLogo.value = image;
     const reader = new FileReader();
     reader.readAsDataURL(image);
     reader.onload = (e) => {
@@ -59,20 +61,22 @@ const upload = async () => {
     }
 
     const formData = new FormData();
-    
+    formData.append('file', selectedLogo.value);
+    formData.append('customer', userStore.customer.tag);
 
-    formData.append('file', previewImage.value);
-    formData.append('tag', userStore.customer.tag);
+    let testFormData = new FormData();
+    testFormData.append('file', selectedLogo.value);
 
     try {
         const response = await new Promise((resolve) => {
-            services.post_Record('/customer/update_logo', formData, (response) => {
-            resolve(response)
-        },);
-    });
+            services.post_Record_formData('/customer/update_logo', formData, (response) => {
+                resolve(response)
+            }, false);
+        });
         if (response.status === 200) {
             previewImage.value = response.data.logoUrl;
             ElMessage.success('Logo updated successfully!');
+            emit('close-modal');
         } else {
             ElMessage.error(response.data.message || 'An error occurred while uploading the logo.');
         }
