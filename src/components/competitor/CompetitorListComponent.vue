@@ -332,7 +332,7 @@ const loadLinksByEstablishment = async (company) => {
 
     try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`establishment/url?tag=${tag}`, (response) => {
+            services.get_Record(`/api/customer/establishment/url?tag=${tag}`, (response) => {
                 resolve(response);
             });
         });
@@ -445,16 +445,47 @@ const deleteCompetitor = async () => {
     }
 }
 
-const isValidUrl = (url, urlTemplate) => {
-    const pattern = urlPattern(urlTemplate);
-    let isValid = false
-
-    if (pattern.test(url)) {
-        isValid = true;
-    }
-
-    return isValid
+function getDomainFromUrl(url) {
+    const urlObj = new URL(url);
+    return urlObj.hostname;
 }
+function getDomainAndPathFromUrl(url) {
+    const urlObj = new URL(url);
+    const domain = urlObj.hostname;
+    const path = urlObj.pathname + urlObj.search;
+    return path;
+}
+
+const isValidUrl = (url, urlTemplate) => {
+    //   console.log("url:", url);
+    console.log("urlTemplate:", urlTemplate);
+
+    const pattern = urlPattern(urlTemplate); 
+    // console.log("Pattern:", pattern);
+
+    const domainUrlTemplate = getDomainFromUrl(urlTemplate);
+    const domainUrlInput = getDomainFromUrl(url);
+    const path = getDomainAndPathFromUrl(url);    
+    console.log("Nom de domaine urlTemplate :", domainUrlTemplate);
+    console.log("Nom de domaine input:", domainUrlInput )
+    console.log("le path est : ", path)
+    let isValid = false;
+
+    if(domainUrlTemplate === domainUrlInput){
+        isValid = true;
+        console.log("Same domaine")
+    }else{
+        isValid = false;
+        console.log("Not match domaine")
+    }
+    // if (pattern.test(url)) { // Utilisation de la méthode test de l'objet RegExp
+    //     isValid = true;
+    // }
+
+    return isValid;
+}
+
+
 
 const getValueUrl = (url, urlTemplate) => {
     const pattern = urlPattern(urlTemplate);
@@ -464,6 +495,8 @@ const getValueUrl = (url, urlTemplate) => {
     }
     return null;
 }
+
+//console.log(getValueUrl(url, urlTemplate));
 
 const getHashtagValue = (value) => {
     if (value.startsWith("#")) {
@@ -475,7 +508,7 @@ const getHashtagValue = (value) => {
 const submit = async () => {
     showSpinner.value = true;
     let urlObject = splitUriAndUrl(provider.value)
-
+    console.log(urlObject);
     // const data = {
     //     value1: isHashtag.value?getHashtagValue(link.value):link.value,
     //     establishment: establishment.value,
@@ -484,12 +517,12 @@ const submit = async () => {
     // }
 
     const data = {
-        value1: isHashtag.value ? getHashtagValue(link.value) : getValueUrl(link.value, urlObject.url),
+        value1: isHashtag.value ? getHashtagValue(link.value) : getDomainAndPathFromUrl(link.value),
         establishment: establishment.value,
         provider: urlObject.uri,
         enable: true
     }
-
+    console.log(data)
     if (isEdit.value) {
         try {
             const response = await new Promise((resolve) => {
@@ -580,6 +613,7 @@ onBeforeMount(async () => {
         const response = await new Promise((resolve, reject) => {
             services.get_Record(`providers`, (response) => {
                 resolve(response);
+                console.log(response);
             });
         });
 
@@ -593,8 +627,7 @@ onBeforeMount(async () => {
                     url: item.url,
                     uri: `/api/providers/${item.id}`
                 })
-            })
-
+            })    
         } else {
             console.error('Error fetching advantages:', response);
         }
