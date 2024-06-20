@@ -110,17 +110,27 @@
                         <div class="modal__header mb-5">
                             <div class="modal__title">
                                 <h3 class="font-semibold text-gray-900 dark:text-white">
-                                    <i class="uil uil-image-v"></i> Upload profile image
+                                    <i class="uil uil-image-v"></i> Upload logo
                                 </h3>
                             </div>
                             <div class="modal__close">
                                 <i class="uil uil-times-circle" @click="showModal = false"></i>
                             </div>
                         </div>
-                        <EditProfileEdit />
+                        <EditCustomerEdit />
                     </template>
                 </ModalComponent>
-
+                
+                <div class="customer__header">
+                        <div class="info__title mt-4">
+                            Customer logo
+                        </div>
+                        <div class="profile__image" @click="showModal = true">
+                            <div class="customer__main__avatar">
+                                <i class="uil uil-camera"></i>
+                            </div>
+                        </div>
+                </div>
                 <div class="grid gap-6 mb-6 grid-cols-1 w-full">
                     <div class="personal__info w-full">
                         <div class="info__title">
@@ -210,6 +220,10 @@ const VueCountryCode = defineAsyncComponent(() =>
     import("@Components/utils/CountryCodeComponent.vue")
 )
 
+const EditCustomerEdit = defineAsyncComponent(() =>
+    import("@Components/users/EditCustomerPictureComponent.vue")
+)
+
 const EditProfileEdit = defineAsyncComponent(() =>
     import("@Components/users/EditProfilePictureComponent.vue")
 )
@@ -291,7 +305,7 @@ const submitCustomer = async () => {
         if (newColorData.value.title_color)
             formData['titlecolor'] = newColorData.value.title_color;
     }
-
+   
     await saveTheme(formData);
 
 };
@@ -447,6 +461,21 @@ function toggleEdit() {
     color: var(--color-warning);
 }
 
+.customer__main__avatar {
+    cursor: pointer;
+    border: 3px solid var(--color-primary);
+    padding: 3px;
+    width: 50px;
+    height: 48px;
+}
+
+.customer__main__avatar i {
+    position: relative;
+    left: 11px;
+    top: 7px;
+    color: var(--color-warning);
+}
+
 .personal__info {
     display: flex;
     gap: 2rem;
@@ -587,6 +616,9 @@ input {
     transform: rotate(360deg);
 }
 
+.customer__header {
+    display: flex;
+}
 @media screen and (max-width: 800px) {
     .user__main__container {
         width: 120%;

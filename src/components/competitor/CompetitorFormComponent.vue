@@ -123,7 +123,7 @@
                 <div class="grid gap-6 mb-6 md:grid-cols-2">
                     <div>
                         <label for="countries"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishments
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Which establishment is it
                             <span>*</span></label>
                         <el-select v-model="establishments" placeholder="Choose establishment" size="large" multiple
                             collapse-tags collapse-tags-tooltip>
