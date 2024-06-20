@@ -8,7 +8,7 @@
         <i class="uil uil-bars"></i>
       </button>
       <div class="admin__menu" :class="{ 'menu-open': isMenuOpen }">
-        <ul>
+        
           <li>
             <router-link :to="{ name: 'Personal_details' }"  @click.native="closeMenu">
               <i class="uil uil-user"></i><span>Account</span>
@@ -45,11 +45,11 @@
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'Parameters' }" active-class="active"  @click.native="closeMenu">
+            <router-link :to="{ name: 'Parameters', params:{tag: route.params.tag, tab: 'establishments', sub_tab:'establishments_list' } }" active-class="active"  @click.native="closeMenu">
               <i class="uil uil-setting"></i> <span>Parameters</span>
             </router-link>
           </li>
-        </ul>
+   
       </div>
       <div class="all__content">
         <RouterView />
@@ -63,7 +63,7 @@ import { ref, computed, provide, watch } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 
-const isMenuOpen = ref(false);
+const isMenuOpen = ref(true);
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
@@ -157,7 +157,7 @@ const breadcrumbData = [
   width: 95%;
 }
 
-.admin__menu ul {
+.admin__menu {
   margin-top: 50px;
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
 }
@@ -256,16 +256,13 @@ const breadcrumbData = [
 
   .admin__menu.menu-open {
     display: none; 
-   
-   
   }
 
   .menu-toggle {
-  display: block; 
-  cursor: pointer;
-  margin-top: 10%;
-  margin-right: 100%;
-
+    display: block; 
+    cursor: pointer;
+    margin-top: 4rem;
+    margin-right: 100%;
   }
 
   .all__content {
@@ -276,12 +273,15 @@ const breadcrumbData = [
   .admin__container {
     flex-direction: column;
     margin-bottom: 20%;
-    
-    
+    padding-bottom: 20px;
   }
 
   .admin__menu li a span {
     display: block;
+  }
+
+  .admin__menu {
+    margin-top: -30px;
   }
 
   ul {
