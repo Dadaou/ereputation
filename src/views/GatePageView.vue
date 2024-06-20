@@ -3,7 +3,7 @@
         <div class="feedback">
             <div class="desktop">
                 <div class="grid gap-0 grid-cols-5">
-                    <GateMenuComponent v-for="item in categories" :item="item" :key="item.title"
+                    <GateMenuComponent v-for="item in useCategories" :item="item" :key="item.title"
                         @select="openMenu(item)" />
                 </div>
                 <div class="gate__body">
@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="mobile">
-                <div v-for="(item, index) in categories" :key="index">
+                <div v-for="(item, index) in useCategories" :key="index">
                     <button class="accordion gate__menu" :class="[item.active ? 'clicked' : '']"
                         @click="toggleMenu(item)">
                         <span class="icon-container">
@@ -93,6 +93,13 @@ const categories = ref([
     { value: "info", label: "Infos", active: false, icon: "uil:info-circle" },
     { value: "follow", label: "Follow us", active: false, icon: "uil:heart-alt" }
 ]);
+
+const useCategories = computed(() => {
+    if (links.value && links.value['category'] && links.value['category'] != 'Restaurant') {
+        return categories.value.filter(v => v.value != "menus")
+    }
+    return categories.value
+})
 
 const toggleMenu = (item) => {
     category.value = item.value
