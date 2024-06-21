@@ -509,12 +509,12 @@ const reloadStaffsList = async (type) => {
 const loadCategories = async () => {
     try {
         const response = await new Promise((resolve) => {
-            services.get_Record('categories', (response) => {
+            services.get_Record(`customer/establishments/categories?tag=${route.params.tag}`, (response) => {
                 resolve(response);
             });
         });
         if (response.status === 200) {
-            allCategories.value = filterCategory(response.data['hydra:member']);
+            allCategories.value = response.data;
         } else {
             console.error('Error fetching categories:', response);
         }

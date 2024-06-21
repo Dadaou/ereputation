@@ -19,6 +19,31 @@ const getInstance = (isPublic = false, isNoAuth = false) => {
     }
   })
 
+
+
+  const baseURL = import.meta.env.VITE_APP_API_URL
+
+  if (isNoAuth) {
+    instance.defaults.baseURL = baseURL.slice(0, baseURL.length - 3)
+  } else {
+    instance.defaults.baseURL = baseURL
+    if (isPublic == true) {
+      instance.defaults.headers['Authorization'] = `Bearer ${localStorage.getItem('access')}`
+    } else {
+      instance.defaults.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+    }
+  }
+
+  return instance
+}
+
+const getInstanceFormData = (isPublic = false, isNoAuth = false) => {
+  const instance = axios.create({
+    headers: {
+      
+    }
+  })
+
   const baseURL = import.meta.env.VITE_APP_API_URL
 
   if (isNoAuth) {
@@ -92,6 +117,17 @@ const get_Record = async (url, next, isPublic = false, isNoAuth = false) => {
 const post_Record = async (url, body, next, isPublic = false, isNoAuth = false) => {
   try {
     const axiosInstance = getInstance(isPublic, isNoAuth)
+    await axiosInstance.post(`${url}`, body).then((response) => {
+      next(response)
+    })
+  } catch (error) {
+    return next(error.response)
+  }
+}
+
+const post_Record_formData = async (url, body, next, isPublic = false, isNoAuth = false) => {
+  try {
+    const axiosInstance = getInstanceFormData(isPublic, isNoAuth)
     await axiosInstance.post(`${url}`, body).then((response) => {
       next(response)
     })
@@ -381,5 +417,6 @@ export default {
   downloadQrcode,
   downloadSVGQrcode,
   generateColor,
-  downloadJPEGQrcode
+  downloadJPEGQrcode,
+  post_Record_formData
 }
