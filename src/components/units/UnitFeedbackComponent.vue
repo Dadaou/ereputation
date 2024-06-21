@@ -338,7 +338,7 @@ const submit = async () => {
                                         email: email.value,
                                         language: (lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase(),
                                         app_url: app_url.value,
-                                        template: `workflow_en`
+                                        template: "workflow_"+((lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase())
                                     }
                                     console.log(coupons)
                                     await services.createRecord('public/workflow', coupons, () => {

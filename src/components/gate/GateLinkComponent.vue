@@ -3,7 +3,7 @@
         <Icon v-if="!item.logo && icon" :icon="icon" class="mb-2" width="24px" color="grey" />
         <img v-if="item.logo && item.logo.length > 0" :src="item.logo[0]" class="gate__logo">
         <img v-if="logoSrc" :src="logoSrc" :alt="`${item.label} logo`" class="gate__logoSrc">
-        <h4 class="mb-1">{{ item.label }}</h4>
+        <h4 v-else class="mb-1">{{ item.label }}</h4>
     </a>
 </template>
 <script setup>
@@ -100,14 +100,17 @@ const logoSrc = computed(() => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 140px;
-    height: 140px;
+    width: 100%;
+    /* height: 140px; */
+    height: auto;
+    aspect-ratio: 1/1;
     border-radius: 5px;
     /* box-shadow: rgba(149, 157, 165, 0.2) 0px 4px 12px; */
-    border: 1px solid rgba(220, 220, 220, 1);
+    border: 1px solid rgba(220, 220, 220, .4);
     cursor: pointer;
     padding: 8px;
     transition: all .5s linear;
+    background: white;
 }
 
 .gate__link:hover {
@@ -137,8 +140,8 @@ const logoSrc = computed(() => {
 }
 
 .gate__logoSrc {
-    margin-top: 13px;
-    width: 40%;
+    width: 64px;
+    height: 64px;
     margin-bottom: 5px;
     border-radius: 6px;
 }
