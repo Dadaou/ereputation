@@ -23,9 +23,9 @@
         <template #default="scope">
           <div class="reviews-link">
             <el-tooltip :content="'Reviews ' + scope.row.name" placement="top">
-              <a
-                :href="`/customer/${route.params.tag}/establishment/${scope.row.tag}/reviews`">{{
-                  scope.row.totalReviews }}</a>
+             <span @click="redirectToReviews(route.params.tag, scope.row.tag)">
+                {{scope.row.totalReviews }}
+             </span>  
             </el-tooltip>
           </div>
         </template>
@@ -53,11 +53,11 @@
         :customer="route.params.tag" :establishment="establishment.tag" type="establishment" />
 </template>
 <script setup>
-import { computed, defineAsyncComponent, ref, onBeforeMount, watch } from 'vue'
+import { computed, defineAsyncComponent, ref, onBeforeMount, watch, inject } from 'vue'
 import { useUserStore } from "@Stores/user.js"
 import { useAppStore } from "@Stores/app.js";
+import moment from 'moment';
 import {
-    ElMessage,
     ElTable,
     ElTableColumn,
     ElButton,
@@ -97,14 +97,22 @@ const isValidLink = ref('true')
 const establishment = ref(null)
 const links = ref([])
 const baseurl = window.location.origin;
-const downloaded = ref(false)
+const start_date = inject('start_date');
+const end_date = inject('end_date');
+const companies = ref([])
+
+const redirectToReviews = async(customer, establishment)=>{
+    start_date.value = moment(new Date('2010-01-01')).format('YYYY-M-DD')
+    end_date.value = moment().format('YYYY-M-DD') // null is to get the current date
+    router.push(`/customer/${customer}/establishment/${establishment}/reviews/intern`)
+}
 
 const establishments = computed(() => {
     let data = [];
     let filteredData = [];
-    if (userStore.user && userStore.user.customer && userStore.user.customer.establishments) {
-        data = userStore.user.customer.establishments;
-
+    // if (userStore.user && userStore.user.customer && userStore.user.customer.establishments) {
+        // data = userStore.user.customer.establishments;
+        data = companies.value
         data.forEach(establishment => {
             filteredData.push({
                 name: establishment.name,
@@ -127,7 +135,7 @@ const establishments = computed(() => {
                 link: `${baseurl}/public/${route.params.tag}/establishment/${establishment.competitor_tag}/feedback`
             })
         });
-    }
+    //}
     filteredData = filteredData.filter((data) => {
         return !search.value || data.name.toLowerCase().includes(search.value.toLowerCase()) || data.category.toLowerCase().includes(search.value.toLowerCase())
             || data.address.toLowerCase().includes(search.value.toLowerCase()) || (data.country && data.country.toLowerCase().includes(search.value.toLowerCase()))
@@ -190,6 +198,21 @@ const getValueUrl = (url, urlTemplate) => {
     return null;
 }
 
+const getParametersEstablishments = async(customer)=>{
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`/customer/establishments/parameters?tag=${customer}`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status == 200) {
+         companies.value = response.data
+        }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 watch([provider, link], () => {
     let urlTemplate;
 
@@ -201,6 +224,7 @@ watch([provider, link], () => {
 })
 
 onBeforeMount(async () => {
+    await getParametersEstablishments (route.params.tag)
     try {
         const response = await new Promise((resolve, reject) => {
             services.get_Record(`providers`, (response) => {
@@ -372,6 +396,10 @@ img.establishment_img {
 
 .modal__header div {
     align-self: center;
+}
+
+.reviews-link span{
+    cursor: pointer;
 }
 
 .modal__close i {

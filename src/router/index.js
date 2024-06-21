@@ -176,7 +176,7 @@ const router = createRouter({
           component: () => import('@Views/WeatherPageView.vue')
         },
         {
-          path: '/customer/:tag/establishment/:id/reviews',
+          path: '/customer/:tag/establishment/:id/reviews/:type?',
           name: 'Review',
           beforeEnter: [CheckAccess],
           component: () => import('@Views/ReviewPageView.vue')
