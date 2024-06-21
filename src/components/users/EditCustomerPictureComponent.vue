@@ -30,8 +30,6 @@ import { ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useUserStore } from "@Stores/user.js";
 import services from '@Services/services.js';
-import { formatDate } from '@vueuse/core';
-
 const userStore = useUserStore();
 const previewImage = ref(null);
 const imageInputHover = ref(false);
@@ -64,8 +62,6 @@ const upload = async () => {
     formData.append('file', selectedLogo.value);
     formData.append('customer', userStore.customer.tag);
 
-    let testFormData = new FormData();
-    testFormData.append('file', selectedLogo.value);
 
     try {
         const response = await new Promise((resolve) => {

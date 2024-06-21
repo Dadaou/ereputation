@@ -104,7 +104,7 @@
                     </div>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="Customer" name="customer">
+            <el-tab-pane label="Settings" name="customer">
                 <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
                     <template #content>
                         <div class="modal__header mb-5">
@@ -121,17 +121,22 @@
                     </template>
                 </ModalComponent>
                 
-                <div class="customer__header">
-                        <div class="info__title mt-4">
-                            Customer logo
+                <div class="grid gap-6 mb-6 grid-cols-1 w-full">
+                    <div class="personal__info w-full">
+                        <div class="info__title">
+                            Logo
                         </div>
-                        <div class="profile__image" @click="showModal = true">
-                            <div class="customer__main__avatar">
-                                <i class="uil uil-camera"></i>
+                        <div class="info__content">
+                            <div class="info__container">
+                                <div class="info__edit inline-flex w-full gap-6">
+                                    <div class="image-container" @click="showModal = true" style="width:30%">
+                                    <img :src="customerLogo.logo" :alt="customerLogo.name" class="logo__img"/>
+                                    <div class="overlay">  <i class="uil uil-edit mr-1"></i>Change logo</div>
+                                </div>
+                                </div>
                             </div>
                         </div>
-                </div>
-                <div class="grid gap-6 mb-6 grid-cols-1 w-full">
+                    </div>
                     <div class="personal__info w-full">
                         <div class="info__title">
                             Back color
@@ -202,7 +207,7 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, defineAsyncComponent, computed } from 'vue';
+import { ref, onBeforeMount, defineAsyncComponent, computed,watch } from 'vue';
 import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from '@Stores/app.js';
 import { useRouter } from "vue-router";
@@ -395,7 +400,27 @@ const resetColors = async () => {
     }
 };
 
+const customerLogo = ref('');
+
+const setCustomerLogo = async (tag) => {
+    const response = await new Promise((resolve) => {
+        services.get_Record(`customer/logo?tag=${tag}`, (response) => {
+            resolve(response);
+        }, true, true);
+    });
+
+    if ((response.status == 200)) {
+      customerLogo.value = response.data;
+    }
+};
+
+const getCustomerLogo = async (tag) => {
+    if (!customerLogo.value) await setCustomerLogo(tag)
+    return customerLogo.value
+}
+
 onBeforeMount(() => {
+    getCustomerLogo(userStore.customer.tag);
     user.value.firstname = userStore.user.firstname;
     user.value.lastname = userStore.user.lastname;
     user.value.email = userStore.user.email;
@@ -407,6 +432,11 @@ onBeforeMount(() => {
     }
     newColorData.value = { ...colorData.value };
 });
+
+watch(() => userStore.customer.tag, (newTag) => {
+    getCustomerLogo(newTag);
+},{ immediate: true });
+
 
 function toggleEdit() {
     editing.value = !editing.value;
@@ -619,6 +649,41 @@ input {
 
 .customer__header {
     display: flex;
+}
+
+.info__title_logo {
+    font-weight: 500;
+    color: grey;
+    font-size: 14px;
+}
+.image-container {
+    cursor: pointer;
+    position: relative;
+    width: 24%;
+    border-radius: .5rem;
+    border-color: var(--light-color-bg2);
+    border-width: .1rem;
+    height: 60px;
+}
+
+.image-container img {
+    border-radius: .5rem;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    border-radius: 0 0 0.44rem 0.44rem;
 }
 @media screen and (max-width: 800px) {
     .user__main__container {
