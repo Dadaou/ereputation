@@ -100,14 +100,17 @@ const logoSrc = computed(() => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 140px;
-    height: 140px;
+    width: 100%;
+    /* height: 140px; */
+    height: auto;
+    aspect-ratio: 1/1;
     border-radius: 5px;
     /* box-shadow: rgba(149, 157, 165, 0.2) 0px 4px 12px; */
-    border: 1px solid rgba(220, 220, 220, 1);
+    border: 1px solid rgba(220, 220, 220, .4);
     cursor: pointer;
     padding: 8px;
     transition: all .5s linear;
+    background: white;
 }
 
 .gate__link:hover {
@@ -137,8 +140,8 @@ const logoSrc = computed(() => {
 }
 
 .gate__logoSrc {
-    margin-top: 13px;
-    width: 40%;
+    width: 24px;
+    height: 24px;
     margin-bottom: 5px;
     border-radius: 6px;
 }
