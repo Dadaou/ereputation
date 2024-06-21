@@ -50,7 +50,7 @@ const selectRating = (selectedRating) => {
     }
 }
 
-selectRating('okay');
+//selectRating('okay');
 
 
 </script>

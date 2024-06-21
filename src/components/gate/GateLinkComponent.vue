@@ -3,7 +3,7 @@
         <Icon v-if="!item.logo && icon" :icon="icon" class="mb-2" width="24px" color="grey" />
         <img v-if="item.logo && item.logo.length > 0" :src="item.logo[0]" class="gate__logo">
         <img v-if="logoSrc" :src="logoSrc" :alt="`${item.label} logo`" class="gate__logoSrc">
-        <h4 class="mb-1">{{ item.label }}</h4>
+        <h4 v-else class="mb-1">{{ item.label }}</h4>
     </a>
 </template>
 <script setup>
@@ -140,8 +140,8 @@ const logoSrc = computed(() => {
 }
 
 .gate__logoSrc {
-    width: 24px;
-    height: 24px;
+    width: 64px;
+    height: 64px;
     margin-bottom: 5px;
     border-radius: 6px;
 }
