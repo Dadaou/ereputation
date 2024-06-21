@@ -321,7 +321,6 @@ const handleCategoryDropdown = (type) => {
 watch([start_date, end_date, selectedWebsites, selectedFeeling, categoryFilters], () => {
     categoryFilters.value = categoryFilters.value.length > 0 ? categoryFilters.value : ['all']
     loadReviews(companyId, 1, options.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
-
 })
 
 let selectedStars = ref('0');
@@ -352,6 +351,9 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         apiParams += `&from=${dateStart}&to=${dateEnd}`;
     }
 
+    source = IsValueOkay(route.params.type) && route.params.type == 'intern'
+        ?'App (Private)'
+        :'all'
     if (IsValueOkay(source)) {
         source = (source == 'App (Private)') ? 'App (Private)' : source.toLowerCase();
         apiParams += `&platform=${source}`
@@ -375,6 +377,7 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     // }
 
     const api = apiBase + '?' + apiParams;
+    console.log(api)
 
     await loadFeelingData(tag, dateStart, dateEnd, source);
     await loadStarData(tag, dateStart, dateEnd, source);
@@ -558,7 +561,11 @@ onBeforeMount(async () => {
 
         }
     })
-
+    
+    // const reviewsType = IsValueOkay(route.params.type) && route.params.type == 'intern'
+    // ?'App (Private)'
+    // :'all'
+    
     await loadReviews(companyId, 1, options.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value)
     await loadCategories(companyId)
 });
