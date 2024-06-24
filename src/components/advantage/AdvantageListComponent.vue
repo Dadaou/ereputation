@@ -3,7 +3,7 @@
   </div>
   <el-input v-model="search" size="small" placeholder="Type to search" class="search" />
   <div class="mt-5 erep_table table__container">
-    <el-table v-if="advantageLoading == false" :data="filterTableData" class="responsive-table" :row-class-name="rowClassName" style="width: 100%">
+    <el-table  v-if="advantageLoading == false" :data="filterTableData" class="responsive-table" :row-class-name="rowClassName" style="width: 100%">
       <el-table-column label="Name" fixed prop="name" width="188" />
       <el-table-column label="Establishment" prop="establishment_name" width="190" />
       <el-table-column label="Amount" prop="amount" align="center" width="100" />
@@ -164,8 +164,8 @@ const isExpired = (date) => {
 
 <style scoped>
   .enabled-button {
-    color: #008000;
-    background-color: rgb(213, 255, 208);
+    color: #74d474;
+  
   }
 
   .expired-date {
