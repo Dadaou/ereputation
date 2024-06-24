@@ -139,7 +139,6 @@ const unitLinks = computed(() => {
     return []
 })
 
-
 const platformLinks = computed(() => {
     if (links.value) {
         return links.value['Platform']
@@ -176,7 +175,6 @@ onBeforeMount(async () => {
     }, true);
 
     await loadLinks(establishmentTag);
-
 });
 
 </script>

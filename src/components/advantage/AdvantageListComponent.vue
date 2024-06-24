@@ -3,7 +3,7 @@
   </div>
   <el-input v-model="search" size="small" placeholder="Type to search" class="search" />
   <div class="mt-5 erep_table table__container">
-    <el-table v-if="advantageLoading == false" :data="filterTableData" class="responsive-table" :row-class-name="rowClassName" style="width: 100%">
+    <el-table  v-if="advantageLoading == false" :data="filterTableData" class="responsive-table" :row-class-name="rowClassName" style="width: 100%">
       <el-table-column label="Name" fixed prop="name" width="188" />
       <el-table-column label="Establishment" prop="establishment_name" width="190" />
       <el-table-column label="Amount" prop="amount" align="center" width="100" />
@@ -17,17 +17,23 @@
       <el-table-column label="Used" prop="used" align="center" width="80" />
       <el-table-column label="Expired At" width="110">
         <template #default="scope">
-          {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
+          <span :class="{'expired-date': isExpired(scope.row.expired_at)}">
+      {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
+         </span>
         </template>
       </el-table-column>
       <el-table-column label="Enable" align="center" width="80">
         <template #default="scope">
-          <el-button v-if="scope.row.enable" size="small" @click="handleDisable(scope.$index, scope.row)"><i
-              class="uil uil-check-square" style="color: #777; font-size: 15px;"></i></el-button>
-
-          <el-button v-else size="small" @click="handleEnable(scope.$index, scope.row)"><i class="uil uil-square"
-              style="color: #777; font-size: 15px;"></i></el-button>
-        </template>
+         <el-button 
+          :class="{'enabled-button': scope.row.enable}" 
+          size="small" 
+          @click="scope.row.enable ? handleDisable(scope.$index, scope.row) : handleEnable(scope.$index, scope.row)">
+         <i 
+          :class="scope.row.enable ? 'uil uil-check-square' : 'uil uil-square'" 
+          >
+         </i>
+        </el-button>
+      </template>
       </el-table-column>
 
       <el-table-column label="Actions" width="200">
@@ -143,17 +149,29 @@ const handleDelete = async (index, advantages) => {
     });
   }
 };
-const rowClassName = ({ row }) => {
+/*const rowClassName = ({ row }) => {
   if (!row.enable) {
     return 'red-background';
   } else if (row.limit_atteinte || row.advantage_limit <= row.received || moment(row.expired_at) <= moment()) {
     return 'orange-background';
   }
   return '';
+};*/
+const isExpired = (date) => {
+  return moment(date).isSameOrBefore(moment(), 'day');
 };
 </script>
 
 <style scoped>
+  .enabled-button {
+    color: #74d474;
+  
+  }
+
+  .expired-date {
+  color: red;
+}
+
 button {
   border: none;
   cursor: pointer;

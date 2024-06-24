@@ -25,7 +25,7 @@
                 </template>
                 <template #default="scope">
                     <div class="vertical-buttons">
-                        <el-tooltip :content="`Click to enter ${scope.row.name}'s feedback formulary`" placement="top">
+                        <el-tooltip :content="`Click to enter ${scope.row.name}'s gates page`" placement="top">
                             <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
                                     class="uil uil-external-link-alt"></i></a>
                         </el-tooltip>
