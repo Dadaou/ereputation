@@ -77,7 +77,7 @@ const route = useRoute();
 
 const isActive = (menuName) => {
   if (menuName === 'Parameters') {
-    return ['establishments', 'links', 'competitors', 'staffs', 'services', 'events', 'categories'].includes(route.params.tab);
+    return ['establishments', 'links','urls', 'competitors', 'staffs', 'services', 'events', 'categories'].includes(route.params.tab);
   }
   return route.name === menuName;
 };

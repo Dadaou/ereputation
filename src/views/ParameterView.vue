@@ -24,6 +24,19 @@
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
+            <el-tab-pane label="URLs" name="urls">
+                <el-tabs v-model="parametersUrlsConf.urls" class="demo-tabs">
+                    <el-tab-pane label="URLs" name="urls_list">
+                        <LinksListComponent @reload="reloadLink()" @edit="(url) => handleEdit(url, 'links')" />
+                    </el-tab-pane>
+                    <el-tab-pane label="Add a new provider URL" name="urls_provider_form">
+                        <UrlProviderFormComponent @reload="reloadLink()" />
+                    </el-tab-pane>
+                    <el-tab-pane label="Add URL to Gate" name="urls_gate_form">
+                        <UrlGateFormComponent @reload="reloadLink()" />
+                    </el-tab-pane>
+                </el-tabs>
+            </el-tab-pane>
             <el-tab-pane label="Competitors" name="competitors">
                 <el-tabs v-model="parametersUrlsConf.competitors" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
                     <el-tab-pane label="Competitors" name="competitors_list">
@@ -162,6 +175,15 @@ const LinksFormComponent = defineAsyncComponent(() =>
     import("@Components/links/LinksFormComponent.vue")
 )
 
+const UrlProviderFormComponent = defineAsyncComponent(() =>
+    import("@Components/url/UrlProviderFormComponent.vue")
+)
+
+
+const UrlGateFormComponent = defineAsyncComponent(() =>
+    import("@Components/url/UrlGateFormComponent.vue")
+)
+
 const EstablishmentListComponent = defineAsyncComponent(() =>
     import("@Components/establishments/EstablishmentListComponent.vue")
 )
@@ -222,6 +244,7 @@ const parametersUrlsConf = reactive({
     tabs: 'establishments',
     establishments : 'establishments_list',
     links: 'links_list',
+    urls: 'urls_list',
     competitors: 'competitors_list',
     staffs: 'staffs_list',
     events: 'events_list',
