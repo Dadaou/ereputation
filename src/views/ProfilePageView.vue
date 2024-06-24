@@ -45,7 +45,7 @@
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'Parameters', params:{tag: route.params.tag, tab: 'establishments', sub_tab:'establishments_list' } }" active-class="active"  @click.native="closeMenu">
+            <router-link :to="{ name: 'Parameters', params:{tag: route.params.tag, tab: 'establishments', sub_tab:'establishments_list' } }" active-class="active"  @click.native="closeMenu" :class="{ active: isActive('Parameters') }">
               <i class="uil uil-setting"></i> <span>Parameters</span>
             </router-link>
           </li>
@@ -74,6 +74,13 @@ const closeMenu = () => {
 };
 
 const route = useRoute();
+
+const isActive = (menuName) => {
+  if (menuName === 'Parameters') {
+    return ['establishments', 'links', 'competitors', 'staffs', 'services', 'events', 'categories'].includes(route.params.tab);
+  }
+  return route.name === menuName;
+};
 
 const page = computed(() => {
   let data = {
