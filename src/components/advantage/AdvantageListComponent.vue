@@ -17,17 +17,23 @@
       <el-table-column label="Used" prop="used" align="center" width="80" />
       <el-table-column label="Expired At" width="110">
         <template #default="scope">
-          {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
+          <span :class="{'expired-date': isExpired(scope.row.expired_at)}">
+      {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
+         </span>
         </template>
       </el-table-column>
       <el-table-column label="Enable" align="center" width="80">
         <template #default="scope">
-          <el-button v-if="scope.row.enable" size="small" @click="handleDisable(scope.$index, scope.row)"><i
-              class="uil uil-check-square" style="color: #777; font-size: 15px;"></i></el-button>
-
-          <el-button v-else size="small" @click="handleEnable(scope.$index, scope.row)"><i class="uil uil-square"
-              style="color: #777; font-size: 15px;"></i></el-button>
-        </template>
+         <el-button 
+          :class="{'enabled-button': scope.row.enable}" 
+          size="small" 
+          @click="scope.row.enable ? handleDisable(scope.$index, scope.row) : handleEnable(scope.$index, scope.row)">
+         <i 
+          :class="scope.row.enable ? 'uil uil-check-square' : 'uil uil-square'" 
+          style="color: #777; font-size: 15px;">
+         </i>
+        </el-button>
+      </template>
       </el-table-column>
 
       <el-table-column label="Actions" width="200">
@@ -143,17 +149,29 @@ const handleDelete = async (index, advantages) => {
     });
   }
 };
-const rowClassName = ({ row }) => {
+/*const rowClassName = ({ row }) => {
   if (!row.enable) {
     return 'red-background';
   } else if (row.limit_atteinte || row.advantage_limit <= row.received || moment(row.expired_at) <= moment()) {
     return 'orange-background';
   }
   return '';
+};*/
+const isExpired = (date) => {
+  return moment(date).isSameOrBefore(moment(), 'day');
 };
 </script>
 
 <style scoped>
+  .enabled-button {
+    
+    background-color: rgb(68, 170, 131);
+  }
+
+  .expired-date {
+  color: red;
+}
+
 button {
   border: none;
   cursor: pointer;
