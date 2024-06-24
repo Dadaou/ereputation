@@ -96,13 +96,10 @@ watchEffect(()  => {
       (data.scope && data.scope.toLowerCase().includes(search.value.toLowerCase()))
   })
  
-  if (advantages.value.length > 0 ) {
-     // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      advantageLoading.value = false;
-  }
-  else {
-    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+  if (advantages.value.length === 0 || filteredData.length === 0) {
     advantageLoading.value = true;
+  } else {
+    advantageLoading.value = false;
   }
 
   // eslint-disable-next-line no-const-assign
