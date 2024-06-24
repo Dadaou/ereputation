@@ -14,7 +14,7 @@
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="Links" name="links">
+            <!-- <el-tab-pane label="Links" name="links">
                 <el-tabs v-model="parametersUrlsConf.links" class="demo-tabs">
                     <el-tab-pane label="Links" name="links_list">
                         <LinksListComponent @reload="reloadLink()" @edit="(link) => handleEdit(link, 'links')" />
@@ -23,7 +23,7 @@
                         <LinksFormComponent @reload="reloadLink()" />
                     </el-tab-pane>
                 </el-tabs>
-            </el-tab-pane>
+            </el-tab-pane> -->
             <el-tab-pane label="URLs" name="urls">
                 <el-tabs v-model="parametersUrlsConf.urls" class="demo-tabs">
                     <el-tab-pane label="URLs" name="urls_list">
