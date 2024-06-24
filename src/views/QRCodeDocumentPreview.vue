@@ -125,7 +125,13 @@ const updateTemplate = () => {
     customer: customer,
   }, (response) => {
     if (response.status == 200) {
-      template.value = response.data;
+      const {textGreeting, textClosing, ...remainData} = response.data
+      template.value = {
+        text_closing: textClosing,
+        text_greeting: textGreeting,
+        ...remainData
+      };
+      console.log(template.value)
       templates.value[templates.value.findIndex(el => el.id === template.value.id)] = response.data;
       ElMessage({
         message: h('p', null, [
@@ -211,6 +217,7 @@ onBeforeMount(async () => {
     templates.value = res.filter((item) => item.category == route.query.section && (item.establishment_tag == null || item.establishment_tag == route.params.id));
     template.value = templates.value[0]
     templateId.value = template.value.id
+    console.log(template.value)
   }
 
 });
