@@ -164,8 +164,7 @@ const isExpired = (date) => {
 
 <style scoped>
   .enabled-button {
-    
-    background-color: rgb(68, 170, 131);
+    background-color: rgb(213, 255, 208);
   }
 
   .expired-date {
