@@ -30,7 +30,7 @@
           @click="scope.row.enable ? handleDisable(scope.$index, scope.row) : handleEnable(scope.$index, scope.row)">
          <i 
           :class="scope.row.enable ? 'uil uil-check-square' : 'uil uil-square'" 
-          style="color: #777; font-size: 15px;">
+          >
          </i>
         </el-button>
       </template>
@@ -164,6 +164,7 @@ const isExpired = (date) => {
 
 <style scoped>
   .enabled-button {
+    color: #008000;
     background-color: rgb(213, 255, 208);
   }
 
