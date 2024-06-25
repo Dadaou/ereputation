@@ -4,7 +4,7 @@
       <div>
         <div class="template__filter">
           <div class="text-sm title"> Choose a template </div>
-          <el-select v-model="templateId" filterable placeholder="choose template" size="large">
+          <el-select v-model="templateId" filterable placeholder="choose template" size="large" class="test">
             <el-option v-for="(item, index) in templates" :key="index" :label="item.name" :value="item.id"
               @click="changeValue(item)" />
           </el-select>
@@ -262,7 +262,7 @@ watch(template, () => {
 }
 
 .filter {
-  flex-basis: 400px;
+  flex-basis: 450px;
 }
 
 #preview>div {
@@ -380,15 +380,18 @@ body {
 
 .my-form button {
   width: 100%;
-  font-size: 1rem;
-  /* Taille de police */
+  font-size: 1rem; /* Taille de police */
   background-color: #2F74E0;
   color: white;
-  padding: 0.35rem 0.25rem;
-  /* Ajoutez un remplissage pour le texte d'entrée */
-  border: 100%px solid #ccc;
-  /* Ajoutez une bordure */
-  border-radius: 0.25rem;
-  /* Ajoutez un rayon de bordure */
+  padding: 0.35rem 0.25rem; /* Ajoutez un remplissage pour le texte d'entrée */
+  border: 1px solid #cccccc; /* Ajoutez une bordure */
+  border-radius: 0.25rem; /* Ajoutez un rayon de bordure */
+  transition: background-color 0.3s ease; /* Transition pour un effet de survol plus fluide */
 }
+
+.my-form button:hover {
+  background-color: #1a4c99; /* Changez la couleur de fond au survol */
+  color: white; /* Assurez-vous que le texte reste blanc */
+}
+
 </style>

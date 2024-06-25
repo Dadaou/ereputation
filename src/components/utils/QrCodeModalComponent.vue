@@ -35,7 +35,7 @@
           <i class="uil uil-download-alt"></i> SVG
         </button>
         <button v-if="downloaded == false" class="btn__light_secondary" @click="print(customer, establishment)">
-          <i class="uil uil-download-alt"></i> Print A5
+          <i class="uil uil-download-alt"></i> Print template
         </button>
         <button v-else class="btn__light_secondary" @click="close">
           close
