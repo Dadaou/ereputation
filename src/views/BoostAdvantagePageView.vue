@@ -16,14 +16,11 @@
                     <h1 v-if="discount.description" class="boost__name">
                         {{ discount.description }}
                     </h1>
-                    <!-- <p class="boost__description">
-                        test
-                    </p> -->
                     <h2 class="boost_quantity">
                         Limited Quantity: <strong class="boost__quantity-nb">{{ discount.quantity }}</strong>
                     </h2>
                     <div style="margin-top: 32px">
-                        <h4 class="boost_comment">Don't miss out on this excusive offer!</h4>
+                        <h4 class="boost_comment">Don't miss out on this exclusive offer!</h4>
                     </div>
                     <div v-if="logo && logo.logo" class="customer__logo">
                         <img :src="logo.logo">
@@ -47,7 +44,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -75,13 +71,13 @@ const interval = ref(null);
 const qrSize = computed(() => {
     let size = 550
     if (window.innerWidth <= 780) {
-        size = 200
+        size = 100
     } else if (window.innerWidth <= 1024) {
-        size = 320
+        size = 200
     } else if (window.innerWidth <= 1440) {
-        size = 400
+        size = 350
     } else {
-        size = 550
+        size = 400
     }
     return size
 })
@@ -147,15 +143,16 @@ onBeforeUnmount(() => {
 <style>
 .screen__container {
     width: 100vw;
-    height: auto;
+    height: 100vh;
     /* height: 100vh; */
     /* width: 1920px;
     height: 1080px; */
-    aspect-ratio: 16/9;
+    justify-content: center;
+    align-items: center;
     background: linear-gradient(180deg, rgba(216, 217, 226, 1) 0%, white 100%);
     overflow: hidden;
     position: relative;
-    border: red solid 5px;
+  
 }
 
 .bg__circle {
@@ -171,61 +168,62 @@ onBeforeUnmount(() => {
 
 .screen__content * {
     z-index: 9;
+
 }
 
 .boost__title {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 6.5rem;
+    font-size: 4rem;
     color: var(--el-color-primary);
 }
 
 .icon__container {
-    height: 80px;
+    height: 50px;
     width: auto;
 }
 
 .icon__container img {
-    height: 80px !important;
+    height: 50px !important;
     width: auto;
 }
 
 .boost__name {
     font-family: Montserrat, sans-serif;
     ;
-    font-size: 5rem;
+    font-size: 3.5rem;
     font-weight: 600;
-    margin-top: 68px;
+    margin-top: 20px;
     color: var(--color-primary);
 }
 
 .boost_quantity {
     font-family: Montserrat, sans-serif;
     ;
-    font-size: 5.5rem;
+    font-size: 3rem;
     font-weight: 400;
-    margin-top: 108px;
+    margin-top: 20px;
 }
 
 .boost__quantity-nb {
     font-family: Montserrat, sans-serif;
     ;
-    font-size: 7rem;
+    font-size: 4rem;
     font-weight: 600;
     color: #db0113;
 }
 
 .boost__qrcode {
-    margin-top: 80px;
+    margin-top: 20px;
     aspect-ratio: 1/1;
     background: transparent;
     border-radius: 100%;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .boost_comment {
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: 400;
     font-family: Montserrat, sans-serif;
     ;
@@ -233,7 +231,7 @@ onBeforeUnmount(() => {
 }
 
 .boost__description {
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: 400;
     font-family: Montserrat, sans-serif;
     ;
@@ -241,8 +239,8 @@ onBeforeUnmount(() => {
 }
 
 .customer__logo {
-    height: 104px;
-    margin-top: 200px;
+    height: 80px;
+    margin-top: 20px;
     align-self: flex-start;
 }
 
@@ -252,131 +250,42 @@ onBeforeUnmount(() => {
 }
 
 .discount-content {
-    margin-top: 80px;
-    gap: 48px
-}
-
-@media screen and (min-width: 1441px) {
-
-    .discount-container {
-        margin-top: 250px;
-        gap: 24px;
-    }
-
-    .boost__title {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        font-size: 6.5rem;
-        color: var(--el-color-primary);
-    }
-
-    .icon__container {
-        height: 80px;
-        width: auto;
-    }
-
-    .icon__container img {
-        height: 80px !important;
-        width: auto;
-    }
-
-    .boost__name {
-        font-family: Montserrat, sans-serif;
-        ;
-        font-size: 5rem;
-        font-weight: 600;
-        margin-top: 68px;
-        color: var(--color-primary);
-    }
-
-    .boost_quantity {
-        font-family: Montserrat, sans-serif;
-        ;
-        font-size: 5.5rem;
-        font-weight: 400;
-        margin-top: 108px;
-    }
-
-    .boost__quantity-nb {
-        font-family: Montserrat, sans-serif;
-        ;
-        font-size: 7rem;
-        font-weight: 600;
-        color: #db0113;
-    }
-
-    .boost__qrcode {
-        margin-top: 80px;
-        aspect-ratio: 1/1;
-        background: transparent;
-        border-radius: 100%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .boost_comment {
-        font-size: 3rem;
-        font-weight: 400;
-        font-family: Montserrat, sans-serif;
-        ;
-        color: var(--color-secondary);
-    }
-
-    .boost__description {
-        font-size: 3rem;
-        font-weight: 400;
-        font-family: Montserrat, sans-serif;
-        ;
-        color: var(--color-bg2);
-    }
-
-    .customer__logo {
-        height: 104px;
-        margin-top: 200px;
-        align-self: flex-start;
-    }
-
-    .customer__logo img {
-        width: auto;
-        height: 100%;
-    }
-
-    .discount-content {
-        margin-top: 80px;
-        gap: 48px
-    }
+    margin-top: 20px;
+    gap: 20px
 }
 
 @media screen and (max-width: 1440px) {
-
     .discount-container {
-        margin-top: 110px;
+        
         gap: 24px;
     }
-
+    
     .boost__title {
+        margin-top: 40px;
         font-size: 3rem;
+        
     }
 
     .icon__container {
-        height: 26px;
+        height: 40px;
         width: auto;
     }
 
     .icon__container img {
-        height: 26px !important;
+        margin-top: 120%;
+        height: 40px !important;
         width: auto;
     }
 
     .boost__name {
-        font-size: 3.5rem;
-        margin-top: 40px;
+        margin-top: 100px;
+        font-size: 3rem;
 
     }
 
     .boost_quantity {
-        font-size: 3.5rem;
-        margin-top: 24px;
+        margin-top: -150px;
+        font-size: 2.5rem;
     }
 
     .boost__quantity-nb {
@@ -384,10 +293,12 @@ onBeforeUnmount(() => {
     }
 
     .boost__qrcode {
+        margin-right: 50px;
         margin-top: 20px;
     }
 
     .boost_comment {
+        margin-top: -30px;
         font-size: 1.4rem;
     }
 
@@ -396,7 +307,7 @@ onBeforeUnmount(() => {
     }
 
     .customer__logo {
-        height: 56px;
+        height: 60px;
         margin-top: 108px;
     }
 }
@@ -463,6 +374,7 @@ onBeforeUnmount(() => {
     }
 
     .boost__title {
+        margin-top: 20px;
         font-size: 2rem;
     }
 
@@ -472,6 +384,7 @@ onBeforeUnmount(() => {
     }
 
     .icon__container img {
+
         height: 24px !important;
         width: auto;
     }
@@ -505,7 +418,7 @@ onBeforeUnmount(() => {
 
     .customer__logo {
         height: 48px;
-        margin-top: 48px;
+        margin-top: 68px;
     }
 }
 </style>
