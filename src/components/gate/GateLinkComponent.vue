@@ -1,11 +1,16 @@
 <template>
-    <a v-if="item.label" class="gate__link" :href="item.href" target="_blank">
+    <a v-if="item.label" 
+       class="gate__link" 
+       :href="item.document || item.href" 
+       target="_blank" 
+       rel="noopener noreferrer">
         <Icon v-if="!item.logo && icon" :icon="icon" class="mb-2" width="24px" color="grey" />
-        <img v-if="item.logo && item.logo.length > 0" :src="item.logo[0]" class="gate__logo">
+        <img v-if="item.logo && item.logo.length > 0" :src="item.logo" class="gate__logo">
         <img v-if="logoSrc" :src="logoSrc" :alt="`${item.label} logo`" class="gate__logoSrc">
         <h4 v-else class="mb-1">{{ item.label }}</h4>
     </a>
 </template>
+
 <script setup>
 import { Icon } from '@iconify/vue';
 import { computed } from 'vue';
