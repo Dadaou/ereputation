@@ -106,21 +106,20 @@ const addContentToPdf = async () => {
     const imageData = canvas.toDataURL('image/jpeg', 1.0);
     const pageWidth = doc.value.internal.pageSize.getWidth();
     const pageHeight = doc.value.internal.pageSize.getHeight();
-    //const imgProps = doc.value.getImageProperties(imageData);
+    const imgProps = doc.value.getImageProperties(imageData);
     
-    let imgWidth, imgHeight;
-    if (template.value.size === 'a5') {
-      imgWidth = pageWidth;
-      imgHeight = pageHeight;
-    } else {
-      imgWidth = pageWidth; 
-      imgHeight = pageHeight;
-    }
-    
+    const originalWidth = imgProps.width;
+    const originalHeight = imgProps.height;
+    const ratio = Math.min(pageWidth / originalWidth, pageHeight / originalHeight);
+    const imgWidth = originalWidth * ratio;
+    const imgHeight = originalHeight * ratio;
+
+    const xOffset = (pageWidth - imgWidth) / 2;
+    const yOffset = (pageHeight - imgHeight) / 2;
     
    /* const imgWidth = pageWidth - 20; 
     const imgHeight = (imgProps.height * imgWidth) / imgProps.width;*/
-    doc.value.addImage(imageData, 'JPEG', 0, 0, imgWidth, imgHeight); 
+    doc.value.addImage(imageData, 'JPEG', xOffset, yOffset, imgWidth, imgHeight); 
   }
 }
 
