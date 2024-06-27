@@ -62,10 +62,7 @@ appStore.setCurrentPage({
   icon: "uil-qrcode-scan"
 });
 const route = useRoute();
-const doc = new jsPDF({
-  orientation: 'portrait',
-  format: 'a5'
-});
+const doc = ref(null);
 const qrStore = useQrStore();
 const template = ref(null);
 const editable = ref(false);
@@ -92,20 +89,26 @@ const submit = async () => {
 };
 
 const generatePdf = async () => {
+  doc.value =  new jsPDF({
+  orientation: 'portrait',
+  format: template.value.size
+});
   await addContentToPdf();
-  doc.save(`${filename.value}.pdf`);
+  if (doc.value) {
+  doc.value.save(`${filename.value}.pdf`);
+  }
 };
 
 const addContentToPdf = async () => {
   const body = document.getElementsByClassName("content");
-  if (body.length) {
+  if (body.length && doc.value) {
 
     let content = body[0];
     let canvas = await html2canvas(content, { scale: 4, useCORS: true });
     const imageData = canvas.toDataURL('image/jpeg', 1.0);
     const aspectRatio = canvas.width / canvas.height;
     const adjustedHeight = 0 || 130 / aspectRatio;
-    doc.addImage(imageData, 'PNG', 10, 10, 130, adjustedHeight, undefined, 'SLOW');
+    doc.value.addImage(imageData, 'PNG', 10, 10, 130, adjustedHeight, undefined, 'SLOW');
   }
 }
 
@@ -217,7 +220,6 @@ onBeforeMount(async () => {
     templates.value = res.filter((item) => item.category == route.query.section && (item.establishment_tag == null || item.establishment_tag == route.params.id));
     template.value = templates.value[0]
     templateId.value = template.value.id
-    console.log(template.value)
   }
 
 });
