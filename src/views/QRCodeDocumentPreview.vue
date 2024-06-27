@@ -100,15 +100,16 @@ const generatePdf = async () => {
 };
 
 const addContentToPdf = async () => {
-  const body = document.getElementsByClassName("content");
-  if (body.length && doc.value) {
-
-    let content = body[0];
-    let canvas = await html2canvas(content, { scale: 4, useCORS: true });
+  const body = document.getElementById("preview");
+  if (body && doc.value) {
+    let canvas = await html2canvas(body, { scale: 4, useCORS: true });
     const imageData = canvas.toDataURL('image/jpeg', 1.0);
-    const aspectRatio = canvas.width / canvas.height;
-    const adjustedHeight = 0 || 130 / aspectRatio;
-    doc.value.addImage(imageData, 'PNG', 10, 10, 130, adjustedHeight, undefined, 'SLOW');
+    const pageWidth = doc.value.internal.pageSize.getWidth();
+    const pageHeight = doc.value.internal.pageSize.getHeight();
+    const imgProps = doc.value.getImageProperties(imageData);
+    const imgWidth = pageWidth - 20; 
+    const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+    doc.value.addImage(imageData, 'JPEG', 10, 10, imgWidth, imgHeight); 
   }
 }
 
