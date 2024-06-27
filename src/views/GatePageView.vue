@@ -30,6 +30,16 @@
                         <GateLinkComponent v-for="(element, index) in offerLinks" :item="element" type="Offer"
                             :key="index" />
                     </div>
+                    <div v-if="category == 'infos'"
+                        class="list__container grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-12">
+                        <GateLinkComponent v-for="(element, index) in infoLinks" :item="element" type="Info"
+                            :key="index" />
+                    </div>
+                    <div v-if="category == 'menus'"
+                        class="list__container grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-12">
+                        <GateLinkComponent v-for="(element, index) in menuLinks" :item="element" type="Menu"
+                            :key="index" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -66,7 +76,7 @@ const categories = ref([
     { value: "menus", label: "Menus", active: false, icon: "uim:th-large" },
     { value: "reviews", label: "Reviews", active: false, icon: "uil:star" },
     { value: "offers", label: "Offers", active: false, icon: "bi:tags" },
-    { value: "info", label: "Infos", active: false, icon: "uil:info-circle" },
+    { value: "infos", label: "Infos", active: false, icon: "uil:info-circle" },
     { value: "follow", label: "Follow us", active: false, icon: "uil:heart-alt" }
 ]);
 
@@ -156,6 +166,20 @@ const followLinks = computed(() => {
 const offerLinks = computed(() => {
     if (links.value) {
         return links.value['Offers']
+    }
+    return []
+})
+
+const infoLinks = computed(() => {
+    if (links.value) {
+        return links.value['Infos']
+    }
+    return []
+})
+
+const menuLinks = computed(() => {
+    if (links.value) {
+        return links.value['Menus']
     }
     return []
 })

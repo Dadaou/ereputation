@@ -64,7 +64,6 @@ import {
     ElInput, ElTooltip
 } from 'element-plus'
 import services from '@Services/services.js';
-import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
 import 'element-plus/es/components/table-column/style/css'
 import 'element-plus/es/components/popconfirm/style/css'
