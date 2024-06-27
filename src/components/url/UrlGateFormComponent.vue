@@ -1,59 +1,76 @@
 <template>
     <div class="security__header border__bottom mt-10">
-         <div class="security__edit">
+        <div class="security__edit">
             <!-- <h4><i class="uil uil-company"></i> Establishment</h4> -->
-            <p>Add the URLs pointing to your internal resources (menus, promotional offers, websites…) so that they are displayed in your Gate.</p>
+            <p>Add the URLs pointing to your internal resources (menus, promotional offers, websites…) so that they are
+                displayed in your Gate.</p>
         </div>
     </div>
     <div>
         <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
-                    <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span>*</span></label>
-                    <el-select v-model="establishment" placeholder="Choose establishment" size="large" :disabled="IsValueOkay(competitor)" clearable filterable>
-                        <el-option v-for="item in establishments" :key="item.tag" :label="item.name" :value="item.uri" />
-                    </el-select>
-                </div>
-                <!-- <div>
-                    <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
-                    <el-select id="category" v-model="category" placeholder="Choose category" size="large" clearable>
-                        <el-option v-for="item in categories" :key="item" :label="item" :value="item" />
+                    <label for="countries"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
+                        <span>*</span></label>
+                    <el-select v-model="establishment" placeholder="Choose establishment" size="large"
+                        :disabled="IsValueOkay(competitor)" clearable filterable>
+                        <el-option v-for="item in establishments" :key="item.tag" :label="item.name"
+                            :value="item.uri" />
                     </el-select>
                 </div>
                 <div>
-                    <label for="providers" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Providers</label>
-                    <el-select id="providers" v-model="provider" placeholder="Choose provider" size="large" filterable clearable>
-                        <el-option v-for="item in filteredProviders" :key="item.uri" :label="item.name" :value="`${item.uri}${item.url}`" />
-                    </el-select>
-                </div> -->
-                <div>
-                    <label for="caption" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Caption</label>
-                    <input type="text" id="caption" v-model="caption" :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                    <label for="caption"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Caption</label>
+                    <input type="text" id="caption" v-model="caption"
+                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
                 </div>
                 <div>
-                    <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
+                    <label for="section"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
                     <el-select id="section" v-model="section" placeholder="" size="large">
                         <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
                     </el-select>
                 </div>
-            </div> 
-            <div>
                 <div>
-                    <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ !isHashtag ? 'Link' : 'Hashtag' }} <span>*</span></label>
-                    <p v-if="!isHashtag && provider" class="text-gray-900 text-sm">Url must start with {{ splitUriAndUrl(provider).url }}</p>
+                    <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ !isHashtag
+                        ? 'Link' : 'Hashtag' }} <span>*</span></label>
+                    <p v-if="!isHashtag && provider" class="text-gray-900 text-sm">Url must start with {{
+                        splitUriAndUrl(provider).url }}</p>
                     <p v-if="!isValidLink && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
                     <p v-if="!isValidHashtag && isHashtag" class="text-red-500 text-sm">Invalid hashtag format</p>
-                    <input v-if="isHashtag" type="text" id="link" v-model="link" :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']" placeholder="#hashtag" required>
-                    <input v-else type="text" id="link" v-model="link" :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']" required>
+                    <input v-if="isHashtag" type="text" id="link" v-model="link"
+                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']"
+                        placeholder="#hashtag" required>
+                    <input v-else type="text" id="link" v-model="link"
+                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']"
+                        required>
+                </div>
+                <div>
+                    <label for="logoFile"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Logo</label>
+                    <input type="file" id="logoFile" ref="logoInput" @change="handleFileChange('logo', $event)"
+                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                </div>
+                <div>
+                    <label for="documentFile"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Document</label>
+                    <input type="file" id="documentFile" ref="documentInput"
+                        @change="handleFileChange('document', $event)"
+                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
                 </div>
             </div>
             <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
-                <button v-if="!isHashtag" type="submit" :disabled="!isValidLink" :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
-                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading ...</span>
+                <button v-if="!isHashtag" type="submit" :disabled="!isValidLink"
+                    :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
+                        ...</span>
                     <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
                 </button>
-                <button v-else type="submit" :disabled="!isValidHashtag" :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidHashtag ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
-                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading ...</span>
+                <button v-else type="submit" :disabled="!isValidHashtag"
+                    :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidHashtag ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
+                        ...</span>
                     <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
                 </button>
             </div>
@@ -64,8 +81,8 @@
 <script setup>
 import { computed, defineAsyncComponent, ref, onBeforeMount, watch, inject } from 'vue'
 import { useUserStore } from "@Stores/user.js"
-import {ElMessage, ElTable, ElTableColumn, ElButton, ElInput, ElOption, ElSelect, ElPopconfirm } from 'element-plus'
-import { useWindowSize } from '@vueuse/core';
+import { ElMessage, ElTable, ElTableColumn, ElButton, ElInput, ElOption, ElSelect, ElPopconfirm } from 'element-plus'
+import { formatDate, useWindowSize } from '@vueuse/core';
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import services from '@Services/services.js';
 import 'element-plus/es/components/popconfirm/style/css'
@@ -83,6 +100,9 @@ const ModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/ModalComponent.vue')
 )
 
+const UrlLogoFormComponent = defineAsyncComponent(() =>
+    import('@Components/url/UrlLogoFormComponent.vue')
+)
 const router = useRouter();
 const route = useRoute();
 
@@ -94,14 +114,17 @@ const modalWidth = computed(() => {
     let gap = (windowSize - width.value) / 19;
     return gap + 45;
 });
+const selectedLogo = ref(null);
+const selectedDocument = ref(null);
+
 const link_to_update = inject('link_to_update');
 const showModal = ref(false);
 const showLinkModal = ref(false);
 const providers = ref([]);
 const provider = ref(null)
-const categories = ref(['','Hashtag', 'Platform', 'Social'])
+const categories = ref(['', 'Hashtag', 'Platform', 'Social'])
 const category = ref('Platform')
-const sections = ref(['','MENUS', 'REVIEWS', 'OFFERS', 'INFOS', 'FOLLOW US'])
+const sections = ref(['', 'MENUS', 'REVIEWS', 'OFFERS', 'INFOS', 'FOLLOW US'])
 const section = ref('')
 const showSpinner = ref(false)
 const search = ref('')
@@ -148,7 +171,7 @@ const establishments = computed(() => {
             })
         });
     }
-    
+
     filteredData = filteredData.filter((data) => {
         return !search.value || data.name.toLowerCase().includes(search.value.toLowerCase())
     })
@@ -306,7 +329,29 @@ const getHashtagValue = (value) => {
     return value
 }
 
+
+const handleFileChange = (type, e) => {
+    const file = e.target.files[0];
+    if (type === 'document') {
+        selectedDocument.value = file;
+    } else if (type === 'logo') {
+        selectedLogo.value = file;
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+    }
+};
+
 const submit = async () => {
+    const formData = new FormData();
+    const formDataTwo = new FormData();
+    if (selectedLogo.value) {
+        formData.append('file', selectedLogo.value);
+        formData.append('type', "logo");
+    }
+    if (selectedDocument.value) {
+        formDataTwo.append('file', selectedDocument.value);
+        formDataTwo.append('type', "document");
+    }
     showSpinner.value = true;
 
     let urlObject = null;
@@ -349,8 +394,46 @@ const submit = async () => {
     } else {
         try {
             const response = await new Promise((resolve) => {
-                services.createRecord('settings', data, (response) => {
+                services.createRecord('settings', data, async (response) => {
                     resolve(response);
+                    const settingUrl = response.data['@id'];
+                    const lastSlashIndex = settingUrl.lastIndexOf('/') + 1;
+                    const settingId = settingUrl.substring(lastSlashIndex);
+                    formData.append('id', settingId);
+                    formDataTwo.append('id', settingId);
+                    try {
+                        const response = await new Promise((resolve) => {
+                            services.post_Record_formData('/customer/settings/upload', formData, (response) => {
+                                resolve(response)
+                            }, false);
+                        });
+                        if (response.status === 200 || response.status === 201) {
+                            // ElMessage.success('Files logo uploaded successfully!');
+                            emit('close-modal');
+                        } else {
+                            ElMessage.error(response.data.message || 'An error occurred while uploading the files.');
+                        }
+                    } catch (error) {
+                        ElMessage.error('An error occurred while uploading the files.');
+                        console.error(error);
+                    }
+
+                    try {
+                        const response = await new Promise((resolve) => {
+                            services.post_Record_formData('/customer/settings/upload', formDataTwo, (response) => {
+                                resolve(response)
+                            }, false);
+                        });
+                        if (response.status === 200 || response.status === 201) {
+                            // ElMessage.success('Files document uploaded successfully!');
+                            emit('close-modal');
+                        } else {
+                            ElMessage.error(response.data.message || 'An error occurred while uploading the files.');
+                        }
+                    } catch (error) {
+                        ElMessage.error('An error occurred while uploading the files.');
+                        console.error(error);
+                    }
                 });
             });
 
@@ -367,8 +450,8 @@ const submit = async () => {
             console.log(error)
         }
     }
-  
-    router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'urls_list'} });
+
+    router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'urls_list' } });
 }
 
 const resetValue = () => {
@@ -568,6 +651,61 @@ input {
     /* overflow-x: scroll; */
     overflow-y: auto;
     width: 85%;
+}
+
+.profile__header {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.profile__header h2 {
+    color: var(--color-bg2);
+}
+
+.profile__header p {
+    font-size: 14px;
+    color: grey;
+    font-weight: 500;
+}
+
+.user__main__avatar {
+    cursor: pointer;
+}
+
+.user__main__avatar img {
+    width: 50px;
+    height: 48px;
+    border: 3px solid var(--color-primary);
+    padding: 3px;
+}
+
+.user__main__avatar i {
+    position: relative;
+    left: 17px;
+    top: -25px;
+    color: var(--color-warning);
+}
+
+.modal__header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal__header div {
+    align-self: center;
+}
+
+.modal__close i {
+    float: right;
+    font-size: 25px;
+    color: red;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.modal__close i:hover {
+    transform: rotate(360deg);
 }
 
 form button {
