@@ -254,14 +254,14 @@
                 <el-date-picker class="mt-2" v-model="end_date" placeholder="End date" :size="'large'" />
             </div>
         </div>
-        <CommunityFeedbackComponent :reviewFeedbackData="services.getScoreColor(avgScore)" />
+        <CommunityFeedbackComponent v-if="activeName !== 'trends'" :reviewFeedbackData="services.getScoreColor(avgScore)" />
         <el-tooltip ref="tooltipRef" :visible="desc.visible" :virtual-ref="buttonRef" virtual-triggering
             popper-class="singleton-tooltip" placement="top">
             <template #content>
                 <span> {{ desc.text }} </span>
             </template>
         </el-tooltip>
-        <BaseLegend :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData" :alignment="'vertical'">
+         <BaseLegend v-if="activeName !== 'trends'" :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData" :alignment="'vertical'">
         </BaseLegend>
     </div>
 </template>

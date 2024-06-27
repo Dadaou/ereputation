@@ -594,4 +594,10 @@ form button {
         /* Occuper toute la largeur sur les petits écrans */
     }
 }
+
+@media screen and (max-width: 500px) {
+    form {
+        padding-right: 3.5rem !important;
+    }
+}
 </style>
