@@ -265,7 +265,6 @@ onBeforeUnmount(() => {
 
 @media screen and (max-width: 1440px) {
     .discount-container {
-        
         gap: 24px;
     }
     
@@ -307,8 +306,8 @@ onBeforeUnmount(() => {
     }
 
     .boost__qrcode {
-        margin-right: -100px;
-        margin-top: 30px;
+        margin-right: -30px;
+        margin-top: 100px;
     }
 
     .boost_comment {
