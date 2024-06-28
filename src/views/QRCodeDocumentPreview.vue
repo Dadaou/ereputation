@@ -102,24 +102,25 @@ const generatePdf = async () => {
 const addContentToPdf = async () => {
   const body = document.getElementById("preview");
   if (body && doc.value) {
+    body.style.margin = "0";
+    body.style.padding = "0";
+
     let canvas = await html2canvas(body, { scale: 4, useCORS: true });
     const imageData = canvas.toDataURL('image/jpeg', 1.0);
     const pageWidth = doc.value.internal.pageSize.getWidth();
     const pageHeight = doc.value.internal.pageSize.getHeight();
-    const imgProps = doc.value.getImageProperties(imageData);
+    /*const imgProps = doc.value.getImageProperties(imageData);
     
     const originalWidth = imgProps.width;
     const originalHeight = imgProps.height;
     const ratio = Math.min(pageWidth / originalWidth, pageHeight / originalHeight);
     const imgWidth = originalWidth * ratio;
-    const imgHeight = originalHeight * ratio;
+    const imgHeight = originalHeight * ratio;*/
 
-    const xOffset = (pageWidth - imgWidth) / 2;
-    const yOffset = (pageHeight - imgHeight) / 2;
-    
+   
    /* const imgWidth = pageWidth - 20; 
     const imgHeight = (imgProps.height * imgWidth) / imgProps.width;*/
-    doc.value.addImage(imageData, 'JPEG', xOffset, yOffset, imgWidth, imgHeight); 
+    doc.value.addImage(imageData, 'JPEG', 0, 0, pageWidth, pageHeight); 
   }
 }
 
@@ -253,8 +254,16 @@ watch(template, () => {
 });
 </script>
 <style>
+#core {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 #preview {
-  margin-top: -24px;
+  margin: 0;
+  padding: 0;
 }
 
 
@@ -280,7 +289,7 @@ watch(template, () => {
 
 #preview>div {
   margin: auto;
-  width: 70%;
+  width: 100%;
   text-align: justify;
 }
 
@@ -293,6 +302,7 @@ watch(template, () => {
 }
 
 #preview p {
+  margin: 0;
   padding: 15px 0;
 }
 
