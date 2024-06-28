@@ -119,7 +119,7 @@ const title = computed(() => {
 const currentEstablishment = ref(null)
 const competitors = inject('competitorsData');
 const competitor = ref(null)
-const links = inject('links');
+const links = inject('urls');
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 const isHashtag = computed(() => {
@@ -336,7 +336,7 @@ const submit = async () => {
 
             if (response.status == 200) {
                 ElMessage({
-                    message: `link updated successfully`,
+                    message: `Url provider updated successfully`,
                     type: 'success',
                 })
                 showSpinner.value = false;

@@ -27,9 +27,9 @@
             <el-tab-pane label="URLs" name="urls">
                 <el-tabs v-model="parametersUrlsConf.urls" class="demo-tabs">
                     <el-tab-pane label="URLs" name="urls_list">
-                        <LinksListComponent @reload="reloadLink()" @edit="(url) => handleEdit(url, 'links')" />
+                        <UrlListComponent @reload="reloadLink()" @edit="(url) => handleEdit(url, 'urls')" />
                     </el-tab-pane>
-                    <el-tab-pane label="Add a new provider URL" name="urls_provider_form">
+                    <el-tab-pane label="Add a new provider URL" name="urls_form">
                         <UrlProviderFormComponent @reload="reloadLink()" />
                     </el-tab-pane>
                     <el-tab-pane label="Add URL to Gate" name="urls_gate_form">
@@ -175,6 +175,10 @@ const LinksFormComponent = defineAsyncComponent(() =>
     import("@Components/links/LinksFormComponent.vue")
 )
 
+const UrlListComponent = defineAsyncComponent(() =>
+    import("@Components/url/UrlListComponent.vue")
+)
+
 const UrlProviderFormComponent = defineAsyncComponent(() =>
     import("@Components/url/UrlProviderFormComponent.vue")
 )
@@ -243,7 +247,6 @@ const activeName = ref('establishments')
 const parametersUrlsConf = reactive({
     tabs: 'establishments',
     establishments : 'establishments_list',
-    links: 'links_list',
     urls: 'urls_list',
     competitors: 'competitors_list',
     staffs: 'staffs_list',
@@ -277,7 +280,7 @@ provide('advantages', allAdvantages)
 provide('categories', allCategories)
 provide('units', allUnits)
 provide('partnerships', allPartnerships)
-provide('links', allLinks)
+provide('urls', allLinks)
 provide('providers', providers)
 
 const establishment_to_update = ref(null)
@@ -337,7 +340,7 @@ const handleEdit = (value, type) => {
         unit_to_update.value = value;
     }
 
-    if (type == 'links') {
+    if (type == 'urls') {
         link_to_update.value = value;
     }
 };

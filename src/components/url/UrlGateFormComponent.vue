@@ -47,17 +47,34 @@
                         required>
                 </div>
                 <div>
-                    <label for="logoFile"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Logo</label>
-                    <input type="file" id="logoFile" ref="logoInput" @change="handleFileChange('logo', $event)"
-                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                    <label for="logoFile" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Logo</label>
+                    <div class="image-selector border-gray-300" :class="!previewImage && 'hover'" @click="selectLogo"
+                        @mouseover="imageInputHover = true" @mouseleave="imageInputHover = false">
+                        <img v-if="previewImage" :src="previewImage" class="uploading-image" />
+                        <i v-else class="uil uil-image-plus"></i>
+                        <div v-if="imageInputHover && previewImage" class="img-hover">
+                            <i class="uil uil-image-edit"></i>
+                        </div>
+                    </div>
+                    <input type="file" id="logoFile" ref="logoInput" 
+                        @change="handleFileChange('logo', $event)"
+                        accept="image/png, image/jpeg, image/gif"
+                        style="display:none"
+                    >
                 </div>
                 <div>
-                    <label for="documentFile"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Document</label>
+                    <label for="documentFile" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Document</label>
+                    <div class="image-selector border-gray-300" @click="selectDocument"  @mouseover="documentInputHover = true" @mouseleave="documentInputHover = false">
+                        <div v-if="selectedDocument" class="file-name" style="font-size: 16px;">{{ fileName }}</div>
+                        <i v-else class="uil uil-file-plus"></i>
+                        <div v-if="documentInputHover" class="img-hover">
+                            <i class="uil uil-image-edit"></i>
+                        </div>
+                    </div>
                     <input type="file" id="documentFile" ref="documentInput"
                         @change="handleFileChange('document', $event)"
-                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                        accept="application/pdf"
+                        style="display:none">
                 </div>
             </div>
             <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
@@ -113,7 +130,17 @@ const modalWidth = computed(() => {
 });
 const selectedLogo = ref(null);
 const selectedDocument = ref(null);
+const previewImage = ref(null);
+const imageInputHover = ref(false);
+const imgHasChanged = ref(false);
+const fileName = ref('');
 
+const selectLogo = () => {
+    document.getElementById('logoFile').click();
+}
+const selectDocument = () => {
+    document.getElementById('documentFile').click();
+}
 const link_to_update = inject('link_to_update');
 const showModal = ref(false);
 const showLinkModal = ref(false);
@@ -138,7 +165,7 @@ const title = computed(() => {
 const currentEstablishment = ref(null)
 const competitors = inject('competitorsData');
 const competitor = ref(null)
-const links = inject('links');
+const links = inject('urls');
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 const isHashtag = computed(() => {
@@ -331,10 +358,15 @@ const handleFileChange = (type, e) => {
     const file = e.target.files[0];
     if (type === 'document') {
         selectedDocument.value = file;
+        fileName.value = file.name;
     } else if (type === 'logo') {
         selectedLogo.value = file;
         const reader = new FileReader();
         reader.readAsDataURL(file);
+        reader.onload = e => {
+            previewImage.value = e.target.result;
+        };
+        imgHasChanged.value = true;
     }
 };
 
@@ -452,6 +484,7 @@ const submit = async () => {
 }
 
 const resetValue = () => {
+    previewImage.value = null;
     establishment.value = ''
     provider.value = null
     isValidLink.value = true
@@ -608,7 +641,7 @@ input {
 
 .image-selector {
     width: 100%;
-    height: 250px;
+    height: 150px !important;
     border-radius: 8px;
     border-width: 2px;
     border-style: solid;
@@ -666,43 +699,43 @@ input {
     font-weight: 500;
 }
 
-.user__main__avatar {
+
+.image-selector {
+    width: 100%;
+    height: 250px;
+    border-radius: 8px;
+    border-width: 2px;
+    border-style: solid;
     cursor: pointer;
-}
-
-.user__main__avatar img {
-    width: 50px;
-    height: 48px;
-    border: 3px solid var(--color-primary);
-    padding: 3px;
-}
-
-.user__main__avatar i {
-    position: relative;
-    left: 17px;
-    top: -25px;
-    color: var(--color-warning);
-}
-
-.modal__header {
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
 }
 
-.modal__header div {
-    align-self: center;
+.image-selector.hover:hover {
+    background: rgba(245, 245, 250, .4);
 }
 
-.modal__close i {
-    float: right;
-    font-size: 25px;
-    color: red;
-    cursor: pointer;
-    transition: var(--transition);
+.image-selector * {
+    font-size: 64px;
+    color: var(--color-bg2)
 }
 
-.modal__close i:hover {
-    transform: rotate(360deg);
+.img-hover {
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(245, 245, 250, .4);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 form button {
