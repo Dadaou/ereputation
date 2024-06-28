@@ -484,6 +484,8 @@ const submit = async () => {
 }
 
 const resetValue = () => {
+    selectedDocument.value = null;
+    fileName.value = '';
     previewImage.value = null;
     establishment.value = ''
     provider.value = null
