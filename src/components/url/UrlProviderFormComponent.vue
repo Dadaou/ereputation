@@ -119,7 +119,7 @@ const title = computed(() => {
 const currentEstablishment = ref(null)
 const competitors = inject('competitorsData');
 const competitor = ref(null)
-const links = inject('urls');
+const links = inject('links');
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 const isHashtag = computed(() => {

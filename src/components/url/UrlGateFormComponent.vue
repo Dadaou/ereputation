@@ -64,12 +64,12 @@
                 </div>
                 <div>
                     <label for="documentFile" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Document</label>
-                    <div class="image-selector border-gray-300" @click="selectDocument"  @mouseover="documentInputHover = true" @mouseleave="documentInputHover = false">
+                    <div class="image-selector border-gray-300" @click="selectDocument">
                         <div v-if="selectedDocument" class="file-name" style="font-size: 16px;">{{ fileName }}</div>
                         <i v-else class="uil uil-file-plus"></i>
-                        <div v-if="documentInputHover" class="img-hover">
+                        <!-- <div class="img-hover">
                             <i class="uil uil-image-edit"></i>
-                        </div>
+                        </div> -->
                     </div>
                     <input type="file" id="documentFile" ref="documentInput"
                         @change="handleFileChange('document', $event)"
@@ -165,7 +165,7 @@ const title = computed(() => {
 const currentEstablishment = ref(null)
 const competitors = inject('competitorsData');
 const competitor = ref(null)
-const links = inject('urls');
+const links = inject('links');
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 const isHashtag = computed(() => {
