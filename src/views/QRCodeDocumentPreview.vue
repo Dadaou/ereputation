@@ -109,18 +109,19 @@ const addContentToPdf = async () => {
     const imageData = canvas.toDataURL('image/jpeg', 1.0);
     const pageWidth = doc.value.internal.pageSize.getWidth();
     const pageHeight = doc.value.internal.pageSize.getHeight();
-    /*const imgProps = doc.value.getImageProperties(imageData);
+    const imgProps = doc.value.getImageProperties(imageData);
     
     const originalWidth = imgProps.width;
     const originalHeight = imgProps.height;
     const ratio = Math.min(pageWidth / originalWidth, pageHeight / originalHeight);
     const imgWidth = originalWidth * ratio;
-    const imgHeight = originalHeight * ratio;*/
-
+    const imgHeight = originalHeight * ratio;
    
+    const x = (pageWidth - imgWidth) / 2; 
+    const y = (pageHeight - imgHeight) / 2;
    /* const imgWidth = pageWidth - 20; 
     const imgHeight = (imgProps.height * imgWidth) / imgProps.width;*/
-    doc.value.addImage(imageData, 'JPEG', 0, 0, pageWidth, pageHeight); 
+    doc.value.addImage(imageData, 'JPEG', x, y, imgWidth, imgHeight); 
   }
 }
 
@@ -254,18 +255,10 @@ watch(template, () => {
 });
 </script>
 <style>
-#core {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
 #preview {
   margin: 0;
   padding: 0;
 }
-
 
 #qrcodeContainer {
   width: 100% !important;

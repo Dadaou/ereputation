@@ -4,7 +4,7 @@
             <div class="tablet_mobile__head">
                 <div class="establishment__info">
                     <h1 class="society__name">{{ establishment.name }}</h1>
-                    <div class="society__category">
+                    <div class="society__category" v-if="['Restaurant', 'Hotel', 'Residence'].includes(establishment.category)">
                         <i
                             :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
                         <span class="ml-2">{{ establishment.category }}</span>

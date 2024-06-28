@@ -73,7 +73,7 @@ const qrSize = computed(() => {
     if (window.innerWidth <= 780) {
         size = 180
     } else if (window.innerWidth <= 1024) {
-        size = 450
+        size = 380
     } else if (window.innerWidth <= 1440) {
         size = 450
     } else {
@@ -339,6 +339,7 @@ onBeforeUnmount(() => {
     }
 
     .boost__title {
+        margin-top: 38px;
         font-size: 2.5rem;
     }
 
@@ -353,7 +354,7 @@ onBeforeUnmount(() => {
     }
 
     .boost__name {
-        font-size: 2.5rem;
+        font-size: 2rem;
         margin-top: 40px;
 
     }
@@ -368,6 +369,7 @@ onBeforeUnmount(() => {
     }
 
     .boost__qrcode {
+       
         margin-top: 20px;
     }
 
