@@ -81,9 +81,9 @@ const categories = ref([
 ]);
 
 const useCategories = computed(() => {
-    if (links.value && links.value['category'] && links.value['category'] != 'Restaurant') {
+    /*if (links.value && links.value['category'] && links.value['category'] != 'Restaurant') {
         return categories.value.filter(v => v.value != "menus")
-    }
+    }*/
     return categories.value
 })
 
