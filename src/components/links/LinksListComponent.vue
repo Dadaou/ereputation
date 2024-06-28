@@ -56,7 +56,10 @@ import 'element-plus/es/components/table-column/style/css'
 import 'element-plus/es/components/popconfirm/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
+import { useRoute, useRouter } from 'vue-router'
 
+const router = useRouter();
+const route = useRoute();
 const emit = defineEmits(['reload', 'edit']);
 const tableData = inject('links');
 const search = ref('')
@@ -151,7 +154,16 @@ const handleEdit = async (data) => {
     section: data.section,
     caption: data.caption
   }
+  const sub_tab = payload.category && payload.category.trim() !== '' ? 'urls_form' : 'urls_gate_form';
 
+  router.push({ 
+    name: route.name, 
+    params: { 
+      ...route.params, 
+      tab: 'urls', 
+      sub_tab: sub_tab 
+    }
+  });
   setTimeout(function () {
     emit('edit', payload)
   }, 250);
