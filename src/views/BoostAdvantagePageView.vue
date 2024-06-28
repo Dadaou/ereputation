@@ -27,11 +27,11 @@
                     </div>
                 </div>
                 <div v-else style="margin-top: 220px">
-                    <h2 class="boost_quantity">
+                    <h2 class="boost_sold">
                         This benefit is sold out
                     </h2>
                     <div style="margin-top: 32px">
-                        <h4 class="boost_comment">Stay tuned, new benefits are coming soon!</h4>
+                        <h4 class="boost_stay">Stay tuned, new benefits are coming soon!</h4>
                     </div>
                     <div v-if="logo && logo.logo" class="customer__logo">
                         <img :src="logo.logo">
@@ -71,13 +71,13 @@ const interval = ref(null);
 const qrSize = computed(() => {
     let size = 550
     if (window.innerWidth <= 780) {
-        size = 100
+        size = 180
     } else if (window.innerWidth <= 1024) {
-        size = 200
+        size = 450
     } else if (window.innerWidth <= 1440) {
-        size = 350
+        size = 450
     } else {
-        size = 400
+        size = 550
     }
     return size
 })
@@ -192,7 +192,6 @@ onBeforeUnmount(() => {
     ;
     font-size: 3.5rem;
     font-weight: 600;
-    margin-top: 20px;
     color: var(--color-primary);
 }
 
@@ -201,7 +200,15 @@ onBeforeUnmount(() => {
     ;
     font-size: 3rem;
     font-weight: 400;
-    margin-top: 20px;
+   
+}
+
+.boost_sold {
+    font-family: Montserrat, sans-serif;
+    ;
+    font-size: 3rem;
+    font-weight: 400;
+   
 }
 
 .boost__quantity-nb {
@@ -230,6 +237,14 @@ onBeforeUnmount(() => {
     color: var(--color-secondary);
 }
 
+.boost_stay {
+    font-size: 1.5rem;
+    font-weight: 400;
+    font-family: Montserrat, sans-serif;
+    ;
+    color: var(--color-secondary);
+}
+
 .boost__description {
     font-size: 2rem;
     font-weight: 400;
@@ -240,18 +255,12 @@ onBeforeUnmount(() => {
 
 .customer__logo {
     height: 80px;
-    margin-top: 20px;
     align-self: flex-start;
 }
 
 .customer__logo img {
     width: auto;
     height: 100%;
-}
-
-.discount-content {
-    margin-top: 20px;
-    gap: 20px
 }
 
 @media screen and (max-width: 1440px) {
@@ -261,7 +270,7 @@ onBeforeUnmount(() => {
     }
     
     .boost__title {
-        margin-top: 40px;
+        margin-top: 70px;
         font-size: 3rem;
         
     }
@@ -272,33 +281,43 @@ onBeforeUnmount(() => {
     }
 
     .icon__container img {
-        margin-top: 120%;
+        margin-top: 190%;
         height: 40px !important;
         width: auto;
     }
 
     .boost__name {
-        margin-top: 100px;
+        margin-top: 40px;
         font-size: 3rem;
 
     }
 
     .boost_quantity {
-        margin-top: -150px;
+       margin-top: 18px;
         font-size: 2.5rem;
     }
+
+    .boost_sold {
+        margin-top: -150px;
+        font-size: 2.5rem;
+   }
 
     .boost__quantity-nb {
         font-size: 3rem;
     }
 
     .boost__qrcode {
-        margin-right: 50px;
-        margin-top: 20px;
+        margin-right: -100px;
+        margin-top: 30px;
     }
 
     .boost_comment {
-        margin-top: -30px;
+        margin-top: 10px;
+        font-size: 1.4rem;
+    }
+
+    .boost_stay {
+        margin-bottom: 10px;
         font-size: 1.4rem;
     }
 
@@ -308,7 +327,7 @@ onBeforeUnmount(() => {
 
     .customer__logo {
         height: 60px;
-        margin-top: 108px;
+        margin-top: 60px;
     }
 }
 
@@ -369,7 +388,7 @@ onBeforeUnmount(() => {
 @media screen and (max-width: 768px) {
 
     .discount-container {
-        margin-top: 48px;
+        margin-top: 68px;
         gap: 24px;
     }
 
@@ -384,41 +403,47 @@ onBeforeUnmount(() => {
     }
 
     .icon__container img {
-
+        margin-top: 120%;
         height: 24px !important;
         width: auto;
     }
 
     .boost__name {
+        margin-left: 16px;
         font-size: 2rem;
         margin-top: 36px;
 
     }
 
     .boost_quantity {
-        font-size: 2rem;
+        margin-left: 16px;
+        font-size: 1.5rem;
         margin-top: 14px;
     }
 
     .boost__quantity-nb {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
 
     .boost__qrcode {
-        margin-top: 0px;
+        margin-right: 20px;
+        margin-top: 30px;
     }
 
     .boost_comment {
-        font-size: 1rem;
+        margin-left: 16px;
+        font-size: 0.9rem;
     }
 
     .boost__description {
+        margin-left: 16px;
         font-size: 1rem;
     }
 
     .customer__logo {
+        margin-left: 16px;
         height: 48px;
-        margin-top: 68px;
+        margin-top: 28px;
     }
 }
 </style>
