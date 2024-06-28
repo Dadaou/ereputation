@@ -100,9 +100,6 @@ const ModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/ModalComponent.vue')
 )
 
-const UrlLogoFormComponent = defineAsyncComponent(() =>
-    import('@Components/url/UrlLogoFormComponent.vue')
-)
 const router = useRouter();
 const route = useRoute();
 
