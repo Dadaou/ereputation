@@ -119,8 +119,7 @@ const addContentToPdf = async () => {
    
     const x = (pageWidth - imgWidth) / 2; 
     const y = (pageHeight - imgHeight) / 2;
-   /* const imgWidth = pageWidth - 20; 
-    const imgHeight = (imgProps.height * imgWidth) / imgProps.width;*/
+ 
     doc.value.addImage(imageData, 'JPEG', x, y, imgWidth, imgHeight); 
   }
 }
