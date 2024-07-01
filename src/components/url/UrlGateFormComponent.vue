@@ -401,11 +401,51 @@ const submit = async () => {
 
     if (isEdit.value) {
         try {
-            const response = await new Promise((resolve) => {
-                services.putRecord('settings', id.value, data, (response) => {
-                    resolve(response);
-                });
+            // eslint-disable-next-line no-async-promise-executor
+            const response = await new Promise(async (resolve) => { // Ajout de async ici
+            services.putRecord('settings', id.value, data, async (response) => { // Ajout de async ici aussi
+                resolve(response);
+                const settingUrl = response.data['@id'];
+                const lastSlashIndex = settingUrl.lastIndexOf('/') + 1;
+                const settingId = settingUrl.substring(lastSlashIndex);
+                console.log(settingId)
+                formData.append('id', settingId);
+                formDataTwo.append('id', settingId);
+              
+                try {
+                    const response = await new Promise((resolve) => {
+                        services.post_Record_formData(`/customer/settings/upload`, formData, (response) => {
+                            resolve(response);
+                        }, false);
+                    });
+                    if (response.status === 200 || response.status === 201) {
+                        emit('close-modal');
+                    } else {
+                        ElMessage.error(response.data.message || 'An error occurred while uploading the files.');
+                    }
+                } catch (error) {
+                    ElMessage.error('An error occurred while uploading the files.');
+                    console.error(error);
+                }
+
+                try {
+                        const response = await new Promise((resolve) => {
+                            services.post_Record_formData('/customer/settings/upload', formDataTwo, (response) => {
+                                resolve(response)
+                            }, false);
+                        });
+                        if (response.status === 200 || response.status === 201) {
+                            // ElMessage.success('Files document uploaded successfully!');
+                            emit('close-modal');
+                        } else {
+                            ElMessage.error(response.data.message || 'An error occurred while uploading the files.');
+                        }
+                    } catch (error) {
+                        ElMessage.error('An error occurred while uploading the files.');
+                        console.error(error);
+                    }
             });
+        });
 
             if (response.status == 200) {
                 ElMessage({
