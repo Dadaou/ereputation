@@ -65,9 +65,9 @@
         "validationcoupon": "Veuillez entrer le mot de passe pour valider le coupon"
     },
     "advantage": {
-        "limit_qty": "",
-        "dont_miss": "",
-        "boost_stay": "",
-        "sold_out": ""
+        "limit_qty": "Quantité limitée",
+        "dont_miss": "Ne manquez pas nos offres exclusives",
+        "boost_stay": "De nouvelles offres seront bientôt disponibles !",
+        "sold_out": "Cette offre est épuisée"
     }
 }

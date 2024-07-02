@@ -70,9 +70,9 @@
         "validationcoupon": "Por favor ingresa la contraseña para validar el cupón"
     },
     "advantage": {
-        "limit_qty": "",
-        "dont_miss": "",
-        "boost_stay": "",
-        "sold_out": ""
+        "limit_qty": "Cantidad Limitada",
+        "dont_miss": "¡No te pierdas esta oferta exclusiva!",
+        "boost_stay": "¡Nuevas ofertas estarán disponibles pronto!",
+        "sold_out": "Esta oferta está agotada"
     }
 }
