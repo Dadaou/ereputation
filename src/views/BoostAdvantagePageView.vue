@@ -83,7 +83,7 @@ const qrSize = computed(() => {
     } else if (window.innerWidth <= 1440) {
         size = 450
     } else if (window.innerWidth <= 1980) {
-        size = 750
+        size = 700
     } else {
         size = 550
     }
@@ -201,7 +201,7 @@ onBeforeUnmount(() => {
     /* width: 1920px;
     height: 1080px; */
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     background: linear-gradient(180deg, rgba(216, 217, 226, 1) 0%, white 40%);
     overflow: hidden;
     position: relative;
