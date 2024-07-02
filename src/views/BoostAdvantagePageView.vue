@@ -76,6 +76,8 @@ const qrSize = computed(() => {
         size = 380
     } else if (window.innerWidth <= 1440) {
         size = 450
+    } else if (window.innerWidth <= 1980) {
+        size = 450
     } else {
         size = 550
     }
@@ -264,6 +266,73 @@ onBeforeUnmount(() => {
     height: 100%;
 }
 
+@media screen and (max-width: 1980px) {
+    .discount-container {
+        gap: 24px;
+    }
+    
+    .boost__title {
+        margin-top: 100px;
+        font-size: 3.5rem;
+        
+    }
+
+    .icon__container {
+        height: 40px;
+        width: auto;
+    }
+
+    .icon__container img {
+        margin-top: 120px;
+        height: 50px !important;
+        width: auto;
+    }
+
+    .boost__name {
+        margin-top: 40px;
+        font-size: 3.75rem;
+
+    }
+
+    .boost_quantity {
+       margin-top: 18px;
+        font-size: 3rem;
+    }
+
+    .boost_sold {
+        margin-top: -150px;
+        font-size: 3.5rem;
+   }
+
+    .boost__quantity-nb {
+        font-size: 4rem;
+    }
+
+    .boost__qrcode {
+        margin-right: -30px;
+        margin-top: 10px;
+    }
+
+    .boost_comment {
+        margin-top: 10px;
+        font-size: 1.4rem;
+    }
+
+    .boost_stay {
+        margin-bottom: 10px;
+        font-size: 1.4rem;
+    }
+
+    .boost__description {
+        font-size: 1.4rem;
+    }
+
+    .customer__logo {
+        height: 60px;
+        margin-top: 60px;
+    }
+}
+
 @media screen and (max-width: 1440px) {
     .discount-container {
         gap: 24px;
@@ -308,7 +377,7 @@ onBeforeUnmount(() => {
 
     .boost__qrcode {
         margin-right: -30px;
-        margin-top: 100px;
+        margin-top: 10px;
     }
 
     .boost_comment {
