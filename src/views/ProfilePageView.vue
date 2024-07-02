@@ -268,12 +268,12 @@ const breadcrumbData = [
   .menu-toggle {
     display: block; 
     cursor: pointer;
-    margin-top: 4rem;
+    margin-top: 2.5rem;
     margin-right: 100%;
   }
 
   .all__content {
-    margin-top: 0px;
+    margin-top: -25px;
     width: 115%;
   }
 
