@@ -38,8 +38,8 @@
         "post": "Post comment",
         "requiredinputs": "Please, provide all needed information.",
         "read_more": "Find out more...",
-        "choose_advantage":"Enjoy a benefit by clicking on the thumbnail of your choice below :",
-        "description":"Description"
+        "choose_advantage": "Enjoy a benefit by clicking on the thumbnail of your choice below :",
+        "description": "Description"
     },
     "staffFeedback": {
         "interne": "Internal use only, your comment will not be posted on the public platforms.",
@@ -63,5 +63,11 @@
         "utilisation": "To be used between",
         "et": "and",
         "validationcoupon": "Please enter the password to validate the coupon"
+    },
+    "advantage": {
+        "limit_qty": "Limited Quantity",
+        "dont_miss": "Don't miss out on this exclusive offer!",
+        "boost_stay": "Stay tuned, new benefits are coming soon!",
+        "sold_out": "This benefit is sold out"
     }
 }
