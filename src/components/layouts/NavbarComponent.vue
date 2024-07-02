@@ -167,16 +167,22 @@ watch(width, () => {
 });
 
 onMounted(() => {
+  let language = "en"
+  try {
+    language = navigator.language.slice(0, 2)
+  } catch (e) {
+    // Do nothing
+  }
   /** Charger la langue par defaut */
-  var lg = localStorage.getItem("langue")
 
   for (let item of languages) {
-    if (item.code == lg) {
-      currentLanguage.value = {
-        name: item.name,
-        code: item.code,
-        svg: item.svg
-      }
+    if (item.bb == language) {
+      // currentLanguage.value = {
+      //   name: item.name,
+      //   code: item.code,
+      //   svg: item.svg
+      // }
+      selectCurrentLanguage(item)
       i18n.locale = item.bb
       locale.value = item.bb
     }
