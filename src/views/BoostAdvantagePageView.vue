@@ -151,11 +151,11 @@ onBeforeUnmount(() => {
     height: 1080px; */
     justify-content: center;
     align-items: center;
-    background: linear-gradient(180deg, rgba(216, 217, 226, 1) 0%, white 100%);
+    background: linear-gradient(180deg, rgba(216, 217, 226, 1) 0%, white 40%);
     overflow: hidden;
     position: relative;
     display: flex;
-  
+
 }
 
 .bg__circle {
@@ -203,7 +203,7 @@ onBeforeUnmount(() => {
     ;
     font-size: 3rem;
     font-weight: 400;
-   
+
 }
 
 .boost_sold {
@@ -211,7 +211,7 @@ onBeforeUnmount(() => {
     ;
     font-size: 3rem;
     font-weight: 400;
-   
+
 }
 
 .boost__quantity-nb {
@@ -270,11 +270,11 @@ onBeforeUnmount(() => {
     .discount-container {
         gap: 24px;
     }
-    
+
     .boost__title {
         margin-top: 50px;
         font-size: 5rem;
-        
+
     }
 
     .icon__container {
@@ -295,7 +295,7 @@ onBeforeUnmount(() => {
     }
 
     .boost_quantity {
-       margin-top: 18px;
+        margin-top: 18px;
         font-size: 3rem;
     }
 
@@ -303,7 +303,7 @@ onBeforeUnmount(() => {
         margin-right: 200px;
         margin-top: -150px;
         font-size: 3.8rem;
-   }
+    }
 
     .boost__quantity-nb {
         font-size: 4rem;
@@ -338,11 +338,11 @@ onBeforeUnmount(() => {
     .discount-container {
         gap: 24px;
     }
-    
+
     .boost__title {
         margin-top: 40px;
         font-size: 3rem;
-        
+
     }
 
     .icon__container {
@@ -363,14 +363,14 @@ onBeforeUnmount(() => {
     }
 
     .boost_quantity {
-       margin-top: 18px;
+        margin-top: 18px;
         font-size: 2.5rem;
     }
 
     .boost_sold {
         margin-top: -150px;
         font-size: 2.5rem;
-   }
+    }
 
     .boost__quantity-nb {
         font-size: 3rem;
@@ -439,7 +439,7 @@ onBeforeUnmount(() => {
     }
 
     .boost__qrcode {
-       
+
         margin-top: 20px;
     }
 
