@@ -37,8 +37,8 @@
         "indice3": "condiciones generales de uso",
         "post": "Publicar comentario",
         "read_more": "Más información...",
-        "choose_advantage":"Disfruta de un beneficio haciendo clic en la miniatura de tu elección a continuación :",
-        "description":"Descripción",
+        "choose_advantage": "Disfruta de un beneficio haciendo clic en la miniatura de tu elección a continuación :",
+        "description": "Descripción",
         "thanks": {
             "title1": "Gracias ",
             "title2": " por tus comentarios",
@@ -68,5 +68,11 @@
         "utilisation": "Para utilizar entre el",
         "et": "y el",
         "validationcoupon": "Por favor ingresa la contraseña para validar el cupón"
+    },
+    "advantage": {
+        "limit_qty": "",
+        "dont_miss": "",
+        "boost_stay": "",
+        "sold_out": ""
     }
 }

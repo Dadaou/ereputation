@@ -17,10 +17,11 @@
                         {{ discount.description }}
                     </h1>
                     <h2 class="boost_quantity">
-                        Limited Quantity: <strong class="boost__quantity-nb">{{ discount.quantity }}</strong>
+                        {{ $t("advantage.limit_qty") }}: <strong class="boost__quantity-nb">{{ discount.quantity
+                            }}</strong>
                     </h2>
                     <div style="margin-top: 32px">
-                        <h4 class="boost_comment">Don't miss out on this exclusive offer!</h4>
+                        <h4 class="boost_comment"> {{ $t("advantage.dont_miss") }} </h4>
                     </div>
                     <div v-if="logo && logo.logo" class="customer__logo">
                         <img :src="logo.logo">
@@ -28,10 +29,10 @@
                 </div>
                 <div v-else style="margin-top: 220px">
                     <h2 class="boost_sold">
-                        This benefit is sold out
+                        {{ $t("advantage.sold_out") }}
                     </h2>
                     <div style="margin-top: 32px">
-                        <h4 class="boost_stay">Stay tuned, new benefits are coming soon!</h4>
+                        <h4 class="boost_stay">{{ $t("advantage.boost_stay") }}</h4>
                     </div>
                     <div v-if="logo && logo.logo" class="customer__logo">
                         <img :src="logo.logo">
@@ -55,6 +56,9 @@ import { useAppStore } from "@Stores/app.js";
 import services from '@Services/services.js';
 import { alertProps } from 'element-plus';
 import moment from 'moment';
+import { useI18n } from "vue-i18n";
+import { i18n } from '@/i18n';
+import { languages } from '@Services/languages.js';
 
 const baseurl = window.location.origin
 
@@ -63,6 +67,8 @@ const icon2Src = ref(new URL('@/assets/images/discount.svg', import.meta.url).hr
 const appStore = useAppStore();
 const route = useRoute();
 const logo = ref(null);
+
+const { locale } = useI18n();
 
 const discount = ref(null);
 
@@ -106,8 +112,53 @@ const updateInfo = () => {
     }, 10000)
 }
 
+const findLanguage = (language) => {
+    for (let item of languages) {
+        if (item.bb == language.toLowerCase()) {
+            return item
+        }
+    }
+
+    return null
+}
+
+const setCustomerLanguage = async () => {
+    appStore.isLoading = true;
+    const response = await new Promise((resolve) => {
+        services.get_Record(`customer/language?tag=${route.params.tag}`, (response) => {
+            resolve(response)
+        }, true, true)
+    })
+
+    if (response.status == 200) {
+        let lg = findLanguage(response.data.language)
+        i18n.locale = lg.bb
+        locale.value = lg.bb
+    }
+}
+
 onMounted(async () => {
     appStore.isLoading = true;
+    let language = null
+
+    try {
+        language = navigator.language.slice(0, 2)
+    } catch (e) {
+        // Do nothing
+    }
+
+    if (language) {
+        let lg = findLanguage(language)
+        if (lg) {
+            i18n.locale = lg.bb
+            locale.value = lg.bb
+        } else {
+            setCustomerLanguage()
+        }
+
+    } else {
+        setCustomerLanguage()
+    }
     try {
         if (route.query.q) {
             const response = await new Promise((resolve, reject) => {

@@ -38,8 +38,8 @@
         "post": "Poster un commentaire",
         "requiredinputs": "Veuillez fournir toutes les informations nécessaires.",
         "read_more": "En savoir plus...",
-        "choose_advantage":"Bénéficiez d'un avantage en cliquant ci dessous sur la vignette de votre choix :",
-        "description":"Description"
+        "choose_advantage": "Bénéficiez d'un avantage en cliquant ci dessous sur la vignette de votre choix :",
+        "description": "Description"
     },
     "staffFeedback": {
         "interne": "Usage interne uniquement, votre commentaire ne sera pas diffusé sur les plateformes publiques.",
@@ -63,5 +63,11 @@
         "utilisation": "A utiliser entre le",
         "et": "et",
         "validationcoupon": "Veuillez entrer le mot de passe pour valider le coupon"
+    },
+    "advantage": {
+        "limit_qty": "",
+        "dont_miss": "",
+        "boost_stay": "",
+        "sold_out": ""
     }
 }
