@@ -152,6 +152,7 @@ onBeforeUnmount(() => {
     background: linear-gradient(180deg, rgba(216, 217, 226, 1) 0%, white 100%);
     overflow: hidden;
     position: relative;
+    display: flex;
   
 }
 
