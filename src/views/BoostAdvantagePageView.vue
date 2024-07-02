@@ -77,7 +77,7 @@ const qrSize = computed(() => {
     } else if (window.innerWidth <= 1440) {
         size = 450
     } else if (window.innerWidth <= 1980) {
-        size = 450
+        size = 750
     } else {
         size = 550
     }
@@ -272,8 +272,8 @@ onBeforeUnmount(() => {
     }
     
     .boost__title {
-        margin-top: 100px;
-        font-size: 3.5rem;
+        margin-top: 50px;
+        font-size: 5rem;
         
     }
 
@@ -283,8 +283,8 @@ onBeforeUnmount(() => {
     }
 
     .icon__container img {
-        margin-top: 120px;
-        height: 50px !important;
+        margin-top: 60px;
+        height: 70px !important;
         width: auto;
     }
 
@@ -300,8 +300,9 @@ onBeforeUnmount(() => {
     }
 
     .boost_sold {
+        margin-right: 200px;
         margin-top: -150px;
-        font-size: 3.5rem;
+        font-size: 3.8rem;
    }
 
     .boost__quantity-nb {
@@ -309,18 +310,18 @@ onBeforeUnmount(() => {
     }
 
     .boost__qrcode {
-        margin-right: -30px;
-        margin-top: 10px;
+        margin-right: -100px;
+        margin-top: 100px;
     }
 
     .boost_comment {
         margin-top: 10px;
-        font-size: 1.4rem;
+        font-size: 2.1rem;
     }
 
     .boost_stay {
         margin-bottom: 10px;
-        font-size: 1.4rem;
+        font-size: 2.1rem;
     }
 
     .boost__description {
@@ -328,7 +329,7 @@ onBeforeUnmount(() => {
     }
 
     .customer__logo {
-        height: 60px;
+        height: 100px;
         margin-top: 60px;
     }
 }
@@ -339,7 +340,7 @@ onBeforeUnmount(() => {
     }
     
     .boost__title {
-        margin-top: 70px;
+        margin-top: 40px;
         font-size: 3rem;
         
     }
@@ -350,7 +351,7 @@ onBeforeUnmount(() => {
     }
 
     .icon__container img {
-        margin-top: 190%;
+        margin-top: 130%;
         height: 40px !important;
         width: auto;
     }
@@ -377,7 +378,7 @@ onBeforeUnmount(() => {
 
     .boost__qrcode {
         margin-right: -30px;
-        margin-top: 10px;
+        margin-top: 60px;
     }
 
     .boost_comment {
