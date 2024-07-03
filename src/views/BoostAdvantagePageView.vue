@@ -12,7 +12,8 @@
                 </div>
             </div>
             <div v-if="discount" class="inline-flex items-center justify-around w-full discount-content">
-                <div v-if="discount.quantity > 0 && moment(discount.expired_at) >= moment()">
+                <div v-if="isEnable == null"></div>
+                <div v-else-if="isEnable == true">
                     <h1 v-if="discount.description" class="boost__name">
                         {{ discount.description }}
                     </h1>
@@ -73,6 +74,10 @@ const { locale } = useI18n();
 const discount = ref(null);
 
 const interval = ref(null);
+
+const isEnable = computed(() => {
+    return discount.value ? (discount.value.quantity > 0 && moment(discount.value.expired_at) >= moment()) : null
+})
 
 const qrSize = computed(() => {
     let size = 550
