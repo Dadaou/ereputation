@@ -6,7 +6,7 @@
     <div class="admin__container" >
       <button class="menu-toggle" @click="toggleMenu">
         <i class="uil uil-bars"></i>
-        <span v-if="selectedMenu">{{ selectedMenu }}</span>
+        <span v-if="selectedMenu" class="text-sm font-medium text-gray-700 dark:text-gray-400"> {{ selectedMenu }}</span>
       </button>
       <div class="admin__menu" :class="{ 'menu-open': isMenuOpen }">
         
@@ -61,11 +61,25 @@
 
 <script setup>
 import { ref, computed, provide, watch } from 'vue';
-import { RouterView, useRoute } from 'vue-router';
+import { RouterView, useRoute, useRouter} from 'vue-router';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 
 const isMenuOpen = ref(true);
 const selectedMenu = ref('');
+
+const route = useRoute();
+const router = useRouter();
+
+const menuMap = {
+  "Personal_details": "Account",
+  "Subscription": "Subscription",
+  "QRCodes": "My QRCodes",
+  "Advantage": "Advantages",
+  "Partnership": "Partnership",
+  "Contact": "Contacts",
+  "Discount_coupons": "Discount coupons",
+  "Parameters": "Parameters"
+};
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
@@ -79,8 +93,6 @@ const selectMenu = (menuName) => {
   selectedMenu.value = menuName;
   closeMenu();
 };
-
-const route = useRoute();
 
 const isActive = (menuName) => {
   if (menuName === 'Parameters') {
@@ -153,6 +165,10 @@ const breadcrumbData = [
     isCurrent: true,
   },
 ];
+
+watch(route, (newRoute) => {
+  selectedMenu.value = menuMap[newRoute.name] || '';
+});
 
 </script>
 <style scoped>
@@ -309,8 +325,8 @@ const breadcrumbData = [
   }
   
   .menu-toggle span {
-    margin-left: 20px;
-    font-size: 1rem;
+    margin-left: 8px;
+    font-size: 0.9rem;
     white-space: nowrap;
   
   }
