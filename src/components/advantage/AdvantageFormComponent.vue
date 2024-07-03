@@ -86,7 +86,7 @@
                     <div>
                         <label for="code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             Code
-                            <Tooltip text="Use your own discount code recognized by your system" />
+                            <span>*</span>
                         </label>
                         <input type="text" id="code" v-model="code"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
@@ -99,7 +99,7 @@
                         <div>
                             <label for="validity"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Validity
-                                <Tooltip text="Validity period after coupon creation (in number of days)" />
+                                <span>*</span>
                             </label>
                             <input type="number" id="validity" v-model="validity"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
@@ -107,7 +107,7 @@
                         <div>
                             <label for="limit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Limit
-                                <Tooltip text="Offer limited to x units" />
+                                <span>*</span>
                             </label>
                             <input type="number" id="limit" v-model="advantageLimit"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
@@ -122,14 +122,16 @@
                     <div>
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             Date from
-                            <Tooltip text="To use before the [date]" />
+                            <span>*</span>
+                            <!-- <Tooltip text="To use before the [date]" /> -->
                         </label>
                         <el-date-picker v-model="dateFrom" :size="'large'" />
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             Date to
-                            <Tooltip text="To use after the [date]" />
+                            <span>*</span>
+                            <!-- <Tooltip text="To use after the [date]" /> -->
                         </label>
                         <el-date-picker v-model="dateEnd" :size="'large'" />
                     </div>
