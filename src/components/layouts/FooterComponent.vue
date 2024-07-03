@@ -23,7 +23,10 @@
             </ul>
             <ul v-else></ul>
             <!-- <span v-if="!isFeedback"><i class="uil uil-copyright"></i>2024, all rights reserved</span> -->
-            <span v-if="appStore.account && appStore.account.brand">Powered by {{ appStore.account.brand }}</span>
+            <span v-if="appStore.account && appStore.account.brand">
+              Powered by 
+              <a href="#" @click="handleBrandClick">{{ appStore.account.brand }}</a>
+            </span>
           </li>
         </ul>
       </div>
@@ -74,6 +77,13 @@ onBeforeMount(async () => {
   }
 });
 
+const handleBrandClick = () => {
+  if (appStore.account && appStore.account.website) {
+    window.open(appStore.account.website, '_blank');
+  } else {
+    alert('Website information is not available.');
+  }
+};
 </script>
 
 <style scoped>
