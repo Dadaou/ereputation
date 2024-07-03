@@ -1,8 +1,11 @@
 <template>
     <div class="user__main__container">
         <el-tabs v-model="activePartnershipTab" class="demo-tabs">
-                    <el-tab-pane label="Partnership list" name="partnership_list">
+                    <el-tab-pane label="Partnerships requested by your establishment" name="partnership_list">
                         <PartnershipListComponent @update="() => reloadPartnershipsData()" />
+                    </el-tab-pane>
+                    <el-tab-pane label="Request for partnerships" name="partnership_request">
+                        <PartnershipRequestComponent @update="() => reloadPartnershipsData()" />
                     </el-tab-pane>
                     <el-tab-pane label="Request a new partnership" name="partnership_form">
                         <PartnershipFormComponent @update="() => reloadPartnershipsData()" />
@@ -34,6 +37,9 @@ const PartnershipListComponent = defineAsyncComponent(() =>
     import("@Components/partnership/PartnershipListComponent.vue")
 )
 
+const PartnershipRequestComponent = defineAsyncComponent(() =>
+    import("@Components/partnership/PartnershipRequestComponent.vue")
+)
 const position = ref('top')
 watch(width, () => {
     if (width.value < 800) {
