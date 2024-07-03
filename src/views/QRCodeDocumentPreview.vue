@@ -8,6 +8,9 @@
             <el-option v-for="(item, index) in templates" :key="index" :label="item.name" :value="item.id"
               @click="changeValue(item)" />
           </el-select>
+          <div v-if="template" class="template-size">
+            Template Size: {{ template.size.toUpperCase() }}
+          </div>
           <button v-if="template" class="btn downloads mt-2" @click="generatePdf">PDF Download</button>
         </div> <br>
         <form v-if="template && editable" class="my-form" @submit.prevent="submit">
@@ -286,6 +289,13 @@ watch(template, () => {
 
 #qrcodeContainer {
   width: 100% !important;
+}
+
+.template-size {
+  font-size: 14px;
+  margin-top: 10px;
+  margin-bottom: -8px;
+  color: #080707;
 }
 
 .document_preview {
