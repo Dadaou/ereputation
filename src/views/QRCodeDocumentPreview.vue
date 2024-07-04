@@ -3,12 +3,20 @@
     <div class="filter">
       <div>
         <div class="template__filter">
-          <div class="text-sm title"> Choose a template </div>
+          <div class="section-title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
+              <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h4.5L14 4.5zM10.5 4a.5.5 0 0 1-.5-.5V1.5H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4h-2.5z"/>
+            </svg>
+            Choose a Template
+          </div>
           <el-select v-model="templateId" filterable placeholder="choose template" size="large" class="test">
             <el-option v-for="(item, index) in templates" :key="index" :label="item.name" :value="item.id"
               @click="changeValue(item)" />
           </el-select>
           <div v-if="template" class="template-size">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-fullscreen" viewBox="0 0 16 16">
+              <path d="M.5 2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H1.707l3.147 3.146a.5.5 0 1 1-.708.708L1 3.707V7a.5.5 0 0 1-1 0v-4zm15 11a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1 0-1h3.293l-3.147-3.146a.5.5 0 0 1 .708-.708L15 12.293V9a.5.5 0 0 1 1 0v4z"/>
+            </svg>
             Template Size: {{ template.size.toUpperCase() }}
           </div>
           <button v-if="template" class="btn downloads mt-2" @click="generatePdf">PDF Download</button>
@@ -291,11 +299,49 @@ watch(template, () => {
   width: 100% !important;
 }
 
+.section-title {
+  font-size: 17px;
+  font-weight: bold;
+  margin-bottom: 17px;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 2px solid #2A69CA;
+}
+
+.section-title svg {
+  font-size: 20px;
+  margin-right: 23px; /* Adjusted margin-right */
+  color: #3498db;
+}
+
+.section-title i {
+  font-size: 18px;
+  margin-right: 5px;
+  color: #3498db;
+}
+
 .template-size {
-  font-size: 14px;
-  margin-top: 10px;
-  margin-bottom: -8px;
-  color: #080707;
+  font-size: 16px;
+  margin-top: 5px;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 2px solid #2A69CA;
+}
+
+.template-size svg {
+  font-size: 18px;
+  margin-right: 33px; /* Adjusted margin-right */
+  color: #3498db;
+}
+
+.template-size i {
+  font-size: 16px;
+  margin-right: 5px;
+  color: #3498db;
 }
 
 .document_preview {
@@ -336,10 +382,16 @@ watch(template, () => {
 
 .btn.downloads {
   width: 100%;
+  margin-top: 15px;
   background-color: var(--color-primary);
   color: white;
   border-radius: 5px;
-  padding: 5px;
+  padding: 12px;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 body {
