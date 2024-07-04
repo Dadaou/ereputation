@@ -372,6 +372,9 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         apiParams += `&feeling=${selectedFeeling.value.toLowerCase()}`
     }
 
+    if (route.params.type == 'intern') {
+        apiParams += `&via=myqrcode`;
+    }
     // if(IsValueOkay(language)){
     //         apiParams += `&language=${language}`
     // }
