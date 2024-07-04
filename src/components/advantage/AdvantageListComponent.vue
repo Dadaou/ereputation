@@ -3,7 +3,7 @@
   </div>
   <el-input v-model="search" size="small" placeholder="Type to search" class="search" />
   <div class="mt-5 erep_table table__container">
-    <el-table  v-if="advantageLoading == false" :data="filterTableData" class="responsive-table" :row-class-name="rowClassName" style="width: 100%">
+    <el-table :data="filterTableData" class="responsive-table" :row-class-name="rowClassName" style="width: 100%">
       <el-table-column label="Name" fixed prop="name" width="188" />
       <el-table-column label="Establishment" prop="establishment_name" width="190" />
       <el-table-column label="Amount" prop="amount" align="center" width="100" />
@@ -53,13 +53,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <div v-else role="status" class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5" v-for="index in 2" :key="index">
-          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-          <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
-      <span class="sr-only">Loading...</span>
-    </div>
   </div>
 </template>
 
@@ -82,28 +75,17 @@ const tableWidth = computed(() => {
 const route = useRoute();
 const router = useRouter();
 
-let filterTableData = [];
-
-watchEffect(()  => {
-  let filteredData = advantages.value;
-
-  filteredData = filteredData.filter((data) => {
-    return !search.value ||
+const filterTableData = computed(() => {
+  return advantages.value.filter(data => {
+    return (
+      !search.value ||
       data.name.toLowerCase().includes(search.value.toLowerCase()) ||
       (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
       (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase())) ||
       (data.metric && data.metric.toLowerCase().includes(search.value.toLowerCase())) ||
       (data.scope && data.scope.toLowerCase().includes(search.value.toLowerCase()))
-  })
- 
-  if (advantages.value.length === 0 || filteredData.length === 0) {
-    advantageLoading.value = true;
-  } else {
-    advantageLoading.value = false;
-  }
-
-  // eslint-disable-next-line no-const-assign
-  filterTableData = filteredData; 
+    );
+  });
 });
 
 const reloadData = (advantageToRemove) => {
