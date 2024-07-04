@@ -39,7 +39,7 @@
         leave-active-class="animate__animated animate__zoomOut">
         <div v-if="show_menu && showMenu" class="items-center w-full" id="navbar-language">
           <ul class="menu font-medium">
-            <li v-for="menu in mainMenu" @click="closeDropdownMenu">
+            <li v-for="menu in mainMenu" @click="closeDropdownMenu" :key="menu">
               <RouterLink :to="{
                 name: menu.routeName,
                 params: {
@@ -68,6 +68,7 @@ import { i18n } from '@/i18n';
 import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import { languages, current } from '@Services/languages.js';
 import { mainMenu, publicUrls, privateUrls } from '@Services/routes.js';
+import services from '@Services/services.js'
 
 const UserDropdownMenu = defineAsyncComponent(
   () => import("@Components/utils/UserMenuDropdownComponent.vue")
@@ -166,21 +167,56 @@ watch(width, () => {
   else show_menu.value = false;
 });
 
-onMounted(() => {
-  /** Charger la langue par defaut */
-  var lg = localStorage.getItem("langue")
-
+const findLanguage = (language) => {
   for (let item of languages) {
-    if (item.code == lg) {
-      currentLanguage.value = {
-        name: item.name,
-        code: item.code,
-        svg: item.svg
-      }
-      i18n.locale = item.bb
-      locale.value = item.bb
+    if (item.bb == language.toLowerCase()) {
+      return item
     }
   }
+
+  return null
+}
+
+const setCustomerLanguage = async () => {
+  appStore.isLoading = true;
+  const response = await new Promise((resolve) => {
+    services.get_Record(`customer/language?tag=${route.params.tag}`, (response) => {
+      resolve(response)
+    }, true, true)
+  })
+
+  if (response.status == 200) {
+    let lg = findLanguage(response.data.language)
+    selectCurrentLanguage(lg)
+    i18n.locale = lg.bb
+    locale.value = lg.bb
+  }
+}
+
+onMounted(async () => {
+  appStore.isLoading = true;
+  let language = null
+
+  try {
+    language = navigator.language.slice(0, 2)
+  } catch (e) {
+    // Do nothing
+  }
+
+  if (language) {
+    let lg = findLanguage(language)
+    if (lg) {
+      selectCurrentLanguage(lg)
+      i18n.locale = lg.bb
+      locale.value = lg.bb
+    } else {
+      setCustomerLanguage()
+    }
+
+  } else {
+    setCustomerLanguage()
+  }
+  appStore.isLoading = false;
 });
 
 onBeforeMount(async () => {

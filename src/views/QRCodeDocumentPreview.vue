@@ -8,6 +8,9 @@
             <el-option v-for="(item, index) in templates" :key="index" :label="item.name" :value="item.id"
               @click="changeValue(item)" />
           </el-select>
+          <div v-if="template" class="template-size">
+            Template Size: {{ template.size.toUpperCase() }}
+          </div>
           <button v-if="template" class="btn downloads mt-2" @click="generatePdf">PDF Download</button>
         </div> <br>
         <form v-if="template && editable" class="my-form" @submit.prevent="submit">
@@ -30,7 +33,7 @@
         </form>
       </div>
     </div>
-    <div v-if="template" id="preview" style="font-family: Arial, sans-serif;">
+    <div v-if="template" id="preview" style="font-family: Arial, sans-serif;" :style="documentSize">
 
       <div id="core" v-html="core"></div>
     </div>
@@ -42,7 +45,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, watch, ref } from 'vue';
+import { onBeforeMount, watch, ref, computed } from 'vue';
 import { useAppStore } from "@Stores/app.js";
 import { useQrStore } from "@Stores/qrtemplate.js";
 import { useRoute } from "vue-router";
@@ -89,18 +92,18 @@ const submit = async () => {
 };
 
 const generatePdf = async () => {
-  doc.value =  new jsPDF({
-  orientation: 'portrait',
-  format: template.value.size
-});
+  doc.value = new jsPDF({
+    orientation: 'portrait',
+    format: template.value.size
+  });
   await addContentToPdf();
   if (doc.value) {
-  doc.value.save(`${filename.value}.pdf`);
+    doc.value.save(`${filename.value}.pdf`);
   }
 };
 
 const addContentToPdf = async () => {
-  const body = document.getElementById("preview");
+  const body = document.getElementById("core");
   if (body && doc.value) {
     body.style.margin = "0";
     body.style.padding = "0";
@@ -110,17 +113,17 @@ const addContentToPdf = async () => {
     const pageWidth = doc.value.internal.pageSize.getWidth();
     const pageHeight = doc.value.internal.pageSize.getHeight();
     const imgProps = doc.value.getImageProperties(imageData);
-    
+
     const originalWidth = imgProps.width;
     const originalHeight = imgProps.height;
     const ratio = Math.min(pageWidth / originalWidth, pageHeight / originalHeight);
     const imgWidth = originalWidth * ratio;
     const imgHeight = originalHeight * ratio;
-   
-    const x = (pageWidth - imgWidth) / 2; 
+
+    const x = (pageWidth - imgWidth) / 2;
     const y = (pageHeight - imgHeight) / 2;
- 
-    doc.value.addImage(imageData, 'JPEG', x, y, imgWidth, imgHeight); 
+
+    doc.value.addImage(imageData, 'JPEG', x, y, imgWidth, imgHeight);
   }
 }
 
@@ -140,13 +143,12 @@ const updateTemplate = () => {
     customer: customer,
   }, (response) => {
     if (response.status == 200) {
-      const {textGreeting, textClosing, ...remainData} = response.data
+      const { textGreeting, textClosing, ...remainData } = response.data
       template.value = {
         text_closing: textClosing,
         text_greeting: textGreeting,
         ...remainData
       };
-      console.log(template.value)
       templates.value[templates.value.findIndex(el => el.id === template.value.id)] = response.data;
       ElMessage({
         message: h('p', null, [
@@ -173,25 +175,49 @@ const generateCore = async () => {
   const qrCodeDataURL = qrCanvas.toDataURL('image/png', 1.0); // Convert to base64
   tmp = tmp.replace('{{qrcodeimg}}', `<img src="${qrCodeDataURL}" style="width: 100%;">`)
 
- /* try {
-    const response = await fetch(template.value.logo)
-    if (!response.ok) {
-      throw new Error('image not found')
-    }
-    const blob = await response.blob()
-    const reader = new FileReader()
-    reader.onloadend = () => {
-      tmp = tmp.replace('{{logo}}', `<img src="${reader.result}" style="width: 100%;">`);
-      core.value = tmp;
-    }
-    reader.readAsDataURL(blob)
-  } catch (error) {
-    console.error('Error encoding image:', error)
-  } */
+  /* try {
+     const response = await fetch(template.value.logo)
+     if (!response.ok) {
+       throw new Error('image not found')
+     }
+     const blob = await response.blob()
+     const reader = new FileReader()
+     reader.onloadend = () => {
+       tmp = tmp.replace('{{logo}}', `<img src="${reader.result}" style="width: 100%;">`);
+       core.value = tmp;
+     }
+     reader.readAsDataURL(blob)
+   } catch (error) {
+     console.error('Error encoding image:', error)
+   } */
 
-   tmp = tmp.replace('{{logo}}', `<img src="data:image/png;base64,${template.value.logo_base64}" style="width: 100%;">`);
-   core.value = tmp;
+  tmp = tmp.replace('{{logo}}', `<img src="data:image/png;base64,${template.value.logo_base64}" style="width: 100%;">`);
+  core.value = tmp;
 }
+
+const documentSize = computed(() => {
+  if (template.value) {
+    switch (template.value.size) {
+      case "a4": {
+        return {
+          width: "21cm",
+          height: "29cm"
+        }
+      }
+      case "a5": {
+        return {
+          width: "14.8cm",
+          height: "20.7cm"
+        }
+      }
+    }
+  }
+
+  return {
+    width: "21.5cm",
+    height: "29cm"
+  }
+})
 
 onBeforeMount(async () => {
 
@@ -257,10 +283,19 @@ watch(template, () => {
 #preview {
   margin: 0;
   padding: 0;
+  border: lightgrey inset 1px;
+  overflow: hidden;
 }
 
 #qrcodeContainer {
   width: 100% !important;
+}
+
+.template-size {
+  font-size: 14px;
+  margin-top: 10px;
+  margin-bottom: -8px;
+  color: #080707;
 }
 
 .document_preview {
@@ -271,17 +306,18 @@ watch(template, () => {
   display: flex;
   flex-direction: row;
   gap: 1rem;
-  justify-content: flex-start;
+  justify-content: space-between;
   width: 100%;
 }
 
 .filter {
-  flex-basis: 450px;
+  flex-basis: 250px;
 }
 
 #preview>div {
   margin: auto;
   width: 100%;
+  height: 100%;
   text-align: justify;
 }
 
@@ -395,18 +431,28 @@ body {
 
 .my-form button {
   width: 100%;
-  font-size: 1rem; /* Taille de police */
+  font-size: 1rem;
+  /* Taille de police */
   background-color: #2F74E0;
   color: white;
-  padding: 0.35rem 0.25rem; /* Ajoutez un remplissage pour le texte d'entrée */
-  border: 1px solid #cccccc; /* Ajoutez une bordure */
-  border-radius: 0.25rem; /* Ajoutez un rayon de bordure */
-  transition: background-color 0.3s ease; /* Transition pour un effet de survol plus fluide */
+  padding: 0.35rem 0.25rem;
+  /* Ajoutez un remplissage pour le texte d'entrée */
+  border: 1px solid #cccccc;
+  /* Ajoutez une bordure */
+  border-radius: 0.25rem;
+  /* Ajoutez un rayon de bordure */
+  transition: background-color 0.3s ease;
+  /* Transition pour un effet de survol plus fluide */
 }
 
 .my-form button:hover {
-  background-color: #1a4c99; /* Changez la couleur de fond au survol */
-  color: white; /* Assurez-vous que le texte reste blanc */
+  background-color: #1a4c99;
+  /* Changez la couleur de fond au survol */
+  color: white;
+  /* Assurez-vous que le texte reste blanc */
 }
 
+.content {
+  height: 100%;
+}
 </style>

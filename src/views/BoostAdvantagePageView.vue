@@ -12,15 +12,17 @@
                 </div>
             </div>
             <div v-if="discount" class="inline-flex items-center justify-around w-full discount-content">
-                <div v-if="discount.quantity > 0 && moment(discount.expired_at) >= moment()">
+                <div v-if="isEnable == null"></div>
+                <div v-else-if="isEnable == true">
                     <h1 v-if="discount.description" class="boost__name">
                         {{ discount.description }}
                     </h1>
                     <h2 class="boost_quantity">
-                        Limited Quantity: <strong class="boost__quantity-nb">{{ discount.quantity }}</strong>
+                        {{ $t("advantage.limit_qty") }}: <strong class="boost__quantity-nb">{{ discount.quantity
+                            }}</strong>
                     </h2>
                     <div style="margin-top: 32px">
-                        <h4 class="boost_comment">Don't miss out on this exclusive offer!</h4>
+                        <h4 class="boost_comment"> {{ $t("advantage.dont_miss") }} </h4>
                     </div>
                     <div v-if="logo && logo.logo" class="customer__logo">
                         <img :src="logo.logo">
@@ -28,10 +30,10 @@
                 </div>
                 <div v-else style="margin-top: 220px">
                     <h2 class="boost_sold">
-                        This benefit is sold out
+                        {{ $t("advantage.sold_out") }}
                     </h2>
                     <div style="margin-top: 32px">
-                        <h4 class="boost_stay">Stay tuned, new benefits are coming soon!</h4>
+                        <h4 class="boost_stay">{{ $t("advantage.boost_stay") }}</h4>
                     </div>
                     <div v-if="logo && logo.logo" class="customer__logo">
                         <img :src="logo.logo">
@@ -55,6 +57,9 @@ import { useAppStore } from "@Stores/app.js";
 import services from '@Services/services.js';
 import { alertProps } from 'element-plus';
 import moment from 'moment';
+import { useI18n } from "vue-i18n";
+import { i18n } from '@/i18n';
+import { languages } from '@Services/languages.js';
 
 const baseurl = window.location.origin
 
@@ -64,9 +69,15 @@ const appStore = useAppStore();
 const route = useRoute();
 const logo = ref(null);
 
+const { locale } = useI18n();
+
 const discount = ref(null);
 
 const interval = ref(null);
+
+const isEnable = computed(() => {
+    return discount.value ? (discount.value.quantity > 0 && moment(discount.value.expired_at) >= moment()) : null
+})
 
 const qrSize = computed(() => {
     let size = 550
@@ -76,6 +87,8 @@ const qrSize = computed(() => {
         size = 380
     } else if (window.innerWidth <= 1440) {
         size = 450
+    } else if (window.innerWidth <= 1980) {
+        size = 600
     } else {
         size = 550
     }
@@ -104,8 +117,53 @@ const updateInfo = () => {
     }, 10000)
 }
 
+const findLanguage = (language) => {
+    for (let item of languages) {
+        if (item.bb == language.toLowerCase()) {
+            return item
+        }
+    }
+
+    return null
+}
+
+const setCustomerLanguage = async () => {
+    appStore.isLoading = true;
+    const response = await new Promise((resolve) => {
+        services.get_Record(`customer/language?tag=${route.params.tag}`, (response) => {
+            resolve(response)
+        }, true, true)
+    })
+
+    if (response.status == 200) {
+        let lg = findLanguage(response.data.language)
+        i18n.locale = lg.bb
+        locale.value = lg.bb
+    }
+}
+
 onMounted(async () => {
     appStore.isLoading = true;
+    let language = null
+
+    try {
+        language = navigator.language.slice(0, 2)
+    } catch (e) {
+        // Do nothing
+    }
+
+    if (language) {
+        let lg = findLanguage(language)
+        if (lg) {
+            i18n.locale = lg.bb
+            locale.value = lg.bb
+        } else {
+            setCustomerLanguage()
+        }
+
+    } else {
+        setCustomerLanguage()
+    }
     try {
         if (route.query.q) {
             const response = await new Promise((resolve, reject) => {
@@ -143,16 +201,17 @@ onBeforeUnmount(() => {
 <style>
 .screen__container {
     width: 100vw;
-    height: 100vh;
+    /* height: 100vh; */
     /* height: 100vh; */
     /* width: 1920px;
     height: 1080px; */
     justify-content: center;
-    align-items: center;
-    background: linear-gradient(180deg, rgba(216, 217, 226, 1) 0%, white 100%);
+    align-items: flex-start;
+    background: linear-gradient(180deg, rgba(216, 217, 226, 1) 0%, white 40%);
     overflow: hidden;
     position: relative;
-  
+    display: flex;
+
 }
 
 .bg__circle {
@@ -200,7 +259,7 @@ onBeforeUnmount(() => {
     ;
     font-size: 3rem;
     font-weight: 400;
-   
+
 }
 
 .boost_sold {
@@ -208,7 +267,7 @@ onBeforeUnmount(() => {
     ;
     font-size: 3rem;
     font-weight: 400;
-   
+
 }
 
 .boost__quantity-nb {
@@ -263,15 +322,15 @@ onBeforeUnmount(() => {
     height: 100%;
 }
 
-@media screen and (max-width: 1440px) {
+@media screen and (max-width: 1980px) {
     .discount-container {
         gap: 24px;
     }
-    
+
     .boost__title {
-        margin-top: 70px;
-        font-size: 3rem;
-        
+        margin-top: 50px;
+        font-size: 5rem;
+
     }
 
     .icon__container {
@@ -280,7 +339,75 @@ onBeforeUnmount(() => {
     }
 
     .icon__container img {
-        margin-top: 190%;
+        margin-top: 60px;
+        height: 70px !important;
+        width: auto;
+    }
+
+    .boost__name {
+        margin-top: 40px;
+        font-size: 3.75rem;
+
+    }
+
+    .boost_quantity {
+        margin-top: 18px;
+        font-size: 3rem;
+    }
+
+    .boost_sold {
+        margin-right: 200px;
+        margin-top: -150px;
+        font-size: 3.8rem;
+    }
+
+    .boost__quantity-nb {
+        font-size: 4rem;
+    }
+
+    .boost__qrcode {
+        margin-right: -100px;
+        margin-top: 100px;
+    }
+
+    .boost_comment {
+        margin-top: 10px;
+        font-size: 2.1rem;
+    }
+
+    .boost_stay {
+        margin-bottom: 10px;
+        font-size: 2.1rem;
+    }
+
+    .boost__description {
+        font-size: 1.4rem;
+    }
+
+    .customer__logo {
+        height: 100px;
+        margin-top: 60px;
+    }
+}
+
+@media screen and (max-width: 1440px) {
+    .discount-container {
+        gap: 24px;
+    }
+
+    .boost__title {
+        margin-top: 40px;
+        font-size: 3rem;
+
+    }
+
+    .icon__container {
+        height: 40px;
+        width: auto;
+    }
+
+    .icon__container img {
+        margin-top: 130%;
         height: 40px !important;
         width: auto;
     }
@@ -292,14 +419,14 @@ onBeforeUnmount(() => {
     }
 
     .boost_quantity {
-       margin-top: 18px;
+        margin-top: 18px;
         font-size: 2.5rem;
     }
 
     .boost_sold {
         margin-top: -150px;
         font-size: 2.5rem;
-   }
+    }
 
     .boost__quantity-nb {
         font-size: 3rem;
@@ -307,7 +434,7 @@ onBeforeUnmount(() => {
 
     .boost__qrcode {
         margin-right: -30px;
-        margin-top: 100px;
+        margin-top: 60px;
     }
 
     .boost_comment {
@@ -368,7 +495,7 @@ onBeforeUnmount(() => {
     }
 
     .boost__qrcode {
-       
+
         margin-top: 20px;
     }
 

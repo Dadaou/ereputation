@@ -4,7 +4,7 @@
             <div v-for="(item, index) in useCategories" :key="index">
                 <button class="accordion gate__menu" :class="[item.active ? 'clicked' : '']" @click="toggleMenu(item)">
                     <span class="icon-container">
-                        <Icon :icon="item.icon" width="14px" />
+                        <Icon :icon="item.icon" width="25px" />
                     </span>
                     <span>{{ item.label }}</span>
                 </button>

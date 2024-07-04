@@ -1,12 +1,13 @@
 <template>
   <div class="mt-5 table__container">
     <div class="table-description" style="margin-bottom: 16px;">
-      <p>Partnerships requested by your establishment</p>
+      <p>Requests for partnerships</p>
       <div>
-        <el-input v-model="searchSent" size="small" placeholder="Type to search" class="input_searchs"/>
+        <el-input v-model="searchReceived" size="small" placeholder="Type to search" class="input_search"/>
       </div>
     </div>
-    <el-table :data="filterTableDataSent" class="responsive-table">
+   
+    <el-table :data="filterTableDataReceived" class="responsive-table">
       <el-table-column label="Advantage" prop="advantage_name" style="width: 15%; min-width: 200px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 30%; min-width: 400px;" />
       <el-table-column label="Partnership" prop="partnership_name" style="width: 30%; min-width: 4%;" />
@@ -20,20 +21,25 @@
       </el-table-column>
       <el-table-column label="State" prop="state" align="center" style="width: 10%; min-width: 200px;">
         <template #default="scope">
-          <i v-if="scope.row.state == 'pending'" class="uil uil-dna mr-1" style="font-size: 16px;"></i>
-          <i v-else class="uil uil-check mr-1" style="color:var(--color-success); font-size: 16px;"></i>
+          <el-popconfirm v-if="scope.row.state == 'valid'"
+            title='Are you sure to change the state of partnership to "PENDING"?'
+            @confirm="handleEvent(scope.$index, scope.row, 'state', 'pending')">
+            <template #reference>
+              <el-button><i class="uil uil-check mr-1"
+                  style="color:var(--color-success); font-size: 16px;"></i></el-button>
+            </template>
+          </el-popconfirm>
+          <el-popconfirm v-if="scope.row.state == 'pending'"
+            title='Are you sure to change the state of partnership to "VALID"'
+            @confirm="handleEvent(scope.$index, scope.row, 'state', 'valid')">
+            <template #reference>
+              <el-button><i class="uil uil-dna mr-1" style="font-size: 16px;"></i></el-button>
+            </template>
+          </el-popconfirm>
+          <!-- <span style="text-transform: uppercase; font-size: 12px;">{{ scope.row.state }}</span> -->
         </template>
       </el-table-column>
       <el-table-column label="Enable" prop="enable" align="center" style="width: 10%; min-width: 200px;">
-        <!--<template #default="scope">
-          <span style="text-transform: uppercase;">
-            <i v-if="scope.row.enable" class="uil uil-check mr-1"
-              style="color:var(--color-success); font-size: 16px;"></i>
-            <i v-else class="uil uil-times mr-1" style="color:var(--color-danger2); font-size: 16px;"></i>
-          </span>
-
-        </template>-->
-
         <template #default="scope">
           <el-popconfirm v-if="scope.row.enable == false" title='Are you sure to "ENABLE" this partnership?'
             @confirm="handleEvent(scope.$index, scope.row, 'enable', true)">
@@ -56,15 +62,22 @@
           </span> -->
 
         </template>
-
       </el-table-column>
-      <!-- <el-table-column>
-        <template #header>
-          <el-input v-model="searchSent" size="small" placeholder="Type to search" class="searchTab"/>
+      <el-table-column style="width: 15%; min-width: 200px;" align="right">
+        <!-- <template #header>
+          <el-input v-model="searchReceived" size="small" placeholder="Type to search" class="searchTab"/>
+        </template> -->
+        <template #default="scope">
+          <el-popconfirm v-if="scope.row.state == 'pending' && scope.row.enable == false"
+            title="Are you sure to accept this request?" @confirm="handleAccept(scope.$index, scope.row)">
+            <template #reference>
+              <el-button><i class="uil uil-check mr-1" style="color:var(--color-success); font-size: 16px;"></i><span
+                  style="color:var(--color-success); font-size:10px;">Accept</span></el-button>
+            </template>
+          </el-popconfirm>
         </template>
-      </el-table-column> -->
+      </el-table-column>
     </el-table>
-
   </div>
 </template>
 <script setup>
@@ -160,7 +173,6 @@ const handleEvent = async (index, partnership, column, value) => {
 };
 </script>
 <style scoped>
-
 button {
   border: none;
   cursor: pointer;
