@@ -48,33 +48,41 @@
                 </div>
                 <div>
                     <label for="logoFile" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Logo</label>
-                    <div class="image-selector border-gray-300" :class="!previewImage && 'hover'" @click="selectLogo"
-                        @mouseover="imageInputHover = true" @mouseleave="imageInputHover = false">
-                        <img v-if="previewImage" :src="previewImage" class="uploading-image" />
-                        <i v-else class="uil uil-image-plus"></i>
-                        <div v-if="imageInputHover && previewImage" class="img-hover">
-                            <i class="uil uil-image-edit"></i>
+                    <div class="drop-area" @dragover.prevent @drop="onLogoDrop">
+                        <div class="image-selector border-gray-300" :class="!previewImage && 'hover'" @click="selectLogo"
+                            @mouseover="imageInputHover = true" @mouseleave="imageInputHover = false">
+                                <draggable v-model="logoFiles" @end="onEnd" @change="onChange">
+                                    <template #item="{ element }">
+                                        <div class="file-item">
+                                            <img v-if="previewImage" :src="previewImage" class="uploading-image" />
+                                            <i v-if="imageInputHover" class="uil uil-image-edit img-hover"></i>
+                                        </div>
+                                    </template>
+                                </draggable>
+                                <i v-if="!logoFiles.length" class="uil uil-image-plus"></i>
+                            </div>
+                            <input type="file" id="logoFile" ref="logoInput" @change="handleFileChange('logo', $event)"
+                                accept="image/png, image/jpeg, image/gif" style="display:none">
                         </div>
                     </div>
-                    <input type="file" id="logoFile" ref="logoInput" 
-                        @change="handleFileChange('logo', $event)"
-                        accept="image/png, image/jpeg, image/gif"
-                        style="display:none"
-                    >
-                </div>
                 <div>
                     <label for="documentFile" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Document</label>
-                    <div class="image-selector border-gray-300" @click="selectDocument">
-                        <div v-if="selectedDocument" class="file-name" style="font-size: 16px;">{{ fileName }}</div>
-                        <i v-else class="uil uil-file-plus"></i>
-                        <!-- <div class="img-hover">
-                            <i class="uil uil-image-edit"></i>
-                        </div> -->
+                    <div class="drop-area" @dragover.prevent @drop="onDocumentDrop">
+                        <div class="image-selector border-gray-300" @click="selectDocument"
+                            @mouseover="documentInputHover = true" 
+                            @mouseleave="documentInputHover = false">
+                            <draggable v-model="documentFiles" @end="onEnd" @change="onChange">
+                                <template #item="{ element }">
+                                    <div class="file-item" style="font-size: 16px">
+                                        {{ element.name }}
+                                        <i v-if="documentInputHover && documentFiles.length" class="uil uil-file-edit-alt img-hover"></i>
+                                    </div>
+                                </template>
+                            </draggable>
+                            <i v-if="!documentFiles.length" class="uil uil-file-plus"></i>
+                        </div>
+                        <input type="file" id="documentFile" ref="documentInput" @change="handleFileChange('document', $event)" accept="application/pdf" style="display:none">
                     </div>
-                    <input type="file" id="documentFile" ref="documentInput"
-                        @change="handleFileChange('document', $event)"
-                        accept="application/pdf"
-                        style="display:none">
                 </div>
             </div>
             <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
@@ -112,6 +120,7 @@ import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import { useRoute, useRouter } from 'vue-router';
+import draggable from 'vuedraggable';
 
 const ModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/ModalComponent.vue')
@@ -132,15 +141,109 @@ const selectedLogo = ref(null);
 const selectedDocument = ref(null);
 const previewImage = ref(null);
 const imageInputHover = ref(false);
+const documentInputHover = ref(false); 
 const imgHasChanged = ref(false);
 const fileName = ref('');
+const logoFiles = ref([]);
+const documentFiles = ref([]);
 
+const onLogoDrop = (event) => {
+  event.preventDefault();
+  const droppedFiles = event.dataTransfer.files;
+  if (droppedFiles.length > 0) {
+    if (isImageFile(droppedFiles[0])) {
+      handleFiles(droppedFiles[0], 'logo');
+    } else {
+      showErrorMessage('Please upload a valid image file for the logo.');
+    }
+  }
+};
+
+const onDocumentDrop = (event) => {
+  event.preventDefault();
+  const droppedFiles = event.dataTransfer.files;
+  if (droppedFiles.length > 0) {
+    if (isPdfFile(droppedFiles[0])) {
+      handleFiles(droppedFiles[0], 'document');
+    } else {
+      showErrorMessage('Please upload a valid PDF file for the document.');
+    }
+  }
+};
+
+const handleFiles = (file, type) => {
+  if (type === 'logo') {
+    const reader = new FileReader();
+    selectedLogo.value = file;
+    reader.readAsDataURL(file);
+    reader.onload = (e) => {
+      logoFiles.value = [{
+        file: file,
+        previewImage: e.target.result
+      }];
+      previewImage.value = e.target.result;
+    };
+  } else if (type === 'document') {
+    selectedDocument.value = file;
+    documentFiles.value = [{
+      file: file,
+      name: file.name
+    }];
+  }
+};
+
+const isImageFile = (file) => {
+  return ['image/png', 'image/jpeg', 'image/gif'].includes(file.type);
+};
+
+const isPdfFile = (file) => {
+  return file.type === 'application/pdf';
+};
+
+const selectFiles = () => {
+  document.querySelector('input[type="file"]').click();
+};
+
+const onEnd = (event) => {
+  console.log('Drag ended', event);
+};
+
+const onChange = (event) => {
+  console.log('Order changed', event);
+};
+
+const handleFileChange = (type, e) => {
+  const file = e.target.files[0];
+  if (file) {
+    if (type === 'document') {
+      if (isPdfFile(file)) {
+        documentFiles.value = [{ file: file, name: file.name }];
+      } else {
+        showErrorMessage('Please upload a valid PDF file for the document.');
+      }
+    } else if (type === 'logo') {
+      if (isImageFile(file)) {
+        handleFiles(file, 'logo');
+      } else {
+        showErrorMessage('Please upload a valid image file for the logo.');
+      }
+    }
+    // Reset the input value
+    e.target.value = '';
+  }
+};
 const selectLogo = () => {
     document.getElementById('logoFile').click();
 }
 const selectDocument = () => {
     document.getElementById('documentFile').click();
 }
+const showErrorMessage = (message) => {
+  ElMessage({
+    message: message,
+    type: 'error',
+  });
+};
 const link_to_update = inject('link_to_update');
 const showModal = ref(false);
 const showLinkModal = ref(false);
@@ -354,22 +457,6 @@ const getHashtagValue = (value) => {
 }
 
 
-const handleFileChange = (type, e) => {
-    const file = e.target.files[0];
-    if (type === 'document') {
-        selectedDocument.value = file;
-        fileName.value = file.name;
-    } else if (type === 'logo') {
-        selectedLogo.value = file;
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = e => {
-            previewImage.value = e.target.result;
-        };
-        imgHasChanged.value = true;
-    }
-};
-
 const submit = async () => {
     const formData = new FormData();
     const formDataTwo = new FormData();
@@ -401,51 +488,53 @@ const submit = async () => {
 
     if (isEdit.value) {
         try {
-            // eslint-disable-next-line no-async-promise-executor
-            const response = await new Promise(async (resolve) => { // Ajout de async ici
-            services.putRecord('settings', id.value, data, async (response) => { // Ajout de async ici aussi
-                resolve(response);
-                const settingUrl = response.data['@id'];
-                const lastSlashIndex = settingUrl.lastIndexOf('/') + 1;
-                const settingId = settingUrl.substring(lastSlashIndex);
-                console.log(settingId)
-                formData.append('id', settingId);
-                formDataTwo.append('id', settingId);
-              
-                try {
-                    const response = await new Promise((resolve) => {
-                        services.post_Record_formData(`/customer/settings/upload`, formData, (response) => {
-                            resolve(response);
-                        }, false);
-                    });
-                    if (response.status === 200 || response.status === 201) {
-                        emit('close-modal');
-                    } else {
-                        ElMessage.error(response.data.message || 'An error occurred while uploading the files.');
-                    }
-                } catch (error) {
-                    ElMessage.error('An error occurred while uploading the files.');
-                    console.error(error);
-                }
+            const response = await new Promise(async (resolve) => {
+                services.putRecord('settings', id.value, data, async (response) => {
+                    resolve(response);
+                    const settingUrl = response.data['@id'];
+                    const lastSlashIndex = settingUrl.lastIndexOf('/') + 1;
+                    const settingId = settingUrl.substring(lastSlashIndex);
 
-                try {
-                        const response = await new Promise((resolve) => {
-                            services.post_Record_formData('/customer/settings/upload', formDataTwo, (response) => {
-                                resolve(response)
-                            }, false);
-                        });
-                        if (response.status === 200 || response.status === 201) {
-                            // ElMessage.success('Files document uploaded successfully!');
-                            emit('close-modal');
-                        } else {
-                            ElMessage.error(response.data.message || 'An error occurred while uploading the files.');
+                    formData.append('id', settingId);
+                    formDataTwo.append('id', settingId);
+
+                    let uploadErrors = [];
+
+                    if (formData.has('file')) {
+                        try {
+                            const response = await new Promise((resolve) => {
+                                services.post_Record_formData(`/customer/settings/upload`, formData, (response) => {
+                                    resolve(response);
+                                }, false);
+                            });
+                            if (response.status !== 200 && response.status !== 201) {
+                                uploadErrors.push('An error occurred while uploading the logo.');
+                            }
+                        } catch (error) {
+                            uploadErrors.push('An error occurred while uploading the logo.');
                         }
-                    } catch (error) {
-                        ElMessage.error('An error occurred while uploading the files.');
-                        console.error(error);
                     }
+
+                    if (formDataTwo.has('file')) {
+                        try {
+                            const response = await new Promise((resolve) => {
+                                services.post_Record_formData('/customer/settings/upload', formDataTwo, (response) => {
+                                    resolve(response);
+                                }, false);
+                            });
+                            if (response.status !== 200 && response.status !== 201) {
+                                uploadErrors.push('An error occurred while uploading the document.');
+                            }
+                        } catch (error) {
+                            uploadErrors.push('An error occurred while uploading the document.');
+                        }
+                    }
+
+                    if (uploadErrors.length > 0) {
+                        uploadErrors.forEach(error => ElMessage.error(error));
+                    }
+                });
             });
-        });
 
             if (response.status == 200) {
                 ElMessage({
@@ -470,38 +559,39 @@ const submit = async () => {
                     const settingId = settingUrl.substring(lastSlashIndex);
                     formData.append('id', settingId);
                     formDataTwo.append('id', settingId);
-                    try {
-                        const response = await new Promise((resolve) => {
-                            services.post_Record_formData('/customer/settings/upload', formData, (response) => {
-                                resolve(response)
-                            }, false);
-                        });
-                        if (response.status === 200 || response.status === 201) {
-                            // ElMessage.success('Files logo uploaded successfully!');
-                            emit('close-modal');
-                        } else {
-                            ElMessage.error(response.data.message || 'An error occurred while uploading the files.');
+                    let uploadErrors = [];
+                    if (formData.has('file')) {
+                        try {
+                            const response = await new Promise((resolve) => {
+                                services.post_Record_formData('/customer/settings/upload', formData, (response) => {
+                                    resolve(response)
+                                }, false);
+                            })
+                            if (response.status !== 200 && response.status !== 201) {
+                                uploadErrors.push('An error occurred while uploading the logo.');
+                            }
+                        } catch (error) {
+                            uploadErrors.push('An error occurred while uploading the logo.');
                         }
-                    } catch (error) {
-                        ElMessage.error('An error occurred while uploading the files.');
-                        console.error(error);
                     }
 
-                    try {
-                        const response = await new Promise((resolve) => {
-                            services.post_Record_formData('/customer/settings/upload', formDataTwo, (response) => {
-                                resolve(response)
-                            }, false);
-                        });
-                        if (response.status === 200 || response.status === 201) {
-                            // ElMessage.success('Files document uploaded successfully!');
-                            emit('close-modal');
-                        } else {
-                            ElMessage.error(response.data.message || 'An error occurred while uploading the files.');
+                    if (formDataTwo.has('file')) {
+                        try {
+                            const response = await new Promise((resolve) => {
+                                services.post_Record_formData('/customer/settings/upload', formDataTwo, (response) => {
+                                    resolve(response)
+                                }, false);
+                            });
+                            if (response.status !== 200 && response.status !== 201) {
+                                uploadErrors.push('An error occurred while uploading the document.');
+                            }
+                        } catch (error) {
+                            uploadErrors.push('An error occurred while uploading the document.');
                         }
-                    } catch (error) {
-                        ElMessage.error('An error occurred while uploading the files.');
-                        console.error(error);
+                    }
+
+                    if (uploadErrors.length > 0) {
+                        uploadErrors.forEach(error => ElMessage.error(error));
                     }
                 });
             });
@@ -524,6 +614,7 @@ const submit = async () => {
 }
 
 const resetValue = () => {
+    documentFiles.value = "";
     selectedDocument.value = null;
     fileName.value = '';
     previewImage.value = null;
@@ -806,6 +897,7 @@ form button {
 
 @media screen and (max-width: 500px) {
     form {
+        height: 850px !important;
         padding-right: 3.5rem !important;
     }
 }

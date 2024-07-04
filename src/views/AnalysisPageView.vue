@@ -584,9 +584,14 @@ const loadAnalysisData = async (tag, dateStart, dateEnd, categories) => {
         let totalLabels = response.data.labels.length;
 
         if (totalLabels > 11 && containerBody2 && containerBody) {
-            let new_width = totalLabels * 25 * response.data.datasets.length
-            containerBody.style.width = `${new_width}px`
-            containerBody2.style.width = `${new_width}px`
+            let new_width;
+            if (window.innerWidth <= 975) {
+                new_width = totalLabels * 5 * response.data.datasets.length;
+            } else {
+                new_width = totalLabels * 2 * response.data.datasets.length;
+            }
+            containerBody.style.width = `${new_width}vw`
+            containerBody2.style.width = `${new_width}vw`
         } else {
             containerBody.style.width = '';
             containerBody2.style.width = '';
