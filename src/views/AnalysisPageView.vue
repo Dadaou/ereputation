@@ -533,17 +533,7 @@ const onChange = () => {
     loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value);
 };
 const handleLabelChange = (selectedLabel) => {
-    if (selectedLabel === 'all') {
-        categoryFilters.value = ['all'];
-    } else {
-        const index = categoryFilters.value.indexOf('all');
-        if (index !== -1) {
-            categoryFilters.value.splice(index, 1);
-        }
-        if (!categoryFilters.value.includes(selectedLabel)) {
-            categoryFilters.value.push(selectedLabel);
-        }
-    }
+    categoryFilters.value = [selectedLabel];
     onChange()
 }
 
