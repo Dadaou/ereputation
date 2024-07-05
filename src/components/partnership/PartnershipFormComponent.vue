@@ -72,8 +72,8 @@
         <form @submit.prevent="submitEmail" @keydown.enter.prevent="submitEmail" class="mt-4 px-2">
             <div class="inline-flex items-center gap-2">
                 <div>
-                    <label for="countries"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
+                    <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Please
+                        select your establishment
                         <span>*</span></label>
                     <el-select v-model="establishmentInviteFriend" placeholder="Choose establishment" size="large">
                         <el-option v-for="item in userStore.user.customer.establishments" :key="item.id"
