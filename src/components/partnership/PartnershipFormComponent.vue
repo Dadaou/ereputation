@@ -145,10 +145,12 @@ watch(partnership, () => {
 
 onBeforeMount(async () => {
     await loadAdvantage();
+    advantageOptions.value = advantages.value;
 })
 
 const searchAdvantage = (query) => {
     if (query) {
+        
         loading.value = true
         setTimeout(() => {
             loading.value = false
@@ -158,20 +160,23 @@ const searchAdvantage = (query) => {
             })
         }, 200)
     } else {
+        
         advantageOptions.value = advantages.value
     }
 }
 
 const searchPartnership = (query) => {
     if (query) {
-        loading.value = true
+        
+        loading2.value = true
         setTimeout(() => {
-            loading.value = false
+            loading2.value = false
             partnershipOptions.value = partnerships.value.filter((item) => {
                 return item.name.toLowerCase().includes(query.toLowerCase())
             })
         }, 200)
     } else {
+        
         partnershipOptions.value = partnerships.value
     }
 }
@@ -197,6 +202,7 @@ const updatePartnershipList = async (advantageId) => {
     });
     if (response.status === 200) {
         partnerships.value = response.data;
+        partnershipOptions.value = partnerships.value
         appStore.isLoading = false;
     }
     appStore.isLoading = false;
@@ -258,7 +264,11 @@ const submit = async () => {
 };
 
 const submitEmail = async () => {
+    console.log(partner.value);
+    console.log(email.value);
+    console.log(establishment.value)
     if (partner.value && email.value && establishment.value) {
+        
         showSpinnerEmail.value = true;
 
         let data = {
@@ -288,6 +298,8 @@ const submitEmail = async () => {
             expiredAt.value = '';
             showSpinnerEmail.value = false;
         }
+    } else {
+        ElMessage.error(`Please, fill the Advantage!`);
     }
     // if (partnership.value && partnership.value) {
     //     try {
