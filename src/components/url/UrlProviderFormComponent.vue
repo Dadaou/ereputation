@@ -1,38 +1,52 @@
 <template>
     <div class="security__header border__bottom mt-10">
-         <div class="security__edit">
+        <div class="security__edit">
             <!-- <h4><i class="uil uil-company"></i> Establishment</h4> -->
             <p>Add the URL of your public review platforms, social medoia profiles, or hashtags you wish to monitor.
-                 You can display these links into your Gate (Your unique QR Code) by selecting the corresponding section in the section field. </p>
+                You can display these links into your Gate (Your unique QR Code) by selecting the corresponding section
+                in the section field. </p>
         </div>
     </div>
     <div>
         <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
-                    <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span>*</span></label>
-                    <el-select v-model="establishment" placeholder="Choose establishment" size="large" :disabled="IsValueOkay(competitor)" clearable filterable>
-                        <el-option v-for="item in establishments" :key="item.tag" :label="item.name" :value="item.uri" />
+                    <label for="countries"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
+                        <span>*</span></label>
+                    <el-select v-model="establishment" placeholder="Choose establishment" size="large"
+                        :disabled="IsValueOkay(competitor)" clearable filterable>
+                        <el-option v-for="item in establishments" :key="item.tag" :label="item.name"
+                            :value="item.uri" />
                     </el-select>
                 </div>
                 <div>
-                    <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
+                    <label for="category"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
                     <el-select id="category" v-model="category" placeholder="Choose category" size="large" clearable>
                         <el-option v-for="item in categories" :key="item" :label="item" :value="item" />
                     </el-select>
                 </div>
                 <div>
-                    <label for="providers" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Providers</label>
-                    <el-select id="providers" v-model="provider" placeholder="Choose provider" size="large" filterable clearable>
-                        <el-option v-for="item in filteredProviders" :key="item.uri" :label="item.name" :value="`${item.uri}${item.url}`" />
+                    <label for="providers"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Providers</label>
+                    <el-select id="providers" v-model="provider" placeholder="Choose provider" size="large" filterable
+                        clearable>
+                        <el-option v-for="item in filteredProviders" :key="item.uri" :label="item.name"
+                            :value="`${item.uri}${item.url}`" />
                     </el-select>
                 </div>
+                <!-- <div>
+                    <label for="caption"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Caption</label>
+                    <input type="text" id="caption" v-model="caption"
+                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                </div> -->
                 <div>
-                    <label for="caption" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Caption</label>
-                    <input type="text" id="caption" v-model="caption" :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
-                </div>
-                <div>
-                    <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
+                    <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section
+                        <Tooltip
+                            text="Please choose the section of the gate (Unified QR code) in which you wish to share this link. Leave it blank to not share it." />
+                    </label>
                     <el-select id="section" v-model="section" placeholder="" size="large">
                         <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
                     </el-select>
@@ -40,21 +54,31 @@
             </div>
             <div>
                 <div>
-                    <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ !isHashtag ? 'Link' : 'Hashtag' }} <span>*</span></label>
-                    <p v-if="!isHashtag && provider" class="text-gray-900 text-sm">Url must start with {{ splitUriAndUrl(provider).url }}</p>
+                    <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ !isHashtag
+                        ? 'Link' : 'Hashtag' }} <span>*</span></label>
+                    <p v-if="!isHashtag && provider" class="text-gray-900 text-sm">Url must start with {{
+                        splitUriAndUrl(provider).url }}</p>
                     <p v-if="!isValidLink && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
                     <p v-if="!isValidHashtag && isHashtag" class="text-red-500 text-sm">Invalid hashtag format</p>
-                    <input v-if="isHashtag" type="text" id="link" v-model="link" :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']" placeholder="#hashtag" required>
-                    <input v-else type="text" id="link" v-model="link" :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']" required>
+                    <input v-if="isHashtag" type="text" id="link" v-model="link"
+                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']"
+                        placeholder="#hashtag" required>
+                    <input v-else type="text" id="link" v-model="link"
+                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']"
+                        required>
                 </div>
             </div>
             <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
-                <button v-if="!isHashtag" type="submit" :disabled="!isValidLink" :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
-                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading ...</span>
+                <button v-if="!isHashtag" type="submit" :disabled="!isValidLink"
+                    :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
+                        ...</span>
                     <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
                 </button>
-                <button v-else type="submit" :disabled="!isValidHashtag" :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidHashtag ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
-                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading ...</span>
+                <button v-else type="submit" :disabled="!isValidHashtag"
+                    :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidHashtag ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
+                        ...</span>
                     <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
                 </button>
             </div>
@@ -82,6 +106,10 @@ import { useRoute, useRouter } from 'vue-router';
 
 const ModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/ModalComponent.vue')
+)
+
+const Tooltip = defineAsyncComponent(() =>
+    import('@Components/utils/QuestionMarkTooltipComponent.vue')
 )
 
 const router = useRouter();
