@@ -33,7 +33,7 @@
                             <span><strong>{{ item.name }}</strong>, </span>
                             <span style="color: var(--el-text-color-secondary);font-size: 13px;"> {{
                                 item.address1 }}, {{ item.zipcode }}, {{
-                                    item.city }}</span>
+                                item.city }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -71,10 +71,20 @@
         </div>
         <form @submit.prevent="submitEmail" @keydown.enter.prevent="submitEmail" class="mt-4 px-2">
             <div class="inline-flex items-center gap-2">
+                <div>
+                    <label for="countries"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
+                        <span>*</span></label>
+                    <el-select v-model="establishmentInviteFriend" placeholder="Choose establishment" size="large">
+                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id"
+                            :label="item.name" :value="item.competitor_tag" />
+                    </el-select>
+                </div>
                 <input type="email" id="email" v-model="email" placeholder="Enter an email address"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-50 p-2">
-                <button type="submit"
-                    class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-50 p-2" style="margin-top: 30px;">
+                <button type=" submit"
+                    class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
+                    style="margin-top: 30px;">
                     <SpinnerComponent :show-spinner="showSpinnerEmail" :color="'gray'" /> <span
                         v-if="showSpinnerEmail">Loading
                         ...</span>
@@ -88,7 +98,7 @@
 // import moment from 'moment';
 import { ref, inject, watch, defineAsyncComponent, computed, onBeforeMount } from 'vue'
 import services from '@Services/services.js'
-// import { useUserStore } from "@Stores/user.js"
+import { useUserStore } from "@Stores/user.js"
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue'
 import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
@@ -124,6 +134,9 @@ const loading = ref(false)
 const partnershipOptions = ref([]);
 const loading2 = ref(false)
 
+const userStore = useUserStore();
+const establishmentInviteFriend = ref('')
+
 watch(advantage, () => {
     if (advantage.value) {
         partnership.value = null;
@@ -146,6 +159,12 @@ watch(partnership, () => {
 onBeforeMount(async () => {
     await loadAdvantage();
     advantageOptions.value = advantages.value;
+
+    // Vérifiez s'il y a des établissements et sélectionnez le premier par défaut
+    if (userStore.user.customer.establishments.length > 0) {
+        const firstEstablishment = userStore.user.customer.establishments[0]
+        establishmentInviteFriend.value = firstEstablishment.competitor_tag
+    }
 })
 
 const searchAdvantage = (query) => {
@@ -264,13 +283,13 @@ const submit = async () => {
 };
 
 const submitEmail = async () => {
-    if (partner.value && email.value && establishment.value) {
+    if (partner.value && email.value && establishmentInviteFriend.value) {
         
         showSpinnerEmail.value = true;
 
         let data = {
             "email": email.value,
-            "code": establishment.value,
+            "code":establishmentInviteFriend.value,
             "partner": partner.value,
             "url": app_url.value,
             "template": partnership.value ? "partnership_customer" : "partnership_nocustomer"
@@ -295,8 +314,6 @@ const submitEmail = async () => {
             expiredAt.value = '';
             showSpinnerEmail.value = false;
         }
-    } else {
-        ElMessage.error(`Please, fill the Advantage!`);
     }
     // if (partnership.value && partnership.value) {
     //     try {
