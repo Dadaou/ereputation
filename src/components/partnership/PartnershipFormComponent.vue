@@ -264,9 +264,6 @@ const submit = async () => {
 };
 
 const submitEmail = async () => {
-    console.log(partner.value);
-    console.log(email.value);
-    console.log(establishment.value)
     if (partner.value && email.value && establishment.value) {
         
         showSpinnerEmail.value = true;
