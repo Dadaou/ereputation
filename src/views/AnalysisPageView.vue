@@ -6,17 +6,17 @@
 
                     <AnalysisCategory text="Your customers appreciated your establishment for the following services"
                         :ratings="ratingsCondition1" condition='condition1' v-if="ratingsCondition1.length > 0"
-                        class="mb-4" />
+                        class="mb-4" @labelChange="handleLabelChange"/>
 
                     <AnalysisCategory
                         text="Your customers believe that you can improve the quality of the following services"
                         :ratings="ratingsCondition2" condition='condition2' v-if="ratingsCondition2.length > 0"
-                        class="mb-4" />
+                        class="mb-4" @labelChange="handleLabelChange"/>
 
                     <AnalysisCategory
                         text="It is necessary to establish actions in order to improve the following areas"
                         :ratings="ratingsCondition3" condition='condition3' v-if="ratingsCondition3.length > 0"
-                        class="mb-4" />
+                        class="mb-4" @labelChange="handleLabelChange"/>
 
                     <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']">
                         <div class="containerChart" ref="scrollContainer1"
@@ -244,7 +244,7 @@
                     <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
                         :disabled="categoryFilters.length > 1 && !categoryFilters.includes('all')" />
                     <el-option v-for="(item, index) in categories" :key="index" :label="item.category"
-                        :value="item.category" @click="handleCategoryDropdown('other')" />
+                        :value="item.category" @click="handleCategoryDropdown('other')"/>
                 </el-select>
             </div>
 
@@ -526,6 +526,25 @@ const calculateAvg = (data) => {
 const handleCategoryDropdown = (type) => {
     const filters = type == 'other' ? categoryFilters.value.filter(category => category != 'all') : ['all']
     categoryFilters.value = categoryFilters.value.length > 0 ? filters : ['all']
+}
+
+const onChange = () => {
+    console.log('Filters changed, reloading chart data...');
+    loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value);
+};
+const handleLabelChange = (selectedLabel) => {
+    if (selectedLabel === 'all') {
+        categoryFilters.value = ['all'];
+    } else {
+        const index = categoryFilters.value.indexOf('all');
+        if (index !== -1) {
+            categoryFilters.value.splice(index, 1);
+        }
+        if (!categoryFilters.value.includes(selectedLabel)) {
+            categoryFilters.value.push(selectedLabel);
+        }
+    }
+    onChange()
 }
 
 const loadCategories = async (tag) => {
