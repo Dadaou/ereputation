@@ -18,8 +18,9 @@
 		    color: 'white',
 		    padding: '5px',
 		    borderRadius: '5px',
-		    marginRight: '10px' 
-		}">
+		    marginRight: '10px',
+			cursor: 'pointer'
+		}" @click="emitLabelChange(rating.label)">
 		    {{ rating.label }}
 		</span>
 
@@ -42,6 +43,11 @@ const props = defineProps({
 		default: ''
 	}
 });
+const emit = defineEmits(['labelChange']);
+
+const emitLabelChange = (label) => {
+    emit('labelChange', label);
+}
 </script>
 <style scoped>
 	.cat_desc{
