@@ -40,13 +40,16 @@
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
                 </el-tab-pane>
+                <el-tab-pane label="Analysis competitors" name="analysis_competitors">
+                    <AnalysisCompetitors />
+                </el-tab-pane>
                 <el-tab-pane label="Staff" name="staff">
                     <StaffRanking />
                 </el-tab-pane>
                 <el-tab-pane label="Events & weather" name="events_weather">
                     Coming soon ...
                 </el-tab-pane>
-              <!--  <el-tab-pane label="Sales" name="sales">
+                <!--  <el-tab-pane label="Sales" name="sales">
                     <div
                         v-if="salesAnalysis && salesAnalysis.avgCustomerCard != 0 && salesAnalysis.current.avgBookings != 0 && salesAnalysis.current.avgTTV != 0 && salesAnalysis.current.score != '0'">
                         <p class="analysis-sales-title" style="margin-top: 1rem;">
@@ -254,14 +257,16 @@
                 <el-date-picker class="mt-2" v-model="end_date" placeholder="End date" :size="'large'" />
             </div>
         </div>
-        <CommunityFeedbackComponent v-if="activeName !== 'trends'" :reviewFeedbackData="services.getScoreColor(avgScore)" />
+        <CommunityFeedbackComponent v-if="activeName !== 'trends'"
+            :reviewFeedbackData="services.getScoreColor(avgScore)" />
         <el-tooltip ref="tooltipRef" :visible="desc.visible" :virtual-ref="buttonRef" virtual-triggering
             popper-class="singleton-tooltip" placement="top">
             <template #content>
                 <span> {{ desc.text }} </span>
             </template>
         </el-tooltip>
-         <BaseLegend v-if="activeName !== 'trends'" :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData" :alignment="'vertical'">
+        <BaseLegend v-if="activeName !== 'trends'" :class="['legend', !isLoading ? '' : 'loading']"
+            :LegendData="legendData" :alignment="'vertical'">
         </BaseLegend>
     </div>
 </template>
@@ -328,6 +333,10 @@ const StaffRanking = defineAsyncComponent(() =>
 
 const AnalysisTrend = defineAsyncComponent(() =>
     import('@Views/TrendsView.vue')
+)
+
+const AnalysisCompetitors = defineAsyncComponent(() =>
+    import('@Views/AnalysisCompetitors.vue')
 )
 
 const companiesStore = useCompanyStore();
