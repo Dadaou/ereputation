@@ -9,16 +9,17 @@
         <form id="establishmentForm" @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div class="md:order-2">
-                    <div class="image-selector border-gray-300" :class="!previewImage && 'hover'" @click="selectImg"
-                        @mouseover="imageInputHover = true" @mouseleave="imageInputHover = false">
-                        <img v-if="previewImage" :src="previewImage" class="uploading-image" />
-                        <i v-else class="uil uil-image-plus"></i>
-                        <div v-if="imageInputHover && previewImage" class="img-hover">
-                            <i class="uil uil-image-edit"></i>
+                    <div class="image-selector border-gray-300" @dragover.prevent="onDragOver" 
+                    @drop.prevent="onDrop"  @click="selectImg" >
+                        <div v-if="previewImage" class="image-preview">
+                            <img :src="previewImage" alt="Preview Image" class="uploading-image"/>
+                            <div class="img-hover">
+                                <i class="uil uil-image-edit"></i>
+                            </div>
                         </div>
+                        <i v-else class="uil uil-image-plus"></i>
+                        <input id="imgInput" name="file" type="file" @change="updateImage"  style="display:none">
                     </div>
-
-                    <input id="imgInput" name="file" type="file" @change=updateImage style="display:none">
                 </div>
                 <div class="md:order-1">
                     <div class="mb-6">
@@ -161,6 +162,48 @@ const establishment_to_update = inject('establishment_to_update');
 const imgHasChanged = ref(false);
 const cleanEstablishmentForm = inject('clearEstablishmentForm');
 
+
+const onDragOver = (event) => {
+    imageInputHover.value = true; 
+};
+
+const onDrop = (event) => {
+    event.preventDefault();
+    const files = event.dataTransfer.files;
+    if (files.length > 0) {
+        const file = files[0];
+        if (isImageFile(file)) {
+            updateImageFromFile(file);
+            // Définir manuellement les fichiers de l'élément input
+            document.getElementById('imgInput').files = event.dataTransfer.files;
+            imgHasChanged.value = true;
+        } else {
+            showErrorMessage("Veuillez télécharger un fichier image valide.");
+        }
+    }
+};
+
+
+const isImageFile = (file) => {
+    return ['image/png', 'image/jpeg', 'image/gif'].includes(file.type);
+};
+
+
+const updateImageFromFile = (file) => {
+    if (isImageFile(file)) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (e) => {
+            previewImage.value = e.target.result;
+            const event = new Event('change', { bubbles: true });
+            document.getElementById('imgInput').dispatchEvent(event);
+        };
+    } else {
+        showErrorMessage("Veuillez télécharger un fichier image valide.");
+    }
+};
+
+
 const resetForm = () => {
     data.value = {};
     previewImage.value = null;
@@ -175,12 +218,23 @@ watch(cleanEstablishmentForm, () => {
 
 const updateImage = (e) => {
     const image = e.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(image);
-    reader.onload = e => {
-        previewImage.value = e.target.result;
-    };
-    imgHasChanged.value = true;
+    if (isImageFile(image)) {
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+        reader.onload = e => {
+            previewImage.value = e.target.result;
+        };
+        imgHasChanged.value = true;
+    } else {
+        showErrorMessage("Please upload a valid image file.");
+    }
+};
+
+const showErrorMessage = (message) => {
+  ElMessage({
+    message: message,
+    type: 'error',
+  });
 };
 
 const selectImg = () => {
