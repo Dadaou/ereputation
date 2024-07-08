@@ -9,7 +9,7 @@
     </div>
   </div>
   <div class="overflow-x-auto">
-    <el-table :data="filterTableData" class="responsive-table full-width" style="width: 100%;">
+    <el-table :data="filteredData" class="responsive-table full-width" style="width: 100%;">
       <el-table-column label="Name" fixed width="250">
       	<template #default="scope">
       		{{ scope.row.firstname }} {{ scope.row.lastname }}
@@ -79,7 +79,7 @@ const exportData = (type, filename) => {
   downloaded.value = true;
 };
 
-const filterTableData = computed (() => {
+const filteredData = computed (() => {
   let filteredData = contacts.value;
   filteredData = filteredData.filter((data) => {
     return !search.value || 
