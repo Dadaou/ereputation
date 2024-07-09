@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import services from '@Services/services.js'
-// import moment from 'moment'
 import { useAppStore } from '@Stores/app.js'
 import { useUserStore } from '@Stores/user.js'
 import { ref } from 'vue'
@@ -9,32 +8,36 @@ export const useCompanyStore = defineStore('company', () => {
   const establishments = ref(null)
   const establishment = ref(null)
   const appStore = useAppStore()
+ 
 
   const fetchCustomerEstablishments = async (tag) => {
-    const userStore = useUserStore()
+    const userStore = useUserStore() 
+    const userId = userStore.user.id 
     const response = await new Promise((resolve) => {
       services.get_Record(
-          `/customer/${tag}/establishments/all`,
-          (response) => {
-            resolve(response)
-          }
-        )
+        `/customer/${tag}/establishments/all?user_id=${userId}`, 
+        (response) => {
+          resolve(response)
+        }
+      )
+    })
+    
+    if (response.status == 200) {
+      establishments.value = {}
+      response.data.forEach((item) => {
+        establishments.value[item.competitor_tag] = item
       })
-      
-      if (response.status == 200) {
-        establishments.value = {}
-        response.data.forEach((item) => {
-          establishments.value[item.competitor_tag] = item
-        })
-        return true
-      } else {
-        return true
-      }
+      return true
+    } else {
+      return true
+    }
   }
 
   const getEstablishment = async (customer, tag) => {
+    const userStore = useUserStore();
+   
     if (!establishments.value || !(tag in establishments.value)) {
-      await fetchCustomerEstablishments(customer)
+      await fetchCustomerEstablishments(customer, userStore.user.id)
     }
 
     if (!(tag in establishments.value)) {
@@ -45,7 +48,6 @@ export const useCompanyStore = defineStore('company', () => {
   }
 
   const getEstablishments = async (tag) => {
-   
     await fetchCustomerEstablishments(tag)
     appStore.isLoading = false
     return Object.values(establishments.value)
@@ -57,6 +59,7 @@ export const useCompanyStore = defineStore('company', () => {
     rating = rating.includes(',') ? rating.replace(',', '.') : rating
     return Number(rating)
   }
+
   const generateLegend = (data, colors) => {
     let legend = []
     var index = 0
@@ -91,33 +94,33 @@ export const useCompanyStore = defineStore('company', () => {
     return legend
   }
 
-  const transformLinksData = (inputData, tag)=> {
+  const transformLinksData = (inputData, tag) => {
     return inputData.map(item => {
-        return {
-            establishment: item.establishment_name || '',
-            establishmentTag: tag,
-            category: item.provider_category || '',
-            name: item.provider_name || '',
-            providerurl: item.provider_url,
-            url: item.provider_url ? item.provider_url.replace('{value1}', item.settings_value1) : '',
-            id: item.settings_id || 0,
-            settings_value1: item.settings_value1 || ''
-        };
+      return {
+        establishment: item.establishment_name || '',
+        establishmentTag: tag,
+        category: item.provider_category || '',
+        name: item.provider_name || '',
+        providerurl: item.provider_url,
+        url: item.provider_url ? item.provider_url.replace('{value1}', item.settings_value1) : '',
+        id: item.settings_id || 0,
+        settings_value1: item.settings_value1 || ''
+      };
     });
   }
 
-  const loadLinksByEstablishment = async (tag) =>{
+  const loadLinksByEstablishment = async (tag) => {
     let data = []
-     try {
-        const response = await new Promise((resolve) => {
-            services.get_Record(`public/establishment/url?tag=${tag}`, (response) => {
-                resolve(response);
-            }, true);
-        });
-       
-        if (response.status == 200) {
-           data = transformLinksData(response.data.data, tag)
-        }
+    try {
+      const response = await new Promise((resolve) => {
+        services.get_Record(`public/establishment/url?tag=${tag}`, (response) => {
+          resolve(response);
+        }, true);
+      });
+      
+      if (response.status == 200) {
+        data = transformLinksData(response.data.data, tag)
+      }
     } catch (error) {
     }
     return data

@@ -23,6 +23,13 @@
 				<establishment-list-loaded-component :nb="3" />
 			</template>
 		</suspense>
+		<!--<div class="reviews-count mt-4" v-for="(establishment, index) in establishments" :key="index">
+			<div v-if="establishment.reviews_count">
+				<div v-for="(count, score) in establishment.reviews_count" :key="score">
+					Score {{ score }}: {{ count }} reviews
+				</div>
+			</div> 
+		</div>-->
 	</div>
 </template>
 <script setup>
@@ -34,6 +41,7 @@ import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
 import services from '@Services/services.js';
 import moment from 'moment'
+import { useUserStore } from '@Stores/user.js';
 
 const EstablishmentsListComponent = defineAsyncComponent(() =>
 	import('@Components/utils/EstablishmentsListComponent.vue')
@@ -43,11 +51,13 @@ const Tooltip = defineAsyncComponent(() =>
 	import('@Components/utils/QuestionMarkTooltipComponent.vue')
 )
 
-const info_bulle_text = `"global" means the average of the final grades displayed on the platforms.This grade typically covers the entire platform history, and it's this grade that consumers typically look at first.
+const info_bulle_text = `"global" means the average of the final grades displayed on the platforms. This grade typically covers the entire platform history, and it's this grade that consumers typically look at first.
 "score" means the average ratings of all comments within a defined date range.`
 const establishments = ref([]);
 const dataLoading = ref(true);
 const customerTag = inject('tag');
+const userStore = useUserStore();
+const userId = userStore.user.id;
 
 const categories = ref([
 	{ label: 'All', value: 'all' },
@@ -74,9 +84,9 @@ watch([type, categoryFilters, start_date, end_date], async () => {
 })
 
 const IsValueOkay = (value) => (value == '' || value == 0 || value == null || value == undefined) ? false : true;
-const loadEstablishment = async (tag, category, dateStart, dateEnd, note) => {
+const loadEstablishment = async (tag, category, dateStart, dateEnd, note, userId) => {
 	let uri = 'get/establishment/classement'
-	let params = `tag=${tag}&category=${category}&note=${note}`
+	let params = `tag=${tag}&category=${category}&note=${note}&user_id=${userId}`
 
 	if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
 		dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
@@ -99,6 +109,16 @@ const loadEstablishment = async (tag, category, dateStart, dateEnd, note) => {
 			if (note == 'global') {
 				objet.rating = objet.note
 			}
+			
+		/*	if (!objet.reviews_count) {
+				objet.reviews_count = {
+					5: 0,
+					4: 0,
+					3: 0,
+					2: 0,
+					1: 0
+				};
+			}*/
 			return { ...objet, isGlobal: (note == 'global') }
 		});
 	}
@@ -106,7 +126,7 @@ const loadEstablishment = async (tag, category, dateStart, dateEnd, note) => {
 
 onMounted(async () => {
 	if (start_date.value && end_date.value) {
-		await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, type.value)
+		await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, type.value, userId)
 		dataLoading.value = false
 	}
 });

@@ -3,7 +3,7 @@
     <el-input v-model="search" size="small" placeholder="Type to search" class="search"/>  
   </div>
   <div class="overflow-x-auto mt-5">
-    <el-table :data="filterTableData" class="responsive-table" style="width: 100%">
+    <el-table :data="filteredData" class="responsive-table" style="width: 100%">
       <el-table-column fixed label="Advantage name" prop="adv_name" width="250" />
       <el-table-column label="Establishment" prop="establishment_name" width="200" />
       <el-table-column label="Customer email" width="250">
@@ -73,9 +73,9 @@ const compareDatesDesc = (a, b) => {
   if (dateA.isAfter(dateB)) return -1;
   return 0;
 };
-const filterTableData = computed (() => {
+const filteredData = computed (() => {
   let filteredData = discountData.value;
-  filteredData = filteredData.filter((data) => {
+  filteredData.filter((data) => {
     return !search.value ||
       (data.adv_name && data.adv_name.toLowerCase().includes(search.value.toLowerCase())) ||
       (data.code && data.code.toLowerCase().includes(search.value.toLowerCase())) ||

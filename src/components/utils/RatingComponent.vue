@@ -28,14 +28,24 @@
       
     </div>
     <div class="reviews__value mb-2" v-if="company.isTrends">
-           <div>Previous: {{company.previous.from}} / {{company.previous.to}} , Notes:{{company.previous.note}} </div> 
-           <div>Period: {{company.curent.from}} / {{company.curent.to}} , Notes:{{company.curent.note}}</div>
-      </div> 
+
+      <div v-if="selectedDate">
+        <div>Selected Date: {{ selectedDate }} , Score: {{ company.previous.note }} </div>
+        <div>Current Date: {{ company.curent.to }} , Score: {{ company.curent.note }}</div>
+      </div>
+      <div v-else>
+        <div>Previous: {{ company.previous.from }} / {{ company.previous.to }} , Score: {{ company.previous.note }} </div>
+        <div>Period: {{ company.curent.from }} / {{ company.curent.to }} , Score: {{ company.curent.note }}</div>
+      </div>
+    </div>
  <!--  <div class="ratio">{{company.ratio?`Ratio ${Number(company.ratio).toFixed(1)}%`:''}}</div> -->
 </div>
 </template>
 
 <script setup>
+import { inject} from 'vue';
+
+const selectedDate = inject('selectedDate')
 const props = defineProps(['reviews', 'rating', 'score', 'feeling', 'company']);
 
 const arrondirRatio = (ratio)=>{

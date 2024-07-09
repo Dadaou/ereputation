@@ -1,21 +1,38 @@
 <template>
     <div class="filters">
         <div class="select_info">
-            <el-select v-model="type" size="large">
+            <el-select v-model="type" size="large" class="custom-width">
                 <el-option v-for="(item, index) in types" :key="index" :label="item.label" :value="item.value" />
             </el-select>
             <Tooltip :text="info_bulle_text" />
         </div>
-        <el-select v-model="categoryFilters" size="large">
+        <el-select v-model="categoryFilters" size="large" class="custom-width">
             <el-option v-for="(item, index) in categories" :key="index" :label="item.label" :value="item.value" />
         </el-select>
+        <div class="date_pick">
+            <el-date-picker 
+                v-model="selectedDate" 
+                type="date" 
+                placeholder="Select Date" 
+                size="large"
+                class="widthdate"
+                @change="handleDateChange"
+            />
+        <Tooltip :text="info_bulle_text1" /> 
+        </div>
         <div>
-            <el-input-number v-model="days" :min="1" size="large" />
+            <el-input-number 
+                v-model="days" 
+                :min="1" 
+                size="large" 
+                class="custom-width"
+                :disabled="isDateSelected" 
+            />
         </div>
     </div>
     <div class="society__list mt-5" v-if="establishments.length > 0">
         <suspense>
-            <establishments-list-component :establishments="establishments" :tag='customerTag' />
+            <establishments-list-component :establishments="establishments" :tag='customerTag' :selectedDate="selectedDate" />
             <template #fallback>
                 <establishment-list-loaded-component :nb="3" />
             </template>
@@ -23,28 +40,34 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted, defineAsyncComponent, inject, watch } from 'vue';
+import { ref, onMounted, defineAsyncComponent, inject, watch, provide } from 'vue';
 import EstablishmentListLoadedComponent from '@Components/utils/EstablishmentListLoadedComponent.vue';
-import { ElOption, ElSelect, ElInputNumber } from 'element-plus';
-import 'element-plus/es/components/option/style/css'
-import 'element-plus/es/components/select/style/css'
-import 'element-plus/es/components/date-picker/style/css'
-import 'element-plus/es/components/input-number/style/css'
+import { ElOption, ElSelect, ElDatePicker, ElInputNumber } from 'element-plus';
+import 'element-plus/es/components/option/style/css';
+import 'element-plus/es/components/select/style/css';
+import 'element-plus/es/components/date-picker/style/css';
+import 'element-plus/es/components/input-number/style/css';
 import services from '@Services/services.js';
+import { useUserStore } from '@Stores/user.js';
 
 const EstablishmentsListComponent = defineAsyncComponent(() =>
     import('@Components/utils/EstablishmentsListComponent.vue')
-)
+);
 
 const Tooltip = defineAsyncComponent(() =>
     import('@Components/utils/QuestionMarkTooltipComponent.vue')
-)
+);
 
 const info_bulle_text = `"global" means the average of the final grades displayed on the platforms.This grade typically covers the entire platform history, and it's this grade that consumers typically look at first.
-"score" means the average ratings of all comments within a defined date range.`
+"score" means the average ratings of all comments within a defined date range.`;
+
+const info_bulle_text1 = `Compare the current situation to this date.`;
+
 const establishments = ref([]);
 const dataLoading = ref(true);
 const customerTag = inject('tag');
+const userStore = useUserStore();
+const userId = userStore.user.id;
 
 const categories = ref([
     { label: 'All', value: 'all' },
@@ -59,19 +82,40 @@ const types = ref([
     { label: 'Score', value: 'score' },
 ]);
 
-const type = ref('global')
-const categoryFilters = ref('all')
-const days = ref(60)
+const type = ref('global');
+const categoryFilters = ref('all');
+const days = ref(60);
+const selectedDate = ref(null);
+provide('selectedDate', selectedDate);
+const isDateSelected = ref(false);
 
-watch([type, categoryFilters, days], async () => {
-    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value)
-})
+const handleDateChange = (value) => {
+    isDateSelected.value = !!value;
+    if (isDateSelected.value) {
+        days.value = null;
+        const offsetDate = new Date(value);
+        offsetDate.setDate(offsetDate.getDate() + 1); // Correcting the date by adding one day
+        selectedDate.value = offsetDate.toISOString().split('T')[0];
+    } else {
+        selectedDate.value = null;
+    }
+};
 
-const loadEstablishment = async (tag, category, days, note) => {
-    let uri = 'get/establishment/trend'
-    let params = `tag=${tag}&category=${category}&note=${note}&days=${days}`
+watch([type, categoryFilters, days, selectedDate], async () => {
+    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value);
+});
 
-    uri = `${uri}?${params}`
+const loadEstablishment = async (tag, category, days, note, date) => {
+    let uri = 'get/establishment/trend';
+    let params = `tag=${tag}&category=${category}&note=${note}&user_id=${userId}`;
+
+    if (date) {
+        params += `&date=${date}`;
+    } else {
+        params += `&days=${days}`;
+    }
+
+    uri = `${uri}?${params}`;
 
     const response = await new Promise((resolve) => {
         services.get_Record(uri, (response) => {
@@ -80,15 +124,17 @@ const loadEstablishment = async (tag, category, days, note) => {
     });
 
     if (response.status == 200) {
-        establishments.value = response.data.map(objet => {
-            return { ...objet, ratio: objet.ratio_value, ratio_text: objet.ratio, isTrends: true }
+        establishments.value = response.data.map((objet) => {
+            return { ...objet, ratio: objet.ratio_value, ratio_text: objet.ratio, isTrends: true };
         });
+    } else {
+        console.error('Error loading establishments:', response);
     }
-}
+};
 
 onMounted(async () => {
-    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value)
-    dataLoading.value = false
+    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value);
+    dataLoading.value = false;
 });
 
 </script>
@@ -107,11 +153,21 @@ onMounted(async () => {
 .filters>* {
     margin: 2px;
     flex-grow: 1;
-    max-width: 310px;
+    max-width: 300px;
     /* Adjust based on your design needs */
 }
 
+.custom-width {
+    width: 100%;
+}
+
 .select_info {
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
+
+.date_pick {
     display: flex;
     align-items: center;
     align-content: center;
