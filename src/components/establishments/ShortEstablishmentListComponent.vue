@@ -200,7 +200,7 @@ const getValueUrl = (url, urlTemplate) => {
 const getParametersEstablishments = async(customer)=>{
     
     try {
-        const userId = userStore.userId;
+        const userId = userStore.user.id;
         const response = await new Promise((resolve) => {
             services.get_Record(`/customer/establishments/parameters?tag=${customer}&user_id=${userId}`, (response) => {
                 resolve(response);
