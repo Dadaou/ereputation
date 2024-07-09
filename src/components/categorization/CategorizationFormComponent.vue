@@ -43,7 +43,7 @@
 </template>
 <script setup>
 import moment from 'moment';
-import { ref, inject, watch } from 'vue'
+import { ref, inject, onBeforeMount, watch } from 'vue'
 import services from '@Services/services.js'
 import { useUserStore } from "@Stores/user.js"
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue'
@@ -175,7 +175,12 @@ const updateData = (establishmentTag, category) => {
         if (item.id == currentCategory.id) categories.value[index] = currentCategory;
     })
 };
-
+onBeforeMount (() => {
+       const establishments = userStore.user.customer.establishments;
+       if (establishments.length > 0) {
+        establishment.value = type.value === 'edit' ? `/api/establishments/${establishments[0].id}`: [establishments[0].competitor_tag];
+    }
+});
 </script>
 <style scoped>
 label span {
