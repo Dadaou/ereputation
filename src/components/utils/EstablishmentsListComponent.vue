@@ -41,7 +41,12 @@
                                         <i class="uil uil-location-point"></i>
                                         <span>{{ company.address1 }}, {{ company.city }}</span>
                                     </div>
-                                </div>
+                                    <div class="reviews-count">
+                                        <div v-for="(count, score) in company.reviews_count" :key="score">
+                                              Score {{ score }}: {{ count }} reviews
+                                       </div>
+                                   </div>
+                                     </div>
                             </div>
                         </div>
                     </div>
@@ -90,8 +95,10 @@ const props = defineProps({
         type: String,
         required: true
     }
+    
 });
 
+const selectedDate = inject('selectedDate')
 const userStore = useUserStore();
 const tag = inject('tag')
 

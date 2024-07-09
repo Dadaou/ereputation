@@ -10,9 +10,9 @@ export const useUserStore = defineStore(
     const authenticated = ref(localStorage.getItem('user_authenticated'))
     const entity = ref('users')
     const customer = ref(null)
+    const userId = ref(null)
 
     const signIn = async (email, password, next) => {
-      
       const response = await services.login(email, password)
 
       if (response.status == 200) {
@@ -24,6 +24,7 @@ export const useUserStore = defineStore(
           authenticated.value = true
           services.setUser()
           user.value = _user
+          userId.value = _user.id
           next({ authenticated: authenticated.value, status: 200 })
       
         } else {
@@ -108,6 +109,7 @@ export const useUserStore = defineStore(
 
     return {
       user,
+      userId,
       customer,
       authenticated,
       entity,
