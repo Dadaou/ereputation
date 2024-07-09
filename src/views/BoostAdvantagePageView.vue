@@ -55,7 +55,6 @@ import QrcodeVue from 'qrcode.vue'
 import { useRoute } from 'vue-router';
 import { useAppStore } from "@Stores/app.js";
 import services from '@Services/services.js';
-import { alertProps } from 'element-plus';
 import moment from 'moment';
 import { useI18n } from "vue-i18n";
 import { i18n } from '@/i18n';
@@ -76,7 +75,7 @@ const discount = ref(null);
 const interval = ref(null);
 
 const isEnable = computed(() => {
-    return discount.value ? (discount.value.quantity > 0 && moment(discount.value.expired_at) >= moment()) : null
+    return discount.value ? (discount.value.quantity > 0 && (discount.value.expired_at ? moment(discount.value.expired_at) >= moment() : true)) : null
 })
 
 const qrSize = computed(() => {
