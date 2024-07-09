@@ -225,8 +225,8 @@ watch([provider, link], () => {
 })
 
 onBeforeMount(async () => {
-    await getParametersEstablishments (route.params.tag)
     try {
+        await getParametersEstablishments (route.params.tag)
         const response = await new Promise((resolve, reject) => {
             services.get_Record(`providers`, (response) => {
                 resolve(response);
