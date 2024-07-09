@@ -170,12 +170,15 @@
     </EstablishmentInfoMobile>
 
     <div class="right__side">
+    
         <div
             class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" v-if="!establishmentLoading">
-                <div v-if="establishment.url_source !== null" class="establishment__img">
-                    <img :src="establishment.url_source" alt="" />
-                </div>
+                <div class="photo">
+                    <div v-if="establishment.url_source !== null" class="establishment__img">
+                        <img :src="establishment.url_source" alt="" />
+                    </div>
+                
                 <div v-else role="status"
                     class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
                     <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
@@ -186,6 +189,7 @@
                     </svg>
                     <span class="sr-only">Loading...</span>
                 </div>
+            </div>
             </a>
             <a href="#" v-else>
                 <div role="status"
@@ -204,7 +208,7 @@
                 <label v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></label>
                 <div class="society__location">
                     <i
-                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '', establishment.category == 'Other' ? 'uil-home ' : '']"></i>
+                        :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '', establishment.category == 'Event' ? 'uil-schedule' : '', establishment.category == 'Other' ? 'uil-home ' : '']"></i>
                     <span v-if="!establishmentLoading" class="society__location">{{ establishment.category }}</span>
                     <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                 </div>
@@ -239,6 +243,7 @@
                 </button>
             </RouterLink> -->
         </div>
+    
         <div class="rating__customers">
             <div class="title">Rating by Customers</div>
             <div class="chart__rating">
@@ -1059,5 +1064,10 @@ img {
         padding: 15px;
         font-size: 14px;
     }
+}
+
+.photo{
+    width: 70%;
+    margin-left: 50px;
 }
 </style>
