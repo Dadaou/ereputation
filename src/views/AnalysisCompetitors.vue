@@ -1,14 +1,6 @@
 <template>
-    <div style="margin-top: 15px;">
-        <!-- <ComparisonChartComponent :data="plotdata" :width="chart__width" :chartheight="chart__height"
-            :establishment="establishment" :companies="comparisonData" :competitors="computedCompetitors"
-            :timePeriod="selectedTimePeriod" :colors="colors" /> -->
-        <div v-if="chartData" class="chart__container w-full" ref="lineChartContainer">
-            <Line :data="chartData" :options="chartConfig" />
-        </div>
-
-
-        <!-- <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']">
+    <div>
+        <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']">
             <div class="containerChart" ref="scrollContainer2"
                 @scroll="syncScroll('scrollContainer2', 'scrollContainer1')">
                 <div :class="['containerBody2 mt-5', !isLoading ? '' : 'loading']">
@@ -17,10 +9,52 @@
             </div>
 
             <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
-        </div> -->
+        </div>
 
         <BaseLegend v-if="chartLoading == false" class="legend" :LegendData="legendData" :alignment="'horizontal'">
         </BaseLegend>
+    </div>
+    <div class="relative overflow-x-auto" style="margin-top: 15px;">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        Establishment
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Global score average within the date range
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Current score
+                    </th>
+                </tr>
+            </thead>
+            <tbody v-if="competitorData.length > 0">
+                <tr v-for="competitorDatas in competitorData" :key="competitorDatas.id"
+                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {{ competitorDatas.name }}
+                    </th>
+                    <td class="px-6 py-4">
+                        {{ competitorDatas.average_score }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ competitorDatas.current_score }}
+                    </td>
+                    
+                </tr>
+
+            </tbody>
+            <tbody v-else>
+                <tr class="no__staff">
+                    <td colspan="4">
+                        <div style="text-align: center;">
+                            <span>no staff</span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </template>
 
@@ -28,36 +62,28 @@
 import moment from 'moment';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
-import { useUserStore } from "@Stores/user.js";
 import { useRoute, useRouter } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
-import ComparisonChartComponent from '@Components/utils/ComparisonChartComponent.vue';
-import { ref, reactive, watch, onBeforeMount, computed, provide, inject, defineAsyncComponent } from 'vue';
+import { ref, watch, onMounted ,computed, provide, inject, defineAsyncComponent , nextTick } from 'vue';
 import 'element-plus/es/components/date-picker/style/css'
 import { useChartsStore } from "@Stores/charts.js"
 
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-} from 'chart.js'
+// import {
+//     Chart as ChartJS,
+//     CategoryScale,
+//     LinearScale,
+//     PointElement,
+//     LineElement,
+//     Title,
+//     Tooltip,
+// } from 'chart.js'
 import { Line } from 'vue-chartjs';
 
-const confidenceChart = ref({
-    labels: [],
-    datasets: []
-})
 
-const EstablishmentInfoMobile = defineAsyncComponent(
-    () => import("@Components/utils/EstablishmentInfoMobile.vue")
-)
 
-const DashboardMobile = defineAsyncComponent(
-    () => import("@Components/utils/DashboardMobileComponent.vue")
+
+const SpinnerComponent = defineAsyncComponent(() =>
+    import('@Components/utils/SpinnerComponent.vue')
 )
 
 const options = ref({
@@ -84,27 +110,19 @@ appStore.setBreadcrumbs([
 ]);
 
 const chartsStore = useChartsStore();
-
-const userStore = useUserStore();
 const companiesStore = useCompanyStore();
 let selectedCompetitors = ref('Global');
 let selectedWebsites = ref('Global');
 let websites = ref(['Global']);
 
 let establishment = ref({ reviews: [] });
-let competitors = ref([]);
-let computedCompetitors = computed(() => {
-    let data = [{ name: 'Global' }];
-    establishment.value['competitors'] && establishment.value['competitors'].forEach(c => {
-        data.push(c);
-    })
-    return data;
-});
+
+
 
 let visibleData = ref([])
 const starsData = ref([])
 
-let comparisonData = ref([establishment.value, ...competitors.value]);
+
 const all_items = ref({
     rating: { title: "Score", value: 0, icon: "uil-thumbs-up", description: "Average score from selected filters" },
     global: { title: "Global", value: 0, icon: "uil-star", description: "Current average score displayed on public platforms (considering all the history retained by the platforms)" },
@@ -112,11 +130,8 @@ const all_items = ref({
     reviews: { title: "Reviews", value: 0, icon: "uil-comment" },
     // competitors: { title: "Competitors", value: 0, icon: "uil-building" }
 });
-let currentFilter = ref('filter');
 
-let plotdata = ref([]);
 let legendData = ref([]);
-const establishmentLoading = ref(true)
 const reviewsLoading = ref(false)
 const feedbackLoading = ref(false)
 const semesterChartLoading = ref(false)
@@ -125,15 +140,16 @@ const language = inject('language')
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 const categories = ref([])
+const isLoading = ref(false);
 
-const lineChartContainer = ref(null);
-const barChartWidth = ref(620);
+
 
 let selectedTimePeriod = ref('');
 // let timePeriods = ref(['Days', 'Weeks', 'Months', 'Quarters', 'Semesters']);
 
+let competitorData = ref([]);
 
-let lastReviews = ref([]);
+
 let reviewFeedbackData = ref({
     width: 0,
     red: 0,
@@ -143,27 +159,60 @@ let reviewFeedbackData = ref({
 
 const colors = ref(['#f75842', '#337ecc', '#4682B4', '#6495ED', '#1E90FF', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']);
 
-let chartConfig = reactive({
-    data: {
-        labels: [],
-        datasets: [
-            {
-                label: 'Data One',
-                backgroundColor: '#f87979',
-                data: [40, 20, 12, 39, 10, 40,]
-            }
-        ]
+let chartConfig = {
+    maintainAspectRatio: false,
+    scales: {
     },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: false,
+    plugins: {
+        legend: {
+            display: false,
+        },
+        zoom: {
+            pan: {
+                enabled: true,
+                mode: 'x',
+            },
+            zoom: {
+                wheel: {
+                    enabled: true,
+                },
+                pinch: {
+                    enabled: true,
+                },
+                mode: 'x',
             }
         },
+        beforeDraw: function (chart) {
+            var ctx = chart.ctx;
+            chart.data.datasets.forEach(function (dataset, i) {
+                var meta = chart.getDatasetMeta(i);
+                if (!meta.hidden) {
+                    meta.data.forEach(function (element, index) {
+                        // Dessiner le texte sous chaque barre en fonction de sa valeur
+                        var dataValue = dataset.data[index];
+                        var text = '';
+                        if (dataValue > 0.2) {
+                            text = 'Positif';
+                        } else if (dataValue < -0.2) {
+                            text = 'Négatif';
+                        } else {
+                            text = 'Neutre';
+                        }
+                        var fontSize = 12;
+                        var fontStyle = 'normal';
+                        var fontFamily = 'Arial';
+                        ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+                        var textWidth = ctx.measureText(text).width;
+                        var elementX = element._model.x;
+                        var elementY = element._model.y + 20; // Ajuster la valeur pour positionner le texte sous les barres
+                        ctx.fillStyle = 'black';
+                        ctx.fillText(text, elementX - textWidth / 2, elementY);
+                    });
+                }
+            });
+        }
     }
-});
+};
 
 let chartData = ref({
     labels: [],
@@ -234,6 +283,8 @@ const loadDatasets = async () => {
     }
 }
 
+
+
 const viewData = async (establishment, establishmentTag, dateStart, dateEnd, website, competitors, timePeriods) => {
     chartLoading.value = true
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
@@ -249,11 +300,40 @@ const viewData = async (establishment, establishmentTag, dateStart, dateEnd, web
         //Global value to change
         
         // plotdata.value = await chartsStore.loadData(tags, "Days", dateStart, dateEnd, website)
-        let datachart= await chartsStore.loadData(tags, "Days", dateStart, dateEnd, website)
+        let datachart = await chartsStore.loadDataCompetitor(establishmentTag, "daily", dateStart, dateEnd, website)
+       
+        await chartsStore.fetchDataCompetitor(establishmentTag, "daily", dateStart, dateEnd, website, (response) => {
+            let data = response.data.data
+            competitorData.value = data;
+        })
 
+        
         chartData.value = formatSixMonthsChartData(datachart);
         
-        // legendData.value = companiesStore.generateLegend(plotdata.value, colors.value);
+
+        await nextTick();
+
+        const containerBody = document.querySelector('.containerBody');
+        const containerBody2 = document.querySelector('.containerBody2');
+
+        let totalLabels = chartData.value.labels.length;
+
+        if (totalLabels > 11 && containerBody2 && containerBody) {
+            let new_width;
+            if (window.innerWidth <= 975) {
+                new_width = totalLabels * 5 * chartData.value.datasets.length;
+            } else {
+                new_width = totalLabels * 2 * chartData.value.datasets.length;
+            }
+            containerBody.style.width = `${new_width}vw !important`
+            containerBody2.style.width = `${new_width}vw !important`
+
+        } else {
+            containerBody.style.width = '';
+            containerBody2.style.width = '';
+        }
+        
+        legendData.value = companiesStore.generateLegend(datachart, colors.value);
     }
     chartLoading.value = false;
 }
@@ -278,8 +358,8 @@ const formatStarsData = (data) => {
 }
 
 const globalComparison = async (establishment, establishmentTag, dateStart, dateEnd, website, stars, language, competitors, timePeriods) => {
-    viewData(establishment, establishmentTag, dateStart, dateEnd, website, competitors, timePeriods);
-    loadReviews(establishmentTag, 1, 20, 1, dateStart, dateEnd, website, stars, language);
+    await  viewData(establishment, establishmentTag, dateStart, dateEnd, website, competitors, timePeriods);
+    // loadReviews(establishmentTag, 1, 20, 1, dateStart, dateEnd, website, stars, language);
 };
 
 const gotoReviewPage = (id, tag) => {
@@ -475,61 +555,77 @@ const loadIndiceData = async (tag, dateStart, dateEnd) => {
     }
 }
 
-onBeforeMount(async () => {
-    // loadDatasets();
-    // ChartJS.register(
-    //     CategoryScale,
-    //     LinearScale,
-    //     PointElement,
-    //     LineElement,
-    //     Title,
-    //     Tooltip,
-    // )
-
+onMounted(async () => {
     appStore.isLoading = true;
 
-    companiesStore.getEstablishment(customerTag.value, companyId.value).then((data) => {
+    const data = await companiesStore.getEstablishment(customerTag.value, companyId.value);
 
-        if (data == false) {
-            appStore.setIsExist(false);
-            appStore.isLoading = false;
-        }
-        else {
-            establishment.value = data;
-            appStore.isLoading = false;
-            establishment.value['tag'] = companyId.value;
-            appStore.setCurrentPage({
-                title1: "",
-                title2: establishment.value.name,
-                icon: "uil-estate"
-            });
+    if (!data) {
+        appStore.setIsExist(false);
+        appStore.isLoading = false;
+    } else {
+        establishment.value = data;
+        appStore.isLoading = false;
+        establishment.value['tag'] = companyId.value;
+        appStore.setCurrentPage({
+            title1: "",
+            title2: establishment.value.name,
+            icon: "uil-estate"
+        });
 
-            appStore.setBreadcrumbs([
-                {
-                    title: establishment.value.name,
-                    path: `${route.path}`,
-                    isCurrent: true,
-                },
-            ]);
+        appStore.setBreadcrumbs([
+            {
+                title: establishment.value.name,
+                path: `${route.path}`,
+                isCurrent: true,
+            },
+        ]);
 
-            establishmentLoading.value = false
-            
-            globalComparison(establishment.value, companyId.value, start_date.value, end_date.value, selectedWebsites.value, '', language.value, selectedCompetitors.value, selectedTimePeriod.value)
-            websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
-        }
-    })
-    
-    await loadCategories(companyId.value)
+        await globalComparison(establishment.value, companyId.value, start_date.value, end_date.value, selectedWebsites.value, '', language.value, selectedCompetitors.value, selectedTimePeriod.value);
+        websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
+    }
 
-
-    // window.onresize = () => {
-    //     if (lineChartContainer.value && lineChartContainer.value.clientWidth > 400) {
-    //         barChartWidth.value = lineChartContainer.value.clientWidth;
-    //     } else {
-    //         barChartWidth.value = 400;
-    //     }
-    // };
+    await loadCategories(companyId.value);
 });
+
+// onMounted(async () => {
+
+//     appStore.isLoading = true;
+
+//     companiesStore.getEstablishment(customerTag.value, companyId.value).then((data) => {
+
+//         if (data == false) {
+//             appStore.setIsExist(false);
+//             appStore.isLoading = false;
+//         }
+//         else {
+//             establishment.value = data;
+//             appStore.isLoading = false;
+//             establishment.value['tag'] = companyId.value;
+//             appStore.setCurrentPage({
+//                 title1: "",
+//                 title2: establishment.value.name,
+//                 icon: "uil-estate"
+//             });
+
+//             appStore.setBreadcrumbs([
+//                 {
+//                     title: establishment.value.name,
+//                     path: `${route.path}`,
+//                     isCurrent: true,
+//                 },
+//             ]);
+
+//             establishmentLoading.value = false
+            
+//             globalComparison(establishment.value, companyId.value, start_date.value, end_date.value, selectedWebsites.value, '', language.value, selectedCompetitors.value, selectedTimePeriod.value)
+//             websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
+//         }
+//     })
+    
+//     await loadCategories(companyId.value)
+
+// });
 
 
 </script>
@@ -539,34 +635,14 @@ onBeforeMount(async () => {
     overflow: auto;
 } */
 
-.chart__container {
-    width: 100%;
-    max-width: 1200px;
-    /* Ajustez cette valeur selon vos besoins */
-    margin: 0 auto;
-    /* Centre le conteneur */
-    padding: 20px;
-    /* Ajoute de l'espace autour du graphique */
-   
-}
 
-.chart__container canvas {
-    width: 100% !important;
-    height: 500px !important;
-    /* Hauteur fixe pour le graphique */
-}
+/* #confidence {
+    width:100% !important ;
+} */
 
-@media (max-width: 768px) {
-    .chart__container {
-        padding: 10px;
-        /* Réduit le padding sur les petits écrans */
-    }
 
-    .chart__container canvas {
-        height: 300px !important;
-        /* Réduit la hauteur sur les petits écrans */
-    }
-}
+
+
 
 
 
@@ -882,4 +958,6 @@ img {
         font-size: 14px;
     }
 }
+
+
 </style>
