@@ -198,9 +198,7 @@ const categoriesOptions = ref([
 
 const userStore = useUserStore();
 const showSpinner = ref(false);
-/**
- * Event
- */
+
 const dateFrom = ref(null);
 const dateEnd = ref(null);
 const expiredAt = ref(null);
@@ -220,6 +218,7 @@ const advantage_to_update = inject('advantage_to_update');
 const advantages = inject('advantages');
 const activeAdvantageTab = inject('advantage_activeTab');
 const metrics = ref(['Percent', 'Amount'])
+
 watch(advantage_to_update, () => {
     if (advantage_to_update.value != null) {
         expiredAt.value = advantage_to_update.value["expired_at"];
@@ -279,6 +278,23 @@ const updateData = (_advantage, establishment) => {
     })
 }
 
+const resetForm = () => {
+    dateFrom.value = null;
+    dateEnd.value = null;
+    expiredAt.value = null;
+    description.value = null;
+    category.value = '';
+    code.value = '';
+    advantageName.value = '';
+    amount.value = '';
+    metric.value = '';
+    scope.value = '';
+    validity.value = '';
+    advantageLimit.value = ''
+    establishment.value = "";
+    type.value = 'add';
+}
+
 const submit = async () => {
     const advantageData = {
         "category": category.value,
@@ -336,19 +352,7 @@ const submit = async () => {
                 }
             }
 
-            dateFrom.value = null;
-            dateEnd.value = null;
-            expiredAt.value = null;
-            description.value = null;
-            category.value = '';
-            code.value = '';
-            advantageName.value = '';
-            amount.value = '';
-            metric.value = '';
-            scope.value = '';
-            validity.value = '';
-            advantageLimit.value = ''
-            establishment.value = "";
+            resetForm(); // Réinitialiser le formulaire ici
             showSpinner.value = false;
             activeAdvantageTab.value = 'advantage_list';
         } else {
@@ -381,6 +385,7 @@ const selectAdvantage = (advantage) => {
     establishment.value = companies.length > 0 ? `/api/establishments/${companies[0].id},${companies[0].name}` : "";
 };
 </script>
+
 <style scoped>
 .advantage_container {
     display: flex;
