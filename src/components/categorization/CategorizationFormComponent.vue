@@ -65,7 +65,7 @@ const categories = inject('categories');
 
 watch(category_to_update, () => {
     if (category_to_update.value != null) {
-        establishment.value = category_to_update.value["establishment"];
+        establishment.value = `/api/establishments/${category_to_update.value.establishment_id}`;
         category.value = category_to_update.value["category"];
         type.value = 'edit';
     }
