@@ -79,6 +79,7 @@
         </form>
     </div>
 </template>
+
 <script setup>
 import moment from 'moment';
 import { ref, inject, watch, onBeforeMount } from 'vue';
@@ -98,12 +99,9 @@ const route = useRoute();
 const userStore = useUserStore();
 const staffStore = useStaffStore();
 const staffs = inject('staffs');
-const clearForm = inject('clearStaffForm')
+const clearForm = inject('clearStaffForm');
 const showSpinner = ref(false);
 
-/**
- * Staff
- */
 const firstname = ref('');
 const lastname = ref('');
 const gender = ref('');
@@ -120,26 +118,41 @@ const genders = [
         value: 'O',
         label: 'Other',
     }
-]
+];
 const startDate = ref(null);
 const endDate = ref(null);
 const establishment = ref('');
 const departments = [
     'Front Office', 'Housekeeping', 'Kitchen', 'Bar', 'Room service'
-]
+];
 const department = ref('');
-const sections = ref(['','MENUS', 'INFOS', 'FOLLOW US', 'REVIEWS', 'OFFERS'])
-const section = ref('')
+const sections = ref(['', 'MENUS', 'INFOS', 'FOLLOW US', 'REVIEWS', 'OFFERS']);
+const section = ref('');
 const staff_to_update = inject('staff_to_update');
 const type = ref('add');
 
-watch(staff_to_update, () => {
-    if (staff_to_update.value != null) {
-        fillForm(staff_to_update.value)
-    }
-})
+// Charger le formulaire avec les données du personnel à mettre à jour s'il y en a
+onBeforeMount(() => {
+    const staff = staffStore.getStaff();
 
-const fillForm = (staff)=>{
+    if (staff) {
+        staff['establishment'] = `/api/establishments/${staff['establishment']}`;
+        staff_to_update.value = staff;
+        fillForm(staff);
+        staffStore.resetStaff();
+    }
+
+    // Sélectionner le premier établissement par défaut
+    if (userStore.user.customer.establishments.length > 0) {
+        establishment.value = `/api/establishments/${userStore.user.customer.establishments[0].id}`;
+    }
+});
+
+watch(clearForm, () => {
+    if (clearForm.value) resetForm();
+});
+
+const fillForm = (staff) => {
     gender.value = staff["gender"];
     department.value = staff["department"];
     startDate.value = new Date(staff["datefrom"]);
@@ -148,52 +161,10 @@ const fillForm = (staff)=>{
     lastname.value = staff["lastname"];
     firstname.value = staff["firstname"];
     section.value = staff["section"];
-     type.value = 'edit';
-}
+    type.value = 'edit';
+};
 
-const loadData = (_staff, staff) => {
-    let new_staff = {
-        id: _staff.id,
-        datefrom: _staff.datefrom,
-        dateto: _staff.dateto,
-        department: _staff.department,
-        establishment_name: _staff.establishment.name,
-        establishment: _staff.establishment['@id'],
-        establishment_id: _staff.establishment.id,
-        establishment_tag: _staff.establishment.competitor_tag,
-        tag: _staff.tag,
-        gender: _staff.gender,
-        firstname: _staff.firstname,
-        lastname: _staff.lastname,
-        section: staff.section
-    }
-    staffs.value.push(new_staff);
-}
-
-const updateData = (_staff, staff) => {
-
-    let new_staff = {
-        id: _staff.id,
-        datefrom: _staff.datefrom,
-        dateto: _staff.dateto,
-        department: _staff.department,
-        establishment_name: _staff.establishment.name,
-        establishment: _staff.establishment['@id'],
-        establishment_id: _staff.establishment.id,
-        establishment_tag: _staff.establishment.competitor_tag,
-        tag: _staff.tag,
-        gender: _staff.gender,
-        firstname: _staff.firstname,
-        lastname: _staff.lastname,
-        section: staff.section
-    }
-
-    staffs.value.forEach((staff, index) => {
-        if (staff.id == new_staff.id) staffs.value[index] = new_staff;
-    })
-}
-
-const resetForm = ()=>{
+const resetForm = () => {
     gender.value = '';
     department.value = '';
     startDate.value = '';
@@ -202,10 +173,15 @@ const resetForm = ()=>{
     lastname.value = '';
     firstname.value = '';
     showSpinner.value = false;
-    section.value = ''
+    section.value = '';
     type.value = 'add';
     staff_to_update.value = null;
-}
+
+    // Réinitialiser le champ establishment à la première valeur par défaut
+    if (userStore.user.customer.establishments.length > 0) {
+        establishment.value = `/api/establishments/${userStore.user.customer.establishments[0].id}`;
+    }
+};
 
 const submit = async () => {
     let staff = {
@@ -217,7 +193,7 @@ const submit = async () => {
         "dateto": (endDate.value == null || endDate.value == "") ? null : moment(endDate.value).format('YYYY-MM-DD'),
         "establishment": establishment.value,
         "section": section.value
-    }
+    };
 
     try {
         if (gender.value != '' && department.value != '' && startDate.value != null && establishment.value != '' && firstname.value != '') {
@@ -234,7 +210,7 @@ const submit = async () => {
                     ElMessage({
                         message: `${firstname.value} added successfully to staff member.`,
                         type: 'success',
-                    })
+                    });
                 }
             } else {
                 const response = await new Promise((resolve) => {
@@ -242,18 +218,18 @@ const submit = async () => {
                         resolve(response);
                     });
                 });
-                
+
                 if (response.status == 200) {
                     let data = response.data;
                     updateData(data, staff);
                     ElMessage({
                         message: `Staff updated successfully`,
                         type: 'success',
-                    })
+                    });
                 }
             }
-            resetForm()
-            router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'staffs_list'} });
+            resetForm();
+            router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'staffs_list' } });
         } else {
             ElMessage.error(`Please, provide all needed information to ${type.value} a staff`);
         }
@@ -262,20 +238,46 @@ const submit = async () => {
     }
 };
 
-onBeforeMount(()=>{
-    const staff = staffStore.getStaff();
+const loadData = (_staff, staff) => {
+    let new_staff = {
+        id: _staff.id,
+        datefrom: _staff.datefrom,
+        dateto: _staff.dateto,
+        department: _staff.department,
+        establishment_name: _staff.establishment.name,
+        establishment: _staff.establishment['@id'],
+        establishment_id: _staff.establishment.id,
+        establishment_tag: _staff.establishment.competitor_tag,
+        tag: _staff.tag,
+        gender: _staff.gender,
+        firstname: _staff.firstname,
+        lastname: _staff.lastname,
+        section: staff.section
+    };
+    staffs.value.push(new_staff);
+};
 
-    if(staff){
-        staff['establishment'] = `/api/establishments/${staff['establishment']}`
-        staff_to_update.value = staff;
-        fillForm(staff)
-        staffStore.resetStaff()
-    }
-});
+const updateData = (_staff, staff) => {
+    let new_staff = {
+        id: _staff.id,
+        datefrom: _staff.datefrom,
+        dateto: _staff.dateto,
+        department: _staff.department,
+        establishment_name: _staff.establishment.name,
+        establishment: _staff.establishment['@id'],
+        establishment_id: _staff.establishment.id,
+        establishment_tag: _staff.establishment.competitor_tag,
+        tag: _staff.tag,
+        gender: _staff.gender,
+        firstname: _staff.firstname,
+        lastname: _staff.lastname,
+        section: staff.section
+    };
 
-watch(clearForm, ()=>{
-  if(clearForm.value) resetForm()
-});
+    staffs.value.forEach((staff, index) => {
+        if (staff.id == new_staff.id) staffs.value[index] = new_staff;
+    });
+};
 </script>
 <style scoped>
 form {
