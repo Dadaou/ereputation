@@ -564,18 +564,7 @@ const sortByCurrentScore = (data, sortBy, sortAsc) => {
 };
 
 const sortedCompetitorData = computed(() => {
-    if (!competitorData.value) return [];
-    
-    return competitorData.value.slice().sort((a, b) => {
-        let valueA = a[sortBy.value];
-        let valueB = b[sortBy.value];
-
-        if (sortAsc.value) {
-            return valueA < valueB ? -1 : (valueA > valueB ? 1 : 0);
-        } else {
-            return valueA > valueB ? -1 : (valueA < valueB ? 1 : 0);
-        }
-    });
+    return sortByCurrentScore(competitorData.value, sortBy, sortAsc);
 });
 
 const toRGBA = (hex, opacity) => {
