@@ -31,27 +31,16 @@
                     </th>
                 </tr>
             </thead>
-            <tbody v-if="sortedCompetitorData.length > 0">
-                <tr v-for="competitorDatas in sortedCompetitorData" :key="competitorDatas.id"
-                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {{ competitorDatas.name }}
-                    </th>
+            <tbody>
+                <tr v-for="(dataset, index) in chartData.datasets" :key="index"  :style="{ backgroundColor: toRGBA(dataset.backgroundColor, 0.85) }" class="text-white border-b dark:bg-gray-800 dark:border-gray-700">
                     <td class="px-6 py-4">
-                        {{ competitorDatas.average_score }}
+                        {{ dataset.label }}
                     </td>
                     <td class="px-6 py-4">
-                        {{ competitorDatas.current_score }}
+                        {{ dataset.data[0] }}
                     </td>
-
-                </tr>
-            </tbody>
-            <tbody v-else>
-                <tr class="no__staff">
-                    <td colspan="4">
-                        <div style="text-align: center;">
-                            <span>no staff</span>
-                        </div>
+                    <td class="px-6 py-4">
+                        {{ dataset.data[dataset.data.length - 1] }}
                     </td>
                 </tr>
             </tbody>
@@ -251,6 +240,9 @@ const formatSixMonthsChartData = (datas) => {
 
     chartdata.labels = labels
 
+    chartdata.datasets.forEach((dataset) => {
+        console.log(dataset.label + ": " + dataset.backgroundColor);
+    });
     return chartdata
 }
 
@@ -572,8 +564,28 @@ const sortByCurrentScore = (data, sortBy, sortAsc) => {
 };
 
 const sortedCompetitorData = computed(() => {
-    return sortByCurrentScore(competitorData.value, sortBy, sortAsc);
+    if (!competitorData.value) return [];
+    
+    return competitorData.value.slice().sort((a, b) => {
+        let valueA = a[sortBy.value];
+        let valueB = b[sortBy.value];
+
+        if (sortAsc.value) {
+            return valueA < valueB ? -1 : (valueA > valueB ? 1 : 0);
+        } else {
+            return valueA > valueB ? -1 : (valueA < valueB ? 1 : 0);
+        }
+    });
 });
+
+const toRGBA = (hex, opacity) => {
+    let r = parseInt(hex.slice(1, 3), 16),
+        g = parseInt(hex.slice(3, 5), 16),
+        b = parseInt(hex.slice(5, 7), 16);
+
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}
+
 
 const toggleSort = (column) => {
     if (sortBy.value === column) {
