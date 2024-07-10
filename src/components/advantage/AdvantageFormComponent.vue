@@ -162,7 +162,7 @@
 </template>
 <script setup>
 import moment from 'moment';
-import { ref, inject, watch, defineAsyncComponent } from 'vue';
+import { ref, inject, watch, onBeforeMount, defineAsyncComponent } from 'vue';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
@@ -384,6 +384,13 @@ const selectAdvantage = (advantage) => {
     const companies = userStore.user.customer.establishments
     establishment.value = companies.length > 0 ? `/api/establishments/${companies[0].id},${companies[0].name}` : "";
 };
+
+onBeforeMount (() => {
+    const establishments = userStore.user.customer.establishments;
+    if (establishments.length > 0) {
+        establishment.value = `/api/establishments/${establishments[0].id},${establishments[0].name}`;
+    }
+})
 </script>
 
 <style scoped>

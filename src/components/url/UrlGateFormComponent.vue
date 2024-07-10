@@ -307,6 +307,12 @@ const establishments = computed(() => {
     return filteredData;
 });
 
+onBeforeMount(() => {
+   
+    if (establishments.value.length > 0) {
+        establishment.value = establishments.value[0].uri; // Ou équivalent en fonction de la structure de vos données
+    }
+});
 const filteredLinks = computed(() => {
     let filteredData = allLinks.value;
     filteredData = filteredData.filter((data) => {

@@ -57,7 +57,7 @@
 </template>
 <script setup>
 import moment from 'moment';
-import { ref, inject, watch } from 'vue';
+import { ref, inject, watch, onBeforeMount } from 'vue';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import { useEventStore } from "@Stores/event.js";
@@ -236,6 +236,12 @@ const submit = async () => {
     console.log(error);
   }
 };
+onBeforeMount(() => {
+  if (userStore.user.customer.establishments.length > 0) {
+    establishments.value = [`/api/establishments/${userStore.user.customer.establishments[0].id}`];
+  }
+});
+
 </script>
 <style scoped>
 form {

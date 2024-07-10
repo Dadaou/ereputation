@@ -6,17 +6,17 @@
 
                     <AnalysisCategory text="Your customers appreciated your establishment for the following services"
                         :ratings="ratingsCondition1" condition='condition1' v-if="ratingsCondition1.length > 0"
-                        class="mb-4" @labelChange="handleLabelChange"/>
+                        class="mb-4" @labelChange="handleLabelChange" />
 
                     <AnalysisCategory
                         text="Your customers believe that you can improve the quality of the following services"
                         :ratings="ratingsCondition2" condition='condition2' v-if="ratingsCondition2.length > 0"
-                        class="mb-4" @labelChange="handleLabelChange"/>
+                        class="mb-4" @labelChange="handleLabelChange" />
 
                     <AnalysisCategory
                         text="It is necessary to establish actions in order to improve the following areas"
                         :ratings="ratingsCondition3" condition='condition3' v-if="ratingsCondition3.length > 0"
-                        class="mb-4" @labelChange="handleLabelChange"/>
+                        class="mb-4" @labelChange="handleLabelChange" />
 
                     <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']">
                         <div class="containerChart" ref="scrollContainer1"
@@ -40,13 +40,16 @@
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
                 </el-tab-pane>
+                <el-tab-pane label="Competitors" name="analysis_competitors">
+                    <AnalysisCompetitors />
+                </el-tab-pane>
                 <el-tab-pane label="Staff" name="staff">
                     <StaffRanking />
                 </el-tab-pane>
                 <el-tab-pane label="Events & weather" name="events_weather">
                     Coming soon ...
                 </el-tab-pane>
-              <!--  <el-tab-pane label="Sales" name="sales">
+                <!--  <el-tab-pane label="Sales" name="sales">
                     <div
                         v-if="salesAnalysis && salesAnalysis.avgCustomerCard != 0 && salesAnalysis.current.avgBookings != 0 && salesAnalysis.current.avgTTV != 0 && salesAnalysis.current.score != '0'">
                         <p class="analysis-sales-title" style="margin-top: 1rem;">
@@ -127,13 +130,13 @@
 
             <el-date-picker v-model="end_date" placeholder="End date" :size="'large'" />
         </div>
-        <div class="px-2 w-full my-2">
-            <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
-                :max-collapse-tags="3" placeholder="select categories" size="large">
-                <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
-                    :disabled="categoryFilters.length > 1 && !categoryFilters.includes('all')" />
-                <el-option v-for="(item, index) in categories" :key="index" :label="item.category"
-                    :value="item.category" @click="handleCategoryDropdown('other')" />
+        <div class="px-2 w-full my-2" v-if="activeName !== 'analysis_competitors'" >
+            <el-select v-model=" categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
+            :max-collapse-tags="3" placeholder="select categories" size="large">
+            <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
+                :disabled="categoryFilters.length > 1 && !categoryFilters.includes('all')" />
+            <el-option v-for="(item, index) in categories" :key="index" :label="item.category" :value="item.category"
+                @click="handleCategoryDropdown('other')" />
             </el-select>
         </div>
     </div>
@@ -237,14 +240,14 @@
                     selectedFeeling = feeling
                 }" :default="feelings[0]" /> -->
 
-            <div class="date__filter">
+            <div class="date__filter" v-if="activeName !== 'analysis_competitors'">
                 <div class="text-sm title">Filter by category</div>
                 <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
                     :max-collapse-tags="3" placeholder="select categories" size="large">
                     <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
                         :disabled="categoryFilters.length > 1 && !categoryFilters.includes('all')" />
                     <el-option v-for="(item, index) in categories" :key="index" :label="item.category"
-                        :value="item.category" @click="handleCategoryDropdown('other')"/>
+                        :value="item.category" @click="handleCategoryDropdown('other')" />
                 </el-select>
             </div>
 
@@ -253,15 +256,23 @@
                 <el-date-picker v-model="start_date" placeholder="Start date" :size="'large'" />
                 <el-date-picker class="mt-2" v-model="end_date" placeholder="End date" :size="'large'" />
             </div>
+
+            <!-- <DropdownComponent v-if="activeName === 'analysis_competitors'" :showTitle="false" placeholder=""
+                :data="timePeriods" @submit="(timePeriod) => {
+                selectedTimePeriod = timePeriod
+            }" :default="timePeriods[0]" /> -->
         </div>
-        <CommunityFeedbackComponent v-if="activeName !== 'trends'" :reviewFeedbackData="services.getScoreColor(avgScore)" />
+
+        <CommunityFeedbackComponent v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' "
+            :reviewFeedbackData="services.getScoreColor(avgScore)" />
         <el-tooltip ref="tooltipRef" :visible="desc.visible" :virtual-ref="buttonRef" virtual-triggering
             popper-class="singleton-tooltip" placement="top">
             <template #content>
                 <span> {{ desc.text }} </span>
             </template>
         </el-tooltip>
-         <BaseLegend v-if="activeName !== 'trends'" :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData" :alignment="'vertical'">
+        <BaseLegend v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' "
+            :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData" :alignment="'vertical'">
         </BaseLegend>
     </div>
 </template>
@@ -330,6 +341,10 @@ const AnalysisTrend = defineAsyncComponent(() =>
     import('@Views/TrendsView.vue')
 )
 
+const AnalysisCompetitors = defineAsyncComponent(() =>
+    import('@Views/AnalysisCompetitors.vue')
+)
+
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 
@@ -367,6 +382,7 @@ const all_items = ref([
     { title: "Reviews", value: 0, icon: "uil-comment" },
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
+let timePeriods = ref(['Daily', 'Weeks', 'Months']);
 const dataLegend = ref([]);
 const legendData = ref([]);
 const start_date = inject('start_date');
@@ -601,6 +617,7 @@ const loadAnalysisData = async (tag, dateStart, dateEnd, categories) => {
             }
             containerBody.style.width = `${new_width}vw`
             containerBody2.style.width = `${new_width}vw`
+            
         } else {
             containerBody.style.width = '';
             containerBody2.style.width = '';

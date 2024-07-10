@@ -20,7 +20,7 @@
         </div>
         <div class="photo">
             <div v-if="establishment.url_source !== null" class="establishment__img">
-                <img :src="establishment.url_source" alt="" />
+                <img id="logoimagemobile" :src="establishment.url_source" alt="" style="display:none" />
             </div>
             <div v-else role="status"
                 class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
@@ -91,10 +91,39 @@ const props = defineProps({
 const loading = computed(()=>{
 	return props.isLoading
 });	
+
 </script>
 <style scoped>
 .dashboard{
 	display: flex;
 }
-	
+.smallClass{
+    width: auto! important;
+    height: 100%! important;
+    margin-top:50px;
+}
+.largeClass{
+    width: 100%! important;
+    height: auto! important;
+    margin-top:50px;
+}
+.establishment__img {
+    width: 100%;
+    height: 160px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+@media screen and (min-width: 540px) and (max-width: 975px) {
+
+    .establishment__info_tablet{
+        margin-top:0px! important;
+    }
+    .smallClass{
+        margin-top:0px! important;
+    }
+    .largeClass{
+        margin-top:0px! important;
+    }
+}
 </style>

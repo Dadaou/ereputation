@@ -450,6 +450,9 @@ watch(category, () => {
 })
 
 onBeforeMount(async () => {
+    if (establishments.value.length > 0) {
+        establishment.value = establishments.value[0].uri; // Set the URI of the first establishment
+    }
     try {
         const response = await new Promise((resolve) => {
             services.get_Record(`providers`, (response) => {

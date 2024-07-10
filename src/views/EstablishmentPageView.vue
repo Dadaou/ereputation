@@ -175,8 +175,8 @@
             class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" v-if="!establishmentLoading">
                 <div class="photo">
-                    <div v-if="establishment.url_source !== null" class="establishment__img">
-                        <img :src="establishment.url_source" alt="" />
+                    <div  v-if="establishment.url_source !== null" class="establishment__img">
+                        <img id="logoimage" :src="establishment.url_source" alt="" :class="widthimage(establishment.url_source)"/>
                     </div>
                 
                 <div v-else role="status"
@@ -528,6 +528,68 @@ const gotoReviewPage = (id, tag) => {
 }
 
 /**
+ * obtenir width image from url
+ */
+const getMeta = (url, cb) => {
+  const img = new Image();
+  img.onload = () => cb(null, img);
+  img.onerror = (err) => cb(err);
+  img.src = url;
+};
+
+/** Fonction widthimage pour savoir le width 
+ * @param event 
+*/
+const  widthimage = (event) => {
+    // Loadging establishment__img
+    var imgmobile = document.getElementById("logoimagemobile");
+    if(imgmobile !== null){
+        imgmobile.classList.add("fade-in");
+    }
+    document.getElementsByClassName("establishment__img").innerText = "Loading image...";
+    return getMeta(event,(err, img) =>{
+        const heightresize = 160; //hauteur div pour l'image
+        var aspectRatio = img.naturalWidth / img.naturalHeight;
+        var newWidth = 0;
+        if(aspectRatio == 1){
+            // ici carre
+            newWidth =heightresize;
+        }else{
+            newWidth =heightresize * aspectRatio;
+        }   
+        let classy =   (newWidth>240)? "largeClass" : "smallClass";
+        // pour le desktop
+        var elem = document.getElementById("logoimage");
+        elem.classList.add("fade-in");
+        setTimeout(() => {
+            elem.classList.add('show');
+            }, 10);
+        elem.classList.add(classy);
+        elem.src = event;
+        //new Promise(resolve=>{elem.onload = resolve})
+       
+        //pour le mobile
+        var elemmob = document.getElementById("logoimagemobile");
+        if(elemmob !== null){
+            elemmob.classList.add(classy);
+            
+            elemmob.src=event;
+            // Ajouter la classe 'show' pour déclencher l'animation de fondu en entrée
+            setTimeout(() => {
+                
+                elemmob.classList.add('show');
+                elemmob.style.display = "block";
+            }, 10);
+        }
+        
+        return "OK";
+    });
+   
+}
+
+
+
+/**
  * Navbar Handler
  * useWindowScroll allows us to detect the scroll event on 
  * the browser
@@ -708,6 +770,7 @@ const loadIndiceData = async (tag, dateStart, dateEnd) => {
 }
 
 onBeforeMount(async () => {
+   
     ChartJS.register(
         CategoryScale,
         LinearScale,
@@ -742,7 +805,7 @@ onBeforeMount(async () => {
                     isCurrent: true,
                 },
             ]);
-
+            
             establishmentLoading.value = false
             globalComparison(establishment.value, companyId.value, start_date.value, end_date.value, selectedWebsites.value, '', language.value, selectedCompetitors.value, selectedTimePeriod.value)
             websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
@@ -1064,10 +1127,36 @@ img {
         padding: 15px;
         font-size: 14px;
     }
+    .establishment__info_tablet{
+        margin-top:0px! important;
+    }
+    .smallClass{
+        margin-top:0px! important;
+    }
+    .largeClass{
+        margin-top:0px! important;
+    }
 }
 
 .photo{
-    width: 70%;
-    margin-left: 50px;
+    width: 100%;
+    /*margin-left: 50px;*/
+}
+.smallClass{
+    width: auto! important;
+    height: 100%! important;
+    margin-bottom:10px;
+}
+.largeClass{
+    width: 100%! important;
+    height: auto! important;
+    margin-bottom:10px;
+}
+.fade-in {
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
+.fade-in.show {
+    opacity: 1;
 }
 </style>
