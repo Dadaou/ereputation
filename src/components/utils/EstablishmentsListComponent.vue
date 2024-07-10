@@ -1,9 +1,9 @@
 <template>
-    <div class="list__item" v-for="company in establishments">
+    <div class="list__item" v-for="company in establishments" :key="company.id">
         <div class="society__info__container">
             <swiper v-if="company.url_source !== null" @click="goToCompany(company)" class="society__logo"
                 :modules="[Virtual]" :slides-per-view="1" :space-between="10" :virtual="true">
-                <swiper-slide v-show="mediaStore.isImageFile(image)" v-for="image in [...company.url_source]">
+                <swiper-slide v-show="mediaStore.isImageFile(image)" v-for="image in [...company.url_source]" :key="image">
                     <img :src="company.url_source">
                 </swiper-slide>
             </swiper>
@@ -46,7 +46,7 @@
                                               Score {{ score }}: {{ count }} reviews
                                        </div>
                                    </div>
-                                     </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -55,8 +55,6 @@
                         :company="company" />
                 </div>
                 <div class="list__actions">
-                    <!-- <button class="btn mr-2 qrcode" @click="showModal = true, establishment = company">QR Code <i
-                            class="uil uil-qrcode-scan"></i></button> -->
                     <button class="btn" @click="goToCompany(company)">More details</button>
                 </div>
             </div>
@@ -67,8 +65,9 @@
         :showModal="showModal" :filename="`${establishment.name}-feedback-link`" @close="showModal = false"
         :customer="tag" :establishment="establishment.competitor_tag" type="establishment" />
 </template>
+
 <script setup>
-import { ref, defineAsyncComponent, computed, inject } from 'vue';
+import { ref, defineAsyncComponent, inject } from 'vue';
 import RatingComponent from '@Components/utils/RatingComponent.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Virtual } from 'swiper/modules';
@@ -77,7 +76,6 @@ import { useAppStore } from "@Stores/app.js";
 import { useRouter } from "vue-router";
 import 'swiper/css';
 import { useUserStore } from "@Stores/user.js";
-import services from '@Services/services.js';
 
 const QrCodeModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/QrCodeModalComponent.vue')
@@ -94,11 +92,14 @@ const props = defineProps({
     tag: {
         type: String,
         required: true
+    },
+    selectedDate: {
+        type: String,
+        required: false
     }
     
 });
 
-const selectedDate = inject('selectedDate')
 const userStore = useUserStore();
 const tag = inject('tag')
 

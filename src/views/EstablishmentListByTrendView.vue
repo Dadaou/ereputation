@@ -1,26 +1,29 @@
 <template>
     <div class="filters">
         <div class="select_info">
-            <el-select v-model="type" size="large" class="custom-width">
+            <el-select v-model="type" size="large">
                 <el-option v-for="(item, index) in types" :key="index" :label="item.label" :value="item.value" />
             </el-select>
             <Tooltip :text="info_bulle_text" />
         </div>
-        <el-select v-model="categoryFilters" size="large" class="custom-width">
+        <div class="catfiltre">
+        <el-select v-model="categoryFilters" size="large">
             <el-option v-for="(item, index) in categories" :key="index" :label="item.label" :value="item.value" />
         </el-select>
+        </div>
         <div class="date_pick">
             <el-date-picker 
                 v-model="selectedDate" 
                 type="date" 
+                format="YYYY-MM-DD"
+                value-format="YYYY-MM-DD"
                 placeholder="Select Date" 
                 size="large"
-                class="widthdate"
                 @change="handleDateChange"
             />
         <Tooltip :text="info_bulle_text1" /> 
         </div>
-        <div>
+        <div class="number_days">
             <el-input-number 
                 v-model="days" 
                 :min="1" 
@@ -39,6 +42,7 @@
         </suspense>
     </div>
 </template>
+
 <script setup>
 import { ref, onMounted, defineAsyncComponent, inject, watch, provide } from 'vue';
 import EstablishmentListLoadedComponent from '@Components/utils/EstablishmentListLoadedComponent.vue';
@@ -49,6 +53,7 @@ import 'element-plus/es/components/date-picker/style/css';
 import 'element-plus/es/components/input-number/style/css';
 import services from '@Services/services.js';
 import { useUserStore } from '@Stores/user.js';
+import moment from 'moment'
 
 const EstablishmentsListComponent = defineAsyncComponent(() =>
     import('@Components/utils/EstablishmentsListComponent.vue')
@@ -87,15 +92,14 @@ const categoryFilters = ref('all');
 const days = ref(60);
 const selectedDate = ref(null);
 provide('selectedDate', selectedDate);
+
 const isDateSelected = ref(false);
 
 const handleDateChange = (value) => {
     isDateSelected.value = !!value;
     if (isDateSelected.value) {
         days.value = null;
-        const offsetDate = new Date(value);
-        offsetDate.setDate(offsetDate.getDate() + 1); // Correcting the date by adding one day
-        selectedDate.value = offsetDate.toISOString().split('T')[0];
+        selectedDate.value = moment(value).format('YYYY-MM-DD'); 
     } else {
         selectedDate.value = null;
     }
@@ -136,7 +140,6 @@ onMounted(async () => {
     await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value);
     dataLoading.value = false;
 });
-
 </script>
 <style scoped>
 .filters {
@@ -157,11 +160,13 @@ onMounted(async () => {
     /* Adjust based on your design needs */
 }
 
-.custom-width {
-    width: 100%;
+.select_info {
+    display: flex;
+    align-items: center;
+    align-content: center;
 }
 
-.select_info {
+.catfiltre {
     display: flex;
     align-items: center;
     align-content: center;
@@ -171,6 +176,16 @@ onMounted(async () => {
     display: flex;
     align-items: center;
     align-content: center;
+}
+
+.number_days {
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
+
+.custom-width {
+    width: 100%;
 }
 
 @media (max-width: 768px) {
