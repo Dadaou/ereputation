@@ -28,7 +28,7 @@
       
     </div>
     <div class="reviews__value mb-2" v-if="company.isTrends">
-
+      <Tooltip :text="info_bulle_text" />
       <div v-if="selectedDate">
         <div>Selected Date: {{ selectedDate }} , Score: {{ company.previous.note }} </div>
         <div>Current Date: {{ company.curent.to }} , Score: {{ company.curent.note }}</div>
@@ -43,8 +43,13 @@
 </template>
 
 <script setup>
-import { inject} from 'vue';
+import { inject, defineAsyncComponent} from 'vue';
 
+const Tooltip = defineAsyncComponent(() =>
+    import('@Components/utils/QuestionMarkTooltipComponent.vue')
+);
+
+const info_bulle_text = `the last x days compared to the previous x days.`;
 const selectedDate = inject('selectedDate')
 const props = defineProps(['reviews', 'rating', 'score', 'feeling', 'company']);
 
