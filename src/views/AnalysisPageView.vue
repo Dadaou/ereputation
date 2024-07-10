@@ -40,7 +40,7 @@
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="Analysis competitors" name="analysis_competitors">
+                <el-tab-pane label="Competitors" name="analysis_competitors">
                     <AnalysisCompetitors />
                 </el-tab-pane>
                 <el-tab-pane label="Staff" name="staff">

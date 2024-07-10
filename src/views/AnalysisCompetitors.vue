@@ -163,6 +163,10 @@ const colors = ref(['#f75842', '#337ecc', '#4682B4', '#6495ED', '#1E90FF', '#00B
 let chartConfig = {
     maintainAspectRatio: false,
     scales: {
+        y: {
+            min: 0,
+            max: 5
+        }
     },
     plugins: {
         legend: {
@@ -621,6 +625,7 @@ onMounted(async () => {
 .arrow-up,
 .arrow-down {
     cursor: pointer;
+    margin-right:4px
 }
 
 .btn.trends {
