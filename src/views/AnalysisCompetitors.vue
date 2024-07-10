@@ -625,7 +625,6 @@ onMounted(async () => {
 .arrow-up,
 .arrow-down {
     cursor: pointer;
-    margin-right:4px
 }
 
 .btn.trends {
