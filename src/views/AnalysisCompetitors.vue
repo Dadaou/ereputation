@@ -21,7 +21,9 @@
                     <th scope="col" class="px-6 py-3">
                         Establishment
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 py-3" @click="toggleSort('average_score')">
+                        <span v-if="sortBy === 'average_score' && sortAsc" class="arrow-up">&#9650;</span>
+                        <span v-if="sortBy === 'average_score' && !sortAsc" class="arrow-down">&#9660;</span>
                         Global score average within the date range
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -29,8 +31,8 @@
                     </th>
                 </tr>
             </thead>
-            <tbody v-if="competitorData.length > 0">
-                <tr v-for="competitorDatas in competitorData" :key="competitorDatas.id"
+            <tbody v-if="sortedCompetitorData.length > 0">
+                <tr v-for="competitorDatas in sortedCompetitorData" :key="competitorDatas.id"
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         {{ competitorDatas.name }}
@@ -41,9 +43,8 @@
                     <td class="px-6 py-4">
                         {{ competitorDatas.current_score }}
                     </td>
-                    
-                </tr>
 
+                </tr>
             </tbody>
             <tbody v-else>
                 <tr class="no__staff">
@@ -219,6 +220,8 @@ let chartData = ref({
     datasets: []
 })
 
+
+
 const formatSixMonthsChartData = (datas) => {
     let chartdata = {
         labels: [],
@@ -302,10 +305,11 @@ const viewData = async (establishment, establishmentTag, dateStart, dateEnd, web
         // plotdata.value = await chartsStore.loadData(tags, "Days", dateStart, dateEnd, website)
         let datachart = await chartsStore.loadDataCompetitor(establishmentTag, "daily", dateStart, dateEnd, website)
        
-        await chartsStore.fetchDataCompetitor(establishmentTag, "daily", dateStart, dateEnd, website, (response) => {
-            let data = response.data.data
+        await chartsStore.fetchDataCompetitor(establishmentTag, "daily", dateStart, dateEnd, website, (data) => {
+            // let data = response.data.data
             competitorData.value = data;
         })
+
 
         
         chartData.value = formatSixMonthsChartData(datachart);
@@ -375,13 +379,7 @@ const gotoReviewPage = (id, tag) => {
     }, 100);
 }
 
-/**
- * Navbar Handler
- * useWindowScroll allows us to detect the scroll event on 
- * the browser
- */
-const chart__width = ref(800);
-const chart__height = ref(300);
+
 
 
 watch([start_date, end_date, selectedWebsites], () => {
@@ -555,6 +553,34 @@ const loadIndiceData = async (tag, dateStart, dateEnd) => {
     }
 }
 
+let sortBy = ref('average_score');
+let sortAsc = ref(true);
+
+const sortByCurrentScore = (data, sortBy, sortAsc) => {
+    const sortedData = data.slice().sort((a, b) => {
+        if (sortAsc.value) {
+            return a[sortBy.value] - b[sortBy.value];
+        } else {
+            return b[sortBy.value] - a[sortBy.value];
+        }
+    });
+    return sortedData;
+};
+
+const sortedCompetitorData = computed(() => {
+    return sortByCurrentScore(competitorData.value, sortBy, sortAsc);
+});
+
+const toggleSort = (column) => {
+    if (sortBy.value === column) {
+        sortAsc.value = !sortAsc.value;
+    } else {
+        sortBy.value = column;
+        sortAsc.value = true; // Tri ascendant par défaut lorsque vous changez la colonne de tri
+    }
+};
+
+
 onMounted(async () => {
     appStore.isLoading = true;
 
@@ -588,63 +614,14 @@ onMounted(async () => {
     await loadCategories(companyId.value);
 });
 
-// onMounted(async () => {
-
-//     appStore.isLoading = true;
-
-//     companiesStore.getEstablishment(customerTag.value, companyId.value).then((data) => {
-
-//         if (data == false) {
-//             appStore.setIsExist(false);
-//             appStore.isLoading = false;
-//         }
-//         else {
-//             establishment.value = data;
-//             appStore.isLoading = false;
-//             establishment.value['tag'] = companyId.value;
-//             appStore.setCurrentPage({
-//                 title1: "",
-//                 title2: establishment.value.name,
-//                 icon: "uil-estate"
-//             });
-
-//             appStore.setBreadcrumbs([
-//                 {
-//                     title: establishment.value.name,
-//                     path: `${route.path}`,
-//                     isCurrent: true,
-//                 },
-//             ]);
-
-//             establishmentLoading.value = false
-            
-//             globalComparison(establishment.value, companyId.value, start_date.value, end_date.value, selectedWebsites.value, '', language.value, selectedCompetitors.value, selectedTimePeriod.value)
-//             websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
-//         }
-//     })
-    
-//     await loadCategories(companyId.value)
-
-// });
-
 
 </script>
 
 <style scoped>
-/* .chart__container {
-    overflow: auto;
-} */
-
-
-/* #confidence {
-    width:100% !important ;
-} */
-
-
-
-
-
-
+.arrow-up,
+.arrow-down {
+    cursor: pointer;
+}
 
 .btn.trends {
     width: 100%;

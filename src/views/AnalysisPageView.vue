@@ -130,13 +130,13 @@
 
             <el-date-picker v-model="end_date" placeholder="End date" :size="'large'" />
         </div>
-        <div class="px-2 w-full my-2">
-            <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
-                :max-collapse-tags="3" placeholder="select categories" size="large">
-                <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
-                    :disabled="categoryFilters.length > 1 && !categoryFilters.includes('all')" />
-                <el-option v-for="(item, index) in categories" :key="index" :label="item.category"
-                    :value="item.category" @click="handleCategoryDropdown('other')" />
+        <div class="px-2 w-full my-2" v-if="activeName !== 'analysis_competitors'" >
+            <el-select v-model=" categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
+            :max-collapse-tags="3" placeholder="select categories" size="large">
+            <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
+                :disabled="categoryFilters.length > 1 && !categoryFilters.includes('all')" />
+            <el-option v-for="(item, index) in categories" :key="index" :label="item.category" :value="item.category"
+                @click="handleCategoryDropdown('other')" />
             </el-select>
         </div>
     </div>
@@ -240,7 +240,7 @@
                     selectedFeeling = feeling
                 }" :default="feelings[0]" /> -->
 
-            <div class="date__filter">
+            <div class="date__filter" v-if="activeName !== 'analysis_competitors'">
                 <div class="text-sm title">Filter by category</div>
                 <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
                     :max-collapse-tags="3" placeholder="select categories" size="large">
@@ -256,8 +256,11 @@
                 <el-date-picker v-model="start_date" placeholder="Start date" :size="'large'" />
                 <el-date-picker class="mt-2" v-model="end_date" placeholder="End date" :size="'large'" />
             </div>
+
             <!-- <DropdownComponent v-if="activeName === 'analysis_competitors'" :showTitle="false" placeholder=""
-                :data="timePeriods" @submit="handleTimePeriodSubmit" :default="timePeriods[0]" /> -->
+                :data="timePeriods" @submit="(timePeriod) => {
+                selectedTimePeriod = timePeriod
+            }" :default="timePeriods[0]" /> -->
         </div>
 
         <CommunityFeedbackComponent v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' "
@@ -379,7 +382,7 @@ const all_items = ref([
     { title: "Reviews", value: 0, icon: "uil-comment" },
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
-let timePeriods = ref(['Days', 'Weeks', 'Months', 'Quarters', 'Semesters']);
+let timePeriods = ref(['Daily', 'Weeks', 'Months']);
 const dataLegend = ref([]);
 const legendData = ref([]);
 const start_date = inject('start_date');
