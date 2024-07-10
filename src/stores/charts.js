@@ -76,7 +76,8 @@ export const useChartsStore = defineStore(
       const api = apiBase + '?' + apiParams
       await services.get_Record(api, (response) => {
         if (response && response.status == 200) {
-          next(response)
+          const data = response.data.data;
+          next(data);
         }
       })
     }
@@ -94,8 +95,8 @@ export const useChartsStore = defineStore(
 
       let result = []
 
-      await fetchDataCompetitor(tag, type.toLowerCase(), fFrom, fTo, platform, (response) => {
-        let data = response.data.data
+      await fetchDataCompetitor(tag, type.toLowerCase(), fFrom, fTo, platform, (data) => {
+        // let data = response.data.data
         if (data.length) {
           let items = data.length
           Object.keys(data[0].data).forEach((key) => {

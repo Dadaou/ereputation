@@ -217,6 +217,7 @@ const handleFileChange = (type, e) => {
   if (file) {
     if (type === 'document') {
       if (isPdfFile(file)) {
+        selectedDocument.value = file;
         documentFiles.value = [{ file: file, name: file.name }];
       } else {
         showErrorMessage('Please upload a valid PDF file for the document.');

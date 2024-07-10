@@ -3,8 +3,13 @@
         <div class="society__info__container">
             <swiper v-if="company.url_source !== null" @click="goToCompany(company)" class="society__logo"
                 :modules="[Virtual]" :slides-per-view="1" :space-between="10" :virtual="true">
+<<<<<<< HEAD
                 <swiper-slide v-show="mediaStore.isImageFile(image)" v-for="image in [...company.url_source]" :key="image">
                     <img :src="company.url_source">
+=======
+                <swiper-slide v-show="mediaStore.isImageFile(image)" v-for="image in [...company.url_source]">
+                    <img :src="company.url_source"  :class="widthimage(company.url_source,company.competitor_tag)" :id="company.competitor_tag">
+>>>>>>> abadcb7633b64a50c0c797d592ae52b7b2020688
                 </swiper-slide>
             </swiper>
             <swiper v-else @click="goToCompany(company)" class="society__logo" :modules="[Virtual]" :slides-per-view="1"
@@ -32,7 +37,7 @@
                                     </a>
                                     <div class="society__category">
                                         <i
-                                            :class="['uil', company.category == 'Restaurant' ? 'uil-restaurant' : '', company.category == 'Hotel' ? 'uil-bed-double' : '', company.category == 'Residence' ? 'uil-home' : '', company.category == 'Other' ? 'uil-home ' : '']">
+                                            :class="['uil', company.category == 'Restaurant' ? 'uil-restaurant' : '', company.category == 'Hotel' ? 'uil-bed-double' : '', company.category == 'Residence' ? 'uil-home' : '', company.category == 'Other' ? 'uil-home ' : '',company.category == 'Event' ? 'uil-schedule' : '']">
                                         </i>
                                         <span>{{ company.category }}</span>
                                     </div>
@@ -67,7 +72,11 @@
 </template>
 
 <script setup>
+<<<<<<< HEAD
 import { ref, defineAsyncComponent, inject } from 'vue';
+=======
+import { ref, defineAsyncComponent, computed, inject,onMounted } from 'vue';
+>>>>>>> abadcb7633b64a50c0c797d592ae52b7b2020688
 import RatingComponent from '@Components/utils/RatingComponent.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Virtual } from 'swiper/modules';
@@ -119,6 +128,49 @@ const goToCompany = (establishment) => {
         });
     }, 100);
 };
+/**
+ * obtenir width image from url
+ */
+ const getMeta = (url, cb) => {
+  const img = new Image();
+  img.onload = () => cb(null, img);
+  img.onerror = (err) => cb(err);
+  img.src = url;
+};
+
+/** Fonction widthimage pour savoir le width 
+ * @param event 
+*/
+const  widthimage = ((event,id) => {
+     return getMeta(event,(err, img) =>{
+        const heightresize = 110; //hauteur div pour l'image
+        var aspectRatio = img.naturalWidth / img.naturalHeight;
+        var newWidth = 0;
+        if(aspectRatio == 1){
+            // ici carre
+            newWidth =heightresize;
+        }else{
+            newWidth =heightresize * aspectRatio;
+        }   
+        console.log(newWidth);
+        let classy =   (newWidth>140)? "largeClass" : "smallClass";
+        
+        var elem = document.getElementById(id);
+        elem.classList.add("fade-in");
+        setTimeout(() => {
+            elem.classList.add('show');
+            }, 10);
+        elem.classList.add(classy);
+        elem.src = event;
+        //new Promise(resolve=>{elem.onload = resolve})
+       
+        
+       
+        return "OK";
+    });
+   
+});
+
 </script>
 <style scoped>
 .list__item {
@@ -145,12 +197,15 @@ const goToCompany = (establishment) => {
     height: 95px;
     z-index: 0;
     transform: var(--transition);
+    display:flex;
+    justify-content:center;
     /*margin-inline: 8px !important;*/
 }
 
 .society__logo img {
-    object-fit: cover;
-    /* height: 100%;
+   
+    /* 
+    height: 100%;
   width: 100%;
   object-fit: cover;*/
 }
@@ -327,5 +382,27 @@ const goToCompany = (establishment) => {
     .society__item label {
         font-size: 14px;
     }
+}
+
+.smallClass{
+    width: auto! important;
+    height: 100%! important;
+    margin:auto;
+    vertical-align: middle;
+    
+}
+.largeClass{
+    width: 100%! important;
+    height: auto! important;
+    margin:auto;
+    vertical-align: middle;
+    margin-top:10px;
+}
+.fade-in {
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
+.fade-in.show {
+    opacity: 1;
 }
 </style>
