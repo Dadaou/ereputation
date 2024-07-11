@@ -1,19 +1,23 @@
 <template>
 	<div class="filters">
-		<div class="select_info">
-			<el-select v-model="type" size="large">
-				<el-option v-for="(item, index) in types" :key="index" :label="item.label" :value="item.value" />
-			</el-select>
-			<Tooltip :text="info_bulle_text" />
-		</div>
-		<el-select v-model="categoryFilters" size="large">
-			<el-option v-for="(item, index) in categories" :key="index" :label="item.label" :value="item.value" />
-		</el-select>
-		<div>
-			<el-date-picker v-model="start_date" type="date" :size="'large'" />
-		</div>
-		<div>
-			<el-date-picker v-model="end_date" type="date" :size="'large'" />
+		<div class="row">
+			<div class="select_info">
+				<el-select v-model="type" size="large">
+					<el-option v-for="(item, index) in types" :key="index" :label="item.label" :value="item.value" />
+				</el-select>
+				<Tooltip :text="info_bulle_text" />
+			</div>
+			<div class="catfiltre">
+				<el-select v-model="categoryFilters" size="large">
+					<el-option v-for="(item, index) in categories" :key="index" :label="item.label" :value="item.value" />
+				</el-select>
+			</div>
+			<div class="date_picker">
+				<el-date-picker v-model="start_date" type="date" :size="'large'" />
+			</div>
+			<div class="date_picker">
+				<el-date-picker v-model="end_date" type="date" :size="'large'" />
+			</div>
 		</div>
 	</div>
 	<div class="society__list mt-5" v-if="establishments.length > 0">
@@ -101,13 +105,12 @@ const loadEstablishment = async (tag, category, dateStart, dateEnd, note) => {
 			if (note == 'global') {
 				objet.rating = objet.note
 			}
-
-			/*	objet.reviews_count = {
+		/*	objet.reviews_count = {
 				5: objet.stars ? objet.stars['5 stars'] || 0 : 0,
 				4: objet.stars ? objet.stars['4 stars'] || 0 : 0,
 				3: objet.stars ? objet.stars['3 stars'] || 0 : 0,
 				2: objet.stars ? objet.stars['2 stars'] || 0 : 0,
-				1: objet.star ? objet.star['1 star'] || 0 : 0,
+				1: objet.stars ? objet.stars['1 stars'] || 0 : 0,
 			};*/
 		
 		
@@ -127,8 +130,7 @@ onMounted(async () => {
 <style scoped>
 .filters {
 	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
+	flex-direction: column;
 	align-items: center;
 	padding: 10px;
 	background-color: #f5f5f5;
@@ -136,17 +138,19 @@ onMounted(async () => {
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.filters>* {
-	margin: 2px;
-	flex-grow: 1;
-	max-width: 300px;
-	/* Adjust based on your design needs */
+.row {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	margin-bottom: 10px;
 }
 
-.select_info {
+.select_info, .catfiltre, .date_picker {
 	display: flex;
 	align-items: center;
-	align-content: center;
+	flex-grow: 1;
+	max-width: 300px;
+	margin-right: 10px;
 }
 
 @media (min-width: 1500px) {
@@ -162,18 +166,22 @@ onMounted(async () => {
 }
 
     .filters>* {
-        flex-basis: 50%;
+        flex-basis: 100%;
         margin-bottom: 10px;
-        max-width: 47%;
+        max-width: 100%;
         gap: 0.1rem;
     }
 }
 
 @media (max-width: 768px) {
-	.filters>* {
-		flex-basis: 100%;
-		margin-bottom: 10px;
-		max-width: 100%;
-	}
+	.row {
+        flex-direction: column;
+    }
+    .filters>* {
+        flex-basis: 100%;
+        margin-bottom: 10px;
+        max-width: 100%;
+        gap: 0.1rem;
+    }
 }
 </style>
