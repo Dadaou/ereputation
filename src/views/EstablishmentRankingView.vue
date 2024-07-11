@@ -23,13 +23,6 @@
 				<establishment-list-loaded-component :nb="3" />
 			</template>
 		</suspense>
-		<!--<div class="reviews-count mt-4" v-for="(establishment, index) in establishments" :key="index">
-			<div v-if="establishment.reviews_count">
-				<div v-for="(count, score) in establishment.reviews_count" :key="score">
-					Score {{ score }}: {{ count }} reviews
-				</div>
-			</div> 
-		</div>-->
 	</div>
 </template>
 <script setup>
@@ -84,7 +77,7 @@ watch([type, categoryFilters, start_date, end_date], async () => {
 })
 
 const IsValueOkay = (value) => (value == '' || value == 0 || value == null || value == undefined) ? false : true;
-const loadEstablishment = async (tag, category, dateStart, dateEnd, note, userId) => {
+const loadEstablishment = async (tag, category, dateStart, dateEnd, note) => {
 	let uri = 'get/establishment/classement'
 	let params = `tag=${tag}&category=${category}&note=${note}&user_id=${userId}`
 
@@ -104,21 +97,20 @@ const loadEstablishment = async (tag, category, dateStart, dateEnd, note, userId
 
 	if (response.status == 200) {
 		establishments.value = response.data.map(objet => {
-
-			//si global on affiche la note
+			// si global on affiche la note
 			if (note == 'global') {
 				objet.rating = objet.note
 			}
-			
-		/*	if (!objet.reviews_count) {
-				objet.reviews_count = {
-					5: 0,
-					4: 0,
-					3: 0,
-					2: 0,
-					1: 0
-				};
-			}*/
+
+			/*	objet.reviews_count = {
+				5: objet.stars ? objet.stars['5 stars'] || 0 : 0,
+				4: objet.stars ? objet.stars['4 stars'] || 0 : 0,
+				3: objet.stars ? objet.stars['3 stars'] || 0 : 0,
+				2: objet.stars ? objet.stars['2 stars'] || 0 : 0,
+				1: objet.star ? objet.star['1 star'] || 0 : 0,
+			};*/
+		
+		
 			return { ...objet, isGlobal: (note == 'global') }
 		});
 	}
@@ -126,12 +118,12 @@ const loadEstablishment = async (tag, category, dateStart, dateEnd, note, userId
 
 onMounted(async () => {
 	if (start_date.value && end_date.value) {
-		await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, type.value, userId)
+		await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, type.value)
 		dataLoading.value = false
 	}
 });
-
 </script>
+
 <style scoped>
 .filters {
 	display: flex;
@@ -147,7 +139,7 @@ onMounted(async () => {
 .filters>* {
 	margin: 2px;
 	flex-grow: 1;
-	max-width: 200px;
+	max-width: 300px;
 	/* Adjust based on your design needs */
 }
 
@@ -155,6 +147,26 @@ onMounted(async () => {
 	display: flex;
 	align-items: center;
 	align-content: center;
+}
+
+@media (min-width: 1500px) {
+	.filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+    .filters>* {
+        flex-basis: 50%;
+        margin-bottom: 10px;
+        max-width: 47%;
+        gap: 0.1rem;
+    }
 }
 
 @media (max-width: 768px) {
