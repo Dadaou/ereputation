@@ -188,7 +188,7 @@ onMounted(async () => {
     width: 100%;
 }
 
-@media (min-width: 1910px) {
+@media (min-width: 1500px) {
     .filters {
     display: flex;
     flex-wrap: wrap;
