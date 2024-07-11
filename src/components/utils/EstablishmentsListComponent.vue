@@ -3,13 +3,8 @@
         <div class="society__info__container">
             <swiper v-if="company.url_source !== null" @click="goToCompany(company)" class="society__logo"
                 :modules="[Virtual]" :slides-per-view="1" :space-between="10" :virtual="true">
-<<<<<<< HEAD
-                <swiper-slide v-show="mediaStore.isImageFile(image)" v-for="image in [...company.url_source]" :key="image">
-                    <img :src="company.url_source">
-=======
-                <swiper-slide v-show="mediaStore.isImageFile(image)" v-for="image in [...company.url_source]">
+                <swiper-slide v-show="mediaStore.isImageFile(image)" v-for="image in company.url_source" :key="image">
                     <img :src="company.url_source"  :class="widthimage(company.url_source,company.competitor_tag)" :id="company.competitor_tag">
->>>>>>> abadcb7633b64a50c0c797d592ae52b7b2020688
                 </swiper-slide>
             </swiper>
             <swiper v-else @click="goToCompany(company)" class="society__logo" :modules="[Virtual]" :slides-per-view="1"
@@ -72,11 +67,7 @@
 </template>
 
 <script setup>
-<<<<<<< HEAD
-import { ref, defineAsyncComponent, inject } from 'vue';
-=======
 import { ref, defineAsyncComponent, computed, inject,onMounted } from 'vue';
->>>>>>> abadcb7633b64a50c0c797d592ae52b7b2020688
 import RatingComponent from '@Components/utils/RatingComponent.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Virtual } from 'swiper/modules';
@@ -152,7 +143,6 @@ const  widthimage = ((event,id) => {
         }else{
             newWidth =heightresize * aspectRatio;
         }   
-        console.log(newWidth);
         let classy =   (newWidth>140)? "largeClass" : "smallClass";
         
         var elem = document.getElementById(id);
@@ -163,9 +153,7 @@ const  widthimage = ((event,id) => {
         elem.classList.add(classy);
         elem.src = event;
         //new Promise(resolve=>{elem.onload = resolve})
-       
-        
-       
+
         return "OK";
     });
    
@@ -184,7 +172,7 @@ const  widthimage = ((event,id) => {
 
 .society__info__container {
     display: flex;
-    gap: 1rem;
+    gap: 0.4rem;
     font-size: 15px;
     color: var(--color-bg2);
     justify-content: flex-start;
@@ -202,13 +190,13 @@ const  widthimage = ((event,id) => {
     /*margin-inline: 8px !important;*/
 }
 
-.society__logo img {
+/*.society__logo img {
    
-    /* 
+     
     height: 100%;
   width: 100%;
-  object-fit: cover;*/
-}
+  object-fit: cover;
+}*/
 
 .society__logo svg {
     height: 100%;
