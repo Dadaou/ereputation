@@ -190,13 +190,13 @@ const  widthimage = ((event,id) => {
     /*margin-inline: 8px !important;*/
 }
 
-/*.society__logo img {
+.society__logo img {
    
-     
+    /* 
     height: 100%;
   width: 100%;
-  object-fit: cover;
-}*/
+  object-fit: cover;*/
+}
 
 .society__logo svg {
     height: 100%;

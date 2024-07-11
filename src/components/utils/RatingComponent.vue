@@ -30,7 +30,7 @@
     <div class="reviews__value mb-2" v-if="company.isTrends">
       
       <div v-if="selectedDate">
-        <div> <Tooltip :text="info_bulle_text" class="infobulle" />Selected Date: {{ selectedDate }} , Score: {{ company.previous.note }} 
+        <div> <Tooltip :text="info_bulle_text"/>Selected Date: {{ selectedDate }} , Score: {{ company.previous.note }} 
         </div>
         <div class="curent">Current Date: {{ company.curent.to }} , Score: {{ company.curent.note }}</div>
     </div>

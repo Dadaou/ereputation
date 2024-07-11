@@ -188,6 +188,27 @@ onMounted(async () => {
     width: 100%;
 }
 
+@media (min-width: 1910px) {
+    .filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+    .filters>* {
+        flex-basis: 50%;
+        margin-bottom: 10px;
+        max-width: 47%;
+        gap: 0.1rem;
+    }
+
+}
+
 @media (max-width: 768px) {
     .filters>* {
         flex-basis: 100%;
