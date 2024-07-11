@@ -20,7 +20,7 @@
                 </div>
                 <div class="photo">
                     <div v-if="establishment.url_source !== null" class="establishment__img">
-                        <img :src="establishment.url_source" alt="" />
+                        <img :src="establishment.url_source" alt="" id="logoimage"/>
                     </div>
                     <div v-else role="status"
                         class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
@@ -214,6 +214,7 @@ onBeforeMount(async () => {
     await services.get_Record(`public/establishment/${route.params.etab}/media`, (response) => {
         if (response !== undefined && response.status == 200) {
             establishment.value = response['data'];
+            widthimage(establishment.value.url_source);
         }
 
         if (response !== undefined && response.status == 404) {
@@ -378,9 +379,89 @@ const submit = async () => {
     }
 
 };
+/**
+ * obtenir width image from url
+ */
+ const getMeta = (url, cb) => {
+  const img = new Image();
+  img.onload = () => cb(null, img);
+  img.onerror = (err) => cb(err);
+  img.src = url;
+};
+
+/** Fonction widthimage pour savoir le width 
+ * @param event 
+*/
+const  widthimage = (event) => {
+    
+    document.getElementsByClassName("establishment__img").innerText = "Loading image...";
+    return getMeta(event,(err, img) =>{
+        const heightresize = 150; //hauteur div pour l'image
+        var aspectRatio = img.naturalWidth / img.naturalHeight;
+        var newWidth = 0;
+        if(aspectRatio == 1){
+            // ici carre
+            newWidth =heightresize;
+        }else{
+            newWidth =heightresize * aspectRatio;
+        }   
+        let classy =   (newWidth>210)? "largeClass" : "smallClass";
+        // pour le desktop
+        var elem = document.getElementById("logoimage");
+        elem.classList.add("fade-in");
+        setTimeout(() => {
+            elem.classList.add('show');
+            
+            }, 10);
+        elem.classList.add(classy);
+        elem.src = event;
+        //new Promise(resolve=>{elem.onload = resolve})
+       
+        //pour le mobile
+        var elemmob = document.getElementById("logoimagemobile");
+        if(elemmob !== null){
+            elemmob.classList.add(classy);
+            
+            elemmob.src=event;
+            // Ajouter la classe 'show' pour déclencher l'animation de fondu en entrée
+            setTimeout(() => {
+                
+                elemmob.classList.add('show');
+                elemmob.style.display = "block";
+            }, 10);
+        }
+        
+        return "OK";
+    });
+   
+}
+
 </script>
 
 <style scoped>
+.smallClass{
+    width: auto! important;
+    height: 100%! important;
+    object-fit:contain! important;
+}
+.establishment__img{
+    display:flex;
+    justify-content:center;
+}
+.largeClass{
+    width: 100%! important;
+    height: auto! important;
+    object-fit:contain! important;
+}
+.fade-in {
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
+.fade-in.show {
+    opacity: 1;
+}
+
+
 .modal__header {
     display: flex;
     justify-content: space-between;
@@ -396,10 +477,6 @@ const submit = async () => {
     color: red;
     cursor: pointer;
     transition: var(--transition);
-}
-
-img {
-    height: 100%;
 }
 
 .qr__code {
@@ -549,25 +626,21 @@ input:focus {
 }
 
 .photo {
-    flex-basis: 190px;
+    flex-basis: 250px;
+    
 }
 
 .photo div {
     height: 100%;
 }
 
-.photo img {
-    height: 100%;
-    width: 100%;
-}
+
 
 .staff__card {
     /* border: 1px solid var(--light-color-bg2);*/
     padding: 5px;
     /*flex-basis: 500px;*/
     flex-grow: 1;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    /* border-radius: 5px;*/
     display: flex;
     justify-content: space-between;
 }
