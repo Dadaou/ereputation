@@ -1,6 +1,7 @@
 <template>
   <div class="scroll-wrapper">
-    <label for="email" v-if="discounts.length > 0" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">
+    <label for="email" v-if="discounts.length > 0"
+      class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">
       {{ $t("feedback.choose_advantage") }}
     </label>
     <ul class="discount-list">
@@ -164,15 +165,15 @@ onMounted(async () => {
   let data = await advantageStore.getAdvantageAvailable(props.establishment, true)
 
   if (props.discount) {
-    
+
     let d = data.find((d) => d.id == props.discount)
     if (d) {
       discounts.value = [{ ...d, icon: "🎉" }]
       selectDiscount(0, discounts.value[0])
     }
-   
+
   } else {
-   
+
     discounts.value = data.map((discount, index) => {
       let icon = '';
       if (index % 2 === 0) {
@@ -182,11 +183,13 @@ onMounted(async () => {
       }
       return { ...discount, icon };
     });
+
+    if (discounts.value.length == 1) {
+      selectDiscount(0, discounts.value[0])
+    }
   }
+
   generateColors();
-  // if (discounts.value.length) {
-  //   selectDiscount(1, discounts.value[1]);
-  // }
 });
 
 const generateColors = () => {
