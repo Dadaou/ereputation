@@ -26,13 +26,17 @@
                         <span v-if="sortBy === 'average_score' && !sortAsc" class="arrow-down">&#9660;</span>
                         Global score average within the date range
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 py-3" @click="toggleSort('average_score')">
+                        <span v-if="sortBy === 'average_score' && sortAsc" class="arrow-up">&#9650;</span>
+                        <span v-if="sortBy === 'average_score' && !sortAsc" class="arrow-down">&#9660;</span>
                         Current score
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(dataset, index) in chartData.datasets" :key="index"  :style="{ backgroundColor: toRGBA(dataset.backgroundColor, 0.85) }" class="text-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <tr v-for="(dataset, index) in sortedData" :key="index"
+                    :style="{ backgroundColor: toRGBA(dataset.backgroundColor, 0.85) }"
+                    class="text-white border-b dark:bg-gray-800 dark:border-gray-700">
                     <td class="px-6 py-4">
                         {{ dataset.label }}
                     </td>
@@ -240,9 +244,6 @@ const formatSixMonthsChartData = (datas) => {
 
     chartdata.labels = labels
 
-    chartdata.datasets.forEach((dataset) => {
-        console.log(dataset.label + ": " + dataset.backgroundColor);
-    });
     return chartdata
 }
 
@@ -552,20 +553,27 @@ const loadIndiceData = async (tag, dateStart, dateEnd) => {
 let sortBy = ref('average_score');
 let sortAsc = ref(true);
 
-const sortByCurrentScore = (data, sortBy, sortAsc) => {
-    const sortedData = data.slice().sort((a, b) => {
+
+const sortedData = computed(() => {
+    return chartData.value.datasets.slice().sort((a, b) => {
+        const avgA = a.data.reduce((sum, val) => sum + val, 0) / a.data.length;
+        const avgB = b.data.reduce((sum, val) => sum + val, 0) / b.data.length;
         if (sortAsc.value) {
-            return a[sortBy.value] - b[sortBy.value];
+            return avgA - avgB;
         } else {
-            return b[sortBy.value] - a[sortBy.value];
+            return avgB - avgA;
         }
     });
-    return sortedData;
-};
-
-const sortedCompetitorData = computed(() => {
-    return sortByCurrentScore(competitorData.value, sortBy, sortAsc);
 });
+
+const toggleSort = (key) => {
+    if (sortBy.value === key) {
+        sortAsc.value = !sortAsc.value;
+    } else {
+        sortBy.value = key;
+        sortAsc.value = true;
+    }
+};
 
 const toRGBA = (hex, opacity) => {
     let r = parseInt(hex.slice(1, 3), 16),
@@ -576,14 +584,7 @@ const toRGBA = (hex, opacity) => {
 }
 
 
-const toggleSort = (column) => {
-    if (sortBy.value === column) {
-        sortAsc.value = !sortAsc.value;
-    } else {
-        sortBy.value = column;
-        sortAsc.value = true; // Tri ascendant par défaut lorsque vous changez la colonne de tri
-    }
-};
+
 
 
 onMounted(async () => {

@@ -120,7 +120,7 @@
             class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" v-if="!dataLoading">
                 <div v-if="establishment.url_source !== null" class="establishment__img">
-                    <img :src="establishment.url_source" alt="" />
+                    <img :src="establishment.url_source" id="logoimage" :class="widthimage(establishment.url_source)" alt="" />
                 </div>
                 <div v-else role="status"
                     class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
@@ -232,6 +232,7 @@ appStore.setIsExist(true)
 const customerTag = inject('tag')
 
 const route = useRoute();
+const starParams = route.query.star;
 appStore.setBreadcrumbs([
     {
         title: "Establishment",
@@ -359,9 +360,30 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         apiParams += `&platform=${source}`
     }
 
-    if (IsValueOkay(stars)) {
-        apiParams += `&star=${stars}`
+    
+    const isValueOkay = (value) => (value !== '' && value !== null && value !== undefined && value !== 'Global' && value !== 0);
+
+   
+    let starQueryPart = '';
+
+    if (isValueOkay(starParams)) {
+        starQueryPart = `&star=${starParams} stars`;
+    } else if (isValueOkay(stars)) {
+        starQueryPart = `&star=${stars}`;
     }
+
+    if (starQueryPart) {
+        apiParams += starQueryPart;
+    }
+
+    // if (IsValueOkay(stars)) {
+    //     apiParams += `&star=${stars}`
+    // }
+
+    // console.log(starParams)
+    // if (starParams) {
+    //     apiParams += `&star=${starParams} star`
+    // }
 
     if (category != 'all') {
         apiParams += `&category=${category.join(',')}`
@@ -373,6 +395,10 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     }
 
     if (route.params.type == 'intern') {
+        apiParams += `&via=myqrcode`;
+    }
+
+    if (route.params.type == 'alert') {
         apiParams += `&via=myqrcode`;
     }
     // if(IsValueOkay(language)){
@@ -560,6 +586,7 @@ onBeforeMount(async () => {
             all_items.value[1].value = establishment.value.totalReviews;
             appStore.isLoading = false;
             dataLoading.value = false;
+            
             websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
 
         }
@@ -572,6 +599,71 @@ onBeforeMount(async () => {
     await loadReviews(companyId, 1, options.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value)
     await loadCategories(companyId)
 });
+
+/**
+ * obtenir width image from url
+ */
+ const getMeta = (url, cb) => {
+  const img = new Image();
+  img.onload = () => cb(null, img);
+  img.onerror = (err) => cb(err);
+  img.src = url;
+};
+
+/** Fonction widthimage pour savoir le width 
+ * @param event 
+*/
+const  widthimage = (event) => {
+    // Loadging establishment__img
+    
+    var imgmobile = document.getElementById("logoimagemobile");
+    if(imgmobile !== null){
+        imgmobile.classList.add("fade-in");
+    }
+    document.getElementsByClassName("establishment__img").innerText = "Loading image...";
+    return getMeta(event,(err, img) =>{
+        //if(img!=null){
+            const heightresize = 160; //hauteur div pour l'image
+            var aspectRatio = img.naturalWidth / img.naturalHeight;
+            var newWidth = 0;
+            if(aspectRatio == 1){
+                // ici carre
+                newWidth =heightresize;
+            }else{
+                newWidth =heightresize * aspectRatio;
+            }   
+            let classy =   (newWidth>240)? "largeClass" : "smallClass";
+            // pour le desktop
+            var elem = document.getElementById("logoimage");
+            elem.classList.add("fade-in");
+            setTimeout(() => {
+                elem.classList.add('show');
+                elem.style.display="block";
+                }, 10);
+            elem.classList.add(classy);
+            elem.src = event;
+            //new Promise(resolve=>{elem.onload = resolve})
+        
+            //pour le mobile
+            var elemmob = document.getElementById("logoimagemobile");
+            if(elemmob !== null){
+                elemmob.classList.add(classy);
+                
+                elemmob.src=event;
+                // Ajouter la classe 'show' pour déclencher l'animation de fondu en entrée
+                setTimeout(() => {
+                    
+                    elemmob.classList.add('show');
+                    elemmob.style.display = "block";
+                }, 10);
+            }
+            
+            return "OK";
+        //}
+        
+    });
+   
+}
 </script>
 
 <style scoped>
@@ -595,5 +687,60 @@ onBeforeMount(async () => {
 }
 .reviews__content {
     margin: 0
+}
+@media screen and (min-width: 540px) and (max-width: 975px) {
+
+    .establishment__info_tablet{
+        margin-top:50px! important;
+    }
+    .smallClass{
+        margin-top:10px! important;
+        margin-bottom:10px;
+    }
+    .largeClass{
+        margin-top:10px! important;
+        margin-bottom:10px;
+    }
+}
+
+@media screen  and (max-width: 520px) {
+
+    .establishment__info_tablet{
+        margin-top:50px! important;
+    }
+    .smallClass{
+        margin-top:60px! important;
+        margin-bottom:10px;
+    }
+    .largeClass{
+        margin-top:60px! important;
+        margin-bottom:10px;
+    }
+}
+
+
+
+.smallClass{
+    width: auto! important;
+    height: 100%! important;
+
+}
+.establishment__img{
+    display:flex;
+    justify-content:center;
+    height: 160px;
+    align-items:center;
+}
+.largeClass{
+    width: 100%! important;
+    height: auto! important;
+
+}
+.fade-in {
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
+.fade-in.show {
+    opacity: 1;
 }
 </style>
