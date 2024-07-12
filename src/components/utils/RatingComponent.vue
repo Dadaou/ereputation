@@ -66,6 +66,10 @@ const arrondirRatio = (ratio)=>{
 </script>
 
 <style scoped>
+.mb-2 {
+    margin-top: 10px;
+    margin-bottom: 0.5rem;
+}
     .rating_container{
       display: flex;
       flex-direction: column;
@@ -80,7 +84,7 @@ const arrondirRatio = (ratio)=>{
     .society__rating{
         display: flex;
         align-items: center;
-        /*width: 125px;*/
+        margin-top: -5px;
     }
 
     .reviews{
@@ -93,7 +97,7 @@ const arrondirRatio = (ratio)=>{
         font-weight: 500 !important;
         font-size: 11px;
         display: block;
-        margin-top: 13px;
+        
     }
 
     .global__rating{

@@ -21,13 +21,15 @@
 		</div>
 	</div>
 	<div class="society__list mt-5" v-if="establishments.length > 0">
-		<suspense>
-			<establishments-list-component :establishments="establishments" :tag='customerTag' />
-			<template #fallback>
-				<establishment-list-loaded-component :nb="3" />
-			</template>
-		</suspense>
-	</div>
+    <suspense>
+      <div class="establishment-rank-view">
+        <establishments-list-component :establishments="establishments" :tag='customerTag' />
+      </div>
+      <template #fallback>
+        <establishment-list-loaded-component :nb="3" />
+      </template>
+    </suspense>
+  </div>
 </template>
 <script setup>
 import { ref, onMounted, defineAsyncComponent, inject, watch } from 'vue';
@@ -102,18 +104,17 @@ const loadEstablishment = async (tag, category, dateStart, dateEnd, note) => {
 	if (response.status == 200) {
 		establishments.value = response.data.map(objet => {
 			// si global on affiche la note
-			if (note == 'global') {
+		if (note == 'global') {
 				objet.rating = objet.note
 			}
-		/*	objet.reviews_count = {
-				5: objet.stars ? objet.stars['5 stars'] || 0 : 0,
-				4: objet.stars ? objet.stars['4 stars'] || 0 : 0,
-				3: objet.stars ? objet.stars['3 stars'] || 0 : 0,
-				2: objet.stars ? objet.stars['2 stars'] || 0 : 0,
-				1: objet.stars ? objet.stars['1 stars'] || 0 : 0,
-			};*/
-		
-		
+		    	objet.reviews_count = {
+					'5': objet.stars ? objet.stars['5 stars'] : 0,
+					'4': objet.stars ? objet.stars['4 stars'] : 0,
+					'3': objet.stars ? objet.stars['3 stars'] : 0,
+					'2': objet.stars ? objet.stars['2 stars'] : 0,
+					'1': objet.stars ? objet.stars['1 star'] : 0,
+					
+			};
 			return { ...objet, isGlobal: (note == 'global') }
 		});
 	}
@@ -128,6 +129,26 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.establishment-rank-view ::v-deep .reviews-count {
+  display: flex;
+  border: 1px solid #dddddd;
+  padding: 5px;
+  border-radius: 5px;
+  margin-top: 40px;
+  margin-right: -130px;
+  margin-left: -215px;
+}
+
+.establishment-rank-view ::v-deep .review-box {
+  display: flex;
+  align-items: center;
+  background: #F5F5F5;
+  padding: 2px;
+  margin: 3px 0;
+  border-radius: 5px;
+  margin-left: 5px;
+}
+
 .filters {
 	display: flex;
 	flex-direction: column;
@@ -183,5 +204,29 @@ onMounted(async () => {
         max-width: 100%;
         gap: 0.1rem;
     }
+	.establishment-rank-view ::v-deep .reviews-count {
+  display: flex;
+  border: 1px solid #747474;
+  padding: 5px;
+  border-radius: 5px;
+  margin-top: 40px;
+  margin-right: -120px;
+  margin-left: 0.5px;
+}
+
+.establishment-rank-view ::v-deep .review-box {
+  display: flex;
+  align-items: center;
+  background: #F5F5F5;
+  padding: 2px;
+  margin: 3px 0;
+  border-radius: 5px;
+  margin-left: -5px;
+}
+
+.establishment-rank-view ::v-deep .score {
+    font-weight: bold;
+    margin-right: 1px;
+}
 }
 </style>

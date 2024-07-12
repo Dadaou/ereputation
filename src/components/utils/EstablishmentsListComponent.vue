@@ -42,10 +42,11 @@
                                         <span>{{ company.address1 }}, {{ company.city }}</span>
                                     </div>
                                     <div class="reviews-count">
-                                        <div v-for="(count, score) in company.reviews_count" :key="score">
-                                              Score {{ score }}: {{ count }} reviews
-                                       </div>
-                                   </div>
+                                        <div class="review-box" v-for="(count, score) in company.reviews_count" :key="score">
+                                            <span class="score">{{ score }}</span><i class="fa fa-star " aria-hidden="true"></i>: 
+                                            {{ count }} {{ count === 0 || count === 1 ? 'review' : 'reviews' }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -161,18 +162,31 @@ const  widthimage = ((event,id) => {
 
 </script>
 <style scoped>
+.reviews-count{
+    margin: -19px;
+}
 .list__item {
     padding: 10px;
     border-radius: 5px;
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
     border: 2px solid var(--light-color-bg1);
     transition: var(--transition);
 }
 
+.list__item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.score {
+    font-weight: bold;
+    margin-right: 1.5px;
+}
+
 .society__info__container {
     display: flex;
-    gap: 0.4rem;
+    gap: 1rem;
     font-size: 15px;
     color: var(--color-bg2);
     justify-content: flex-start;
@@ -270,6 +284,7 @@ const  widthimage = ((event,id) => {
     font-size: 13px;
     font-weight: 500;
     padding: 2px 6px;
+    margin-top: -5px;
 }
 
 .list__actions button:hover {
