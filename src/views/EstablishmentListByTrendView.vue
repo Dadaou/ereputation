@@ -12,6 +12,9 @@
                     <el-option v-for="(item, index) in categories" :key="index" :label="item.label" :value="item.value" />
                 </el-select>
             </div>
+           
+        </div>
+        <div class="bottom-row">
             <div class="date_pick">
                 <el-date-picker 
                     v-model="selectedDate" 
@@ -24,8 +27,9 @@
                 />
                 <Tooltip :text="info_bulle_text1" /> 
             </div>
-        </div>
-        <div class="bottom-row">
+            <div class="or-text">
+                OR
+            </div>
             <div class="number_days">
                 <el-input-number 
                     v-model="days" 
@@ -160,23 +164,31 @@ onMounted(async () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
+    gap: 3rem;
 }
 
+.or-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+    font-weight: bold;
+    font-size: 10px;
+}
 
 .bottom-row {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
-    margin-left: 429px;
+    gap: 0.05rem;
+   
 }
 
 .select_info, .catfiltre, .date_pick, .number_days {
     display: flex;
     align-items: center;
     flex: 1;
-    max-width: 200px; /* Adjust based on your design needs */
+    width: 300px; /* Adjust based on your design needs */
 }
 
 .custom-width {
@@ -201,14 +213,26 @@ onMounted(async () => {
     gap: 1rem;
     }
 
+    .top-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5rem;
+}
+
     .bottom-row {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 1rem;
-    margin-left: 430px;
 }
 
+.select_info, .catfiltre, .date_pick, .number_days {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    max-width: 600px; /* Adjust based on your design needs */
+}
 }
 
 @media (max-width: 768px) {
@@ -223,7 +247,6 @@ onMounted(async () => {
     justify-content: center;
     align-items: center;
     gap: 1rem;
-    margin-left: 297px;
 }
 }
 </style>
