@@ -8,7 +8,7 @@
         <img :src="getLogoUrl(key)" class="alert__logo">
         <div>
           <ul class="alert__review">
-            <li v-for="(noteKey, index) in Object.keys(review).filter(key => key !== 'url_source').slice(0, 3)" :key="noteKey">
+            <li v-for="(noteKey, index) in Object.keys(review).filter(key => key !== 'url_source').slice(0, 3)" :key="noteKey" @click="redirectToReviews(route.params.tag, route.params.id, props.from, props.to, noteKey.replace('note ', ''))">
               {{ review[noteKey] }} review{{ review[noteKey] !== 1 ? 's' : '' }} note {{ noteKey.replace('note ', '') }}
             </li>
           </ul>
@@ -19,14 +19,17 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { inject, onMounted, ref, watch } from 'vue';
 import services from '@Services/services.js';
 import moment from 'moment';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from "vue-router";
 
 const reviewsData = ref({});
 const route = useRoute();
+const router = useRouter();
 const tag = route.params.id;
+const start_date = inject('start_date');
+const end_date = inject('end_date')
 
 const props = defineProps({
   from: String,
@@ -68,6 +71,12 @@ const fetchReviewsData = async (tag, from, to) => {
   }
 };
 
+const redirectToReviews = (customer, tag, from, to, star) => {
+  start_date.value = from;
+  end_date.value = to;
+  router.push(`/customer/${customer}/establishment/${tag}/reviews/alert?star=${star}`);
+};
+
 watch(() => [props.from, props.to], ([newFrom, newTo]) => {
   if (newFrom && newTo) {
     fetchReviewsData(tag, newFrom, newTo);
@@ -89,8 +98,6 @@ onMounted(() => {
 .alert__card{
     gap: 10px;
     display: flex;
-    border: solid 1px var(--light-color-bg2);
-    border-radius: .5rem;
     margin-bottom: 20px;
 }
 

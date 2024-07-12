@@ -232,6 +232,7 @@ appStore.setIsExist(true)
 const customerTag = inject('tag')
 
 const route = useRoute();
+const starParams = route.query.star;
 appStore.setBreadcrumbs([
     {
         title: "Establishment",
@@ -359,9 +360,30 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         apiParams += `&platform=${source}`
     }
 
-    if (IsValueOkay(stars)) {
-        apiParams += `&star=${stars}`
+    
+    const isValueOkay = (value) => (value !== '' && value !== null && value !== undefined && value !== 'Global' && value !== 0);
+
+   
+    let starQueryPart = '';
+
+    if (isValueOkay(starParams)) {
+        starQueryPart = `&star=${starParams} stars`;
+    } else if (isValueOkay(stars)) {
+        starQueryPart = `&star=${stars}`;
     }
+
+    if (starQueryPart) {
+        apiParams += starQueryPart;
+    }
+
+    // if (IsValueOkay(stars)) {
+    //     apiParams += `&star=${stars}`
+    // }
+
+    // console.log(starParams)
+    // if (starParams) {
+    //     apiParams += `&star=${starParams} star`
+    // }
 
     if (category != 'all') {
         apiParams += `&category=${category.join(',')}`
@@ -373,6 +395,10 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     }
 
     if (route.params.type == 'intern') {
+        apiParams += `&via=myqrcode`;
+    }
+
+    if (route.params.type == 'alert') {
         apiParams += `&via=myqrcode`;
     }
     // if(IsValueOkay(language)){
