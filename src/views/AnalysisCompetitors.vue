@@ -240,9 +240,6 @@ const formatSixMonthsChartData = (datas) => {
 
     chartdata.labels = labels
 
-    chartdata.datasets.forEach((dataset) => {
-        console.log(dataset.label + ": " + dataset.backgroundColor);
-    });
     return chartdata
 }
 

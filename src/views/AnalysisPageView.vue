@@ -116,7 +116,7 @@
                     <AnalysisTrend />
                 </el-tab-pane>
                 <el-tab-pane label="Alerts" name="alerts">
-                    Coming soon ...
+                    <AnalysisAlert :from="start_date" :to="end_date" />
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -344,7 +344,9 @@ const AnalysisTrend = defineAsyncComponent(() =>
 const AnalysisCompetitors = defineAsyncComponent(() =>
     import('@Views/AnalysisCompetitors.vue')
 )
-
+const AnalysisAlert = defineAsyncComponent(() =>
+    import('@Views/AlertView.vue')
+)
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 
