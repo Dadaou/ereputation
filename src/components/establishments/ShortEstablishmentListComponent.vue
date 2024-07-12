@@ -36,6 +36,9 @@
                 </template>
                 <template #default="scope">
                     <div class="vertical-buttons">
+                        <el-button size="small" @click="redirectToQRCode(route.params.tag, scope.row.tag)">
+                            <i class="uil uil-file-alt"></i>
+                        </el-button>
                         <el-tooltip :content="`Click to enter ${scope.row.name}'s feedback formulary`" placement="top">
                             <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
                                     class="uil uil-external-link-alt"></i></a>
@@ -106,6 +109,10 @@ const redirectToReviews = async(customer, establishment)=>{
     router.push(`/customer/${customer}/establishment/${establishment}/reviews/intern`)
 }
 
+const redirectToQRCode = async(customer, establishment)=> {
+    const link = `/customer/${customer}/establishment/${establishment}/qr_code_document_preview?section=establishment`;
+    router.push(link);
+}
 const establishments = computed(() => {
     let data = [];
     let filteredData = [];
