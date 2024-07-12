@@ -30,15 +30,15 @@
     <div class="reviews__value mb-2" v-if="company.isTrends">
       
       <div v-if="selectedDate">
-        <div> <Tooltip :text="info_bulle_text"/>Selected Date: {{ selectedDate }} , Score: {{ company.previous.note }} 
+        <div>Selected Date: {{ selectedDate }} , Score: {{ company.previous.note }} 
         </div>
-        <div class="curent">Current Date: {{ company.curent.to }} , Score: {{ company.curent.note }}</div>
+        <div >Current Date: {{ company.curent.to }} , Score: {{ company.curent.note }}</div>
     </div>
       <div v-else>
         
-        <div><Tooltip :text="info_bulle_text"/>Previous: {{ company.previous.from }} / {{ company.previous.to }} , Score: {{ company.previous.note }}
+        <div>Previous: {{ company.previous.from }} / {{ company.previous.to }} , Score: {{ company.previous.note }}
         </div>
-        <div class="curent">Period: {{ company.curent.from }} / {{ company.curent.to }} , Score: {{ company.curent.note }}</div>
+        <div >Period: {{ company.curent.from }} / {{ company.curent.to }} , Score: {{ company.curent.note }}</div>
       </div>
     </div>
  <!--  <div class="ratio">{{company.ratio?`Ratio ${Number(company.ratio).toFixed(1)}%`:''}}</div> -->
@@ -52,7 +52,7 @@ const Tooltip = defineAsyncComponent(() =>
     import('@Components/utils/QuestionMarkTooltipComponent.vue')
 );
 
-const info_bulle_text = `the last x days compared to the previous x days.`;
+
 const selectedDate = inject('selectedDate')
 const props = defineProps(['reviews', 'rating', 'score', 'feeling', 'company', 'selectedDate']);
 
@@ -66,10 +66,6 @@ const arrondirRatio = (ratio)=>{
 </script>
 
 <style scoped>
-    .curent{
-      margin-left: 18px;
-    } 
-
     .rating_container{
       display: flex;
       flex-direction: column;
@@ -97,6 +93,7 @@ const arrondirRatio = (ratio)=>{
         font-weight: 500 !important;
         font-size: 11px;
         display: block;
+        margin-top: 13px;
     }
 
     .global__rating{
