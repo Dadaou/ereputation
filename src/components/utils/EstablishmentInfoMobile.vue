@@ -20,7 +20,7 @@
         </div>
         <div class="photo">
             <div v-if="establishment.url_source !== null" class="establishment__img">
-                <img id="logoimagemobile" :src="establishment.url_source" alt="" style="display:none" />
+                <img id="logoimagemobile" :src="establishment.url_source" alt=""  />
             </div>
             <div v-else role="status"
                 class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">

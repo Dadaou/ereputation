@@ -39,7 +39,7 @@
         </div>
         <div class="photo" v-if="!dataLoading">
             <div v-if="establishment.url_source !== null" class="establishment__img">
-                <img :src="establishment.url_source" alt="" />
+                <img :src="establishment.url_source" alt="" id="logoimagemobile" />
             </div>
             <div v-else role="status"
                 class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
@@ -69,8 +69,8 @@
         <div
             class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" v-if="!dataLoading">
-                <div v-if="establishment.url_source !== null" class="establishment__img">
-                    <img :src="establishment.url_source" alt="" />
+                <div v-if="!dataLoading" class="establishment__img">
+                    <img :src="establishment.url_source" alt="" id="logoimage"/>
                 </div>
                 <div v-else role="status"
                     class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
@@ -392,7 +392,9 @@ onBeforeMount(async () => {
 
             all_items.value[0].value = establishment.value.rating;
             all_items.value[1].value = establishment.value.totalReviews;
+            widthimage(establishment.value.url_source);
             appStore.isLoading = false;
+            
             dataLoading.value = false;
         }
     })
@@ -419,6 +421,71 @@ useResizeObserver(el, (entries) => {
     const { width } = entry.contentRect;
     chartWidth.value = Math.abs(width);
 });
+
+/**
+ * obtenir width image from url
+ */
+ const getMeta = (url, cb) => {
+  const img = new Image();
+  img.onload = () => cb(null, img);
+  img.onerror = (err) => cb(err);
+  img.src = url;
+};
+
+/** Fonction widthimage pour savoir le width 
+ * @param event 
+*/
+const  widthimage = (event) => {
+    // Loadging establishment__img
+    
+    var imgmobile = document.getElementById("logoimagemobile");
+    if(imgmobile !== null){
+        imgmobile.classList.add("fade-in");
+    }
+    document.getElementsByClassName("establishment__img").innerText = "Loading image...";
+    return getMeta(event,(err, img) =>{
+        //if(img!=null){
+            const heightresize = 160; //hauteur div pour l'image
+            var aspectRatio = img.naturalWidth / img.naturalHeight;
+            var newWidth = 0;
+            if(aspectRatio == 1){
+                // ici carre
+                newWidth =heightresize;
+            }else{
+                newWidth =heightresize * aspectRatio;
+            }   
+            let classy =   (newWidth>240)? "largeClass" : "smallClass";
+            // pour le desktop
+            var elem = document.getElementById("logoimage");
+            elem.classList.add("fade-in");
+            setTimeout(() => {
+                elem.classList.add('show');
+                elem.style.display="block";
+                }, 10);
+            elem.classList.add(classy);
+            elem.src = event;
+            //new Promise(resolve=>{elem.onload = resolve})
+        
+            //pour le mobile
+            var elemmob = document.getElementById("logoimagemobile");
+            if(elemmob !== null){
+                elemmob.classList.add(classy);
+                
+                elemmob.src=event;
+                // Ajouter la classe 'show' pour déclencher l'animation de fondu en entrée
+                setTimeout(() => {
+                    
+                    elemmob.classList.add('show');
+                    elemmob.style.display = "block";
+                }, 10);
+            }
+            
+            return "OK";
+        //}
+        
+    });
+   
+}
 </script>
 
 <style scoped>
@@ -429,4 +496,63 @@ useResizeObserver(el, (entries) => {
     border-radius: 5px;
     padding: 5px;
 }
+
+
+@media screen and (min-width: 540px) and (max-width: 975px) {
+
+    .establishment__info_tablet{
+        margin-top:50px! important;
+    }
+    .smallClass{
+        margin-top:10px! important;
+        margin-bottom:10px;
+    }
+    .largeClass{
+        margin-top:10px! important;
+        margin-bottom:10px;
+    }
+}
+
+@media screen  and (max-width: 520px) {
+
+    .establishment__info_tablet{
+        margin-top:50px! important;
+    }
+    .smallClass{
+        margin-top:60px! important;
+        margin-bottom:10px;
+    }
+    .largeClass{
+        margin-top:60px! important;
+        margin-bottom:10px;
+    }
+}
+
+
+
+.smallClass{
+    width: auto! important;
+    height: 100%! important;
+
+}
+.establishment__img{
+    display:flex;
+    justify-content:center;
+    height: 160px;
+    align-items:center;
+}
+.largeClass{
+    width: 100%! important;
+    height: auto! important;
+
+}
+.fade-in {
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
+.fade-in.show {
+    opacity: 1;
+}
+
+
 </style>
