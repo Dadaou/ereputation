@@ -349,6 +349,15 @@ watch([date, type], async () => {
     plotdata.value = reordonnerObjets(response);
   }
 });
+/**
+ * obtenir width image from url
+ */
+ const getMeta = (url, cb) => {
+  const img = new Image();
+  img.onload = () => cb(null, img);
+  img.onerror = (err) => cb(err);
+  img.src = url;
+};
 
 </script>
 <style scoped>
