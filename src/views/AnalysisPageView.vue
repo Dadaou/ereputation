@@ -39,6 +39,48 @@
 
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
+                    
+                    <div class="reviews__content">
+                        <div class="reviews__pagination">
+                            <PaginationComponent :optionsReview="optionsReview" v-if="visibleData.length > 0" @next="(option) => {
+                                loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
+                            }" @prev="(option) => {
+                                loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
+                            }" />
+                        </div>
+                        <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
+                            @reloadData="(review) => reloadData(review)" :categories="categories" />
+                        <div v-else role="status"
+                            class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
+                            v-for="index in 5" :key="index">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                        <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                                        <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                    </div>
+                                    <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
+                                </div>
+                                <div>
+                                    <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                    <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                    <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
+                                </div>
+                            </div>
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <div class="no-comment" v-if="visibleData.length == 0">
+                            No reviews meet to the current filters
+                        </div>
+                        <div class="reviews__pagination">
+                            <PaginationComponent :optionsReview="optionsReview" v-if="visibleData.length > 0" @next="(option) => {
+                                loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
+                            }" @prev="(option) => {
+                                loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
+                            }" />
+                        </div>
+                    </div>
                 </el-tab-pane>
                 <el-tab-pane label="Competitors" name="analysis_competitors">
                     <AnalysisCompetitors />
@@ -290,6 +332,8 @@ import 'element-plus/es/components/option/style/css';
 import 'element-plus/es/components/select/style/css';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
+import CommentComponent from '@Components/utils/CommentComponent.vue';
+import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 
 import {
     Chart as ChartJS,
@@ -426,6 +470,7 @@ const ratingsCondition4 = computed(() => {
     data = data.filter(value => value.avg_rating < 4)
     return data
 })
+const starParams = route.query.star;
 
 const activeName = ref('categorization');
 const newOptions = {
@@ -520,6 +565,13 @@ const options = {
         }
     }
 };
+
+const optionsReview = ref({
+    rowLimit: 20,
+    max: 100,
+    current: 1,
+    page: 1,
+})
 
 const scrollContainer1 = ref(null);
 const scrollContainer2 = ref(null);
@@ -780,6 +832,165 @@ onBeforeMount(async () => {
     await loadSalesAnalysisData(companyId, start_date.value, end_date.value)
     appStore.isLoading = false;
    
+});
+let _reviews = ref([]);
+let dataReviews = ref([]);
+let reviews_loader = ref(true);
+let visibleData = ref([])
+let paginationConfig = ref({
+    current: 0,
+    size: 20,
+    data: [],
+    _data: []
+});
+
+const language = inject('language')
+let selectedWebsites = ref('Global');
+let websites = ref(['Global']);
+let updatePage = function (pageNumber) {
+    paginationConfig.value.current = pageNumber;
+    updateVisibleData(_reviews.value);
+}
+
+let updateVisibleData = function (_data, isStarFilter = false) {
+    let data = paginationConfig.value;
+    _reviews.value = _data
+    if (isStarFilter == false) dataReviews.value = _reviews.value;
+
+    paginationConfig.value.data = _data.slice(data.current * data.size, (data.current * data.size) + data.size)
+    if (paginationConfig.value.data.length == 0 && paginationConfig.value.current > 0) {
+        updatePage(paginationConfig.value.current - 1);
+    }
+    visibleData.value = paginationConfig.value.data
+    reviews_loader.value = false;
+}
+let selectedStars = ref('0');
+const starFilter = (star) => {
+    selectedStars.value = star; 
+};
+
+let reviewFeedbackData = ref({
+    width: 0,
+    red: 0,
+    green: 0,
+    feeling: 0
+});
+
+
+watch([start_date, end_date, selectedWebsites, categoryFilters], () => {
+    categoryFilters.value = categoryFilters.value.length > 0 ? categoryFilters.value : ['all']
+    loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
+})
+
+const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source, stars, category, language) => {
+    optionsReview.value.current = current;
+    optionsReview.value.page = page;
+    reviews_loader.value = true;
+
+    let apiBase = '/review/by_establishment';
+    let apiParams = `tag=${tag}&page=${page}&limit=${limit}`;
+
+    if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
+        apiParams += `&from=${dateStart}&to=${dateEnd}`;
+    }
+
+    source = IsValueOkay(route.params.type) && route.params.type == 'intern'
+        ? 'App (Private)'
+        : 'all'
+    if (IsValueOkay(source)) {
+        source = (source == 'App (Private)') ? 'App (Private)' : source.toLowerCase();
+        apiParams += `&platform=${source}`
+    }
+
+
+    const isValueOkay = (value) => (value !== '' && value !== null && value !== undefined && value !== 'Global' && value !== 0);
+
+    let starQueryPart = '';
+
+    if (isValueOkay(starParams)) {
+        starQueryPart = `&star=${starParams} stars`;
+    } else if (isValueOkay(stars)) {
+        starQueryPart = `&star=${stars}`;
+    }
+
+    if (starQueryPart) {
+        apiParams += starQueryPart;
+    }
+
+    if (category != 'all') {
+        apiParams += `&category=${category.join(',')}`
+    }
+
+    const api = apiBase + '?' + apiParams;
+    console.log(api)
+
+    const response = await new Promise((resolve) => {
+        services.get_Record(api, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+        reviews_loader.value = false;
+        console.log(response.data['data']);
+        optionsReview.value.max = response.data['count'];
+        visibleData.value = response.data['data'];
+    }
+}
+
+const reloadData = (reviewUpdated) => {
+    visibleData.value.forEach((review, index) => {
+        if (review.id == reviewUpdated.id) {
+            visibleData.value[index].feeling = reviewUpdated.feeling;
+        }
+    })
+}
+
+
+
+onBeforeMount(async () => {
+    appStore.isLoading = true;
+
+    companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
+
+        if (data == false) {
+            appStore.setIsExist(false);
+            appStore.isLoading = false;
+        }
+        else {
+            establishment.value = data;
+            appStore.setCurrentPage({
+                title1: "",
+                title2: "Reviews",
+                icon: "uil-comment-alt-dots",
+            });
+
+            appStore.setBreadcrumbs([
+                {
+                    title: establishment.value.name,
+                    path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                    isCurrent: false,
+                },
+                {
+                    title: "Reviews",
+                    path: `${route.path}`,
+                    isCurrent: true
+                }
+            ])
+
+            all_items.value[0].value = establishment.value.rating;
+            all_items.value[1].value = establishment.value.totalReviews;
+            appStore.isLoading = false;
+            dataLoading.value = false;
+
+            websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
+
+        }
+    })
+
+    await loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value)
 });
 
 /**
