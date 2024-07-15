@@ -131,7 +131,6 @@ onMounted(async () => {
 <style scoped>
 .establishment-rank-view ::v-deep .reviews-count {
   display: flex;
-  border: 1px solid #dddddd;
   padding: 5px;
   border-radius: 5px;
   margin-top: 40px;
@@ -149,6 +148,12 @@ onMounted(async () => {
   margin-left: 5px;
 }
 
+.establishment-rank-view ::v-deep .list__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 10px;
+	margin-top: -8px;
+}
 .filters {
 	display: flex;
 	flex-direction: column;
