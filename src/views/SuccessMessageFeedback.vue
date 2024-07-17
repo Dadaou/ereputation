@@ -12,7 +12,7 @@
                 <h2 v-if="links.length > 0">{{ $t("success_text") }}</h2>
                 <ul v-if="links.length > 0" class="logoSrc">
                     <li v-for="link in links" :key="link.id">
-                        <a :href="link.url" target="_blank">
+                        <div @click="handleClick($event,link)">
                             <el-tooltip :content="`${$t('success_text')} ${link.name}`" placement="top">
                                 <img v-if="link.name.toLowerCase().includes('booking')"
                                     src="@/assets/images/logo/Booking.svg" alt="Booking" width="24" height="24">
@@ -38,7 +38,7 @@
                                     alt="Yelp" width="24" height="24">
 
                             </el-tooltip>
-                        </a>
+                        </div>
                     </li>
                 </ul>
                 <h2 v-if="socials.length > 0">{{ $t("success_text2") }}</h2>
@@ -95,6 +95,29 @@ const route = useRoute();
 const companyStore = useCompanyStore();
 const userStore = useUserStore();
 const appStore = useAppStore();
+
+const handleClick = (event,element) => {
+    const visitorId = localStorage.getItem('visitId');
+    const click_source = "feedback";
+    const click_label = ref(null);
+    console.log("click_label", click_label)
+
+    const imgElement = event.target;
+    if (imgElement.tagName === 'IMG') {
+        click_label.value = imgElement.alt;
+        console.log("Alt text of the image:", click_label.value);
+    } else {
+        console.log('No image found in element');
+    }
+
+
+    if (element.url) {
+        window.open(element.url, '_blank');
+    }
+    else {
+        console.log('No valid URL found in element');
+    }
+};
 
 onBeforeMount(async () => {
     appStore.setCurrentPage({

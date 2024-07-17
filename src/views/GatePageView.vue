@@ -11,34 +11,34 @@
                 <div class="panel" v-if="item.active">
                     <div v-if="category == 'reviews'"
                         class="list__container grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 xl:grid-cols-10">
-                        <GateLinkComponent v-for="(element, index) in establishmentLink" :item="element"
-                            type="Establishment" :key="index" />
-                        <GateLinkComponent v-for="(element, index) in staffLinks" :item="element" type="staff"
-                            :key="index" />
-                        <GateLinkComponent v-for="(element, index) in unitLinks" :item="element" type="Unit"
-                            :key="index" />
-                        <GateLinkComponent v-for="(element, index) in platformLinks" :item="element" type="Platform"
-                            :key="index" />
+                        <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in establishmentLink"
+                            :item="element" type="Establishment" :key="index" />
+                        <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in staffLinks"
+                            :item="element" type="staff" :key="index" />
+                        <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in unitLinks"
+                            :item="element" type="Unit" :key="index" />
+                        <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in platformLinks"
+                            :item="element" type="Platform" :key="index" />
                     </div>
                     <div v-if="category == 'follow'"
                         class="list__container grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-12">
-                        <GateLinkComponent v-for="(element, index) in followLinks" :item="element" type="Social"
-                            :key="index" />
+                        <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in followLinks"
+                            :item="element" type="Social" :key="index" />
                     </div>
                     <div v-if="category == 'offers'"
                         class="list__container grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-12">
-                        <GateLinkComponent v-for="(element, index) in offerLinks" :item="element" type="Offer"
-                            :key="index" />
+                        <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in offerLinks"
+                            :item="element" type="Offer" :key="index" />
                     </div>
                     <div v-if="category == 'infos'"
                         class="list__container grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-12">
-                        <GateLinkComponent v-for="(element, index) in infoLinks" :item="element" type="Info"
-                            :key="index" />
+                        <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in infoLinks"
+                            :item="element" type="Info" :key="index" />
                     </div>
                     <div v-if="category == 'menus'"
                         class="list__container grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-12">
-                        <GateLinkComponent v-for="(element, index) in menuLinks" :item="element" type="Menu"
-                            :key="index" />
+                        <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in menuLinks"
+                            :item="element" type="Menu" :key="index" />
                     </div>
                 </div>
             </div>
@@ -86,6 +86,20 @@ const useCategories = computed(() => {
     }*/
     return categories.value
 })
+
+const handleClick = (element,category) => {
+    const visitorId = localStorage.getItem('visitId');
+    const click_label_option = element.label + " " + "logo";
+    const click_source = "gates";
+    const click_label = category;
+    if (element.document) {
+        window.open(element.document, '_blank');
+    } else if (element.href) {
+        window.open(element.href, '_blank');
+    } else {
+        console.log('No valid URL found in element');
+    }
+};
 
 const toggleMenu = (item) => {
     category.value = item.value
