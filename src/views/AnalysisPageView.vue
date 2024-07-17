@@ -42,7 +42,7 @@
                     
                     <div class="reviews__content">
                         <div class="reviews__pagination">
-                            <PaginationComponent :optionsReview="optionsReview" v-if="visibleData.length > 0" @next="(option) => {
+                            <PaginationComponent :options="optionsReview" v-if="visibleData.length > 0" @next="(option) => {
                                 loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
                             }" @prev="(option) => {
                                 loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
@@ -74,7 +74,7 @@
                             No reviews meet to the current filters
                         </div>
                         <div class="reviews__pagination">
-                            <PaginationComponent :optionsReview="optionsReview" v-if="visibleData.length > 0" @next="(option) => {
+                            <PaginationComponent :options="optionsReview" v-if="visibleData.length > 0" @next="(option) => {
                                 loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
                             }" @prev="(option) => {
                                 loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
@@ -869,13 +869,6 @@ const starFilter = (star) => {
     selectedStars.value = star; 
 };
 
-let reviewFeedbackData = ref({
-    width: 0,
-    red: 0,
-    green: 0,
-    feeling: 0
-});
-
 
 watch([start_date, end_date, selectedWebsites, categoryFilters], () => {
     categoryFilters.value = categoryFilters.value.length > 0 ? categoryFilters.value : ['all']
@@ -896,28 +889,6 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         apiParams += `&from=${dateStart}&to=${dateEnd}`;
     }
 
-    source = IsValueOkay(route.params.type) && route.params.type == 'intern'
-        ? 'App (Private)'
-        : 'all'
-    if (IsValueOkay(source)) {
-        source = (source == 'App (Private)') ? 'App (Private)' : source.toLowerCase();
-        apiParams += `&platform=${source}`
-    }
-
-
-    const isValueOkay = (value) => (value !== '' && value !== null && value !== undefined && value !== 'Global' && value !== 0);
-
-    let starQueryPart = '';
-
-    if (isValueOkay(starParams)) {
-        starQueryPart = `&star=${starParams} stars`;
-    } else if (isValueOkay(stars)) {
-        starQueryPart = `&star=${stars}`;
-    }
-
-    if (starQueryPart) {
-        apiParams += starQueryPart;
-    }
 
     if (category != 'all') {
         apiParams += `&category=${category.join(',')}`

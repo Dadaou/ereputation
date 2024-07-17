@@ -148,6 +148,20 @@ const createRecord = async (entity, value, next, isPublic = false, isNoAuth = fa
   }
 }
 
+
+
+const createActionVisitor = async (value, next, isPublic = false, isNoAuth = false) => {
+  try {
+    let url = `/public/visitors/actions`
+    const axiosInstance = getInstance(isPublic, isNoAuth)
+    await axiosInstance.post(`${url}`, value).then((response) => {
+      return next(response)
+    })
+  } catch (error) {
+    return next(error.response)
+  }
+}
+
 const deleteRecord = async (entity, recordId, next, isPublic = false, isNoAuth = false) => {
   try {
     let url = `/${entity}/${recordId}`
@@ -418,5 +432,6 @@ export default {
   downloadSVGQrcode,
   generateColor,
   downloadJPEGQrcode,
-  post_Record_formData
+  post_Record_formData,
+  createActionVisitor
 }

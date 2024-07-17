@@ -12,7 +12,7 @@
                 <h2 v-if="links.length > 0">{{ $t("success_text") }}</h2>
                 <ul v-if="links.length > 0" class="logoSrc">
                     <li v-for="link in links" :key="link.id">
-                        <a :href="link.url" target="_blank">
+                        <div @click="handleClick($event,link)">
                             <el-tooltip :content="`${$t('success_text')} ${link.name}`" placement="top">
                                 <img v-if="link.name.toLowerCase().includes('booking')"
                                     src="@/assets/images/logo/Booking.svg" alt="Booking" width="24" height="24">
@@ -38,13 +38,13 @@
                                     alt="Yelp" width="24" height="24">
 
                             </el-tooltip>
-                        </a>
+                        </div>
                     </li>
                 </ul>
                 <h2 v-if="socials.length > 0">{{ $t("success_text2") }}</h2>
                 <ul v-if="socials.length > 0" class="social">
                     <li v-for="link in socials" :key="link.id">
-                        <a :href="link.url" target="_blank">
+                        <div  @click="handleClick($event, link)">
                             <el-tooltip :content="`${$t('success_text2')} ${link.name}`" placement="top">
                                 <img v-if="link.name.toLowerCase().includes('facebook')"
                                     src="@/assets/images/logo/Facebook.svg" alt="Facebook">
@@ -59,7 +59,7 @@
                                 <Icon icon="logos:linkedin-icon" width="2rem" height="2rem"
                                     v-if="link.name.toLowerCase().includes('linkedin')"></Icon>
                             </el-tooltip>
-                        </a>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -95,6 +95,41 @@ const route = useRoute();
 const companyStore = useCompanyStore();
 const userStore = useUserStore();
 const appStore = useAppStore();
+
+const handleClick = async (event,element) => {
+    const visitorId = localStorage.getItem('visitId');
+    const click_label = ref(null);
+    const imgElement = event.target;
+    if (imgElement.tagName === 'IMG') {
+        click_label.value = imgElement.alt;
+    } else {
+        console.log('No image found in element');
+    }
+
+    const vistorData = {
+        "visitor_id": visitorId,
+        "click_label": click_label.value,
+        "click_source": "feedback",
+    }
+    const response = await new Promise((resolve) => {
+        services.createActionVisitor(vistorData, (response) => {
+            resolve(response);
+        });
+    });
+
+    if (response.status === 200) {
+        console.log("ajout visitor fait");
+        console.log(response.data)
+    }
+
+
+    if (element.url) {
+        window.open(element.url, '_blank');
+    }
+    else {
+        console.log('No valid URL found in element');
+    }
+};
 
 onBeforeMount(async () => {
     appStore.setCurrentPage({
