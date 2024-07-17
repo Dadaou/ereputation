@@ -10,9 +10,9 @@
         </div>
         <div class="card__details">
           <ul class="alert__review">
-            <li v-for="(noteKey, index) in Object.keys(review).filter(key => key !== 'url_source').slice(0, 3).reverse()" :key="noteKey" @click="redirectToReviews(route.params.tag, route.params.id, props.from, props.to, noteKey.replace('note ', ''))">
-              <div class="review-content">
-                <span>{{ noteKey.replace('note ', '') }}  note</span>
+            <li v-for="(noteKey, index) in Object.keys(review).filter(key => key !== 'url_source').slice(4, 7).reverse()" :key="noteKey" @click="redirectToReviews(route.params.tag, route.params.id, props.from, props.to, noteKey.replace('note ', ''))">
+                <div class="review-content">
+                <span>{{ noteKey.replace('note ', '') }} note</span>
                 <div class="percentage-bar">
                   <div class="percentage-line" :style="{ width: calculatePercentage(review[noteKey], review.total) + '%' }"></div>
                 </div>
@@ -110,8 +110,8 @@ onMounted(() => {
 <style scoped>
 .alert__content {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  /* flex-direction: column;
+  align-items: center; */
   gap: 20px;
   margin-top: 10px;
 }
@@ -144,7 +144,7 @@ onMounted(() => {
   right: 0;
   bottom: 0;
   background-color: var(--light-color-bg2);
-  opacity: 0.3;
+  opacity: 0.2;
   z-index: -1;
 }
 
