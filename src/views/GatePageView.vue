@@ -87,11 +87,26 @@ const useCategories = computed(() => {
     return categories.value
 })
 
-const handleClick = (element,category) => {
+
+
+
+const handleClick = async  (element,category) => {
     const visitorId = localStorage.getItem('visitId');
-    const click_label_option = element.label + " " + "logo";
-    const click_source = "gates";
-    const click_label = category;
+    const vistorData = {
+        "visitor_id": visitorId,
+        "click_label": category,
+        "click_source": "gates",
+        "click_label_option": element.label + " " + "logo",
+    }
+    const response = await new Promise((resolve) => {
+        services.createActionVisitor(vistorData, (response) => {
+            resolve(response);
+        });
+    });
+    if (response.status === 200) {
+        console.log("ajout visitor fait");
+        console.log(response.data)
+    }
     if (element.document) {
         window.open(element.document, '_blank');
     } else if (element.href) {

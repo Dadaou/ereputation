@@ -12,7 +12,7 @@
 
 <script setup>
 import { Icon } from '@iconify/vue';
-import { computed} from 'vue';
+import { computed } from 'vue';
 
 
 const emits = defineEmits(['click']);
@@ -20,6 +20,9 @@ const emits = defineEmits(['click']);
 const handleClick = () =>{
     emits('click')
 };
+
+
+
 
 
 const props = defineProps({
