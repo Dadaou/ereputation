@@ -4,15 +4,13 @@
             <swiper v-if="company.url_source !== null" @click="goToCompany(company)" class="society__logo"
                 :modules="[Virtual]" :slides-per-view="1" :space-between="10" :virtual="true">
                 <swiper-slide v-show="mediaStore.isImageFile(image)" v-for="image in company.url_source" :key="image">
-                    <img :src="company.url_source"  :class="widthimage(company.url_source,company.competitor_tag)" :id="company.competitor_tag">
+                    <img :src="company.url_source" :class="widthimage(company.url_source, company.competitor_tag)" :id="company.competitor_tag">
                 </swiper-slide>
             </swiper>
-            <swiper v-else @click="goToCompany(company)" class="society__logo" :modules="[Virtual]" :slides-per-view="1"
-                :space-between="10" :virtual="true">
+            <swiper v-else @click="goToCompany(company)" class="society__logo" :modules="[Virtual]" :slides-per-view="1" :space-between="10" :virtual="true">
                 <swiper-slide>
                     <div role="status" class="society__logo bg-gray-300 rounded-sm">
-                        <svg class="text-gray-200 dark:text-gray-600" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                        <svg class="text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                             <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
                             <path
                                 d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
@@ -27,33 +25,29 @@
                             <div class="item__head">
                                 <div class="society__info">
                                     <a class="establishment__link" @click="goToCompany(company)">
-                                        <label class="society__name">{{ company.name }} {{
-                                            company.score ? `(${company.score})` : '' }}</label>
+                                        <label class="society__name">{{ company.name }} {{ company.score ? `(${company.score})` : '' }}</label>
                                     </a>
                                     <div class="society__category">
                                         <i
-                                            :class="['uil', company.category == 'Restaurant' ? 'uil-restaurant' : '', company.category == 'Hotel' ? 'uil-bed-double' : '', company.category == 'Residence' ? 'uil-home' : '', company.category == 'Other' ? 'uil-home ' : '',company.category == 'Event' ? 'uil-schedule' : '']">
+                                            :class="['uil', company.category == 'Restaurant' ? 'uil-restaurant' : '', company.category == 'Hotel' ? 'uil-bed-double' : '', company.category == 'Residence' ? 'uil-home' : '', company.category == 'Other' ? 'uil-home ' : '', company.category == 'Event' ? 'uil-schedule' : '']">
                                         </i>
                                         <span>{{ company.category }}</span>
                                     </div>
-                                    <div class="society__location"
-                                        v-if="company.address1 != null && company.city != null">
+                                    <div class="society__location" v-if="company.address1 != null && company.city != null">
                                         <i class="uil uil-location-point"></i>
                                         <span>{{ company.address1 }}, {{ company.city }}</span>
                                     </div>
                                     <div class="reviews-count">
-                                        <div class="review-box" v-for="(count, score) in company.reviews_count" :key="score">
-                                            <span class="score">{{ score }}</span><i class="fa fa-star " aria-hidden="true"></i>: 
-                                            {{ count }} {{ count === 0 || count === 1 ? 'review' : 'reviews' }}
+                                        <h2 v-if="showReviewsHeader">Reviews:</h2>
+                                        <div class="review-box" v-for="(count, stars) in sortedReviews(company.reviews_count)" :key="stars" @click="redirectToReviews(stars, company.competitor_tag)">
+                                            <span class="score">{{ stars }}</span><i class="fa fa-star " aria-hidden="true"></i>: {{ count }} 
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <RatingComponent class="rating__content" :reviews="company.totalReviews"
-                        :rating="Number(company.rating).toFixed(1)" :score="company.score" :feeling="company.feeling"
-                        :company="company" />
+                    <RatingComponent class="rating__content" :reviews="company.totalReviews" :rating="Number(company.rating).toFixed(1)" :score="company.score" :feeling="company.feeling" :company="company" />
                 </div>
                 <div class="list__actions">
                     <button class="btn" @click="goToCompany(company)">More details</button>
@@ -68,23 +62,24 @@
 </template>
 
 <script setup>
-import { ref, defineAsyncComponent, computed, inject,onMounted } from 'vue';
+import { ref, defineAsyncComponent, defineEmits, inject, onMounted } from 'vue';
 import RatingComponent from '@Components/utils/RatingComponent.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Virtual } from 'swiper/modules';
 import { useMediaStore } from "@Stores/media.js";
 import { useAppStore } from "@Stores/app.js";
-import { useRouter } from "vue-router";
+import { useRouter,useRoute } from "vue-router";
 import 'swiper/css';
 import { useUserStore } from "@Stores/user.js";
 
-const QrCodeModalComponent = defineAsyncComponent(() =>
-    import('@Components/utils/QrCodeModalComponent.vue')
-)
+const QrCodeModalComponent = defineAsyncComponent(() => import('@Components/utils/QrCodeModalComponent.vue'))
 
 const router = useRouter();
+const route = useRoute()
 const mediaStore = useMediaStore();
 const appStore = useAppStore();
+const tag = inject('tag');
+
 const props = defineProps({
     establishments: {
         type: Array,
@@ -97,12 +92,20 @@ const props = defineProps({
     selectedDate: {
         type: String,
         required: false
+    },
+    start_date: {
+        type: String,
+        required: true
+    },
+    end_date: {
+        type: String,
+        required: true
+    },
+    showReviewsHeader: {
+        type: Boolean,
+        default: false
     }
-    
 });
-
-const userStore = useUserStore();
-const tag = inject('tag')
 
 const establishment = ref(null);
 const showModal = ref(false);
@@ -120,51 +123,68 @@ const goToCompany = (establishment) => {
         });
     }, 100);
 };
-/**
- * obtenir width image from url
- */
- const getMeta = (url, cb) => {
-  const img = new Image();
-  img.onload = () => cb(null, img);
-  img.onerror = (err) => cb(err);
-  img.src = url;
+
+const getMeta = (url, cb) => {
+    const img = new Image();
+    img.onload = () => cb(null, img);
+    img.onerror = (err) => cb(err);
+    img.src = url;
 };
 
-/** Fonction widthimage pour savoir le width 
- * @param event 
-*/
-const  widthimage = ((event,id) => {
-     return getMeta(event,(err, img) =>{
-        const heightresize = 110; //hauteur div pour l'image
+const widthimage = ((event, id) => {
+    return getMeta(event, (err, img) => {
+        const heightresize = 110;
         var aspectRatio = img.naturalWidth / img.naturalHeight;
         var newWidth = 0;
-        if(aspectRatio == 1){
-            // ici carre
-            newWidth =heightresize;
-        }else{
-            newWidth =heightresize * aspectRatio;
-        }   
-        let classy =   (newWidth>140)? "largeClass" : "smallClass";
-        
+        if (aspectRatio == 1) {
+            newWidth = heightresize;
+        } else {
+            newWidth = heightresize * aspectRatio;
+        }
+        let classy = (newWidth > 140) ? "largeClass" : "smallClass";
+
         var elem = document.getElementById(id);
         elem.classList.add("fade-in");
         setTimeout(() => {
             elem.classList.add('show');
-            }, 10);
+        }, 10);
         elem.classList.add(classy);
         elem.src = event;
-        //new Promise(resolve=>{elem.onload = resolve})
-
         return "OK";
     });
-   
 });
+
+const sortedReviews = (reviews) => {
+  return Object.entries(reviews).sort((a, b) => b[0] - a[0]).reduce((obj, [k, v]) => {
+    obj[k] = v;
+    return obj;
+  }, {});
+};
+
+const emit = defineEmits(['redirect-to-reviews']);
+
+const redirectToReviews = (star,id) =>{
+    const {tag} = route.params
+    router.push({
+    name: 'Review',
+    params:{tag,id},
+    query: {
+      stars: `${star}`,
+    },
+  });
+}
 
 </script>
 <style scoped>
 .reviews-count{
     margin: -19px;
 }
+
+.reviews-count h2{
+    margin-left: 10px;
+    font-weight: bold;
+}
+
 .list__item {
     padding: 10px;
     border-radius: 5px;
@@ -201,6 +221,7 @@ const  widthimage = ((event,id) => {
     transform: var(--transition);
     display:flex;
     justify-content:center;
+    border-radius: 5px;
     /*margin-inline: 8px !important;*/
 }
 
