@@ -119,6 +119,7 @@ const establishments = computed(() => {
                 tag: establishment.competitor_tag,
                 uri: `/api/establishments/${establishment.id}`,
                 gps: establishment.locality_gps,
+                website: establishment.website,
                 country: establishment.country,
                 city: establishment.city,
                 category: establishment.category,
