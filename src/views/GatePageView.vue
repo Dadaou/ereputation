@@ -47,7 +47,7 @@
     <EstablishmentNotFound v-else />
 </template>
 <script setup>
-import { ref, computed, onBeforeMount, defineAsyncComponent } from 'vue';
+import { ref, computed, onBeforeMount, defineAsyncComponent, onMounted } from 'vue';
 import 'element-plus/es/components/option/style/css';
 import 'element-plus/es/components/select/style/css';
 import services from '@Services/services.js';
@@ -229,6 +229,16 @@ onBeforeMount(async () => {
 
     await loadLinks(establishmentTag);
 });
+
+onMounted(() => {
+    try {
+        if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
+            window.FingerprintApp.default.main();
+        }
+    } catch (error) {
+        console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
+    }
+})
 
 </script>
 <style scoped>

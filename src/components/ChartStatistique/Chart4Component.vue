@@ -1,0 +1,74 @@
+<template>
+    <h3>Platforms & Reseaux Sociaux</h3>
+    <div>
+        <apexchart type="bar" height="350"  :options="chartOptions" :series="series"></apexchart>
+    </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import VueApexCharts from 'vue3-apexcharts'
+
+// Options du graphique
+const chartOptions = ref({
+   
+    plotOptions: {
+        bar: {
+            horizontal: true,
+            isFunnel: true,
+        },
+    },
+    
+    colors: ['#00E396', '#008FFB'], // Couleurs des séries
+
+
+})
+
+// Données des séries
+const series = ref([
+    {
+        name: "Platforms",
+        data: [
+            {
+                x: "Facebook",
+                y: 1380
+            },
+            {
+                x: "Google",
+                y: 1100
+            },
+            {
+                x: "Trip Advisor",
+                y: 990
+            },
+            {
+                x: "Booking",
+                y: 880
+            },
+            {
+                x: "Instagram",
+                y: 740
+            },
+        ],
+    },
+])
+</script>
+
+<script>
+export default {
+    components: {
+        apexchart: VueApexCharts
+    }
+};
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.chart-container {
+    margin-top: 20px;
+}
+h3 {
+    margin: 40px 0 0;
+    text-align: center;
+}
+</style>
