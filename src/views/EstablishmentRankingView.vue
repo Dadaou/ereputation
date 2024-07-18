@@ -23,7 +23,7 @@
 	<div class="society__list mt-5" v-if="establishments.length > 0">
     <suspense>
       <div class="establishment-rank-view">
-        <establishments-list-component :establishments="establishments" :tag='customerTag' />
+        <establishments-list-component :establishments="establishments" :tag='customerTag' @redirect-to-reviews="redirectToReviews" />
       </div>
       <template #fallback>
         <establishment-list-loaded-component :nb="3" />
@@ -120,6 +120,19 @@ const loadEstablishment = async (tag, category, dateStart, dateEnd, note) => {
 	}
 }
 
+const redirectToReviews = ({ company, stars, start_date, end_date }) => {
+	router.push({
+		name: 'reviews',
+		query: {
+			id: company.id,
+			tag: customerTag,
+			stars: `${stars} star`,
+			start_date,
+			end_date
+		},
+	});
+};
+
 onMounted(async () => {
 	if (start_date.value && end_date.value) {
 		await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, type.value)
@@ -146,6 +159,7 @@ onMounted(async () => {
   margin: 3px 0;
   border-radius: 5px;
   margin-left: 5px;
+  cursor: pointer;
 }
 
 .establishment-rank-view ::v-deep .list__actions {
@@ -212,10 +226,10 @@ onMounted(async () => {
 	.establishment-rank-view ::v-deep .reviews-count {
   display: flex;
   border: 1px solid #747474;
-  padding: 5px;
+  padding: 8px;
   border-radius: 5px;
-  margin-top: 40px;
-  margin-right: -120px;
+  margin-top: 20px;
+  margin-right: -100px;
   margin-left: 0.5px;
 }
 
@@ -232,6 +246,18 @@ onMounted(async () => {
 .establishment-rank-view ::v-deep .score {
     font-weight: bold;
     margin-right: 1px;
+	margin-top: -16px;
+}
+
+.establishment-rank-view ::v-deep .fa-star {
+	margin-top: -15px;
+}
+
+.establishment-rank-view ::v-deep .list__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 0px;
+	margin-top: 18px;
 }
 }
 </style>

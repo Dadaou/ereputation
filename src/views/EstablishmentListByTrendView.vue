@@ -12,7 +12,6 @@
                     <el-option v-for="(item, index) in categories" :key="index" :label="item.label" :value="item.value" />
                 </el-select>
             </div>
-           
         </div>
         <div class="bottom-row">
             <div class="date_pick">
@@ -101,17 +100,20 @@ const days = ref(60);
 const selectedDate = ref(null);
 provide('selectedDate', selectedDate);
 
-const isDateSelected = ref(false);
-
 const handleDateChange = (value) => {
-    isDateSelected.value = !!value;
-    if (isDateSelected.value) {
-        days.value = null;
-        selectedDate.value = moment(value).format('YYYY-MM-DD'); 
-    } else {
-        selectedDate.value = null;
-    }
+  if (value) {
+    days.value = null;
+    selectedDate.value = moment(value).format('YYYY-MM-DD'); 
+  } else {
+    selectedDate.value = null;
+  }
 };
+
+watch(days, (newDays) => {
+  if (newDays !== null) {
+    selectedDate.value = null;
+  }
+});
 
 watch([type, categoryFilters, days, selectedDate], async () => {
     await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value);
