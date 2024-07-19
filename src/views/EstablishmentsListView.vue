@@ -15,8 +15,10 @@
 	    </div>
 	    <div class="society__list mt-5" v-if="establishments.length > 0">
 	        <suspense>
-	            <establishments-list-component :establishments="establishments" :tag='customerTag'/>
-	            <template #fallback>
+	            <div class="establishment-home">
+                <establishments-list-component :establishments="establishments" :tag='customerTag' />
+            </div>
+                 <template #fallback>
 	                <establishment-list-loaded-component :nb="3" />
 	            </template>
 	        </suspense>
@@ -96,6 +98,9 @@ onMounted(async()=>{
 });
 </script>
 <style scoped>
+.establishment-home ::v-deep .list__actions {
+  margin-top: 15px;
+}
 .establishment__link label,
 .establishment__link {
     cursor: pointer !important;

@@ -17,7 +17,7 @@
          </div>
       </div>
       <div :class="['global__rating', company.ratio>0?'green':(company.ratio === 0 ? 'grey' :'red')]" v-if="company.isTrends">
-              <span class="font-medium" :data-tooltip="`Ratio: ${company.ratio_text}`"> 
+              <span class="font-mediumr" :data-tooltip="`Ratio: ${company.ratio_text}`"> 
               {{ company.ratio_text }}
               </span>
       </div>
@@ -113,6 +113,11 @@ const arrondirRatio = (ratio)=>{
         align-content: center;
         gap: 3px;
         margin-left: 30px;
+        
+    }
+
+    .font-mediumr{
+      font-weight: bold;
     }
 
     .global__rating.red{
@@ -120,7 +125,7 @@ const arrondirRatio = (ratio)=>{
     }
 
     .global__rating.green{
-      background-color: green;
+      background-color: #8acca9;
     }
 
     .global__rating.grey{
@@ -164,5 +169,13 @@ const arrondirRatio = (ratio)=>{
     [data-tooltip]:hover::before {
       opacity: 1;
     }
+    @media (max-width: 768px) {
+      .society__rating{
+        display: flex;
+        align-items: center;
+        margin-top: -5px;
+        margin-left: -90px;
+    }
+  }
 
 </style>

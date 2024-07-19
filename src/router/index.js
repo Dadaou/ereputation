@@ -417,6 +417,11 @@ const router = createRouter({
               component: () => import('@Views/MyQRCodesPageView.vue')
             },
             {
+              path: 'statistique',
+              name: 'Statistique',
+              component: () => import('@Views/StatistiquePageView.vue')
+            },
+            {
               path: 'parameters/:tab?/:sub_tab?',
               name: 'Parameters',
               component: () => import('@Views/ParameterView.vue')
