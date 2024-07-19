@@ -37,7 +37,7 @@
                                         <i class="uil uil-location-point"></i>
                                         <span>{{ company.address1 }}, {{ company.city }}</span>
                                     </div>
-                                    <div class="reviews-count">
+                                    <div v-if="type !== 'global'" class="reviews-count">
                                         <h2 v-if="showReviewsHeader">Reviews:</h2>
                                         <div class="review-box" v-if="company.reviews_count" v-for="(count, stars) in sortedReviews(company.reviews_count)" :key="stars" @click="redirectToReviews(stars, company.competitor_tag)">
                                             <span class="score">{{ stars }}</span><i class="fa fa-star " aria-hidden="true"></i>: {{ count }} 
@@ -104,7 +104,11 @@ const props = defineProps({
     showReviewsHeader: {
         type: Boolean,
         default: false
-    }
+    },
+    type: {
+        type: String,
+        required: true
+  }
 });
 
 const establishment = ref(null);
@@ -169,7 +173,7 @@ const redirectToReviews = (star,id) =>{
     name: 'Review',
     params:{tag,id},
     query: {
-      stars: `${star}`,
+      stars: star,
     },
   });
 }

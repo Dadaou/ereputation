@@ -185,7 +185,7 @@
         </div>
         <div class="reviews__star">
             <div v-for="star in starsData" :key="star.label" class="flex items-center mt-1">
-                <a href="#" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
+                <a href="#" :class="{ 'text-blue-500': selectedStars === star.intVal }" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
                     {{ star.label }}
                 </a>
                 <div class="star__bar h-3 bg-gray-200 rounded mx-2 flex-grow">
@@ -672,6 +672,9 @@ const  widthimage = (event) => {
 </script>
 
 <style scoped>
+.text-blue-500 {
+  color: #4299e1;
+}
 @media screen and (max-width:1024px) {
     .tablet>div {
         height: 200px;
