@@ -1,5 +1,5 @@
 <template>
-    <h3>Gate & Feedback</h3>
+    <h3>Gate & Feedback visits</h3>
     <div>
         <apexchart width="500" type="line" :options="chartOptions" :series="series"></apexchart>
     </div>

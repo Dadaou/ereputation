@@ -1,5 +1,5 @@
 <template>
-    <h3>About Gate</h3>
+    <h3>About the gate</h3>
     <div>
         <apexchart width="500" type="treemap" :options="chartOptions" :series="series"></apexchart>
     </div>
