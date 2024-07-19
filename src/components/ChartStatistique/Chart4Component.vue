@@ -1,5 +1,5 @@
 <template>
-    <h3>Platforms & Reseaux Sociaux</h3>
+    <h3>Platforms & Social Media</h3>
     <div>
         <apexchart type="bar" height="350"  :options="chartOptions" :series="series"></apexchart>
     </div>

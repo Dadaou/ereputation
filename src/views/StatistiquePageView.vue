@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Statistique</h1>
+        <h1>Analytics</h1>
         <div class="dashboard">
             <div class="statistique">
                 <ChartComponent />

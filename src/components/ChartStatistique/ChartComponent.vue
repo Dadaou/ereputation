@@ -1,5 +1,5 @@
 <template>
-    <h3>A propos du feedback</h3>
+    <h3>About feedback</h3>
     <div>
         <apexchart width="500" type="bar" :options="chartOptions" :series="series"></apexchart>
     </div>
