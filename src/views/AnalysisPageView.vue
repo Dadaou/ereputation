@@ -736,7 +736,6 @@ const transformData = (chartData) => {
         const { avg_score, feeling, scores, data, label } = category
         // const color = services.generateColor(label)
         const color = colors[index]
-        
         const allScoresZero = scores.every(score => score === 0)
 
         if (!allScoresZero) {
@@ -749,27 +748,25 @@ const transformData = (chartData) => {
                 // fill: false,
                 tension: 0.1
             })
+            plotData2.datasets.push({
+                label: label,
+                backgroundColor: color,
+                data: data,
+                fill: false
+            })
+            ratings.value.push({
+                label: label,
+                avg_rating: calculateAvg(data),
+                color: color
+            })
         }
         score = + avg_score;
-
-        plotData2.datasets.push({
-            label: label,
-            backgroundColor: color,
-            data: data,
-            fill: false
-        })
 
         legends.push({
             label: label,
             color: color,
             avg_score,
             feeling
-        })
-
-        ratings.value.push({
-            label: label,
-            avg_rating: calculateAvg(data),
-            color: color
         })
     })
 
