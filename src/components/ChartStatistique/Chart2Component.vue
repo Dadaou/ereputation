@@ -1,5 +1,5 @@
 <template>
-    <h3>A propos du Gate</h3>
+    <h3>About the gate</h3>
     <div>
         <apexchart width="500" type="treemap" :options="chartOptions" :series="series"></apexchart>
     </div>
@@ -27,7 +27,7 @@ const chartOptions = ref({
                 ranges: [{
                     from: 0,
                     to: 100,
-                    color: '#00E396'
+                    color: '#0a8964'
                 }]
             }
         }

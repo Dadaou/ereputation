@@ -1,5 +1,5 @@
 <template>
-    <h3>Platforms & Reseaux Sociaux</h3>
+    <h3>Platforms & Social Media</h3>
     <div>
         <apexchart type="bar" height="350"  :options="chartOptions" :series="series"></apexchart>
     </div>
@@ -18,8 +18,22 @@ const chartOptions = ref({
             isFunnel: true,
         },
     },
-    
-    colors: ['#00E396', '#008FFB'], // Couleurs des séries
+    legend: {
+        show: false
+    },
+    colors: ['#0a8964'], // Couleurs des séries
+
+
+
+    dataLabels: {
+        enabled: true,
+        formatter: function (val, opt) {
+            return `${opt.w.globals.labels[opt.dataPointIndex]}: ${val}`;
+        },
+        dropShadow: {
+            enabled: true,
+        },
+  },
 
 
 })

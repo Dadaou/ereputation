@@ -1,5 +1,5 @@
 <template>
-    <h3>Gate & Feedback</h3>
+    <h3>Gate & Feedback visits</h3>
     <div>
         <apexchart width="500" type="line" :options="chartOptions" :series="series"></apexchart>
     </div>
@@ -17,7 +17,7 @@ const chartOptions = ref({
     xaxis: {
         categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'], // Mois de l'année
     },
-    colors: ['#00E396', '#008FFB'], // Couleurs des séries
+    colors: ['#0a8964', '#008FFB'], // Couleurs des séries
     legend: {
         position: 'bottom', // Position de la légende
         horizontalAlign: 'center'

@@ -34,7 +34,7 @@
 						<RouterLink :to="`/customer/${customer.tag}/account/statistique`"
 							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
 							<i class="uil-analytics"></i>
-							Statistique
+							Analytics
 						</RouterLink>
 					</li>
 					<li @click="closeDropdown" v-if="customer">

@@ -12,7 +12,7 @@
           <ul class="alert__review">
             <li v-for="(noteKey, index) in Object.keys(review).filter(key => key !== 'url_source').slice(4, 7).reverse()" :key="noteKey" @click="redirectToReviews(route.params.tag, route.params.id, props.from, props.to, noteKey.replace('note ', ''))">
                 <div class="review-content">
-                <span>{{ noteKey.replace('note ', '') }} note</span>
+                <span>{{ noteKey.replace('note ', '') }} <i class="fa fa-star " aria-hidden="true"></i></span>
                 <div class="percentage-bar">
                   <div class="percentage-line" :style="{ width: calculatePercentage(review[noteKey], review.total) + '%' }"></div>
                 </div>
@@ -22,6 +22,7 @@
           </ul>
         </div>
       </div>
+      
     </div>
   </div>
 </template>
