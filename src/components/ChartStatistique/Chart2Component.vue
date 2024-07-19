@@ -27,7 +27,7 @@ const chartOptions = ref({
                 ranges: [{
                     from: 0,
                     to: 100,
-                    color: '#00E396'
+                    color: '#0a8964'
                 }]
             }
         }

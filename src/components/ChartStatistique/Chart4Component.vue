@@ -18,8 +18,22 @@ const chartOptions = ref({
             isFunnel: true,
         },
     },
-    
-    colors: ['#00E396', '#008FFB'], // Couleurs des séries
+    legend: {
+        show: false
+    },
+    colors: ['#0a8964'], // Couleurs des séries
+
+
+
+    dataLabels: {
+        enabled: true,
+        formatter: function (val, opt) {
+            return `${opt.w.globals.labels[opt.dataPointIndex]}: ${val}`;
+        },
+        dropShadow: {
+            enabled: true,
+        },
+  },
 
 
 })

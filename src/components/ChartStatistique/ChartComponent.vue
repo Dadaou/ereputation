@@ -16,9 +16,9 @@ const chartOptions = ref({
         stacked: true
     },
     xaxis: {
-        categories: ['Mars', 'Avril', 'Mai', 'Juin'] // Mois de l'année
+        categories: ['Janvier','Fevrier','Mars', 'Avril', 'Mai', 'Juin','Juillet','Aout','Septembre','Octobre','Novembre','Decembre'] // Mois de l'année
     },
-    colors: ['#00E396', '#FEB019'], // Couleurs des séries
+    colors: ['#0a8964', '#FEB019'], // Couleurs des séries
     legend: {
         position: 'bottom', // Position de la légende
         horizontalAlign: 'center'
