@@ -599,7 +599,6 @@ const handleCategoryDropdown = (type) => {
 }
 
 const onChange = () => {
-    console.log('Filters changed, reloading chart data...');
     loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value);
 };
 const handleLabelChange = (selectedLabel) => {
@@ -737,15 +736,20 @@ const transformData = (chartData) => {
         const { avg_score, feeling, scores, data, label } = category
         // const color = services.generateColor(label)
         const color = colors[index]
-        plotData1.datasets.push({
-            label: label,
-            backgroundColor: color,
-            borderColor: color,
-            data: scores,
-            // pointRadius: 0,
-            // fill: false,
-            tension: 0.1
-        })
+        
+        const allScoresZero = scores.every(score => score === 0)
+
+        if (!allScoresZero) {
+            plotData1.datasets.push({
+                label: label,
+                backgroundColor: color,
+                borderColor: color,
+                data: scores,
+                // pointRadius: 0,
+                // fill: false,
+                tension: 0.1
+            })
+        }
         score = + avg_score;
 
         plotData2.datasets.push({
@@ -895,7 +899,6 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     }
 
     const api = apiBase + '?' + apiParams;
-    console.log(api)
 
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
@@ -905,7 +908,6 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
 
     if (response.status == 200) {
         reviews_loader.value = false;
-        console.log(response.data['data']);
         optionsReview.value.max = response.data['count'];
         visibleData.value = response.data['data'];
     }
