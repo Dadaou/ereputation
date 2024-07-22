@@ -47,11 +47,11 @@ const chartOptions = ref({
     },
     markers: {
         size: 5,
-    },
-    yaxis: {
-        min: 10,
-        max: 60,
     }
+    // yaxis: {
+    //     min: 0,
+    //     max: 60,
+    // }
 })
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
@@ -67,7 +67,7 @@ const loadData = async (start_date, end_date, timePeriods , establishment) => {
     if (establishment) {
         api = api + `&establisment=${establishment}`
     }
-    console.log("apiii " + api);
+   
     
 
     try {
@@ -77,11 +77,11 @@ const loadData = async (start_date, end_date, timePeriods , establishment) => {
             });
         });
         if (response.status === 200) {
-            console.log(response.data);
+            
         dataChart.value = response.data;
         category.value = response.data.categories || [];
             series.value = response.data.series || [];
-            console.log(series.value);
+           
         chartOptions.value = {
             ...chartOptions.value,
             xaxis: {
