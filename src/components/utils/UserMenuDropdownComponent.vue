@@ -30,7 +30,7 @@
 							My QrCOde
 						</RouterLink>
 					</li>
-					<li @click="closeDropdown" v-if="customer">
+					<li @click="closeDropdown" v-if="customer" class="masquer">
 						<RouterLink :to="`/customer/${customer.tag}/account/statistique`"
 							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
 							<i class="uil-analytics"></i>
@@ -136,5 +136,8 @@ onUnmounted(() => {
 
 .animate__animated.animate__fadeOutRight {
   --animate-duration: 1s;
+}
+.masquer{
+	display: none ; 
 }
 </style>
