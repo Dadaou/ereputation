@@ -35,12 +35,11 @@
                 class="space"
             />
             <el-date-picker 
-                class="mt-2" 
                 v-model="end_date" 
                 type="date" 
                 :size="'large'" 
             />
-            <DropdownComponent :showTitle="false" class="dropdown w-full spaceSelect"  :data="timePeriods" @submit="(timePeriod) => {
+            <DropdownComponent :showTitle="false" class="dropdown w-full spaceSelect mt-0" :data="timePeriods" @submit="(timePeriod) => {
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[0]" />
             
