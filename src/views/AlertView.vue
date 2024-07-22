@@ -6,7 +6,7 @@
     <div v-else class="cards-container">
       <div class="alert__card" v-for="(review, key) in reviewsData" :key="key">
         <div class="alert__container__logo">
-          <img :src="getLogoUrl(key)" class="alert__logo">
+          <img :src="key === 'App (Private)' ? appStore.account.logo : getLogoUrl(key)" class="alert__logo">
         </div>
         <div class="card__details">
           <ul class="alert__review">
@@ -32,7 +32,9 @@ import { inject, onMounted, ref, watch } from 'vue';
 import services from '@Services/services.js';
 import moment from 'moment';
 import { useRoute, useRouter } from "vue-router";
+import { useAppStore } from "@Stores/app.js"
 
+const appStore = useAppStore();
 const reviewsData = ref({});
 const route = useRoute();
 const router = useRouter();
