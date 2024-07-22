@@ -40,6 +40,7 @@
 </template>
 
 <script setup>
+
 import { ref, onBeforeMount,watch } from 'vue';
 import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router';
@@ -70,6 +71,7 @@ const selectedTimePeriod = ref(null);
 const timePeriods = ref(['daily', 'monthly', 'yearly']);
 const establishment = ref(null)// Example time periods
 
+
 const chartOptions = ref({
   chart: {
     id: 'vuechart-example',
@@ -87,6 +89,7 @@ const chartOptions = ref({
     bar: {
       borderRadius: 10,
     },
+
   },
 });
 
@@ -99,6 +102,7 @@ const loadData = async (start_date, end_date, selectedTimePeriod , establishment
     let api = `/customer/visitor/reviews?tag=${route.params.tag}&from=${start_date}&to=${end_date}&type=${selectedTimePeriod || 'daily'}`
     if (establishment) {
         api = api + `&establisment=${establishment}`
+
     }
     console.log(api);
     if (IsValueOkay(start_date) && IsValueOkay(end_date)) {
@@ -136,9 +140,12 @@ watch([start_date, end_date, selectedTimePeriod , establishment], () => {
 
 
 
+
 onBeforeMount(async () => {
   await loadData(start_date.value, end_date.value, selectedTimePeriod.value,establishment.value);
 });
+
+
 </script>
 
 
