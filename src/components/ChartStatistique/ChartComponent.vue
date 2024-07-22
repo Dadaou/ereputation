@@ -11,34 +11,16 @@ import VueApexCharts from 'vue3-apexcharts'
 import services from '@Services/services.js';
 import { useRoute } from 'vue-router';
 
-
-
 const route = useRoute();
-
-
-
 const dataChart = ref([]);
-
-const category = ref([]);
-
-// const category = ['2024-07-19', '2024-08-19']
-
+// Données des séries
+const series = ref([])
+const category = ref([])
 
 
 
-// const tranformData = () =>{
-//     // Assurez-vous que dataChart.value.categories est un tableau
-//     if (Array.isArray(dataChart.value.categories)) {
-//         category.value = dataChart.value.categories.map(item => item);
-//         // ou utiliser forEach
-//         // dataChart.value.categories.forEach(item => {
-//         //     category.value.push(item);
-//         // });
-//     }
 
-//     console.log("returnnnnnnnn");
-//     console.log(category.value)
-// }
+
 
 
 // Options du graphique
@@ -49,7 +31,10 @@ const chartOptions = ref({
     },
     xaxis: {
         // categories: category // Mois de l'année
-        categories: category// Mois de l'année
+        
+        categories: category.value // Mois de l'année
+        // categories :['2024-06-19','2024-06-20','2024-06-21','2024-06-22','2024-06-23','2024-06-24','2024-06-25']
+
     },
     colors: ['#0a8964', '#FEB019'], // Couleurs des séries
     legend: {
@@ -66,15 +51,17 @@ const chartOptions = ref({
 const loadData = async () => {
     try {
         const response = await new Promise((resolve) => {
-                services.get_Record(`/customer/visitor/reviews?tag=${route.params.tag}&from=2024-06-19&to=2024-07-19&type=daily`, (response) => {
+                services.get_Record(`/customer/visitor/reviews?tag=${route.params.tag}&from=2024-06-19&to=2024-06-25&type=daily`, (response) => {
                 resolve(response);
             });
         });
         if (response.status === 200) {
-            console.log("data");
             dataChart.value = response.data;
-            category.value = dataChart.value.categories;
-            console.log(dataChart.value)
+            category.value = response.data.categories || []
+            series.value = response.data.series || []; 
+            console.log(series.value);
+            console.log("categorieeeeeeeeeeee")
+            console.log(category.value);
         } else {
             console.error('Error fetching advantages:', response);
         }
@@ -84,29 +71,13 @@ const loadData = async () => {
 }
 
 onBeforeMount(async () => {
-   
     await loadData();
-    // tranformData();
-});
-
-watch(() => dataChart.value.categories, (newCategories) => {
-    if (Array.isArray(newCategories)) {
-        chartOptions.value.xaxis.categories = newCategories;
-    }
 });
 
 
-// Données des séries
-const series = ref([
-    {
-        name: 'Feedback submitted',
-        data: [30, 20]
-    },
-    {
-        name: 'Feedback non submitted',
-        data: [10, 20]
-    }
-])
+
+
+
 </script>
 
 <script>
