@@ -20,8 +20,31 @@
                 <p>14</p>
             </div>
         </div>
-        
        
+        <div class="date__filter">
+            
+            <el-select v-model="establishment" size="large" class="space">
+                <el-option v-for="item in userStore.user.customer.establishments" :key="item.id"
+                    :label="item.name" :value="item.id" />
+            </el-select>
+            
+            <el-date-picker 
+                v-model="start_date" 
+                type="date" 
+                :size="'large'" 
+                class="space"
+            />
+            <el-date-picker 
+                class="mt-2" 
+                v-model="end_date" 
+                type="date" 
+                :size="'large'" 
+            />
+            <DropdownComponent :showTitle="false" class="dropdown w-full spaceSelect"  :data="timePeriods" @submit="(timePeriod) => {
+                    selectedTimePeriod = timePeriod
+                }" :default="timePeriods[0]" />
+            
+        </div>  
         <div class="dashboard">
             <div class="statistique">
                 <ChartComponent />
@@ -32,7 +55,7 @@
         </div>
         <br>
         <div class="dashboard">
-            <div class="statistique bas">
+            <div class="statistique ">
                 <Chart2Component />
             </div>
             <div class="statistique">
@@ -44,8 +67,32 @@
 </template>
 
 <script setup>
+import { ref , provide } from 'vue'
 import {defineAsyncComponent} from 'vue';
+import { ElOption, ElSelect, ElDatePicker } from 'element-plus';
+import { useUserStore } from "@Stores/user.js"
+import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 
+
+const userStore = useUserStore();
+const timePeriods = ref(['daily', 'monthly', 'yearly']);
+
+const selectedTimePeriod = ref(null);
+provide('timePeriods', selectedTimePeriod)
+
+const today = new Date();
+const oneMonthAgo = new Date();
+oneMonthAgo.setMonth(today.getMonth() - 1);
+
+
+const start_date = ref(oneMonthAgo.toISOString().split('T')[0]);
+provide('start_date', start_date)
+
+const end_date = ref(today.toISOString().split('T')[0]);
+provide('end_date', end_date)
+
+const establishment = ref(null)
+provide('establishment', establishment)
 
 const ChartComponent = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/ChartComponent.vue")
@@ -69,6 +116,19 @@ const Chart4Component = defineAsyncComponent(() =>
 
 </script>
 <style>
+.date__filter {
+    display: flex;
+    margin: 30px;
+}
+
+.space {
+    margin-right: 10px;
+}
+
+.spaceSelect {
+    margin-left: 10px;
+}
+
 .bordure-vert{
     border-bottom: 2px solid;
     border-bottom-color: #0a8964;
@@ -83,9 +143,6 @@ const Chart4Component = defineAsyncComponent(() =>
 }
 .dashboard {
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-direction: column;
 }
 @media (max-width: 995px) {
     .dashboard {
