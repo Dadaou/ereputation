@@ -2,20 +2,26 @@
     <div>
         <h1>Analytics</h1>
         <div class="number">
-            <div class="square">
+            <div class="square bordure-bleu">
                 
                 <h5><i class="uil uil-user"></i> <span>Total visits</span></h5>
                 <p>14</p>
             </div>
-             <div class="square">
+            <div class="square square bordure-rouge">
+                <h5><i class="uil uil-times"></i> <span>Total not submitted</span></h5>
+                <p>14</p>
+            </div>
+             <div class="square bordure-vert">
                 <h5><i class="uil-envelope-send"></i> <span>Total submissions</span></h5>
                 <p>14</p>
             </div>
             <div class="square">
-                <h5>Total social media clicks</h5>
+                <h5><i class="uil uil-hand-pointer"></i><span>Total social media clicks</span></h5>
                 <p>14</p>
             </div>
         </div>
+        
+       
         <div class="dashboard">
             <div class="statistique">
                 <ChartComponent />
@@ -59,12 +65,27 @@ const Chart4Component = defineAsyncComponent(() =>
 
 
 
+
+
 </script>
 <style>
+.bordure-vert{
+    border-bottom: 2px solid;
+    border-bottom-color: #0a8964;
+}
+.bordure-bleu{
+    border-bottom: 2px solid;
+    border-bottom-color: #7bc6e9;
+}
+.bordure-rouge{
+    border-bottom: 2px solid;
+    border-bottom-color: #e97b80;
+}
 .dashboard {
     display: flex;
     justify-content: space-around;
-
+    align-items: center;
+    flex-direction: column;
 }
 @media (max-width: 995px) {
     .dashboard {
@@ -110,7 +131,7 @@ h1 {
 }
 .number{
     display: flex;
-    padding: 25px;
+    padding-top: 20px;
     justify-content: space-around;
 }
 
