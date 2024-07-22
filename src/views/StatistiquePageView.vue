@@ -5,7 +5,7 @@
             <div class="square bordure-bleu">
                 
                 <h5><i class="uil uil-user"></i> <span>Total visits</span></h5>
-                <p>14</p>
+                <p>{{nbrTotalVisit}}</p>
             </div>
             <div class="square square bordure-rouge">
                 <h5><i class="uil uil-times"></i> <span>Total not submitted</span></h5>
@@ -23,7 +23,7 @@
        
         <div class="date__filter">
             
-            <el-select v-model="establishment" size="large" class="space">
+            <el-select v-model="establishment"  size="large" class="space" placeholder="Choose etablishment">
                 <el-option v-for="item in userStore.user.customer.establishments" :key="item.id"
                     :label="item.name" :value="item.id" />
             </el-select>
@@ -66,15 +66,19 @@
 </template>
 
 <script setup>
-import { ref , provide } from 'vue'
+import { ref , provide , onBeforeMount } from 'vue'
 import {defineAsyncComponent} from 'vue';
 import { ElOption, ElSelect, ElDatePicker } from 'element-plus';
 import { useUserStore } from "@Stores/user.js"
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
+import services from '@Services/services.js';
+import { useRoute } from 'vue-router';
 
-
+const nbrTotalVisit = ref(null) ;
 const userStore = useUserStore();
 const timePeriods = ref(['daily', 'monthly', 'yearly']);
+
+const route = useRoute();
 
 const selectedTimePeriod = ref(null);
 provide('timePeriods', selectedTimePeriod)
@@ -108,6 +112,31 @@ const Chart3Component = defineAsyncComponent(() =>
 const Chart4Component = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/Chart4Component.vue")
 )
+
+
+const totalVisit = async () =>{
+   
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`/customer/nombre/visitor/current/month?tag=${route.params.tag}`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            console.log(response.data.nbr)
+            nbrTotalVisit.value = response.data.nbr || 0;
+        } else {
+        console.error('Error fetching data:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+onBeforeMount(async () => {
+  await totalVisit();
+});
+
 
 
 
