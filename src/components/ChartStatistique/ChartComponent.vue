@@ -17,10 +17,6 @@ import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router';
 import services from '@Services/services.js';
 import moment from 'moment';
-import { useUserStore } from "@Stores/user.js"
-
-
-const userStore = useUserStore();
 
 const route = useRoute();
 const dataChart = ref([]);
@@ -28,16 +24,11 @@ const series = ref([]);
 const category = ref([]);
 
 const start_date = inject('start_date');
-console.log(start_date)
 const end_date = inject('end_date');
-console.log(end_date)
 
 const timePeriods = inject('timePeriods');
-console.log(timePeriods)
 
 const establishment = inject('establishment');
-console.log("etta");
-console.log(establishment)
 
 
 const chartOptions = ref({
@@ -120,7 +111,7 @@ onBeforeMount(async () => {
 
 <script>
 export default {
-    components: {
+    components: { 
         apexchart: VueApexCharts
     }
 };
