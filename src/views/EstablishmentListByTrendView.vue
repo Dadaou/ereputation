@@ -8,7 +8,7 @@
                 <Tooltip :text="info_bulle_text" />
             </div>
             <div class="catfiltre">
-                <el-select v-model="categoryFilters" size="large">
+                <el-select v-model="categoryFilters" size="large" class="custom-width">
                     <el-option v-for="(item, index) in categories" :key="index" :label="item.label" :value="item.value" />
                 </el-select>
             </div>
@@ -23,6 +23,7 @@
                     placeholder="Select Date" 
                     size="large"
                     @change="handleDateChange"
+                    class="custom-width"
                 />
                 <Tooltip :text="info_bulle_text1" /> 
             </div>
@@ -167,6 +168,7 @@ onMounted(async () => {
     justify-content: center;
     align-items: center;
     gap: 3rem;
+   
 }
 
 .or-text {
@@ -183,21 +185,36 @@ onMounted(async () => {
     justify-content: center;
     align-items: center;
     gap: 0.05rem;
-   
+    margin-left: 15px;
 }
 
-.select_info, .catfiltre, .date_pick, .number_days {
+ .date_pick, .number_days {
     display: flex;
     align-items: center;
     flex: 1;
-    width: 300px; /* Adjust based on your design needs */
+    max-width: 300px;
+}
+
+.select_info {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    max-width: 300px; 
+    
+}
+.catfiltre {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    max-width: 285px; 
+    
 }
 
 .custom-width {
     width: 100%;
 }
 
-@media (min-width: 1500px) {
+@media (min-width: 1920px) {
     .filters {
     display: flex;
     flex-direction: column;
@@ -220,6 +237,7 @@ onMounted(async () => {
     justify-content: center;
     align-items: center;
     gap: 5rem;
+    margin-left: -2px;
 }
 
     .bottom-row {
@@ -229,19 +247,34 @@ onMounted(async () => {
     gap: 1rem;
 }
 
-.select_info, .catfiltre, .date_pick, .number_days {
+.date_pick, .number_days {
     display: flex;
     align-items: center;
     flex: 1;
-    max-width: 600px; /* Adjust based on your design needs */
+    max-width: 450px; /* Adjust based on your design needs */
+}
+
+.select_info {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    max-width: 437px; /* Adjust based on your design needs */
+}
+.catfiltre {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    max-width: 420px; /* Adjust based on your design needs */
 }
 }
 
 @media (max-width: 768px) {
     .top-row {
-        flex-basis: 100%;
-        margin-bottom: 1px;
-        max-width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5rem;
+        margin-left: -9px;
     }
 
     .bottom-row {
@@ -249,6 +282,25 @@ onMounted(async () => {
     justify-content: center;
     align-items: center;
     gap: 1rem;
+}
+.date_pick, .number_days {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    max-width: 450px; /* Adjust based on your design needs */
+}
+
+.select_info {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    max-width: 135px; /* Adjust based on your design needs */
+}
+.catfiltre {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    max-width: 118px; /* Adjust based on your design needs */
 }
 }
 </style>

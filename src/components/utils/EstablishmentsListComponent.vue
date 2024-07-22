@@ -226,21 +226,20 @@ const redirectToReviews = (star,id) =>{
     display:flex;
     justify-content:center;
     border-radius: 5px;
+
     /*margin-inline: 8px !important;*/
 }
 
 .society__logo img {
-   
-    /* 
-    height: 100%;
-  width: 100%;
-  object-fit: cover;*/
+    border-radius: 5px;
 }
 
 .society__logo svg {
     height: 100%;
     width: 100%;
     object-fit: cover;
+   
+    
 }
 
 .society__location span {

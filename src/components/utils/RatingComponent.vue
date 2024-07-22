@@ -125,7 +125,7 @@ const arrondirRatio = (ratio)=>{
     }
 
     .global__rating.green{
-      background-color: #8acca9;
+      background-color: #66d499;
     }
 
     .global__rating.grey{
