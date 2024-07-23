@@ -3,7 +3,7 @@
         <h1>Analytics</h1>
         <div class="number">
             <div class="square bordure-bleu">
-                
+
                 <h5><i class="uil uil-user"></i> <span>Total visits</span></h5>
                 <p>{{nbrTotalVisit}}</p>
             </div>
@@ -11,53 +11,47 @@
                 <h5><i class="uil uil-times"></i> <span>Total not submitted</span></h5>
                 <p>14</p>
             </div>
-             <div class="square bordure-vert">
+            <div class="square bordure-vert">
                 <h5><i class="uil-envelope-send"></i> <span>Total submissions</span></h5>
                 <p>14</p>
             </div>
             <div class="square">
-                <h5><i class="uil uil-hand-pointer"></i><span>Total social media clicks</span></h5>
+                <h5 class="iconfy">
+                    <Icon icon="pepicons-pencil:hand-point" />
+                    <span>Total social media clicks</span>
+                </h5>
                 <p>14</p>
             </div>
         </div>
-       
+
         <div class="date__filter">
-            
-            <el-select v-model="establishment"  size="large" class="space" placeholder="Choose etablishment">
-                <el-option v-for="item in userStore.user.customer.establishments" :key="item.id"
-                    :label="item.name" :value="item.id" />
+
+            <el-select v-model="establishment" size="large" class="space" placeholder="Choose etablishment">
+                <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
+                    :value="item.id" />
             </el-select>
-            
-            <el-date-picker 
-                v-model="start_date" 
-                type="date" 
-                :size="'large'" 
-                class="space"
-            />
-            <el-date-picker 
-                v-model="end_date" 
-                type="date" 
-                :size="'large'" 
-            />
+
+            <el-date-picker v-model="start_date" type="date" :size="'large'" class="space" />
+            <el-date-picker v-model="end_date" type="date" :size="'large'" />
             <DropdownComponent :showTitle="false" class="dropdown w-full spaceSelect mt-0" :data="timePeriods" @submit="(timePeriod) => {
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[0]" />
-            
-        </div>  
+
+        </div>
         <div class="dashboard">
-            <div class="statistique">
+            <div class="statistique-left">
                 <ChartComponent />
             </div>
-            <div class="statistique">
+            <div class="statistique-right">
                 <Chart3Component />
             </div>
         </div>
         <br>
         <div class="dashboard">
-            <div class="statistique ">
+            <div class="statistique-left ">
                 <Chart2Component />
             </div>
-            <div class="statistique">
+            <div class="statistique-right">
                 <Chart4Component />
             </div>
         </div>
@@ -67,6 +61,7 @@
 
 <script setup>
 import { ref , provide , onBeforeMount } from 'vue'
+import { Icon } from '@iconify/vue';
 import {defineAsyncComponent} from 'vue';
 import { ElOption, ElSelect, ElDatePicker } from 'element-plus';
 import { useUserStore } from "@Stores/user.js"
@@ -144,9 +139,31 @@ onBeforeMount(async () => {
 
 </script>
 <style>
+.iconfy{
+    display: flex;
+}
+.iconify--pepicons-pencil{
+    color: #000 !important;
+    margin-right: 3px;
+    margin-top: 2px;
+}
+.statistique-left{
+    float: left;
+    width: 45%;
+    /* padding: 10px; */
+    margin-left: 30px;
+    
+}
+
+.statistique-right{
+    float : right ; 
+    width: 45%;
+    margin-right: 30px;
+}
+
 .date__filter {
     display: flex;
-    margin: 30px;
+    margin: 2.5%;
 }
 
 .space {
@@ -170,7 +187,8 @@ onBeforeMount(async () => {
     border-bottom-color: #e97b80;
 }
 .dashboard {
-    display: flex;
+    /* display: flex; */
+    width: 100%;
 }
 @media (max-width: 995px) {
     .dashboard {
