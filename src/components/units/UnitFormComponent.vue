@@ -55,13 +55,13 @@
 </template>
 <script setup>
 import moment from 'moment';
-import { ref, inject, watch, onBeforeMount } from 'vue'
-import services from '@Services/services.js'
+import { ref, inject, watch, onMounted, watchEffect } from 'vue'
 import { useUserStore } from "@Stores/user.js"
-import SpinnerComponent from '@Components/utils/SpinnerComponent.vue'
 import { useStaffStore } from "@Stores/staff.js";
-import { ElMessage, ElOption, ElSelect } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router';
+import services from '@Services/services.js'
+import SpinnerComponent from '@Components/utils/SpinnerComponent.vue'
+import { ElMessage, ElOption, ElSelect } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
@@ -205,13 +205,31 @@ const updateData = (unit, _unit) => {
     })
 };
 
-onBeforeMount(()=>{
+onMounted(async () => {
     const data = staffStore.getUnit();
 
-    if(data){
+    if (data) {
         unit_to_update.value = data;
-        fillForm(data)
-        staffStore.resetUnit()
+        fillForm(data);
+        staffStore.resetUnit();
+    } else {
+        // Chargez les établissements s'ils ne sont pas déjà chargés
+        if (!userStore.user.customer.establishments || userStore.user.customer.establishments.length === 0) {
+            await userStore.fetchCustomerEstablishments();
+        }
+
+        // Définissez la valeur par défaut pour l'établissement
+        const establishments = userStore.user.customer.establishments;
+        if (establishments && establishments.length > 0) {
+            unit.value.establishment = `/api/establishments/${establishments[0].id}`;
+        }
+    }
+});
+
+watchEffect(() => {
+    const establishments = userStore.user.customer.establishments;
+    if (establishments && establishments.length > 0 && !unit.value.establishment) {
+        unit.value.establishment = `/api/establishments/${establishments[0].id}`;
     }
 });
 

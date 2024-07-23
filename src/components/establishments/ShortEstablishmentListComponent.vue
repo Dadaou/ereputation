@@ -37,7 +37,7 @@
                 <template #default="scope">
                     <div class="vertical-buttons">
                         <el-button size="small" @click="redirectToQRCode(route.params.tag, scope.row.tag)">
-                            <i class="uil uil-file-alt"></i>
+                            <i class="uil uil-print"></i>
                         </el-button>
                         <el-tooltip :content="`Click to enter ${scope.row.name}'s feedback formulary`" placement="top">
                             <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
