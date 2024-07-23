@@ -10,7 +10,7 @@
         </div>
         <div class="card__details">
           <ul class="alert__review">
-            <li v-for="(noteKey, index) in Object.keys(review).filter(key => key !== 'url_source').slice(4, 7).reverse()" :key="noteKey" @click="redirectToReviews(route.params.tag, route.params.id, props.from, props.to, noteKey.replace('note ', ''))">
+            <li v-for="(noteKey, index) in Object.keys(review).filter(key => key !== 'url_source').slice(4, 7).reverse()" :key="noteKey" @click="handleClick(noteKey, key)">
                 <div class="review-content">
                 <span>{{ noteKey.replace('note ', '') }} <i class="fa fa-star " aria-hidden="true"></i></span>
                 <div class="percentage-bar">
@@ -41,10 +41,11 @@ const router = useRouter();
 const tag = route.params.id;
 const start_date = inject('start_date');
 const end_date = inject('end_date')
-
+const selectedPlatform = ref('');
 const props = defineProps({
   from: String,
-  to: String
+  to: String,
+  platform: String
 });
 
 const logoMap = {
@@ -60,6 +61,12 @@ const logoMap = {
   'Trustpilot': new URL('@/assets/images/logo/Trustpilot.svg', import.meta.url).href,
   'Yelp': new URL('@/assets/images/logo/Yelp.svg', import.meta.url).href
 };
+
+const handleClick = (noteKey, platform) => {
+  selectedPlatform.value = platform;
+  redirectToReviews(route.params.tag, route.params.id, props.from, props.to, noteKey.replace('note ', ''), selectedPlatform.value);
+};
+
 
 const getLogoUrl = (key) => {
   return logoMap[key];
@@ -90,10 +97,17 @@ const calculatePercentage = (count, total) => {
   return Math.round((count / total) * 100);
 };
 
-const redirectToReviews = (customer, tag, from, to, star) => {
+const redirectToReviews = (customer, tag, from, to, star, platform) => {
   start_date.value = from;
   end_date.value = to;
-  router.push(`/customer/${customer}/establishment/${tag}/reviews/alert?star=${star}`);
+
+  router.push({
+    path: `/customer/${customer}/establishment/${tag}/reviews/alert`,
+    query: {
+      star: star,
+      platform: platform 
+    }
+  });
 };
 
 watch(() => [props.from, props.to], ([newFrom, newTo]) => {

@@ -27,8 +27,13 @@
           logo.name }}</span>
       </div>
       <div class="nav-dropdown">
-        <LanguageMenuDropdown v-if="isFeedback" :current="currentLanguage"
+        <div v-if="isFeedback" class="feedback__option">
+          <a href="#"><i class="fa fa-whatsapp"></i></a>
+          <LanguageMenuDropdown :current="currentLanguage"
           @select="(language) => selectCurrentLanguage(language)" />
+        </div>
+       
+        
         <UserDropdownMenu v-if="userStore.authenticated && !isFeedback" :user="{
           name: `${userStore.user.firstname} ${userStore.user.lastname}`,
           initial: userStore.getInitials(userStore.user.firstname, userStore.user.lastname),
@@ -396,5 +401,15 @@ ul.menu .router-link-exact-active {
   nav>div.nav__login {
     justify-content: center;
   }
+}
+
+.feedback__option {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.feedback__option i {
+  font-size: 35px;
 }
 </style>
