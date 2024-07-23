@@ -248,7 +248,8 @@ export const competitor_countries = [
   { name: 'France', code: 'FR' },
   { name: 'Spain', code: 'ES' },
   { name: 'United Kingdom', code: 'GB' },
-  { name: 'United States', code: 'US' }
+  { name: 'United States', code: 'US' },
+  { name: 'Mauritius', code: 'MU' },
 ]
 
 export const categories = ['Hotel', 'Residence', 'Chalet', 'Restaurant', 'Retail','Event', 'Other']

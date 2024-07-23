@@ -1,19 +1,26 @@
 <template>
-    <div v-if="item.label" 
-       class="gate__link" 
-       rel="noopener noreferrer"
-       @click="handleClick">
-        <Icon v-if="!item.logo && icon" :icon="icon"  :alt="`${item.label} logo`" class="mb-2" width="24px" color="grey" />
-        <img v-if="item.logo && item.logo.length > 0" :src="item.logo" class="gate__logo">
-        <img v-if="logoSrc" :src="logoSrc" :alt="`${item.label} logo`" class="gate__logoSrc">
-        <h4 v-else class="mb-1">{{ item.label }}</h4>
+    <div v-if="item.label" @click="handleClick">
+        <a
+            class="gate__link" 
+            :href="item.document || item.href" 
+            target="_blank" 
+            rel="noopener noreferrer"
+        >
+            <!-- <Icon v-if="!item.logo && icon" :icon="icon"  :alt="`${item.label} logo`" class="mb-2" width="24px" color="grey" /> -->
+            <img v-if="!item.logo && icon" :src="appStore.account.logo" class="gate__logo">
+            <img v-if="item.logo && item.logo.length > 0" :src="item.logo" class="gate__logo">
+            <img v-if="logoSrc" :src="logoSrc" :alt="`${item.label} logo`" class="gate__logoSrc">
+            <h4 v-else class="mb-1">{{ item.label }}</h4>
+        </a>
     </div>
 </template>
 
 <script setup>
 import { Icon } from '@iconify/vue';
 import { computed } from 'vue';
+import { useAppStore } from "@Stores/app.js"
 
+const appStore = useAppStore();
 
 const emits = defineEmits(['click']);
 
@@ -58,7 +65,7 @@ const logoSrc = computed(() => {
             return new URL('@/assets/images/logo/Facebook.svg', import.meta.url).href;
         } else if (props.item.href.includes('instagram.com')) {
             return new URL('@/assets/images/logo/Instagram.svg', import.meta.url).href;
-        } else if (props.item.href.includes('twitter.com')) {
+        } else if (props.item.href.includes('x.com')) {
             return new URL('@/assets/images/logo/Twitter.svg', import.meta.url).href;
         } else if (props.item.href.includes('tiktok.com')) {
             return new URL('@/assets/images/logo/Tiktok.svg', import.meta.url).href;
@@ -137,7 +144,7 @@ const logoSrc = computed(() => {
 .gate__link h4 {
     font-size: .8rem;
     /* color: var(--color-primary); */
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     text-align: center;
 }
 
