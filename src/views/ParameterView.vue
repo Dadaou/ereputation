@@ -384,7 +384,7 @@ const setStatus = async (id, status) => {
         }
     });
 
-    userStore.user.customer.establishments = userStore.user.customer.establishments.filter((x) => x.disable == false); await new Promise((resolve) => {
+    userStore.user.customer.establishments = userStore.user.customer.establishments.filter((x) => x.disable == false || x.disable == null); await new Promise((resolve) => {
         services.post_Record(`/customer/establishment/${id}/${status}`, {}, (response) => {
             resolve(response)
         }, false);
