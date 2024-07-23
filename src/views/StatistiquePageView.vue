@@ -38,6 +38,17 @@
                 }" :default="timePeriods[0]" />
 
         </div>
+        <div class="date__filter">
+            <el-select v-model="sourceFilter" size="large" class="space" placeholder="Choose source">
+                <el-option v-for="item in sources" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+            <el-select v-model="staffFilter" size="large" class="space" placeholder="Choose staff">
+                <el-option v-for="item in staffs" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+            <el-select v-model="unitsFilter" size="large" class="space" placeholder="Choose unit">
+                <el-option v-for="item in units" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+        </div>
         <div class="dashboard">
             <div class="statistique-left">
                 <ChartComponent />
@@ -79,6 +90,21 @@ const nbrTotalVisit = ref(null) ;
 const userStore = useUserStore();
 const timePeriods = ref(['daily', 'monthly', 'yearly']);
 
+// const sources = ref(['all', 'gates', 'feedback']);
+
+const sources = ref([
+    { id: "all", name: 'All' },
+    { id: "gates", name: 'Gates' },
+    { id: "feedback", name: 'Feedback' },
+    // Ajoutez d'autres éléments ici
+]);
+const sourceFilter = ref(null);
+provide('sourceFilter', sourceFilter)
+
+
+
+
+
 const route = useRoute();
 
 const selectedTimePeriod = ref(null);
@@ -87,6 +113,16 @@ provide('timePeriods', selectedTimePeriod)
 const today = new Date();
 const oneMonthAgo = new Date();
 oneMonthAgo.setMonth(today.getMonth() - 1);
+
+const staffs = ref([]);
+
+const staffFilter = ref(null);
+provide('staffFilter', staffFilter)
+
+const units = ref([])
+
+const unitsFilter = ref(null);
+provide('unitsFilter', unitsFilter)
 
 
 
@@ -120,35 +156,9 @@ const PieChartReseauxSociaux = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/PieChartReseauxSociaux.vue")
 )
 
-const staffs = inject('staffs')
 
-let tableData = computed(() => {
-    let data = [];
-    staffs.value.forEach(staff_item => {
-        staff_item['period'] = staff_item.dateto != null ? `${moment(staff_item.datefrom).format('YYYY MMM DD')} to ${moment(staff_item.dateto).format('YYYY MMM DD')}` : `${moment(staff_item.datefrom).format('YYYY MMM DD')} to -`;
-        data.push(staff_item);
-    })
-    return data;
-});
 
-const search = ref('')
-const filterTableData = computed(() => {
-    let filterdata = tableData.value;
-    filterdata = tableData.value.filter(
-        (data) =>
-            !search.value ||
-            data.lastname.toLowerCase().includes(search.value.toLowerCase()) ||
-            data.firstname.toLowerCase().includes(search.value.toLowerCase()) ||
-            data.department.toLowerCase().includes(search.value.toLowerCase()) ||
-            data.section.toLowerCase().includes(search.value.toLowerCase()) ||
-            data.establishment_name.toLowerCase().includes(search.value.toLowerCase())
-    )
-    console.log("filterdataaaaaaaaaaaa");
-    console.log(filterdata);
-    return filterdata
-})
-
-const totalVisit = async () =>{
+const totalVisit = async () => {
    
     try {
         const response = await new Promise((resolve) => {
@@ -167,9 +177,49 @@ const totalVisit = async () =>{
     }
 }
 
+const loadStaff = async () => {
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`/customer/staffs?tag=${route.params.tag}`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            console.log(response.data)
+            staffs.value = response.data
+        } else {
+            console.error('Error fetching data:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const loadUnits = async () => {
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`/customer/units?tag=${route.params.tag}`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            console.log(response.data)
+            units.value = response.data ;
+        } else {
+            console.error('Error fetching data:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+
 onBeforeMount(async () => {
     await totalVisit();
-    filterTableData(); 
+    await loadStaff();
+    await loadUnits(); 
+    
 });
 
 
@@ -213,6 +263,11 @@ onBeforeMount(async () => {
 .spaceSelect {
     margin-left: 10px;
     margin-top : 0 !important
+}
+
+.spaceSelect2 {
+    margin-top: 0 !important ;
+    margin-right: 10px;
 }
 
 .bordure-vert{

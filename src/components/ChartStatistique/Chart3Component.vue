@@ -112,11 +112,6 @@ watch([start_date, end_date, timePeriods , establishment], () => {
 
 
 
-
-onBeforeMount(async () => {
-  await loadData(start_date.value, end_date.value, timePeriods.value,establishment.value);
-});
-
 </script>
 
 <script>
