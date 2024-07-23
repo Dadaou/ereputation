@@ -1,5 +1,5 @@
 <template>
-    <h3>Platforms & Social Media</h3>
+    <h3>Nombre de click de reseaux sociaux </h3>
     <div class="chart-container">
         <apexchart type="bar" height="350" :options="chartOptions" :series="series"></apexchart>
     </div>
@@ -11,7 +11,7 @@ import VueApexCharts from 'vue3-apexcharts'
 
 // Options du graphique
 const chartOptions = ref({
-   
+
     plotOptions: {
         bar: {
             horizontal: true,
@@ -33,7 +33,7 @@ const chartOptions = ref({
         dropShadow: {
             enabled: true,
         },
-  },
+    },
 
 
 })
@@ -82,6 +82,7 @@ export default {
     width: 100%;
     max-width: 100%;
 }
+
 h3 {
     margin: 40px 0 0;
     text-align: center;

@@ -1,13 +1,8 @@
 <template>
   <h3>Feedback form submissions</h3>
-    <div>
-      <apexchart 
-        width="500" 
-        type="bar" 
-        :options="chartOptions" 
-        :series="series" 
-      />
-    </div>
+  <div class="chart-container">
+    <apexchart  type="bar" :options="chartOptions" :series="series" />
+  </div>
 </template>
 
 <script setup>
@@ -118,6 +113,10 @@ export default {
 </script>
 
 <style scoped>
+.chart-container {
+  width: 100%;
+  max-width: 100%;
+}
 .inside {
     display: flex;
     justify-content: center;

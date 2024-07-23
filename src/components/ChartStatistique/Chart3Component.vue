@@ -1,7 +1,7 @@
 <template>
     <h3>Gate & Feedback visits</h3>
-    <div>
-        <apexchart width="500" type="line" :options="chartOptions" :series="series"></apexchart>
+    <div class="chart-container">
+        <apexchart  type="line" :options="chartOptions" :series="series"></apexchart>
     </div>
 </template>
 
@@ -123,6 +123,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.chart-container {
+    width: 100%;
+    max-width: 100%;
+}
 .chart-container {
     margin-top: 20px;
 }
