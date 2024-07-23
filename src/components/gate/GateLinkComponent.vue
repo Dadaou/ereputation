@@ -137,7 +137,7 @@ const logoSrc = computed(() => {
 .gate__link h4 {
     font-size: .8rem;
     /* color: var(--color-primary); */
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     text-align: center;
 }
 
