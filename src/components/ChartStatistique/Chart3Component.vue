@@ -45,13 +45,19 @@ const chartOptions = ref({
         width: 2,
         curve: 'smooth' // Ligne lissée
     },
-    markers: {
-        size: 5,
+    // markers: {
+    //     size: 5,
+    // },
+    yaxis: {
+        min: 0,
+        max: 60,
+        tickAmount: 6, // Nombre de ticks sur l'axe Y
+        labels: {
+            formatter: function (val) {
+                return val.toFixed(0); // Afficher les valeurs sans décimales
+            }
+        }
     }
-    // yaxis: {
-    //     min: 0,
-    //     max: 60,
-    // }
 })
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
@@ -133,5 +139,9 @@ export default {
 h3 {
     margin: 40px 0 0;
     text-align: center;
+    padding: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    color: rgb(101, 101, 101);
 }
 </style>

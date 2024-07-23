@@ -41,7 +41,7 @@ const chartOptions = ref({
   },
   plotOptions: {
     bar: {
-      borderRadius: 10,
+      borderRadius: 0,
     },
 
   },
@@ -124,6 +124,10 @@ export default {
 h3 {
   margin: 40px 0 0;
   text-align: center;
+  padding: 20px;
+  font-weight: 600;
+  font-size: 14px;
+  color: rgb(101, 101, 101);
 }
 
 .inside {

@@ -33,7 +33,7 @@
 
             <el-date-picker v-model="start_date" type="date" :size="'large'" class="space" />
             <el-date-picker v-model="end_date" type="date" :size="'large'" />
-            <DropdownComponent :showTitle="false" class="dropdown w-full spaceSelect mt-0" :data="timePeriods" @submit="(timePeriod) => {
+            <DropdownComponent :showTitle="false" class="dropdown w-full spaceSelect" :data="timePeriods" @submit="(timePeriod) => {
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[0]" />
 
@@ -55,12 +55,17 @@
                 <Chart4Component />
             </div>
         </div>
+        <div class="dashboard">
+            <div class="statistique-left ">
+                <PieChartReseauxSociaux />
+            </div>
 
+        </div>
     </div>
 </template>
 
 <script setup>
-import { ref , provide , onBeforeMount } from 'vue'
+import { ref, provide, onBeforeMount, inject, computed } from 'vue'
 import { Icon } from '@iconify/vue';
 import {defineAsyncComponent} from 'vue';
 import { ElOption, ElSelect, ElDatePicker } from 'element-plus';
@@ -68,6 +73,7 @@ import { useUserStore } from "@Stores/user.js"
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import services from '@Services/services.js';
 import { useRoute } from 'vue-router';
+import moment from 'moment';
 
 const nbrTotalVisit = ref(null) ;
 const userStore = useUserStore();
@@ -81,6 +87,8 @@ provide('timePeriods', selectedTimePeriod)
 const today = new Date();
 const oneMonthAgo = new Date();
 oneMonthAgo.setMonth(today.getMonth() - 1);
+
+
 
 
 const start_date = ref(oneMonthAgo.toISOString().split('T')[0]);
@@ -108,6 +116,37 @@ const Chart4Component = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/Chart4Component.vue")
 )
 
+const PieChartReseauxSociaux = defineAsyncComponent(() =>
+    import("@Components/ChartStatistique/PieChartReseauxSociaux.vue")
+)
+
+const staffs = inject('staffs')
+
+let tableData = computed(() => {
+    let data = [];
+    staffs.value.forEach(staff_item => {
+        staff_item['period'] = staff_item.dateto != null ? `${moment(staff_item.datefrom).format('YYYY MMM DD')} to ${moment(staff_item.dateto).format('YYYY MMM DD')}` : `${moment(staff_item.datefrom).format('YYYY MMM DD')} to -`;
+        data.push(staff_item);
+    })
+    return data;
+});
+
+const search = ref('')
+const filterTableData = computed(() => {
+    let filterdata = tableData.value;
+    filterdata = tableData.value.filter(
+        (data) =>
+            !search.value ||
+            data.lastname.toLowerCase().includes(search.value.toLowerCase()) ||
+            data.firstname.toLowerCase().includes(search.value.toLowerCase()) ||
+            data.department.toLowerCase().includes(search.value.toLowerCase()) ||
+            data.section.toLowerCase().includes(search.value.toLowerCase()) ||
+            data.establishment_name.toLowerCase().includes(search.value.toLowerCase())
+    )
+    console.log("filterdataaaaaaaaaaaa");
+    console.log(filterdata);
+    return filterdata
+})
 
 const totalVisit = async () =>{
    
@@ -129,7 +168,8 @@ const totalVisit = async () =>{
 }
 
 onBeforeMount(async () => {
-  await totalVisit();
+    await totalVisit();
+    filterTableData(); 
 });
 
 
@@ -150,7 +190,6 @@ onBeforeMount(async () => {
 .statistique-left{
     float: left;
     width: 45%;
-    /* padding: 10px; */
     margin-left: 30px;
     
 }
@@ -159,6 +198,7 @@ onBeforeMount(async () => {
     float : right ; 
     width: 45%;
     margin-right: 30px;
+    margin-top: -20px;
 }
 
 .date__filter {
@@ -172,6 +212,7 @@ onBeforeMount(async () => {
 
 .spaceSelect {
     margin-left: 10px;
+    margin-top : 0 !important
 }
 
 .bordure-vert{
