@@ -28,7 +28,7 @@
       </div>
       <div class="nav-dropdown">
         <div v-if="isFeedback" class="feedback__option">
-          <i class="fa fa-whatsapp"></i>
+          <a href="#"><i class="fa fa-whatsapp"></i></a>
           <LanguageMenuDropdown :current="currentLanguage"
           @select="(language) => selectCurrentLanguage(language)" />
         </div>

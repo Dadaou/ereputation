@@ -209,7 +209,7 @@ import CommentComponent from '@Components/utils/CommentComponent.vue';
 import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
-import { ref, watch, onBeforeMount, inject, defineAsyncComponent, onMounted } from 'vue';
+import { ref, watch, onBeforeMount, inject, defineAsyncComponent, onMounted,computed } from 'vue';
 import { ElDatePicker, ElOption, ElSelect } from 'element-plus';
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
@@ -248,6 +248,7 @@ appStore.setBreadcrumbs([
 
 const companyId = route.params.id;
 
+const platform = computed(() => route.query.platform);
 
 let establishment = ref({});
 let _reviews = ref([]);
@@ -357,12 +358,19 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         apiParams += `&from=${dateStart}&to=${dateEnd}`;
     }
 
-    source = IsValueOkay(route.params.type) && route.params.type == 'intern'
-        ?'App (Private)'
-        :'all'
+    const platformValue = platform.value;
+
+    source = IsValueOkay(platformValue) ? platformValue : 'all';
+
+    if (source !== 'App (Private)') {
+        source = source.toLowerCase();
+    }
+
+    apiParams += `&platform=${source}`;
+
     if (IsValueOkay(source)) {
         source = (source == 'App (Private)') ? 'App (Private)' : source.toLowerCase();
-        apiParams += `&platform=${source}`
+        // apiParams += `&platform=${source}`
     }
 
     

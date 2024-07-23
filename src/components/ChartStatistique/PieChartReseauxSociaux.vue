@@ -1,7 +1,7 @@
 <template>
-    <h3>Nombre de click de reseaux sociaux </h3>
+    <h3>Number of total media click</h3>
     <div class="chart-container">
-        <apexchart type="bar" height="350" :options="chartOptions" :series="series"></apexchart>
+        <apexchart type="donut" height="350" :options="chartOptions" :series="series"></apexchart>
     </div>
 </template>
 
@@ -9,63 +9,22 @@
 import { ref } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 
-// Options du graphique
 const chartOptions = ref({
-
-    plotOptions: {
-        bar: {
-            horizontal: true,
-            isFunnel: true,
-        },
-    },
-    legend: {
-        show: false
-    },
-    colors: ['#0a8964'], // Couleurs des séries
-
-
-
+    labels: ['Madame vacances', 'Hotels Antequera Hills'], // Labels des séries
+    colors: ['#0a8964', '#FEB019'], // Couleurs des séries
     dataLabels: {
         enabled: true,
-        formatter: function (val, opt) {
-            return `${opt.w.globals.labels[opt.dataPointIndex]}: ${val}`;
-        },
-        dropShadow: {
-            enabled: true,
-        },
+        formatter: function (val) {
+            return val.toFixed(1) + "%"; // Formater la valeur avec un chiffre après la virgule
+        }
     },
+    legend: {
+        position: 'bottom',
+        horizontalAlign: 'center'
+    }
+});
+const series = ref([44, 13])
 
-
-})
-
-// Données des séries
-const series = ref([
-    {
-        name: "Platforms",
-        data: [
-            {
-                x: "Facebook",
-                y: 1380
-            },
-            {
-                x: "Google",
-                y: 1100
-            },
-            {
-                x: "Trip Advisor",
-                y: 990
-            },
-            {
-                x: "Booking",
-                y: 880
-            },
-            {
-                x: "Instagram",
-                y: 740
-            },
-        ],
-    },
-])
 </script>
 
 <script>
@@ -86,5 +45,9 @@ export default {
 h3 {
     margin: 40px 0 0;
     text-align: center;
+    padding: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    color: rgb(101, 101, 101);
 }
 </style>
