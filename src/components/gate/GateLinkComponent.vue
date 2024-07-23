@@ -58,7 +58,7 @@ const logoSrc = computed(() => {
             return new URL('@/assets/images/logo/Facebook.svg', import.meta.url).href;
         } else if (props.item.href.includes('instagram.com')) {
             return new URL('@/assets/images/logo/Instagram.svg', import.meta.url).href;
-        } else if (props.item.href.includes('twitter.com')) {
+        } else if (props.item.href.includes('x.com')) {
             return new URL('@/assets/images/logo/Twitter.svg', import.meta.url).href;
         } else if (props.item.href.includes('tiktok.com')) {
             return new URL('@/assets/images/logo/Tiktok.svg', import.meta.url).href;
