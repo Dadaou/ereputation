@@ -24,6 +24,9 @@ const timePeriods = inject('timePeriods');
 
 const establishment = inject('establishment');
 
+const staff = inject('staffFilter');
+const units = inject('unitsFilter');
+
 
 
 
@@ -63,7 +66,7 @@ const chartOptions = ref({
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 
 
-const loadData = async (start_date, end_date, timePeriods , establishment) => {
+const loadData = async (start_date, end_date, timePeriods , establishment , staff , units ) => {
     if (IsValueOkay(start_date) && IsValueOkay(end_date)) {
         start_date = moment(new Date(start_date)).format('YYYY-MM-DD');
         end_date = moment(new Date(end_date)).format('YYYY-MM-DD');
@@ -72,6 +75,12 @@ const loadData = async (start_date, end_date, timePeriods , establishment) => {
     let api = `customer/count/navigation/visitor?tag=${route.params.tag}&from=${start_date}&to=${end_date}&type=${timePeriods || 'daily'}`
     if (establishment) {
         api = api + `&establisment=${establishment}`
+    }
+    if (staff) {
+        api = api + `&staff=${staff}`
+    }
+    if (units) {
+        api = api + `&staff=${units}`
     }
    
     
@@ -103,11 +112,11 @@ const loadData = async (start_date, end_date, timePeriods , establishment) => {
 };
 
 onBeforeMount(async () => {
-  await loadData(start_date.value, end_date.value,timePeriods.value,establishment.value);
+    await loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, staff.value, units.value);
 });
 
-watch([start_date, end_date, timePeriods , establishment], () => {
-    loadData(start_date.value, end_date.value,timePeriods.value,establishment.value )
+watch([start_date, end_date, timePeriods , establishment,staff, units ], () => {
+    loadData(start_date.value, end_date.value,timePeriods.value,establishment.value,staff.value , units.value )
 })
 
 
