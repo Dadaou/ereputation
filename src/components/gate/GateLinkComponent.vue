@@ -1,5 +1,5 @@
 <template>
-    <div v-if="item.label" @click="handleClick">
+    <div v-if="item.label || item.logo || logoSrc" @click="handleClick">
         <a
             class="gate__link" 
             :href="item.document || item.href" 
