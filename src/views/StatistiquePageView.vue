@@ -1,6 +1,35 @@
 <template>
     <div>
         <h1>Analytics</h1>
+        <div class="date__filter">
+
+            <el-select v-model="establishment" size="large" class="space" placeholder="All Etablishment">
+                <el-option label="All Etablishment" value="" />
+                <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
+                    :value="item.id" />
+            </el-select>
+
+            <el-date-picker v-model="start_date" type="date" :size="'large'" class="space" />
+            <el-date-picker v-model="end_date" type="date" :size="'large'" />
+            <DropdownComponent :showTitle="false" class="dropdown w-full spaceSelect" :data="timePeriods" @submit="(timePeriod) => {
+                selectedTimePeriod = timePeriod
+            }" :default="timePeriods[0]" />
+
+        </div>
+        <div class="date__filter">
+            <el-select v-model="sourceFilter" size="large" class="space" placeholder="All Source">
+                <el-option label="All Source" value="" />
+                <el-option v-for="item in sources" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+            <el-select v-model="staffFilter" size="large" class="space" placeholder="All Staff">
+                <el-option label="All Staff" value="" />
+                <el-option v-for="item in staffs" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+            <el-select v-model="unitsFilter" size="large" class="space" placeholder="All Unit">
+                <el-option label="All Unit" value="" />
+                <el-option v-for="item in units" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+        </div>
         <div class="number">
             <div class="square bordure-bleu">
                 <h5><i class="uil uil-user"></i> <span>Total visits</span></h5>
@@ -16,38 +45,14 @@
             </div>
             <div class="square">
                 <h5 class="iconfy">
-                    <Icon icon="pepicons-pencil:hand-point" />
+                    <Icon icon="mdi:hand-tap" />
                     <span>Total social media clicks</span>
                 </h5>
                 <p>14</p>
             </div>
         </div>
 
-        <div class="date__filter">
 
-            <el-select v-model="establishment" size="large" class="space" placeholder="Choose etablishment">
-                <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
-                    :value="item.id" />
-            </el-select>
-
-            <el-date-picker v-model="start_date" type="date" :size="'large'" class="space" />
-            <el-date-picker v-model="end_date" type="date" :size="'large'" />
-            <DropdownComponent :showTitle="false" class="dropdown w-full spaceSelect" :data="timePeriods" @submit="(timePeriod) => {
-                    selectedTimePeriod = timePeriod
-                }" :default="timePeriods[0]" />
-
-        </div>
-        <div class="date__filter">
-            <el-select v-model="sourceFilter" size="large" class="space" placeholder="Choose source">
-                <el-option v-for="item in sources" :key="item.id" :label="item.name" :value="item.id" />
-            </el-select>
-            <el-select v-model="staffFilter" size="large" class="space" placeholder="Choose staff">
-                <el-option v-for="item in staffs" :key="item.id" :label="item.name" :value="item.id" />
-            </el-select>
-            <el-select v-model="unitsFilter" size="large" class="space" placeholder="Choose unit">
-                <el-option v-for="item in units" :key="item.id" :label="item.name" :value="item.id" />
-            </el-select>
-        </div>
         <div class="dashboard">
             <div class="statistique-left">
                 <ChartComponent />
@@ -69,7 +74,9 @@
             <div class="statistique-left ">
                 <PieChartReseauxSociaux />
             </div>
-
+            <div class="statistique-right ">
+                <PieChartService />
+            </div>
         </div>
     </div>
 </template>
@@ -154,6 +161,10 @@ const Chart4Component = defineAsyncComponent(() =>
 
 const PieChartReseauxSociaux = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/PieChartReseauxSociaux.vue")
+)
+
+const PieChartService = defineAsyncComponent(() =>
+    import("@Components/ChartStatistique/PieChartService.vue")
 )
 
 
@@ -265,6 +276,7 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
 <style>
 .iconfy{
     display: flex;
+    justify-content: center;
 }
 .iconify--pepicons-pencil{
     color: #000 !important;
