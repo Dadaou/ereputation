@@ -28,7 +28,7 @@
       </div>
       <div class="nav-dropdown">
         <div v-if="isFeedback" class="feedback__option">
-          <a v-if="establishments?.whatsapp == null" href="https://wa.me/message/IZFK26272CXFB1">
+          <a v-if="establishments?.whatsapp == null" href="https://wa.me/message/IZFK26272CXFB1" target="_blank">
             <i class="fa fa-whatsapp"></i>
           </a>
           <LanguageMenuDropdown :current="currentLanguage"
