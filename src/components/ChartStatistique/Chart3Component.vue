@@ -83,7 +83,7 @@ const loadData = async (start_date, end_date, timePeriods , establishment , staf
         api = api + `&staff=${units}`
     }
    
-    
+    console.log("api pour chart line" , api )
 
     try {
         const response = await new Promise((resolve) => {
