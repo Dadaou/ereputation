@@ -3,9 +3,8 @@
         <h1>Analytics</h1>
         <div class="number">
             <div class="square bordure-bleu">
-
                 <h5><i class="uil uil-user"></i> <span>Total visits</span></h5>
-                <p>{{nbrTotalVisit}}</p>
+                <p :class="nbrTotalVisit >= 0 ? 'texte-vert' : 'texte-rouge'">{{ nbrTotalVisit }}</p>
             </div>
             <div class="square square bordure-rouge">
                 <h5><i class="uil uil-times"></i> <span>Total not submitted</span></h5>
@@ -13,7 +12,7 @@
             </div>
             <div class="square bordure-vert">
                 <h5><i class="uil-envelope-send"></i> <span>Total submissions</span></h5>
-                <p>14</p>
+                <p :class="avisSoumis >= 0 ? 'texte-vert' : 'texte-rouge'">{{ avisSoumis }}</p>
             </div>
             <div class="square">
                 <h5 class="iconfy">
@@ -76,17 +75,17 @@
 </template>
 
 <script setup>
-import { ref, provide, onBeforeMount, inject, computed } from 'vue'
+import { ref, provide, onBeforeMount} from 'vue'
 import { Icon } from '@iconify/vue';
-import {defineAsyncComponent} from 'vue';
+import { defineAsyncComponent, watch } from 'vue';
 import { ElOption, ElSelect, ElDatePicker } from 'element-plus';
 import { useUserStore } from "@Stores/user.js"
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import services from '@Services/services.js';
 import { useRoute } from 'vue-router';
-import moment from 'moment';
 
-const nbrTotalVisit = ref(null) ;
+const nbrTotalVisit = ref(null);
+const avisSoumis = ref(null)
 const userStore = useUserStore();
 const timePeriods = ref(['daily', 'monthly', 'yearly']);
 
@@ -120,9 +119,10 @@ const staffFilter = ref(null);
 provide('staffFilter', staffFilter)
 
 const units = ref([])
-
 const unitsFilter = ref(null);
 provide('unitsFilter', unitsFilter)
+
+
 
 
 
@@ -158,17 +158,15 @@ const PieChartReseauxSociaux = defineAsyncComponent(() =>
 
 
 
-const totalVisit = async () => {
-   
+const totalVisit = async (type) => {
     try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`/customer/nombre/visitor/current/month?tag=${route.params.tag}`, (response) => {
+            services.get_Record(`/customer/visitor/indicator?tag=${route.params.tag}&type=${type || 'daily'}`, (response) => {
                 resolve(response);
             });
         });
         if (response.status === 200) {
-            console.log(response.data.nbr)
-            nbrTotalVisit.value = response.data.nbr || 0;
+            nbrTotalVisit.value = response.data || 0;
         } else {
         console.error('Error fetching data:', response);
         }
@@ -185,7 +183,6 @@ const loadStaff = async () => {
             });
         });
         if (response.status === 200) {
-            console.log(response.data)
             staffs.value = response.data
         } else {
             console.error('Error fetching data:', response);
@@ -203,7 +200,6 @@ const loadUnits = async () => {
             });
         });
         if (response.status === 200) {
-            console.log(response.data)
             units.value = response.data ;
         } else {
             console.error('Error fetching data:', response);
@@ -215,13 +211,51 @@ const loadUnits = async () => {
 
 
 
+const loadAvisSoumis = async (establishment, units, staff) => {
+    let api = `customer/visitor/reviews/comparaison?tag=${route.params.tag}`
+    if (establishment) {
+        api = api + `&establisment=${establishment}`
+    }
+    if (units) {
+        api = api + `&units=${units}`
+    }
+    if (staff) {
+        api = api + `&staff=${staff}`
+    }
+
+     console.log("api du comparaison " , api) ; 
+
+
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(api, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            console.log("avis soumis comparaison")
+            console.log(response.data)
+            avisSoumis.value = response.data.count || 0 ;
+        } else {
+            console.error('Error fetching data:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+
 onBeforeMount(async () => {
-    await totalVisit();
+    await totalVisit(selectedTimePeriod.value);
     await loadStaff();
     await loadUnits(); 
-    
+    await loadAvisSoumis(establishment.value, unitsFilter.value, unitsFilter.value);
 });
 
+watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
+    totalVisit(selectedTimePeriod.value);
+    loadAvisSoumis(establishment.value, unitsFilter.value , staffFilter.value)
+})
 
 
 
@@ -334,5 +368,12 @@ h1 {
     justify-content: space-around;
 }
 
+.texte-vert {
+    color: green !important;
+}
+
+.texte-rouge {
+    color: red !important;
+}
 
 </style>
