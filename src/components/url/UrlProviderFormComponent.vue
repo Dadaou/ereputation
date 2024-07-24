@@ -89,7 +89,7 @@
 <script setup>
 import { computed, defineAsyncComponent, ref, onBeforeMount, watch, inject } from 'vue'
 import { useUserStore } from "@Stores/user.js"
-import {ElMessage, ElTable, ElTableColumn, ElButton, ElInput, ElOption, ElSelect, ElPopconfirm } from 'element-plus'
+import { ElMessage, ElTable, ElTableColumn, ElButton, ElInput, ElOption, ElSelect, ElPopconfirm } from 'element-plus'
 import { useWindowSize } from '@vueuse/core';
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import services from '@Services/services.js';
@@ -128,9 +128,9 @@ const showModal = ref(false);
 const showLinkModal = ref(false);
 const providers = ref([]);
 const provider = ref(null)
-const categories = ref(['','Hashtag', 'Platform', 'Social'])
+const categories = ref(['', 'Hashtag', 'Platform', 'Social'])
 const category = ref('Platform')
-const sections = ref(['','MENUS', 'REVIEWS', 'OFFERS', 'INFOS', 'FOLLOW US'])
+const sections = ref(['', 'MENUS', 'REVIEWS', 'OFFERS', 'INFOS', 'FOLLOW US'])
 const section = ref('')
 const showSpinner = ref(false)
 const search = ref('')
@@ -177,7 +177,7 @@ const establishments = computed(() => {
             })
         });
     }
-    
+
     filteredData = filteredData.filter((data) => {
         return !search.value || data.name.toLowerCase().includes(search.value.toLowerCase())
     })
@@ -250,9 +250,13 @@ const urlPattern = (urlTemplate, extensions = ['fr', 'es', 'com']) => {
 };
 
 const splitUriAndUrl = (combinedString) => {
+
+
     if (combinedString !== '') {
         const urlPattern = /https?:\/\/\S+/;
         const match = combinedString.match(urlPattern);
+
+
 
         if (match) {
             const url = match[0];
@@ -260,20 +264,25 @@ const splitUriAndUrl = (combinedString) => {
 
             const urlObject = new URL(url);
             const baseUrl = urlObject.origin;
-
             return { uri, url, baseUrl };
         }
     }
-
     return { uri: combinedString, url: null, baseUrl: null };
 }
 
 
 const isValidUrl = (url, urlTemplate) => {
+    const langAccept = ['fr', 'mu']
+    const splitLink = link.value.split('/')
+    const existsInB = langAccept.some(item => splitLink.includes(item));
     const pattern = urlPattern(urlTemplate);
     let isValid = false
 
     if (pattern.test(url)) {
+        isValid = true;
+    }
+
+    if (existsInB) {
         isValid = true;
     }
 
@@ -344,7 +353,8 @@ const submit = async () => {
     }
 
     const data = {
-        value1: isHashtag.value ? getHashtagValue(link.value) : (urlObject ? getValueUrl(link.value, urlObject.url) : link.value),
+        // value1: isHashtag.value ? getHashtagValue(link.value) : (urlObject ? getValueUrl(link.value, urlObject.url) : link.value),
+        value1: link.value,
         provider: urlObject ? urlObject.uri : null,
         enable: true,
         section: section.value,
@@ -396,8 +406,8 @@ const submit = async () => {
             console.log(error)
         }
     }
-  
-    router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'urls_list'} });
+
+    router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'urls_list' } });
 }
 
 const resetValue = () => {
