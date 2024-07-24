@@ -165,10 +165,31 @@ onMounted(async () => {
 
 .top-row {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 3rem;
-   
+    gap: 5rem;
+}
+.bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.select_info,
+.date_pick,
+.number_days {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.catfiltre {
+    display: flex;
+    align-items: center;
+    flex: 0 1 44%; /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
+    max-width: 300px; /* Vous pouvez ajuster cette valeur selon vos besoins */
+    padding-right: 17px;
 }
 
 .or-text {
@@ -180,40 +201,9 @@ onMounted(async () => {
     font-size: 10px;
 }
 
-.bottom-row {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.05rem;
-    margin-left: 15px;
-}
-
- .date_pick, .number_days {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    max-width: 300px;
-}
-
-.select_info {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    max-width: 300px; 
-    
-}
-.catfiltre {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    max-width: 285px; 
-    
-}
-
 .custom-width {
     width: 100%;
 }
-
 @media (min-width: 1920px) {
     .filters {
     display: flex;
@@ -225,82 +215,154 @@ onMounted(async () => {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-    .filters>* {
-        display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    }
-
-    .top-row {
+.top-row {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     gap: 5rem;
-    margin-left: -2px;
 }
-
-    .bottom-row {
+.bottom-row {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     gap: 1rem;
 }
 
-.date_pick, .number_days {
+.select_info,
+.date_pick,
+.number_days {
     display: flex;
     align-items: center;
     flex: 1;
-    max-width: 450px; /* Adjust based on your design needs */
 }
 
-.select_info {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    max-width: 437px; /* Adjust based on your design needs */
-}
 .catfiltre {
     display: flex;
     align-items: center;
-    flex: 1;
-    max-width: 420px; /* Adjust based on your design needs */
-}
+    flex: 0 1 46%; /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
+    max-width: 600px; /* Vous pouvez ajuster cette valeur selon vos besoins */
+    padding-right: 17px;
 }
 
-@media (max-width: 768px) {
-    .top-row {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 5rem;
-        margin-left: -9px;
-    }
-
-    .bottom-row {
+.or-text {
     display: flex;
+    align-items: center;
     justify-content: center;
+    padding: 0 1rem;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+.custom-width {
+    width: 100%;
+}
+}
+
+@media (min-width: 501) and (max-width: 768px) {
+    .filters {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5rem;
+}
+.bottom-row {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 1rem;
 }
-.date_pick, .number_days {
+
+.select_info,
+.date_pick,
+.number_days {
     display: flex;
     align-items: center;
     flex: 1;
-    max-width: 450px; /* Adjust based on your design needs */
 }
 
-.select_info {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    max-width: 135px; /* Adjust based on your design needs */
-}
 .catfiltre {
     display: flex;
     align-items: center;
+    flex: 0 1 41%; /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
+    max-width: 300px; /* Vous pouvez ajuster cette valeur selon vos besoins */
+    padding-right: 17px;
+}
+
+.or-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+.custom-width {
+    width: 100%;
+}
+}
+
+@media (max-width: 500px) {
+    .filters {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5rem;
+}
+.bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.select_info,
+.date_pick,
+.number_days {
+    display: flex;
+    align-items: center;
     flex: 1;
-    max-width: 118px; /* Adjust based on your design needs */
+}
+
+.catfiltre {
+    display: flex;
+    align-items: center;
+    flex: 0 1 38.5%; /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
+    max-width: 300px; /* Vous pouvez ajuster cette valeur selon vos besoins */
+    padding-right: 17px;
+}
+
+.or-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+.custom-width {
+    width: 100%;
 }
 }
 </style>
