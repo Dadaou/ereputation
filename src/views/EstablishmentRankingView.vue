@@ -23,7 +23,7 @@
     <div class="society__list mt-5" v-if="establishments.length > 0">
         <suspense>
             <div class="establishment-rank-view">
-                <establishments-list-component :establishments="establishments" :tag='customerTag' :showReviewsHeader="true" :type="type" />
+                <establishments-list-component :establishments="establishments" :tag='customerTag' :showReviewsHeader="true" />
             </div>
             <template #fallback>
                 <establishment-list-loaded-component :nb="3" />
