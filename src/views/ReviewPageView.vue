@@ -381,8 +381,14 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
 
     if (isValueOkay(starParams)) {
         starQueryPart = `&star=${starParams} stars`;
+        
     } else if (isValueOkay(stars)) {
         starQueryPart = `&star=${stars}`;
+       
+    }
+
+    if(route.query.stars){
+        apiParams += `&via=myqrcode`;
     }
 
     if (starQueryPart) {
