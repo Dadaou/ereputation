@@ -347,6 +347,59 @@ onMounted(async () => {
 .catfiltre {
     display: flex;
     align-items: center;
+    flex: 0 1 39.5%; /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
+    max-width: 300px; /* Vous pouvez ajuster cette valeur selon vos besoins */
+    padding-right: 17px;
+}
+
+.or-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+.custom-width {
+    width: 100%;
+}
+}
+@media (min-width: 400px) and (max-width: 415px) {
+    .filters {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5rem;
+}
+.bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.select_info,
+.date_pick,
+.number_days {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.catfiltre {
+    display: flex;
+    align-items: center;
     flex: 0 1 38.5%; /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
     max-width: 300px; /* Vous pouvez ajuster cette valeur selon vos besoins */
     padding-right: 17px;
