@@ -395,6 +395,7 @@ const redirectToReviews = (star,id) =>{
 
     .society__location {
         display: flex;
+        width: 180px;
     }
 
     .society__location span {

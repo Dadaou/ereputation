@@ -76,6 +76,10 @@ const arrondirRatio = (ratio)=>{
       align-content: flex-start;
     }
 
+    .rating__observation{
+      text-align: center;
+    }
+
     .ratio{
       font-size: 11px;
       font-weight: 500;
@@ -97,6 +101,7 @@ const arrondirRatio = (ratio)=>{
         font-weight: 500 !important;
         font-size: 11px;
         display: block;
+        text-align: center;
         
     }
 
@@ -170,6 +175,11 @@ const arrondirRatio = (ratio)=>{
       opacity: 1;
     }
     @media (max-width: 768px) {
+      .mb-2 {
+    margin-top: 10px;
+    margin-bottom: 0.5rem;
+    text-align: right
+}
       .society__rating{
         display: flex;
         align-items: center;
@@ -177,7 +187,7 @@ const arrondirRatio = (ratio)=>{
         margin-left: -90px;
     }
   }
-  @media (min-width: 376px) and (max-width: 420px) {
+  @media (max-width: 420px) {
       .society__rating{
         display: flex;
         align-items: center;
@@ -192,6 +202,21 @@ const arrondirRatio = (ratio)=>{
     }
   }
  
+  @media (min-width: 383px) and (max-width: 390px) {
+      .society__rating{
+        display: flex;
+        align-items: center;
+        margin-top: -5px;
+        margin-left: -120px;
+        padding-right: 60px;
+    }
+    .reviews{
+        font-size: 11px;
+        margin-left: -20px;
+        
+    }
+  }
+
   @media (max-width: 375px) {
       .society__rating{
         display: flex;
