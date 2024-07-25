@@ -666,10 +666,10 @@ const loadAnalysisData = async (tag, dateStart, dateEnd, categories) => {
             if (window.innerWidth <= 975) {
                 new_width = totalLabels * 5 * response.data.datasets.length;
             } else {
-                new_width = totalLabels * 2 * response.data.datasets.length;
+                new_width = totalLabels * 5 * response.data.datasets.length;
             }
-            containerBody.style.width = `${new_width}vw`
-            containerBody2.style.width = `${new_width}vw`
+            containerBody.style.width = `${new_width}px`
+            containerBody2.style.width = `${new_width}px`
             
         } else {
             containerBody.style.width = '';
@@ -1029,6 +1029,10 @@ const  widthimage = (event) => {
 }
 </script>
 <style scoped>
+.containerBody,
+.containerBody2 {
+    min-width: 800px !important;
+}
 @media screen and (min-width: 540px) and (max-width: 975px) {
 
     .establishment__info_tablet{
