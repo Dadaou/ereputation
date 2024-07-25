@@ -108,9 +108,9 @@
                 selectedCompetitors = competitor.name
             }" :defaultObj="computedCompetitors[0]" :isDataObject="true" />
         <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform"
-            placeholder="Select a website" :data="websites" @submit="(website) => {
+            placeholder="Select a website" :data="formattedWebsites" @submit="(website) => {
                 selectedWebsites = website
-            }" :default="websites[0]" />
+            }" :default="formattedWebsites[0]" />
         <DropdownComponent :showTitle="false" class="dropdown w-full" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
             selectedTimePeriod = timePeriod
         }" :default="timePeriods[0]" />
@@ -224,9 +224,9 @@
                     selectedCompetitors = competitor.name
                 }" :defaultObj="computedCompetitors[0]" :isDataObject="true" />
             <DropdownComponent class="dropdown" title="Filter by plateform" placeholder="Select a website"
-                :data="websites" @submit="(website) => {
+                :data="formattedWebsites" @submit="(website) => {
                     selectedWebsites = website
-                }" :default="websites[0]" />
+                }" :default="formattedWebsites[0]" />
             <div class="date__filter">
                 <div class="text-sm title">Select a date range</div>
                 <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
@@ -333,6 +333,14 @@ const companiesStore = useCompanyStore();
 let selectedCompetitors = ref('Global');
 let selectedWebsites = ref('Global');
 let websites = ref(['Global']);
+
+const formatString = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+const formattedWebsites = computed(() => {
+    return websites.value.map(website => formatString(website));
+});
 
 let establishment = ref({ reviews: [] });
 let competitors = ref([]);
