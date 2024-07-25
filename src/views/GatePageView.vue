@@ -74,7 +74,7 @@ const links = ref(null);
 
 const categories = ref([
     { value: "menus", label: "Menus", active: false, icon: "uim:th-large" },
-    { value: "reviews", label: "Reviews", active: false, icon: "uil:star" },
+    { value: "reviews", label: "Reviews & Feedbacks", active: false, icon: "uil:star" },
     { value: "offers", label: "Offers", active: false, icon: "bi:tags" },
     { value: "infos", label: "Infos", active: false, icon: "uil:info-circle" },
     { value: "follow", label: "Follow us", active: false, icon: "uil:heart-alt" }
