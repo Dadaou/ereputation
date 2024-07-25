@@ -9,6 +9,11 @@
                     <span>{{ item.label }}</span>
                 </button>
                 <div class="panel" v-if="item.active">
+                    <div class="whatsapplink">
+                        <a v-if="establishment.whatsapp" :href="`${establishment.whatsapp}`" target="_blank">
+                        <i class="fa fa-whatsapp"></i>
+                        </a>
+                    </div>
                     <div v-if="category == 'reviews'"
                         class="list__container grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 xl:grid-cols-10">
                         <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in establishmentLink"
@@ -69,7 +74,7 @@ const appStore = useAppStore();
 const category = ref('reviews');
 let media = [];
 const baseurl = window.location.origin;
-
+const establishement = ref(null)
 const links = ref(null);
 
 const categories = ref([
@@ -243,6 +248,11 @@ onMounted(() => {
 
 </script>
 <style scoped>
+.whatsapplink .fa-whatsapp  {
+    font-size: 200%;
+    padding-top: 20px;
+    color: rgb(31, 218, 31);
+}
 .feedback__form {
     width: 50%;
     margin: 3rem auto;
@@ -427,6 +437,11 @@ img {
     overflow: hidden;
 }
 
+.panel a {
+    width: 10px;
+    background-color: #f9f9f9;
+    overflow: hidden;
+}
 .gate__menu {
     display: flex;
     flex-direction: row;

@@ -47,8 +47,7 @@ export const useAdvantageStore = defineStore('advantage', {
         data = response.data.filter((i) => {
           return (
             isDateNotExpired(i.expired_at) &&
-            i.enable == true &&
-            i.establishment_tag == establishment
+            i.enable == true
           )
         })
       }
