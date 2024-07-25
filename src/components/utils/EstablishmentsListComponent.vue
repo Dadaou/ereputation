@@ -408,6 +408,11 @@ const redirectToReviews = (star,id) =>{
     }
 }
 
+@media (max-width: 380px) {
+    .society__location {
+        width: 180px;
+    }
+  }
 .smallClass{
     width: auto! important;
     height: 100%! important;

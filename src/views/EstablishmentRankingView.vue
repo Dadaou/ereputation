@@ -202,7 +202,14 @@ onMounted(async () => {
 }
 
 @media (max-width: 768px) {
-	.row {
+	.select_info {
+	display: flex;
+	align-items: center;
+	flex-grow: 1;
+	max-width: 318px;
+	margin-right: 10px;
+}
+    .row {
         flex-direction: column;
     }
     .filters>* {
@@ -250,4 +257,117 @@ onMounted(async () => {
 }
 }
 
+@media (min-width: 376px) and (max-width: 500px) {
+	.select_info {
+	display: flex;
+	align-items: center;
+	flex-grow: 1;
+	max-width: 318px;
+	margin-right: 10px;
+}
+    .row {
+        flex-direction: column;
+    }
+    .filters>* {
+        flex-basis: 100%;
+        margin-bottom: 10px;
+        width: 500px;
+        gap: 0.5rem;
+		margin-left: 200px;
+    }
+	.establishment-rank-view ::v-deep .reviews-count {
+  display: flex;
+  padding: 8px;
+  border-radius: 5px;
+  margin-top: 20px;
+  margin-right: 90px;
+  margin-left: -16px;
+  
+}
+
+.establishment-rank-view ::v-deep .review-box {
+  display: flex;
+  align-items: center;
+  background: #F5F5F5;
+  padding: 0px;
+  border-radius: 5px;
+  margin-left: 3px;
+  width: 39px;
+
+}
+
+.establishment-rank-view ::v-deep .score {
+    font-weight: bold;
+    margin-right: 0px;
+	margin-top: 0px;
+}
+
+.establishment-rank-view ::v-deep .fa-star {
+	margin-top: 1px;
+}
+
+.establishment-rank-view ::v-deep .list__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 0px;
+	margin-top: 18px;
+}
+}
+
+@media (max-width: 375px) {
+	.select_info {
+	display: flex;
+	align-items: center;
+	flex-grow: 1;
+	max-width: 318px;
+	margin-right: 10px;
+}
+    .row {
+        flex-direction: column;
+    }
+    .filters>* {
+        flex-basis: 100%;
+        margin-bottom: 10px;
+        width: 500px;
+        gap: 0.5rem;
+		margin-left: 200px;
+    }
+	.establishment-rank-view ::v-deep .reviews-count {
+  display: flex;
+  padding: 8px;
+  border-radius: 5px;
+  margin-top: 20px;
+  margin-right: 90px;
+  margin-left: -16px;
+  
+}
+
+.establishment-rank-view ::v-deep .review-box {
+  display: flex;
+  align-items: center;
+  background: #F5F5F5;
+  padding: 0px;
+  border-radius: 5px;
+  margin-left: 3px;
+  width: 39px;
+
+}
+
+.establishment-rank-view ::v-deep .score {
+    font-weight: bold;
+    margin-right: 0px;
+	margin-top: 0px;
+}
+
+.establishment-rank-view ::v-deep .fa-star {
+	margin-top: 1px;
+}
+
+.establishment-rank-view ::v-deep .list__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 0px;
+	margin-top: 18px;
+}
+}
 </style>
