@@ -224,6 +224,7 @@ onBeforeMount(async () => {
                 title2: establishment.value['name'],
                 icon: "uil-estate"
             });
+            appStore.setEstablishement(response["data"])
         }
     }, true);
 

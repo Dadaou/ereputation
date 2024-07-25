@@ -14,6 +14,7 @@ export const useAppStore = defineStore('app', () => {
   const customerLogo = ref(null)
   const mustRefresh = ref(false)
   const header = ref(true)
+  const establishement = ref(null)
 
   const setBreadcrumbs = (values) => {
     breadcrumbs.value = values
@@ -67,6 +68,14 @@ export const useAppStore = defineStore('app', () => {
     account.value = value
   }
 
+  const setEstablishement = (value) =>{
+    establishement.value = value
+  }
+
+  const getEstablishement = async () =>{
+    return establishement.value
+  }
+
   return {
     start_date,
     end_date,
@@ -84,6 +93,8 @@ export const useAppStore = defineStore('app', () => {
     setAccount,
     setDatesValue,
     setCustomerLogo,
-    getCustomerLogo
+    getCustomerLogo,
+    setEstablishement,
+    getEstablishement
   }
 })

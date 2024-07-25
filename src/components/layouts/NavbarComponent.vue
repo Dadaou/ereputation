@@ -28,7 +28,10 @@
       </div>
       <div class="nav-dropdown">
         <div v-if="isFeedback" class="feedback__option">
-          <a v-if="establishments?.whatsapp == null" href="https://wa.me/message/IZFK26272CXFB1" target="_blank">
+          <a v-if="establishement?.whatsapp == null" href="https://wa.me/message/IZFK26272CXFB1" target="_blank">
+            <i class="fa fa-whatsapp"></i>
+          </a>
+          <a v-else :href="establishement?.whatsapp" target="_blank">
             <i class="fa fa-whatsapp"></i>
           </a>
           <LanguageMenuDropdown :current="currentLanguage"
@@ -99,7 +102,7 @@ const nav__container__ref = ref(null);
 const isScrolling = ref(false);
 const show_menu = ref(false);
 const logo = ref(null)
-
+const establishement = ref(null)
 const props = defineProps({
   isPublic: {
     type: Boolean,
@@ -231,6 +234,10 @@ onBeforeMount(async () => {
   else show_menu.value = false;
   if (route.params.tag) {
     logo.value = await appStore.getCustomerLogo(route.params.tag)
+    var est = appStore.getEstablishement()
+    est.then((result)=>{
+      establishement.value = result
+    })
   }
 });
 </script>
