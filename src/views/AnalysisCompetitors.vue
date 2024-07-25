@@ -601,8 +601,8 @@ onMounted(async () => {
         establishment.value['tag'] = companyId.value;
         appStore.setCurrentPage({
             title1: "",
-            title2: establishment.value.name,
-            icon: "uil-estate"
+            title2: "Analysis",
+            icon: "uil-analytics"
         });
 
         appStore.setBreadcrumbs([
@@ -611,6 +611,11 @@ onMounted(async () => {
                 path: `${route.path}`,
                 isCurrent: true,
             },
+            {
+                title: "Analysis",
+                path: `${route.path}`,
+                isCurrent: true
+            }
         ]);
 
         await globalComparison(establishment.value, companyId.value, start_date.value, end_date.value, selectedWebsites.value, '', language.value, selectedCompetitors.value, selectedTimePeriod.value);
