@@ -39,7 +39,7 @@
 
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
-                    
+
                     <div class="reviews__content">
                         <div class="reviews__pagination">
                             <PaginationComponent :options="optionsReview" v-if="visibleData.length > 0" @next="(option) => {
@@ -172,13 +172,13 @@
 
             <el-date-picker v-model="end_date" placeholder="End date" :size="'large'" />
         </div>
-        <div class="px-2 w-full my-2" v-if="activeName !== 'analysis_competitors'" >
-            <el-select v-model=" categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
-            :max-collapse-tags="3" placeholder="select categories" size="large">
-            <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
-                :disabled="categoryFilters.length > 1 && !categoryFilters.includes('all')" />
-            <el-option v-for="(item, index) in categories" :key="index" :label="item.category" :value="item.category"
-                @click="handleCategoryDropdown('other')" />
+        <div class="px-2 w-full my-2" v-if="activeName !== 'analysis_competitors'">
+            <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
+                :max-collapse-tags="3" placeholder="select categories" size="large">
+                <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
+                    :disabled="categoryFilters.length > 1 && !categoryFilters.includes('all')" />
+                <el-option v-for="(item, index) in categories" :key="index" :label="item.category"
+                    :value="item.category" @click="handleCategoryDropdown('other')" />
             </el-select>
         </div>
     </div>
@@ -205,7 +205,8 @@
         </div>
         <div class="photo" v-if="!dataLoading">
             <div v-if="establishment.url_source !== null" class="establishment__img">
-                <img :src="establishment.url_source" alt="" :class="widthimage(establishment.url_source)" id="logoimagemobile"/>
+                <img :src="establishment.url_source" alt="" :class="widthimage(establishment.url_source)"
+                    id="logoimagemobile" />
             </div>
             <div v-else role="status"
                 class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
@@ -236,7 +237,8 @@
             class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" v-if="!dataLoading">
                 <div v-if="establishment.url_source !== null" class="establishment__img">
-                    <img :src="establishment.url_source" alt="" :class="widthimage(establishment.url_source)"  id="logoimage"/>
+                    <img :src="establishment.url_source" alt="" :class="widthimage(establishment.url_source)"
+                        id="logoimage" />
                 </div>
                 <div v-else role="status"
                     class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
@@ -305,7 +307,7 @@
             }" :default="timePeriods[0]" /> -->
         </div>
 
-        <CommunityFeedbackComponent v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' "
+        <CommunityFeedbackComponent v-if="activeName !== 'trends' && activeName !== 'analysis_competitors'"
             :reviewFeedbackData="services.getScoreColor(avgScore)" />
         <el-tooltip ref="tooltipRef" :visible="desc.visible" :virtual-ref="buttonRef" virtual-triggering
             popper-class="singleton-tooltip" placement="top">
@@ -313,7 +315,7 @@
                 <span> {{ desc.text }} </span>
             </template>
         </el-tooltip>
-        <BaseLegend v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' "
+        <BaseLegend v-if="activeName !== 'trends' && activeName !== 'analysis_competitors'"
             :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData" :alignment="'vertical'">
         </BaseLegend>
     </div>
@@ -677,7 +679,7 @@ const loadAnalysisData = async (tag, dateStart, dateEnd, categories) => {
             }
             containerBody.style.width = `${new_width}px`
             containerBody2.style.width = `${new_width}px`
-            
+
         } else {
             containerBody.style.width = '';
             containerBody2.style.width = '';
@@ -729,6 +731,7 @@ const transformData = (chartData) => {
     }
 
     let score = 0;
+    let scoreLength = 0;
 
     //rating chart
     let plotData2 = {
@@ -767,7 +770,11 @@ const transformData = (chartData) => {
                 color: color
             })
         }
-        score = + avg_score;
+
+        if (avg_score != 0) {
+            scoreLength++;
+            score += avg_score;
+        }
 
         legends.push({
             label: label,
@@ -779,8 +786,7 @@ const transformData = (chartData) => {
 
     ratingChart.value = plotData2;
     confidenceChart.value = plotData1;
-    score = score / datasets.length;
-    avgScore.value = score;
+    avgScore.value = score / scoreLength;
 
     if (legends.length > 0) {
         legendData.value = []
@@ -798,6 +804,7 @@ const transformData = (chartData) => {
         });
     }
 }
+
 
 let _reviews = ref([]);
 let dataReviews = ref([]);
@@ -832,7 +839,7 @@ let updateVisibleData = function (_data, isStarFilter = false) {
 }
 let selectedStars = ref('0');
 const starFilter = (star) => {
-    selectedStars.value = star; 
+    selectedStars.value = star;
 };
 
 
@@ -894,7 +901,7 @@ onBeforeMount(async () => {
             appStore.isLoading = false;
         }
         else {
-            establishment.value = data;         
+            establishment.value = data;
             appStore.setCurrentPage({
                 title1: "",
                 title2: "Analysis",
@@ -921,7 +928,6 @@ onBeforeMount(async () => {
     })
     await loadCategories(companyId)
     await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
-    await loadSalesAnalysisData(companyId, start_date.value, end_date.value)
     await loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value)
     appStore.isLoading = false;
 
@@ -930,64 +936,64 @@ onBeforeMount(async () => {
 /**
  * obtenir width image from url
  */
- const getMeta = (url, cb) => {
-  const img = new Image();
-  img.onload = () => cb(null, img);
-  img.onerror = (err) => cb(err);
-  img.src = url;
+const getMeta = (url, cb) => {
+    const img = new Image();
+    img.onload = () => cb(null, img);
+    img.onerror = (err) => cb(err);
+    img.src = url;
 };
 
 /** Fonction widthimage pour savoir le width 
  * @param event 
 */
-const  widthimage = (event) => {
+const widthimage = (event) => {
     // Loadging establishment__img
-    if(event != undefined){
+    if (event != undefined) {
         var imgmobile = document.getElementById("logoimagemobile");
-        if(imgmobile !== null){
+        if (imgmobile !== null) {
             imgmobile.classList.add("fade-in");
         }
         document.getElementsByClassName("establishment__img").innerText = "Loading image...";
-        return getMeta(event,(err, img) =>{
+        return getMeta(event, (err, img) => {
             //if(img!=null){
-                const heightresize = 160; //hauteur div pour l'image
-                var aspectRatio = img.naturalWidth / img.naturalHeight;
-                var newWidth = 0;
-                if(aspectRatio == 1){
-                    // ici carre
-                    newWidth =heightresize;
-                }else{
-                    newWidth =heightresize * aspectRatio;
-                }   
-                let classy =   (newWidth>240)? "largeClass" : "smallClass";
-                // pour le desktop
-                var elem = document.getElementById("logoimage");
-                elem.classList.add("fade-in");
+            const heightresize = 160; //hauteur div pour l'image
+            var aspectRatio = img.naturalWidth / img.naturalHeight;
+            var newWidth = 0;
+            if (aspectRatio == 1) {
+                // ici carre
+                newWidth = heightresize;
+            } else {
+                newWidth = heightresize * aspectRatio;
+            }
+            let classy = (newWidth > 240) ? "largeClass" : "smallClass";
+            // pour le desktop
+            var elem = document.getElementById("logoimage");
+            elem.classList.add("fade-in");
+            setTimeout(() => {
+                elem.classList.add('show');
+                elem.style.display = "block";
+            }, 10);
+            elem.classList.add(classy);
+            elem.src = event;
+            //new Promise(resolve=>{elem.onload = resolve})
+
+            //pour le mobile
+            var elemmob = document.getElementById("logoimagemobile");
+            if (elemmob !== null) {
+                elemmob.classList.add(classy);
+
+                elemmob.src = event;
+                // Ajouter la classe 'show' pour déclencher l'animation de fondu en entrée
                 setTimeout(() => {
-                    elem.classList.add('show');
-                    elem.style.display="block";
-                    }, 10);
-                elem.classList.add(classy);
-                elem.src = event;
-                //new Promise(resolve=>{elem.onload = resolve})
-            
-                //pour le mobile
-                var elemmob = document.getElementById("logoimagemobile");
-                if(elemmob !== null){
-                    elemmob.classList.add(classy);
-                    
-                    elemmob.src=event;
-                    // Ajouter la classe 'show' pour déclencher l'animation de fondu en entrée
-                    setTimeout(() => {
-                        
-                        elemmob.classList.add('show');
-                        elemmob.style.display = "block";
-                    }, 10);
-                }
-                
-                return "OK";
+
+                    elemmob.classList.add('show');
+                    elemmob.style.display = "block";
+                }, 10);
+            }
+
+            return "OK";
             //}
-            
+
         });
     }
 }
@@ -995,35 +1001,40 @@ const  widthimage = (event) => {
 <style scoped>
 .containerBody,
 .containerBody2 {
-    min-width: 800px !important;
+    min-width: 100% !important;
 }
+
 @media screen and (min-width: 540px) and (max-width: 975px) {
 
-    .establishment__info_tablet{
-        margin-top:50px! important;
+    .establishment__info_tablet {
+        margin-top: 50px ! important;
     }
-    .smallClass{
-        margin-top:10px! important;
-        margin-bottom:10px;
+
+    .smallClass {
+        margin-top: 10px ! important;
+        margin-bottom: 10px;
     }
-    .largeClass{
-        margin-top:10px! important;
-        margin-bottom:10px;
+
+    .largeClass {
+        margin-top: 10px ! important;
+        margin-bottom: 10px;
     }
 }
 
-@media screen  and (max-width: 520px) {
+@media screen and (max-width: 520px) {
 
-    .establishment__info_tablet{
-        margin-top:50px! important;
+    .establishment__info_tablet {
+        margin-top: 50px ! important;
     }
-    .smallClass{
-        margin-top:60px! important;
-        margin-bottom:10px;
+
+    .smallClass {
+        margin-top: 60px ! important;
+        margin-bottom: 10px;
     }
-    .largeClass{
-        margin-top:60px! important;
-        margin-bottom:10px;
+
+    .largeClass {
+        margin-top: 60px ! important;
+        margin-bottom: 10px;
     }
 }
 
@@ -1049,7 +1060,7 @@ const  widthimage = (event) => {
 .legend {
     border: 1px solid var(--light-color-bg2);
     border-radius: 10px;
-    height:auto;
+    height: auto;
     padding: 15px;
     margin: 15px auto;
     margin-top: 15px !important;
@@ -1111,26 +1122,30 @@ p {
 }
 
 
-.smallClass{
-    width: auto! important;
-    height: 100%! important;
+.smallClass {
+    width: auto ! important;
+    height: 100% ! important;
 
 }
-.establishment__img{
-    display:flex;
-    justify-content:center;
+
+.establishment__img {
+    display: flex;
+    justify-content: center;
     height: 160px;
-    align-items:center;
+    align-items: center;
 }
-.largeClass{
-    width: 100%! important;
-    height: auto! important;
+
+.largeClass {
+    width: 100% ! important;
+    height: auto ! important;
 
 }
+
 .fade-in {
     opacity: 0;
     transition: opacity 1s ease-in;
 }
+
 .fade-in.show {
     opacity: 1;
 }
