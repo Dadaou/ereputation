@@ -777,17 +777,8 @@ const transformData = (chartData) => {
         })
     })
 
-    console.log("************ Dataset ***********")
-
-    console.log(datasets)
-
-    console.log("********************************")
-
     ratingChart.value = plotData2;
     confidenceChart.value = plotData1;
-    // score = score / datasets.length;
-    console.log("total score: ", score)
-    console.log("nombre scores: ", scoreLength)
     avgScore.value = score / scoreLength;
 
     if (legends.length > 0) {
