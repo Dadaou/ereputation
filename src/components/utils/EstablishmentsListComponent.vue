@@ -38,7 +38,6 @@
                                         <span>{{ company.address1 }}, {{ company.city }}</span>
                                     </div>
                                     <div class="reviews-count">
-                                        <h2 v-if="showReviewsHeader">Reviews:</h2>
                                         <div class="review-box" v-if="company.reviews_count" v-for="(count, stars) in sortedReviews(company.reviews_count)" :key="stars" @click="redirectToReviews(stars, company.competitor_tag)">
                                             <span class="score">{{ stars }}</span><i class="fa fa-star " aria-hidden="true"></i>: {{ count }} 
                                         </div>
@@ -101,10 +100,6 @@ const props = defineProps({
         type: String,
         required: true
     },
-    showReviewsHeader: {
-        type: Boolean,
-        default: false
-    }
 
 });
 

@@ -23,7 +23,7 @@
     <div class="society__list mt-5" v-if="establishments.length > 0">
         <suspense>
             <div class="establishment-rank-view">
-                <establishments-list-component :establishments="establishments" :tag='customerTag' :showReviewsHeader="true" />
+                <establishments-list-component :establishments="establishments" :tag='customerTag' />
             </div>
             <template #fallback>
                 <establishment-list-loaded-component :nb="3" />
@@ -281,7 +281,7 @@ onMounted(async () => {
   border-radius: 5px;
   margin-top: 20px;
   margin-right: 90px;
-  margin-left: -16px;
+  margin-left: -10px;
   
 }
 
@@ -292,7 +292,7 @@ onMounted(async () => {
   padding: 0px;
   border-radius: 5px;
   margin-left: 3px;
-  width: 39px;
+  width: 45px;
 
 }
 
@@ -398,7 +398,7 @@ onMounted(async () => {
     }
 .establishment-rank-view ::v-deep .reviews{
         font-size: 11px;
-        margin-left: -20px;
+        margin-left: 0px;
         
     }
   }
@@ -413,9 +413,28 @@ onMounted(async () => {
     }
 .establishment-rank-view ::v-deep .reviews{
         font-size: 11px;
-        margin-left: -20px;
+        margin-left: 5px;
         
     }
+    .establishment-rank-view ::v-deep .reviews-count {
+  display: flex;
+  padding: 8px;
+  border-radius: 5px;
+  margin-top: 20px;
+  margin-right: 90px;
+  margin-left: -10px;
+  
+}
+.establishment-rank-view ::v-deep .review-box {
+  display: flex;
+  align-items: center;
+  background: #F5F5F5;
+  padding: 0px;
+  border-radius: 5px;
+  margin-left: 4px;
+  width: 42px;
+
+}
   }
 
 </style>
