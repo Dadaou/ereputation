@@ -9,13 +9,13 @@
                     <span>{{ item.label }}</span>
                 </button>
                 <div class="panel" v-if="item.active">
-                    <div v-if="category == 'reviews'" class="whatsapplink">
-                        <a v-if="establishment.whatsapp" :href="`${establishment.whatsapp}`" target="_blank">
-                        <i class="fa fa-whatsapp"></i>
-                        </a>
-                    </div>
                     <div v-if="category == 'reviews'"
                         class="list__container grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 xl:grid-cols-10">
+                        <div v-if="category == 'reviews'" class="whatsapplink">
+                            <a v-if="establishment.whatsapp" :href="`${establishment.whatsapp}`" target="_blank">
+                                <i class="fa fa-whatsapp"></i>
+                            </a>
+                        </div>
                         <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in establishmentLink"
                             :item="element" type="Establishment" :key="index" />
                         <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in staffLinks"
@@ -248,11 +248,35 @@ onMounted(() => {
 
 </script>
 <style scoped>
-.whatsapplink .fa-whatsapp  {
-    font-size: 200%;
-    padding-top: 20px;
-    color: rgb(31, 218, 31);
+.whatsapplink {
+  position: relative; /* Centre verticalement */
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1/1;
+  border-radius: 5px;
+  border: 1px solid rgba(220, 220, 220, .4);
+  cursor: pointer;
+  padding: 8px;
+  transition: all .5s linear;
+  background: white;
 }
+
+.whatsapplink:hover {
+    transform: scale(1.12);
+    border: 1px solid var(--color-primary);
+    transition: all .5s ease-out;
+
+}
+
+.fa-whatsapp {
+  position: absolute;
+  top: 50%; /* Positionne l'image au milieu verticalement */
+  left: 50%;
+  color: #25D366; /* Couleur verte pour l'icône WhatsApp */
+  font-size: 4.5rem; /* Ajustez la taille de l'icône selon vos besoins */
+  transform: translate(-50%, -50%); /* Centre l'image exactement */
+}
+
 .feedback__form {
     width: 50%;
     margin: 3rem auto;
@@ -481,4 +505,5 @@ img {
     justify-content: center;
     color: #333;
 }
+
 </style>
