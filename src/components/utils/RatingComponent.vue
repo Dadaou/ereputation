@@ -187,49 +187,6 @@ const arrondirRatio = (ratio)=>{
         margin-left: -90px;
     }
   }
-  @media (max-width: 420px) {
-      .society__rating{
-        display: flex;
-        align-items: center;
-        margin-top: -5px;
-        margin-left: -90px;
-        padding-right: 50px;
-    }
-    .reviews{
-        font-size: 11px;
-        margin-left: -20px;
-        
-    }
-  }
  
-  @media (min-width: 383px) and (max-width: 390px) {
-      .society__rating{
-        display: flex;
-        align-items: center;
-        margin-top: -5px;
-        margin-left: -120px;
-        padding-right: 60px;
-    }
-    .reviews{
-        font-size: 11px;
-        margin-left: -20px;
-        
-    }
-  }
-
-  @media (max-width: 375px) {
-      .society__rating{
-        display: flex;
-        align-items: center;
-        margin-top: -5px;
-        margin-left: -120px;
-        padding-right: 60px;
-    }
-    .reviews{
-        font-size: 11px;
-        margin-left: -20px;
-        
-    }
-  }
 
 </style>
