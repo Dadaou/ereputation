@@ -1001,7 +1001,7 @@ const widthimage = (event) => {
 <style scoped>
 .containerBody,
 .containerBody2 {
-    min-width: 800px !important;
+    min-width: 100% !important;
 }
 
 @media screen and (min-width: 540px) and (max-width: 975px) {
