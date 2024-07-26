@@ -9,7 +9,7 @@
                     <span>{{ item.label }}</span>
                 </button>
                 <div class="panel" v-if="item.active">
-                    <div class="whatsapplink">
+                    <div v-if="category == 'reviews'" class="whatsapplink">
                         <a v-if="establishment.whatsapp" :href="`${establishment.whatsapp}`" target="_blank">
                         <i class="fa fa-whatsapp"></i>
                         </a>
