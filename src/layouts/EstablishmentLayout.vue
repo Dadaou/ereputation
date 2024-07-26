@@ -228,15 +228,21 @@ const customerTag = inject('tag');
     display: none !important;
 }
 
-@media screen and (min-width: 1439px) and (max-width: 2559px) {
+@media screen and (min-width: 1441px) and (max-width: 2559px) {
     .left__side {
         width: 73.5%;
+    }
+    .right__side {
+        margin-top: 11px;
     }
 }
 
 @media screen and (max-width:1440px) {
     .left__side {
         width: 70%;
+    }
+    .right__side {
+        margin-top: 9px;
     }
 
     .right__side {

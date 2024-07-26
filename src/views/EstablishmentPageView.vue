@@ -1092,11 +1092,17 @@ onBeforeMount(async () => {
 img {
     height: 200px;
 }
+@media screen and (max-width:2000px) {
+
+.dashboard__content {
+    margin-top: 12px;
+}
+}
 
 @media screen and (max-width:1440px) {
 
     .dashboard__content {
-        margin-top: 15px;
+        margin-top: 8px;
     }
 }
 
