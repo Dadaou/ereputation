@@ -370,4 +370,52 @@ onMounted(async () => {
 	margin-top: 18px;
 }
 }
+
+
+
+@media (max-width: 420px) {
+.establishment-rank-view ::v-deep .society__rating{
+        display: flex;
+        align-items: center;
+        margin-top: -5px;
+        margin-left: -90px;
+        padding-right: 50px;
+    }
+.establishment-rank-view ::v-deep.reviews{
+        font-size: 11px;
+        margin-left: -20px;
+        
+    }
+  }
+ 
+  @media (min-width: 383px) and (max-width: 390px) {
+.establishment-rank-view ::v-deep .society__rating{
+        display: flex;
+        align-items: center;
+        margin-top: -5px;
+        margin-left: -120px;
+        padding-right: 60px;
+    }
+.establishment-rank-view ::v-deep .reviews{
+        font-size: 11px;
+        margin-left: -20px;
+        
+    }
+  }
+
+  @media (max-width: 375px) {
+.establishment-rank-view ::v-deep .society__rating{
+        display: flex;
+        align-items: center;
+        margin-top: -5px;
+        margin-left: -120px;
+        padding-right: 60px;
+    }
+.establishment-rank-view ::v-deep .reviews{
+        font-size: 11px;
+        margin-left: -20px;
+        
+    }
+  }
+
 </style>

@@ -239,6 +239,11 @@ const redirectToReviews = (star,id) =>{
     
 }
 
+.society__location  {
+  
+    width: 250px;
+}
+
 .society__location span {
     height: 35px;
     width: 150px;
@@ -366,6 +371,11 @@ const redirectToReviews = (star,id) =>{
         font-size: 13px;
     }
 
+    .society__location {
+        display: flex;
+        width: 200px;
+    }
+
     .society__item div {
         font-size: 12px;
     }
@@ -387,7 +397,7 @@ const redirectToReviews = (star,id) =>{
 
     .list__actions button {
         flex-grow: 1;
-        margin: 10px 0px 0px 0px;
+        margin: 19px 0px 0px 0px;
         padding: 5px 0px;
         background-color: var(--color-primary);
         color: white;
@@ -395,7 +405,7 @@ const redirectToReviews = (star,id) =>{
 
     .society__location {
         display: flex;
-        width: 180px;
+        width: 200px;
     }
 
     .society__location span {
@@ -407,13 +417,22 @@ const redirectToReviews = (star,id) =>{
     .society__item label {
         font-size: 14px;
     }
+
+    .society__name {
+        width: 200px;
+    }
 }
 
 @media (max-width: 380px) {
     .society__location {
-        width: 180px;
+        width: 200px;
+    }
+
+    .society__name {
+        width: 200px;
     }
   }
+  
 .smallClass{
     width: auto! important;
     height: 100%! important;

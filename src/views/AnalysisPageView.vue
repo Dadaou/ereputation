@@ -467,6 +467,13 @@ const ratingsCondition3 = computed(() => {
     return data
 })
 
+appStore.setCurrentPage({
+    title1: "",
+    title2: "Analysis",
+    icon: "uil-estate",
+});
+
+
 const ratingsCondition4 = computed(() => {
     let data = ratings.value;
     data = data.filter(value => value.avg_rating < 4)
@@ -798,48 +805,7 @@ const transformData = (chartData) => {
     }
 }
 
-onBeforeMount(async () => {
-    appStore.isLoading = true;
-    isLoading.value = true
-    companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
 
-        if (data == false) {
-            appStore.setIsExist(false);
-        }
-        else {
-            establishment.value = data;
-
-            appStore.setCurrentPage({
-                title1: "",
-                title2: "Analysis",
-                icon: "uil-analytics"
-            });
-
-            appStore.setBreadcrumbs([
-                {
-                    title: establishment.value.name,
-                    path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
-                    isCurrent: false,
-                },
-                {
-                    title: "Analysis",
-                    path: `${route.path}`,
-                    isCurrent: true
-                }
-            ])
-
-            all_items.value[0].value = establishment.value.rating;
-            all_items.value[1].value = establishment.value.totalReviews;
-
-            appStore.isLoading = false;
-        }
-    })
-    await loadCategories(companyId)
-    await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
-    await loadSalesAnalysisData(companyId, start_date.value, end_date.value)
-    appStore.isLoading = false;
-
-});
 let _reviews = ref([]);
 let dataReviews = ref([]);
 let reviews_loader = ref(true);
@@ -925,10 +891,9 @@ const reloadData = (reviewUpdated) => {
 }
 
 
-
 onBeforeMount(async () => {
     appStore.isLoading = true;
-
+    isLoading.value = true
     companiesStore.getEstablishment(customerTag.value, companyId).then((data) => {
 
         if (data == false) {
@@ -939,8 +904,8 @@ onBeforeMount(async () => {
             establishment.value = data;
             appStore.setCurrentPage({
                 title1: "",
-                title2: "Reviews",
-                icon: "uil-comment-alt-dots",
+                title2: "Analysis",
+                icon: "uil-analytics"
             });
 
             appStore.setBreadcrumbs([
@@ -950,7 +915,7 @@ onBeforeMount(async () => {
                     isCurrent: false,
                 },
                 {
-                    title: "Reviews",
+                    title: "Analysis",
                     path: `${route.path}`,
                     isCurrent: true
                 }
@@ -959,14 +924,13 @@ onBeforeMount(async () => {
             all_items.value[0].value = establishment.value.rating;
             all_items.value[1].value = establishment.value.totalReviews;
             appStore.isLoading = false;
-            dataLoading.value = false;
-
-            websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
-
         }
     })
-
+    await loadCategories(companyId)
+    await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
     await loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value)
+    appStore.isLoading = false;
+
 });
 
 /**

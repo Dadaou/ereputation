@@ -155,10 +155,10 @@ const logoSrc = computed(() => {
 
 .gate__logo {
     object-fit: contain;
-    height: 70%;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
     border-radius: 6px;
-    box-shadow: -1px -2px 2px 0 rgba(97, 94, 94, 0.2);
+    width: 64px;
+    height: 64px;
 }
 
 .gate__logoSrc {
@@ -166,6 +166,7 @@ const logoSrc = computed(() => {
     height: 64px;
     margin-bottom: 5px;
     border-radius: 6px;
+    object-fit: contain;
 }
 
 @media screen and (max-width:600px) {
