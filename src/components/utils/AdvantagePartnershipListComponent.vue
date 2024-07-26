@@ -114,7 +114,8 @@ ul {
   border-radius: 5px;
   cursor: pointer;
   height: 4rem;
-  width: 250px;
+  width: auto;
+  max-width: 400px;
 }
 
 .discount-list .icon {
