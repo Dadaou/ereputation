@@ -353,8 +353,8 @@ const submit = async () => {
     }
 
     const data = {
-        // value1: isHashtag.value ? getHashtagValue(link.value) : (urlObject ? getValueUrl(link.value, urlObject.url) : link.value),
-        value1: link.value,
+        // value1: link.value,
+        value1: isHashtag.value ? getHashtagValue(link.value) : (urlObject ? getValueUrl(link.value, urlObject.url) : link.value),
         provider: urlObject ? urlObject.uri : null,
         enable: true,
         section: section.value,

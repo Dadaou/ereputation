@@ -10,7 +10,7 @@
                 </button>
                 <div class="panel" v-if="item.active">
                     <div v-if="category == 'reviews'"
-                        class="list__container grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 xl:grid-cols-10">
+                    :class="{'list__container': true, 'grid-cols-3': true, 'sm:grid-cols-4': true, 'md:grid-cols-5': true, 'lg:grid-cols-8': true, 'xl:grid-cols-10': true, 'no-scroll': establishmentLink.length < 8}">
                         <div v-if="category == 'reviews'" class="whatsapplink">
                             <a v-if="establishment.whatsapp" :href="`${establishment.whatsapp}`" target="_blank">
                                 <i class="fa fa-whatsapp"></i>
@@ -250,8 +250,8 @@ onMounted(() => {
 <style scoped>
 .whatsapplink {
   position: relative; /* Centre verticalement */
-  width: 100%;
-  height: auto;
+  width: 170px;
+  height: 140px;
   aspect-ratio: 1/1;
   border-radius: 5px;
   border: 1px solid rgba(220, 220, 220, .4);
@@ -430,7 +430,14 @@ img {
 .list__container {
     margin-block: 16px;
     display: grid;
-    gap: 12px;
+    gap: 172px;
+    overflow-x: auto; /* Permet le défilement horizontal */
+    /* Empêche les éléments de s'enrouler */
+    padding-bottom: 8px;
+}
+
+.list__container.hide-scroll {
+    overflow-x: hidden;
 }
 
 .feedback__form {
@@ -504,6 +511,17 @@ img {
     align-items: center;
     justify-content: center;
     color: #333;
+}
+@media (max-width: 640px) { 
+  .list__container {
+    margin-block: 16px;
+    display: grid;
+    gap: 58px;
+    overflow-x: auto; /* Permet le défilement horizontal */
+    /* Empêche les éléments de s'enrouler */
+    padding-bottom: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Adapte le nombre de colonnes en fonction de l'écran */
+}
 }
 
 </style>

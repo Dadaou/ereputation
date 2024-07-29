@@ -116,14 +116,14 @@ const logoSrc = computed(() => {
 
 </script>
 <style scoped>
+
 .gate__link {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    /* height: 140px; */
-    height: auto;
+    width: 170px;
+    height: 140px; 
     aspect-ratio: 1/1;
     border-radius: 5px;
     /* box-shadow: rgba(149, 157, 165, 0.2) 0px 4px 12px; */
@@ -132,13 +132,12 @@ const logoSrc = computed(() => {
     padding: 8px;
     transition: all .5s linear;
     background: white;
+     
 }
-
 .gate__link:hover {
     transform: scale(1.12);
     border: 1px solid var(--color-primary);
     transition: all .5s ease-out;
-
 }
 
 .gate__link h4 {
@@ -154,22 +153,23 @@ const logoSrc = computed(() => {
 }
 
 .gate__logo {
-    object-fit: contain;
+    object-fit: cover;
     margin-bottom: 5px;
     border-radius: 6px;
-    width: 64px;
-    height: 64px;
+    width: 160px;
+    height: 80px;
 }
 
 .gate__logoSrc {
-    width: 64px;
-    height: 64px;
+    width: 100px;
+    height: 80px;
     margin-bottom: 5px;
     border-radius: 6px;
-    object-fit: contain;
+    object-fit: cover;
 }
 
 @media screen and (max-width:600px) {
+    
     .gate__link h4 {
         font-size: .7rem !important;
         font-weight: 500;

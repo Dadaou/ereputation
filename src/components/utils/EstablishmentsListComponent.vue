@@ -360,6 +360,12 @@ const redirectToReviews = (star,id) =>{
 .modal__close i:hover {
     transform: rotate(360deg);
 }
+@media screen and (max-width:1440px) {
+    .society__location {
+        display: flex;
+        width: 180px;
+    }
+}
 
 @media screen and (max-width:779px) {
     .society__item label {
