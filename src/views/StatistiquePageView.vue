@@ -9,8 +9,8 @@
                     :value="item.id" />
             </el-select>
 
-            <el-date-picker v-model="start_date" type="date" :size="'large'" class="space" />
-            <el-date-picker v-model="end_date" type="date" :size="'large'" />
+            <el-date-picker v-model="start_date" type="date" :size="'large'" class="space" style="margin-bottom: 20px !important;"/>
+            <el-date-picker v-model="end_date" type="date" :size="'large'" class="space2" style="margin-bottom: 20px !important;"/>
             <DropdownComponent :showTitle="false" class="dropdown w-full spaceSelect" :data="timePeriods" @submit="(timePeriod) => {
                 selectedTimePeriod = timePeriod
             }" :default="timePeriods[0]" />
@@ -273,7 +273,7 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
 
 
 </script>
-<style>
+<style scoped>
 .iconfy{
     display: flex;
     justify-content: center;
@@ -299,15 +299,14 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
 
 .date__filter {
     display: flex;
-    margin: 2.5%;
+    gap: 10px;
 }
 
 .space {
-    margin-right: 10px;
+    /* margin-right: 10px; */
 }
 
 .spaceSelect {
-    margin-left: 10px;
     margin-top : 0 !important
 }
 
@@ -388,4 +387,33 @@ h1 {
     color: red !important;
 }
 
+
+@media (max-width: 780px) {
+    .number {
+        justify-content: flex-start;
+        gap: 20px;
+    }
+    .square {
+        padding: 2px !important;
+    }
+}
+@media (max-width: 558px) {
+    .date__filter {
+        display: block !important;
+    }
+    .spaceSelect,
+    .space {
+        margin-bottom: 20px !important;
+    }
+    .number {
+        display: block ;
+        align-items: center;
+    }
+    .square {
+        width: 100%;
+    }
+    .square span{
+        font-size: 12px !important;
+    }
+}
 </style>
