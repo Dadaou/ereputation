@@ -7,7 +7,7 @@
             rel="noopener noreferrer"
         >
             <!-- <Icon v-if="!item.logo && icon" :icon="icon"  :alt="`${item.label} logo`" class="mb-2" width="24px" color="grey" /> -->
-            <img v-if="!item.logo && icon" :src="appStore.account.logo" class="gate__logo">
+            <img v-if="!item.logo && icon" :src="appStore.account.brand === 'LinkyStar' ? qrlinkystarLogo : appStore.account.logo" class="gate__logo">
             <img v-if="item.logo && item.logo.length > 0" :src="item.logo" class="gate__logo">
             <img v-if="logoSrc" :src="logoSrc" :alt="`${item.label} logo`" class="gate__logoSrc">
             <h4 v-else class="mb-1">{{ item.label }}</h4>
@@ -19,7 +19,7 @@
 import { Icon } from '@iconify/vue';
 import { computed } from 'vue';
 import { useAppStore } from "@Stores/app.js"
-
+import qrlinkystarLogo from '@/assets/images/logo/qrlinkystar.png';
 const appStore = useAppStore();
 
 const emits = defineEmits(['click']);
