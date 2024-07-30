@@ -32,23 +32,23 @@
         </div>
         <div class="number">
             <div class="square bordure-bleu">
-                <h5><i class="uil uil-user"></i> <span>Total visits</span></h5>
-                <p :class="nbrTotalVisit >= 0 ? 'texte-vert' : 'texte-rouge'">{{ nbrTotalVisit }}</p>
+                <h5 class="mb-4"><i class="uil uil-user"></i> <span>Total visits</span></h5>
+                <p>{{ nbrTotalVisit }}<sup :class="nbrGapVisit >= 0 ? 'texte-vert' : 'texte-rouge'">+{{ nbrGapVisit }}</sup></p>
             </div>
             <div class="square square bordure-rouge">
                 <h5><i class="uil uil-times"></i> <span>Total not submitted</span></h5>
-                <p>14</p>
+                <p>{{ nbrNotSubmitted }}<sup :class="nbrGapNotSubmitted >= 0 ? 'texte-vert' : 'texte-rouge'">+{{ nbrGapNotSubmitted }}</sup></p>
             </div>
             <div class="square bordure-vert">
-                <h5><i class="uil-envelope-send"></i> <span>Total submissions</span></h5>
-                <p :class="avisSoumis >= 0 ? 'texte-vert' : 'texte-rouge'">{{ avisSoumis }}</p>
+                <h5 class="mb-4"><i class="uil-envelope-send"></i> <span>Total submissions</span></h5>
+                <p>{{ nbrSubmitted }}<sup :class="nbrGapSubmitted >= 0 ? 'texte-vert' : 'texte-rouge'">+{{ nbrGapSubmitted }}</sup></p>
             </div>
             <div class="square">
                 <h5 class="iconfy">
                     <Icon icon="mdi:hand-tap" />
                     <span>Total social media clicks</span>
                 </h5>
-                <p>14</p>
+                <p>{{ nbrClickSocial }}<sup :class="nbrGapClickSocial >= 0 ? 'texte-vert' : 'texte-rouge'">+{{ nbrGapClickSocial }}</sup></p>
             </div>
         </div>
 
@@ -92,6 +92,13 @@ import services from '@Services/services.js';
 import { useRoute } from 'vue-router';
 
 const nbrTotalVisit = ref(null);
+const nbrNotSubmitted = ref(null);
+const nbrSubmitted = ref(null);
+const nbrClickSocial = ref(null);
+const nbrGapVisit = ref(null);
+const nbrGapNotSubmitted = ref(null);
+const nbrGapSubmitted = ref(null);
+const nbrGapClickSocial = ref(null);
 const avisSoumis = ref(null)
 const userStore = useUserStore();
 const timePeriods = ref(['daily', 'monthly', 'yearly']);
@@ -172,12 +179,66 @@ const PieChartService = defineAsyncComponent(() =>
 const totalVisit = async (type) => {
     try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`/customer/visitor/indicator?tag=${route.params.tag}&type=${type || 'daily'}`, (response) => {
+            services.get_Record(`/customer/visitor/indicator?tag=${route.params.tag}&type=${type || 'daily'}&reviews=all`, (response) => {
                 resolve(response);
             });
         });
         if (response.status === 200) {
-            nbrTotalVisit.value = response.data || 0;
+            nbrTotalVisit.value = response.data.visitor_now || 0;
+            nbrGapVisit.value = response.data.gap || 0;
+        } else {
+        console.error('Error fetching data:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+const totalNotSubmitted = async (type) => {
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`/customer/visitor/indicator?tag=${route.params.tag}&type=${type || 'daily'}&reviews=no`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            nbrNotSubmitted.value = response.data.visitor_now || 0;
+            nbrGapNotSubmitted.value = response.data.gap || 0;
+        } else {
+        console.error('Error fetching data:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const totalSubmitted  = async (type) => {
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`/customer/visitor/indicator?tag=${route.params.tag}&type=${type || 'daily'}&reviews=yes`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            nbrSubmitted.value = response.data.visitor_now || 0;
+            nbrGapSubmitted.value = response.data.gap || 0;
+        } else {
+        console.error('Error fetching data:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const totalClickSocial  = async (type) => {
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`/customer/visitorclick/clicks/social?tag=${route.params.tag}&type=${type || 'daily'}`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            nbrClickSocial.value = response.data.visitor_click_now || 0;
+            nbrGapClickSocial.value = response.data.gap || 0;
         } else {
         console.error('Error fetching data:', response);
         }
@@ -258,6 +319,9 @@ const loadAvisSoumis = async (establishment, units, staff) => {
 
 onBeforeMount(async () => {
     await totalVisit(selectedTimePeriod.value);
+    await totalNotSubmitted(selectedTimePeriod.value);
+    await totalSubmitted(selectedTimePeriod.value);
+    await totalClickSocial(selectedTimePeriod.value);
     await loadStaff();
     await loadUnits(); 
     await loadAvisSoumis(establishment.value, unitsFilter.value, unitsFilter.value);
@@ -265,6 +329,9 @@ onBeforeMount(async () => {
 
 watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
     totalVisit(selectedTimePeriod.value);
+    totalNotSubmitted(selectedTimePeriod.value);
+    totalSubmitted(selectedTimePeriod.value);
+    totalClickSocial(selectedTimePeriod.value);
     loadAvisSoumis(establishment.value, unitsFilter.value , staffFilter.value)
 })
 
@@ -370,8 +437,11 @@ h1 {
     text-align: center;
     padding: 10px;
     font-weight: 600;
-    font-size: 14px;
-    color: rgb(101, 101, 101);
+    font-size: 20px;
+    color: black;
+}
+.square p sup {
+    font-size: 12px;
 }
 .number{
     display: flex;
