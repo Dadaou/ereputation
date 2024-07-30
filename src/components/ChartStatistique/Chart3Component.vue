@@ -72,7 +72,7 @@ const loadData = async (start_date, end_date, timePeriods , establishment , staf
         end_date = moment(new Date(end_date)).format('YYYY-MM-DD');
     }
 
-    let api = `customer/count/navigation/visitor?tag=${route.params.tag}&from=${start_date}&to=${end_date}&type=${timePeriods || 'daily'}`
+    let api = `customer/visitor/chart/sources?tag=${route.params.tag}&from=${start_date}&to=${end_date}&type=${timePeriods || 'daily'}`
     if (establishment) {
         api = api + `&establisment=${establishment}`
     }
