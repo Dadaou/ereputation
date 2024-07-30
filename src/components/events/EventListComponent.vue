@@ -12,6 +12,7 @@
       <el-table-column label="Name" prop="name" style="width: 15%; min-width: 200px;" />
       <el-table-column label="Category" prop="category" style="width: 10%; min-width: 200px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" />
+      <el-table-column label="Segment" prop="segment" style="width: 10%; min-width: 200px;" />
       <el-table-column label="Date" prop="date" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Operations" style="width: 25%; min-width: 200px;" align="right">
         <template #header>

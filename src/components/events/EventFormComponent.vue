@@ -32,6 +32,13 @@
               :value="`/api/establishments/${item.id}`" />
           </el-select>
         </div>
+        <div>
+          <label for="segment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Segment
+            <span>*</span></label>
+          <el-select v-model="segment" placeholder="Choose segment" size="large">
+            <el-option v-for="item in segments" :key="item" :label="item" :value="item" />
+          </el-select>
+        </div>
       </div>
       <div class="grid gap-6 mb-6 md:grid-cols-2">
         <div>
@@ -89,12 +96,14 @@ const showSpinner = ref(false);
 const dateFrom = ref(null);
 const dateTo = ref(null);
 const category = ref('');
+const segment = ref('');
 const eventName = ref('');
 const establishments = ref([]);
 const type = ref('add');
 const event_to_update = inject('event_to_update');
-const events = inject('events');;
-const categories = ['Breakdown', 'Happening', 'Incident', 'Misc']
+const events = inject('events');
+const categories = ['Breakdown', 'Happening', 'Incident', 'Misc'];
+const segments = ['Business', 'Economy', 'Families', 'Mixed', 'Students', 'VIP'];
 
 watch(event_to_update, () => {
   if (event_to_update.value != null) {
@@ -102,7 +111,8 @@ watch(event_to_update, () => {
     dateTo.value = new Date(event_to_update.value["dateto"]);
     category.value = event_to_update.value["category"];
     eventName.value = event_to_update.value["name"];
-    establishments.value = event_to_update.value['establishment']
+    establishments.value = event_to_update.value['establishment'];
+    segment.value = event_to_update.value['segment'];
     type.value = 'edit';
   }
 })
@@ -152,6 +162,7 @@ const loadData = (_event, event) => {
     dateto: _event.dateto,
     establishment_name: getEstablishmentsName(_event.establishment),
     establishment: _event.establishment,
+    segment: _event.segment,
     date: `${moment(_event.datefrom).format('YYYY-MM-DD')} to ${moment(_event.dateto).format('YYYY-MM-DD')}`
   }
   events.value.push(new_event);
@@ -166,6 +177,7 @@ const updateData = (_event) => {
     dateto: _event.dateto,
     establishment_name: getEstablishmentsName(_event.establishment),
     establishment: _event.establishment,
+    segment: _event.segment,
     date: `${moment(_event.datefrom).format('YYYY-MM-DD')} to ${moment(_event.dateto).format('YYYY-MM-DD')}`
   }
 
@@ -180,6 +192,7 @@ const resetForm = ()=>{
   category.value = '';
   establishments.value = [];
   eventName.value = '';
+  segment.value = '';
 }
 
 const submit = async () => {
@@ -188,7 +201,8 @@ const submit = async () => {
     "category": category.value,
     "datefrom": moment(dateFrom.value).format('YYYY-MM-DD'),
     "dateto": moment(dateTo.value).format('YYYY-MM-DD'),
-    "establishment": establishments.value
+    "establishment": establishments.value,
+    "segment": segment.value
   }
 
   try {
