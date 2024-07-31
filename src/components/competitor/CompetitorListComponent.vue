@@ -517,7 +517,7 @@ const submit = async () => {
     // }
 
     const data = {
-        value1: isHashtag.value ? getHashtagValue(link.value) : getDomainAndPathFromUrl(link.value),
+        value1: link.value,
         establishment: establishment.value,
         provider: urlObject.uri,
         enable: true
