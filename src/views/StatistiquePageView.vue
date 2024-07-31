@@ -33,11 +33,11 @@
         <div class="number">
             <div class="square bordure-bleu">
                 <h5 class="mb-4"><i class="uil uil-user"></i> <span>Total visits</span></h5>
-                <p>{{ nbrTotalVisit }}<sup :class="nbrGapVisit >= 0 ? 'texte-vert' : 'texte-rouge'">+{{ nbrGapVisit }}</sup></p>
+                <p>{{ nbrTotalVisit }}<sup :class="nbrGapVisit >= 0 ? 'texte-vert' : 'texte-rouge'">{{ nbrGapVisit >= 0 ? '+' : '' }}{{ nbrGapVisit }}</sup></p>
             </div>
-            <div class="square square bordure-rouge">
+            <div class="square square bordure-rouge"> 
                 <h5><i class="uil uil-times"></i> <span>Total not submitted</span></h5>
-                <p>{{ nbrNotSubmitted }}<sup :class="nbrGapNotSubmitted >= 0 ? 'texte-vert' : 'texte-rouge'">+{{ nbrGapNotSubmitted }}</sup></p>
+                <p>{{ nbrNotSubmitted }}<sup :class="nbrGapNotSubmitted >= 0 ? 'texte-vert' : 'texte-rouge'">{{ nbrGapNotSubmitted >= 0 ? '+' : '' }}{{ nbrGapNotSubmitted }}</sup></p>
             </div>
             <div class="square bordure-vert">
                 <h5 class="mb-4"><i class="uil-envelope-send"></i> <span>Total submissions</span></h5>
@@ -467,6 +467,67 @@ h1 {
         padding: 2px !important;
     }
 }
+
+@media (max-width: 768px) {
+    .iconfy{
+    display: flex;
+    justify-content: center;
+}
+.iconify--pepicons-pencil{
+    color: #000 !important;
+    margin-right: 3px;
+    margin-top: 2px;
+}
+.statistique-left{
+    float: left;
+    width: 45%;
+    margin-left: 30px;
+    
+}
+
+.statistique-right{
+    float : right ; 
+    width: 45%;
+    margin-right: 30px;
+    margin-top: -20px;
+}
+
+.date__filter {
+    display: flex;
+    gap: 10px;
+}
+
+.space {
+    /* margin-right: 10px; */
+}
+
+.spaceSelect {
+    margin-top : 0 !important
+}
+
+.spaceSelect2 {
+    margin-top: 0 !important ;
+    margin-right: 10px;
+}
+
+.bordure-vert{
+    border-bottom: 2px solid;
+    border-bottom-color: #0a8964;
+}
+.bordure-bleu{
+    border-bottom: 2px solid;
+    border-bottom-color: #7bc6e9;
+}
+.bordure-rouge{
+    border-bottom: 2px solid;
+    border-bottom-color: #e97b80;
+}
+.dashboard {
+    /* display: flex; */
+    width: 100%;
+}
+}
+
 @media (max-width: 558px) {
     .date__filter {
         display: block !important;
