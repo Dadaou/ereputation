@@ -286,7 +286,7 @@ const loadUnits = async () => {
 const loadAvisSoumis = async (establishment, units, staff) => {
     let api = `customer/visitor/reviews/comparaison?tag=${route.params.tag}`
     if (establishment) {
-        api = api + `&establisment=${establishment}`
+        api = api + `&establishment=${establishment}`
     }
     if (units) {
         api = api + `&units=${units}`
@@ -295,7 +295,7 @@ const loadAvisSoumis = async (establishment, units, staff) => {
         api = api + `&staff=${staff}`
     }
 
-     console.log("api du comparaison " , api) ; 
+    //  console.log("api du comparaison " , api) ; 
 
 
     try {
@@ -305,8 +305,8 @@ const loadAvisSoumis = async (establishment, units, staff) => {
             });
         });
         if (response.status === 200) {
-            console.log("avis soumis comparaison")
-            console.log(response.data)
+            // console.log("avis soumis comparaison")
+            // console.log(response.data)
             avisSoumis.value = response.data.count || 0 ;
         } else {
             console.error('Error fetching data:', response);

@@ -71,7 +71,7 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
 
     let api = `customer/visitorclick/clicks?tag=${route.params.tag}&from=${start_date}&to=${end_date}&type=${timePeriods || 'daily'}&source=${source || 'all'}`
     if (establishment) {
-        api = api + `&establisment=${establishment}`
+        api = api + `&establishment=${establishment}`
     }
     if (units) {
         api = api + `&units=${units}`

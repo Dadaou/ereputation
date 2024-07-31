@@ -74,7 +74,7 @@ const loadData = async (start_date, end_date, timePeriods , establishment , staf
 
     let api = `customer/visitor/chart/sources?tag=${route.params.tag}&from=${start_date}&to=${end_date}&type=${timePeriods || 'daily'}`
     if (establishment) {
-        api = api + `&establisment=${establishment}`
+        api = api + `&establishment=${establishment}`
     }
     if (staff) {
         api = api + `&staff=${staff}`
