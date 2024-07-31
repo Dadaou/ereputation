@@ -10,7 +10,7 @@
                 </button>
                 <div class="panel" v-if="item.active">
                     <div v-if="category == 'reviews'"
-                    :class="{'list__container': true, 'grid-cols-3': true, 'sm:grid-cols-4': true, 'md:grid-cols-5': true, 'lg:grid-cols-8': true, 'xl:grid-cols-10': true, 'no-scroll': establishmentLink.length < 8}">
+                        class="list__container">
                         <div v-if="category == 'reviews'" class="whatsapplink">
                             <a v-if="establishment.whatsapp" :href="`${establishment.whatsapp}`" target="_blank">
                                 <i class="fa fa-whatsapp"></i>
@@ -429,8 +429,8 @@ img {
 
 .list__container {
     margin-block: 16px;
-    display: grid;
-    gap: 172px;
+    display: flex;
+    gap: 12px;
     overflow-x: auto; /* Permet le défilement horizontal */
     /* Empêche les éléments de s'enrouler */
     padding-bottom: 8px;
@@ -515,9 +515,8 @@ img {
 @media (max-width: 640px) { 
   .list__container {
     margin-block: 16px;
-    display: grid;
-    gap: 58px;
-    overflow-x: auto; /* Permet le défilement horizontal */
+    display: flex;
+    gap: 50px;
     /* Empêche les éléments de s'enrouler */
     padding-bottom: 15px;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Adapte le nombre de colonnes en fonction de l'écran */
