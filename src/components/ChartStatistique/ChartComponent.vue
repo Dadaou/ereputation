@@ -69,10 +69,8 @@ const loadData = async (start_date, end_date, timePeriods , establishment , staf
     api = api + `&staff=${staff}`
   }
   if (units) {
-    api = api + `&staff=${units}`
-  }
-  //  console.log("apiiii pour chart 1 " + api ) ; 
-    
+    api = api + `&units=${units}`
+  }  
    
     try {
         const response = await new Promise((resolve) => {

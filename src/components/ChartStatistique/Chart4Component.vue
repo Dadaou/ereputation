@@ -90,7 +90,7 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
             });
         });
         if (response.status === 200) {
-            console.log(response.data)
+            //console.log(response.data)
             if (response.data && Array.isArray(response.data.data)) {
                 series.value = [{
                     name: response.data.name || 'Series 1', // Assurez-vous d'utiliser le bon nom de série

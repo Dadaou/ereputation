@@ -85,7 +85,7 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
         api = api + `&staff=${staff}`
     }
 
-    console.log("api pour le chart 2 " , api )
+    //console.log("api pour le chart 2 " , api )
 
     // console.log("api du funnel " , api) ; 
 
@@ -97,7 +97,7 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
             });
         });
         if (response.status === 200) {
-            console.log(response.data)
+            //console.log(response.data)
             series.value = response.data.series;
             // if (response.data && Array.isArray(response.data.data)) {
             //     series.value = [{

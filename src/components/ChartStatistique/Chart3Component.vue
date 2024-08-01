@@ -80,10 +80,10 @@ const loadData = async (start_date, end_date, timePeriods , establishment , staf
         api = api + `&staff=${staff}`
     }
     if (units) {
-        api = api + `&staff=${units}`
+        api = api + `&units=${units}`
     }
    
-    console.log("api pour chart line" , api )
+    //console.log("api pour chart line" , api )
 
     try {
         const response = await new Promise((resolve) => {
