@@ -161,13 +161,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.chart-container {
+/* .chart-container {
     width: 100%;
     max-width: 100%;
-}
+} */
 
 h3 {
-    margin: 40px 0 0;
+    /* margin: 40px 0 0; */
+    margin-bottom: 22px;
     text-align: center;
     padding: 20px;
     font-weight: 600;

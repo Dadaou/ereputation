@@ -116,34 +116,6 @@ watch([start_date, end_date, timePeriods, establishment,source , units , staff],
     loadData(start_date.value, end_date.value, timePeriods.value, establishment.value ,source.value , units.value , staff.value)
 })
 
-// Données des séries
-// const series = ref([
-//     {
-//         name: "Platforms",
-//         data: [
-//             {
-//                 x: "Facebook",
-//                 y: 1380
-//             },
-//             {
-//                 x: "Google",
-//                 y: 1100
-//             },
-//             {
-//                 x: "Trip Advisor",
-//                 y: 990
-//             },
-//             {
-//                 x: "Booking",
-//                 y: 880
-//             },
-//             {
-//                 x: "Instagram",
-//                 y: 740
-//             },
-//         ],
-//     },
-// ])
 </script>
 
 <script>
@@ -161,7 +133,7 @@ export default {
     max-width: 100%;
 }
 h3 {
-    margin: 40px 0 0;
+    margin: 20px 0 0;
     text-align: center;
     padding: 20px;
     font-weight: 600;

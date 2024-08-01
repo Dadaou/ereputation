@@ -6,16 +6,32 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onBeforeMount, inject, watch } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
+import { useUserStore } from "@Stores/user.js"
+import { useRoute } from 'vue-router'
+import moment from 'moment';
+import services from '@Services/services.js'
+
+const userStore = useUserStore();
+const route = useRoute();
+const start_date = inject('start_date');
+const end_date = inject('end_date');
+const timePeriods = inject('timePeriods');
+const establishment = inject('establishment');
+const staff = inject('staffFilter');
+const units = inject('unitsFilter');
+const source = inject('sourceFilter');
+
+const names = userStore.user.customer.establishments.map(establishment => establishment.name);
 
 const chartOptions = ref({
-    labels: ['Madame vacances', 'Hotels Antequera Hills'], // Labels des séries
-    colors: ['#0a8964', '#FEB019'], // Couleurs des séries
+    labels: names, 
+    colors: ['#0a8964', '#FEB019', '#4D4D4D', '#5DA5DA', '#FAA43A', '#60BD68', '#F17CB0', '#B2912F', '#B276B2', '#DECF3F', '#F15854'], 
     dataLabels: {
         enabled: true,
         formatter: function (val) {
-            return val.toFixed(1) + "%"; // Formater la valeur avec un chiffre après la virgule
+            return val.toFixed(1) + "%";
         }
     },
     legend: {
@@ -24,6 +40,52 @@ const chartOptions = ref({
     }
 });
 const series = ref([44, 13])
+
+
+const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
+
+
+const loadData = async (start_date, end_date, timePeriods, establishment, source, units, staff) => {
+    if (IsValueOkay(start_date) && IsValueOkay(end_date)) {
+        start_date = moment(new Date(start_date)).format('YYYY-MM-DD');
+        end_date = moment(new Date(end_date)).format('YYYY-MM-DD');
+    }
+
+    let api = `customer/count/visitorclick/media/establishment?tag=${route.params.tag}&from=${start_date}&to=${end_date}&type=${timePeriods || 'daily'}&source=${source || 'all'}`
+    if (establishment) {
+        api = api + `&establishment=${establishment}`
+    }
+    if (units) {
+        api = api + `&units=${units}`
+    }
+    if (staff) {
+        api = api + `&staff=${staff}`
+    }
+
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(api, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            series.value = response.data.series;
+        } else {
+            console.error('Error fetching data:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+onBeforeMount(async () => {
+    loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, source.value, units.value, staff.value)
+});
+
+watch([start_date, end_date, timePeriods, establishment, source, units, staff], () => {
+    loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, source.value, units.value, staff.value)
+})
+
 
 </script>
 
@@ -43,7 +105,7 @@ export default {
 }
 
 h3 {
-    margin: 40px 0 0;
+    margin: 17px 0 0;
     text-align: center;
     padding: 20px;
     font-weight: 600;

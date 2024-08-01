@@ -1,21 +1,34 @@
 <template>
     <h3>Number of form submitted by Units</h3>
     <div class="chart-container">
-        <apexchart type="donut" height="350" :options="chartOptions" :series="series"></apexchart>
+        <apexchart :key="chartKey" type="donut" height="350" :options="chartOptions" :series="series"></apexchart>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onBeforeMount, inject, watch } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
+import { useRoute } from 'vue-router'
+import moment from 'moment';
+import services from '@Services/services.js'
+
+
+const route = useRoute();
+const start_date = inject('start_date');
+const end_date = inject('end_date');
+const timePeriods = inject('timePeriods');
+const establishment = inject('establishment');
+const staff = inject('staffFilter');
+const units = inject('unitsFilter');
+const source = inject('sourceFilter');
 
 const chartOptions = ref({
-    labels: ['Navette deux', 'Navette 3'], // Labels des séries
-    colors: ['#0a8964', '#FEB019'], // Couleurs des séries
+    labels: [], 
+    colors: ['#0a8964', '#FEB019', '#4D4D4D', '#5DA5DA', '#FAA43A', '#60BD68', '#F17CB0', '#B2912F', '#B276B2', '#DECF3F', '#F15854'],// Couleurs des séries
     dataLabels: {
         enabled: true,
         formatter: function (val) {
-            return val.toFixed(1) + "%"; // Formater la valeur avec un chiffre après la virgule
+            return val.toFixed(1) + "%"; 
         }
     },
     legend: {
@@ -25,8 +38,74 @@ const chartOptions = ref({
 });
 const series = ref([15, 13])
 
-</script>
+const chartKey = ref(0);
 
+
+const loadUnits = async () => {
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`/customer/units?tag=${route.params.tag}`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            const unitNames = response.data.map(unit => unit.name);
+            chartOptions.value.labels = unitNames;
+            chartKey.value++;
+        } else {
+            console.error('Error fetching data:', response);
+        }
+    } catch (error) {
+        console.error("Error loading units:", error);
+    }
+}
+
+const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
+
+const loadData = async (start_date, end_date, timePeriods, establishment, source, units, staff) => {
+    if (IsValueOkay(start_date) && IsValueOkay(end_date)) {
+        start_date = moment(new Date(start_date)).format('YYYY-MM-DD');
+        end_date = moment(new Date(end_date)).format('YYYY-MM-DD');
+    }
+
+    let api = `customer/visitor/units?tag=${route.params.tag}&from=${start_date}&to=${end_date}&type=${timePeriods || 'daily'}&source=${source || 'all'}`
+    if (establishment) {
+        api = api + `&establishment=${establishment}`
+    }
+    if (units) {
+        api = api + `&units=${units}`
+    }
+    if (staff) {
+        api = api + `&staff=${staff}`
+    }
+
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(api, (response) => {
+                console.log("eeeeeeeeeeee",response)
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            series.value = response.data.series;
+        } else {
+            console.error('Error fetching data:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+onBeforeMount(async () => {
+    await loadUnits(); 
+    loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, source.value, units.value, staff.value)
+});
+
+watch([start_date, end_date, timePeriods, establishment, source, units, staff], () => {
+    loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, source.value, units.value, staff.value)
+})
+
+</script>
 <script>
 export default {
     components: {
@@ -35,7 +114,6 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .chart-container {
     width: 100%;

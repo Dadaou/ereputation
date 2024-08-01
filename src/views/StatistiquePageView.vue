@@ -70,6 +70,7 @@
                 <Chart4Component />
             </div>
         </div>
+        <br>
         <div class="dashboard">
             <div class="statistique-left ">
                 <PieChartReseauxSociaux />
@@ -147,7 +148,7 @@ provide('start_date', start_date)
 const end_date = ref(today.toISOString().split('T')[0]);
 provide('end_date', end_date)
 
-const establishment = ref(null)
+const establishment = ref([])
 provide('establishment', establishment)
 
 const ChartComponent = defineAsyncComponent(() =>
@@ -350,16 +351,18 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
     margin-right: 3px;
     margin-top: 2px;
 }
+
+.statistique-left,
+.statistique-right {
+    width: 50%;
+}
 .statistique-left{
     float: left;
-    width: 45%;
     margin-left: 30px;
-    
 }
 
 .statistique-right{
     float : right ; 
-    width: 45%;
     margin-right: 30px;
     margin-top: -20px;
 }
@@ -395,8 +398,9 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
     border-bottom-color: #e97b80;
 }
 .dashboard {
-    /* display: flex; */
+    display: flex;
     width: 100%;
+    gap: 40px;
 }
 @media (max-width: 995px) {
     .dashboard {
