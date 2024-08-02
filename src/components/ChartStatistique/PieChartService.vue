@@ -99,6 +99,9 @@ export default {
 </script>
 
 <style scoped>
+.vue-apexcharts {
+    height: 300px !important;
+}
 .chart-container {
     width: 100%;
     max-width: 100%;
