@@ -60,7 +60,7 @@ watch(width, () => {
 });
 
 const userStore = useUserStore()
-const activeName = ref('establishments')
+const activeName = ref('gates')
 const activeStaffTab = ref('staff_list')
 
 const establishment_to_update = ref(null)
