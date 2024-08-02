@@ -41,33 +41,33 @@
             </div>
             <div class="square bordure-vert">
                 <h5><i class="uil-envelope-send"></i> <span>Total submissions</span></h5>
-                <p>{{ nbrSubmitted }}<sup :class="nbrGapSubmitted >= 0 ? 'texte-vert' : 'texte-rouge'">+{{ nbrGapSubmitted }}</sup></p>
+                <p>{{ nbrSubmitted }}<sup :class="nbrGapSubmitted >= 0 ? 'texte-vert' : 'texte-rouge'">{{ nbrGapSubmitted >= 0 ? '+' : '' }}{{ nbrGapSubmitted }}</sup></p>
             </div>
             <div class="square">
                 <h5 class="iconfy">
                     <Icon icon="mdi:hand-tap" />
                     <span>Total social media clicks</span>
                 </h5>
-                <p>{{ nbrClickSocial }}<sup :class="nbrGapClickSocial >= 0 ? 'texte-vert' : 'texte-rouge'">+{{ nbrGapClickSocial }}</sup></p>
+                <p>{{ nbrClickSocial }}<sup :class="nbrGapClickSocial >= 0 ? 'texte-vert' : 'texte-rouge'">{{ nbrGapClickSocial >= 0 ? '+' : '' }}{{ nbrGapClickSocial }}</sup></p>
             </div>
         </div>
 
 
         <div class="dashboard">
             <div class="statistique-left">
-                <ChartComponent />
+                <ChartFeedbackSubmissions />
             </div>
             <div class="statistique-right">
-                <Chart3Component />
+                <ChartGateAndFeedbackVisit />
             </div>
         </div>
         <br>
         <div class="dashboard">
             <div class="statistique-left ">
-                <Chart2Component />
+                <ChartAboutGate />
             </div>
             <div class="statistique-right">
-                <Chart4Component />
+                <ChartPlatformsAndSocialmedia />
             </div>
         </div>
         <br>
@@ -150,20 +150,20 @@ provide('end_date', end_date)
 const establishment = ref([])
 provide('establishment', establishment)
 
-const ChartComponent = defineAsyncComponent(() =>
-    import("@Components/ChartStatistique/ChartComponent.vue")
+const ChartFeedbackSubmissions = defineAsyncComponent(() =>
+    import("@Components/ChartStatistique/ChartFeedbackSubmissions.vue")
 )
 
-const Chart2Component = defineAsyncComponent(() =>
-    import("@Components/ChartStatistique/Chart2Component.vue")
+const ChartAboutGate = defineAsyncComponent(() =>
+    import("@Components/ChartStatistique/ChartAboutGate.vue")
 )
 
-const Chart3Component = defineAsyncComponent(() =>
-    import("@Components/ChartStatistique/Chart3Component.vue")
+const ChartGateAndFeedbackVisit = defineAsyncComponent(() =>
+    import("@Components/ChartStatistique/ChartGateAndFeedbackVisit.vue")
 )
 
-const Chart4Component = defineAsyncComponent(() =>
-    import("@Components/ChartStatistique/Chart4Component.vue")
+const ChartPlatformsAndSocialmedia = defineAsyncComponent(() =>
+    import("@Components/ChartStatistique/ChartPlatformsAndSocialmedia.vue")
 )
 
 const PieChartReseauxSociaux = defineAsyncComponent(() =>
