@@ -8,12 +8,11 @@
 <script setup>
 import { ref, onBeforeMount, inject, watch } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
-import { useUserStore } from "@Stores/user.js"
 import { useRoute } from 'vue-router'
 import moment from 'moment';
 import services from '@Services/services.js'
 
-const userStore = useUserStore();
+
 const route = useRoute();
 const start_date = inject('start_date');
 const end_date = inject('end_date');
@@ -23,10 +22,11 @@ const staff = inject('staffFilter');
 const units = inject('unitsFilter');
 const source = inject('sourceFilter');
 
-const names = userStore.user.customer.establishments.map(establishment => establishment.name);
+const series = ref([]);
+const labels = ref([]);
 
 const chartOptions = ref({
-    labels: names, 
+    labels: labels.value, 
     colors: ['#0a8964', '#FEB019', '#4D4D4D', '#5DA5DA', '#FAA43A', '#60BD68', '#F17CB0', '#B2912F', '#B276B2', '#DECF3F', '#F15854'], 
     dataLabels: {
         enabled: true,
@@ -39,7 +39,7 @@ const chartOptions = ref({
         horizontalAlign: 'center'
     }
 });
-const series = ref([44, 13])
+
 
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
@@ -68,8 +68,14 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
                 resolve(response);
             });
         });
-        if (response.status === 200) {
-            series.value = response.data.series;
+        
+        if (response.status === 200 && response.data) {
+                series.value = response.data.series;
+                labels.value = response.data.labels;
+                chartOptions.value = {
+                  ...chartOptions.value,
+                  labels: labels.value
+                };
         } else {
             console.error('Error fetching data:', response);
         }

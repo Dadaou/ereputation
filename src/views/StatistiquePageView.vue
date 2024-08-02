@@ -3,7 +3,7 @@
         <h1>Analytics</h1>
         <div class="date__filter">
 
-            <el-select v-model="establishment" size="large" class="space" placeholder="All Etablishment">
+            <el-select v-model="establishment" multiple size="large" class="space" placeholder="All Etablishment">
                 <el-option label="All Etablishment" value="" />
                 <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
                     :value="item.id" />
@@ -21,11 +21,11 @@
                 <el-option label="All Source" value="" />
                 <el-option v-for="item in sources" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
-            <el-select v-model="staffFilter" size="large" class="space" placeholder="All Staff">
+            <el-select v-model="staffFilter" multiple size="large" class="space" placeholder="All Staff">
                 <el-option label="All Staff" value="" />
                 <el-option v-for="item in staffs" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
-            <el-select v-model="unitsFilter" size="large" class="space" placeholder="All Unit">
+            <el-select v-model="unitsFilter" multiple size="large" class="space" placeholder="All Unit">
                 <el-option label="All Unit" value="" />
                 <el-option v-for="item in units" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
@@ -100,7 +100,6 @@ const nbrGapVisit = ref(null);
 const nbrGapNotSubmitted = ref(null);
 const nbrGapSubmitted = ref(null);
 const nbrGapClickSocial = ref(null);
-const avisSoumis = ref(null)
 const userStore = useUserStore();
 const timePeriods = ref(['daily', 'monthly', 'yearly']);
 
@@ -283,41 +282,6 @@ const loadUnits = async () => {
 }
 
 
-
-const loadAvisSoumis = async (establishment, units, staff) => {
-    let api = `customer/visitor/reviews/comparaison?tag=${route.params.tag}`
-    if (establishment) {
-        api = api + `&establishment=${establishment}`
-    }
-    if (units) {
-        api = api + `&units=${units}`
-    }
-    if (staff) {
-        api = api + `&staff=${staff}`
-    }
-
-    //  console.log("api du comparaison " , api) ; 
-
-
-    try {
-        const response = await new Promise((resolve) => {
-            services.get_Record(api, (response) => {
-                resolve(response);
-            });
-        });
-        if (response.status === 200) {
-            // console.log("avis soumis comparaison")
-            // console.log(response.data)
-            avisSoumis.value = response.data.count || 0 ;
-        } else {
-            console.error('Error fetching data:', response);
-        }
-    } catch (error) {
-        console.error(error);
-    }
-};
-
-
 onBeforeMount(async () => {
     await totalVisit(selectedTimePeriod.value);
     await totalNotSubmitted(selectedTimePeriod.value);
@@ -325,7 +289,6 @@ onBeforeMount(async () => {
     await totalClickSocial(selectedTimePeriod.value);
     await loadStaff();
     await loadUnits(); 
-    await loadAvisSoumis(establishment.value, unitsFilter.value, unitsFilter.value);
 });
 
 watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
@@ -333,7 +296,6 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
     totalNotSubmitted(selectedTimePeriod.value);
     totalSubmitted(selectedTimePeriod.value);
     totalClickSocial(selectedTimePeriod.value);
-    loadAvisSoumis(establishment.value, unitsFilter.value , staffFilter.value)
 })
 
 
@@ -430,6 +392,10 @@ h1 {
     color: var(--color-primary);
 }
 .square{
+    display: flex;
+    flex-direction: column; /* Alignement vertical */
+    justify-content: space-between; /* Espacement entre les enfants */
+    align-items: center;
     width: 20%;
     height: auto;
     border-radius: 5px;

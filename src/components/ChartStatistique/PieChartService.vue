@@ -22,8 +22,11 @@ const staff = inject('staffFilter');
 const units = inject('unitsFilter');
 const source = inject('sourceFilter');
 
+const series = ref([]);
+const labels = ref([]);
+
 const chartOptions = ref({
-    labels: [], 
+    labels: labels.value, 
     colors: ['#0a8964', '#FEB019', '#4D4D4D', '#5DA5DA', '#FAA43A', '#60BD68', '#F17CB0', '#B2912F', '#B276B2', '#DECF3F', '#F15854'],// Couleurs des séries
     dataLabels: {
         enabled: true,
@@ -36,29 +39,6 @@ const chartOptions = ref({
         horizontalAlign: 'center'
     }
 });
-const series = ref([15, 13])
-
-const chartKey = ref(0);
-
-
-const loadUnits = async () => {
-    try {
-        const response = await new Promise((resolve) => {
-            services.get_Record(`/customer/units?tag=${route.params.tag}`, (response) => {
-                resolve(response);
-            });
-        });
-        if (response.status === 200) {
-            const unitNames = response.data.map(unit => unit.name);
-            chartOptions.value.labels = unitNames;
-            chartKey.value++;
-        } else {
-            console.error('Error fetching data:', response);
-        }
-    } catch (error) {
-        console.error("Error loading units:", error);
-    }
-}
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 
@@ -82,12 +62,17 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
     try {
         const response = await new Promise((resolve) => {
             services.get_Record(api, (response) => {
-                console.log("eeeeeeeeeeee",response)
                 resolve(response);
             });
         });
         if (response.status === 200) {
             series.value = response.data.series;
+            labels.value = response.data.labels;
+                chartOptions.value = {
+                  ...chartOptions.value,
+                  labels: labels.value
+                };
+            console.log("eeeeeeeeeeee",response.data)
         } else {
             console.error('Error fetching data:', response);
         }
@@ -97,7 +82,6 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
 };
 
 onBeforeMount(async () => {
-    await loadUnits(); 
     loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, source.value, units.value, staff.value)
 });
 
