@@ -32,7 +32,7 @@
         </div>
         <div class="number">
             <div class="square bordure-bleu">
-                <h5 class="mb-4"><i class="uil uil-user"></i> <span>Total visits</span></h5>
+                <h5><i class="uil uil-user"></i> <span>Total visits</span></h5>
                 <p>{{ nbrTotalVisit }}<sup :class="nbrGapVisit >= 0 ? 'texte-vert' : 'texte-rouge'">{{ nbrGapVisit >= 0 ? '+' : '' }}{{ nbrGapVisit }}</sup></p>
             </div>
             <div class="square square bordure-rouge"> 
@@ -40,7 +40,7 @@
                 <p>{{ nbrNotSubmitted }}<sup :class="nbrGapNotSubmitted >= 0 ? 'texte-vert' : 'texte-rouge'">{{ nbrGapNotSubmitted >= 0 ? '+' : '' }}{{ nbrGapNotSubmitted }}</sup></p>
             </div>
             <div class="square bordure-vert">
-                <h5 class="mb-4"><i class="uil-envelope-send"></i> <span>Total submissions</span></h5>
+                <h5><i class="uil-envelope-send"></i> <span>Total submissions</span></h5>
                 <p>{{ nbrSubmitted }}<sup :class="nbrGapSubmitted >= 0 ? 'texte-vert' : 'texte-rouge'">+{{ nbrGapSubmitted }}</sup></p>
             </div>
             <div class="square">
@@ -402,6 +402,13 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
     width: 100%;
     gap: 40px;
 }
+
+@media (max-width: 1281px) {
+    .square.bordure-bleu h5{
+        margin-bottom: 15px !important;
+    }
+}
+
 @media (max-width: 995px) {
     .dashboard {
         display: flex;
