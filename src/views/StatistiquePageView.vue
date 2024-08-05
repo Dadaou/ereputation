@@ -360,6 +360,8 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
     display: flex;
     width: 100%;
     gap: 40px;
+    height: auto !important;
+    overflow: hidden;
 }
 
 @media (max-width: 1281px) {
@@ -420,7 +422,7 @@ h1 {
 .number{
     display: flex;
     padding-top: 20px;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
 .texte-vert {
