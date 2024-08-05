@@ -16,20 +16,12 @@ const route = useRoute();
 const dataChart = ref([]);
 const series = ref([]);
 const category = ref([]);
-
 const start_date = inject('start_date');
 const end_date = inject('end_date');
-
 const timePeriods = inject('timePeriods');
-
 const establishment = inject('establishment');
-
 const staff = inject('staffFilter');
 const units = inject('unitsFilter');
-
-
-
-
 
 // Options du graphique
 const chartOptions = ref({
@@ -37,34 +29,30 @@ const chartOptions = ref({
         id: 'vuechart-example',
     },
     xaxis: {
-        categories: [], // Mois de l'année
+        categories: [],
     },
-    colors: ['#0a8964', '#FEB019'], // Couleurs des séries
+    colors: ['#0a8964', '#FEB019'],
     legend: {
-        position: 'bottom', // Position de la légende
+        position: 'bottom',
         horizontalAlign: 'center'
     },
     stroke: {
         width: 2,
-        curve: 'smooth' // Ligne lissée
+        curve: 'smooth'
     },
-    // markers: {
-    //     size: 5,
-    // },
     yaxis: {
         min: 0,
         max: 60,
-        tickAmount: 6, // Nombre de ticks sur l'axe Y
+        tickAmount: 6,
         labels: {
             formatter: function (val) {
-                return val.toFixed(0); // Afficher les valeurs sans décimales
+                return val.toFixed(0);
             }
         }
     }
 })
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
-
 
 const loadData = async (start_date, end_date, timePeriods , establishment , staff , units ) => {
     if (IsValueOkay(start_date) && IsValueOkay(end_date)) {
@@ -82,8 +70,6 @@ const loadData = async (start_date, end_date, timePeriods , establishment , staf
     if (units) {
         api = api + `&units=${units}`
     }
-   
-    //console.log("api pour chart line" , api )
 
     try {
         const response = await new Promise((resolve) => {
@@ -118,9 +104,6 @@ onBeforeMount(async () => {
 watch([start_date, end_date, timePeriods , establishment,staff, units ], () => {
     loadData(start_date.value, end_date.value,timePeriods.value,establishment.value,staff.value , units.value )
 })
-
-
-
 </script>
 
 <script>
@@ -131,7 +114,6 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .chart-container {
     width: 100%;

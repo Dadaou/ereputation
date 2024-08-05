@@ -6,7 +6,6 @@
 </template>
 
 <script setup>
-
 import { ref, onBeforeMount,watch , inject } from 'vue';
 import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router';
@@ -17,17 +16,12 @@ const route = useRoute();
 const dataChart = ref([]);
 const series = ref([]);
 const category = ref([]);
-
 const start_date = inject('start_date');
 const end_date = inject('end_date');
-
 const timePeriods = inject('timePeriods');
-
 const establishment = inject('establishment');
-
 const staff = inject('staffFilter');
 const units = inject('unitsFilter');
-
 
 const chartOptions = ref({
   chart: {
@@ -36,6 +30,16 @@ const chartOptions = ref({
   },
   xaxis: {
     categories: [],
+  },
+  yaxis: {
+    min: 0,
+    max: 60,
+    tickAmount: 6,
+    labels: {
+      formatter: function (val) {
+        return val.toFixed(0);
+      }
+    }
   },
   colors: ['#0a8964', '#FEB019'],
   legend: {
@@ -49,8 +53,6 @@ const chartOptions = ref({
 
   },
 });
-
-
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 
@@ -100,16 +102,12 @@ watch([start_date, end_date, timePeriods, establishment, staff, units], () => {
   loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, staff.value, units.value )
 })
 
-
-
-
 onBeforeMount(async () => {
   await loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, staff.value, units.value);
 });
 
 
 </script>
-
 
 <script>
 export default {
