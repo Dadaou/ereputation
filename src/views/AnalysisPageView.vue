@@ -172,7 +172,7 @@
 
             <el-date-picker v-model="end_date" placeholder="End date" :size="'large'" />
         </div>
-        <div class="px-2 w-full my-2" v-if="activeName !== 'analysis_competitors'">
+        <div class="px-2 w-full my-2" v-if="activeName !== 'trends' && activeName !== 'analysis_competitors'">
             <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
                 :max-collapse-tags="3" placeholder="select categories" size="large">
                 <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
@@ -284,7 +284,7 @@
                     selectedFeeling = feeling
                 }" :default="feelings[0]" /> -->
 
-            <div class="date__filter" v-if="activeName !== 'analysis_competitors'">
+            <div class="date__filter" v-if="activeName !== 'trends'  && activeName !== 'analysis_competitors'">
                 <div class="text-sm title">Filter by category</div>
                 <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
                     :max-collapse-tags="3" placeholder="select categories" size="large">
