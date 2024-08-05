@@ -3,14 +3,15 @@
         <h1>Analytics</h1>
         <div class="date__filter">
 
-            <el-select v-model="establishment" multiple size="large" class="space" placeholder="All Etablishment">
-                <el-option label="All Etablishment" value="" />
+            <el-select v-model="establishment" multiple size="large" class="space my-3" placeholder="All Etablishment">
+                <el-option label="All Etablishment" :value="'all'" @click="handleEstablishmentDropdown('all')"
+                    :disabled="establishment.length > 1 && !establishment.includes('all')"/>
                 <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
-                    :value="item.id" />
+                    :value="item.id" @click="handleEstablishmentDropdown('other')"/>
             </el-select>
 
-            <el-date-picker v-model="start_date" type="date" :size="'large'" class="space" style="margin-bottom: 20px !important;"/>
-            <el-date-picker v-model="end_date" type="date" :size="'large'" class="space2" style="margin-bottom: 20px !important;"/>
+            <el-date-picker v-model="start_date" type="date" :size="'large'" class="space my-3" />
+            <el-date-picker v-model="end_date" type="date" :size="'large'" class="space2 my-3"/>
             <DropdownComponent :showTitle="false" class="dropdown w-full spaceSelect" :data="timePeriods" @submit="(timePeriod) => {
                 selectedTimePeriod = timePeriod
             }" :default="timePeriods[0]" />
@@ -92,64 +93,6 @@ import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import services from '@Services/services.js';
 import { useRoute } from 'vue-router';
 
-const nbrTotalVisit = ref(null);
-const nbrNotSubmitted = ref(null);
-const nbrSubmitted = ref(null);
-const nbrClickSocial = ref(null);
-const nbrGapVisit = ref(null);
-const nbrGapNotSubmitted = ref(null);
-const nbrGapSubmitted = ref(null);
-const nbrGapClickSocial = ref(null);
-const userStore = useUserStore();
-const timePeriods = ref(['daily', 'monthly', 'yearly']);
-
-// const sources = ref(['all', 'gates', 'feedback']);
-
-const sources = ref([
-    { id: "all", name: 'All' },
-    { id: "gates", name: 'Gates' },
-    { id: "feedback", name: 'Feedback' },
-    // Ajoutez d'autres éléments ici
-]);
-const sourceFilter = ref(null);
-provide('sourceFilter', sourceFilter)
-
-
-
-
-
-const route = useRoute();
-
-const selectedTimePeriod = ref(null);
-provide('timePeriods', selectedTimePeriod)
-
-const today = new Date();
-const oneMonthAgo = new Date();
-oneMonthAgo.setMonth(today.getMonth() - 1);
-
-const staffs = ref([]);
-
-const staffFilter = ref(null);
-provide('staffFilter', staffFilter)
-
-const units = ref([])
-const unitsFilter = ref(null);
-provide('unitsFilter', unitsFilter)
-
-
-
-
-
-
-const start_date = ref(oneMonthAgo.toISOString().split('T')[0]);
-provide('start_date', start_date)
-
-const end_date = ref(today.toISOString().split('T')[0]);
-provide('end_date', end_date)
-
-const establishment = ref([])
-provide('establishment', establishment)
-
 const ChartFeedbackSubmissions = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/ChartFeedbackSubmissions.vue")
 )
@@ -174,7 +117,59 @@ const PieChartService = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/PieChartService.vue")
 )
 
+const nbrTotalVisit = ref(null);
+const nbrNotSubmitted = ref(null);
+const nbrSubmitted = ref(null);
+const nbrClickSocial = ref(null);
+const nbrGapVisit = ref(null);
+const nbrGapNotSubmitted = ref(null);
+const nbrGapSubmitted = ref(null);
+const nbrGapClickSocial = ref(null);
+const userStore = useUserStore();
+const timePeriods = ref(['daily', 'monthly', 'yearly']);
 
+const sources = ref([
+    { id: "all", name: 'All' },
+    { id: "gates", name: 'Gates' },
+    { id: "feedback", name: 'Feedback' },
+    // Ajoutez d'autres éléments ici
+]);
+
+const sourceFilter = ref(null);
+provide('sourceFilter', sourceFilter)
+
+
+const route = useRoute();
+
+const selectedTimePeriod = ref(null);
+provide('timePeriods', selectedTimePeriod)
+
+const today = new Date();
+const oneMonthAgo = new Date();
+oneMonthAgo.setMonth(today.getMonth() - 1);
+
+const staffs = ref([]);
+
+const staffFilter = ref(null);
+provide('staffFilter', staffFilter)
+
+const units = ref([])
+const unitsFilter = ref(null);
+provide('unitsFilter', unitsFilter)
+
+const start_date = ref(oneMonthAgo.toISOString().split('T')[0]);
+provide('start_date', start_date)
+
+const end_date = ref(today.toISOString().split('T')[0]);
+provide('end_date', end_date)
+
+const establishment = ref([])
+provide('establishment', establishment)
+
+const handleEstablishmentDropdown = (type) => {
+    const filters = type == 'other' ? establishment.value.filter(name => name != 'all') : ['all']
+    establishment.value =  establishment.value.length > 0 ? filters : ['all']
+}
 
 const totalVisit = async (type) => {
     try {
@@ -292,6 +287,7 @@ onBeforeMount(async () => {
 });
 
 watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
+    establishment.value = establishment.value.length > 0 ? establishment.value : ['all']
     totalVisit(selectedTimePeriod.value);
     totalNotSubmitted(selectedTimePeriod.value);
     totalSubmitted(selectedTimePeriod.value);
@@ -332,6 +328,7 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
 .date__filter {
     display: flex;
     gap: 10px;
+    margin-bottom: 10px;
 }
 
 .space {
@@ -339,7 +336,7 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
 }
 
 .spaceSelect {
-    margin-top : 0 !important
+    margin-top : 12px !important
 }
 
 .spaceSelect2 {
@@ -388,7 +385,7 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
 h1 {
     font-size: 18px;
     font-weight: 600;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     color: var(--color-primary);
 }
 .square{
