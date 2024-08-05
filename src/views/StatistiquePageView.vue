@@ -11,12 +11,13 @@
             </el-select>
 
             <el-date-picker v-model="start_date" type="date" :size="'large'" class="space my-3" />
-            <el-date-picker v-model="end_date" type="date" :size="'large'" class="space2 my-3"/>
+            <el-date-picker v-model="end_date" type="date" :size="'large'" class="space my-3"/>
             <DropdownComponent :showTitle="false" class="dropdown w-full spaceSelect" :data="timePeriods" @submit="(timePeriod) => {
                 selectedTimePeriod = timePeriod
             }" :default="timePeriods[0]" />
 
         </div>
+
         <div class="date__filter">
             <el-select v-model="sourceFilter" size="large" class="space" placeholder="All Source">
                 <el-option label="All Source" value="" />
@@ -31,6 +32,7 @@
                 <el-option v-for="item in units" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
         </div>
+
         <div class="number">
             <div class="square bordure-bleu">
                 <h5><i class="uil uil-user"></i> <span>Total visits</span></h5>
@@ -53,8 +55,7 @@
             </div>
         </div>
 
-
-        <div class="dashboard">
+        <div class="dashboard__chart">
             <div class="statistique-left">
                 <ChartFeedbackSubmissions />
             </div>
@@ -63,7 +64,7 @@
             </div>
         </div>
         <br>
-        <div class="dashboard">
+        <div class="dashboard__chart">
             <div class="statistique-left ">
                 <ChartAboutGate />
             </div>
@@ -72,7 +73,7 @@
             </div>
         </div>
         <br>
-        <div class="dashboard">
+        <div class="dashboard__chart">
             <div class="statistique-left ">
                 <PieChartReseauxSociaux />
             </div>
@@ -331,17 +332,8 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
     margin-bottom: 10px;
 }
 
-.space {
-    /* margin-right: 10px; */
-}
-
 .spaceSelect {
     margin-top : 12px !important
-}
-
-.spaceSelect2 {
-    margin-top: 0 !important ;
-    margin-right: 10px;
 }
 
 .bordure-vert{
@@ -356,7 +348,7 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
     border-bottom: 2px solid;
     border-bottom-color: #e97b80;
 }
-.dashboard {
+.dashboard__chart {
     display: flex;
     width: 100%;
     gap: 40px;
@@ -371,7 +363,7 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
 }
 
 @media (max-width: 995px) {
-    .dashboard {
+    .dashboard__chart {
         display: flex;
         justify-content: space-around;
     }
@@ -473,17 +465,9 @@ h1 {
     gap: 10px;
 }
 
-.space {
-    /* margin-right: 10px; */
-}
 
 .spaceSelect {
     margin-top : 0 !important
-}
-
-.spaceSelect2 {
-    margin-top: 0 !important ;
-    margin-right: 10px;
 }
 
 .bordure-vert{
@@ -498,27 +482,40 @@ h1 {
     border-bottom: 2px solid;
     border-bottom-color: #e97b80;
 }
-.dashboard {
-    /* display: flex; */
+.dashboard__chart {
     width: 100%;
 }
 }
 
 @media (max-width: 558px) {
+    .dashboard__chart {
+        display: block;
+    }
+
+    .statistique-left,
+    .statistique-right,
+    .square,
     .date__filter {
         display: block !important;
+        width: 85%;
+        margin-left: 2%;
+        float:none;
     }
-    .spaceSelect,
+
     .space {
-        margin-bottom: 20px !important;
+        margin-bottom: 10px !important;
     }
+
+    .spaceSelect {
+        margin-bottom: 20px !important;
+        margin-top: 10px !important;
+    }
+
     .number {
         display: block ;
         align-items: center;
     }
-    .square {
-        width: 100%;
-    }
+    
     .square span{
         font-size: 12px !important;
     }

@@ -72,7 +72,6 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
                   ...chartOptions.value,
                   labels: labels.value
                 };
-            console.log("eeeeeeeeeeee",response.data)
         } else {
             console.error('Error fetching data:', response);
         }
