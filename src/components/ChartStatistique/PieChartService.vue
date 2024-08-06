@@ -1,9 +1,20 @@
 <template>
     <h3>Number of form submitted by Units</h3>
-    <div class="chart-container">
-        <apexchart :key="chartKey" type="donut" height="350" :options="chartOptions" :series="series"></apexchart>
+    <div v-if="hasData">
+        <div class="chart-container">
+            <apexchart :key="chartKey" type="donut" height="350" :options="chartOptions" :series="series"></apexchart>
+        </div>
+    </div>
+    <div v-else>
+        <div>No data available for the selected filters
+            <span v-if="IsValueOkay(establishment)">by establishment {{ establishment }}</span>
+            <span v-if="IsValueOkay(source)">by source: {{ source }}</span>
+            <span v-if="IsValueOkay(units)">by units: {{ units }}</span>
+            <span v-if="IsValueOkay(staff)">by staff: {{ staff }}</span>
+        </div>
     </div>
 </template>
+
 
 <script setup>
 import { ref, onBeforeMount, inject, watch } from 'vue'
@@ -21,6 +32,7 @@ const establishment = inject('establishment');
 const staff = inject('staffFilter');
 const units = inject('unitsFilter');
 const source = inject('sourceFilter');
+const hasData = ref(false);
 
 const series = ref([]);
 const labels = ref([]);
@@ -58,7 +70,7 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
     if (staff) {
         api = api + `&staff=${staff}`
     }
-
+    console.log("ito",establishment.value)
     try {
         const response = await new Promise((resolve) => {
             services.get_Record(api, (response) => {
@@ -68,15 +80,28 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
         if (response.status === 200) {
             series.value = response.data.series;
             labels.value = response.data.labels;
+            chartOptions.value.labels = labels.value;
+
+            const total = series.value.reduce((acc, curr) => acc + curr, 0);
+            hasData.value = total > 0;
+
+            if (hasData.value) {
                 chartOptions.value = {
                   ...chartOptions.value,
                   labels: labels.value
                 };
+             
+            } else {
+                
+                console.warn('Data is present but the sum is zero.');
+            }
         } else {
             console.error('Error fetching data:', response);
+            hasData.value = false;
         }
     } catch (error) {
         console.error(error);
+        hasData.value = false;
     }
 };
 
