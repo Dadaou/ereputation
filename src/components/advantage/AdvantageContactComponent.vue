@@ -173,6 +173,13 @@ button:hover {
     display: inline;
     margin-right: 7rem;
   }
+  .el-table--fit {
+    font-size: 11px !important;
+  }
+
+  .table-description p {
+    font-size: 12px;
+  }
 }
 @media screen and (max-width: 468px) {
   .input_search {
@@ -183,6 +190,13 @@ button:hover {
   .container {
     display: flex;
     justify-content: space-between;
+  }
+  .el-table--fit {
+    font-size: 11px !important;
+  }
+
+  .table-description p {
+    font-size: 12px;
   }
 }
 </style>
