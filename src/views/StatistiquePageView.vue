@@ -150,11 +150,13 @@ const oneMonthAgo = new Date();
 oneMonthAgo.setMonth(today.getMonth() - 1);
 
 const staffs = ref([]);
+provide('staffs', staffs)
 
 const staffFilter = ref(null);
 provide('staffFilter', staffFilter)
 
 const units = ref([])
+provide('units', units)
 const unitsFilter = ref(null);
 provide('unitsFilter', unitsFilter)
 
@@ -166,6 +168,7 @@ provide('end_date', end_date)
 
 const establishment = ref([])
 provide('establishment', establishment)
+provide('establishments', userStore.user.customer.establishments)
 
 const handleEstablishmentDropdown = (type) => {
     const filters = type == 'other' ? establishment.value.filter(name => name != 'all') : ['all']

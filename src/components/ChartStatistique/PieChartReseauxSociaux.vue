@@ -1,8 +1,31 @@
 <template>
     <h3>Number of total media click</h3>
-    <div class="chart-container">
+
+    <div v-if="hasData">
+       
+        <div class="chart-container">
         <apexchart type="donut" height="350" :options="chartOptions" :series="series"></apexchart>
-    </div>
+        </div>
+   </div>
+   <div v-else>
+
+<div>No clicks for : <br>
+    <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'"> establishments[
+    <span v-for="estab_id in establishment" :key="estab_id">{{ estab_id }}
+    <span v-for="estab_name in establishments" :key="estab_name.id"><span v-if="estab_name.id == estab_id">{{ estab_name.name }} ,</span></span></span>]<br></span>
+    
+    <span v-if="IsValueOkay(source)">source : {{ source }}<br></span>
+
+    <span v-if="IsValueOkay(units)">units [
+    <span v-for="unit_id in units" :key="unit_id">
+    <span v-for="unite in unites" :key="unite.id"><span v-if="unite.id == unit_id">{{ unite.name }} ,</span></span></span>]<br></span>
+    
+    <span v-if="IsValueOkay(staff)"> staff [
+    <span v-for="staff_id in staff" :key="staff_id">
+    <span v-for="staff_name in staffs" :key="staff_name.id"><span v-if="staff_name.id == staff_id">{{ staff_name.firstName }} ,</span></span></span>]</span>
+</div>
+
+</div>
 </template>
 
 <script setup>
@@ -18,12 +41,16 @@ const start_date = inject('start_date');
 const end_date = inject('end_date');
 const timePeriods = inject('timePeriods');
 const establishment = inject('establishment');
+const establishments = inject('establishments');
 const staff = inject('staffFilter');
+const staffs = inject('staffs');
+const unites = inject('units');
 const units = inject('unitsFilter');
 const source = inject('sourceFilter');
 
 const series = ref([]);
 const labels = ref([]);
+const hasData = ref(false);
 
 const chartOptions = ref({
     labels: labels.value, 
@@ -76,6 +103,9 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
                   ...chartOptions.value,
                   labels: labels.value
                 };
+
+                const total = series.value.reduce((acc, curr) => acc + curr, 0);
+                hasData.value = total > 0;
         } else {
             console.error('Error fetching data:', response);
         }

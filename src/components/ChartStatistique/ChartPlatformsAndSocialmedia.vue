@@ -1,8 +1,31 @@
 <template>
     <h3>Platforms & Social Media</h3>
-    <div class="chart-container">
+
+    <div v-if="hasData">
+       
+        <div class="chart-container">
         <apexchart type="bar" height="350" :options="chartOptions" :series="series"></apexchart>
-    </div>
+        </div>
+  </div>
+  <div v-else>
+
+<div>No clicks for : <br>
+    <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'"> establishments[
+    <span v-for="estab_id in establishment" :key="estab_id">{{ estab_id }}
+    <span v-for="estab_name in establishments" :key="estab_name.id"><span v-if="estab_name.id == estab_id">{{ estab_name.name }} ,</span></span></span>]<br></span>
+    
+    <span v-if="IsValueOkay(source)">source : {{ source }}<br></span>
+
+    <span v-if="IsValueOkay(units)">units [
+    <span v-for="unit_id in units" :key="unit_id">
+    <span v-for="unite in unites" :key="unite.id"><span v-if="unite.id == unit_id">{{ unite.name }} ,</span></span></span>]<br></span>
+    
+    <span v-if="IsValueOkay(staff)"> staff [
+    <span v-for="staff_id in staff" :key="staff_id">
+    <span v-for="staff_name in staffs" :key="staff_name.id"><span v-if="staff_name.id == staff_id">{{ staff_name.firstName }} ,</span></span></span>]</span>
+</div>
+
+</div>
 </template>
 
 <script setup>
@@ -20,13 +43,15 @@ const end_date = inject('end_date');
 const timePeriods = inject('timePeriods');
 
 const establishment = inject('establishment');
-
+const establishments = inject('establishments');
+const staffs = inject('staffs');
+const unites = inject('units');
 const staff = inject('staffFilter');
 const units = inject('unitsFilter');
 const source = inject('sourceFilter');
 
 const series = ref([]);
-
+const hasData = ref(false);
 
 
 
@@ -96,6 +121,9 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
                     name: response.data.name || 'Series 1', // Assurez-vous d'utiliser le bon nom de série
                     data: response.data.data
                 }];
+                hasData.value = response.data.data.length > 0;
+              
+                
             } else {
                 console.error('Expected array but got:', response.data);
                 series.value = [];
