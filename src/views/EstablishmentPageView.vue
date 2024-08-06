@@ -212,12 +212,20 @@
                     <span v-if="!establishmentLoading" class="society__location">{{ establishment.category }}</span>
                     <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                 </div>
+                <div class="society__location" v-if="establishment.country != null">
+                    <i class="uil uil-map"></i>
+                    <span v-if="!establishmentLoading" class="society__location">
+                        {{ establishment.country }}</span>
+                    <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                </div>
+
                 <div class="society__location">
                     <i class="uil uil-location-point"></i>
                     <span v-if="!establishmentLoading" class="society__location"> {{
                         establishment.city }}</span>
                     <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                 </div>
+                
             </div>
             <DropdownComponent class="dropdown" title="Compare to" placeholder="Select a competitor"
                 :data="computedCompetitors" @submit="(competitor) => {

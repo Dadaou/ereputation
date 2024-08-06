@@ -444,8 +444,13 @@ img.establishment_img {
 }
 
 .table__container {
-    /* overflow-x: scroll; */
-    width: 85%;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    width: 85%; /* Make sure the container takes full width */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+}
+
+.el-table {
+    min-width: 600px; /* Ensure the table has a minimum width to trigger scrolling */
 }
 
 .search {

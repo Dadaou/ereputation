@@ -1,5 +1,5 @@
 <template>
-	<div class="tablet_mobile__head" v-if="!loading">
+    <div class="tablet_mobile__head" v-if="!loading">
         <div class="establishment__info_tablet">
             <label>{{ establishment.name }}</label>
             <div>
@@ -20,7 +20,7 @@
         </div>
         <div class="photo">
             <div v-if="establishment.url_source !== null" class="establishment__img">
-                <img id="logoimagemobile" :src="establishment.url_source" alt=""  />
+                <img id="logoimagemobile" :src="establishment.url_source" alt="Establishment Logo" />
             </div>
             <div v-else role="status"
                 class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
@@ -73,57 +73,67 @@
         </div>
     </div>
 </template>
+
 <script setup>
 import { computed } from 'vue';
 
 const props = defineProps({
-	establishment:{
-		type: Object,
-		required: true
-	},
-	isLoading: {
-		type: Boolean,
-		required: true,
-		default: false
-	}
+    establishment:{
+        type: Object,
+        required: true
+    },
+    isLoading: {
+        type: Boolean,
+        required: true,
+        default: false
+    }
 });
 
-const loading = computed(()=>{
-	return props.isLoading
-});	
-
+const loading = computed(() => {
+    return props.isLoading
+});    
 </script>
+
 <style scoped>
-.dashboard{
-	display: flex;
+.dashboard {
+    display: flex;
 }
-.smallClass{
-    width: auto! important;
-    height: 100%! important;
-    margin-top:50px;
+.smallClass {
+    width: auto !important;
+    height: 100% !important;
+    margin-top: 50px;
 }
-.largeClass{
-    width: 100%! important;
-    height: auto! important;
-    margin-top:50px;
+.largeClass {
+    width: 100% !important;
+    height: auto !important;
+    margin-top: 50px;
 }
 .establishment__img {
     width: 100%;
-    height: 160px;
+    height: 150px;
+    max-height: 200px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+.establishment__img img {
+    width: auto;
+    height: 100%;
+    max-height: 180px;
+    object-fit: cover;
+}
+.photo {
+    margin-bottom: -10px; /* Adjust this value as needed */
+}
 @media screen and (min-width: 540px) and (max-width: 975px) {
-
-    .establishment__info_tablet{
-        margin-top:0px! important;
+    .establishment__info_tablet {
+        margin-top: 0px !important;
     }
-    .smallClass{
-        margin-top:0px! important;
+    .smallClass {
+        margin-top: 0px !important;
     }
-    .largeClass{
-        margin-top:0px! important;
+    .largeClass {
+        margin-top: 0px !important;
     }
 }
 </style>
