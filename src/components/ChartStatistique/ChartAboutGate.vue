@@ -44,6 +44,11 @@ const chartOptions = ref({
             // reverseNegativeShade: true,
             colorScale: {
                 ranges: [
+                    {   
+                    from: 0,
+                    to: 10000000,
+                    color: '#3EB489'
+                    },
                     // {
                     // from: 0,
                     // to: 1,
@@ -74,26 +79,22 @@ const chartOptions = ref({
                     // to: 15,
                     // color: '#62ce86'
                     // },
-                    {
-                    from: -1,
-                    to: 0,
-                    color: '#48c16c'
-                    },
-                    {
-                    from: 1,
-                    to: 10,
-                    color: '#30ab48'
-                    },
-                    {
-                    from: 11,
-                    to: 100,
-                    color: '#3b9358'
-                    },
-                    {
-                    from: 101,
-                    to: 8000000000,
-                    color: '#215332'
-                    }
+                 
+                    // {
+                    // from: 1,
+                    // to: 10,
+                    // color: '#30ab48'
+                    // },
+                    // {
+                    // from: 11,
+                    // to: 100,
+                    // color: '#3b9358'
+                    // },
+                    // {
+                    // from: 101,
+                    // to: 8000000000,
+                    // color: '#215332'
+                    // }
                    
             ]
             }
