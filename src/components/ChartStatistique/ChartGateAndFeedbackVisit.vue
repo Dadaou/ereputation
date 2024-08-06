@@ -31,7 +31,7 @@ const chartOptions = ref({
     xaxis: {
         categories: [],
     },
-    colors: ['#0a8964', '#62ce86'],
+    colors: ['#0a8964', '#48c16c'],
     legend: {
         position: 'bottom',
         horizontalAlign: 'center'
