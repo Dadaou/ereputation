@@ -20,7 +20,7 @@
     
     <span v-if="IsValueOkay(staff)"> staff [
     <span v-for="staff_id in staff" :key="staff_id">
-    <span v-for="staff_name in staffs" :key="staff_name.id"><span v-if="staff_name.id == staff_id">{{ staff_name.firstName }} ,</span></span></span>]</span>
+    <span v-for="staff_name in staffs" :key="staff_name.id"><span v-if="staff_name.id == staff_id">{{ staff_name.name }} ,</span></span></span>]</span>
 </div>
 
 </div>
