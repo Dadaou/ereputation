@@ -70,7 +70,7 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
     if (staff) {
         api = api + `&staff=${staff}`
     }
-    console.log("ito",establishment.value)
+    
     try {
         const response = await new Promise((resolve) => {
             services.get_Record(api, (response) => {
