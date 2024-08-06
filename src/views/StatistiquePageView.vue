@@ -295,10 +295,6 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
     totalClickSocial(selectedTimePeriod.value);
 })
 
-
-
-
-
 </script>
 <style scoped>
 .iconfy{
@@ -426,7 +422,7 @@ h1 {
 }
 
 
-@media (max-width: 780px) {
+@media (min-width: 560px) and (max-width: 800px) {
     .number {
         justify-content: flex-start;
         gap: 20px;
@@ -434,57 +430,18 @@ h1 {
     .square {
         padding: 2px !important;
     }
-}
+    .dashboard__chart {
+        display: block;
+        width: 90%;
+        gap: 20px;
+    }
 
-@media (max-width: 768px) {
-    .iconfy{
-    display: flex;
-    justify-content: center;
-}
-.iconify--pepicons-pencil{
-    color: #000 !important;
-    margin-right: 3px;
-    margin-top: 2px;
-}
-.statistique-left{
-    float: left;
-    width: 45%;
-    margin-left: 30px;
-    
-}
-
-.statistique-right{
-    float : right ; 
-    width: 45%;
-    margin-right: 30px;
-    margin-top: -20px;
-}
-
-.date__filter {
-    display: flex;
-    gap: 10px;
-}
-
-
-.spaceSelect {
-    margin-top : 0 !important
-}
-
-.bordure-vert{
-    border-bottom: 2px solid;
-    border-bottom-color: #0a8964;
-}
-.bordure-bleu{
-    border-bottom: 2px solid;
-    border-bottom-color: #7bc6e9;
-}
-.bordure-rouge{
-    border-bottom: 2px solid;
-    border-bottom-color: #e97b80;
-}
-.dashboard__chart {
-    width: 100%;
-}
+    .statistique-left,
+    .statistique-right {
+        display: block !important;
+        width: 95%;
+        float:none;
+    }
 }
 
 @media (max-width: 558px) {
