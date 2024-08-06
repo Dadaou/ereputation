@@ -42,7 +42,7 @@ const chartOptions = ref({
     legend: {
         show: false
     },
-    colors: ['#0a8964'], // Couleurs des séries
+    colors: ['#30ab48'], // Couleurs des séries
 
 
 

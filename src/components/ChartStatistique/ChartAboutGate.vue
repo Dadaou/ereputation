@@ -38,16 +38,64 @@ const chartOptions = ref({
     },
     plotOptions: {
         treemap: {
-            distributed: true,
-            enableShades: true,
-            shadeIntensity: 0.5,
-            reverseNegativeShade: true,
+            // distributed: true,
+            enableShades: false,
+            // shadeIntensity: 0.5,
+            // reverseNegativeShade: true,
             colorScale: {
-                ranges: [{
-                    from: 0,
+                ranges: [
+                    // {
+                    // from: 0,
+                    // to: 1,
+                    // color: '#dcf4e4'
+                    // },
+                    // {
+                    // from: 1,
+                    // to: 2,
+                    // color: '#B8D9D2'
+                    // },
+                    // {
+                    // from: 2,
+                    // to: 3,
+                    // color: '#a8e4bc'
+                    // },
+                    // {
+                    // from: 0,
+                    // to: 2,
+                    // color: '#85d9a1'
+                    // },
+                    // {
+                    // from: 3,
+                    // to: 10,
+                    // color: '#73d393'
+                    // },
+                    // {
+                    // from: 11,
+                    // to: 15,
+                    // color: '#62ce86'
+                    // },
+                    {
+                    from: -1,
+                    to: 0,
+                    color: '#48c16c'
+                    },
+                    {
+                    from: 1,
+                    to: 10,
+                    color: '#30ab48'
+                    },
+                    {
+                    from: 11,
                     to: 100,
-                    color: '#0a8964'
-                }]
+                    color: '#3b9358'
+                    },
+                    {
+                    from: 101,
+                    to: 8000000000,
+                    color: '#215332'
+                    }
+                   
+            ]
             }
         }
     },

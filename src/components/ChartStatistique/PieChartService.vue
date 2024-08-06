@@ -27,7 +27,7 @@ const labels = ref([]);
 
 const chartOptions = ref({
     labels: labels.value, 
-    colors: ['#0a8964', '#FEB019', '#4D4D4D', '#5DA5DA', '#FAA43A', '#60BD68', '#F17CB0', '#B2912F', '#B276B2', '#DECF3F', '#F15854'],// Couleurs des séries
+    colors: ['#dcf4e4', '#B8D9D2', '#a8e4bc', '#85d9a1', '#73d393', '#62ce86', '#48c16c', '#30ab48', '#3b9358', '#215332', '#14331f'],// Couleurs des séries
     dataLabels: {
         enabled: true,
         formatter: function (val) {

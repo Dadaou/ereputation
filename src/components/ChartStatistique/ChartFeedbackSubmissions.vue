@@ -41,7 +41,7 @@ const chartOptions = ref({
       }
     }
   },
-  colors: ['#0a8964', '#FEB019'],
+  colors: ['#0a8964', '#62ce86'],
   legend: {
     position: 'bottom',
     horizontalAlign: 'center',
