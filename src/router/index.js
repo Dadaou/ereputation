@@ -361,6 +361,11 @@ const router = createRouter({
               component: () => import('@Views/EstablishmentListByTrendView.vue')
             },
             {
+              path: 'customer/:tag/establishment/analytic',
+              name: 'Analytic',
+              component: () => import('@Views/StatistiquePageView.vue')
+            },
+            {
               path: 'customers',
               name: 'CustomersList',
               component: () => import('@Views/CustomerListView.vue')
@@ -416,11 +421,7 @@ const router = createRouter({
               name: 'QRCodes',
               component: () => import('@Views/MyQRCodesPageView.vue')
             },
-            {
-              path: 'statistique',
-              name: 'Statistique',
-              component: () => import('@Views/StatistiquePageView.vue')
-            },
+      
             {
               path: 'parameters/:tab?/:sub_tab?',
               name: 'Parameters',
