@@ -437,7 +437,7 @@ h1 {
 
 @media (min-width: 560px) and (max-width: 800px) {
     .number {
-        justify-content: flex-start;
+        /* justify-content: flex-start; */
         gap: 20px;
     }
     .square {
