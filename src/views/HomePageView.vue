@@ -15,6 +15,10 @@
                         :to="{ name: 'EstablishmentListByTrend', params: { tag: tag } }">
                         <Icon :icon="'gg:trending'" width="25"></Icon>
                     </RouterLink>
+                    <RouterLink class="search__icon"
+                        :to="{ name: 'Statistique', params: { tag: tag } }">
+                        <Icon :icon="'mdi:chart-line'" width="25"></Icon>
+                    </RouterLink>
                 </div>
                 <button
                     v-if="userStore.user.partner && userStore.user.roles.includes('ROLE_PARTNER') && route.name !== 'CustomersList'"
