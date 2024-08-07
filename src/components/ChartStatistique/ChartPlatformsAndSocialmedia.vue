@@ -16,7 +16,7 @@
                                 {{ estab_name.name }}<span v-if="index !== establishment.length - 1">, </span>
                             </span>
                         </span>
-                    </span>
+                    </span><br>
                 </span>
 
                 <span v-if="IsValueOkay(source)">source : {{ source }}<br></span>
@@ -181,9 +181,7 @@ export default {
 }
 
 .content-message {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    text-align: center;
     font-size: 14px;
     font-weight: bold;
     margin-top: 22px;

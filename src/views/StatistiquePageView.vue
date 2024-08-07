@@ -9,9 +9,12 @@
                 <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
                     :value="item.id" @click="handleEstablishmentDropdown('other')"/>
             </el-select>
-
+            <div class="date_picker">
             <el-date-picker v-model="start_date" type="date" :size="'large'" class="space my-3" />
+            </div>
+            <div class="date_picker">
             <el-date-picker v-model="end_date" type="date" :size="'large'" class="space my-3"/>
+            </div>
             <DropdownComponent :showTitle="false" class="dropdown w-full spaceSelect" :data="timePeriods" @submit="(timePeriod) => {
                 selectedTimePeriod = timePeriod
             }" :default="timePeriods[0]" />
@@ -316,12 +319,12 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
 }
 .statistique-left{
     float: left;
-    margin-left: 30px;
+    /* margin-left: 30px; */
 }
 
 .statistique-right{
     float : right ; 
-    margin-right: 30px;
+    /* margin-right: 30px; */
     margin-top: -20px;
 }
 
@@ -350,9 +353,16 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
 .dashboard__chart {
     display: flex;
     width: 100%;
-    gap: 40px;
+    gap: 20px;
     height: auto !important;
     overflow: hidden;
+}
+
+.date_picker {
+	display: flex;
+	align-items: center;
+	flex-grow: 1;
+	min-width: 165px;
 }
 
 @media (max-width: 1281px) {
@@ -435,7 +445,7 @@ h1 {
     }
     .dashboard__chart {
         display: block;
-        width: 90%;
+        width: 100%;
         gap: 20px;
     }
 
@@ -457,11 +467,15 @@ h1 {
     .square,
     .date__filter {
         display: block !important;
-        width: 85%;
-        margin-left: 2%;
+        width: 100%;
         float:none;
     }
 
+    .statistique-right,
+    .statistique-left {
+        width: 99%;
+        margin-left: 1%
+    }
     .space {
         margin-bottom: 10px !important;
     }
