@@ -11,6 +11,7 @@ import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router';
 import services from '@Services/services.js';
 import moment from 'moment';
+import { useUserStore } from "@Stores/user.js"
 
 const route = useRoute();
 const dataChart = ref([]);
@@ -22,6 +23,7 @@ const timePeriods = inject('timePeriods');
 const establishment = inject('establishment');
 const staff = inject('staffFilter');
 const units = inject('unitsFilter');
+const userStore = useUserStore();
 
 const chartOptions = ref({
   chart: {
@@ -41,7 +43,7 @@ const chartOptions = ref({
       }
     }
   },
-  colors: ['#0a8964', '#48c16c'],
+  colors: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#0000B3', '#8080FF']) : (userStore.user.customer.partner_back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#0000B3', '#8080FF']),
   legend: {
     position: 'bottom',
     horizontalAlign: 'center',

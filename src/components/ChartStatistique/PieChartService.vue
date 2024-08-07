@@ -10,7 +10,7 @@
 
         <div class="no_data" >
   
-            <div v-if="IsValueOkay(establishment) && establishment[0] != 'all'">No forms submitted for units of establishments <br>
+            <div v-if="IsValueOkay(establishment) && establishment[0] != 'all'">No forms submitted for units of establishments 
                 <span v-for="estab_id,index in establishment" :key="estab_id">
                 <span v-for="estab_name in establishments" :key="estab_name.id">
                     <span v-if="estab_name.id == estab_id">
@@ -21,7 +21,7 @@
                 </span>
             </div>
             <div v-else-if="IsValueOkay(units)">
-                No forms submitted for units <br>
+                No forms submitted for units 
                 <span v-for="unit_id,index in units" :key="unit_id">
                 <span v-for="unite in unites" :key="unite.id">
                     <span v-if="unite.id == unit_id">
@@ -70,8 +70,9 @@ const userStore = useUserStore();
 
 const chartOptions = ref({
     labels: labels.value, 
-    colors: userStore.user.partner.back_color == "#0a8964" ? ['#dcf4e4', '#B8D9D2', '#a8e4bc', '#85d9a1', '#73d393', '#62ce86', '#48c16c', '#30ab48', '#3b9358', '#215332', '#14331f'] : 
-    ['#CCCCFF', '#B3B3FF', '#8080FF', '#4D4DFF', '#3333FF', '#0000FF', '#0000CC', '#0000B3', '#000080', '#000066', '#00004D'],// Couleurs des séries
+    colors: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? ['#dcf4e4', '#B8D9D2', '#a8e4bc', '#85d9a1', '#73d393', '#62ce86', '#48c16c', '#30ab48', '#3b9358', '#215332', '#14331f'] : ['#CCCCFF', '#B3B3FF', '#8080FF', '#4D4DFF', '#3333FF', '#0000FF', '#0000CC', '#0000B3', '#000080', '#000066', '#00004D']) : 
+    (userStore.user.customer.partner_back_color == "#0a8964" ? ['#dcf4e4', '#B8D9D2', '#a8e4bc', '#85d9a1', '#73d393', '#62ce86', '#48c16c', '#30ab48', '#3b9358', '#215332', '#14331f'] : ['#CCCCFF', '#B3B3FF', '#8080FF', '#4D4DFF', '#3333FF', '#0000FF', '#0000CC', '#0000B3', '#000080', '#000066', '#00004D']) ,
+  // Couleurs des séries
     dataLabels: {
         enabled: true,
         formatter: function (val) {

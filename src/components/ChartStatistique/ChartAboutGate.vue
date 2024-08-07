@@ -29,6 +29,7 @@ import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router';
 import moment from 'moment';
 import services from '@Services/services.js';
+import { useUserStore } from "@Stores/user.js"
 
 
 const route = useRoute();
@@ -41,13 +42,13 @@ const timePeriods = inject('timePeriods');
 const establishment = inject('establishment');
 const establishments = inject('establishments');
 const staff = inject('staffFilter');
-const staffs = inject('staffs');
-const unites = inject('units');
+
 const units = inject('unitsFilter');
 const source = inject('sourceFilter');
 
 const series = ref([]);
 const hasData = ref(false);
+const userStore = useUserStore();
 
 // Options du graphique
 const chartOptions = ref({
@@ -68,7 +69,7 @@ const chartOptions = ref({
                     {   
                     from: 0,
                     to: 10000000,
-                    color: '#3EB489'
+                    color: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? '#3EB489' : "#8080FF") : (userStore.user.customer.partner_back_color == "#0a8964" ? '#3EB489' : "#8080FF") 
                     },
                     // {
                     // from: 0,
@@ -177,6 +178,8 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
 };
 
 onBeforeMount(async () => {
+   
+    
     loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, source.value, units.value, staff.value)
 });
 

@@ -51,6 +51,7 @@ import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router';
 import moment from 'moment';
 import services from '@Services/services.js';
+import { useUserStore } from "@Stores/user.js"
 
 const route = useRoute();
 
@@ -69,6 +70,7 @@ const source = inject('sourceFilter');
 
 const series = ref([]);
 const hasData = ref(false);
+const userStore = useUserStore();
 
 
 
@@ -84,7 +86,7 @@ const chartOptions = ref({
     legend: {
         show: false
     },
-    colors: ['#3EB489'], // Couleurs des séries
+    colors: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? '#3EB489' : "#8080FF") : (userStore.user.customer.partner_back_color == "#0a8964" ? '#3EB489' : "#8080FF"), // Couleurs des séries
 
 
 
