@@ -7,25 +7,20 @@
         <apexchart  type="treemap" :options="chartOptions" :series="series"></apexchart>
         </div>
     </div>
-    <div v-else>
-
-        <div>No interactions for : <br>
-            <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'"> establishments[
-            <span v-for="estab_id in establishment" :key="estab_id">{{ estab_id }}
-            <span v-for="estab_name in establishments" :key="estab_name.id"><span v-if="estab_name.id == estab_id">{{ estab_name.name }} ,</span></span></span>]<br></span>
-            
-            <span v-if="IsValueOkay(source)">source : {{ source }}<br></span>
-
-            <span v-if="IsValueOkay(units)">units [
-            <span v-for="unit_id in units" :key="unit_id">
-            <span v-for="unite in unites" :key="unite.id"><span v-if="unite.id == unit_id">{{ unite.name }} ,</span></span></span>]<br></span>
-            
-            <span v-if="IsValueOkay(staff)"> staff [
-            <span v-for="staff_id in staff" :key="staff_id">
-            <span v-for="staff_name in staffs" :key="staff_name.id"><span v-if="staff_name.id == staff_id">{{ staff_name.name }} ,</span></span></span>]</span>
-        </div>
-  
+    <div v-else class="content-message">
+    <div>No interactions for establishments <br>
+        <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'">
+            <span v-for="(estab_id, index) in establishment" :key="estab_id" style="display: inline;">
+                <span v-for="estab_name in establishments" :key="estab_name.id" style="display: inline;">
+                    <span v-if="estab_name.id == estab_id" style="display: inline;">
+                        {{ estab_name.name }}<span v-if="index !== establishment.length - 1">, </span>
+                    </span>
+                </span>
+            </span>
+        </span>
     </div>
+</div>
+
 </template>
 
 <script setup>
@@ -160,11 +155,6 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
         api = api + `&staff=${staff}`
     }
 
-    //console.log("api pour le chart 2 " , api )
-
-    // console.log("api du funnel " , api) ; 
-
-
     try {
         const response = await new Promise((resolve) => {
             services.get_Record(api, (response) => {
@@ -178,16 +168,6 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
             if (response.data.series.length > 0) {
                 hasData.value = response.data.series[0].data.length > 0;
             }
-           
-            // if (response.data && Array.isArray(response.data.data)) {
-            //     series.value = [{
-            //         name: response.data.name || 'Series 1', // Assurez-vous d'utiliser le bon nom de série
-            //         data: response.data.data
-            //     }];
-            // } else {
-            //     console.error('Expected array but got:', response.data);
-            //     series.value = [];
-            // }
         } else {
             console.error('Error fetching data:', response);
         }
@@ -204,31 +184,6 @@ watch([start_date, end_date, timePeriods, establishment, source, units, staff], 
     loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, source.value, units.value, staff.value)
 })
 
-// Données des séries
-// const series = ref([{
-//     data: [
-//         {
-//             x: 'Reviews',
-//             y: 25
-//         },
-//         {
-//             x: 'Menu',
-//             y: 15
-//         },
-//         {
-//             x: 'Offers',
-//             y: 35
-//         },
-//         {
-//             x: 'Info',
-//             y: 10
-//         },
-//         {
-//             x: 'Follow us',
-//             y: 15
-//         }
-//     ]
-// }])
 </script>
 
 <script>
@@ -241,10 +196,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-/* .chart-container {
+.chart-container {
     width: 100%;
     max-width: 100%;
-} */
+}
+
+.content-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+}
 
 h3 {
     /* margin: 40px 0 0; */
