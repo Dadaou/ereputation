@@ -7,25 +7,42 @@
         <apexchart type="bar" height="350" :options="chartOptions" :series="series"></apexchart>
         </div>
   </div>
-  <div v-else>
+    <div v-else class="content-message">
+        <div>No clicks for <br>
+                <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'"> establishment :
+                    <span v-for="(estab_id, index) in establishment" :key="estab_id" >
+                        <span v-for="estab_name in establishments" :key="estab_name.id" >
+                            <span v-if="estab_name.id == estab_id">
+                                {{ estab_name.name }}<span v-if="index !== establishment.length - 1">, </span>
+                            </span>
+                        </span>
+                    </span>
+                </span>
 
-<div>No clicks for : <br>
-    <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'"> establishments[
-    <span v-for="estab_id in establishment" :key="estab_id">{{ estab_id }}
-    <span v-for="estab_name in establishments" :key="estab_name.id"><span v-if="estab_name.id == estab_id">{{ estab_name.name }} ,</span></span></span>]<br></span>
-    
-    <span v-if="IsValueOkay(source)">source : {{ source }}<br></span>
+                <span v-if="IsValueOkay(source)">source : {{ source }}<br></span>
 
-    <span v-if="IsValueOkay(units)">units [
-    <span v-for="unit_id in units" :key="unit_id">
-    <span v-for="unite in unites" :key="unite.id"><span v-if="unite.id == unit_id">{{ unite.name }} ,</span></span></span>]<br></span>
-    
-    <span v-if="IsValueOkay(staff)"> staff [
-    <span v-for="staff_id in staff" :key="staff_id">
-    <span v-for="staff_name in staffs" :key="staff_name.id"><span v-if="staff_name.id == staff_id">{{ staff_name.name }} ,</span></span></span>]</span>
-</div>
+                <span v-if="IsValueOkay(units)">units :
+                    <span v-for="(unit_id, index) in units" :key="unit_id">
+                        <span v-for="unite in unites" :key="unite.id">
+                            <span v-if="unite.id == unit_id">
+                                {{ unite.name }}<span v-if="index !== units.length - 1">, </span>
+                            </span>
+                        </span>
+                    </span><br>
+                </span>
+                
+                <span v-if="IsValueOkay(staff)"> staff :
+                    <span v-for="(staff_id, index) in staff" :key="staff_id">
+                        <span v-for="staff_name in staffs" :key="staff_name.id">
+                            <span v-if="staff_name.id == staff_id">
+                                {{ staff_name.name }}<span v-if="index !== staff.length - 1">, </span>
+                            </span>
+                        </span>
+                    </span>
+                </span>
+        </div>
 
-</div>
+    </div>
 </template>
 
 <script setup>
@@ -160,6 +177,16 @@ export default {
     width: 100%;
     max-width: 100%;
 }
+
+.content-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 22px;
+}
+
 h3 {
     margin: 20px 0 0;
     text-align: center;
