@@ -1,4 +1,5 @@
 <template>
+
     <h3>Number of form submitted by Units</h3>
     <div v-if="hasData">
         <div class="chart-container">
@@ -7,23 +8,35 @@
     </div>
     <div v-else>
 
-<div>No forms submitted for : <br>
-    <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'"> establishments[
-    <span v-for="estab_id in establishment" :key="estab_id">{{ estab_id }}
-    <span v-for="estab_name in establishments" :key="estab_name.id"><span v-if="estab_name.id == estab_id">{{ estab_name.name }} ,</span></span></span>]<br></span>
-    
-    <span v-if="IsValueOkay(source)">source : {{ source }}<br></span>
+        <div class="no_data" >
+  
+            <div v-if="IsValueOkay(establishment) && establishment[0] != 'all'">No forms submitted for units of establishments <br>
+                <span v-for="estab_id,index in establishment" :key="estab_id">
+                <span v-for="estab_name in establishments" :key="estab_name.id">
+                    <span v-if="estab_name.id == estab_id">
+                        <span v-if="index != establishment.length - 1">{{ estab_name.name }} ,</span>
+                        <span v-else>{{ estab_name.name }}</span>
+                    </span>
+                </span>
+                </span>
+            </div>
+            <div v-else-if="IsValueOkay(units)">
+                No forms submitted for units <br>
+                <span v-for="unit_id,index in units" :key="unit_id">
+                <span v-for="unite in unites" :key="unite.id">
+                    <span v-if="unite.id == unit_id">
+                        <span v-if="index != units.length - 1">{{ unite.name }} ,</span>
+                        <span v-else>{{ unite.name }}</span>
+                    </span>
+                </span>
+                </span>
+            </div>
 
-    <span v-if="IsValueOkay(units)">units [
-    <span v-for="unit_id in units" :key="unit_id">
-    <span v-for="unite in unites" :key="unite.id"><span v-if="unite.id == unit_id">{{ unite.name }} ,</span></span></span>]<br></span>
-    
-    <span v-if="IsValueOkay(staff)"> staff [
-    <span v-for="staff_id in staff" :key="staff_id">
-    <span v-for="staff_name in staffs" :key="staff_name.id"><span v-if="staff_name.id == staff_id">{{ staff_name.name }} ,</span></span></span>]</span>
-</div>
+        </div>
 
-</div>
+
+
+    </div>
 </template>
 
 
@@ -33,6 +46,8 @@ import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router'
 import moment from 'moment';
 import services from '@Services/services.js'
+import { useUserStore } from "@Stores/user.js"
+
 
 
 const route = useRoute();
@@ -42,18 +57,21 @@ const timePeriods = inject('timePeriods');
 const establishment = inject('establishment');
 const establishments = inject('establishments');
 const staff = inject('staffFilter');
-const staffs = inject('staffs');
+
 const unites = inject('units');
 const units = inject('unitsFilter');
 const source = inject('sourceFilter');
 const hasData = ref(false);
 
+
 const series = ref([]);
 const labels = ref([]);
+const userStore = useUserStore();
 
 const chartOptions = ref({
     labels: labels.value, 
-    colors: ['#dcf4e4', '#B8D9D2', '#a8e4bc', '#85d9a1', '#73d393', '#62ce86', '#48c16c', '#30ab48', '#3b9358', '#215332', '#14331f'],// Couleurs des séries
+    colors: userStore.user.partner.back_color == "#0a8964" ? ['#dcf4e4', '#B8D9D2', '#a8e4bc', '#85d9a1', '#73d393', '#62ce86', '#48c16c', '#30ab48', '#3b9358', '#215332', '#14331f'] : 
+    ['#CCCCFF', '#B3B3FF', '#8080FF', '#4D4DFF', '#3333FF', '#0000FF', '#0000CC', '#0000B3', '#000080', '#000066', '#00004D'],// Couleurs des séries
     dataLabels: {
         enabled: true,
         formatter: function (val) {
@@ -121,7 +139,10 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
     }
 };
 
+
+
 onBeforeMount(async () => {
+
     loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, source.value, units.value, staff.value)
 });
 
@@ -154,5 +175,10 @@ h3 {
     font-weight: 600;
     font-size: 14px;
     color: rgb(101, 101, 101);
+}
+.no_data {
+  
+  text-align: center;
+  font-weight: bold;
 }
 </style>
