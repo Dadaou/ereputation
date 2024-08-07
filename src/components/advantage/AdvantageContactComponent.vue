@@ -15,14 +15,14 @@
       		{{ scope.row.firstname }} {{ scope.row.lastname }}
         </template>
       </el-table-column>
-      <el-table-column label="Email" prop="email" width="360"/>
-      <el-table-column label="Establishment" prop="establishment_name" width="340"/>
-      <el-table-column label="Created at" width="180">
+      <el-table-column label="Email" prop="email" class="contain_tab"/>
+      <el-table-column label="Establishment" prop="establishment_name" class="contain_tab"/>
+      <el-table-column label="Created at">
         <template #default="scope">
           {{ formatCreatedAt(scope.row.created_at) }}
         </template>
       </el-table-column>
-      <el-table-column label="Updated at" width="150">
+      <el-table-column label="Updated at" width="120">
         <template #default="scope">
             {{ formatUpdatedAt(scope.row.updated_at)}}
         </template>
@@ -197,5 +197,8 @@ button:hover {
   .table-description p {
     font-size: 12px;
   }
+}
+.contain_tab {
+  background-color: red !important;
 }
 </style>
