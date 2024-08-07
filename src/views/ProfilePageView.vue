@@ -46,6 +46,11 @@
             </router-link>
           </li>
           <li>
+            <router-link :to="{ name: 'Statistique' }"  @click.native="selectMenu('Analytic')">
+              <i class="uil uil-chart"></i> <span>Analytic</span>
+            </router-link>
+          </li>
+          <li>
             <router-link :to="{ name: 'Parameters', params:{tag: route.params.tag, tab: 'establishments', sub_tab:'establishments_list' } }" active-class="active"  @click.native="selectMenu('Parameters')" :class="{ active: isActive('Parameters') }">
               <i class="uil uil-setting"></i> <span>Parameters</span>
             </router-link>
@@ -78,6 +83,7 @@ const menuMap = {
   "Partnership": "Partnership",
   "Contact": "Contacts",
   "Discount_coupons": "Discount coupons",
+  "Statistique": "Analytic",
   "Parameters": "Parameters"
 };
 
@@ -132,6 +138,11 @@ const page = computed(() => {
       title1: "",
       title2: "Discount",
       icon: "uil-bill",
+    },
+    "Statistique": {
+      title1: "",
+      title2: "Analytic",
+      icon: "uil-chart",
     },
     "Parameters": {
       title1: "",
