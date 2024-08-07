@@ -16,7 +16,7 @@
                         <Icon :icon="'gg:trending'" width="25"></Icon>
                     </RouterLink>
                     <RouterLink class="search__icon"
-                        :to="{ name: 'Statistique', params: { tag: tag } }">
+                        :to="{ name: 'Analytic', params: { tag: tag } }">
                         <Icon :icon="'mdi:chart-line'" width="25"></Icon>
                     </RouterLink>
                 </div>
