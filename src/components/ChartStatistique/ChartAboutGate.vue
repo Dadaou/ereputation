@@ -2,29 +2,32 @@
     <h3>About the gate</h3>
 
     <div v-if="hasData">
-       
+
         <div class="chart-container">
-        <apexchart  type="treemap" :options="chartOptions" :series="series"></apexchart>
+            <apexchart type="treemap" :options="chartOptions" :series="series"></apexchart>
         </div>
     </div>
     <div v-else class="content-message">
-    <div>No interactions for establishments <br>
-        <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'">
-            <span v-for="(estab_id, index) in establishment" :key="estab_id" style="display: inline;">
-                <span v-for="estab_name in establishments" :key="estab_name.id" style="display: inline;">
-                    <span v-if="estab_name.id == estab_id" style="display: inline;">
-                        {{ estab_name.name }}<span v-if="index !== establishment.length - 1">, </span>
+        <div>No interactions for <br>
+            <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'">establishments
+                <span v-for="(estab_id, index) in establishment" :key="estab_id" style="display: inline;">
+                    <span v-for="estab_name in establishments" :key="estab_name.id" style="display: inline;">
+                        <span v-if="estab_name.id == estab_id" style="display: inline;">
+                            {{ estab_name.name }}<span v-if="index !== establishment.length - 1">, </span>
+                        </span>
                     </span>
                 </span>
             </span>
-        </span>
+            <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)">date :
+                from {{ formattedStartDate }} to {{ formattedEndDate }}
+            </span>
+        </div>
     </div>
-</div>
 
 </template>
 
 <script setup>
-import { ref, onBeforeMount, inject, watch } from 'vue'
+import { ref, onBeforeMount, inject, watch, computed } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router';
 import moment from 'moment';
@@ -49,6 +52,8 @@ const source = inject('sourceFilter');
 const series = ref([]);
 const hasData = ref(false);
 const userStore = useUserStore();
+const formattedStartDate = computed(() => moment(start_date.value).format('ddd DD MMM YYYY'));
+const formattedEndDate = computed(() => moment(end_date.value).format('ddd DD MMM YYYY'));
 
 // Options du graphique
 const chartOptions = ref({
@@ -60,65 +65,15 @@ const chartOptions = ref({
     },
     plotOptions: {
         treemap: {
-            // distributed: true,
             enableShades: false,
-            // shadeIntensity: 0.5,
-            // reverseNegativeShade: true,
             colorScale: {
                 ranges: [
-                    {   
-                    from: 0,
-                    to: 10000000,
-                    color: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? '#3EB489' : "#009DCF") : (userStore.user.customer.partner_back_color == "#0a8964" ? '#3EB489' : "#009DCF") 
+                    {
+                        from: 0,
+                        to: 10000000,
+                        color: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? '#3EB489' : "#009DCF") : (userStore.user.customer.partner_back_color == "#0a8964" ? '#3EB489' : "#009DCF")
                     },
-                    // {
-                    // from: 0,
-                    // to: 1,
-                    // color: '#dcf4e4'
-                    // },
-                    // {
-                    // from: 1,
-                    // to: 2,
-                    // color: '#B8D9D2'
-                    // },
-                    // {
-                    // from: 2,
-                    // to: 3,
-                    // color: '#a8e4bc'
-                    // },
-                    // {
-                    // from: 0,
-                    // to: 2,
-                    // color: '#85d9a1'
-                    // },
-                    // {
-                    // from: 3,
-                    // to: 10,
-                    // color: '#73d393'
-                    // },
-                    // {
-                    // from: 11,
-                    // to: 15,
-                    // color: '#62ce86'
-                    // },
-                 
-                    // {
-                    // from: 1,
-                    // to: 10,
-                    // color: '#30ab48'
-                    // },
-                    // {
-                    // from: 11,
-                    // to: 100,
-                    // color: '#3b9358'
-                    // },
-                    // {
-                    // from: 101,
-                    // to: 8000000000,
-                    // color: '#215332'
-                    // }
-                   
-            ]
+                ]
             }
         }
     },
@@ -163,9 +118,8 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
             });
         });
         if (response.status === 200) {
-            //console.log(response.data)
             series.value = response.data.series;
-           
+
             if (response.data.series.length > 0) {
                 hasData.value = response.data.series[0].data.length > 0;
             }
@@ -178,8 +132,8 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
 };
 
 onBeforeMount(async () => {
-   
-    
+
+
     loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, source.value, units.value, staff.value)
 });
 
