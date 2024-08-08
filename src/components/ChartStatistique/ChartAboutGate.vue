@@ -17,13 +17,12 @@
                         </span>
                     </span>
                 </span>
-            </span>
+            </span><br>
             <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)">date :
                 from {{ formattedStartDate }} to {{ formattedEndDate }}
             </span>
         </div>
     </div>
-
 </template>
 
 <script setup>
