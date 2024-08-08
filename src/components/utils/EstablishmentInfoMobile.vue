@@ -110,21 +110,13 @@ const loading = computed(() => {
 }
 .establishment__img {
     width: 100%;
-    height: 150px;
-    max-height: 200px;
+    height: 160px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.establishment__img img {
-    width: auto;
-    height: 100%;
-    max-height: 180px;
-    object-fit: cover;
-}
-.photo {
-    margin-bottom: -10px; /* Adjust this value as needed */
-}
+
+
 @media screen and (min-width: 540px) and (max-width: 975px) {
     .establishment__info_tablet {
         margin-top: 0px !important;
