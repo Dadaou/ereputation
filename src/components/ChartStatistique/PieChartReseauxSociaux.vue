@@ -151,8 +151,8 @@ h3 {
     color: rgb(101, 101, 101);
 }
 .no_data {
-  
     text-align: center;
+    font-size: 14px;
     font-weight: bold;
 }
 </style>

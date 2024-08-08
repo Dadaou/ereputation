@@ -127,7 +127,7 @@ export default {
 h3 {
     margin: 80px 0 0;
     text-align: center;
-    padding: 2px;
+    /* padding: 2px; */
     font-weight: 600;
     font-size: 14px;
     color: rgb(101, 101, 101);

@@ -205,9 +205,7 @@ export default {
 }
 
 .content-message {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    text-align: center;
     font-size: 14px;
     font-weight: bold;
 }
