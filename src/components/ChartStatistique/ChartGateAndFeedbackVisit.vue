@@ -190,6 +190,6 @@ h3 {
     text-align: center;
     font-size: 14px;
     font-weight: bold;
-    margin-top: 22px;
+    margin-top: 42px;
 }
 </style>

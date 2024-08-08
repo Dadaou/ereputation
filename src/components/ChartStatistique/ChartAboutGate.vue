@@ -8,7 +8,7 @@
         </div>
     </div>
     <div v-else class="content-message">
-        <div>No interactions for <br>
+        <div>No interactions for
             <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'">establishments
                 <span v-for="(estab_id, index) in establishment" :key="estab_id" style="display: inline;">
                     <span v-for="estab_name in establishments" :key="estab_name.id" style="display: inline;">
