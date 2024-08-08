@@ -33,7 +33,7 @@ const chartOptions = ref({
     xaxis: {
         categories: [],
     },
-    colors: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#0000B3', '#8080FF']) : (userStore.user.customer.partner_back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#0000B3', '#8080FF']),
+    colors: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']) : (userStore.user.customer.partner_back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']),
     legend: {
         position: 'bottom',
         horizontalAlign: 'center'

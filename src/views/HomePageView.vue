@@ -58,7 +58,7 @@ const backToCustomer = () => {
 };
 
 const show = computed(() => {
-    let routeName = ['EstablishmentList', 'EstablishmentRanking', 'EstablishmentListByTrend', undefined];
+    let routeName = ['EstablishmentList', 'EstablishmentRanking', 'EstablishmentListByTrend','Analytic', undefined];
     return routeName.includes(route.name)
 });
 

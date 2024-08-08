@@ -1,8 +1,10 @@
 <template>
   <h3>Feedback form submissions</h3>
-  <div class="chart-container">
+
+      <div class="chart-container">
     <apexchart  type="bar" :options="chartOptions" :series="series" />
-  </div>
+    </div>
+ 
 </template>
 
 <script setup>
@@ -43,7 +45,7 @@ const chartOptions = ref({
       }
     }
   },
-  colors: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#0000B3', '#8080FF']) : (userStore.user.customer.partner_back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#0000B3', '#8080FF']),
+  colors: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']) : (userStore.user.customer.partner_back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']),
   legend: {
     position: 'bottom',
     horizontalAlign: 'center',
@@ -121,8 +123,8 @@ export default {
 
 <style scoped>
 .chart-container {
-  width: 100%;
-  max-width: 100%;
+   width: 100%;
+  max-width: 100%; 
 }
 .inside {
     display: flex;

@@ -69,7 +69,7 @@ const chartOptions = ref({
                     {   
                     from: 0,
                     to: 10000000,
-                    color: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? '#3EB489' : "#8080FF") : (userStore.user.customer.partner_back_color == "#0a8964" ? '#3EB489' : "#8080FF") 
+                    color: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? '#3EB489' : "#009DCF") : (userStore.user.customer.partner_back_color == "#0a8964" ? '#3EB489' : "#009DCF") 
                     },
                     // {
                     // from: 0,
