@@ -1,14 +1,52 @@
 <template>
   <h3>Feedback form submissions</h3>
 
-      <div class="chart-container">
-    <apexchart  type="bar" :options="chartOptions" :series="series" />
+  <div v-if="hasData">
+    <div class="chart-container">
+      <apexchart  type="bar" :options="chartOptions" :series="series" />
     </div>
- 
+  </div>
+  
+  <div v-else class="content-message">
+        <div>No clicks for <br>
+                <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'"> establishment :
+                    <span v-for="(estab_id, index) in establishment" :key="estab_id" >
+                        <span v-for="estab_name in establishments" :key="estab_name.id" >
+                            <span v-if="estab_name.id == estab_id">
+                                {{ estab_name.name }}<span v-if="index !== establishment.length - 1">, </span>
+                            </span>
+                        </span>
+                    </span><br>
+                </span>
+
+                <span v-if="IsValueOkay(units)">units :
+                    <span v-for="(unit_id, index) in units" :key="unit_id">
+                        <span v-for="unite in unites" :key="unite.id">
+                            <span v-if="unite.id == unit_id">
+                                {{ unite.name }}<span v-if="index !== units.length - 1">, </span>
+                            </span>
+                        </span>
+                    </span><br>
+                </span>
+                
+                <span v-if="IsValueOkay(staff)"> staff :
+                    <span v-for="(staff_id, index) in staff" :key="staff_id">
+                        <span v-for="staff_name in staffs" :key="staff_name.id">
+                            <span v-if="staff_name.id == staff_id">
+                                {{ staff_name.name }}<span v-if="index !== staff.length - 1">, </span>
+                            </span>
+                        </span>
+                    </span>
+                </span>
+                <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)"> date :
+                  from {{ formattedStartDate }} to {{ formattedEndDate }}
+                </span>
+        </div>
+  </div>
 </template>
 
 <script setup>
-import { ref, onBeforeMount,watch , inject } from 'vue';
+import { ref, onBeforeMount,watch , inject, computed } from 'vue';
 import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router';
 import services from '@Services/services.js';
@@ -23,10 +61,15 @@ const start_date = inject('start_date');
 const end_date = inject('end_date');
 const timePeriods = inject('timePeriods');
 const establishment = inject('establishment');
+const establishments = inject('establishments');
 const staff = inject('staffFilter');
+const staffs = inject('staffs');
+const unites = inject('units');
 const units = inject('unitsFilter');
 const userStore = useUserStore();
-
+const hasData = ref(false);
+const formattedStartDate = computed(() => moment(start_date.value).format('ddd DD MMM YYYY'));
+const formattedEndDate = computed(() => moment(end_date.value).format('ddd DD MMM YYYY'));
 const chartOptions = ref({
   chart: {
     id: 'vuechart-example',
@@ -54,7 +97,6 @@ const chartOptions = ref({
     bar: {
       borderRadius: 0,
     },
-
   },
 });
 
@@ -94,6 +136,12 @@ const loadData = async (start_date, end_date, timePeriods , establishment , staf
             categories: category.value,
             },
         };
+          const total = series.value.reduce((totalAcc, serie) => {
+            return totalAcc + (serie.data ? serie.data.reduce((acc, curr) => acc + curr, 0) : 0);
+          }, 0);
+
+          hasData.value = total > 0;
+                
         } else {
         console.error('Error fetching data:', response);
         }
@@ -153,5 +201,12 @@ h3 {
 
 .mt-2 {
   margin-top: 0.5rem;
+}
+
+.content-message {
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 22px;
 }
 </style>
