@@ -8,8 +8,8 @@
         </div>
     </div>
     <div v-else class="content-message">
-        <div>No interactions for establishments <br>
-            <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'">
+        <div>No interactions for
+            <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'">establishments
                 <span v-for="(estab_id, index) in establishment" :key="estab_id" style="display: inline;">
                     <span v-for="estab_name in establishments" :key="estab_name.id" style="display: inline;">
                         <span v-if="estab_name.id == estab_id" style="display: inline;">
@@ -17,14 +17,16 @@
                         </span>
                     </span>
                 </span>
+            </span><br>
+            <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)">date :
+                from {{ formattedStartDate }} to {{ formattedEndDate }}
             </span>
         </div>
     </div>
-
 </template>
 
 <script setup>
-import { ref, onBeforeMount, inject, watch } from 'vue'
+import { ref, onBeforeMount, inject, watch, computed } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router';
 import moment from 'moment';
@@ -50,6 +52,8 @@ const source = inject('sourceFilter');
 const series = ref([]);
 const hasData = ref(false);
 const userStore = useUserStore();
+const formattedStartDate = computed(() => moment(start_date.value).format('ddd DD MMM YYYY'));
+const formattedEndDate = computed(() => moment(end_date.value).format('ddd DD MMM YYYY'));
 
 // Options du graphique
 const chartOptions = ref({
@@ -130,7 +134,6 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
             });
         });
         if (response.status === 200) {
-            //console.log(response.data)
             series.value = response.data.series;
 
             if (response.data.series.length > 0) {

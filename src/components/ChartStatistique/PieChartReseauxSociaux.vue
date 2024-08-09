@@ -7,9 +7,9 @@
             <apexchart type="donut" height="350" :options="chartOptions" :series="series"></apexchart>
         </div>
     </div>
-    <div v-else>
-
-        <div class="no_data" v-if="IsValueOkay(establishment) && establishment[0] != 'all'">No clicks for establishments
+    <div v-else class="no_data">
+        No clicks for <br>
+        <div v-if="IsValueOkay(establishment) && establishment[0] != 'all'">establishments
 
             <span v-for="estab_id, index in establishment" :key="estab_id">
                 <span v-for="estab_name in establishments" :key="estab_name.id">
@@ -19,14 +19,15 @@
                     </span>
                 </span>
             </span>
-
         </div>
-
+        <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)">date :
+            from {{ formattedStartDate }} to {{ formattedEndDate }}
+        </span>
     </div>
 </template>
 
 <script setup>
-import { ref, onBeforeMount, inject, watch } from 'vue'
+import { ref, onBeforeMount, inject, watch, computed } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router'
 import moment from 'moment';
@@ -50,11 +51,11 @@ const series = ref([]);
 const labels = ref([]);
 const hasData = ref(false);
 const userStore = useUserStore();
+const formattedStartDate = computed(() => moment(start_date.value).format('ddd DD MMM YYYY'));
+const formattedEndDate = computed(() => moment(end_date.value).format('ddd DD MMM YYYY'));
 
 const chartOptions = ref({
     labels: labels.value,
-    // colors: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? ['#dcf4e4', '#B8D9D2', '#a8e4bc', '#85d9a1', '#73d393', '#62ce86', '#48c16c', '#30ab48', '#3b9358', '#215332', '#14331f'] : ['#AED3E3', '#86BEDA', '#009DCF', '#008DCF', '#008DC0', '#007AE2', '#006DB2', '#00609C', '#00569D', '#004F92', '#003A88']) :
-    //     (userStore.user.customer.partner_back_color == "#0a8964" ? ['#dcf4e4', '#B8D9D2', '#a8e4bc', '#85d9a1', '#73d393', '#62ce86', '#48c16c', '#30ab48', '#3b9358', '#215332', '#14331f'] : ['#AED3E3', '#86BEDA', '#009DCF', '#008DCF', '#008DC0', '#007AE2', '#006DB2', '#00609C', '#00569D', '#004F92', '#003A88']),
     colors: userStore.user.partner ? generateShadedPaletteByOpacity(userStore.user.partner.back_color, 15) : generateShadedPaletteByOpacity(userStore.user.customer.partner_back_color, 15),
     dataLabels: {
         enabled: true,

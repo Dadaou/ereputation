@@ -33,7 +33,7 @@
         </template>
       </el-table-column>
       <el-table-column label="Category" prop="category" width="117" />
-      <el-table-column style="width: 20%; min-width: 300px;" align="right">
+      <el-table-column style="width: 20%; min-width: 450px;" align="right">
         <template #header>
           <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
         </template>
@@ -317,6 +317,9 @@ button i.uil-edit {
 
   .el-table--fit {
     font-size: 11px !important;
+  }
+  .action-buttons {
+    display: block;
   }
 }
 </style>
