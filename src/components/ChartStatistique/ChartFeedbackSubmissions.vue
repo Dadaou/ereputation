@@ -1,14 +1,14 @@
 <template>
   <h3>Feedback form submissions</h3>
 
-      <div class="chart-container">
-    <apexchart  type="bar" :options="chartOptions" :series="series" />
-    </div>
- 
+  <div class="chart-container">
+    <apexchart type="bar" :options="chartOptions" :series="series" />
+  </div>
+
 </template>
 
 <script setup>
-import { ref, onBeforeMount,watch , inject } from 'vue';
+import { ref, onBeforeMount, watch, inject } from 'vue';
 import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router';
 import services from '@Services/services.js';
@@ -45,7 +45,8 @@ const chartOptions = ref({
       }
     }
   },
-  colors: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']) : (userStore.user.customer.partner_back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']),
+  // colors: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']) : (userStore.user.customer.partner_back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']),
+  colors: userStore.user.partner ? [userStore.user.partner.back_color, userStore.user.partner.title_color] : [userStore.user.customer.partner_back_color, userStore.user.customer.partner_title_color],
   legend: {
     position: 'bottom',
     horizontalAlign: 'center',
@@ -60,50 +61,50 @@ const chartOptions = ref({
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 
-const loadData = async (start_date, end_date, timePeriods , establishment , staff , units ) => {
+const loadData = async (start_date, end_date, timePeriods, establishment, staff, units) => {
 
-    if (IsValueOkay(start_date) && IsValueOkay(end_date)) {
-        start_date = moment(new Date(start_date)).format('YYYY-MM-DD');
-        end_date = moment(new Date(end_date)).format('YYYY-MM-DD');
-    }
+  if (IsValueOkay(start_date) && IsValueOkay(end_date)) {
+    start_date = moment(new Date(start_date)).format('YYYY-MM-DD');
+    end_date = moment(new Date(end_date)).format('YYYY-MM-DD');
+  }
 
-    let api = `/customer/visitor/reviews?tag=${route.params.tag}&from=${start_date}&to=${end_date}&type=${timePeriods || 'daily'}`
-    if (establishment) {
-        api = api + `&establishment=${establishment}`
+  let api = `/customer/visitor/reviews?tag=${route.params.tag}&from=${start_date}&to=${end_date}&type=${timePeriods || 'daily'}`
+  if (establishment) {
+    api = api + `&establishment=${establishment}`
   }
   if (staff) {
     api = api + `&staff=${staff}`
   }
   if (units) {
     api = api + `&units=${units}`
-  }  
-   
-    try {
-        const response = await new Promise((resolve) => {
-            services.get_Record(api, (response) => {
-                resolve(response);
-            });
-        });
-        if (response.status === 200) {
-        dataChart.value = response.data;
-        category.value = response.data.categories || [];
-        series.value = response.data.series || [];
-        chartOptions.value = {
-            ...chartOptions.value,
-            xaxis: {
-            categories: category.value,
-            },
-        };
-        } else {
-        console.error('Error fetching data:', response);
-        }
-    } catch (error) {
-        console.error(error);
+  }
+
+  try {
+    const response = await new Promise((resolve) => {
+      services.get_Record(api, (response) => {
+        resolve(response);
+      });
+    });
+    if (response.status === 200) {
+      dataChart.value = response.data;
+      category.value = response.data.categories || [];
+      series.value = response.data.series || [];
+      chartOptions.value = {
+        ...chartOptions.value,
+        xaxis: {
+          categories: category.value,
+        },
+      };
+    } else {
+      console.error('Error fetching data:', response);
     }
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 watch([start_date, end_date, timePeriods, establishment, staff, units], () => {
-  loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, staff.value, units.value )
+  loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, staff.value, units.value)
 })
 
 onBeforeMount(async () => {
@@ -115,21 +116,23 @@ onBeforeMount(async () => {
 
 <script>
 export default {
-    components: { 
-        apexchart: VueApexCharts
-    }
+  components: {
+    apexchart: VueApexCharts
+  }
 };
 </script>
 
 <style scoped>
 .chart-container {
-   width: 100%;
-  max-width: 100%; 
+  width: 100%;
+  max-width: 100%;
 }
+
 .inside {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
+
 h3 {
   margin: 40px 0 0;
   text-align: center;

@@ -1,12 +1,12 @@
 <template>
     <h3>Gate & Feedback visits</h3>
     <div class="chart-container">
-        <apexchart  type="line" :options="chartOptions" :series="series"></apexchart>
+        <apexchart type="line" :options="chartOptions" :series="series"></apexchart>
     </div>
 </template>
 
 <script setup>
-import { ref , onBeforeMount , inject , watch } from 'vue'
+import { ref, onBeforeMount, inject, watch } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router';
 import moment from 'moment';
@@ -33,7 +33,8 @@ const chartOptions = ref({
     xaxis: {
         categories: [],
     },
-    colors: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']) : (userStore.user.customer.partner_back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']),
+    // colors: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']) : (userStore.user.customer.partner_back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']),
+    colors: userStore.user.partner ? [userStore.user.partner.back_color, userStore.user.partner.title_color] : [userStore.user.customer.partner_back_color, userStore.user.customer.partner_title_color],
     legend: {
         position: 'bottom',
         horizontalAlign: 'center'
@@ -56,7 +57,7 @@ const chartOptions = ref({
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 
-const loadData = async (start_date, end_date, timePeriods , establishment , staff , units ) => {
+const loadData = async (start_date, end_date, timePeriods, establishment, staff, units) => {
     if (IsValueOkay(start_date) && IsValueOkay(end_date)) {
         start_date = moment(new Date(start_date)).format('YYYY-MM-DD');
         end_date = moment(new Date(end_date)).format('YYYY-MM-DD');
@@ -80,19 +81,19 @@ const loadData = async (start_date, end_date, timePeriods , establishment , staf
             });
         });
         if (response.status === 200) {
-            
-        dataChart.value = response.data;
-        category.value = response.data.categories || [];
+
+            dataChart.value = response.data;
+            category.value = response.data.categories || [];
             series.value = response.data.series || [];
-           
-        chartOptions.value = {
-            ...chartOptions.value,
-            xaxis: {
-            categories: category.value,
-            },
-        };
+
+            chartOptions.value = {
+                ...chartOptions.value,
+                xaxis: {
+                    categories: category.value,
+                },
+            };
         } else {
-        console.error('Error fetching data:', response);
+            console.error('Error fetching data:', response);
         }
     } catch (error) {
         console.error(error);
@@ -103,8 +104,8 @@ onBeforeMount(async () => {
     await loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, staff.value, units.value);
 });
 
-watch([start_date, end_date, timePeriods , establishment,staff, units ], () => {
-    loadData(start_date.value, end_date.value,timePeriods.value,establishment.value,staff.value , units.value )
+watch([start_date, end_date, timePeriods, establishment, staff, units], () => {
+    loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, staff.value, units.value)
 })
 </script>
 
@@ -121,9 +122,11 @@ export default {
     width: 100%;
     max-width: 100%;
 }
+
 .chart-container {
     margin-top: 20px;
 }
+
 h3 {
     margin: 80px 0 0;
     text-align: center;
