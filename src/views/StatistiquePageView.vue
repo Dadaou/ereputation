@@ -27,8 +27,13 @@
                 <el-option v-for="item in sources" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
             <el-select v-model="staffFilter" multiple size="large" class="space" placeholder="All Staff">
-                <el-option label="All Staff" value="" />
-                <el-option v-for="item in staffs" :key="item.id" :label="item.name" :value="item.id" />
+                <el-option label="All Staff" :value="''" @click="handleStaffDropdown('')"
+                :disabled="staffFilter.length > 1 && !staffFilter.includes('')"/>
+                <el-option v-for="item in staffs" :key="item.id" :label="item.name" :value="item.id" 
+                    @click="handleStaffDropdown('other')"/>
+
+                <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
+                    :value="item.id" @click="handleEstablishmentDropdown('other')" />
             </el-select>
             <el-select v-model="unitsFilter" multiple size="large" class="space" placeholder="All Unit">
                 <el-option label="All Unit" value="" />
@@ -186,6 +191,11 @@ const handleEstablishmentDropdown = (type) => {
     establishment.value = establishment.value.length > 0 ? filters : ['all']
 }
 
+const handleStaffDropdown = (type) => {
+    const filterstaff = type == 'other' ? staffFilter.value.filter(name => name != '') : ['']
+    staffFilter.value = staffFilter.value.length > 0 ? filterstaff : ['']
+}
+
 const totalVisit = async (type) => {
     try {
         const response = await new Promise((resolve) => {
@@ -303,6 +313,7 @@ onBeforeMount(async () => {
 
 watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
     establishment.value = establishment.value.length > 0 ? establishment.value : ['all']
+    staffFilter.value = staffFilter.value.length > 0 ? staffFilter.value : ['']
     totalVisit(selectedTimePeriod.value);
     totalNotSubmitted(selectedTimePeriod.value);
     totalSubmitted(selectedTimePeriod.value);
