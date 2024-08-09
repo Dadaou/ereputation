@@ -100,6 +100,16 @@ const chartOptions = ref({
   },
 });
 
+const getMaxData=(data1,data2)=>{
+  let max1=Math.ceil(Math.max(...data1)/10) * 10;
+  let max2=Math.ceil(Math.max(...data2)/10) * 10;
+
+ if (max2 > max1) {
+  max1=max2;
+ }
+ return max1;
+}
+
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 
 const loadData = async (start_date, end_date, timePeriods , establishment , staff , units ) => {
@@ -130,10 +140,14 @@ const loadData = async (start_date, end_date, timePeriods , establishment , staf
         dataChart.value = response.data;
         category.value = response.data.categories || [];
         series.value = response.data.series || [];
+        const maxValue= response.data.series.length > 0 ? getMaxData(response.data.series[0].data,response.data.series[1].data) : 0;
         chartOptions.value = {
             ...chartOptions.value,
             xaxis: {
             categories: category.value,
+            },
+            yaxis: {
+            max: maxValue,
             },
         };
           const total = series.value.reduce((totalAcc, serie) => {
