@@ -2,9 +2,8 @@
     <h3>Platforms & Social Media</h3>
 
     <div v-if="hasData">
-
         <div class="chart-container">
-            <apexchart type="bar" height="350" :options="chartOptions" :series="series"></apexchart>
+            <apexchart type="bar" height="350" :options="options" :series="series"></apexchart>
         </div>
     </div>
     <div v-else class="content-message">
@@ -44,92 +43,80 @@
                 from {{ formattedStartDate }} to {{ formattedEndDate }}
             </span>
         </div>
-
     </div>
 </template>
 
 <script setup>
 import { ref, onBeforeMount, inject, watch, computed } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
-import { useRoute } from 'vue-router';
-import moment from 'moment';
-import services from '@Services/services.js';
+import { useRoute } from 'vue-router'
+import moment from 'moment'
+import services from '@Services/services.js'
 import { useUserStore } from "@Stores/user.js"
+import { generateShadedPaletteByLight } from "@Services/theme.js"
 
-const route = useRoute();
+const route = useRoute()
 
-const start_date = inject('start_date');
-const end_date = inject('end_date');
+const start_date = inject('start_date')
+const end_date = inject('end_date')
+const timePeriods = inject('timePeriods')
+const establishment = inject('establishment')
+const establishments = inject('establishments')
+const staffs = inject('staffs')
+const unites = inject('units')
+const staff = inject('staffFilter')
+const units = inject('unitsFilter')
+const source = inject('sourceFilter')
 
-const timePeriods = inject('timePeriods');
-
-const establishment = inject('establishment');
-const establishments = inject('establishments');
-const staffs = inject('staffs');
-const unites = inject('units');
-const staff = inject('staffFilter');
-const units = inject('unitsFilter');
-const source = inject('sourceFilter');
-
-const series = ref([]);
-const hasData = ref(false);
-const userStore = useUserStore();
+const series = ref([])
+const hasData = ref(false)
+const userStore = useUserStore()
 const formattedStartDate = computed(() => moment(start_date.value).format('ddd DD MMM YYYY'));
 const formattedEndDate = computed(() => moment(end_date.value).format('ddd DD MMM YYYY'));
 
-
-// Options du graphique
-const chartOptions = ref({
-
+const options = ref({
+    series: [],
+    chart: {
+        type: 'bar',
+        height: 350,
+    },
     plotOptions: {
         bar: {
+            borderRadius: 0,
             horizontal: true,
+            distributed: true,
+            barHeight: '80%',
             isFunnel: true,
-        },
+        }
     },
-    legend: {
-        show: false
-    },
-    colors: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? '#3EB489' : "#009DCF") : (userStore.user.customer.partner_back_color == "#0a8964" ? '#3EB489' : "#009DCF"), // Couleurs des séries
-
-
-
+    colors: userStore.user.partner ? generateShadedPaletteByLight(userStore.user.partner.title_color, 5) : generateShadedPaletteByLight(userStore.user.customer.partner_title_color, 5),
     dataLabels: {
         enabled: true,
         formatter: function (val, opt) {
-            return `${opt.w.globals.labels[opt.dataPointIndex]}: ${val}`;
+            return opt.w.globals.labels[opt.dataPointIndex]
         },
         dropShadow: {
             enabled: true,
-        },
+        }
     },
-
-
+    xaxis: {
+        categories: [],
+    },
+    legend: {
+        show: false,
+    },
 })
 
+const IsValueOkay = (value) => ['', 'Global', 0, null, undefined].indexOf(value) === -1
 
-const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
+const loadData = async () => {
+    let formatted_start_date = IsValueOkay(start_date.value) ? moment(new Date(start_date.value)).format('YYYY-MM-DD') : ''
+    let formatted_end_date = IsValueOkay(end_date.value) ? moment(new Date(end_date.value)).format('YYYY-MM-DD') : ''
 
-
-const loadData = async (start_date, end_date, timePeriods, establishment, source, units, staff) => {
-    if (IsValueOkay(start_date) && IsValueOkay(end_date)) {
-        start_date = moment(new Date(start_date)).format('YYYY-MM-DD');
-        end_date = moment(new Date(end_date)).format('YYYY-MM-DD');
-    }
-
-    let api = `customer/visitorclick/clicks?tag=${route.params.tag}&from=${start_date}&to=${end_date}&type=${timePeriods || 'daily'}&source=${source || 'all'}`
-    if (establishment) {
-        api = api + `&establishment=${establishment}`
-    }
-    if (units) {
-        api = api + `&units=${units}`
-    }
-    if (staff) {
-        api = api + `&staff=${staff}`
-    }
-
-    // console.log("api du funnel " , api) ; 
-
+    let api = `customer/visitorclick/clicks?tag=${route.params.tag}&from=${formatted_start_date}&to=${formatted_end_date}&type=${timePeriods.value || 'daily'}&source=${source.value || 'all'}`
+    if (IsValueOkay(establishment.value)) api += `&establishment=${establishment.value}`
+    if (IsValueOkay(units.value)) api += `&units=${units.value}`
+    if (IsValueOkay(staff.value)) api += `&staff=${staff.value}`
 
     try {
         const response = await new Promise((resolve) => {
@@ -137,27 +124,28 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
                 resolve(response);
             });
         });
-        if (response.status === 200) {
-            //console.log(response.data)
+        if (response.status === 200 && response.data && Array.isArray(response.data.data)) {
             if (response.data && Array.isArray(response.data.data)) {
                 series.value = [{
-                    name: response.data.name || 'Series 1', // Assurez-vous d'utiliser le bon nom de série
+                    name: response.data.name || 'Series 1',
                     data: response.data.data
-                }];
-                hasData.value = response.data.data.length > 0;
+                }]
 
+                hasData.value = response.data.data.length > 0
 
+                options.value.xaxis.categories = response.data.data.map(item => item.x) || []
             } else {
                 console.error('Expected array but got:', response.data);
                 series.value = [];
             }
         } else {
-            console.error('Error fetching data:', response);
+            console.error('Error fetching data:', response)
+            series.value = []
         }
     } catch (error) {
-        console.error(error);
+        console.error(error)
     }
-};
+}
 
 onBeforeMount(async () => {
     loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, source.value, units.value, staff.value)
@@ -167,17 +155,17 @@ watch([start_date, end_date, timePeriods, establishment, source, units, staff], 
     loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, source.value, units.value, staff.value)
 })
 
+watch([start_date, end_date, timePeriods, establishment, source, units, staff], loadData)
 </script>
 
 <script>
 export default {
     components: {
-        apexchart: VueApexCharts
+        apexchart: VueApexCharts,
     }
-};
+}
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .chart-container {
     width: 100%;
@@ -192,7 +180,7 @@ export default {
 }
 
 h3 {
-    margin: 20px 0 0;
+    /* margin: 20px 0 0; */
     text-align: center;
     padding: 20px;
     font-weight: 600;

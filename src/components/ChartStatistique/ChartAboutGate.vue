@@ -32,6 +32,7 @@ import { useRoute } from 'vue-router';
 import moment from 'moment';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js"
+import { generateShadedPaletteByOpacity } from "@Services/theme.js"
 
 
 const route = useRoute();
@@ -92,6 +93,22 @@ const chartOptions = ref({
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 
+const colorRange = () => {
+    if (userStore.user.partner || userStore.user.customer) {
+        const range = [100000000, 100, 25, 10, 5, 0]
+        const colors = userStore.user.partner
+            ? generateShadedPaletteByOpacity(userStore.user.partner.back_color, 10)
+            : generateShadedPaletteByOpacity(userStore.user.customer.partner_back_color, 10)
+        return colors.map((color, index) => (
+            {
+                from: range[index + 1],
+                to: range[index],
+                color: color
+            }
+        ))
+    }
+    return []
+}
 
 const loadData = async (start_date, end_date, timePeriods, establishment, source, units, staff) => {
     if (IsValueOkay(start_date) && IsValueOkay(end_date)) {
@@ -121,6 +138,37 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
 
             if (response.data.series.length > 0) {
                 hasData.value = response.data.series[0].data.length > 0;
+                chartOptions.value = {
+                    chart: {
+                        id: 'vuechart-treemap',
+                    },
+                    legend: {
+                        show: false
+                    },
+                    plotOptions: {
+                        treemap: {
+                            // distributed: true,
+                            enableShades: false,
+                            // shadeIntensity: 0.5,
+                            // reverseNegativeShade: true,
+                            colorScale: {
+                                ranges: colorRange()
+                            }
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        style: {
+                            fontSize: '18px',
+                            fontFamily: 'Helvetica, Arial, sans-serif',
+                            fontWeight: 'bold',
+                            colors: ['#fff']
+                        },
+                        formatter: function (text, op) {
+                            return [text, op.value].join(': ');
+                        }
+                    }
+                }
             }
         } else {
             console.error('Error fetching data:', response);
@@ -131,8 +179,6 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
 };
 
 onBeforeMount(async () => {
-
-
     loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, source.value, units.value, staff.value)
 });
 

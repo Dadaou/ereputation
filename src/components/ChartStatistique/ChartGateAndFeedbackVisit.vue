@@ -79,7 +79,8 @@ const chartOptions = ref({
     xaxis: {
         categories: [],
     },
-    colors: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']) : (userStore.user.customer.partner_back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']),
+    // colors: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']) : (userStore.user.customer.partner_back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']),
+    colors: userStore.user.partner ? [userStore.user.partner.back_color, userStore.user.partner.title_color] : [userStore.user.customer.partner_back_color, userStore.user.customer.partner_title_color],
     legend: {
         position: 'bottom',
         horizontalAlign: 'center'
@@ -100,14 +101,14 @@ const chartOptions = ref({
     }
 })
 
-const getMaxData=(data1,data2)=>{
-    let max1=Math.ceil(Math.max(...data1)/10) * 10;
- let max2=Math.ceil(Math.max(...data2)/10) * 10;
+const getMaxData = (data1, data2) => {
+    let max1 = Math.ceil(Math.max(...data1) / 10) * 10;
+    let max2 = Math.ceil(Math.max(...data2) / 10) * 10;
 
- if (max2 > max1) {
-  max1=max2;
- }
- return max1;
+    if (max2 > max1) {
+        max1 = max2;
+    }
+    return max1;
 }
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
@@ -140,7 +141,7 @@ const loadData = async (start_date, end_date, timePeriods, establishment, staff,
             dataChart.value = response.data;
             category.value = response.data.categories || [];
             series.value = response.data.series || [];
-            const maxValue= response.data.series.length > 0 ? getMaxData(response.data.series[0].data,response.data.series[1].data) : 0;
+            const maxValue = response.data.series.length > 0 ? getMaxData(response.data.series[0].data, response.data.series[1].data) : 0;
             chartOptions.value = {
                 ...chartOptions.value,
                 xaxis: {
@@ -186,12 +187,13 @@ export default {
     max-width: 100%;
 }
 
-.chart-container {
+/* .chart-container {
     margin-top: 20px;
-}
+} */
 
 h3 {
-    margin: 80px 0 0;
+    /* margin: 80px 0 0; */
+    padding: 20px;
     text-align: center;
     /* padding: 2px; */
     font-weight: 600;
