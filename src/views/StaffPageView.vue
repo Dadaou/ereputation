@@ -550,8 +550,8 @@ const  widthimage = (event) => {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: 70px;
-    margin-top: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
     border-radius: 10px;
 }
 .largeClass {

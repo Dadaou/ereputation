@@ -1136,15 +1136,14 @@ p {
     font-size: 1rem;
 }
 
-
 .smallClass {
     width: auto !important;
     height: 120% !important;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: 70px;
-    margin-top: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
     border-radius: 10px;
 }
 .largeClass {
@@ -1156,6 +1155,7 @@ p {
 .mediumClass{
     border-radius: 10px;
 }
+
 .fade-in {
     opacity: 0;
     transition: opacity 1s ease-in;
