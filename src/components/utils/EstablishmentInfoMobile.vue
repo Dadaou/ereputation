@@ -106,11 +106,16 @@ const loading = computed(() => {
     align-items: center;
     margin-left: 70px;
     margin-top: 20px;
+    border-radius: 10px;
 }
 .largeClass {
     width: 100% !important;
     height: auto !important;
     margin-top: 50px;
+    border-radius: 10px;
+}
+.mediumClass{
+    border-radius: 10px;
 }
 
 

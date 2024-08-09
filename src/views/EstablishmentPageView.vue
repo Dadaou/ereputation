@@ -1179,17 +1179,19 @@ img {
 .smallClass{
     width: auto! important;
     height: 100%! important;
+    border-radius: 10px;
     
 }
 .mediumClass {
     width: 90%; /* Occupe toute la largeur du conteneur */
     height: auto; /* Garde le ratio de l'image */
+    border-radius: 10px;
 }
 
 .largeClass{
     width: 100%! important;
     height: auto! important;
-    
+    border-radius: 10px;
 }
 .fade-in {
     opacity: 0;
