@@ -573,7 +573,16 @@ const  widthimage = (event) => {
         }else{
             newWidth =heightresize * aspectRatio;
         }   
-        let classy =   (newWidth>240)? "largeClass" : "smallClass";
+      //  let classy =   (newWidth>240)? "largeClass" : "smallClass";
+        let classy;
+        if (newWidth > 300) {
+            classy = "largeClass"; // largeClass pour les images plus larges
+        } 
+        else if (newWidth >= 220 && newWidth <= 300) {
+            classy = "mediumClass"; // Nouvelle classe pour les images entre 240 et 300 pixels
+        } else {
+            classy = "smallClass"; // smallClass pour les images plus petites
+        }
         // pour le desktop
         var elem = document.getElementById("logoimage");
         elem.classList.add("fade-in");
@@ -1158,6 +1167,9 @@ img {
     .largeClass{
         margin-top:0px! important;
     }
+    .mediumClass{
+        margin-top:0px! important;
+    }
 }
 
 .photo{
@@ -1169,6 +1181,11 @@ img {
     height: 100%! important;
     
 }
+.mediumClass {
+    width: 90%; /* Occupe toute la largeur du conteneur */
+    height: auto; /* Garde le ratio de l'image */
+}
+
 .largeClass{
     width: 100%! important;
     height: auto! important;

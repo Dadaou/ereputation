@@ -965,7 +965,15 @@ const widthimage = (event) => {
             } else {
                 newWidth = heightresize * aspectRatio;
             }
-            let classy = (newWidth > 240) ? "largeClass" : "smallClass";
+            // let classy = (newWidth > 200) ? "largeClass" : "smallClass";
+            let classy;
+            if (newWidth > 300) {
+                classy = "largeClass"; // largeClass pour les images plus larges
+            } else if (newWidth > 240 && newWidth <= 300) {
+                classy = "mediumClass"; // Nouvelle classe pour les images entre 240 et 300 pixels
+            } else {
+                classy = "smallClass"; // smallClass pour les images plus petites
+            }
             // pour le desktop
             var elem = document.getElementById("logoimage");
             elem.classList.add("fade-in");
@@ -1014,7 +1022,10 @@ const widthimage = (event) => {
         margin-top: 10px ! important;
         margin-bottom: 10px;
     }
-
+    .mediumClass {
+        margin-top: 10px ! important;
+        margin-bottom: 10px;
+    }
     .largeClass {
         margin-top: 10px ! important;
         margin-bottom: 10px;
@@ -1031,7 +1042,11 @@ const widthimage = (event) => {
         margin-top: 60px ! important;
         margin-bottom: 10px;
     }
-
+    .mediumClass {
+        margin-top: 60px ! important;
+        margin-bottom: 10px;
+    }
+    
     .largeClass {
         margin-top: 60px ! important;
         margin-bottom: 10px;
@@ -1127,7 +1142,11 @@ p {
     height: 100% ! important;
 
 }
+.mediumClass {
+    width: 100% ! important;
+    height: 100% ! important;
 
+}
 .establishment__img {
     display: flex;
     justify-content: center;

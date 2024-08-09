@@ -100,21 +100,19 @@ const loading = computed(() => {
 }
 .smallClass {
     width: auto !important;
-    height: 100% !important;
-    margin-top: 50px;
+    height: 120% !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 70px;
+    margin-top: 20px;
 }
 .largeClass {
     width: 100% !important;
     height: auto !important;
     margin-top: 50px;
 }
-.establishment__img {
-    width: 100%;
-    height: 160px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+
 
 
 @media screen and (min-width: 540px) and (max-width: 975px) {
