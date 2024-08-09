@@ -31,9 +31,6 @@
                 :disabled="staffFilter.length > 1 && !staffFilter.includes('')"/>
                 <el-option v-for="item in staffs" :key="item.id" :label="item.name" :value="item.id" 
                     @click="handleStaffDropdown('other')"/>
-
-                <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
-                    :value="item.id" @click="handleEstablishmentDropdown('other')" />
             </el-select>
             <el-select v-model="unitsFilter" multiple size="large" class="space" placeholder="All Unit">
                 <el-option label="All Unit" value="" />
