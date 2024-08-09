@@ -162,7 +162,8 @@
         </div>
         <div class="photo" v-if="!dataLoading">
             <div v-if="establishment.url_source !== null" class="establishment__img">
-                <img  :src="establishment.url_source" id="logoimagemobile"  alt="" />
+                <img :src="establishment.url_source" alt="" :class="widthimage(establishment.url_source)"
+                    id="logoimagemobile" />
             </div>
             <div v-else role="status"
                 class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
@@ -193,7 +194,7 @@
             class="establishment bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" v-if="!dataLoading">
                 <div v-if="establishment.url_source !== null" class="establishment__img">
-                    <img :src="establishment.url_source"  id="logoimage" alt="" />
+                    <img :src="establishment.url_source" id="logoimage" :class="widthimage(establishment.url_source)" alt="" />
                 </div>
                 <div v-else role="status"
                     class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
@@ -931,7 +932,15 @@ const  widthimage = (event) => {
             }else{
                 newWidth =heightresize * aspectRatio;
             }   
-            let classy =   (newWidth>240)? "largeClass" : "smallClass";
+            // let classy =   (newWidth>240)? "largeClass" : "smallClass";
+            let classy;
+            if (newWidth > 300) {
+                classy = "largeClass"; // largeClass pour les images plus larges
+            } else if (newWidth >= 220 && newWidth <= 300) {
+                classy = "mediumClass"; // Nouvelle classe pour les images entre 240 et 300 pixels
+            } else {
+                classy = "smallClass"; // smallClass pour les images plus petites
+            }
             // pour le desktop
             var elem = document.getElementById("logoimage");
             if(elem !== null){
@@ -980,12 +989,12 @@ const  widthimage = (event) => {
         margin-top:50px! important;
     }
     .smallClass{
-        margin-top:10px! important;
-        margin-bottom:10px;
+        margin-top:0px! important;
+        margin-bottom:0px;
     }
     .largeClass{
-        margin-top:10px! important;
-        margin-bottom:10px;
+        margin-top:0px! important;
+        margin-bottom:0px;
     }
 }
 
@@ -995,31 +1004,34 @@ const  widthimage = (event) => {
         margin-top:50px! important;
     }
     .smallClass{
-        margin-top:60px! important;
-        margin-bottom:10px;
+        margin-top:0px! important;
+        margin-bottom:0px;
     }
+  
     .largeClass{
-        margin-top:60px! important;
-        margin-bottom:10px;
+        margin-top:0px! important;
+        margin-bottom:0px;
     }
 }
 
-
-.smallClass{
-width: auto! important;
-height: 100%! important;
-
+.smallClass {
+    width: auto !important;
+    height: 120% !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 70px;
+    margin-top: 20px;
+    border-radius: 10px;
 }
-.establishment__img{
-display:flex;
-justify-content:center;
-height: 160px;
-align-items:center;
+.largeClass {
+    width: 100% !important;
+    height: auto !important;
+    margin-top: 50px;
+    border-radius: 10px;
 }
-.largeClass{
-width: 100%! important;
-height: auto! important;
-
+.mediumClass{
+    border-radius: 10px;
 }
 .fade-in {
     opacity: 0;

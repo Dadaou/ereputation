@@ -273,7 +273,15 @@ const  widthimage = (event) => {
             }else{
                 newWidth =heightresize * aspectRatio;
             }   
-            let classy =   (newWidth>240)? "largeClass" : "smallClass";
+            // let classy =   (newWidth>240)? "largeClass" : "smallClass";
+            let classy;
+            if (newWidth > 300) {
+                classy = "largeClass"; // largeClass pour les images plus larges
+            } else if (newWidth >= 220 && newWidth <= 300) {
+                classy = "mediumClass"; // Nouvelle classe pour les images entre 240 et 300 pixels
+            } else {
+                classy = "smallClass"; // smallClass pour les images plus petites
+            }
             // pour le desktop
             var elem = document.getElementById("logoimage");
             elem.classList.add("fade-in");
@@ -326,6 +334,10 @@ const  widthimage = (event) => {
         margin-top:10px! important;
         margin-bottom:10px;
     }
+    .mediumClass {
+        margin-top: 10px ! important;
+        margin-bottom: 10px;
+    }
     .largeClass{
         margin-top:10px! important;
         margin-bottom:10px;
@@ -341,6 +353,10 @@ const  widthimage = (event) => {
         margin-top:60px! important;
         margin-bottom:10px;
     }
+    .mediumClass{
+        margin-top:60px! important;
+        margin-bottom:10px;
+    }
     .largeClass{
         margin-top:60px! important;
         margin-bottom:10px;
@@ -349,22 +365,24 @@ const  widthimage = (event) => {
 
 
 
-
-.smallClass{
-    width: auto! important;
-    height: 100%! important;
-    
+.smallClass {
+    width: auto !important;
+    height: 120% !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 70px;
+    margin-top: 20px;
+    border-radius: 10px;
 }
-.establishment__img{
-    display:flex;
-    justify-content:center;
-    height: 160px;
-    align-items:center;
+.largeClass {
+    width: 100% !important;
+    height: auto !important;
+    margin-top: 50px;
+    border-radius: 10px;
 }
-.largeClass{
-    width: 100%! important;
-    height: auto! important;
-    
+.mediumClass{
+    border-radius: 10px;
 }
 .fade-in {
     opacity: 0;

@@ -969,7 +969,7 @@ const widthimage = (event) => {
             let classy;
             if (newWidth > 300) {
                 classy = "largeClass"; // largeClass pour les images plus larges
-            } else if (newWidth > 240 && newWidth <= 300) {
+            } else if (newWidth > 220 && newWidth <= 300) {
                 classy = "mediumClass"; // Nouvelle classe pour les images entre 240 et 300 pixels
             } else {
                 classy = "smallClass"; // smallClass pour les images plus petites
@@ -1138,28 +1138,24 @@ p {
 
 
 .smallClass {
-    width: auto ! important;
-    height: 100% ! important;
-
-}
-.mediumClass {
-    width: 100% ! important;
-    height: 100% ! important;
-
-}
-.establishment__img {
+    width: auto !important;
+    height: 120% !important;
     display: flex;
     justify-content: center;
-    height: 160px;
     align-items: center;
+    margin-left: 70px;
+    margin-top: 20px;
+    border-radius: 10px;
 }
-
 .largeClass {
-    width: 100% ! important;
-    height: auto ! important;
-
+    width: 100% !important;
+    height: auto !important;
+    margin-top: 50px;
+    border-radius: 10px;
 }
-
+.mediumClass{
+    border-radius: 10px;
+}
 .fade-in {
     opacity: 0;
     transition: opacity 1s ease-in;
