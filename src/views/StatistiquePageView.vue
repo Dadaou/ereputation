@@ -33,8 +33,10 @@
                     @click="handleStaffDropdown('other')"/>
             </el-select>
             <el-select v-model="unitsFilter" multiple size="large" class="space" placeholder="All Unit">
-                <el-option label="All Unit" value="" />
-                <el-option v-for="item in units" :key="item.id" :label="item.name" :value="item.id" />
+                <el-option label="All Unit" :value="''" @click="handleUnitDropdown('')"
+                    :disabled="unitsFilter.length > 1 && !unitsFilter.includes('')"/>
+                <el-option v-for="item in units" :key="item.id" :label="item.name" :value="item.id" 
+                    @click="handleUnitDropdown('other')"/>
             </el-select>
         </div>
 
@@ -193,6 +195,11 @@ const handleStaffDropdown = (type) => {
     staffFilter.value = staffFilter.value.length > 0 ? filterstaff : ['']
 }
 
+const handleUnitDropdown = (type) => {
+    const filterunit = type == 'other' ? unitsFilter.value.filter(name => name != '') : ['']
+    unitsFilter.value = unitsFilter.value.length > 0 ? filterunit : ['']
+}
+
 const totalVisit = async (type) => {
     try {
         const response = await new Promise((resolve) => {
@@ -311,6 +318,7 @@ onBeforeMount(async () => {
 watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
     establishment.value = establishment.value.length > 0 ? establishment.value : ['all']
     staffFilter.value = staffFilter.value.length > 0 ? staffFilter.value : ['']
+    unitsFilter.value = unitsFilter.value.length > 0 ? unitsFilter.value : ['']
     totalVisit(selectedTimePeriod.value);
     totalNotSubmitted(selectedTimePeriod.value);
     totalSubmitted(selectedTimePeriod.value);
