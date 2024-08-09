@@ -61,6 +61,7 @@ const selectRating = (selectedRating) => {
     width: 80%;
     margin: auto;
     margin-top: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .rating__feedback div {
