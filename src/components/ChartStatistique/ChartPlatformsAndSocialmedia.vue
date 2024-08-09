@@ -166,7 +166,7 @@ export default {
 }
 
 h3 {
-    margin: 20px 0 0;
+    /* margin: 20px 0 0; */
     text-align: center;
     padding: 20px;
     font-weight: 600;

@@ -123,12 +123,13 @@ export default {
     max-width: 100%;
 }
 
-.chart-container {
+/* .chart-container {
     margin-top: 20px;
-}
+} */
 
 h3 {
-    margin: 80px 0 0;
+    /* margin: 80px 0 0; */
+    padding: 20px;
     text-align: center;
     /* padding: 2px; */
     font-weight: 600;

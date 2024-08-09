@@ -5,15 +5,15 @@
 
             <el-select v-model="establishment" multiple size="large" class="space my-3" placeholder="All Etablishment">
                 <el-option label="All Etablishment" :value="'all'" @click="handleEstablishmentDropdown('all')"
-                    :disabled="establishment.length > 1 && !establishment.includes('all')"/>
+                    :disabled="establishment.length > 1 && !establishment.includes('all')" />
                 <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
-                    :value="item.id" @click="handleEstablishmentDropdown('other')"/>
+                    :value="item.id" @click="handleEstablishmentDropdown('other')" />
             </el-select>
             <div class="date_picker">
-            <el-date-picker v-model="start_date" type="date" :size="'large'" class="space my-3" />
+                <el-date-picker v-model="start_date" type="date" :size="'large'" class="space my-3" />
             </div>
             <div class="date_picker">
-            <el-date-picker v-model="end_date" type="date" :size="'large'" class="space my-3"/>
+                <el-date-picker v-model="end_date" type="date" :size="'large'" class="space my-3" />
             </div>
             <DropdownComponent :showTitle="false" class="dropdown w-full spaceSelect" :data="timePeriods" @submit="(timePeriod) => {
                 selectedTimePeriod = timePeriod
@@ -39,56 +39,64 @@
         <div class="number">
             <div class="square bordure-bleu">
                 <h5><i class="uil uil-user"></i> <span>Total visits</span></h5>
-                <p>{{ nbrTotalVisit }}<sup :class="nbrGapVisit >= 0 ? 'texte-vert' : 'texte-rouge'">{{ nbrGapVisit >= 0 ? '+' : '' }}{{ nbrGapVisit }}</sup></p>
+                <p>{{ nbrTotalVisit }}<sup :class="nbrGapVisit >= 0 ? 'texte-vert' : 'texte-rouge'">{{ nbrGapVisit >= 0
+                    ? '+' : '' }}{{ nbrGapVisit }}</sup></p>
             </div>
-            <div class="square square bordure-rouge"> 
+            <div class="square square bordure-rouge">
                 <h5><i class="uil uil-times"></i> <span>Total not submitted</span></h5>
-                <p>{{ nbrNotSubmitted }}<sup :class="nbrGapNotSubmitted >= 0 ? 'texte-vert' : 'texte-rouge'">{{ nbrGapNotSubmitted >= 0 ? '+' : '' }}{{ nbrGapNotSubmitted }}</sup></p>
+                <p>{{ nbrNotSubmitted }}<sup :class="nbrGapNotSubmitted >= 0 ? 'texte-vert' : 'texte-rouge'">{{
+                    nbrGapNotSubmitted >= 0 ? '+' : '' }}{{ nbrGapNotSubmitted }}</sup></p>
             </div>
             <div class="square bordure-vert">
                 <h5><i class="uil-envelope-send"></i> <span>Total submissions</span></h5>
-                <p>{{ nbrSubmitted }}<sup :class="nbrGapSubmitted >= 0 ? 'texte-vert' : 'texte-rouge'">{{ nbrGapSubmitted >= 0 ? '+' : '' }}{{ nbrGapSubmitted }}</sup></p>
+                <p>{{ nbrSubmitted }}<sup :class="nbrGapSubmitted >= 0 ? 'texte-vert' : 'texte-rouge'">{{
+                    nbrGapSubmitted >= 0 ? '+' : '' }}{{ nbrGapSubmitted }}</sup></p>
             </div>
             <div class="square">
                 <h5 class="iconfy">
                     <Icon icon="mdi:hand-tap" />
                     <span>Total social media clicks</span>
                 </h5>
-                <p>{{ nbrClickSocial }}<sup :class="nbrGapClickSocial >= 0 ? 'texte-vert' : 'texte-rouge'">{{ nbrGapClickSocial >= 0 ? '+' : '' }}{{ nbrGapClickSocial }}</sup></p>
+                <p>{{ nbrClickSocial }}<sup :class="nbrGapClickSocial >= 0 ? 'texte-vert' : 'texte-rouge'">{{
+                    nbrGapClickSocial >= 0 ? '+' : '' }}{{ nbrGapClickSocial }}</sup></p>
             </div>
         </div>
 
-        <div class="dashboard__chart">
-            <div class="statistique-left">
+        <!-- <div class="dashboard__chart"> -->
+        <div class="grid max-[1080px]:grid-cols-1 grid-cols-2 min-[1920px]:grid-cols-3 grid-flow-row gap-4 mt-8">
+            <div class="statistique">
                 <ChartFeedbackSubmissions />
             </div>
-            <div class="statistique-right">
+            <div class="statistique">
                 <ChartGateAndFeedbackVisit />
             </div>
-        </div>
-        <br>
-        <div class="dashboard__chart">
-            <div class="statistique-left ">
-                <ChartAboutGate />
-            </div>
-            <div class="statistique-right">
-                <ChartPlatformsAndSocialmedia />
-            </div>
-        </div>
-        <br>
-        <div class="dashboard__chart">
-            <div class="statistique-left ">
-                <PieChartReseauxSociaux />
-            </div>
-            <div class="statistique-right ">
+            <div class="statistique">
                 <PieChartService />
             </div>
+            <div class="statistique">
+                <ChartAboutGate />
+            </div>
+            <div class="statistique">
+                <ChartPlatformsAndSocialmedia />
+            </div>
+            <div class="statistique">
+                <PieChartReseauxSociaux />
+            </div>
+
+        </div>
+        <br>
+        <div class="dashboard__chart">
+
+        </div>
+        <br>
+        <div class="dashboard__chart">
+
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, provide, onBeforeMount} from 'vue'
+import { ref, provide, onBeforeMount } from 'vue'
 import { Icon } from '@iconify/vue';
 import { defineAsyncComponent, watch } from 'vue';
 import { ElOption, ElSelect, ElDatePicker } from 'element-plus';
@@ -175,7 +183,7 @@ provide('establishments', userStore.user.customer.establishments)
 
 const handleEstablishmentDropdown = (type) => {
     const filters = type == 'other' ? establishment.value.filter(name => name != 'all') : ['all']
-    establishment.value =  establishment.value.length > 0 ? filters : ['all']
+    establishment.value = establishment.value.length > 0 ? filters : ['all']
 }
 
 const totalVisit = async (type) => {
@@ -189,7 +197,7 @@ const totalVisit = async (type) => {
             nbrTotalVisit.value = response.data.visitor_now || 0;
             nbrGapVisit.value = response.data.gap || 0;
         } else {
-        console.error('Error fetching data:', response);
+            console.error('Error fetching data:', response);
         }
     } catch (error) {
         console.error(error);
@@ -206,14 +214,14 @@ const totalNotSubmitted = async (type) => {
             nbrNotSubmitted.value = response.data.visitor_now || 0;
             nbrGapNotSubmitted.value = response.data.gap || 0;
         } else {
-        console.error('Error fetching data:', response);
+            console.error('Error fetching data:', response);
         }
     } catch (error) {
         console.error(error);
     }
 }
 
-const totalSubmitted  = async (type) => {
+const totalSubmitted = async (type) => {
     try {
         const response = await new Promise((resolve) => {
             services.get_Record(`/customer/visitor/indicator?tag=${route.params.tag}&type=${type || 'daily'}&reviews=yes`, (response) => {
@@ -224,14 +232,14 @@ const totalSubmitted  = async (type) => {
             nbrSubmitted.value = response.data.visitor_now || 0;
             nbrGapSubmitted.value = response.data.gap || 0;
         } else {
-        console.error('Error fetching data:', response);
+            console.error('Error fetching data:', response);
         }
     } catch (error) {
         console.error(error);
     }
 }
 
-const totalClickSocial  = async (type) => {
+const totalClickSocial = async (type) => {
     try {
         const response = await new Promise((resolve) => {
             services.get_Record(`/customer/visitorclick/clicks/social?tag=${route.params.tag}&type=${type || 'daily'}`, (response) => {
@@ -242,7 +250,7 @@ const totalClickSocial  = async (type) => {
             nbrClickSocial.value = response.data.visitor_click_now || 0;
             nbrGapClickSocial.value = response.data.gap || 0;
         } else {
-        console.error('Error fetching data:', response);
+            console.error('Error fetching data:', response);
         }
     } catch (error) {
         console.error(error);
@@ -274,7 +282,7 @@ const loadUnits = async () => {
             });
         });
         if (response.status === 200) {
-            units.value = response.data ;
+            units.value = response.data;
         } else {
             console.error('Error fetching data:', response);
         }
@@ -290,7 +298,7 @@ onBeforeMount(async () => {
     await totalSubmitted(selectedTimePeriod.value);
     await totalClickSocial(selectedTimePeriod.value);
     await loadStaff();
-    await loadUnits(); 
+    await loadUnits();
 });
 
 watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
@@ -303,11 +311,12 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
 
 </script>
 <style scoped>
-.iconfy{
+.iconfy {
     display: flex;
     justify-content: center;
 }
-.iconify--pepicons-pencil{
+
+.iconify--pepicons-pencil {
     color: #000 !important;
     margin-right: 3px;
     margin-top: 2px;
@@ -317,13 +326,14 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
 .statistique-right {
     width: 50%;
 }
-.statistique-left{
+
+.statistique-left {
     float: left;
     /* margin-left: 30px; */
 }
 
-.statistique-right{
-    float : right ; 
+.statistique-right {
+    float: right;
     /* margin-right: 30px; */
     margin-top: -20px;
 }
@@ -335,23 +345,26 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
 }
 
 .spaceSelect {
-    margin-top : 12px !important
+    margin-top: 12px !important
 }
 
-.bordure-vert{
+.bordure-vert {
     border-bottom: 2px solid;
     border-bottom-color: #0a8964;
 }
-.bordure-bleu{
+
+.bordure-bleu {
     border-bottom: 2px solid;
     border-bottom-color: #7bc6e9;
 }
-.bordure-rouge{
+
+.bordure-rouge {
     border-bottom: 2px solid;
     border-bottom-color: #e97b80;
 }
+
 .dashboard__chart {
-    display: flex;
+    /* display: grid; */
     width: 100%;
     gap: 20px;
     height: auto !important;
@@ -359,14 +372,14 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
 }
 
 .date_picker {
-	display: flex;
-	align-items: center;
-	flex-grow: 1;
-	min-width: 165px;
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    min-width: 165px;
 }
 
 @media (max-width: 1281px) {
-    .square.bordure-bleu h5{
+    .square.bordure-bleu h5 {
         margin-bottom: 15px !important;
     }
 }
@@ -378,23 +391,29 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
     }
 
 }
-    
+
 .bas {
-    margin-left : -50px ;
+    margin-left: -50px;
 }
+
 .statistique {
     z-index: 2;
+    width: 100%;
 }
+
 h1 {
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 5px;
     color: var(--color-primary);
 }
-.square{
+
+.square {
     display: flex;
-    flex-direction: column; /* Alignement vertical */
-    justify-content: space-between; /* Espacement entre les enfants */
+    flex-direction: column;
+    /* Alignement vertical */
+    justify-content: space-between;
+    /* Espacement entre les enfants */
     align-items: center;
     width: 20%;
     height: auto;
@@ -402,7 +421,7 @@ h1 {
     box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
 }
 
-.square h5{
+.square h5 {
     text-align: center;
     padding: 20px;
     font-weight: 600;
@@ -417,10 +436,12 @@ h1 {
     font-size: 20px;
     color: black;
 }
+
 .square p sup {
     font-size: 12px;
 }
-.number{
+
+.number {
     display: flex;
     padding-top: 20px;
     justify-content: space-between;
@@ -440,9 +461,11 @@ h1 {
         /* justify-content: flex-start; */
         gap: 20px;
     }
+
     .square {
         padding: 2px !important;
     }
+
     .dashboard__chart {
         display: block;
         width: 100%;
@@ -453,7 +476,7 @@ h1 {
     .statistique-right {
         display: block !important;
         width: 95%;
-        float:none;
+        float: none;
     }
 }
 
@@ -468,7 +491,7 @@ h1 {
     .date__filter {
         display: block !important;
         width: 100%;
-        float:none;
+        float: none;
     }
 
     .statistique-right,
@@ -476,6 +499,7 @@ h1 {
         width: 99%;
         margin-left: 1%
     }
+
     .space {
         margin-bottom: 10px !important;
     }
@@ -486,11 +510,11 @@ h1 {
     }
 
     .number {
-        display: block ;
+        display: block;
         align-items: center;
     }
-    
-    .square span{
+
+    .square span {
         font-size: 12px !important;
     }
 }
