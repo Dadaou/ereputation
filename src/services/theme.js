@@ -34,9 +34,6 @@ const hexToRgb = (hex) => {
   return [r, g, b]
 }
 
-// Exemple d'utilisation
-console.log(hexToRgb('#ff5733')) // Output: [255, 87, 51]
-
 const rgbToHsl = (r, g, b) => {
   r /= 255
   g /= 255
@@ -137,19 +134,12 @@ export const generateShadedPaletteByLight = (hexColor, numberOfShades = 5) => {
   let [h, s, l] = rgbToHsl(r, g, b)
 
   let shades = []
-  // const step = l / numberOfShades
   const step = 25 / numberOfShades
-  // const initialL = l
-
-  console.log('number: ', numberOfShades)
-  console.log('step:', step)
 
   let i = 1
 
   while (shades.length < numberOfShades) {
     let newL = step * i
-
-    console.log('newL: ', newL)
 
     if (newL > l && newL >= 60) {
       let [newR, newG, newB] = hslToRgb(h, s, newL)
@@ -159,22 +149,14 @@ export const generateShadedPaletteByLight = (hexColor, numberOfShades = 5) => {
     i++
   }
 
-  console.log('Results: ' + shades)
-
   return shades
 }
 
 export const generateShadedPaletteByOpacity = (hexColor, numberOfShades = 5) => {
   let [r, g, b] = hexToRgb(hexColor)
-  // let [h, s, l] = rgbToHsl(r, g, b)
 
   let shades = []
-  // const step = l / numberOfShades
   const step = 150 / numberOfShades
-  // const initialL = l
-
-  console.log('number: ', numberOfShades)
-  console.log('step:', step)
 
   let i = numberOfShades
 
@@ -182,14 +164,11 @@ export const generateShadedPaletteByOpacity = (hexColor, numberOfShades = 5) => 
     let newO = step * i
 
     if (newO <= 150) {
-      console.log('newO: ', newO)
       shades.push(rgbaToHex([r, g, b, newO]))
     }
 
     i--
   }
-
-  console.log('Results: ' + shades)
 
   return shades
 }

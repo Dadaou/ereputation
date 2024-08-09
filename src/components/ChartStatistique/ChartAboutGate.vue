@@ -2,34 +2,35 @@
     <h3>About the gate</h3>
 
     <div v-if="hasData">
-       
+
         <div class="chart-container">
-        <apexchart  type="treemap" :options="chartOptions" :series="series"></apexchart>
+            <apexchart type="treemap" :options="chartOptions" :series="series"></apexchart>
         </div>
     </div>
     <div v-else class="content-message">
-    <div>No interactions for establishments <br>
-        <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'">
-            <span v-for="(estab_id, index) in establishment" :key="estab_id" style="display: inline;">
-                <span v-for="estab_name in establishments" :key="estab_name.id" style="display: inline;">
-                    <span v-if="estab_name.id == estab_id" style="display: inline;">
-                        {{ estab_name.name }}<span v-if="index !== establishment.length - 1">, </span>
+        <div>No interactions for establishments <br>
+            <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'">
+                <span v-for="(estab_id, index) in establishment" :key="estab_id" style="display: inline;">
+                    <span v-for="estab_name in establishments" :key="estab_name.id" style="display: inline;">
+                        <span v-if="estab_name.id == estab_id" style="display: inline;">
+                            {{ estab_name.name }}<span v-if="index !== establishment.length - 1">, </span>
+                        </span>
                     </span>
                 </span>
             </span>
-        </span>
+        </div>
     </div>
-</div>
 
 </template>
 
 <script setup>
-import { ref, onBeforeMount, inject, watch } from 'vue'
+import { ref, onBeforeMount, inject, watch, computed } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router';
 import moment from 'moment';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js"
+import { generateShadedPaletteByLight, generateShadedPaletteByOpacity } from "@Services/theme.js"
 
 
 const route = useRoute();
@@ -66,59 +67,59 @@ const chartOptions = ref({
             // reverseNegativeShade: true,
             colorScale: {
                 ranges: [
-                    {   
-                    from: 0,
-                    to: 10000000,
-                    color: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? '#3EB489' : "#009DCF") : (userStore.user.customer.partner_back_color == "#0a8964" ? '#3EB489' : "#009DCF") 
+                    {
+                        from: 0,
+                        to: 10000000,
+                        color: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? '#3EB489' : "#009DCF") : (userStore.user.customer.partner_back_color == "#0a8964" ? '#3EB489' : "#009DCF")
                     },
-                    // {
-                    // from: 0,
-                    // to: 1,
-                    // color: '#dcf4e4'
-                    // },
-                    // {
-                    // from: 1,
-                    // to: 2,
-                    // color: '#B8D9D2'
-                    // },
-                    // {
-                    // from: 2,
-                    // to: 3,
-                    // color: '#a8e4bc'
-                    // },
-                    // {
-                    // from: 0,
-                    // to: 2,
-                    // color: '#85d9a1'
-                    // },
-                    // {
-                    // from: 3,
-                    // to: 10,
-                    // color: '#73d393'
-                    // },
-                    // {
-                    // from: 11,
-                    // to: 15,
-                    // color: '#62ce86'
-                    // },
-                 
-                    // {
-                    // from: 1,
-                    // to: 10,
-                    // color: '#30ab48'
-                    // },
-                    // {
-                    // from: 11,
-                    // to: 100,
-                    // color: '#3b9358'
-                    // },
-                    // {
-                    // from: 101,
-                    // to: 8000000000,
-                    // color: '#215332'
-                    // }
-                   
-            ]
+                    //     {
+                    //         from: 0,
+                    //         to: 1,
+                    //         color: '#dcf4e4'
+                    //     },
+                    //     {
+                    //         from: 1,
+                    //         to: 2,
+                    //         color: '#B8D9D2'
+                    //     },
+                    //     {
+                    //         from: 2,
+                    //         to: 3,
+                    //         color: '#a8e4bc'
+                    //     },
+                    //     {
+                    //         from: 0,
+                    //         to: 2,
+                    //         color: '#85d9a1'
+                    //     },
+                    //     {
+                    //         from: 3,
+                    //         to: 10,
+                    //         color: '#73d393'
+                    //     },
+                    //     // {
+                    //     // from: 11,
+                    //     // to: 15,
+                    //     // color: '#62ce86'
+                    //     // },
+
+                    //     // {
+                    //     // from: 1,
+                    //     // to: 10,
+                    //     // color: '#30ab48'
+                    //     // },
+                    //     {
+                    //         from: 11,
+                    //         to: 100,
+                    //         color: '#3b9358'
+                    //     },
+                    //     {
+                    //         from: 101,
+                    //         to: 8000000000,
+                    //         color: '#215332'
+                    //     }
+
+                ]
             }
         }
     },
@@ -138,6 +139,22 @@ const chartOptions = ref({
 
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 
+const colorRange = () => {
+    if (userStore.user.partner || userStore.user.customer) {
+        const range = [100000000, 100, 25, 10, 5, 0]
+        const colors = userStore.user.partner
+            ? generateShadedPaletteByOpacity(userStore.user.partner.back_color, 10)
+            : generateShadedPaletteByOpacity(userStore.user.customer.partner_back_color, 10)
+        return colors.map((color, index) => (
+            {
+                from: range[index + 1],
+                to: range[index],
+                color: color
+            }
+        ))
+    }
+    return []
+}
 
 const loadData = async (start_date, end_date, timePeriods, establishment, source, units, staff) => {
     if (IsValueOkay(start_date) && IsValueOkay(end_date)) {
@@ -165,9 +182,40 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
         if (response.status === 200) {
             //console.log(response.data)
             series.value = response.data.series;
-           
+
             if (response.data.series.length > 0) {
                 hasData.value = response.data.series[0].data.length > 0;
+                chartOptions.value = {
+                    chart: {
+                        id: 'vuechart-treemap',
+                    },
+                    legend: {
+                        show: false
+                    },
+                    plotOptions: {
+                        treemap: {
+                            // distributed: true,
+                            enableShades: false,
+                            // shadeIntensity: 0.5,
+                            // reverseNegativeShade: true,
+                            colorScale: {
+                                ranges: colorRange()
+                            }
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        style: {
+                            fontSize: '18px',
+                            fontFamily: 'Helvetica, Arial, sans-serif',
+                            fontWeight: 'bold',
+                            colors: ['#fff']
+                        },
+                        formatter: function (text, op) {
+                            return [text, op.value].join(': ');
+                        }
+                    }
+                }
             }
         } else {
             console.error('Error fetching data:', response);
@@ -178,8 +226,6 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
 };
 
 onBeforeMount(async () => {
-   
-    
     loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, source.value, units.value, staff.value)
 });
 
