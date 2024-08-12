@@ -988,9 +988,14 @@ const  widthimage = (event) => {
     .establishment__info_tablet{
         margin-top:50px! important;
     }
-    .smallClass{
-        margin-top:0px! important;
-        margin-bottom:0px;
+    .smallClass {
+        width: auto !important;
+        height: 120% !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 70px;
+        border-radius: 10px;
     }
     .largeClass{
         margin-top:0px! important;
@@ -1001,11 +1006,16 @@ const  widthimage = (event) => {
 @media screen  and (max-width: 520px) {
 
     .establishment__info_tablet{
-        margin-top:50px! important;
+        margin-top:60px! important;
     }
-    .smallClass{
-        margin-top:0px! important;
-        margin-bottom:0px;
+    .smallClass {
+        width: auto !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 70px;
+        margin-top: 0px;
+        border-radius: 10px;
     }
   
     .largeClass{

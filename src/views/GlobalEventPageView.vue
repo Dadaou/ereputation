@@ -328,11 +328,16 @@ const  widthimage = (event) => {
 @media screen and (min-width: 540px) and (max-width: 975px) {
 
     .establishment__info_tablet{
-        margin-top:50px! important;
+        margin-top:60px! important;
     }
-    .smallClass{
-        margin-top:10px! important;
-        margin-bottom:10px;
+    .smallClass {
+        width: auto !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 70px;
+        margin-top: 0px;
+        border-radius: 10px;
     }
     .mediumClass {
         margin-top: 10px ! important;
@@ -347,14 +352,19 @@ const  widthimage = (event) => {
 @media screen  and (max-width: 520px) {
 
     .establishment__info_tablet{
-        margin-top:50px! important;
-    }
-    .smallClass{
         margin-top:60px! important;
-        margin-bottom:10px;
+    }
+    .smallClass {
+        width: auto !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 70px;
+        margin-top: 0px;
+        border-radius: 10px;
     }
     .mediumClass{
-        margin-top:60px! important;
+        margin-top:0px! important;
         margin-bottom:10px;
     }
     .largeClass{
