@@ -145,10 +145,8 @@ const userStore = useUserStore();
 const timePeriods = ref(['daily', 'monthly', 'yearly']);
 
 const sources = ref([
-    { id: "all", name: 'All' },
     { id: "gates", name: 'Gates' },
     { id: "feedback", name: 'Feedback' },
-    // Ajoutez d'autres éléments ici
 ]);
 
 const sourceFilter = ref(null);
