@@ -287,7 +287,7 @@ import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import ComparisonChartComponent from '@Components/utils/ComparisonChartComponent.vue';
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
-import { ref, reactive, watch, onBeforeMount, computed, provide, inject, defineAsyncComponent } from 'vue';
+import { ref, reactive, watch, onBeforeMount, computed, provide, inject, defineAsyncComponent,nextTick } from 'vue';
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css'
 import { useChartsStore } from "@Stores/charts.js"
@@ -502,8 +502,10 @@ const viewData = async (establishment, establishmentTag, dateStart, dateEnd, web
         //Global value to change
         plotdata.value = await chartsStore.loadData(tags, timePeriods, dateStart, dateEnd, website)
         legendData.value = companiesStore.generateLegend(plotdata.value, colors.value);
+        
     }
     chartLoading.value = false;
+    
 }
 
 const formatStarsData = (data) => {
@@ -528,6 +530,7 @@ const formatStarsData = (data) => {
 const globalComparison = async (establishment, establishmentTag, dateStart, dateEnd, website, stars, language, competitors, timePeriods) => {
     viewData(establishment, establishmentTag, dateStart, dateEnd, website, competitors, timePeriods);
     loadReviews(establishmentTag, 1, 20, 1, dateStart, dateEnd, website, stars, language);
+    
 };
 
 const gotoReviewPage = (id, tag) => {
