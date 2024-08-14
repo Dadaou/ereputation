@@ -45,8 +45,8 @@
     <div class="tablet_mobile__filter tablet">
         <div class="reviews__star">
             <div v-for="star in starsData" :key="star.label" class="flex items-center mt-1">
-                <a href="#" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
-                    {{ star.label }}
+                <a href="#" :style="{'width':'8%'}" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
+                    {{ star.label }} <i class="fa fa-star " aria-hidden="true"></i>
                 </a>
                 <div class="star__bar h-3 bg-gray-200 rounded mx-2 flex-grow">
                     <div class="star__bar-fill h-3 bg-yellow-300 rounded" :style="{ 'width': `${star.percentage}%` }">
@@ -86,8 +86,8 @@
     <div class="tablet_mobile__filter" v-if="currentFilter == 'star'">
         <div class="reviews__star">
             <div v-for="star in starsData" :key="star.label" class="flex items-center mt-1">
-                <a href="#" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
-                    {{ star.label }}
+                <a href="#" :style="{'width':'8%'}" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
+                    {{ star.label }} <i class="fa fa-star " aria-hidden="true"></i>
                 </a>
                 <div class="star__bar h-3 bg-gray-200 rounded mx-2 flex-grow">
                     <div class="star__bar-fill h-3 bg-yellow-300 rounded" :style="{ 'width': `${star.percentage}%` }">
@@ -185,8 +185,8 @@
         </div>
         <div class="reviews__star">
             <div v-for="star in starsData" :key="star.label" class="flex items-center mt-1">
-                <a href="#" :class="{ 'text-blue-500': selectedStars === star.intVal }" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
-                    {{ star.label }}
+                <a href="#" :style="{'width':'8%'}" :class="{ 'text-blue-500': selectedStars === star.intVal }" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
+                    {{ star.label }} <i class="fa fa-star " aria-hidden="true"></i>
                 </a>
                 <div class="star__bar h-3 bg-gray-200 rounded mx-2 flex-grow">
                     <div class="star__bar-fill h-3 bg-yellow-300 rounded" :style="{ 'width': `${star.percentage}%` }">
@@ -456,7 +456,7 @@ const formatStarsData = (data) => {
     }, 0);
     Object.keys(data).forEach(k => {
         tmp.push({
-            label: k,
+            label: k[0],
             value: data[k],
             percentage: (data[k] == 0) ? 0 : (data[k] * 100 / total),
             intVal: k.split()[0]
@@ -694,6 +694,9 @@ const  widthimage = (event) => {
 </script>
 
 <style scoped>
+.fa-star{
+    color:var(--color-warning);
+}
 .text-blue-500 {
   color: #4299e1;
 }
