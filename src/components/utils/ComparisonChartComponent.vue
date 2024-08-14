@@ -13,7 +13,7 @@
             </GroupedBarChart>
         </div>
 
-        <div class="colLarge">
+        <div class="colLarge" id="colLarge">
             <div class="boxLarge">
                 <GroupedBarChart class="chart" :plot-data="props.data" x-key="name" :width="custom_width"
                     :height="200" :margin="{top: 20, bottom: 35, left: 55, right: 25 } " :colors="colors" :x-axis-label="_timePeriod"
@@ -82,7 +82,7 @@
 import ModalComponent from '@Components/utils/ModalComponent.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import moment from 'moment';
-import { ref, watch, computed, onUpdated, inject } from 'vue';
+import { ref, watch, computed, onUpdated, inject,onMounted,nextTick } from 'vue';
 import { useCompanyStore } from "@Stores/company.js";
 import { useResizeObserver } from '@vueuse/core';
 import { useWindowSize } from '@vueuse/core';
@@ -144,7 +144,8 @@ const custom_width = computed(() => {
     if (nb > 9) {
         width = (width * nb) / 9;
     }
-
+   console.log(nb)
+    
     return width;
 })
 
@@ -175,9 +176,27 @@ const viewData = async () => {
         legendData.value = companiesStore.generateLegend(plotData.value, props.colors);
     }
 
-
+    
     chart2Loading.value = false;
+
+    
 }
+
+onMounted(()=>{
+    setTimeout(() => {
+        nextTick(()=>{
+            
+            var div = document.getElementsByClassName("chart")[0].children
+                //document.getElementsByClassName("chart")[0].scrollLeft += longueur
+            var widthp = parseInt(div[0].getAttribute("width"))
+                const longueur = widthp * props.data.length 
+                document.getElementById("colLarge").scrollLeft += longueur 
+                document.getElementById("colLarge").scrollLeft = longueur 
+            
+        })
+    },2000)
+   
+})
 
 const custom_width2 = computed(() => {
 
@@ -243,7 +262,21 @@ const barWidth = computed(() => {
 onUpdated(() => {
     chartWidth.value = (el.value != null && el.value != undefined) ? Math.abs(el.value.offsetWidth) : chartWidth.value;
     chartModalWidth.value = (el2.value != null && el2.value != undefined) ? Math.abs(el2.value.offsetWidth) : chartModalWidth.value;
+    setTimeout(() => {
+        nextTick(()=>{
+            
+            var div = document.getElementsByClassName("chart")[0].children
+                //document.getElementsByClassName("chart")[0].scrollLeft += longueur
+            var widthp = parseInt(div[0].getAttribute("width"))
+                const longueur = widthp * props.data.length 
+                document.getElementById("colLarge").scrollLeft += longueur 
+                document.getElementById("colLarge").scrollLeft = longueur 
+            
+        })
+    },2000)
 })
+
+
 
 useResizeObserver(el, (entries) => {
     const entry = entries[0]
