@@ -262,7 +262,18 @@ const barWidth = computed(() => {
 onUpdated(() => {
     chartWidth.value = (el.value != null && el.value != undefined) ? Math.abs(el.value.offsetWidth) : chartWidth.value;
     chartModalWidth.value = (el2.value != null && el2.value != undefined) ? Math.abs(el2.value.offsetWidth) : chartModalWidth.value;
-    
+    setTimeout(() => {
+        nextTick(()=>{
+            
+            var div = document.getElementsByClassName("chart")[0].children
+                //document.getElementsByClassName("chart")[0].scrollLeft += longueur
+            var widthp = parseInt(div[0].getAttribute("width"))
+                const longueur = widthp * props.data.length 
+                document.getElementById("colLarge").scrollLeft += longueur 
+                document.getElementById("colLarge").scrollLeft = longueur 
+            
+        })
+    },2000)
 })
 
 
