@@ -3,7 +3,7 @@
     <h3>Number of form submitted by Units</h3>
     <div v-if="hasData">
         <div class="chart-container">
-            <apexchart type="donut" height="350" :options="chartOptions" :series="series"></apexchart>
+            <apexchart type="donut" height="480"  :options="chartOptions" :series="series"></apexchart>
         </div>
     </div>
     <div v-else class="no_data">
