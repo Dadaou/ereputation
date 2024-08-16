@@ -1,7 +1,7 @@
 <template>
     <div class="main__container">
         <!--   <HeadComponent :page="page"></HeadComponent> -->
-        <div class="container client__container">
+        <div class=" container client__container ">
             <div v-if="!dataLoading" class="header">
                 <div class="header_navigation">
                     <RouterLink class="search__icon" :to="{ name: 'EstablishmentList', params: { tag: tag } }">
@@ -25,9 +25,11 @@
                     @click="backToCustomer">
                     <i class="uil uil-arrow-left"></i>Back</button>
             </div>
-            <RouterView />
+            <RouterView v-if="route.name != 'Analytic'"/>
         </div>
+        <RouterView v-if="route.name == 'Analytic'"/>
     </div>
+   
 </template>
 
 <script setup>

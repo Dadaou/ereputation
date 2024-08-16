@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="admin__container">
         <h1>Analytics</h1>
         <div class="date__filter">
 
@@ -12,7 +12,7 @@
             <div class="date_picker">
                 <el-date-picker v-model="start_date" type="date" :size="'large'" class="space my-3" />
             </div>
-            <div class="date_picker">
+            <div class="date_picker"> 
                 <el-date-picker v-model="end_date" type="date" :size="'large'" class="space my-3" />
             </div>
             <DropdownComponent :showTitle="false" class="dropdown w-full spaceSelect" :data="timePeriods" @submit="(timePeriod) => {
@@ -325,6 +325,49 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
 
 </script>
 <style scoped>
+.admin__container {
+  height: inherit;
+
+  gap: 2rem;
+  width: 95% !important;
+  margin: auto;
+  margin-top: 8% !important;
+  overflow-x: hidden;
+  
+}
+@media (min-width: 880px) and (max-width: 1090px){
+    .admin__container {
+        margin-top: 10% !important;
+    }
+
+}
+@media (min-width: 580px) and (max-width: 879px){
+    .admin__container {
+        margin-top: 14% !important;
+    }
+
+}
+
+@media (min-width: 390px) and (max-width: 579px) {
+    .admin__container {
+        margin-top: 20% !important;
+    }
+
+}
+@media (min-width: 290px) and (max-width: 389px) {
+    .admin__container {
+        margin-top: 28% !important;
+    }
+
+}
+
+@media (min-width: 100px) and (max-width: 289px) {
+    .admin__container {
+        margin-top: 42% !important;
+    }
+
+}
+
 .iconfy {
     display: flex;
     justify-content: center;
