@@ -16,7 +16,7 @@
                 <div class="percentage-bar">
                   <div class="percentage-line" :style="{ width: calculatePercentage(review[noteKey], review.total) + '%' }"></div>
                 </div>
-                 <span>{{ calculatePercentage(review[noteKey], review.total) }}%</span>
+                 <span>{{ review[noteKey] }}</span>
               </div>
             </li>
           </ul>
