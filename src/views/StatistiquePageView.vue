@@ -1,44 +1,70 @@
 <template>
     <div class="admin__container">
         <h1>Analytics</h1>
-        <div class="date__filter">
 
-            <el-select v-model="establishment" multiple size="large" class="space my-3" placeholder="All Etablishment">
-                <el-option label="All Etablishment" :value="'all'" @click="handleEstablishmentDropdown('all')"
-                    :disabled="establishment.length > 1 && !establishment.includes('all')" />
-                <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
-                    :value="item.id" @click="handleEstablishmentDropdown('other')" />
-            </el-select>
-            <div class="date_picker">
-                <el-date-picker v-model="start_date" type="date" :size="'large'" class="space my-3" />
+
+        <div class="container mx-auto p-4">
+            <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-7 gap-4">
+
+               
+                    <el-select v-model="establishment" multiple size="large" class="space" placeholder="All Etablishment">
+                        <el-option label="All Etablishment" :value="'all'" @click="handleEstablishmentDropdown('all')"
+                            :disabled="establishment.length > 1 && !establishment.includes('all')" />
+                        <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
+                            :value="item.id" @click="handleEstablishmentDropdown('other')" />
+                    </el-select>
+        
+
+              
+                    <div class="date_picker">
+                        <el-date-picker v-model="start_date" type="date" :size="'large'" class="space " />
+                    </div>
+           
+
+             
+                    <div class="date_picker"> 
+                        <el-date-picker v-model="end_date" type="date" :size="'large'" class="space " />
+                    </div>
+            
+
+            
+                    <DropdownComponent :showTitle="false" class="dropdown " :data="timePeriods" @submit="(timePeriod) => {
+                        selectedTimePeriod = timePeriod
+                    }" :default="timePeriods[0]" />
+            
+
+           
+                    <el-select v-model="sourceFilter" size="large" class="space" placeholder="All Source">
+                        <el-option label="All Source" value="" />
+                        <el-option v-for="item in sources" :key="item.id" :label="item.name" :value="item.id" />
+                    </el-select>
+               
+
+          
+                    <el-select v-model="staffFilter" multiple size="large" class="space" placeholder="All Staff">
+                        <el-option label="All Staff" :value="''" @click="handleStaffDropdown('')"
+                        :disabled="staffFilter.length > 1 && !staffFilter.includes('')"/>
+                        <el-option v-for="item in staffs" :key="item.id" :label="item.name" :value="item.id" 
+                            @click="handleStaffDropdown('other')"/>
+                    </el-select>
+              
+                
+      
+                    <el-select v-model="unitsFilter" multiple size="large" class="space" placeholder="All Unit">
+                        <el-option label="All Unit" :value="''" @click="handleUnitDropdown('')"
+                            :disabled="unitsFilter.length > 1 && !unitsFilter.includes('')"/>
+                        <el-option v-for="item in units" :key="item.id" :label="item.name" :value="item.id" 
+                            @click="handleUnitDropdown('other')"/>
+                    </el-select>
+              
+
+           
             </div>
-            <div class="date_picker"> 
-                <el-date-picker v-model="end_date" type="date" :size="'large'" class="space my-3" />
-            </div>
-            <DropdownComponent :showTitle="false" class="dropdown w-full spaceSelect" :data="timePeriods" @submit="(timePeriod) => {
-                selectedTimePeriod = timePeriod
-            }" :default="timePeriods[0]" />
-
         </div>
+      
 
-        <div class="date__filter">
-            <el-select v-model="sourceFilter" size="large" class="space" placeholder="All Source">
-                <el-option label="All Source" value="" />
-                <el-option v-for="item in sources" :key="item.id" :label="item.name" :value="item.id" />
-            </el-select>
-            <el-select v-model="staffFilter" multiple size="large" class="space" placeholder="All Staff">
-                <el-option label="All Staff" :value="''" @click="handleStaffDropdown('')"
-                :disabled="staffFilter.length > 1 && !staffFilter.includes('')"/>
-                <el-option v-for="item in staffs" :key="item.id" :label="item.name" :value="item.id" 
-                    @click="handleStaffDropdown('other')"/>
-            </el-select>
-            <el-select v-model="unitsFilter" multiple size="large" class="space" placeholder="All Unit">
-                <el-option label="All Unit" :value="''" @click="handleUnitDropdown('')"
-                    :disabled="unitsFilter.length > 1 && !unitsFilter.includes('')"/>
-                <el-option v-for="item in units" :key="item.id" :label="item.name" :value="item.id" 
-                    @click="handleUnitDropdown('other')"/>
-            </el-select>
-        </div>
+   
+ 
 
         <div class="number">
             <div class="square bordure-bleu">
@@ -335,6 +361,9 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
   overflow-x: hidden;
   
 }
+.dropdown {
+    margin-top: 0% !important;
+}
 @media (min-width: 880px) and (max-width: 1090px){
     .admin__container {
         margin-top: 10% !important;
@@ -401,9 +430,9 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
     margin-bottom: 10px;
 }
 
-.spaceSelect {
+/*.spaceSelect {
     margin-top: 12px !important
-}
+}*/
 
 .bordure-vert {
     border-bottom: 2px solid;
@@ -428,12 +457,12 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
     overflow: hidden;
 }
 
-.date_picker {
+/*.date_picker {
     display: flex;
     align-items: center;
     flex-grow: 1;
     min-width: 165px;
-}
+}*/
 
 @media (max-width: 1281px) {
     .square.bordure-bleu h5 {
@@ -557,14 +586,14 @@ h1 {
         margin-left: 1%
     }
 
-    .space {
+    /*.space {
         margin-bottom: 10px !important;
     }
 
     .spaceSelect {
         margin-bottom: 20px !important;
         margin-top: 10px !important;
-    }
+    }*/
 
     .number {
         display: block;
