@@ -1,10 +1,11 @@
 <template>
     <div class="admin__container">
-        <h1>Analytics</h1>
+       
 
 
-        <div class="container mx-auto p-4">
-            <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-7 gap-4">
+        <div class="filtre_content mx-1 p-4">
+       
+            <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-7 lg:grid-cols-7 gap-4">
 
                
                     <el-select v-model="establishment" multiple size="large" class="space" placeholder="All Etablishment">
@@ -351,51 +352,25 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
 
 </script>
 <style scoped>
+
+.filtre_content{
+width:100% !important;
+
+}
+
 .admin__container {
-  height: inherit;
 
   gap: 2rem;
-  width: 95% !important;
-  margin: auto;
-  margin-top: 8% !important;
+
+  margin: 0%;
+  margin-top: 120px !important;
   overflow-x: hidden;
   
 }
 .dropdown {
     margin-top: 0% !important;
 }
-@media (min-width: 880px) and (max-width: 1090px){
-    .admin__container {
-        margin-top: 10% !important;
-    }
 
-}
-@media (min-width: 580px) and (max-width: 879px){
-    .admin__container {
-        margin-top: 14% !important;
-    }
-
-}
-
-@media (min-width: 390px) and (max-width: 579px) {
-    .admin__container {
-        margin-top: 20% !important;
-    }
-
-}
-@media (min-width: 290px) and (max-width: 389px) {
-    .admin__container {
-        margin-top: 28% !important;
-    }
-
-}
-
-@media (min-width: 100px) and (max-width: 289px) {
-    .admin__container {
-        margin-top: 42% !important;
-    }
-
-}
 
 .iconfy {
     display: flex;
@@ -487,12 +462,7 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
     width: 100%;
 }
 
-h1 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 5px;
-    color: var(--color-primary);
-}
+
 
 .square {
     display: flex;

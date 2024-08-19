@@ -19,11 +19,14 @@
                         :to="{ name: 'Analytic', params: { tag: tag } }">
                         <Icon :icon="'mdi:chart-line'" width="25"></Icon>
                     </RouterLink>
+
                 </div>
+                <h1 v-if="route.name == 'Analytic'">Analytics</h1>
                 <button
                     v-if="userStore.user.partner && userStore.user.roles.includes('ROLE_PARTNER') && route.name !== 'CustomersList'"
                     @click="backToCustomer">
                     <i class="uil uil-arrow-left"></i>Back</button>
+                    
             </div>
             <RouterView v-if="route.name != 'Analytic'"/>
         </div>
@@ -78,6 +81,15 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+
+h1 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--color-primary);
+    position: absolute;
+    top: 50px;
+}
 .header {
     display: flex;
     justify-content: space-between;
