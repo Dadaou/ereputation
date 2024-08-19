@@ -43,7 +43,9 @@
     </div>
     <div class="society__list mt-5" v-if="establishments.length > 0">
         <suspense>
+            <div class="establishment-rank-view">
             <establishments-list-component :establishments="establishments" :tag='customerTag' :selectedDate="selectedDate" />
+            </div>
             <template #fallback>
                 <establishment-list-loaded-component :nb="3" />
             </template>
@@ -140,6 +142,13 @@ const loadEstablishment = async (tag, category, days, note, date) => {
 
     if (response.status == 200) {
         establishments.value = response.data.map((objet) => {
+            objet.reviews_count = {
+                '5 ': objet.stars ? objet.stars['5 stars'] : 0,
+                '4 ': objet.stars ? objet.stars['4 stars'] : 0,
+                '3 ': objet.stars ? objet.stars['3 stars'] : 0,
+                '2 ': objet.stars ? objet.stars['2 stars'] : 0,
+                '1 ': objet.stars ? objet.stars['1 star'] : 0,
+            };
             return { ...objet, ratio: objet.ratio_value, ratio_text: objet.ratio, isTrends: true };
         });
     } else {
@@ -153,6 +162,72 @@ onMounted(async () => {
 });
 </script>
 <style scoped>
+.establishment-rank-view ::v-deep .reviews-count {
+  display: flex;
+  padding: 5px;
+  border-radius: 5px;
+  margin-top: 40px;
+  margin-right: -130px;
+  margin-left: -235px;
+}
+
+.establishment-rank-view ::v-deep .review-box {
+  display: flex;
+  align-items: center;
+  background: #F5F5F5;
+  padding: 2px;
+  margin-top: -2.1px;
+  border-radius: 5px;
+  margin-left: 12px;
+  cursor: pointer;
+}
+@media (min-width: 100px) and (max-width: 600px){
+    .establishment-rank-view ::v-deep .review-box {
+    justify-content: center;
+    margin-left: 0%;
+    }
+    .establishment-rank-view ::v-deep .reviews-count {
+    justify-content: center;
+    margin-left: 0%;
+
+    }
+}
+
+@media (min-width: 336px) and (max-width: 389px){
+    .establishment-rank-view ::v-deep .review-box {
+    justify-content: center;
+    margin-left: 0%;
+    margin-top: 50px;
+    }
+    .establishment-rank-view ::v-deep .reviews-count {
+    justify-content: center;
+    margin-left: 0%;
+    margin-top: 50px;
+    }
+}
+
+@media (min-width: 100px) and (max-width: 335px){
+    .establishment-rank-view ::v-deep .review-box {
+        justify-content: center;
+    margin-right: 1%;
+    margin-top: 80px;
+    z-index: 999;
+    }
+    .establishment-rank-view ::v-deep .reviews-count {
+        justify-content: center;
+        margin-left: -80px;
+    margin-top: 80px;
+    z-index: 999;
+    
+    }
+}
+
+
+
+
+
+
+
 .filters {
     display: flex;
     flex-direction: column;
