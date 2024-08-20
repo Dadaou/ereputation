@@ -443,6 +443,7 @@ const  widthimage = (event) => {
     width: auto! important;
     height: 100%! important;
     object-fit:contain! important;
+    border-radius: 5px;
 }
 .establishment__img{
     display:flex;
@@ -451,7 +452,8 @@ const  widthimage = (event) => {
 .largeClass{
     width: 100%! important;
     height: auto! important;
-    object-fit:contain! important;
+    border-radius: 5px;
+    margin-top:10px;
 }
 .fade-in {
     opacity: 0;
@@ -631,7 +633,8 @@ input:focus {
 }
 
 .photo div {
-    height: 100%;
+    height: auto;
+   
 }
 
 
@@ -689,6 +692,7 @@ span.label {
         position: relative;
         /*top: 10.5rem !important;*/
         width: 70%;
+        top:1rem ! important;
     }
 }
 
@@ -702,6 +706,14 @@ span.label {
 @media screen and (max-width:750px) {
     .feedback__form {
         width: 90%;
+    }
+
+    .photo div {
+        height: 100%;
+    
+    }
+    .largeClass{
+        margin-top:0px! important;
     }
 }
 </style>

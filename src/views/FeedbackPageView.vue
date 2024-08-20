@@ -409,15 +409,18 @@ const  widthimage = (event) => {
     width: auto! important;
     height: 100%! important;
     object-fit:contain! important;
+    border-radius: 5px;
 }
 .establishment__img{
     display:flex;
     justify-content:center;
+    flex-basis: 350px;
 }
 .largeClass{
     width: 100%! important;
     height: auto! important;
-    object-fit:contain! important;
+    /*object-fit:contain! important;*/
+    border-radius: 5px;
 }
 .fade-in {
     opacity: 0;

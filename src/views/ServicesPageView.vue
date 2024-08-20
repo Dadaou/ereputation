@@ -99,7 +99,7 @@
 </template>
 <script setup>
 import moment from 'moment';
-import { computed, onMounted, onBeforeMount, ref, watch, inject, defineAsyncComponent } from 'vue';
+import { computed, onMounted, onUpdated,onBeforeMount,nextTick, ref, watch, inject, defineAsyncComponent } from 'vue';
 import StaffItemComponent from '@Components/staffs/StaffItemComponent.vue';
 import { useRoute } from 'vue-router';
 import { useAppStore } from "@Stores/app.js";
@@ -323,6 +323,25 @@ watch(activeName, async () => {
   if (activeName.value !== 'staffs') {
     await getUnitChartdata(companyId, activeName.value, date.value)
   }
+})
+onUpdated(() => {
+  //if(plotdata.value.length > 0){
+    setTimeout(() => {
+        nextTick(()=>{
+            console.log(plotdata.value.length)
+           
+              var div = document.getElementsByClassName("boxLarge")
+                //document.getElementsByClassName("chart")[0].scrollLeft += longueur
+              var divchild = div
+              console.log(divchild)
+              var widthp = parseInt(divchild[0].getAttribute("width"))
+                const longueur = widthp * plotdata.value.length 
+                document.getElementById("boxLarge").scrollLeft += longueur 
+                document.getElementById("boxLarge").scrollLeft = longueur 
+           
+        })
+    },3000)
+  //}
 })
 
 onMounted(async () => {
