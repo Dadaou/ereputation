@@ -3,7 +3,7 @@
        
 
 
-        <div class="filtre_content mx-1 p-4">
+        <div class="filtre_content p-4">
        
             <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-7 lg:grid-cols-7 gap-4">
 
@@ -362,7 +362,8 @@ width:100% !important;
 
   gap: 2rem;
 
-  margin: 0%;
+  margin-right: 5%;
+  margin-left: 5%;
   margin-top: 120px !important;
   overflow-x: hidden;
   

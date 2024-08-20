@@ -17,7 +17,7 @@
                     </RouterLink>
                     <RouterLink class="search__icon"
                         :to="{ name: 'Analytic', params: { tag: tag } }">
-                        <Icon :icon="'mdi:chart-line'" width="25"></Icon>
+                        <Icon :icon="'uim:chart-pie'" width="25"></Icon>
                     </RouterLink>
 
                 </div>

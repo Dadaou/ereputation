@@ -153,6 +153,8 @@ import { ElDatePicker, ElOption, ElSelect, ElTooltip } from 'element-plus';
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import { Icon } from '@iconify/vue';
+import services from '@Services/services.js'
+
 
 const props = defineProps({
     reviews: {
@@ -239,15 +241,23 @@ const updateReview = async () => {
     let updatedValue = {
         feeling: feel.value,
         confidence: 1,
+        id:id.value
     }
     selectedReview.value.feeling = feel.value;
 
     try {
         showModal.value = false;
         if (modal.value.type == 'feeling') {
-            await feedbackStore.updateReview(id.value, updatedValue, response => {
-                // Do nothing
-            })
+
+            await services.post_Record(
+        "/review/feeling/update",
+        updatedValue,
+        (response) => {
+          console.log(response);
+        });
+            // await feedbackStore.updateReview(id.value, updatedValue, response => {
+            //     // Do nothing
+            // })
         } else {
             await feedbackStore.updateReviewCategory(id.value, modal.value.action, selectedReview.value.category, category.value, false, response => {
                 // Do nothing
