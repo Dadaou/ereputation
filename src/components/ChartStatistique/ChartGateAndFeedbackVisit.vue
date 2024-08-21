@@ -2,7 +2,7 @@
     <h3>Gate & Feedback visits</h3>
     <div v-if="hasData">
         <div class="chart-container">
-            <apexchart type="line" :options="chartOptions" :series="series"></apexchart>
+            <apexchart type="line" height="460" :options="chartOptions" :series="series"></apexchart>
         </div>
     </div>
     <div v-else class="content-message">
@@ -185,6 +185,7 @@ export default {
 .chart-container {
     width: 100%;
     max-width: 100%;
+    overflow-x: scroll;
 }
 
 /* .chart-container {

@@ -3,7 +3,7 @@
 
   <div v-if="hasData">
     <div class="chart-container">
-      <apexchart type="bar" :options="chartOptions" :series="series" />
+      <apexchart type="bar" height="460" :options="chartOptions" :series="series" />
     </div>
   </div>
 
