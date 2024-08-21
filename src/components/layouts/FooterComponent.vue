@@ -25,7 +25,7 @@
             <!-- <span v-if="!isFeedback"><i class="uil uil-copyright"></i>2024, all rights reserved</span> -->
             <span v-if="appStore.account && appStore.account.brand">
               Powered by 
-              <a href="#" @click="handleBrandClick">{{ appStore.account.brand }}</a>
+              <a href="#" @click="handleBrandClick">Linkystar</a>
             </span>
           </li>
         </ul>
