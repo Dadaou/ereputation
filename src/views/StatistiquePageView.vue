@@ -8,8 +8,8 @@
             <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-7 lg:grid-cols-7 gap-4">
 
                
-                    <el-select v-model="establishment" multiple size="large" class="space" placeholder="All Etablishment">
-                        <el-option label="All Etablishment" :value="'all'" @click="handleEstablishmentDropdown('all')"
+                    <el-select v-model="establishment" multiple size="large" class="space" placeholder="All Etablishments">
+                        <el-option label="All Etablishments" :value="'all'" @click="handleEstablishmentDropdown('all')"
                             :disabled="establishment.length > 1 && !establishment.includes('all')" />
                         <el-option v-for="item in userStore.user.customer.establishments" :key="item.id" :label="item.name"
                             :value="item.id" @click="handleEstablishmentDropdown('other')" />
@@ -35,15 +35,15 @@
             
 
            
-                    <el-select v-model="sourceFilter" size="large" class="space" placeholder="All Source">
-                        <el-option label="All Source" value="" />
+                    <el-select v-model="sourceFilter" size="large" class="space" placeholder="All Sources">
+                        <el-option label="All Sources" value="" />
                         <el-option v-for="item in sources" :key="item.id" :label="item.name" :value="item.id" />
                     </el-select>
                
 
           
-                    <el-select v-model="staffFilter" multiple size="large" class="space" placeholder="All Staff">
-                        <el-option label="All Staff" :value="''" @click="handleStaffDropdown('')"
+                    <el-select v-model="staffFilter" multiple size="large" class="space" placeholder="All Staffs">
+                        <el-option label="All Staffs" :value="''" @click="handleStaffDropdown('')"
                         :disabled="staffFilter.length > 1 && !staffFilter.includes('')"/>
                         <el-option v-for="item in staffs" :key="item.id" :label="item.name" :value="item.id" 
                             @click="handleStaffDropdown('other')"/>
@@ -51,8 +51,8 @@
               
                 
       
-                    <el-select v-model="unitsFilter" multiple size="large" class="space" placeholder="All Unit">
-                        <el-option label="All Unit" :value="''" @click="handleUnitDropdown('')"
+                    <el-select v-model="unitsFilter" multiple size="large" class="space" placeholder="All Units">
+                        <el-option label="All Units" :value="''" @click="handleUnitDropdown('')"
                             :disabled="unitsFilter.length > 1 && !unitsFilter.includes('')"/>
                         <el-option v-for="item in units" :key="item.id" :label="item.name" :value="item.id" 
                             @click="handleUnitDropdown('other')"/>
@@ -135,6 +135,7 @@ import { useUserStore } from "@Stores/user.js"
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import services from '@Services/services.js';
 import { useRoute } from 'vue-router';
+import moment from 'moment';
 
 const ChartFeedbackSubmissions = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/ChartFeedbackSubmissions.vue")
@@ -228,7 +229,7 @@ const handleUnitDropdown = (type) => {
 const totalVisit = async (type) => {
     try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`/customer/visitor/indicator?tag=${route.params.tag}&type=${type || 'daily'}&reviews=all`, (response) => {
+            services.get_Record(`/customer/visitor/indicator?tag=${route.params.tag}&type=${type || 'daily'}&reviews=all&from=${moment(start_date.value).format('YYYY-MM-DD')}&to=${moment(end_date.value).format('YYYY-MM-DD')}`, (response) => {
                 resolve(response);
             });
         });
@@ -245,7 +246,7 @@ const totalVisit = async (type) => {
 const totalNotSubmitted = async (type) => {
     try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`/customer/visitor/indicator?tag=${route.params.tag}&type=${type || 'daily'}&reviews=no`, (response) => {
+            services.get_Record(`/customer/visitor/indicator?tag=${route.params.tag}&type=${type || 'daily'}&reviews=no&from=${moment(start_date.value).format('YYYY-MM-DD')}&to=${moment(end_date.value).format('YYYY-MM-DD')}`, (response) => {
                 resolve(response);
             });
         });
@@ -261,9 +262,10 @@ const totalNotSubmitted = async (type) => {
 }
 
 const totalSubmitted = async (type) => {
+
     try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`/customer/visitor/indicator?tag=${route.params.tag}&type=${type || 'daily'}&reviews=yes`, (response) => {
+            services.get_Record(`/customer/visitor/indicator?tag=${route.params.tag}&type=${type || 'daily'}&reviews=yes&from=${moment(start_date.value).format('YYYY-MM-DD')}&to=${moment(end_date.value).format('YYYY-MM-DD')}`, (response) => {
                 resolve(response);
             });
         });
@@ -281,7 +283,7 @@ const totalSubmitted = async (type) => {
 const totalClickSocial = async (type) => {
     try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`/customer/visitorclick/clicks/social?tag=${route.params.tag}&type=${type || 'daily'}`, (response) => {
+            services.get_Record(`/customer/visitorclick/clicks/social?tag=${route.params.tag}&type=${type || 'daily'}&from=${moment(start_date.value).format('YYYY-MM-DD')}&to=${moment(end_date.value).format('YYYY-MM-DD')}`, (response) => {
                 resolve(response);
             });
         });
@@ -340,7 +342,7 @@ onBeforeMount(async () => {
     await loadUnits();
 });
 
-watch([establishment, unitsFilter, staffFilter, selectedTimePeriod], () => {
+watch([establishment, unitsFilter, staffFilter, selectedTimePeriod,start_date, end_date], () => {
     establishment.value = establishment.value.length > 0 ? establishment.value : ['all']
     staffFilter.value = staffFilter.value.length > 0 ? staffFilter.value : ['']
     unitsFilter.value = unitsFilter.value.length > 0 ? unitsFilter.value : ['']
