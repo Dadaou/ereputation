@@ -130,7 +130,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.establishment-rank-view ::v-deep .reviews-count {
+.establishment-rank-view :deep(.reviews-count) {
   display: flex;
   padding: 5px;
   border-radius: 5px;
@@ -139,7 +139,7 @@ onMounted(async () => {
   margin-left: -235px;
 }
 
-.establishment-rank-view ::v-deep .review-box {
+.establishment-rank-view :deep(.review-box) {
   display: flex;
   align-items: center;
   background: #F5F5F5;
@@ -150,7 +150,7 @@ onMounted(async () => {
   cursor: pointer;
 }
 
-.establishment-rank-view ::v-deep .list__actions {
+.establishment-rank-view :deep(.list__actions)  {
     display: flex;
     justify-content: flex-end;
     margin-right: 10px;
@@ -219,7 +219,7 @@ onMounted(async () => {
         gap: 0.5rem;
 		margin-left: 200px;
     }
-	.establishment-rank-view ::v-deep .reviews-count {
+	.establishment-rank-view :deep(.reviews-count) {
   display: flex;
   padding: 8px;
   border-radius: 5px;
@@ -229,7 +229,7 @@ onMounted(async () => {
   
 }
 
-.establishment-rank-view ::v-deep .review-box {
+.establishment-rank-view :deep(.review-box) {
   display: flex;
   align-items: center;
   background: #F5F5F5;
@@ -239,17 +239,17 @@ onMounted(async () => {
 
 }
 
-.establishment-rank-view ::v-deep .score {
+.establishment-rank-view :deep(.score) {
     font-weight: bold;
     margin-right: 1px;
 	margin-top: 0px;
 }
 
-.establishment-rank-view ::v-deep .fa-star {
+.establishment-rank-view :deep(.fa-star) {
 	margin-top: 0px;
 }
 
-.establishment-rank-view ::v-deep .list__actions {
+.establishment-rank-view :deep(.list__actions) {
     display: flex;
     justify-content: flex-end;
     margin-right: 0px;
@@ -275,7 +275,7 @@ onMounted(async () => {
         gap: 0.5rem;
 		margin-left: 200px;
     }
-	.establishment-rank-view ::v-deep .reviews-count {
+	.establishment-rank-view :deep(.reviews-count) {
   display: flex;
   padding: 8px;
   border-radius: 5px;
@@ -285,7 +285,7 @@ onMounted(async () => {
   
 }
 
-.establishment-rank-view ::v-deep .review-box {
+.establishment-rank-view :deep(.review-box) {
   display: flex;
   align-items: center;
   background: #F5F5F5;
@@ -296,17 +296,17 @@ onMounted(async () => {
 
 }
 
-.establishment-rank-view ::v-deep .score {
+.establishment-rank-view :deep(.score) {
     font-weight: bold;
     margin-right: 0px;
 	margin-top: 0px;
 }
 
-.establishment-rank-view ::v-deep .fa-star {
+.establishment-rank-view :deep(.fa-star) {
 	margin-top: 1px;
 }
 
-.establishment-rank-view ::v-deep .list__actions {
+.establishment-rank-view :deep(.list__actions) {
     display: flex;
     justify-content: flex-end;
     margin-right: 0px;
@@ -332,7 +332,7 @@ onMounted(async () => {
         gap: 0.5rem;
 		margin-left: 200px;
     }
-	.establishment-rank-view ::v-deep .reviews-count {
+	.establishment-rank-view :deep(.reviews-count) {
   display: flex;
   padding: 8px;
   border-radius: 5px;
@@ -342,7 +342,7 @@ onMounted(async () => {
   
 }
 
-.establishment-rank-view ::v-deep .review-box {
+.establishment-rank-view :deep(.review-box) {
   display: flex;
   align-items: center;
   background: #F5F5F5;
@@ -353,17 +353,17 @@ onMounted(async () => {
 
 }
 
-.establishment-rank-view ::v-deep .score {
+.establishment-rank-view :deep(.score) {
     font-weight: bold;
     margin-right: 0px;
 	margin-top: 0px;
 }
 
-.establishment-rank-view ::v-deep .fa-star {
+.establishment-rank-view :deep(.fa-star) {
 	margin-top: 1px;
 }
 
-.establishment-rank-view ::v-deep .list__actions {
+.establishment-rank-view :deep(.list__actions) {
     display: flex;
     justify-content: flex-end;
     margin-right: 0px;
@@ -374,14 +374,14 @@ onMounted(async () => {
 
 
 @media (max-width: 420px) {
-.establishment-rank-view ::v-deep .society__rating{
+.establishment-rank-view :deep(.society__rating) {
         display: flex;
         align-items: center;
         margin-top: -5px;
         margin-left: -90px;
         padding-right: 50px;
     }
-.establishment-rank-view ::v-deep.reviews{
+.establishment-rank-view :deep(.reviews) {
         font-size: 11px;
         margin-left: -20px;
         
@@ -389,14 +389,14 @@ onMounted(async () => {
   }
  
   @media (min-width: 383px) and (max-width: 390px) {
-.establishment-rank-view ::v-deep .society__rating{
+.establishment-rank-view :deep(.society__rating){
         display: flex;
         align-items: center;
         margin-top: -5px;
         margin-left: -120px;
         padding-right: 60px;
     }
-.establishment-rank-view ::v-deep .reviews{
+.establishment-rank-view :deep(.reviews){
         font-size: 11px;
         margin-left: 0px;
         
@@ -404,19 +404,19 @@ onMounted(async () => {
   }
 
   @media (max-width: 375px) {
-.establishment-rank-view ::v-deep .society__rating{
+.establishment-rank-view :deep(.society__rating){
         display: flex;
         align-items: center;
         margin-top: -5px;
         margin-left: -120px;
         padding-right: 60px;
     }
-.establishment-rank-view ::v-deep .reviews{
+.establishment-rank-view :deep(.reviews){
         font-size: 11px;
         margin-left: 5px;
         
     }
-    .establishment-rank-view ::v-deep .reviews-count {
+    .establishment-rank-view :deep(.reviews-count) {
   display: flex;
   padding: 8px;
   border-radius: 5px;
@@ -425,7 +425,7 @@ onMounted(async () => {
   margin-left: -10px;
   
 }
-.establishment-rank-view ::v-deep .review-box {
+.establishment-rank-view :deep(.review-box) {
   display: flex;
   align-items: center;
   background: #F5F5F5;

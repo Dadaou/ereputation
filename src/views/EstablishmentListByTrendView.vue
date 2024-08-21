@@ -162,7 +162,7 @@ onMounted(async () => {
 });
 </script>
 <style scoped>
-.establishment-rank-view ::v-deep .reviews-count {
+.establishment-rank-view :deep(.reviews-count) {
   display: flex;
   padding: 5px;
   border-radius: 5px;
@@ -171,7 +171,7 @@ onMounted(async () => {
   margin-left: -235px;
 }
 
-.establishment-rank-view ::v-deep .review-box {
+.establishment-rank-view :deep(.review-box)  {
   display: flex;
   align-items: center;
   background: #F5F5F5;
@@ -182,11 +182,11 @@ onMounted(async () => {
   cursor: pointer;
 }
 @media (min-width: 100px) and (max-width: 600px){
-    .establishment-rank-view ::v-deep .review-box {
+    .establishment-rank-view :deep(.review-box)  {
     justify-content: center;
     margin-left: 0%;
     }
-    .establishment-rank-view ::v-deep .reviews-count {
+    .establishment-rank-view :deep(.reviews-count)  {
     justify-content: center;
     margin-left: 0%;
 
@@ -194,12 +194,12 @@ onMounted(async () => {
 }
 
 @media (min-width: 336px) and (max-width: 389px){
-    .establishment-rank-view ::v-deep .review-box {
+    .establishment-rank-view :deep(.review-box)  {
     justify-content: center;
     margin-left: 0%;
     margin-top: 50px;
     }
-    .establishment-rank-view ::v-deep .reviews-count {
+    .establishment-rank-view :deep(.reviews-count)  {
     justify-content: center;
     margin-left: 0%;
     margin-top: 50px;
@@ -207,13 +207,13 @@ onMounted(async () => {
 }
 
 @media (min-width: 100px) and (max-width: 335px){
-    .establishment-rank-view ::v-deep .review-box {
+    .establishment-rank-view :deep(.review-box)  {
         justify-content: center;
     margin-right: 1%;
     margin-top: 80px;
     z-index: 999;
     }
-    .establishment-rank-view ::v-deep .reviews-count {
+    .establishment-rank-view :deep(.reviews-count)  {
         justify-content: center;
         margin-left: -80px;
     margin-top: 80px;
