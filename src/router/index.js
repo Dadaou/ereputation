@@ -421,6 +421,11 @@ const router = createRouter({
               name: 'QRCodes',
               component: () => import('@Views/MyQRCodesPageView.vue')
             },
+            {
+              path: 'screens/:sub_tab?',
+              name: 'Screen',
+              component: () => import('@Views/MyScreen.vue')
+            },
       
             {
               path: 'parameters/:tab?/:sub_tab?',

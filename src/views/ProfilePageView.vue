@@ -26,6 +26,11 @@
             </router-link>
           </li>
           <li>
+            <router-link :to="{ name: 'Screen' }" active-class="active"  @click.native="selectMenu('My Screen')">
+              <i class="uil uil-presentation"></i> <span>My Screen</span>
+            </router-link>
+          </li>
+          <li>
             <router-link :to="{ name: 'Advantage' }"  @click.native="selectMenu('Advantages')">
               <i class="uil uil-bill"></i> <span>Advantages</span>
             </router-link>
@@ -78,7 +83,8 @@ const menuMap = {
   "Partnership": "Partnership",
   "Contact": "Contacts",
   "Discount_coupons": "Discount coupons",
-  "Parameters": "Parameters"
+  "Parameters": "Parameters",
+  "Screen": "My Screen"
 };
 
 const toggleMenu = () => {
@@ -152,6 +158,11 @@ const page = computed(() => {
       title1: "",
       title2: "My QRCode",
       icon: "uil-qrcode-scan",
+    },
+    "Screen": {
+      title1: "",
+      title2: "My Screen",
+      icon: "uil-screen",
     }
   }
 
