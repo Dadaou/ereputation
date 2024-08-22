@@ -17,36 +17,193 @@
 
       <div class="grid gap-6 mb-6 md:grid-cols-2">
 
-        <div>
-          <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Screen name
+         <div>
+          <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Advantages
             <span>*</span></label>
-          <input type="text" id="first_name"             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+          <el-select v-model="advantage" placeholder="Choose establishment" size="large" filterable>
+            <el-option v-for="item in props.advantages" :key="item.id" :label="item.name"
+              :value="`/api/advantages/${item.id}`" />
+          </el-select>
         </div>
 
         <div>
-            <label for="countries"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Screen Template
-                <span>*</span></label>
-            <el-select  placeholder="Choose screen template" size="large" filterable>
-                <el-option v-for="item in screenTemplates" :key="item.id"
-                    :label="item.name" :value="`/api/screentemplates/${item.id}`" />
-            </el-select>
+          <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
+            <span>*</span></label>
+          <input type="text" id="first_name" v-model="category"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
         </div>
+
 
       </div>
 
       <div class="grid gap-6 mb-6 md:grid-cols-2">
 
-        <div>
-          <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
-            <span>*</span></label>
-          <el-select  placeholder="Choose establishment" size="large" filterable>
-            <el-option v-for="item in establishments" :key="item.id" :label="item.name"
-              :value="`/api/establishments/${item.id}`" />
-          </el-select>
-        </div>
+          <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Date from
+                    <!-- <span>*</span> -->
+                    <!-- <Tooltip text="To use before the [date]" /> -->
+                </label>
+                <el-date-picker v-model="date_from" :size="'large'" />
+          </div>
+
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Date To
+                    <!-- <span>*</span> -->
+                    <!-- <Tooltip text="To use before the [date]" /> -->
+                </label>
+                <el-date-picker v-model="date_to" :size="'large'" />
+            </div>
+
  
       </div>
+
+      <div class="grid gap-6 mb-6 md:grid-cols-3">
+
+            <div>
+              <label for="hour_from"
+                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hour From
+                  <span></span></label>
+              <input type="number" id="hour_from" v-model="hour_from"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
+            </div>
+
+            <div>
+                  <label for="minute_from"
+                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hour From
+                      <span></span></label>
+                  <input type="number" id="minute_from" v-model="minute_from"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
+            </div>
+
+          <div>
+                  <label for="seconde_from"
+                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hour From
+                      <span></span></label>
+                  <input type="number" id="seconde_from" v-model="seconde_from"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
+          </div>
+
+
+ 
+      </div>
+
+      <div class="grid gap-6 mb-6 md:grid-cols-3">
+
+              <div>
+                  <label for="hour_to"
+                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hour From
+                      <span></span></label>
+                  <input type="number" id="hour_to" v-model="hour_to"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
+              </div>
+
+              <div>
+                  <label for="minute_to"
+                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hour From
+                      <span></span></label>
+                  <input type="number" id="minute_to" v-model="minute_to"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
+              </div>
+
+              <div>
+                  <label for="seconde_to"
+                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hour From
+                      <span></span></label>
+                  <input type="number" id="seconde_to" v-model="seconde_to"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
+              </div>
+ 
+      </div>
+
+          <div class="grid gap-6 mb-6 md:grid-cols-7 justify-center">
+
+              <div>
+               <el-button 
+                  :class="{'enabled-button': advantage_screen.d0}" 
+                  size="small" 
+                  @click="advantage_screen.d0 ? handleDisable('d0', advantage_screen) : handleEnable('d0', advantage_screen)">
+                   <i 
+                    :class="advantage_screen.d0 ? 'uil uil-check-square' : 'uil uil-square'" 
+                    >
+                   </i> d0
+                </el-button>
+              </div>
+
+              <div>
+               <el-button 
+                  :class="{'enabled-button': advantage_screen.d1}" 
+                  size="small" 
+                  @click="advantage_screen.d1 ? handleDisable('d1', advantage_screen) : handleEnable('d1', advantage_screen)">
+                   <i 
+                    :class="advantage_screen.d1 ? 'uil uil-check-square' : 'uil uil-square'" 
+                    >
+                   </i> d1
+                </el-button>
+              </div>
+
+              <div>
+               <el-button 
+                  :class="{'enabled-button': advantage_screen.d2}" 
+                  size="small" 
+                  @click="advantage_screen.d2 ? handleDisable('d2', advantage_screen) : handleEnable('d2', advantage_screen)">
+                   <i 
+                    :class="advantage_screen.d2 ? 'uil uil-check-square' : 'uil uil-square'" 
+                    >
+                   </i> d2
+                </el-button>
+              </div>
+
+              <div>
+               <el-button 
+                  :class="{'enabled-button': advantage_screen.d3}" 
+                  size="small" 
+                  @click="advantage_screen.d3 ? handleDisable('d3', advantage_screen) : handleEnable('d3', advantage_screen)">
+                   <i 
+                    :class="advantage_screen.d3 ? 'uil uil-check-square' : 'uil uil-square'" 
+                    >
+                   </i> d3
+                </el-button>
+              </div>
+
+              <div>
+               <el-button 
+                  :class="{'enabled-button': advantage_screen.d4}" 
+                  size="small" 
+                  @click="advantage_screen.d4 ? handleDisable('d4', advantage_screen) : handleEnable('d4', advantage_screen)">
+                   <i 
+                    :class="advantage_screen.d4 ? 'uil uil-check-square' : 'uil uil-square'" 
+                    >
+                   </i> d4
+                </el-button>
+              </div>
+
+              <div>
+               <el-button 
+                  :class="{'enabled-button': advantage_screen.d5}" 
+                  size="small" 
+                  @click="advantage_screen.d5 ? handleDisable('d5', advantage_screen) : handleEnable('d5', advantage_screen)">
+                   <i 
+                    :class="advantage_screen.d5 ? 'uil uil-check-square' : 'uil uil-square'" 
+                    >
+                   </i> d5
+                </el-button>
+              </div>
+
+              <div>
+               <el-button 
+                  :class="{'enabled-button': advantage_screen.d6}" 
+                  size="small" 
+                  @click="advantage_screen.d6 ? handleDisable('d6', advantage_screen) : handleEnable('d6', advantage_screen)">
+                   <i 
+                    :class="advantage_screen.d6 ? 'uil uil-check-square' : 'uil uil-square'" 
+                    >
+                   </i> d6
+                </el-button>
+              </div>
+ 
+          </div>
 
       <div class="flex items-center justify-between py-2 border-t border-b dark:border-gray-600">
         <button type="submit"
@@ -61,17 +218,48 @@
   </ModalComponent>
 </template>
 <script setup>
-import { computed, ref, inject } from 'vue';
+import { computed, ref, inject,defineAsyncComponent } from 'vue';
 import ModalComponent from '@Components/utils/ModalComponent.vue';
 import services from '@Services/services.js';
 import { useWindowSize } from '@vueuse/core';
 import { useRouter, useRoute } from "vue-router";
-import { ElMessage, ElOption, ElSelect } from 'element-plus';
-import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
+import { ElMessage, ElOption, ElSelect,ElDatePicker, ElTooltip,ElButton } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
+
+// const Tooltip = defineAsyncComponent(() =>
+//     import('@Components/utils/QuestionMarkTooltipComponent.vue')
+// )
+
+
+const date_from = ref('');
+const date_to = ref('');
+const category = ref('');
+const enable = ref(false);
+const advantage_screen = ref({
+  d0:false,
+  d1:false,
+  d2:false,
+  d3:false,
+  d4:false,
+  d5:false
+});
+// const d1 = ref(false);
+// const d2 = ref(false);
+// const d3 = ref(false);
+// const d4 = ref(false);
+// const d5 = ref(false);
+// const d6 = ref(false);
+const hour_from = ref();
+const minute_from = ref();
+const seconde_from = ref();
+const hour_to = ref();
+const minute_to = ref();
+const seconde_to = ref();
+const advantage = ref(null);
+
 
 const props = defineProps({
   screen: {
@@ -81,30 +269,10 @@ const props = defineProps({
   advantages: {
     default: []
   },
-  screenName:{
-    type: String,
-    default: ''
-  },
   showModal: {
     type: Boolean,
     default: false
-  },
-    screenTemplate:{
-    type: String,
-    default: ''
-  },
-    screenTemplates:{
-    type: Array,
-    default: []
-  },
-    establishment:{
-    type: String,
-    default: ''
-  },
-    establishments:{
-    type: Array,
-    default: []
-  },
+  }
 });
 
 const emits = defineEmits(['close'])
@@ -113,6 +281,12 @@ const router = useRouter();
 const route = useRoute();
 const close = () => {
   emits('close')
+}
+
+const handleEnable = (days,adv_screen)=>{
+ 
+  adv_screen[days]=true;
+   console.log(adv_screen)
 }
 
 const { width } = useWindowSize()
@@ -127,9 +301,29 @@ const show = computed(() => props.showModal)
 
 </script>
 <style scoped>
-#qrcode {
-  margin: auto;
+input,
+select {
+    border-radius: 4px !important;
+    background-color: white;
 }
+
+label {
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    color: var(--color-bg2) !important;
+}
+
+label span {
+    color: red;
+}
+
+input {
+    caret-color: var(--light-color-bg2);
+}
+ .enabled-button {
+    color: #74d474;
+  
+  }
 
 .modal__header {
   display: flex;
@@ -148,23 +342,10 @@ const show = computed(() => props.showModal)
   transition: var(--transition);
 }
 
-.download__qr_btn {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-}
 
-.download__qr_btn button {
-  flex-basis: 50%;
-}
 
 .modal__close i:hover {
   transform: rotate(360deg);
 }
 
-.establishment__review__qrcode p {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--color-bg2);
-}
 </style>
