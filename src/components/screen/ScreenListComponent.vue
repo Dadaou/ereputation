@@ -19,7 +19,7 @@
           </el-tooltip>
           <el-tooltip placement="top">
             <template #content> Add Advantages of this screen </template>
-            <el-button size="small" @click="showModal = true"><i class="uil uil-plus-circle"></i></el-button>
+            <el-button size="small" @click="showModal = true,screen_id = scope.row"><i class="uil uil-plus-circle"></i></el-button>
           </el-tooltip>
         
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
@@ -33,7 +33,8 @@
     </el-table>
   </div>
     <ScreenAdvantageModalComponent 
-      
+      :screen="screen_id"
+      :advantages="advantages"
       :showModal="showModal" @close="showModal = false"
        />
 </template>
@@ -41,7 +42,7 @@
 
 
 <script setup>
-import { computed, ref, inject,defineAsyncComponent } from 'vue';
+import { computed, ref, inject,defineAsyncComponent,onBeforeMount } from 'vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput,ElTooltip } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
@@ -61,6 +62,9 @@ const showModal = ref(false);
 const emit = defineEmits(['edit']);
 
 const screens = inject('screens')
+
+const advantages = inject('advantages');
+const screen_id = ref(null);
 
 
 let tableData = computed(() => {
@@ -128,6 +132,8 @@ const handleDelete = async (index, screen) => {
       }
 
 }
+
+
 
 
 

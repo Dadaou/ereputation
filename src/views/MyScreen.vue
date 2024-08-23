@@ -26,6 +26,7 @@ import 'element-plus/es/components/tab-pane/style/css';
 
 
 
+
 const { width } = useWindowSize();
 const route = useRoute();
 const router = useRouter();
@@ -69,9 +70,11 @@ provide('clearScreenForm', cleanScreenForm);
 
 
 const allscreens = ref([]);
+const advantages = ref([]);
 
 
 provide('screens', allscreens);
+provide('advantages', advantages);
 
 const screen_to_update = ref(null)
 provide('screen_to_update', screen_to_update)
@@ -79,7 +82,7 @@ provide('screen_to_update', screen_to_update)
 
 const handleEdit = (value, type) => {
     myscreensUrlsConf[type] = `${type}_form`;
-    
+
     // if (type == 'screens') {
         screen_to_update.value = value;
         screen_to_update.value['establishment'] = `/api/establishments/${value.establishment_id}`
@@ -99,11 +102,27 @@ const loadScreens = async () => {
         });
         if (response.status === 200) {
             allscreens.value = response.data
-            console.log(allscreens)
+            console.log(allscreens.value)
         }
   
 
-      console.log( allscreens.value)
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const loadAdvantages = async () => {
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`customer/establishments/advantages?tag=${route.params.tag}`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            advantages.value = response.data
+            console.log(advantages)
+        }
+  
     } catch (error) {
         console.error(error);
     }
@@ -139,6 +158,7 @@ onBeforeMount(async () => {
     }
 
     await loadScreens();
+    await loadAdvantages();
    
 });
 

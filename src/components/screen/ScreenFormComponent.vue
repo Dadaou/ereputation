@@ -76,7 +76,7 @@ const screenTemplates = ref([]);
 const type = ref('add');
 const screen_to_update = inject('screen_to_update');
 const screens = inject('screens');
-
+const advantages = inject('advantages');
 
 watch(screen_to_update, () => {
   if (screen_to_update.value != null) {
@@ -95,6 +95,7 @@ const loadData = (_screen) => {
     name: _screen.name,
     establishment: _screen.establishment,
     screentemplate: _screen.screentemplate,
+    advantage_names:_screen.advantage_names,
     advantages:_screen.advantages,
     establishment_name: _screen.establishment_name,
     screentemplate_name: _screen.screentemplate_name
@@ -108,6 +109,7 @@ const updateData = (_screen) => {
     name: _screen.name,
     establishment: _screen.establishment,
     screentemplate: _screen.screentemplate,
+    advantage_names:_screen.advantage_names,
     advantages:_screen.advantages,
     establishment_name: _screen.establishment_name,
     screentemplate_name: _screen.screentemplate_name
@@ -122,6 +124,51 @@ const resetForm = ()=>{
   establishment.value = '';
   screenName.value = '';
   screenTemplate.value = '';
+}
+
+const getAdvantageNames=(value)=>{
+  if (screens.value.length > 0) {
+        let name='';
+        let sc_advantages=[];
+     
+      value.advantageScreens.forEach((adv)=>{
+            let check_ids = [];
+           screens.value.forEach(sc =>{
+
+             sc.advantages.forEach(item=>{
+
+               const match = adv.match(/\/(\d+)$/);
+
+                if (match) {
+
+                  const number = match[1];
+
+                   if (item.id == number && !check_ids.includes(item.id)) {
+
+                      if (name != '') {
+                        name=name + ',' + item.name;
+                      } else {
+                        name=item.name
+                      }
+
+                      var oneAdvantage={};
+                      oneAdvantage.adv_id = item.adv_id;
+                      oneAdvantage.adv_name = item.adv_name;
+
+                      sc_advantages.push(oneAdvantage);
+                    
+                   }
+                   check_ids.push(item.id)
+                }
+
+             })
+         
+        });
+
+      })
+ 
+      return [name,sc_advantages];
+  }
 }
 
 const getEstablishmentName=(value)=>{
@@ -156,8 +203,6 @@ const getScreenTemplateName = (value)=>{
            if (item.id == number ) {
             name=item.name;
            }
-        }else{
-          console.log(value.screentemplate)
         }
        
       });
@@ -189,7 +234,8 @@ const submit = async () => {
         });
 
         if (response.status === 201) {
-          response.data.advantages=response.data.advantageScreens;
+          response.data.advantage_names=getAdvantageNames(response.data)[0];
+          response.data.advantages=getAdvantageNames(response.data)[1];
           response.data.establishment_name=getEstablishmentName(response.data);
           response.data.screentemplate_name=getScreenTemplateName(response.data);
           loadData(response.data);
@@ -209,10 +255,12 @@ const submit = async () => {
 
         if (response.status == 200) {
      
-          response.data.advantages=response.data.advantageScreens;
+        
           response.data.establishment_name=getEstablishmentName(response.data);
           response.data.screentemplate_name=getScreenTemplateName(response.data);
-               console.log(response.data)
+          response.data.advantage_names=getAdvantageNames(response.data)[0];
+          response.data.advantages=getAdvantageNames(response.data)[1];
+          console.log(getAdvantageNames(response.data)[1]);
           updateData(response.data);
           ElMessage({
             message: `Event updated successfully.`,

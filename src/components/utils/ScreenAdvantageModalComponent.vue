@@ -4,7 +4,7 @@
       <div class="modal__header">
         <div class="modal__title">
           <h3 class="font-semibold text-gray-900 dark:text-white">
-            <i class="uil uil-qrcode-scan"></i> Advantage Screen
+            <i class="uil uil-presentation"></i> Advantage Screen
           </h3>
         </div>
         <div class="modal__close">
@@ -17,10 +17,12 @@
 
       <div class="grid gap-6 mb-6 md:grid-cols-2">
 
-         <div>
+ 
+        <div>
           <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Advantages
             <span>*</span></label>
-          <el-select v-model="advantage" placeholder="Choose establishment" size="large" filterable>
+          <el-select v-model="advantage" placeholder="Choose advantage" size="large" multiple collapse-tags
+            collapse-tags-tooltip>
             <el-option v-for="item in props.advantages" :key="item.id" :label="item.name"
               :value="`/api/advantages/${item.id}`" />
           </el-select>
@@ -71,7 +73,7 @@
 
             <div>
                   <label for="minute_from"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hour From
+                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Minute From
                       <span></span></label>
                   <input type="number" id="minute_from" v-model="minute_from"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
@@ -79,7 +81,7 @@
 
           <div>
                   <label for="seconde_from"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hour From
+                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seconde From
                       <span></span></label>
                   <input type="number" id="seconde_from" v-model="seconde_from"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
@@ -93,7 +95,7 @@
 
               <div>
                   <label for="hour_to"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hour From
+                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hour To
                       <span></span></label>
                   <input type="number" id="hour_to" v-model="hour_to"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
@@ -101,7 +103,7 @@
 
               <div>
                   <label for="minute_to"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hour From
+                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Minute To
                       <span></span></label>
                   <input type="number" id="minute_to" v-model="minute_to"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
@@ -109,7 +111,7 @@
 
               <div>
                   <label for="seconde_to"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hour From
+                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seconde To
                       <span></span></label>
                   <input type="number" id="seconde_to" v-model="seconde_to"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
@@ -209,7 +211,7 @@
         <button type="submit"
           class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
           <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading ...</span>
-          <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} screen</span>
+          <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} advantage</span>
         </button>
       </div>
     </form>
@@ -228,6 +230,7 @@ import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
+import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 
 // const Tooltip = defineAsyncComponent(() =>
 //     import('@Components/utils/QuestionMarkTooltipComponent.vue')
@@ -237,7 +240,6 @@ import 'element-plus/es/components/date-picker/style/css'
 const date_from = ref('');
 const date_to = ref('');
 const category = ref('');
-const enable = ref(false);
 const advantage_screen = ref({
   d0:false,
   d1:false,
@@ -246,19 +248,16 @@ const advantage_screen = ref({
   d4:false,
   d5:false
 });
-// const d1 = ref(false);
-// const d2 = ref(false);
-// const d3 = ref(false);
-// const d4 = ref(false);
-// const d5 = ref(false);
-// const d6 = ref(false);
+
 const hour_from = ref();
 const minute_from = ref();
 const seconde_from = ref();
 const hour_to = ref();
 const minute_to = ref();
 const seconde_to = ref();
-const advantage = ref(null);
+const advantage = ref([]);
+const showSpinner = ref(false);
+const type = ref('add');
 
 
 const props = defineProps({
@@ -289,6 +288,7 @@ const handleEnable = (days,adv_screen)=>{
    console.log(adv_screen)
 }
 
+
 const { width } = useWindowSize()
 const modalWidth = computed(() => {
   let windowSize = 1500;
@@ -296,7 +296,124 @@ const modalWidth = computed(() => {
   return gap + 45;
 });
 
-const show = computed(() => props.showModal)
+const show = computed(() => props.showModal);
+
+const resetForm = (dvantage_screen)=>{
+  date_from.value = '';
+  date_to.value = '';
+  category.value = '';
+  advantage.value = [];
+  dvantage_screen.value.d0 = false;
+  dvantage_screen.value.d1 = false;
+  dvantage_screen.value.d2 = false;
+  dvantage_screen.value.d3 = false;
+  dvantage_screen.value.d4 = false;
+  dvantage_screen.value.d5 = false;
+  dvantage_screen.value.d6 = false;
+  hour_from.value = null;
+  hour_to.value = null;
+  minute_from.value = null;
+  minute_to.value = null;
+  seconde_from.value = null;
+  seconde_to.value = null;
+}
+
+
+const submit = async () => {
+  
+  
+
+
+  try {
+
+    if ( date_from.value != '' && date_to.value != '' && props.screen.value != ''
+      && advantage.value != '' && hour_from.value && hour_to.value) {
+
+      showSpinner.value = true;
+
+      if (type.value == 'add') {
+
+        for (var i = 0; i < advantage.value.length; i++) {
+
+            let _advantage_screen = {
+              "dateFrom": date_from.value,
+              "dateTo": date_to.value,
+              "category": category.value,
+              "screen": `/api/screens/${props.screen.id}`,
+              "advantage": advantage.value[i],
+              "d0": advantage_screen.value.d0,
+              "d1": advantage_screen.value.d1,
+              "d2": advantage_screen.value.d2,
+              "d3": advantage_screen.value.d3,
+              "d4": advantage_screen.value.d4,
+              "d5": advantage_screen.value.d5,
+              "d6": advantage_screen.value.d6,
+              "hourFrom": hour_from.value != '' ? parseInt(hour_from.value) : null,
+              "hourTo": hour_to.value != '' ? parseInt(hour_to.value) : null,
+              "minuteFrom": minute_from.value != '' ? parseInt(minute_from.value) : null,
+              "minuteTo": minute_to.value != '' ? parseInt(minute_to.value) : null,
+              "secondeFrom": seconde_from.value != '' ? parseInt(seconde_from.value) :null,
+              "secondeTo": seconde_to.value != '' ? parseInt(seconde_to.value)  : null
+              }
+                  console.log(_advantage_screen);
+
+                const response = await new Promise((resolve) => {
+                  services.createRecord('advantage_screens', _advantage_screen, (response) => {
+                    resolve(response);
+                    
+                  });
+                });
+
+              if (response.status === 201 && i == advantage.value.length - 1) {
+                resetForm(advantage_screen)
+               console.log(response.data)
+                ElMessage({
+                  message: `Advantages added successfully.`,
+                  type: 'success',
+                });
+              }
+          
+        }
+      
+      
+
+      } else {
+
+        // const response = await new Promise((resolve) => {
+        //   services.patchRecord('screens', screen_to_update.value['id'], screen, (response) => {
+        //     resolve(response);
+        //   });
+        // });
+
+        // if (response.status == 200) {
+     
+        //   response.data.advantages=response.data.advantageScreens;
+        //   response.data.establishment_name=getEstablishmentName(response.data);
+        //   response.data.screentemplate_name=getScreenTemplateName(response.data);
+        //        console.log(response.data)
+        //   updateData(response.data);
+        //   ElMessage({
+        //     message: `Event updated successfully.`,
+        //     type: 'success',
+        //   });
+        //   type.value = 'add'
+        // }
+      }
+      // resetForm()
+      // router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'screens_list'} });
+      showSpinner.value = false;
+    } else {
+      ElMessage.error(`Please, provide all needed information to ${type.value} an advantage`);
+      showSpinner.value = false;
+    }
+
+
+  } catch (error) {
+    console.log(error);
+  }
+
+
+};
 
 
 </script>
