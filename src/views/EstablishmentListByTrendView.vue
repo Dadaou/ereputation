@@ -12,14 +12,7 @@
                     <el-option v-for="(item, index) in categories" :key="index" :label="item.label" :value="item.value" />
                 </el-select>
             </div>
-            <div class="date_picker">
-                <el-date-picker v-model="start_date" type="date" :size="'large'" />
-            </div>
-            <div class="date_picker">
-                <el-date-picker v-model="end_date" type="date" :size="'large'" />
-          </div>
         </div>
-        
         <div class="bottom-row">
             <div class="date_pick">
                 <el-date-picker 
@@ -90,6 +83,8 @@ const dataLoading = ref(true);
 const customerTag = inject('tag');
 const userStore = useUserStore();
 const userId = userStore.user.id;
+const start_date = inject('start_date');
+const end_date = inject('end_date');
 
 const categories = ref([
     { label: 'All', value: 'all' },
@@ -106,8 +101,6 @@ const types = ref([
 
 const type = ref('global');
 const categoryFilters = ref('all');
-const start_date = inject('start_date');
-const end_date = inject('end_date');
 const days = ref(60);
 const selectedDate = ref(null);
 provide('selectedDate', selectedDate);
@@ -131,8 +124,6 @@ watch([type, categoryFilters, days, selectedDate,start_date, end_date], async ()
     await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value,start_date.value, end_date.value);
 });
 
-const IsValueOkay = (value) => (value !== '' && value !== 0 && value !== null && value !== undefined)
-
 const loadEstablishment = async (tag, category, days, note, date,dateStart, dateEnd) => {
     let uri = 'get/establishment/trend';
     let params = `tag=${tag}&category=${category}&note=${note}&user_id=${userId}`;
@@ -143,12 +134,6 @@ const loadEstablishment = async (tag, category, days, note, date,dateStart, date
         params += `&days=${days}`;
     }
 
-    if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
-        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
-        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
-        params += `&from=${dateStart}&to=${dateEnd}`;
-    }
-
     uri = `${uri}?${params}`;
 
     const response = await new Promise((resolve) => {
@@ -156,9 +141,25 @@ const loadEstablishment = async (tag, category, days, note, date,dateStart, date
             resolve(response);
         });
     });
-
+    
     if (response.status == 200) {
         establishments.value = response.data.map((objet) => {
+            // Extraction des dates start_date et end_date
+            const start_date_extracted = objet.curent?.from;
+            const end_date_extracted = objet.curent?.to;
+
+            // Stockage des valeurs dans l'état
+            start_date.value = start_date_extracted;
+            end_date.value = end_date_extracted;
+              // vérifier  le format des  dates
+            if (start_date_extracted) {
+                start_date.value = moment(start_date_extracted).format('YYYY-MM-DD');
+                console.log(start_date.value);
+            }
+            if (end_date_extracted) {
+                end_date.value = moment(end_date_extracted).format('YYYY-MM-DD');
+            }
+            
             objet.reviews_count = {
                 '5 ': objet.stars ? objet.stars['5 stars'] : 0,
                 '4 ': objet.stars ? objet.stars['4 stars'] : 0,
@@ -167,6 +168,7 @@ const loadEstablishment = async (tag, category, days, note, date,dateStart, date
                 '1 ': objet.stars ? objet.stars['1 star'] : 0,
             };
             return { ...objet, ratio: objet.ratio_value, ratio_text: objet.ratio, isTrends: true };
+            
         });
     } else {
         console.error('Error loading establishments:', response);
@@ -259,7 +261,7 @@ onMounted(async () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    gap: 5rem;
 }
 .bottom-row {
     display: flex;
@@ -268,7 +270,7 @@ onMounted(async () => {
     gap: 1rem;
 }
 
-    
+.select_info,
 .date_pick,
 .number_days {
     display: flex;
@@ -276,12 +278,12 @@ onMounted(async () => {
     flex: 1;
 }
 
-.select_info, .catfiltre, .date_picker {
-	display: flex;
-	align-items: center;
-	flex-grow: 1;
-	max-width: 300px;
-	margin-right: 10px;
+.catfiltre {
+    display: flex;
+    align-items: center;
+    flex: 0 1 44%; /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
+    max-width: 300px; /* Vous pouvez ajuster cette valeur selon vos besoins */
+    padding-right: 17px;
 }
 
 .or-text {
