@@ -12,7 +12,14 @@
                     <el-option v-for="(item, index) in categories" :key="index" :label="item.label" :value="item.value" />
                 </el-select>
             </div>
+            <div class="date_picker">
+                <el-date-picker v-model="start_date" type="date" :size="'large'" />
+            </div>
+            <div class="date_picker">
+                <el-date-picker v-model="end_date" type="date" :size="'large'" />
+          </div>
         </div>
+        
         <div class="bottom-row">
             <div class="date_pick">
                 <el-date-picker 
@@ -99,6 +106,8 @@ const types = ref([
 
 const type = ref('global');
 const categoryFilters = ref('all');
+const start_date = inject('start_date');
+const end_date = inject('end_date');
 const days = ref(60);
 const selectedDate = ref(null);
 provide('selectedDate', selectedDate);
@@ -118,11 +127,13 @@ watch(days, (newDays) => {
   }
 });
 
-watch([type, categoryFilters, days, selectedDate], async () => {
-    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value);
+watch([type, categoryFilters, days, selectedDate,start_date, end_date], async () => {
+    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value,start_date.value, end_date.value);
 });
 
-const loadEstablishment = async (tag, category, days, note, date) => {
+const IsValueOkay = (value) => (value !== '' && value !== 0 && value !== null && value !== undefined)
+
+const loadEstablishment = async (tag, category, days, note, date,dateStart, dateEnd) => {
     let uri = 'get/establishment/trend';
     let params = `tag=${tag}&category=${category}&note=${note}&user_id=${userId}`;
 
@@ -130,6 +141,12 @@ const loadEstablishment = async (tag, category, days, note, date) => {
         params += `&date=${date}`;
     } else {
         params += `&days=${days}`;
+    }
+
+    if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
+        params += `&from=${dateStart}&to=${dateEnd}`;
     }
 
     uri = `${uri}?${params}`;
@@ -157,7 +174,7 @@ const loadEstablishment = async (tag, category, days, note, date) => {
 };
 
 onMounted(async () => {
-    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value);
+    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value,start_date.value, end_date.value);
     dataLoading.value = false;
 });
 </script>
@@ -242,7 +259,7 @@ onMounted(async () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 5rem;
+    width: 100%;
 }
 .bottom-row {
     display: flex;
@@ -251,7 +268,7 @@ onMounted(async () => {
     gap: 1rem;
 }
 
-.select_info,
+    
 .date_pick,
 .number_days {
     display: flex;
@@ -259,12 +276,12 @@ onMounted(async () => {
     flex: 1;
 }
 
-.catfiltre {
-    display: flex;
-    align-items: center;
-    flex: 0 1 44%; /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
-    max-width: 300px; /* Vous pouvez ajuster cette valeur selon vos besoins */
-    padding-right: 17px;
+.select_info, .catfiltre, .date_picker {
+	display: flex;
+	align-items: center;
+	flex-grow: 1;
+	max-width: 300px;
+	margin-right: 10px;
 }
 
 .or-text {
