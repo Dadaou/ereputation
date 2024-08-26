@@ -26,7 +26,7 @@
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'Screen' }" active-class="active"  @click.native="selectMenu('My Screen')">
+            <router-link :to="{ name: 'Screen' }" active-class="active"  @click.native="selectMenu('My Screens')">
               <i class="uil uil-presentation"></i> <span>My Screen</span>
             </router-link>
           </li>

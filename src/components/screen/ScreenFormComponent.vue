@@ -77,14 +77,22 @@ const type = ref('add');
 const screen_to_update = inject('screen_to_update');
 const screens = inject('screens');
 const advantages = inject('advantages');
+const cleanScreenForm = inject('cleanScreenForm');
 
-watch(screen_to_update, () => {
+watch([screen_to_update,cleanScreenForm], () => {
   if (screen_to_update.value != null) {
     screenName.value = screen_to_update.value["name"];
     establishment.value = screen_to_update.value['establishment'];
     screenTemplate.value = screen_to_update.value['screentemplate'];
     type.value = 'edit';
+   
   }
+
+  if (cleanScreenForm.value != 0) {
+    resetForm();
+   
+  }
+    
 })
 
 
@@ -98,8 +106,11 @@ const loadData = (_screen) => {
     advantage_names:_screen.advantage_names,
     advantages:_screen.advantages,
     establishment_name: _screen.establishment_name,
-    screentemplate_name: _screen.screentemplate_name
+    screentemplate_name: _screen.screentemplate_name,
+    screentemplate_id: _screen.screentemplate_id,
+    establishment_id: _screen.establishment_id
   }
+
   screens.value.push(new_screen);
 }
 
@@ -112,7 +123,9 @@ const updateData = (_screen) => {
     advantage_names:_screen.advantage_names,
     advantages:_screen.advantages,
     establishment_name: _screen.establishment_name,
-    screentemplate_name: _screen.screentemplate_name
+    screentemplate_name: _screen.screentemplate_name,
+    screentemplate_id: _screen.screentemplate_id,
+    establishment_id: _screen.establishment_id
   }
 
   screens.value.forEach((event, index) => {
@@ -174,6 +187,7 @@ const getAdvantageNames=(value)=>{
 const getEstablishmentName=(value)=>{
   if (userStore.user.customer.establishments.length > 0) {
         let name='';
+        let etab_id=null;
       userStore.user.customer.establishments.forEach(item =>{
 
         const match = value.establishment.match(/\/(\d+)$/);
@@ -182,18 +196,20 @@ const getEstablishmentName=(value)=>{
           const number = match[1];
            if (item.id == number ) {
             name=item.name;
+            etab_id=number;
            }
         }
        
       });
 
-      return name;
+      return [name,etab_id];
   }
 }
 
 const getScreenTemplateName = (value)=>{
   if (screenTemplates.value.length > 0) {
         let name='';
+        let temp_id = null;
       screenTemplates.value.forEach(item =>{
 
         const match = value.screentemplate.match(/\/(\d+)$/);
@@ -202,12 +218,13 @@ const getScreenTemplateName = (value)=>{
           const number = match[1];
            if (item.id == number ) {
             name=item.name;
+            temp_id=number;
            }
         }
        
       });
 
-      return name;
+      return [name,temp_id];
   }
 }
 
@@ -236,8 +253,11 @@ const submit = async () => {
         if (response.status === 201) {
           response.data.advantage_names=getAdvantageNames(response.data)[0];
           response.data.advantages=getAdvantageNames(response.data)[1];
-          response.data.establishment_name=getEstablishmentName(response.data);
-          response.data.screentemplate_name=getScreenTemplateName(response.data);
+          response.data.establishment_name=getEstablishmentName(response.data)[0];
+          response.data.screentemplate_name=getScreenTemplateName(response.data)[0];
+          response.data.establishment_id=getEstablishmentName(response.data)[1];
+          response.data.screentemplate_id=getScreenTemplateName(response.data)[1];
+          console.log(response.data)
           loadData(response.data);
           ElMessage({
             message: `Screen added successfully.`,
@@ -256,11 +276,13 @@ const submit = async () => {
         if (response.status == 200) {
      
         
-          response.data.establishment_name=getEstablishmentName(response.data);
-          response.data.screentemplate_name=getScreenTemplateName(response.data);
           response.data.advantage_names=getAdvantageNames(response.data)[0];
           response.data.advantages=getAdvantageNames(response.data)[1];
-          console.log(getAdvantageNames(response.data)[1]);
+          response.data.establishment_name=getEstablishmentName(response.data)[0];
+          response.data.screentemplate_name=getScreenTemplateName(response.data)[0];
+          response.data.establishment_id=getEstablishmentName(response.data)[1];
+          response.data.screentemplate_id=getScreenTemplateName(response.data)[1];
+          
           updateData(response.data);
           ElMessage({
             message: `Event updated successfully.`,
@@ -270,6 +292,7 @@ const submit = async () => {
         }
       }
       resetForm()
+      cleanScreenForm.value = true;
       router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'screens_list'} });
       showSpinner.value = false;
     } else {
@@ -305,6 +328,7 @@ onBeforeMount(() => {
     establishment.value = [`/api/establishments/${userStore.user.customer.establishments[0].id}`];
   }
   loadScreenTemplates();
+  
   
 });
 

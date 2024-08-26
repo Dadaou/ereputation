@@ -51,9 +51,7 @@ watch(width, () => {
     }
 });
 
-const clearScreenForm = () => {
-    cleanScreenForm.value = !cleanScreenForm.value
-}
+
 
 
 const myscreensUrlsConf = reactive({
@@ -63,10 +61,14 @@ const myscreensUrlsConf = reactive({
 
 provide('myscreensUrlsConf', myscreensUrlsConf);
 
-const cleanScreenForm = ref(false);
+const cleanScreenForm = ref(0);
 
-provide('clearScreenForm', cleanScreenForm);
+provide('cleanScreenForm', cleanScreenForm);
 
+const clearScreenForm = () => {
+    cleanScreenForm.value = cleanScreenForm.value + 1;
+    
+}
 
 
 const allscreens = ref([]);
@@ -88,7 +90,8 @@ const handleEdit = (value, type) => {
         screen_to_update.value['establishment'] = `/api/establishments/${value.establishment_id}`
          screen_to_update.value['screentemplate'] = `/api/screentemplates/${value.screentemplate_id}`
     // }
-
+         cleanScreenForm.value = 0;
+         console.log(value)
 
 };
 

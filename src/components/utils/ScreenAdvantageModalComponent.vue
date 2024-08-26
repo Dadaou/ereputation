@@ -258,6 +258,10 @@ const seconde_to = ref();
 const advantage = ref([]);
 const showSpinner = ref(false);
 const type = ref('add');
+const advantage_screens = ref({
+  name: '',
+  advantages:[]
+});
 
 
 const props = defineProps({
@@ -274,12 +278,15 @@ const props = defineProps({
   }
 });
 
+const screens = inject('screens');
 const emits = defineEmits(['close'])
 const router = useRouter();
 
 const route = useRoute();
 const close = () => {
   emits('close')
+  if (advantage_screens.value) {updateData()}
+  
 }
 
 const handleEnable = (days,adv_screen)=>{
@@ -317,6 +324,61 @@ const resetForm = (dvantage_screen)=>{
   seconde_from.value = null;
   seconde_to.value = null;
 }
+
+const updateData = () => {
+  const new_screen = {
+    id: props.screen.id,
+    name: props.screen.name,
+    establishment: props.screen.establishment,
+    screentemplate: props.screen.screentemplate,
+    advantage_names: advantage_screens.value.name,
+    advantages:advantage_screens.value.advantages,
+    establishment_name: props.screen.establishment_name,
+    screentemplate_name: props.screen.screentemplate_name
+  }
+
+  screens.value.forEach((event, index) => {
+    if (event.id == new_screen.id) screens.value[index] = new_screen;
+  })
+}
+
+const getAdvantageNames=(value)=>{
+  if (props.advantages.length > 0) {
+    
+      props.advantages.forEach((adv)=>{
+       
+               const match = value.advantage.match(/\/(\d+)$/);
+
+                if (match) {
+
+                  const number = match[1];
+
+                     if (adv.id == number) {
+
+                        if (advantage_screens.value.name != '') {
+                          advantage_screens.value.name=advantage_screens.value.name + ',' + adv.name;
+                        } else {
+                          advantage_screens.value.name=adv.name
+                        }
+
+                        var oneAdvantage={};
+                        oneAdvantage.adv_id = adv.id;
+                        oneAdvantage.adv_name = adv.name;
+
+                        advantage_screens.value.advantages.push(oneAdvantage);
+                      
+                     }
+                 }
+
+      })
+ 
+     
+  }
+}
+
+
+
+
 
 
 const submit = async () => {
@@ -364,14 +426,22 @@ const submit = async () => {
                   });
                 });
 
-              if (response.status === 201 && i == advantage.value.length - 1) {
-                resetForm(advantage_screen)
-               console.log(response.data)
-                ElMessage({
-                  message: `Advantages added successfully.`,
-                  type: 'success',
-                });
-              }
+                   if (response.status === 201 ) {
+                   
+                     // console.log(response.data)
+                     getAdvantageNames(response.data);
+                     console.log(advantage_screens.value)
+                  
+                    }
+
+                    if (response.status === 201 && i == advantage.value.length - 1) {
+                      resetForm(advantage_screen)
+              
+                      ElMessage({
+                        message: `Advantages added successfully.`,
+                        type: 'success',
+                      });
+                    }
           
         }
       
