@@ -349,11 +349,14 @@ const loadAdvantage = async () => {
 
 </script>
 <style scoped>
+/* Ajustement général du texte */
 .profile__header p {
     font-size: 14px;
     color: grey;
     font-weight: 500;
 }
+
+/* Responsive: Ajustement pour les petits écrans */
 @media screen and (max-width: 468px) {
     .profile__header {
         padding-right: .5rem;
@@ -361,6 +364,38 @@ const loadAdvantage = async () => {
     }
     .profile__header p {
         font-size: 13px;
+    }
+}
+
+/* Assurez-vous que les formulaires ne dépassent pas l'écran */
+form {
+    max-width: 85%;
+    overflow-x: hidden;
+}
+
+/* Réduire les marges pour les petits écrans */
+@media screen and (max-width: 768px) {
+    .grid {
+        display: block;
+    }
+    .grid > div {
+        margin-bottom: 1.5rem;
+    }
+    .grid > div input, 
+    .grid > div .el-select, 
+    .grid > div .el-date-picker {
+        width: 100%;
+    }
+    .inline-flex {
+        display: block;
+    }
+    .inline-flex > div,
+    .inline-flex input,
+    .inline-flex button {
+        width: 100%;      
+    }
+    .inline-flex input {
+        margin-top: 0.5rem;
     }
 }
 </style>
