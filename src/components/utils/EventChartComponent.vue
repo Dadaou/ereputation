@@ -1,5 +1,5 @@
 <template>
-  <div id="chart__event" class="chart" :style="{
+  <div id="chart__event" class="chart_content" :style="{
     'width': `${props.width}px`,
     'overflowX': 'auto'
   }">
@@ -18,19 +18,19 @@
     }">
       <SpinnerComponent />
     </div>
-    <div v-else class="chart" :style="{
+    <div v-else class="chart_content" :style="{
       'display': 'flex',
       'width': '100%',
     }">
       <div class="colSmall">
-        <GroupedBarChart :plot-data="plotdata.notes" x-key="date" :width="custom_width.chart" :height="200"
+        <GroupedBarChart class="chart" :plot-data="plotdata.notes" x-key="date" :width="custom_width.chart" :height="200"
           :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Reviews"
           :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
           :y-tick-format="d => `${d}`" />
       </div>
-      <div class="colLarge">
+      <div class="colLarge" id="colLar">
         <div class="boxLarge">
-          <GroupedBarChart :plot-data="plotdata.notes" x-key="date" :width="custom_width.chart" :height="200"
+          <GroupedBarChart class="chart" :plot-data="plotdata.notes" x-key="date" :width="custom_width.chart" :height="200"
             :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Reviews"
             :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
             :y-tick-format="d => `${d}`" />
@@ -49,7 +49,7 @@
 <script setup>
 import moment from 'moment';
 import { ElTooltip } from 'element-plus';
-import { computed, onMounted, ref, watch, inject, onBeforeMount, defineAsyncComponent } from 'vue';
+import { computed, onMounted, ref, watch, inject, onBeforeMount, defineAsyncComponent,nextTick } from 'vue';
 import services from '@Services/services.js';
 import { useRoute, useRouter } from "vue-router";
 
@@ -267,6 +267,20 @@ watch([date, type], async () => {
   }
 });
 
+
+watch(() => plotdata.value.events_per_date , () => {
+    nextTick(() => {
+        const colLargeElement = document.getElementById("colLar");
+        if (colLargeElement) {
+            const div = document.getElementsByClassName("chart")[0].children;
+            const widthp = parseInt(div[0].getAttribute("width"));
+            const longueur = widthp * plotdata.value.events_per_date.length;
+            colLargeElement.scrollLeft += longueur;
+            colLargeElement.scrollLeft = longueur;
+        }
+    });
+}, { immediate: true, deep: true });
+
 </script>
 <style scoped>
 ul.event {
@@ -277,11 +291,11 @@ ul.event {
   left: 10.5%;
 }
 
-.chart {
+.chart_content {
   overflow-x: auto;
 }
 
-.chart::-webkit-scrollbar {
+.chart_content::-webkit-scrollbar {
   width: 6px;
   height: 5px !important;
   background-color: white;
