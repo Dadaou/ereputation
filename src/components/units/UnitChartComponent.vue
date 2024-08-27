@@ -14,18 +14,18 @@
 }">
     <SpinnerComponent />
 </div>
-<div v-else class="chart" :style="{
+<div v-else class="chart_content" :style="{
     'display': 'flex',
     'width': '100%',
  }">
   <div class="colSmall">
-    <GroupedBarChart :plot-data="plotdata" x-key="date" :width="custom_width" :height="200" :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label=""
-    :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']" :y-tick-format="d => `${d}`" />
+    <GroupedBarChart  class="chart" :plot-data="plotdata" x-key="date" :width="custom_width" :height="200" :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label=""
+    :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']" :y-tick-format="d => `${d}`"/>
   </div>
-  <div class="colLarge">
+  <div class="colLarge" id="colLarge">
     <div class="boxLarge">
-      <GroupedBarChart :plot-data="plotdata" x-key="date" :width="custom_width" :height="200" :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label=""
-    :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']" :y-tick-format="d => `${d}`" />
+      <GroupedBarChart  class="chart" :plot-data="plotdata" x-key="date" :width="custom_width" :height="200" :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label=""
+    :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']" :y-tick-format="d => `${d}`"/>
     </div>
   </div>
 </div>
@@ -35,7 +35,7 @@
 </div>	
 </template>
 <script setup>
-import { ref, defineAsyncComponent, computed } from 'vue';
+import { ref, defineAsyncComponent, computed, nextTick, watch} from 'vue';
 
 const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
@@ -74,6 +74,18 @@ const custom_width = computed(() => {
 
   return width;
 });
+watch(() => props.plotdata, () => {
+    nextTick(() => {
+        const colLargeElement = document.getElementById("colLarge");
+        if (colLargeElement) {
+            const div = document.getElementsByClassName("chart")[0].children;
+            const widthp = parseInt(div[0].getAttribute("width"));
+            const longueur = widthp * props.plotdata.length;
+            colLargeElement.scrollLeft += longueur;
+            colLargeElement.scrollLeft = longueur;
+        }
+    });
+}, { immediate: true, deep: true });
 
 const load = computed(()=>{
   return props.chartLoading

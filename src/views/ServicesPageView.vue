@@ -51,7 +51,7 @@
               :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
               :y-tick-format="d => `${d}`" />
           </div>
-          <div class="colLarge">
+          <div class="colLarge" id="colLarges">
             <div class="boxLarge">
               <GroupedBarChart :plot-data="plotdata" x-key="date" :width="custom_width" :height="200"
                 :margin="{ top: 20, bottom: 35, left: 55, right: 60 }" x-axis-label="Dates" y-axis-label="Reviews"
@@ -324,22 +324,33 @@ watch(activeName, async () => {
     await getUnitChartdata(companyId, activeName.value, date.value)
   }
 })
+
+watch(() => plotdata.value, () => {
+    nextTick(() => {
+        const colLargeElement = document.getElementById("colLarges");
+        if (colLargeElement) {
+            const div = document.getElementsByClassName("chart")[0].children;
+            const widthp = parseInt(div[0].getAttribute("width"));
+            const longueur = widthp * plotdata.value.length;
+            colLargeElement.scrollLeft += longueur;
+            colLargeElement.scrollLeft = longueur;
+        }
+    });
+}, { immediate: true, deep: true });
+
 onUpdated(() => {
   //if(plotdata.value.length > 0){
     setTimeout(() => {
-        nextTick(()=>{
-            console.log(plotdata.value.length)
-           
-              var div = document.getElementsByClassName("boxLarge")
-                //document.getElementsByClassName("chart")[0].scrollLeft += longueur
-              var divchild = div
-              console.log(divchild)
-              var widthp = parseInt(divchild[0].getAttribute("width"))
-                const longueur = widthp * plotdata.value.length 
-                document.getElementById("boxLarge").scrollLeft += longueur 
-                document.getElementById("boxLarge").scrollLeft = longueur 
-           
-        })
+      nextTick(() => {
+        const colLargeElement = document.getElementById("colLarges");
+        if (colLargeElement) {
+            const div = document.getElementsByClassName("chart")[0].children;
+            const widthp = parseInt(div[0].getAttribute("width"));
+            const longueur = widthp * plotdata.value.length;
+            colLargeElement.scrollLeft += longueur;
+            colLargeElement.scrollLeft = longueur;
+        }
+    });
     },3000)
   //}
 })
