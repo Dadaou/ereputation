@@ -83,6 +83,8 @@ const dataLoading = ref(true);
 const customerTag = inject('tag');
 const userStore = useUserStore();
 const userId = userStore.user.id;
+const start_date = inject('start_date');
+const end_date = inject('end_date');
 
 const categories = ref([
     { label: 'All', value: 'all' },
@@ -118,11 +120,11 @@ watch(days, (newDays) => {
   }
 });
 
-watch([type, categoryFilters, days, selectedDate], async () => {
-    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value);
+watch([type, categoryFilters, days, selectedDate,start_date, end_date], async () => {
+    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value,start_date.value, end_date.value);
 });
 
-const loadEstablishment = async (tag, category, days, note, date) => {
+const loadEstablishment = async (tag, category, days, note, date,dateStart, dateEnd) => {
     let uri = 'get/establishment/trend';
     let params = `tag=${tag}&category=${category}&note=${note}&user_id=${userId}`;
 
@@ -139,9 +141,25 @@ const loadEstablishment = async (tag, category, days, note, date) => {
             resolve(response);
         });
     });
-
+    
     if (response.status == 200) {
         establishments.value = response.data.map((objet) => {
+            // Extraction des dates start_date et end_date
+            const start_date_extracted = objet.curent?.from;
+            const end_date_extracted = objet.curent?.to;
+
+            // Stockage des valeurs dans l'état
+            start_date.value = start_date_extracted;
+            end_date.value = end_date_extracted;
+              // vérifier  le format des  dates
+            if (start_date_extracted) {
+                start_date.value = moment(start_date_extracted).format('YYYY-MM-DD');
+                console.log(start_date.value);
+            }
+            if (end_date_extracted) {
+                end_date.value = moment(end_date_extracted).format('YYYY-MM-DD');
+            }
+            
             objet.reviews_count = {
                 '5 ': objet.stars ? objet.stars['5 stars'] : 0,
                 '4 ': objet.stars ? objet.stars['4 stars'] : 0,
@@ -150,6 +168,7 @@ const loadEstablishment = async (tag, category, days, note, date) => {
                 '1 ': objet.stars ? objet.stars['1 star'] : 0,
             };
             return { ...objet, ratio: objet.ratio_value, ratio_text: objet.ratio, isTrends: true };
+            
         });
     } else {
         console.error('Error loading establishments:', response);
@@ -157,7 +176,7 @@ const loadEstablishment = async (tag, category, days, note, date) => {
 };
 
 onMounted(async () => {
-    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value);
+    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value,start_date.value, end_date.value);
     dataLoading.value = false;
 });
 </script>
