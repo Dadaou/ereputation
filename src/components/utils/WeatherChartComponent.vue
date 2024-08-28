@@ -18,20 +18,20 @@
     }">
       <SpinnerComponent />
     </div>
-    <div v-else class="chart" :style="{
+    <div v-else class="chart_content" :style="{
         'display': 'flex',
         'width': '100%',
      }">
      <div class="colSmall">
-       <GroupedBarChart :plot-data="data" x-key="name" :width="custom_width" :height="200"
+       <GroupedBarChart class="chart" :plot-data="data" x-key="name" :width="custom_width" :height="200"
         :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
         :x-tick-format="d => `${d}`" :margin="{ top: 20, bottom: 35, left: 30, right: 20 }"/>
         <!--  <div id="weatherIcons" style="height: 58px; width: 100%; position: relative;">
          </div> -->
      </div>
-     <div class="colLarge">
+     <div class="colLarge" id="colLarge">
       <div class="boxLarge">
-        <GroupedBarChart :plot-data="data" x-key="name" :width="custom_width" :height="200"
+        <GroupedBarChart class="chart" :plot-data="data" x-key="name" :width="custom_width" :height="200"
         :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
         :x-tick-format="d => `${d}`" :margin="{ top: 20, bottom: 35, left: 30, right: 20 }"/>
         <div id="weatherIcons" style="height: 58px; width: 100%; position: relative;">
@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { ref, inject, defineAsyncComponent, computed, onMounted, watch } from 'vue';
+import { ref, inject, defineAsyncComponent, computed, onMounted, watch, nextTick } from 'vue';
 import { useResizeObserver, useWindowSize } from '@vueuse/core';
 const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
@@ -129,6 +129,18 @@ watch(data, () => {
   setTimeout(() => positionIcons(), 2000)
     ;
 });
+watch(() => data.value , () => {
+    nextTick(() => {
+        const colLargeElement = document.getElementById("colLarge");
+        if (colLargeElement) {
+            const div = document.getElementsByClassName("chart")[0].children;
+            const widthp = parseInt(div[0].getAttribute("width"));
+            const longueur = widthp * data.value.length;
+            colLargeElement.scrollLeft += longueur;
+            colLargeElement.scrollLeft = longueur;
+        }
+    });
+}, { immediate: true, deep: true });
 </script>
 
 <style scoped>
