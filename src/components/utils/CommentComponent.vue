@@ -46,15 +46,51 @@
                 </div>
                 <div class="review__right mt-2">
                     <div style="height: 20px;" v-if="showCategory">
-                        <div v-if="review.category && review.category.split(';').length > 0">
+                        <div v-if="review.category && review.category.split(';').length > 0" class="inline-flex">
+
+                             
+                            <!-- category -->
                             <div v-for="categ in review.category.split(';')" :key="categ" class="inline-flex">
+
                                 <div v-if="categ != ''" class="review__category-container ml-1"
-                                    @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review)">
-                                    <span class="review__category">{{
-                                        categ }}</span>
+                                  >
+                                 
+                                    <span   @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review),category=categ,old_item_category=categ" class="review__category">{{
+                                        categ }}
+
+                                          <span v-if="review.classification_feeling[categ]" class="emoji "
+                                                @click.stop="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review),old_item_category=categ,feeling_categorization='yes'">
+                                                <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
+                                                <span v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
+                                                <span v-if="review.classification_feeling[categ] == 'negative'">😕</span>
+                                          </span>
+
+                                          <span v-else class="emoji ">
+                                               
+                                                <i class="uil uil-question-circle"
+                                                style="color: var(--color-warning); cursor: pointer" @mouseover="(e) => {
+                                                    buttonRefCateg = e.currentTarget
+                                                    visibleCateg = true
+                                                }" @mouseleave="() => visibleCateg = false"
+                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review),old_item_category=categ,feeling_categorization='yes'">
+                                                </i>
+                                                <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg" :virtual-ref="buttonRefCateg" virtual-triggering
+                                                    popper-class="singleton-tooltip" placement="top">
+                                                    <template #content>
+                                                        <span>Click to add review feeling</span>
+                                                    </template>
+                                                </el-tooltip>
+                                               
+                                          </span>
+                                          
+
+
+                                    </span>
 
                                 </div>
                             </div>
+
+                         
 
                         </div>
 
@@ -74,12 +110,22 @@
                             </el-tooltip>
                         </div>
                     </div>
-                    <div v-if="showEmoji">
+                    <div v-if="showEmoji & baseURL == 'https://api-dev.nexties.fr/api'">
                         <span v-if="review.feeling" class="emoji mx-1"
                             @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review)">
-                            <span v-if="review.feeling == 'positive'">😀</span>
-                            <span v-if="review.feeling == 'neutre' || review.feeling == 'neutral'">😐</span>
-                            <span v-if="review.feeling == 'negative'">😕</span>
+                            <!-- have classification -->
+                              <span v-if="review.category && review.category.split(';').length > 0" class="emoji mx-1">
+                                    <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'positive'">😀</span>
+                                    <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'neutre'">😐</span>
+                                    <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'negative'">😕</span>
+                                </span>
+                            <!-- not have classification -->
+                            <span v-else class="emoji mx-1">
+                                <span v-if="review.feeling == 'positive'">😀</span>
+                                <span v-if="review.feeling == 'neutre' || review.feeling == 'neutral'">😐</span>
+                                <span v-if="review.feeling == 'negative'">😕</span>
+                            </span>
+                          
                         </span>
                         <span class="emoji mx-1" v-else>
                             <i class="uil uil-question-circle"
@@ -124,17 +170,33 @@
                         feel = feeling
                     }" />
 
-                    <el-select v-else v-model="category" filterable placeholder="select categories" size="large">
+                    <el-select v-if="modal.type == 'category' || modal.type == 'delete'" v-model="category" filterable placeholder="select categories" size="large">
                         <el-option key="0" label="" value="" />
                         <el-option v-for="(item, index) in categories" :key="index + 1" :label="item.category"
                             :value="item.category" />
                     </el-select>
+                    <!-- <div v-else style="color: orangered;">Delete this category ?</div> -->
+                  
 
                 </div>
-                <div class="mt-5 download__qr_btn">
+                <div class="mt-5 download__qr_btn ">
+
+                      <el-popconfirm v-if="(modal.type == 'category' || modal.type == 'delete') && (modal.action != 'add')" title="Are you sure to delete this?" @confirm="updateReview" placement="top">
+                        <template #reference>
+                              <button 
+                                style="background-color: indianred !important;color: white;margin-inline: 5px;" class="btn__light_secondary" @click="modal.type = 'delete'">
+                                <span ><i class="uil uil-trash"></i> Delete</span>
+                           
+                              </button>
+                        </template>
+                      </el-popconfirm>
+
                     <button class="btn__light_secondary" @click="updateReview">
-                        <i class="uil uil-save"></i> {{ modal.action == "edit" ? 'Save' : 'Add' }}
+                        <span ><i class="uil uil-save"></i> {{ modal.action == "edit" ? 'Save' : 'Add' }}</span>
+                       
                     </button>
+                     
+                   
                 </div>
             </template>
         </ModalComponent>
@@ -149,7 +211,7 @@ import FeelingFeedbackComponent from '@Components/utils/FeelingFeedbackComponent
 import { useFeedbackStore } from '@Stores/feedback.js';
 import { useCompanyStore } from "@Stores/company.js";
 import { useWindowSize } from '@vueuse/core';
-import { ElDatePicker, ElOption, ElSelect, ElTooltip } from 'element-plus';
+import { ElDatePicker, ElOption, ElSelect, ElTooltip,ElPopconfirm } from 'element-plus';
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import { Icon } from '@iconify/vue';
@@ -192,11 +254,62 @@ const modalWidth = computed(() => {
     return gap + 35;
 })
 const buttonRef = ref()
+const buttonRefCateg = ref()
 const tooltipRef = ref()
+const tooltipRefCateg = ref()
 const buttonRef2 = ref()
 const tooltipRef2 = ref()
 const visible = ref(false)
+const visibleCateg = ref(false)
 const visible2 = ref(false)
+ const baseURL = ref(import.meta.env.VITE_APP_API_URL);
+
+const getFeeling = (categ,feel)=>{
+
+      var result=[];
+
+        result['negative']=0;
+        result['neutre']=0;
+        result['positive']=0;
+        var maxKey = '';
+    for (var i = 0; i < categ.length; i++) {
+
+       if (feel[categ[i]] == "negative") {
+        result['negative']++;
+
+       } else if(feel[categ[i]] == "neutre" || feel[categ[i]] == "neutral"){
+        result['neutre']++;
+       }else{
+        result['positive']++;
+       }
+
+    }
+
+
+        const feels=[result['negative'],result['neutre'],result['positive']];
+        const maxValue = Math.max(...feels);
+    
+        if (result['positive'] == maxValue) {
+          
+                maxKey = 'positive';
+        
+        }else{
+            if (result['neutre'] == maxValue && result['negative'] == result['neutre']) {
+                maxKey = 'neutre';
+            } else {
+
+                if (result['neutre'] == maxValue) {
+                    maxKey = 'neutre';
+                } else {
+                    maxKey = 'negative';
+                }
+                 
+            }
+        }
+       
+
+     return maxKey;
+}
 const formatRating = (rating, source) => {
     if (source == 'tripadvisor' && rating * 5 <= 5) {
         rating = rating * 5
@@ -217,7 +330,9 @@ const modal = ref({
 })
 const feel = ref('okay');
 const id = ref('');
+const old_item_category = ref('');
 const selectedReview = ref(null);
+const feeling_categorization = ref(null);
 provide('feeling', feel);
 const category = ref('')
 
@@ -238,12 +353,15 @@ const reloadData = (reviewUpdated, feeling) => {
 
 const updateReview = async () => {
 
+
     let updatedValue = {
         feeling: feel.value,
         confidence: 1,
-        id:id.value
+        review:id.value,
+        feeling_categorization: feeling_categorization.value ? 'yes' : null,
+        category:old_item_category.value
     }
-    selectedReview.value.feeling = feel.value;
+   
 
     try {
         showModal.value = false;
@@ -255,14 +373,84 @@ const updateReview = async () => {
         (response) => {
           console.log(response);
         });
-            // await feedbackStore.updateReview(id.value, updatedValue, response => {
-            //     // Do nothing
-            // })
+
+            if (feeling_categorization.value) {
+                selectedReview.value.classification_feeling[old_item_category.value] = feel.value;
+            } else {
+                selectedReview.value.feeling = feel.value;
+            }
+             
+           
+        
         } else {
-            await feedbackStore.updateReviewCategory(id.value, modal.value.action, selectedReview.value.category, category.value, false, response => {
+           
+            var cur_cat = modal.value.type == 'delete' ? null : category.value;
+            var old_cat = modal.value.type == 'delete' ? category.value : old_item_category.value;
+
+           
+            await feedbackStore.updateReviewCategory(id.value, modal.value.action, old_cat, cur_cat, false, response => {
                 // Do nothing
             })
-            selectedReview.value.category = category.value
+
+            if (modal.value.action == 'add' && !selectedReview.value.category) {
+                selectedReview.value.category = cur_cat;
+                selectedReview.value.classification_feeling=[];
+                selectedReview.value.classification_feeling[old_item_category.value]=null;
+            }
+
+                if (selectedReview.value.category.split(';').length > 0) {
+                      var new_cat='';
+                      for (var i = 0; i < selectedReview.value.category.split(';').length; i++) {
+                    
+                           if (modal.value.type == 'delete') {
+
+                                 if (selectedReview.value.category.split(';')[i] != category.value) {
+                                    if (new_cat != '') {
+
+                                        new_cat = new_cat+';'+selectedReview.value.category.split(';')[i];
+                                
+                                    } else {
+                                        new_cat = selectedReview.value.category.split(';')[i];
+                                       
+                                    }
+                                    
+                                }
+
+                           } else {
+
+                           
+                                    if (new_cat != '') {
+
+                                        if (selectedReview.value.category.split(';')[i] == old_item_category.value) {
+                                            new_cat = new_cat+';'+category.value;
+                                        } else {
+                                            new_cat = new_cat+';'+selectedReview.value.category.split(';')[i];
+                                        }
+                                
+                                    } else {
+                                        
+                                        if (selectedReview.value.category.split(';')[i] == old_item_category.value) {
+                                             new_cat = category.value;
+                                        } else {
+                                            new_cat = selectedReview.value.category.split(';')[i];
+                                        }
+                                       
+                                    }
+                                   
+                       
+                           }
+                        }
+
+
+                    
+                        selectedReview.value.category = new_cat;
+
+                } else {
+                   
+                    selectedReview.value.category = null;
+                }
+              
+
         }
     } catch (error) {
         console.log(error);
@@ -278,6 +466,7 @@ const handleModal = (text, action, icon, type, review) => {
         type: type
     }
 
+  
     editReview(review)
 
 };
