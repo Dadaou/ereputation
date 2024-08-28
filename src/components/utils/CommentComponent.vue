@@ -183,10 +183,11 @@
 
                       <el-popconfirm v-if="(modal.type == 'category' || modal.type == 'delete') && (modal.action != 'add')" title="Are you sure to delete this?" @confirm="updateReview" placement="top">
                         <template #reference>
-                          <button style="background-color: indianred !important;color: white;margin-inline: 5px;"class="btn__light_secondary" @click="modal.type = 'delete'">
-                            <span ><i class="uil uil-trash"></i> Delete</span>
-                       
-                          </button>
+                              <button 
+                                style="background-color: indianred !important;color: white;margin-inline: 5px;" class="btn__light_secondary" @click="modal.type = 'delete'">
+                                <span ><i class="uil uil-trash"></i> Delete</span>
+                           
+                              </button>
                         </template>
                       </el-popconfirm>
 
