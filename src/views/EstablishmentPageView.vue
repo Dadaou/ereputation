@@ -36,7 +36,7 @@
                     loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, language)
                 }" />
             </div>
-            <CommentComponent v-if="reviewsLoading == false" :reviews="visibleData" :allReviews="establishment.reviews"
+            <CommentComponent @update-feeling="updateFeeling" v-if="reviewsLoading == false" :reviews="visibleData" :allReviews="establishment.reviews"
                 :showEmoji="true" :categories="categories" />
             <div v-else role="status"
                 class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
@@ -396,6 +396,40 @@ let reviewFeedbackData = ref({
     feeling: 0
 });
 
+const calculSentimentAnalysis = (_score) =>{
+
+        
+        let rawWidth = _score * 100 / 2
+        let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
+        let feeling = rawWidth > 0 ? 1 : -1
+        let red = 255
+        let green = 255
+        if (feeling == -1) {
+            red = 255
+            green = 255 - ((_score * 100 * 255) / 100)
+        } else {
+            green = 255
+            red = 255 - ((_score * 100 * 255) / 100)
+        }
+
+       let _reviewFeedbackData = {
+            width: width,
+            red: red,
+            green: green,
+            feeling: feeling,
+            score: _score
+        }
+
+        return _reviewFeedbackData;
+}
+
+const updateFeeling = (newFeedbackData) =>{
+   
+    reviewFeedbackData.value = newFeedbackData;
+}
+
+provide('reviewFeedbackData',reviewFeedbackData);
+provide('calculSentimentAnalysis',calculSentimentAnalysis);
 const colors = ref(['#f75842', '#337ecc', '#4682B4', '#6495ED', '#1E90FF', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']);
 
 let chartConfig = reactive({
@@ -643,6 +677,9 @@ watch(selectedStars, () => {
     loadReviews(companyId.value, 1, options.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, language.value);
 });
 
+
+
+
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source, stars, language) => {
     options.value.current = current;
@@ -688,6 +725,13 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         all_items.value.reviews.value = response.data['count'];
         all_items.value.rating.value = response.data['rating'];
         all_items.value.global.value = response.data['global'];
+
+        // calcul sentiment analysis
+       let feeling_score = calculSentimentAnalysis(response.data['feeling_score']);
+       reviewFeedbackData.value = feeling_score;
+
+
+        feedbackLoading.value = false;
     }
 }
 
@@ -715,27 +759,27 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source) => {
     });
 
     if (response.status == 200) {
-        const score = response.data[tag]
-        let rawWidth = score * 100 / 2
-        let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
-        let feeling = rawWidth > 0 ? 1 : -1
-        let red = 255
-        let green = 255
-        if (feeling == -1) {
-            red = 255
-            green = 255 - ((score * 100 * 255) / 100)
-        } else {
-            green = 255
-            red = 255 - ((score * 100 * 255) / 100)
-        }
+        // const score = response.data[tag]
+        // let rawWidth = score * 100 / 2
+        // let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
+        // let feeling = rawWidth > 0 ? 1 : -1
+        // let red = 255
+        // let green = 255
+        // if (feeling == -1) {
+        //     red = 255
+        //     green = 255 - ((score * 100 * 255) / 100)
+        // } else {
+        //     green = 255
+        //     red = 255 - ((score * 100 * 255) / 100)
+        // }
 
-        reviewFeedbackData.value = {
-            width: width,
-            red: red,
-            green: green,
-            feeling: feeling,
-            score: score
-        }
+        // reviewFeedbackData.value = {
+        //     width: width,
+        //     red: red,
+        //     green: green,
+        //     feeling: feeling,
+        //     score: score
+        // }
 
         feedbackLoading.value = false
     }

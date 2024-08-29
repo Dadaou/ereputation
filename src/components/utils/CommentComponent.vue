@@ -55,11 +55,11 @@
                                 <div v-if="categ != ''" class="review__category-container ml-1"
                                   >
                                  
-                                    <span   @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review),category=categ,old_item_category=categ" class="review__category">{{
+                                    <span   @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review,categ),category=categ,old_item_category=categ" class="review__category">{{
                                         categ }}
 
                                           <span v-if="review.classification_feeling[categ]" class="emoji "
-                                                @click.stop="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review),old_item_category=categ,feeling_categorization='yes'">
+                                                @click.stop="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review,categ),old_item_category=categ,feeling_categorization='yes'">
                                                 <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
                                                 <span v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
                                                 <span v-if="review.classification_feeling[categ] == 'negative'">😕</span>
@@ -72,7 +72,7 @@
                                                     buttonRefCateg = e.currentTarget
                                                     visibleCateg = true
                                                 }" @mouseleave="() => visibleCateg = false"
-                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review),old_item_category=categ,feeling_categorization='yes'">
+                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review,categ),old_item_category=categ,feeling_categorization='yes'">
                                                 </i>
                                                 <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg" :virtual-ref="buttonRefCateg" virtual-triggering
                                                     popper-class="singleton-tooltip" placement="top">
@@ -100,7 +100,7 @@
                                     buttonRef = e.currentTarget
                                     visible = true
                                 }" @mouseleave="() => visible = false"
-                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review)">
+                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null)">
                             </i>
                             <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
                                 popper-class="singleton-tooltip" placement="top">
@@ -112,7 +112,7 @@
                     </div>
                     <div v-if="showEmoji & baseURL == 'https://api-dev.nexties.fr/api'">
                         <span v-if="review.feeling" class="emoji mx-1"
-                            @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review)">
+                            @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review,null)">
                             <!-- have classification -->
                               <span v-if="review.category && review.category.split(';').length > 0" class="emoji mx-1">
                                     <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'positive'">😀</span>
@@ -133,7 +133,7 @@
                                     buttonRef2 = e.currentTarget
                                     visible2 = true
                                 }" @mouseleave="() => visible2 = false"
-                                @click="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review)">
+                                @click="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review,null)">
                             </i>
                             <el-tooltip ref="tooltipRef2" :visible="visible2" :virtual-ref="buttonRef2"
                                 virtual-triggering popper-class="singleton-tooltip" placement="top">
@@ -183,8 +183,7 @@
 
                       <el-popconfirm v-if="(modal.type == 'category' || modal.type == 'delete') && (modal.action != 'add')" title="Are you sure to delete this?" @confirm="updateReview" placement="top">
                         <template #reference>
-                              <button 
-                                style="background-color: indianred !important;color: white;margin-inline: 5px;" class="btn__light_secondary" @click="modal.type = 'delete'">
+                              <button style="background-color: indianred !important;color: white;margin-inline: 5px;" class="btn__light_secondary" @click="modal.type = 'delete'">
                                 <span ><i class="uil uil-trash"></i> Delete</span>
                            
                               </button>
@@ -203,7 +202,7 @@
     </div>
 </template>
 <script setup>
-import { ref, provide, computed } from 'vue';
+import { ref, provide, computed,inject } from 'vue';
 import moment from 'moment';
 import { useUserStore } from "@Stores/user.js";
 import ModalComponent from '@Components/utils/ModalComponent.vue';
@@ -242,7 +241,7 @@ const props = defineProps({
     }
 });
 
-const emits = defineEmits(['reloadData']);
+const emits = defineEmits(['reloadData','update-feeling']);
 
 const { width, height } = useWindowSize();
 const userStore = useUserStore();
@@ -331,24 +330,93 @@ const modal = ref({
 const feel = ref('okay');
 const id = ref('');
 const old_item_category = ref('');
+const old_item_feeling = ref('');
 const selectedReview = ref(null);
 const feeling_categorization = ref(null);
 provide('feeling', feel);
-const category = ref('')
+const category = ref('');
+const reviewFeedbackData = inject('reviewFeedbackData');
+const calculSentimentAnalysis = inject('calculSentimentAnalysis');
 
-const editReview = (review) => {
-    feel.value = review.feeling;
-    review.feeling = feel.value;
+const editReview = (review,_category='') => {
+    
+    if (_category != '' && _category != 'null' && _category != null) {
+
+         feel.value = review.classification_feeling[_category];
+        review.feeling = feel.value;
+        id.value = review.id;
+        selectedReview.value = review;
+        category.value = review.category
+
+        if (feel.value == 'neutre') feel.value = 'neutral';
+        
+        old_item_feeling.value = review.feeling;
+
+        showModal.value = true;
+
+    } else {
+
+
     id.value = review.id;
     selectedReview.value = review;
-    category.value = review.category
-
-    if (feel.value == 'neutre') feel.value = 'neutral';
     showModal.value = true;
+
+    }
+   
 }
 
 const reloadData = (reviewUpdated, feeling) => {
     emits('reloadData', reviewUpdated);
+}
+
+// calcul score de feeling
+const calculFeelingScore = (_reviews,_selectedReview,_feeling) =>{
+
+    let sommeFeeling=0;
+    let kFeeling=0;
+
+
+
+    _reviews.forEach(_review =>{
+
+        _review.classifications.forEach(_classification =>{
+
+            if (_classification.feeling != '' && _classification.feeling != null && 
+                _classification.feeling != 'null' && _classification.classification_confidence) {
+
+                    if (_classification.id == _selectedReview.id) {
+                        _classification.feeling = _feeling;
+                    }
+
+                    if (_classification.feeling == 'positive') {
+                       sommeFeeling = sommeFeeling + (_classification.classification_confidence * 1);
+                       kFeeling++;
+
+                    } else {
+
+                        if (_classification.feeling == 'negative') {
+
+                           sommeFeeling = sommeFeeling + (_classification.classification_confidence * -1);
+                            kFeeling++;
+
+                        } else {
+                           sommeFeeling = sommeFeeling + (_classification.classification_confidence * 0);
+                            kFeeling++;
+                        }
+
+                    }
+            }
+        })
+    });
+
+    if (kFeeling > 0) {
+        console.log(sommeFeeling/kFeeling);
+        return sommeFeeling/kFeeling;
+    }else{
+        console.log("zero ",sommeFeeling/kFeeling);
+        return 0;
+    }
+
 }
 
 const updateReview = async () => {
@@ -371,8 +439,16 @@ const updateReview = async () => {
         "/review/feeling/update",
         updatedValue,
         (response) => {
-          console.log(response);
+       
         });
+
+     
+            
+            const feelingScore = calculFeelingScore(props.reviews,selectedReview.value,feel.value);
+            let newFeedbackData=calculSentimentAnalysis(feelingScore);
+            console.log(feelingScore)
+            emits('update-feeling', newFeedbackData);
+          
 
             if (feeling_categorization.value) {
                 selectedReview.value.classification_feeling[old_item_category.value] = feel.value;
@@ -457,7 +533,7 @@ const updateReview = async () => {
     }
 };
 
-const handleModal = (text, action, icon, type, review) => {
+const handleModal = (text, action, icon, type, review,category='') => {
     showModal.value = true
     modal.value = {
         text: text,
@@ -467,7 +543,7 @@ const handleModal = (text, action, icon, type, review) => {
     }
 
   
-    editReview(review)
+    editReview(review,category)
 
 };
 

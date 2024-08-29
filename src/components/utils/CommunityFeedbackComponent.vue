@@ -40,6 +40,7 @@ const props = defineProps({
         }
     }
 });
+console.log(props.reviewFeedbackData)
 </script>
 <style scoped>
 .community__feedback {
