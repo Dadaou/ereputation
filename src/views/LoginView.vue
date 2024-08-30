@@ -71,7 +71,7 @@ const submit = async () => {
     sessionStorage.clear();
     session.clearCache();
     console.log("all cache cleared")
-    session.setItemWithTTL('verification_session', 1000 * 60 * 30, 1000 * 60 * 5);
+    session.setItemWithTTL('verification_session', 1000 * 60 * 30, 1000 * 60 * 60 * 4);
     await userStore.signIn(form.value.email, form.value.password, async (response) => {
         if (response.authenticated) {
             navigateUser(userStore.user)

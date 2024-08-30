@@ -467,7 +467,7 @@ router.beforeEach((to, from, next) => {
 
           if (to.name != 'Login') {
 
-            session.setItemWithTTL('verification_session', 1000 * 60 * 30, 1000 * 60 * 5);
+            session.setItemWithTTL('verification_session', 1000 * 60 * 30, 1000 * 60 * 60 * 4);
             window.scrollTo(0, 0);
             if (to.matched.some((record) => record.meta.requiresAuth)) {
               const isAuthenticated = checkAuthentication()

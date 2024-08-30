@@ -152,6 +152,17 @@
             <div class="col-span-2">
                 <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 comment">{{ review.comment }}</p>
             </div>
+
+             <!-- category on small screen -->
+
+
+              
+
+            <!-- Fin category on small screen -->
+
+
+
+
         </article>
         <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
             <template #content>
