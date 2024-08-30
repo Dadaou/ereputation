@@ -10,6 +10,8 @@ import ProfileLayout from '@Layouts/ProfileLayout.vue'
 import PublicLayout from '../layouts/PublicLayout.vue'
 
 import { useUserStore } from '@Stores/user.js'
+import { useAppStore } from '@Stores/app.js'
+import session from '@Services/session.js';
 
 
 
@@ -450,24 +452,45 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  window.scrollTo(0, 0);
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    const isAuthenticated = checkAuthentication()
-    if (!isAuthenticated) {
-      next({
-        name: 'DiscountAuthentication',
-        params: {
-          tag: to.params.tag
-        },
-        query: { redirect: to.fullPath }
-      })
-      localStorage.setItem('isSellerAuthenticated', false)
+    if (to.name != 'Login' && session.getItemWithTTL('verification_session') == null) {
+      console.log('session expired');
+      useUserStore().signOut();
+    useUserStore().authenticated = false;
+    useAppStore().isLoading = false;
+    // profileLayout
+    if(useUserStore().authenticated === false) next({ name: "Login",query: {
+                    session: 'expired'
+                  }});
+
+      
     } else {
-      next()
+
+          if (to.name != 'Login') {
+
+            session.setItemWithTTL('verification_session', 1000 * 60 * 30, 1000 * 60 * 5);
+            window.scrollTo(0, 0);
+            if (to.matched.some((record) => record.meta.requiresAuth)) {
+              const isAuthenticated = checkAuthentication()
+              if (!isAuthenticated) {
+                next({
+                  name: 'DiscountAuthentication',
+                  params: {
+                    tag: to.params.tag
+                  },
+                  query: { redirect: to.fullPath }
+                })
+                localStorage.setItem('isSellerAuthenticated', false)
+              } else {
+                next()
+              }
+            } else {
+              next()
+            }
+
+          }else next()
+      
+          
     }
-  } else {
-    next()
-  }
 })
 
 function checkAuthentication() {

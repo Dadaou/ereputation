@@ -1,10 +1,7 @@
 /**
  * Définir une valeur dans localStorage avec TTL
- * @param {string} key - Clé du stockage
- * @param {*} value - Valeur à stocker
- * @param {number} ttl - Durée en millisecondes (TTL)
  */
-export function setItemWithTTL(key, value, ttl) {
+const setItemWithTTL=(key, value, ttl)=> {
   const now = new Date();
   const item = {
     value: value,
@@ -15,10 +12,9 @@ export function setItemWithTTL(key, value, ttl) {
 
 /**
  * Obtenir une valeur de localStorage avec TTL
- * @param {string} key - Clé du stockage
- * @returns {*} Valeur stockée ou null si expirée
+ *
  */
-export function getItemWithTTL(key) {
+const getItemWithTTL=(key)=> {
   const itemStr = localStorage.getItem(key);
   if (!itemStr) {
     return null;
@@ -32,10 +28,49 @@ export function getItemWithTTL(key) {
   return item.value;
 }
 
-/**
- * Effacer une valeur du localStorage
- * @param {string} key - Clé du stockage
- */
-export function clearItem(key) {
+
+ // Effacer une valeur du localStorage
+
+const clearItem =(key)=> {
   localStorage.removeItem(key);
+}
+
+const clearCache =()=>{
+
+  // Vérifiez si le navigateur supporte les service workers
+  if ('serviceWorker' in navigator) {
+    // Enregistrez le service worker
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      for (let registration of registrations) {
+        registration.unregister().then(function(success) {
+          if (success) {
+            console.log('Service worker désenregistré avec succès.');
+          }
+        }).catch(function(error) {
+          console.error('Erreur lors du désenregistrement du service worker:', error);
+        });
+      }
+    });
+
+    // Effacez le cache associé aux service workers
+    if ('caches' in window) {
+      caches.keys().then(function(cacheNames) {
+        cacheNames.forEach(function(cacheName) {
+          caches.delete(cacheName).then(function(success) {
+            if (success) {
+              console.log('Cache effacé:', cacheName);
+            }
+          });
+        });
+      });
+    }
+  }
+
+}
+
+export default {
+  clearItem,
+  getItemWithTTL,
+  setItemWithTTL,
+  clearCache
 }

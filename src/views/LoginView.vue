@@ -21,13 +21,14 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, defineAsyncComponent } from 'vue'
+import { ref, watch, onMounted,onBeforeUnmount, onBeforeMount,defineAsyncComponent } from 'vue'
 import { useUserStore } from "@Stores/user.js"
 import { useAppStore } from "@Stores/app.js"
-import { useRouter } from "vue-router"
+import { useRouter,useRoute } from "vue-router"
 import { useWindowSize } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
+import session from '@Services/session.js';
 
 
 const SpinnerComponent = defineAsyncComponent(() =>
@@ -38,6 +39,7 @@ const AlertComponent = defineAsyncComponent(() =>
     import('@Components/utils/AlertComponent.vue')
 )
 const router = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
 const appStore = useAppStore();
 
@@ -65,6 +67,11 @@ const showSpinner = ref(false)
 
 const submit = async () => {
     showSpinner.value = true;
+    localStorage.clear();
+    sessionStorage.clear();
+    session.clearCache();
+    console.log("all cache cleared")
+    session.setItemWithTTL('verification_session', 1000 * 60 * 30, 1000 * 60 * 5);
     await userStore.signIn(form.value.email, form.value.password, async (response) => {
         if (response.authenticated) {
             navigateUser(userStore.user)
@@ -104,9 +111,23 @@ const navigateUser = (user) => {
 const { width, height } = useWindowSize();
 const form__ref = ref(null)
 
+
 onMounted(() => {
+ 
+    if (session.getItemWithTTL('verification_session') == null && route.query.session == 'expired') {
+            isError.value = true;
+            notification.value.message = "Oops! your session is expired";
+            notification.value.type = "error";
+            console.log('expiré')
+           
+    }
     if (width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');
 });
+
+
+// onBeforeMount(()=>{
+//     appStore.mustRefresh = false;
+// })
 
 watch([width, isError], () => {
     if (width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');
