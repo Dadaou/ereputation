@@ -458,9 +458,7 @@ router.beforeEach((to, from, next) => {
     useUserStore().authenticated = false;
     useAppStore().isLoading = false;
     // profileLayout
-    if(useUserStore().authenticated === false) next({ name: "Login",query: {
-                    session: 'expired'
-                  }});
+    if(useUserStore().authenticated === false) next({ name: "Login"});
 
       
     } else {

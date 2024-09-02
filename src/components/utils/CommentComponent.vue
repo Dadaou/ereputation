@@ -156,70 +156,7 @@
            
 
 
-
-
-        </article>
-
-
-
-
-
-
-
-
-
-        <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
-            <template #content>
-                <div class="modal__header">
-                    <div class="modal__title">
-                        <h3 class="font-semibold text-gray-900 dark:text-white">
-                            <i class="uil uil-edit"></i> {{ modal.text }}
-                        </h3>
-                    </div>
-                    <div class="modal__close">
-                        <i class="uil uil-times-circle" @click="showModal = false"></i>
-                    </div>
-                </div>
-                <div class="mb-6 feedback__rating">
-                    <FeelingFeedbackComponent v-if="modal.type == 'feeling'" @updateValue="(feeling) => {
-                        feel = feeling
-                    }" />
-
-                    <el-select v-if="modal.type == 'category' || modal.type == 'delete'" v-model="category" filterable placeholder="select categories" size="large">
-                        <el-option key="0" label="" value="" />
-                        <el-option v-for="(item, index) in categories" :key="index + 1" :label="item.category"
-                            :value="item.category" />
-                    </el-select>
-                    <!-- <div v-else style="color: orangered;">Delete this category ?</div> -->
-                  
-
-                </div>
-                <div class="mt-5 download__qr_btn ">
-
-                      <el-popconfirm v-if="(modal.type == 'category' || modal.type == 'delete') && (modal.action != 'add')" title="Are you sure to delete this?" @confirm="updateReview" placement="top">
-                        <template #reference>
-                              <button style="background-color: indianred !important;color: white;margin-inline: 5px;" class="btn__light_secondary" @click="modal.type = 'delete'">
-                                <span ><i class="uil uil-trash"></i> Delete</span>
-                           
-                              </button>
-                        </template>
-                      </el-popconfirm>
-
-                    <button class="btn__light_secondary" @click="updateReview">
-                        <span ><i class="uil uil-save"></i> {{ modal.action == "edit" ? 'Save' : 'Add' }}</span>
-                       
-                    </button>
-                     
-                   
-                </div>
-            </template>
-        </ModalComponent>
-    </div>
-
-
-
-
-
+            
               <!-- category on small screen -->
 
         <div class="review__right_mobile mt-2">
@@ -296,6 +233,71 @@
             </div>
         </div>
             <!-- Fin category on small screen -->
+
+
+
+        </article>
+
+
+
+
+
+
+
+
+
+        <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
+            <template #content>
+                <div class="modal__header">
+                    <div class="modal__title">
+                        <h3 class="font-semibold text-gray-900 dark:text-white">
+                            <i class="uil uil-edit"></i> {{ modal.text }}
+                        </h3>
+                    </div>
+                    <div class="modal__close">
+                        <i class="uil uil-times-circle" @click="showModal = false"></i>
+                    </div>
+                </div>
+                <div class="mb-6 feedback__rating">
+                    <FeelingFeedbackComponent v-if="modal.type == 'feeling'" @updateValue="(feeling) => {
+                        feel = feeling
+                    }" />
+
+                    <el-select v-if="modal.type == 'category' || modal.type == 'delete'" v-model="category" filterable placeholder="select categories" size="large">
+                        <el-option key="0" label="" value="" />
+                        <el-option v-for="(item, index) in categories" :key="index + 1" :label="item.category"
+                            :value="item.category" />
+                    </el-select>
+                    <!-- <div v-else style="color: orangered;">Delete this category ?</div> -->
+                  
+
+                </div>
+                <div class="mt-5 download__qr_btn ">
+
+                      <el-popconfirm v-if="(modal.type == 'category' || modal.type == 'delete') && (modal.action != 'add')" title="Are you sure to delete this?" @confirm="updateReview" placement="top">
+                        <template #reference>
+                              <button style="background-color: indianred !important;color: white;margin-inline: 5px;" class="btn__light_secondary" @click="modal.type = 'delete'">
+                                <span ><i class="uil uil-trash"></i> Delete</span>
+                           
+                              </button>
+                        </template>
+                      </el-popconfirm>
+
+                    <button class="btn__light_secondary" @click="updateReview">
+                        <span ><i class="uil uil-save"></i> {{ modal.action == "edit" ? 'Save' : 'Add' }}</span>
+                       
+                    </button>
+                     
+                   
+                </div>
+            </template>
+        </ModalComponent>
+    </div>
+
+
+
+
+
 
 
 

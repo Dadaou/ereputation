@@ -67,9 +67,9 @@ const showSpinner = ref(false)
 
 const submit = async () => {
     showSpinner.value = true;
-    localStorage.clear();
-    sessionStorage.clear();
-    session.clearCache();
+    // localStorage.clear();
+    // sessionStorage.clear();
+    // session.clearCache();
     console.log("all cache cleared")
     session.setItemWithTTL('verification_session', 1000 * 60 * 30, 1000 * 60 * 60 * 4);
     await userStore.signIn(form.value.email, form.value.password, async (response) => {
