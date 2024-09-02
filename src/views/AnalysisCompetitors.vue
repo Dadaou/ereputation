@@ -29,7 +29,7 @@
                     <th scope="col" class="px-6 py-3" @click="toggleSort('average_score')">
                         <span v-if="sortBy === 'average_score' && sortAsc" class="arrow-up">&#9650;</span>
                         <span v-if="sortBy === 'average_score' && !sortAsc" class="arrow-down">&#9660;</span>
-                        Current score
+                        Current Global score
                     </th>
                 </tr>
             </thead>
