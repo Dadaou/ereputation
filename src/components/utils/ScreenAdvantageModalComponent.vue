@@ -1,5 +1,5 @@
 <template>
-  <ModalComponent :showModal="showModal" @close="close" :width="modalWidth">
+  <ModalComponent :showModal="showModal" @close="close">
     <template #content>
       <div class="modal__header">
         <div class="modal__title">
@@ -123,7 +123,7 @@
  
       </div>
 
-          <div class="grid gap-6 mb-6 md:grid-cols-7 justify-center">
+          <div class="grid gap-6 mb-6 md:grid-cols-7 sm:grid-cols-3 justify-center">
 
               <div>
                <el-button 

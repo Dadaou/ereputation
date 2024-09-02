@@ -1,29 +1,29 @@
 <template>
-  <div class="security__header border__bottom">
-  </div>
-  <el-input v-model="search" size="small" placeholder="Type to search" class="search" />
-  <div class="mt-5 erep_table table__container">
-    <el-table :data="filterTableData" class="responsive-table" :row-class-name="rowClassName" style="width: 100%">
-      <el-table-column label="Name" fixed prop="name" width="188" />
-      <el-table-column label="Establishment" prop="establishment_name" width="190" />
-      <el-table-column label="Amount" prop="amount" align="center" width="100" />
-      <el-table-column label="Category" prop="category" width="120" />
-      <el-table-column label="Code" prop="code" width="85" />
-  <!--   <el-table-column label="Metric" prop="metric" width="100" />
-      <el-table-column label="Scope" prop="scope" width="100" />
-       <el-table-column label="Validity" prop="validity" align="center" width="100" /> -->
-      <el-table-column label="Limit" prop="advantageLimit" align="center" width="70" />
-      <el-table-column label="Received" prop="received" align="center" width="90" />
-      <el-table-column label="Used" prop="used" align="center" width="80" />
-      <el-table-column label="Expired At" width="110">
-        <template #default="scope">
+  <div class="mt-5 table__container">
+     <div class="table-description" style="margin-bottom: 16px;">
+      <p></p>
+      <div>
+        <el-input v-model="searchSent" size="small" placeholder="Type to search" class="input_searchs"/>
+      </div>
+    </div>
+    <el-table :data="filterTableData" class="responsive-table">
+      <el-table-column label="Name" prop="name" align="center" style="width: 5%; min-width: 200px;" />
+      <el-table-column label="Establishment" prop="establishment_name" align="center" style="width: 5%; min-width: 400px;" />
+      <el-table-column label="Amount" prop="amount" align="center" style="width: 10%; min-width: 4%;" />
+      <el-table-column label="Category" prop="category" align="center" style="width: 20%; min-width: 100px;" />
+      <el-table-column label="Code" prop="code" align="center" style="width: 5%; min-width: 200px;" />
+      <el-table-column label="Limit" prop="advantageLimit" align="center" style="width: 5%; min-width: 400px;" />
+      <el-table-column label="Received" prop="received" align="center" style="width: 10%; min-width: 4%;" />
+      <el-table-column label="Used" prop="used" align="center" style="width: 20%; min-width: 100px;" />
+      <el-table-column label="Expired At" align="center" style="width: 5%; min-width: 200px;" >
+                <template #default="scope">
           <span :class="{'expired-date': isExpired(scope.row.expired_at)}">
       {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
          </span>
         </template>
       </el-table-column>
-      <el-table-column label="Enable" align="center" width="80">
-        <template #default="scope">
+      <el-table-column label="Enable" align="center" style="width: 5%; min-width: 400px;">
+       <template #default="scope">
          <el-button 
           :class="{'enabled-button': scope.row.enable}" 
           size="small" 
@@ -35,9 +35,12 @@
         </el-button>
       </template>
       </el-table-column>
+   
 
-      <el-table-column label="Actions" width="200">
+      <el-table-column label="Actions" style="width: 20%; min-width: 200px;text-align: center;" align="right">
+  
 
+       
         <template #default="scope">
           <el-tooltip placement="top">
             <template #content> Boost this advantage </template>
@@ -51,10 +54,17 @@
             </template>
           </el-popconfirm>
         </template>
+        
+
       </el-table-column>
+
     </el-table>
+
   </div>
+
 </template>
+
+
 
 <script setup>
 import { computed, ref, inject, watchEffect } from 'vue';
@@ -151,6 +161,7 @@ const isExpired = (date) => {
   color: red;
 }
 
+
 button {
   border: none;
   cursor: pointer;
@@ -164,97 +175,49 @@ button i.uil-trash-alt {
 button i.uil-edit {
   color: var(--color-danger) !important;
 }
-
-.security__header {
+.table-description {
   display: flex;
   justify-content: space-between;
 }
 
-.security__header h4 {
-  color: var(--color-bg2);
-  font-size: 19px;
-  font-weight: bold;
+.table-description p {
+  font-size: 14px;
+  color: grey;
+  font-weight: 500;
 }
 
-.security__header p {
-  font-size: 15px;
-  margin: 8px 0;
-}
-
-
-
-.table__container {
-  overflow-x: auto;
-}
-
-.responsive-table .el-table__header-wrapper,
-.responsive-table .el-table__body-wrapper {
-  display: block;
-  overflow-x: auto;
-  white-space: nowrap;
-}
-
-:deep(.el-table__row.red-background .el-table-fixed-column--left),
-:deep(.el-table__row.red-background) {
-  color: black;
-  background-color: rgb(255, 216, 216) !important;
-}
-
-:deep(.el-table__row.orange-background .el-table-fixed-column--left),
-:deep(.el-table__row.orange-background) {
-  color: black;
-  background-color: rgb(255, 226, 193) !important;
-}
-
-:deep(.el-table__row.red-background.hover-row),
-:deep(.el-table__row.red-background.hover-row .el-table__cell) {
-  background-color: rgb(252, 164, 157) !important;
-}
-
-:deep(.el-table__row.orange-background.hover-row),
-:deep(.el-table__row.orange-background.hover-row .el-table__cell) {
-  background-color: rgb(247, 183, 120) !important;
-}
-
-@media screen and (max-width: 800px) {
-  .table__container {
-    width: 96%;
-
-  }
-
-  .responsive-table .el-table__header-wrapper,
-  .responsive-table .el-table__body-wrapper {
-    width: 100%;
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-
-  .el-table-column {
-    min-width: 100px;
-  }
-}
-
-.search {
-  display: flex;
-  max-width: 150px;
-  float: right;
+.responsive-table {
+  width: 100%
 }
 
 @media screen and (max-width: 768px) {
-  .search {
-    display: flex;
-    max-width: 220px;
-    float: right;
+  .responsive-table {
+    width: 85%;
+  }
+  .input_searchs,
+  .input_search {
+    display: inline;
+    margin-right: 7rem; 
+  }
+}
+
+@media screen and (max-width: 468px) {
+  .input_search {
+    display: inline;
+    margin-right: 3.5rem; 
+  }
+
+  .input_searchs {
+    display: inline;
+    margin-right: 9rem; 
   }
 
   .el-table--fit {
     font-size: 11px !important;
   }
 
-  .table__container {
-    width: 95%;
-
+  .table-description p {
+    font-size: 12px;
   }
 }
 </style>

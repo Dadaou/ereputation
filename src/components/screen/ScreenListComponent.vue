@@ -7,13 +7,13 @@
       </div>
     </div>
     <el-table :data="filterTableData" class="responsive-table">
-      <el-table-column label="Name" prop="name" style="width: 5%; min-width: 200px;" />
-      <el-table-column label="Establishment" prop="establishment_name" style="width: 5%; min-width: 400px;" />
-      <el-table-column label="Screen Template" prop="screentemplate_name" style="width: 10%; min-width: 4%;" />
+      <el-table-column label="Name" prop="name" align="center" style="width: 5%; min-width: 200px;" />
+      <el-table-column label="Establishment" prop="establishment_name" align="center" style="width: 5%; min-width: 400px;" />
+      <el-table-column label="Screen Template" prop="screentemplate_name" align="center" style="width: 10%; min-width: 4%;" />
       <el-table-column label="Advantages" prop="advantage_names" align="center" style="width: 20%; min-width: 100px;" />
 
 
-      <el-table-column label="Actions" style="width: 20%; min-width: 200px;">
+      <el-table-column label="Actions" style="width: 20%; min-width: 200px;text-align: center;" align="right">
   
 
        
@@ -42,14 +42,18 @@
       </el-table-column>
 
     </el-table>
-
-  </div>
-
-     <ScreenAdvantageModalComponent 
+ 
+      <ScreenAdvantageModalComponent 
       :screen="screen_id"
       :advantages="advantages"
       :showModal="showModal" @close="showModal = false"
+      class="responsive-modal"
        />
+  
+ 
+  </div>
+
+ 
 </template>
 
 
@@ -183,6 +187,10 @@ button i.uil-edit {
   width: 100%
 }
 
+.responsive-modal {
+  width: 100%
+}
+
 @media screen and (max-width: 768px) {
   .responsive-table {
     width: 85%;
@@ -212,5 +220,14 @@ button i.uil-edit {
   .table-description p {
     font-size: 12px;
   }
+}
+
+@media screen and (max-width: 768px) {
+  .responsive-modal {
+    width: 50%;
+    height: 20%;
+    overflow-y: scroll;
+  }
+
 }
 </style>
