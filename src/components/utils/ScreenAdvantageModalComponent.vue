@@ -28,26 +28,28 @@
           </el-select>
         </div>
 
-        <div>
+          <div>
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                Date from
+                <!-- <span>*</span> -->
+                <!-- <Tooltip text="To use before the [date]" /> -->
+            </label>
+            <el-date-picker v-model="date_from" :size="'large'" />
+          </div>
+
+<!--         <div>
           <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
             <span>*</span></label>
           <input type="text" id="first_name" v-model="category"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-        </div>
+        </div> -->
 
 
       </div>
 
       <div class="grid gap-6 mb-6 md:grid-cols-2">
 
-          <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Date from
-                    <!-- <span>*</span> -->
-                    <!-- <Tooltip text="To use before the [date]" /> -->
-                </label>
-                <el-date-picker v-model="date_from" :size="'large'" />
-          </div>
+
 
             <div>
                 <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -58,11 +60,6 @@
                 <el-date-picker v-model="date_to" :size="'large'" />
             </div>
 
- 
-      </div>
-
-      <div class="grid gap-6 mb-6 md:grid-cols-3">
-
             <div>
               <label for="hour_from"
                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hour From
@@ -70,6 +67,13 @@
               <input type="number" id="hour_from" v-model="hour_from"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
             </div>
+
+ 
+      </div>
+
+      <div class="grid gap-6 mb-6 md:grid-cols-2">
+
+
 
             <div>
                   <label for="minute_from"
