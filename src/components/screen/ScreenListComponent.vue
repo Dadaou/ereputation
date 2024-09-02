@@ -43,17 +43,17 @@
 
     </el-table>
  
-      <ScreenAdvantageModalComponent 
+
+  
+ 
+  </div>
+
+       <ScreenAdvantageModalComponent 
       :screen="screen_id"
       :advantages="advantages"
       :showModal="showModal" @close="showModal = false"
       class="responsive-modal"
        />
-  
- 
-  </div>
-
- 
 </template>
 
 
