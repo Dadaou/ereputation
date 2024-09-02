@@ -114,13 +114,13 @@ const form__ref = ref(null)
 
 onMounted(() => {
  
-    if (session.getItemWithTTL('verification_session') == null && route.query.session == 'expired') {
-            isError.value = true;
-            notification.value.message = "Oops! your session is expired";
-            notification.value.type = "error";
-            console.log('expiré')
+    // if (session.getItemWithTTL('verification_session') == null && route.query.session == 'expired') {
+    //         // isError.value = true;
+    //         // notification.value.message = "Oops! your session is expired";
+    //         // notification.value.type = "error";
+         
            
-    }
+    // }
     if (width.value <= 1024 && isError.value == true) form__ref.value.classList.add('custom__container');
 });
 

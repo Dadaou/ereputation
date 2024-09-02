@@ -286,12 +286,19 @@ const route = useRoute();
 const close = () => {
   emits('close')
   if (advantage_screens.value) {updateData()}
+  resetForm(advantage_screen)
   
 }
 
 const handleEnable = (days,adv_screen)=>{
  
   adv_screen[days]=true;
+   console.log(adv_screen)
+}
+
+const handleDisable = (days,adv_screen)=>{
+ 
+  adv_screen[days]=false;
    console.log(adv_screen)
 }
 

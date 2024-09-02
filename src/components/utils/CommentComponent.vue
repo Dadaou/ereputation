@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <div class="review__right mt-2">
-                    <div style="height: 20px;" v-if="showCategory">
+                    <div style="height: 20px;" v-if="showCategory" class="category_desktop">
                         <div v-if="review.category && review.category.split(';').length > 0" class="inline-flex">
 
                              
@@ -153,17 +153,21 @@
                 <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 comment">{{ review.comment }}</p>
             </div>
 
-             <!-- category on small screen -->
-
-
-              
-
-            <!-- Fin category on small screen -->
+           
 
 
 
 
         </article>
+
+
+
+
+
+
+
+
+
         <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
             <template #content>
                 <div class="modal__header">
@@ -211,6 +215,95 @@
             </template>
         </ModalComponent>
     </div>
+
+
+
+
+
+              <!-- category on small screen -->
+
+        <div class="review__right_mobile mt-2">
+            <div v-if="showCategory" class="category_container_mobile" >
+               <div  v-if="review.category && review.category.split(';').length > 0" class="inline-flex category_mobile">
+
+                             
+                            <!-- category -->
+                            <div v-for="categ in review.category.split(';')" :key="categ">
+
+                                <div v-if="categ != ''" class="review__category-container ml-1"
+                                  >
+                                 
+                                    <span   @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review,categ),category=categ,old_item_category=categ" class="review__category">{{
+                                        categ }}
+
+                                          <span v-if="review.classification_feeling[categ]" class="emoji "
+                                                @click.stop="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review,categ),old_item_category=categ,feeling_categorization='yes'">
+                                                <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
+                                                <span v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
+                                                <span v-if="review.classification_feeling[categ] == 'negative'">😕</span>
+                                          </span>
+
+                                          <span v-else class="emoji ">
+                                               
+                                                <i class="uil uil-question-circle"
+                                                style="color: var(--color-warning); cursor: pointer" @mouseover="(e) => {
+                                                    buttonRefCateg = e.currentTarget
+                                                    visibleCateg = true
+                                                }" @mouseleave="() => visibleCateg = false"
+                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review,categ),old_item_category=categ,feeling_categorization='yes'">
+                                                </i>
+                                                <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg" :virtual-ref="buttonRefCateg" virtual-triggering
+                                                    popper-class="singleton-tooltip" placement="top">
+                                                    <template #content>
+                                                        <span>Click to add review feeling</span>
+                                                    </template>
+                                                </el-tooltip>
+                                               
+                                          </span>
+                                          
+
+
+                                    </span>
+
+                                </div>
+                            </div>
+
+                         
+
+                </div>
+
+                <!-- new category -->
+
+                         <div class="review__category-container" v-else>
+                            <i class="uil uil-question-circle"
+                                style="color: var(--color-warning); font-size: 18px; cursor: pointer" @mouseover="(e) => {
+                                    buttonRef = e.currentTarget
+                                    visible = true
+                                }" @mouseleave="() => visible = false"
+                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null)">
+                            </i>
+                            <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
+                                popper-class="singleton-tooltip" placement="top">
+                                <template #content>
+                                    <span>Click to add category</span>
+                                </template>
+                            </el-tooltip>
+                        </div>
+
+                <!-- end new category -->
+
+
+            </div>
+        </div>
+            <!-- Fin category on small screen -->
+
+
+
+
+
+
+
+
 </template>
 <script setup>
 import { ref, provide, computed,inject } from 'vue';
@@ -560,6 +653,41 @@ const handleModal = (text, action, icon, type, review,category='') => {
 
 </script>
 <style scoped>
+
+.review_right_mobile{
+        width:97%;
+    overflow-x:scroll ;
+    white-space:nowrap;
+    justify-content: right;
+}
+.category_container_mobile{
+    width:98%;
+    overflow:scroll ;
+    white-space:nowrap;
+    overflow-wrap: scroll;
+    word-wrap: scroll;
+    display: none;
+}
+
+.category_mobile{
+    width:100%
+}
+@media screen and (max-width: 975px) {
+    .category_container_mobile{
+
+        display: block;
+
+    }
+
+    .category_desktop{
+        display: none;
+    }
+    .category_mobile{
+/*        justify-content: right;*/
+        margin-bottom: 10px;
+    }
+
+}
 .reviews__content a {
     text-decoration: none;
     border-bottom: none;

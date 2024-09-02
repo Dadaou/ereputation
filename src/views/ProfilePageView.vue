@@ -27,7 +27,7 @@
           </li>
           <li>
             <router-link :to="{ name: 'Screen' }" active-class="active"  @click.native="selectMenu('My Screens')">
-              <i class="uil uil-presentation"></i> <span>My Screen</span>
+              <i class="uil uil-presentation"></i> <span>My Screens</span>
             </router-link>
           </li>
           <li>
@@ -84,7 +84,7 @@ const menuMap = {
   "Contact": "Contacts",
   "Discount_coupons": "Discount coupons",
   "Parameters": "Parameters",
-  "Screen": "My Screen"
+  "Screen": "My Screens"
 };
 
 const toggleMenu = () => {
@@ -161,7 +161,7 @@ const page = computed(() => {
     },
     "Screen": {
       title1: "",
-      title2: "My Screen",
+      title2: "My Screens",
       icon: "uil-screen",
     }
   }
