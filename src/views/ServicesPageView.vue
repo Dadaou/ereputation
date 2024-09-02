@@ -8,7 +8,7 @@
       </div> -->
       <div class="reviews__content">
         <UnitChartComponent :category="category" :plotdata="unitData" :legendData="legendUnitData"
-          :chartLoading="chartUnitLoading" />
+          :chartLoading="chartUnitLoading" :chart-id="category"/>
       </div>
      <!--  <div class="head">
         <div class="app__title">
@@ -199,7 +199,6 @@ const getUnitServices = async (tag) => {
     })
     unitByCategory.value = units;
     categories.value = Object.keys(units)
-    console.log(categories.value)
       // Définir la valeur initiale de activeName après avoir récupéré les catégories
     if (categories.value.includes('Points of sale')) {
       activeName.value = 'Points of sale'

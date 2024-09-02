@@ -22,7 +22,7 @@
     <GroupedBarChart  class="chart" :plot-data="plotdata" x-key="date" :width="custom_width" :height="200" :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label=""
     :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']" :y-tick-format="d => `${d}`"/>
   </div>
-  <div class="colLarge" id="colLarge">
+  <div class="colLarge" :id="`colLarge-${chartId}`">
     <div class="boxLarge">
       <GroupedBarChart  class="chart" :plot-data="plotdata" x-key="date" :width="custom_width" :height="200" :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label=""
     :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']" :y-tick-format="d => `${d}`"/>
@@ -42,23 +42,26 @@ const SpinnerComponent = defineAsyncComponent(() =>
 );
 
 const props = defineProps({
-	category:{
-		type: String,
-		required: true
-	},
-	plotdata:{
-		type: Array,
-		required: true
-	},
-	legendData: {
-		type: Array,
-		required: true
-	},
-	chartLoading: {
-		type: Boolean,
-		default: false 
-	}
+  category:{
+    type: String,
+    required: true
+  },
+  plotdata:{
+    type: Array,
+    required: true
+  },
+  legendData: {
+    type: Array,
+    required: true
+  },
+  chartLoading: {
+    type: Boolean,
+    default: false 
+  },
+  chartId: String
 });
+
+const isProcessing = ref(false);
 
 const isMobile = ref(window.innerWidth <= 768);
 window.addEventListener('resize', () => {
@@ -74,16 +77,23 @@ const custom_width = computed(() => {
 
   return width;
 });
+
 watch(() => props.plotdata, () => {
+    if (isProcessing.value) {
+      return;
+    }
+
+    isProcessing.value = true;
     nextTick(() => {
-        const colLargeElement = document.getElementById("colLarge");
-        if (colLargeElement) {
-            const div = document.getElementsByClassName("chart")[0].children;
-            const widthp = parseInt(div[0].getAttribute("width"));
-            const longueur = widthp * props.plotdata.length;
-            colLargeElement.scrollLeft += longueur;
-            colLargeElement.scrollLeft = longueur;
-        }
+      const colLargeElement = document.getElementById(`colLarge-${props.chartId}`);
+      if (colLargeElement) {
+        const div = document.getElementsByClassName("chart")[0].children;
+        const widthp = parseInt(div[0].getAttribute("width"));
+        const longueur = widthp * props.plotdata.length;
+        colLargeElement.scrollLeft += longueur;
+        colLargeElement.scrollLeft = longueur;
+      }
+      isProcessing.value = false;
     });
 }, { immediate: true, deep: true });
 
