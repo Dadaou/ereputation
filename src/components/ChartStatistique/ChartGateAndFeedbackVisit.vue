@@ -185,7 +185,7 @@ export default {
 .chart-container {
     width: 100%;
     max-width: 100%;
-    overflow-x: scroll;
+    
 }
 
 /* .chart-container {
