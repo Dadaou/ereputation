@@ -133,7 +133,7 @@
                    <i 
                     :class="advantage_screen.d0 ? 'uil uil-check-square' : 'uil uil-square'" 
                     >
-                   </i> d0
+                   </i> Monday
                 </el-button>
               </div>
 
@@ -145,7 +145,7 @@
                    <i 
                     :class="advantage_screen.d1 ? 'uil uil-check-square' : 'uil uil-square'" 
                     >
-                   </i> d1
+                   </i> Tuesday
                 </el-button>
               </div>
 
@@ -157,7 +157,7 @@
                    <i 
                     :class="advantage_screen.d2 ? 'uil uil-check-square' : 'uil uil-square'" 
                     >
-                   </i> d2
+                   </i> Wednesday
                 </el-button>
               </div>
 
@@ -169,7 +169,7 @@
                    <i 
                     :class="advantage_screen.d3 ? 'uil uil-check-square' : 'uil uil-square'" 
                     >
-                   </i> d3
+                   </i> Thursday
                 </el-button>
               </div>
 
@@ -181,7 +181,7 @@
                    <i 
                     :class="advantage_screen.d4 ? 'uil uil-check-square' : 'uil uil-square'" 
                     >
-                   </i> d4
+                   </i> Friday
                 </el-button>
               </div>
 
@@ -193,7 +193,7 @@
                    <i 
                     :class="advantage_screen.d5 ? 'uil uil-check-square' : 'uil uil-square'" 
                     >
-                   </i> d5
+                   </i> Saturday
                 </el-button>
               </div>
 
@@ -205,7 +205,7 @@
                    <i 
                     :class="advantage_screen.d6 ? 'uil uil-check-square' : 'uil uil-square'" 
                     >
-                   </i> d6
+                   </i> Sunday
                 </el-button>
               </div>
  
