@@ -452,18 +452,21 @@ const salesAnalysis = ref(null)
 const ratingsCondition1 = computed(() => {
     let data = ratings.value;
     data = data.filter(value => value.avg_rating >= 4)
+    console.log('>= 4',ratings.value)
     return data
 })
 
 const ratingsCondition2 = computed(() => {
     let data = ratings.value;
     data = data.filter(value => value.avg_rating < 4 && value.avg_rating >= 3)
+    console.log('< 4 && >= 3',ratings.value)
     return data
 })
 
 const ratingsCondition3 = computed(() => {
     let data = ratings.value;
     data = data.filter(value => value.avg_rating < 3)
+    console.log('< 3',ratings.value)
     return data
 })
 
@@ -477,6 +480,7 @@ appStore.setCurrentPage({
 const ratingsCondition4 = computed(() => {
     let data = ratings.value;
     data = data.filter(value => value.avg_rating < 4)
+        console.log('< 4',data)
     return data
 })
 const starParams = route.query.star;
@@ -741,7 +745,8 @@ const transformData = (chartData) => {
 
     let legends = []
     ratings.value = []
-
+    let label_category=[];
+   
     datasets.forEach((category, index) => {
         const { avg_score, feeling, scores, data, label } = category
         // const color = services.generateColor(label)
@@ -749,6 +754,7 @@ const transformData = (chartData) => {
         const allScoresZero = scores.every(score => score === 0)
 
         if (!allScoresZero) {
+      
             plotData1.datasets.push({
                 label: label,
                 backgroundColor: color,
@@ -769,6 +775,8 @@ const transformData = (chartData) => {
                 avg_rating: calculateAvg(data),
                 color: color
             })
+
+            label_category.push(label);
         }
 
         if (avg_score != 0) {
@@ -803,6 +811,9 @@ const transformData = (chartData) => {
             });
         });
     }
+    if (label_category.length <= 0) label_category = categoryFilters.value;
+
+    loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, label_category, language.value)
 }
 
 
@@ -854,7 +865,7 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     reviews_loader.value = true;
 
     let apiBase = '/review/by_establishment';
-    let apiParams = `tag=${tag}&page=${page}&limit=${limit}`;
+    let apiParams = `tag=${tag}&page=${page}&limit=${limit}&platform=${'all'}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
@@ -928,7 +939,7 @@ onBeforeMount(async () => {
     })
     await loadCategories(companyId)
     await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
-    await loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value)
+    //await loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value)
     appStore.isLoading = false;
 
 });
