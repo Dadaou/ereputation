@@ -289,7 +289,7 @@ const router = useRouter();
 const route = useRoute();
 const close = () => {
   emits('close')
-  if (advantage_screens.value) {updateData()}
+  
   resetForm(advantage_screen)
   
 }
@@ -347,7 +347,7 @@ const updateData = () => {
     establishment_name: props.screen.establishment_name,
     screentemplate_name: props.screen.screentemplate_name
   }
-
+ 
   screens.value.forEach((event, index) => {
     if (event.id == new_screen.id) screens.value[index] = new_screen;
   })
@@ -428,7 +428,7 @@ const submit = async () => {
               "secondeFrom": seconde_from.value != '' ? parseInt(seconde_from.value) :null,
               "secondeTo": seconde_to.value != '' ? parseInt(seconde_to.value)  : null
               }
-                  console.log(_advantage_screen);
+                
 
                 const response = await new Promise((resolve) => {
                   services.createRecord('advantage_screens', _advantage_screen, (response) => {
@@ -441,11 +441,12 @@ const submit = async () => {
                    
                      // console.log(response.data)
                      getAdvantageNames(response.data);
-                     console.log(advantage_screens.value)
+                   
                   
                     }
 
                     if (response.status === 201 && i == advantage.value.length - 1) {
+                      if (advantage_screens.value) {updateData()}
                       resetForm(advantage_screen)
               
                       ElMessage({

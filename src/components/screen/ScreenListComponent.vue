@@ -3,7 +3,7 @@
      <div class="table-description" style="margin-bottom: 16px;">
       <p></p>
       <div>
-        <el-input v-model="searchSent" size="small" placeholder="Type to search" class="input_searchs"/>
+        <el-input v-model="search" size="small" placeholder="Type to search" class="input_searchs"/>
       </div>
     </div>
     <el-table :data="filterTableData" class="responsive-table">
