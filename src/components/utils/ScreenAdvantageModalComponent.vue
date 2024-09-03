@@ -224,7 +224,7 @@
   </ModalComponent>
 </template>
 <script setup>
-import { computed, ref, inject,defineAsyncComponent } from 'vue';
+import { computed, ref, inject,defineAsyncComponent,onMounted } from 'vue';
 import ModalComponent from '@Components/utils/ModalComponent.vue';
 import services from '@Services/services.js';
 import { useWindowSize } from '@vueuse/core';
@@ -262,10 +262,7 @@ const seconde_to = ref();
 const advantage = ref([]);
 const showSpinner = ref(false);
 const type = ref('add');
-const advantage_screens = ref({
-  name: '',
-  advantages:[]
-});
+
 
 
 const props = defineProps({
@@ -280,6 +277,11 @@ const props = defineProps({
     type: Boolean,
     default: false
   }
+});
+
+const advantage_screens = ref({
+  name: '',
+  advantages:[]
 });
 
 const screens = inject('screens');
@@ -337,25 +339,25 @@ const resetForm = (dvantage_screen)=>{
 }
 
 const updateData = () => {
-  const new_screen = {
-    id: props.screen.id,
-    name: props.screen.name,
-    establishment: props.screen.establishment,
-    screentemplate: props.screen.screentemplate,
-    advantage_names: advantage_screens.value.name,
-    advantages:advantage_screens.value.advantages,
-    establishment_name: props.screen.establishment_name,
-    screentemplate_name: props.screen.screentemplate_name
-  }
- 
+
+  
+
   screens.value.forEach((event, index) => {
-    if (event.id == new_screen.id) screens.value[index] = new_screen;
+    if (event.id == props.screen.id){
+      screens.value[index].advantage_names = advantage_screens.value.name;
+      screens.value[index].advantages = advantage_screens.value.advantages;
+     
+    }
   })
+
 }
 
 const getAdvantageNames=(value)=>{
   if (props.advantages.length > 0) {
     
+      advantage_screens.value.name = props.screen.advantage_names;
+       advantage_screens.value.advantages = props.screen.advantages;
+  
       props.advantages.forEach((adv)=>{
        
                const match = value.advantage.match(/\/(\d+)$/);
@@ -382,7 +384,6 @@ const getAdvantageNames=(value)=>{
                  }
 
       })
- 
      
   }
 }
@@ -496,6 +497,7 @@ const submit = async () => {
 
 
 };
+
 
 
 </script>
