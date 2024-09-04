@@ -49,7 +49,7 @@
                             }" />
                         </div>
                         <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
-                            @reloadData="(review) => reloadData(review)" :categories="categories" />
+                            @reloadData="(review) => reloadData(review)" :categories="categories" @update-feeling="updateFeeling" />
                         <div v-else role="status"
                             class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
                             v-for="index in 5" :key="index">
@@ -408,6 +408,52 @@ let establishment = ref({});
 const categories = ref([])
 provide('categories', categories)
 const avgScore = ref(0)
+
+// calcul feedBack
+
+let reviewFeedbackData = ref({
+    width: 0,
+    red: 0,
+    green: 0,
+    feeling: 0
+});
+
+const calculSentimentAnalysis = (_score) =>{
+
+        
+        let rawWidth = _score * 100 / 2
+        let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
+        let feeling = rawWidth > 0 ? 1 : -1
+        let red = 255
+        let green = 255
+        if (feeling == -1) {
+            red = 255
+            green = 255 - ((_score * 100 * 255) / 100)
+        } else {
+            green = 255
+            red = 255 - ((_score * 100 * 255) / 100)
+        }
+
+       let _reviewFeedbackData = {
+            width: width,
+            red: red,
+            green: green,
+            feeling: feeling,
+            score: _score
+        }
+
+        return _reviewFeedbackData;
+}
+
+const updateFeeling = (newFeedbackData) =>{
+   
+    reviewFeedbackData.value = newFeedbackData;
+}
+
+provide('reviewFeedbackData',reviewFeedbackData);
+provide('calculSentimentAnalysis',calculSentimentAnalysis);
+
+//Fin
 const _categories = computed(() => {
     let data = []
     categories.value.forEach(category => {
