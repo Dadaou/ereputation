@@ -37,7 +37,7 @@
                 }" />
             </div>
             <CommentComponent v-if="reviewsLoading == false" :reviews="visibleData" :allReviews="establishment.reviews"
-                :showEmoji="true" :categories="categories" />
+                :showEmoji="true" :categories="categories" @update-feeling="updateFeeling" />
             <div v-else role="status"
                 class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
                 v-for="index in 20" :key="index">
@@ -396,6 +396,42 @@ let reviewFeedbackData = ref({
     feeling: 0
 });
 
+
+const calculSentimentAnalysis = (_score) =>{
+
+        
+        let rawWidth = _score * 100 / 2
+        let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
+        let feeling = rawWidth > 0 ? 1 : -1
+        let red = 255
+        let green = 255
+        if (feeling == -1) {
+            red = 255
+            green = 255 - ((_score * 100 * 255) / 100)
+        } else {
+            green = 255
+            red = 255 - ((_score * 100 * 255) / 100)
+        }
+
+       let _reviewFeedbackData = {
+            width: width,
+            red: red,
+            green: green,
+            feeling: feeling,
+            score: _score
+        }
+
+        return _reviewFeedbackData;
+}
+
+const updateFeeling = (newFeedbackData) =>{
+   
+    reviewFeedbackData.value = newFeedbackData;
+}
+
+provide('reviewFeedbackData',reviewFeedbackData);
+provide('calculSentimentAnalysis',calculSentimentAnalysis);
+
 const colors = ref(['#f75842', '#337ecc', '#4682B4', '#6495ED', '#1E90FF', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']);
 
 let chartConfig = reactive({
@@ -688,6 +724,8 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         all_items.value.reviews.value = response.data['count'];
         all_items.value.rating.value = response.data['rating'];
         all_items.value.global.value = response.data['global'];
+        let feeling_score = calculSentimentAnalysis(response.data['feeling_score']);
+       reviewFeedbackData.value = feeling_score;
     }
 }
 
