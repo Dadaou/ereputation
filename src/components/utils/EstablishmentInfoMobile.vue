@@ -131,4 +131,15 @@ const loading = computed(() => {
         margin-top: 0px !important;
     }
 }
+
+@media screen and (max-width: 540px) {
+    .smallClass {
+        margin-top: 0px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    .largeClass {
+        margin-top: 20px;
+    }
+}
 </style>
