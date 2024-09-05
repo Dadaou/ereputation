@@ -10,7 +10,28 @@
       <el-table-column label="Name" prop="name" align="center" style="width: 5%; min-width: 200px;" />
       <el-table-column label="Establishment" prop="establishment_name" align="center" style="width: 5%; min-width: 400px;" />
       <el-table-column label="Screen Template" prop="screentemplate_name" align="center" style="width: 10%; min-width: 4%;" />
-      <el-table-column label="Advantages" prop="advantage_names" align="center" style="width: 20%; min-width: 100px;" />
+      <el-table-column label="Advantages" align="center" style="width: 40%; min-width: 400px;" >
+
+      <template #default="scope">
+      <div v-if="scope.row.advantages && scope.row.advantages.length > 0">
+        <div v-for="adv_screen,index in scope.row.advantages" :key="adv_screen">
+
+                <div @click="showModal = true,screen_id = scope.row,type='edit',advantage_selected=['/api/advantages/'+adv_screen.adv_id],advantage_screen_selected={id:adv_screen.adv_id,name:adv_screen.adv_name,advantage_screen:adv_screen.id}" v-if="adv_screen != ''" class="advantage_screen_list-container"
+                  >
+                 
+                    <span v-if="index == scope.row.advantage_names.split(',').length - 1"   class="advantage_screen_list">{{
+                        adv_screen.adv_name }}
+                    </span>
+                    <span v-else  class="advantage_screen_list">{{
+                        adv_screen.adv_name }} ,
+                    </span>
+
+                </div>
+        </div>
+      </div>
+      </template>
+
+      </el-table-column>
 
 
       <el-table-column label="Actions" style="width: 20%; min-width: 200px;text-align: center;" align="right">
@@ -61,7 +82,7 @@
 
 
 <script setup>
-import { computed, ref, inject,defineAsyncComponent,onBeforeMount } from 'vue';
+import { computed, ref, provide,inject,defineAsyncComponent,onBeforeMount } from 'vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput,ElTooltip } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
@@ -81,9 +102,46 @@ const showModal = ref(false);
 const emit = defineEmits(['edit']);
 
 const screens = inject('screens')
-
+const advantage_screen_selected = ref(null);
+const advantage_selected = ref(null);
 const advantages = inject('advantages');
+provide('advantage',advantage_selected);
+provide('advantage_screen_selected',advantage_screen_selected)
 const screen_id = ref(null);
+const type = ref('add');
+provide('type',type);
+
+const date_from = ref('');
+provide('date_from',date_from);
+const date_to = ref('');
+provide('date_to',date_to);
+const category = ref('');
+provide('category',category);
+const advantage_screen = ref({
+  d0:false,
+  d1:false,
+  d2:false,
+  d3:false,
+  d4:false,
+  d5:false
+});
+provide('advantage_screen',advantage_screen);
+
+const hour_from = ref();
+provide('hour_from',hour_from);
+const minute_from = ref();
+provide('minute_from',minute_from);
+const seconde_from = ref();
+provide('seconde_from',seconde_from);
+const hour_to = ref();
+provide('hour_to',hour_to);
+const minute_to = ref();
+provide('minute_to',minute_to);
+const seconde_to = ref();
+provide('seconde_to',seconde_to);
+
+
+
 
 
 let tableData = computed(() => {
@@ -229,5 +287,12 @@ button i.uil-edit {
     overflow-y: scroll;
   }
 
+}
+.advantage_screen_list {
+    background: whitesmoke;
+  
+    border-radius: 8px;
+    padding: 0 8px;
+    cursor: pointer
 }
 </style>

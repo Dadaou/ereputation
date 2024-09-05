@@ -19,7 +19,10 @@ import { ref, inject } from 'vue';
 
 const emit = defineEmits(['updateValue']);
 let feeling = inject('feeling');
-const feelingCustomer = ref(feeling.value);
+let feeling_review = inject('feeling_review');
+let modal = inject('modal');
+
+const feelingCustomer = ref(modal.value.type != 'feeling_review' ? feeling_review.value : feeling.value );
 
 const selectFeeling = (feel)=>{
     feelingCustomer.value = feel;

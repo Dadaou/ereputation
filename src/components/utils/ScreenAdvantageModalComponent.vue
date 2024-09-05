@@ -241,33 +241,22 @@ import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 // )
 
 
-const date_from = ref('');
-const date_to = ref('');
-const category = ref('');
-const advantage_screen = ref({
-  d0:false,
-  d1:false,
-  d2:false,
-  d3:false,
-  d4:false,
-  d5:false
-});
+const date_from = inject('date_from');
+const date_to = inject('date_to');
+const category = inject('category');
+const advantage_screen = inject('advantage_screen');
 
-const hour_from = ref();
-const minute_from = ref();
-const seconde_from = ref();
-const hour_to = ref();
-const minute_to = ref();
-const seconde_to = ref();
-const advantage = ref([]);
+const hour_from = inject('hour_from');
+const minute_from = inject('minute_from');
+const seconde_from = inject('seconde_from');
+const hour_to = inject('hour_to');
+const minute_to = inject('minute_to');
+const seconde_to = inject('seconde_to');
 const showSpinner = ref(false);
-const type = ref('add');
-
-
 
 const props = defineProps({
   screen: {
-    type: String,
+    type: Object,
     default: null
   },
   advantages: {
@@ -278,6 +267,12 @@ const props = defineProps({
     default: false
   }
 });
+
+
+const type = inject('type');
+
+const advantage = inject('advantage');
+const advantage_screen_selected = inject('advantage_screen_selected')
 
 const advantage_screens = ref({
   name: '',
@@ -299,13 +294,13 @@ const close = () => {
 const handleEnable = (days,adv_screen)=>{
  
   adv_screen[days]=true;
-   console.log(adv_screen)
+
 }
 
 const handleDisable = (days,adv_screen)=>{
  
   adv_screen[days]=false;
-   console.log(adv_screen)
+
 }
 
 
@@ -458,32 +453,61 @@ const submit = async () => {
           
         }
       
-      
+      console.log('add')
+
 
       } else {
 
-        // const response = await new Promise((resolve) => {
-        //   services.patchRecord('screens', screen_to_update.value['id'], screen, (response) => {
-        //     resolve(response);
-        //   });
-        // });
+        console.log('edit')
 
-        // if (response.status == 200) {
-     
-        //   response.data.advantages=response.data.advantageScreens;
-        //   response.data.establishment_name=getEstablishmentName(response.data);
-        //   response.data.screentemplate_name=getScreenTemplateName(response.data);
-        //        console.log(response.data)
-        //   updateData(response.data);
-        //   ElMessage({
-        //     message: `Event updated successfully.`,
-        //     type: 'success',
-        //   });
-        //   type.value = 'add'
-        // }
+
+        for (var i = 0; i < advantage.value.length; i++) {
+             let _advantage_screen_value = {
+              "dateFrom": date_from.value,
+              "dateTo": date_to.value,
+              "advantage": advantage.value[i],
+              "d0": advantage_screen.value.d0,
+              "d1": advantage_screen.value.d1,
+              "d2": advantage_screen.value.d2,
+              "d3": advantage_screen.value.d3,
+              "d4": advantage_screen.value.d4,
+              "d5": advantage_screen.value.d5,
+              "d6": advantage_screen.value.d6,
+              "hourFrom": hour_from.value != '' ? parseInt(hour_from.value) : null,
+              "hourTo": hour_to.value != '' ? parseInt(hour_to.value) : null,
+              "minuteFrom": minute_from.value != '' ? parseInt(minute_from.value) : null,
+              "minuteTo": minute_to.value != '' ? parseInt(minute_to.value) : null,
+              "secondeFrom": seconde_from.value != '' ? parseInt(seconde_from.value) :null,
+              "secondeTo": seconde_to.value != '' ? parseInt(seconde_to.value)  : null
+              }
+
+        const response = await new Promise((resolve) => {
+          services.patchRecord('advantage_screens', advantage_screen_selected.value.advantage_screen, _advantage_screen_value, (response) => {
+            resolve(response);
+          });
+        });
+
+          if (response.status === 200 ) {
+                   
+           getAdvantageNames(response.data);
+         
+        
+          }
+
+        if (response.status == 200 && i == advantage.value.length - 1) {
+           if (advantage_screens.value) {updateData()}
+          resetForm(advantage_screen)
+          ElMessage({
+            message: `Advantage Screen updated successfully.`,
+            type: 'success',
+          });
+          type.value = 'add'
+        }
       }
-      // resetForm()
-      // router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'screens_list'} });
+
+
+      }
+     
       showSpinner.value = false;
     } else {
       ElMessage.error(`Please, provide all needed information to ${type.value} an advantage`);

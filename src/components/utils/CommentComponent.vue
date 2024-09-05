@@ -112,15 +112,15 @@
                     </div>
                     <div v-if="showEmoji & baseURL == 'https://api-dev.nexties.fr/api'">
                         <span v-if="review.feeling" class="emoji mx-1"
-                            @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review,null)">
+                            @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling_review', review,null),feeling_categorization=null">
                             <!-- have classification -->
-                              <span v-if="review.category && review.category.split(';').length > 0" class="emoji mx-1">
+                           <!--    <span v-if="review.category && review.category.split(';').length > 0" class="emoji mx-1">
                                     <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'positive'">😀</span>
                                     <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'neutre'">😐</span>
                                     <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'negative'">😕</span>
-                                </span>
+                                </span> -->
                             <!-- not have classification -->
-                            <span v-else class="emoji mx-1">
+                            <span class="emoji mx-1">
                                 <span v-if="review.feeling == 'positive'">😀</span>
                                 <span v-if="review.feeling == 'neutre' || review.feeling == 'neutral'">😐</span>
                                 <span v-if="review.feeling == 'negative'">😕</span>
@@ -261,6 +261,10 @@
                 <div class="mb-6 feedback__rating">
                     <FeelingFeedbackComponent v-if="modal.type == 'feeling'" @updateValue="(feeling) => {
                         feel = feeling
+                    }" />
+
+                    <FeelingFeedbackComponent v-if="modal.type == 'feeling_review'" @updateValue="(feeling) => {
+                        feel_review = feeling
                     }" />
 
                     <el-select v-if="modal.type == 'category' || modal.type == 'delete'" v-model="category" filterable placeholder="select categories" size="large">
@@ -432,14 +436,17 @@ const modal = ref({
     action: '',
     icon: '',
     type: ''
-})
+});
+provide('modal', modal);
 const feel = ref('okay');
+const feel_review = ref('okay');
 const id = ref('');
 const old_item_category = ref('');
 const old_item_feeling = ref('');
 const selectedReview = ref(null);
 const feeling_categorization = ref(null);
 provide('feeling', feel);
+provide('feeling_review', feel_review);
 const category = ref('');
 const reviewFeedbackData = inject('reviewFeedbackData');
 const calculSentimentAnalysis = inject('calculSentimentAnalysis');
@@ -448,20 +455,24 @@ const editReview = (review,_category='') => {
     
     if (_category != '' && _category != 'null' && _category != null) {
 
-         feel.value = review.classification_feeling[_category];
-        review.feeling = feel.value;
+        old_item_feeling.value = review.classification_feeling[_category];
+        
+
+        if (feel.value == 'neutre') feel.value = 'neutral';
+
         id.value = review.id;
+
+        review.classification_feeling[_category] = feel.value;
         selectedReview.value = review;
         category.value = review.category
 
-        if (feel.value == 'neutre') feel.value = 'neutral';
         
-        old_item_feeling.value = review.feeling;
-
+        console.log(old_item_feeling.value)
         showModal.value = true;
 
     } else {
-
+        console.log(feel_review.value)
+    review.feeling = feel_review.value;
 
     id.value = review.id;
     selectedReview.value = review;
@@ -476,13 +487,13 @@ const reloadData = (reviewUpdated, feeling) => {
 }
 
 // calcul score de feeling
-const calculFeelingScore = (_reviews,_selectedReview,_feeling) =>{
+const calculFeelingScore = (_reviews,_selectedReview,_feeling,type) =>{
 
     let sommeFeeling=0;
     let kFeeling=0;
 
 
-
+    console.log(_reviews)
     _reviews.forEach(_review =>{
 
         _review.classifications.forEach(_classification =>{
@@ -490,7 +501,7 @@ const calculFeelingScore = (_reviews,_selectedReview,_feeling) =>{
             if (_classification.feeling != '' && _classification.feeling != null && 
                 _classification.feeling != 'null' && _classification.classification_confidence) {
 
-                    if (_classification.id == _selectedReview.id) {
+                    if (_classification.id == _selectedReview.id && type == 'category') {
                         _classification.feeling = _feeling;
                     }
 
@@ -515,11 +526,41 @@ const calculFeelingScore = (_reviews,_selectedReview,_feeling) =>{
         })
     });
 
+       _reviews.forEach(_review =>{
+
+            if (_review.feeling != '' && _review.feeling != null && 
+                _review.feeling != 'null' && _review.confidence) {
+
+                    if (_review.id == _selectedReview.id && type == 'review') {
+                        _review.feeling = _feeling;
+                    }
+
+                    if (_review.feeling == 'positive') {
+                       sommeFeeling = sommeFeeling + (_review.confidence * 1);
+                       kFeeling++;
+
+                    } else {
+
+                        if (_review.feeling == 'negative') {
+
+                           sommeFeeling = sommeFeeling + (_review.confidence * -1);
+                            kFeeling++;
+
+                        } else {
+                           sommeFeeling = sommeFeeling + (_review.confidence * 0);
+                            kFeeling++;
+                        }
+
+                    }
+            }
+        
+    });
+
     if (kFeeling > 0) {
         console.log(sommeFeeling/kFeeling);
         return sommeFeeling/kFeeling;
     }else{
-        console.log("zero ",sommeFeeling/kFeeling);
+        console.log("zero ",0);
         return 0;
     }
 
@@ -529,7 +570,7 @@ const updateReview = async () => {
 
 
     let updatedValue = {
-        feeling: feel.value,
+        feeling: modal.value.type == 'feeling' ? feel.value : feel_review.value,
         confidence: 1,
         review:id.value,
         feeling_categorization: feeling_categorization.value ? 'yes' : null,
@@ -539,7 +580,7 @@ const updateReview = async () => {
 
     try {
         showModal.value = false;
-        if (modal.value.type == 'feeling') {
+        if (modal.value.type == 'feeling' || modal.value.type == 'feeling_review') {
 
             await services.post_Record(
         "/review/feeling/update",
@@ -550,16 +591,20 @@ const updateReview = async () => {
 
      
             
-            const feelingScore = calculFeelingScore(props.reviews,selectedReview.value,feel.value);
+            let feelingScore = 0;
+            if (modal.value.type == 'feeling') {
+                 feelingScore = calculFeelingScore(props.reviews,selectedReview.value,feel.value,'category');
+            } else {
+                 feelingScore = calculFeelingScore(props.reviews,selectedReview.value,feel_review.value,'review');
+            }
             let newFeedbackData=calculSentimentAnalysis(feelingScore);
-            console.log(feelingScore)
             emits('update-feeling', newFeedbackData);
           
 
             if (feeling_categorization.value) {
                 selectedReview.value.classification_feeling[old_item_category.value] = feel.value;
             } else {
-                selectedReview.value.feeling = feel.value;
+                selectedReview.value.feeling = feel_review.value;
             }
              
            
