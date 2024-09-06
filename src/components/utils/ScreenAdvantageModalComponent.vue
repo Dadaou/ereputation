@@ -211,7 +211,18 @@
  
           </div>
 
-      <div class="flex items-center justify-between py-2 border-t border-b dark:border-gray-600">
+      <div class="flex items-center justify-start py-2 gap-4 border-t border-b dark:border-gray-600">
+
+         <el-popconfirm v-if="type == 'edit' || type == 'delete'" title="Are you sure to delete this?" @confirm="handleDelete(advantage_screen_selected)">
+          <template #reference>
+              <button v-if="type == 'edit' || type == 'delete'" @click.prevent="type = 'delete'"
+              class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800">
+              <SpinnerComponent :show-spinner="showSpinner_delete" :color="'gray'" /> <span v-if="showSpinner_delete">Loading ...</span>
+              <span v-show="!showSpinner_delete"><i class="uil uil-save"></i> delete advantage</span>
+            </button>
+          </template>
+        </el-popconfirm>
+       
         <button type="submit"
           class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
           <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading ...</span>
@@ -229,7 +240,7 @@ import ModalComponent from '@Components/utils/ModalComponent.vue';
 import services from '@Services/services.js';
 import { useWindowSize } from '@vueuse/core';
 import { useRouter, useRoute } from "vue-router";
-import { ElMessage, ElOption, ElSelect,ElDatePicker, ElTooltip,ElButton } from 'element-plus';
+import { ElMessage, ElOption, ElSelect,ElDatePicker, ElTooltip,ElButton,ElPopconfirm } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
@@ -253,6 +264,7 @@ const hour_to = inject('hour_to');
 const minute_to = inject('minute_to');
 const seconde_to = inject('seconde_to');
 const showSpinner = ref(false);
+const showSpinner_delete = ref(false);
 
 const props = defineProps({
   screen: {
@@ -347,12 +359,12 @@ const updateData = () => {
 
 }
 
-const getAdvantageNames=(value)=>{
+const getAdvantageNames=(value,_adv_screen_value)=>{
   if (props.advantages.length > 0) {
     
       advantage_screens.value.name = props.screen.advantage_names;
        advantage_screens.value.advantages = props.screen.advantages;
-  
+    
       props.advantages.forEach((adv)=>{
        
                const match = value.advantage.match(/\/(\d+)$/);
@@ -369,11 +381,46 @@ const getAdvantageNames=(value)=>{
                           advantage_screens.value.name=adv.name
                         }
 
-                        var oneAdvantage={};
-                        oneAdvantage.adv_id = adv.id;
-                        oneAdvantage.adv_name = adv.name;
+                        var oneAdvantage={
+                          'adv_id': number,
+                          'adv_name': adv.name,
+                          'category': _adv_screen_value.category,
+                          'd0': _adv_screen_value.d0,
+                          'd1': _adv_screen_value.d1,
+                          'd2': _adv_screen_value.d2,
+                          'd3': _adv_screen_value.d3,
+                          'd4': _adv_screen_value.d4,
+                          'd5': _adv_screen_value.d5,
+                          'd6': _adv_screen_value.d6,
+                          'date_from': _adv_screen_value.dateFrom,
+                          'date_to': _adv_screen_value.dateTo,
+                          'hour_from': _adv_screen_value.hourFrom,
+                          'hour_to': _adv_screen_value.hourTo,
+                          'id': value.id,
+                          'minute_from': _adv_screen_value.minuteFrom,
+                          'minute_to': _adv_screen_value.minuteTo,
+                          'seconde_from': _adv_screen_value.secondeFrom,
+                          'seconde_to': _adv_screen_value.secondeTo,
+                        };
 
-                        advantage_screens.value.advantages.push(oneAdvantage);
+                        if (type.value == 'add') {
+                           advantage_screens.value.advantages.push(oneAdvantage);
+                            console.log('add')
+                        } else {
+
+                            if (type.value == 'edit') {
+                                let advs = advantage_screens.value.advantages.filter((data)=>data.adv_id != number);
+                                advs.push(oneAdvantage);
+                                advantage_screens.value.advantages = advs;
+                                 console.log('edit')
+                            } else {
+                                console.log('sup')
+                                let advs = advantage_screens.value.advantages.filter((data)=>data.adv_id != number);
+                                console.log(advs)
+                                advantage_screens.value.advantages = advs;
+                            }
+
+                        }
                       
                      }
                  }
@@ -385,7 +432,31 @@ const getAdvantageNames=(value)=>{
 
 
 
+const handleDelete = async (adv_screen) => {
 
+    showSpinner_delete.value = true;
+
+    const response = await new Promise((resolve) => {
+          services.deleteRecord('advantage_screens',adv_screen.advantage_screen, (response) => {
+            resolve(response);
+            
+          });
+        });
+
+      if (response.status == 204) {
+      
+        getAdvantageNames({'advantage':'/api/advantages/'+adv_screen.id},adv_screen);
+        if (advantage_screens.value) {updateData()}
+        resetForm(advantage_screen);
+        ElMessage({
+          message: `Advantage Screen removed successfully.`,
+          type: 'success',
+        });
+        showSpinner_delete.value = false;
+        close();
+      }
+
+}
 
 
 const submit = async () => {
@@ -436,7 +507,7 @@ const submit = async () => {
                    if (response.status === 201 ) {
                    
                      // console.log(response.data)
-                     getAdvantageNames(response.data);
+                     getAdvantageNames(response.data,_advantage_screen);
                    
                   
                     }
@@ -452,13 +523,10 @@ const submit = async () => {
                     }
           
         }
-      
-      console.log('add')
+    
 
 
       } else {
-
-        console.log('edit')
 
 
         for (var i = 0; i < advantage.value.length; i++) {
@@ -489,7 +557,7 @@ const submit = async () => {
 
           if (response.status === 200 ) {
                    
-           getAdvantageNames(response.data);
+           getAdvantageNames(response.data,_advantage_screen_value);
          
         
           }
@@ -502,6 +570,7 @@ const submit = async () => {
             type: 'success',
           });
           type.value = 'add'
+          close();
         }
       }
 

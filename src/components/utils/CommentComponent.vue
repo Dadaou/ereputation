@@ -58,8 +58,8 @@
                                     <span   @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review,categ),category=categ,old_item_category=categ" class="review__category">{{
                                         categ }}
 
-                                          <span v-if="review.classification_feeling[categ]" class="emoji "
-                                                @click.stop="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review,categ),old_item_category=categ,feeling_categorization='yes'">
+                                          <span v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')" class="emoji "
+                                                @click.stop="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review,categ,),feel=review.classification_feeling[categ],old_item_category=categ,feeling_categorization='yes'">
                                                 <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
                                                 <span v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
                                                 <span v-if="review.classification_feeling[categ] == 'negative'">😕</span>
@@ -112,7 +112,7 @@
                     </div>
                     <div v-if="showEmoji & baseURL == 'https://api-dev.nexties.fr/api'">
                         <span v-if="review.feeling" class="emoji mx-1"
-                            @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling_review', review,null),feeling_categorization=null">
+                            @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling_review', review,null),feel_review=review.feeling,feeling_categorization=null">
                             <!-- have classification -->
                            <!--    <span v-if="review.category && review.category.split(';').length > 0" class="emoji mx-1">
                                     <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'positive'">😀</span>
@@ -173,8 +173,8 @@
                                     <span   @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review,categ),category=categ,old_item_category=categ" class="review__category">{{
                                         categ }}
 
-                                          <span v-if="review.classification_feeling[categ]" class="emoji "
-                                                @click.stop="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review,categ),old_item_category=categ,feeling_categorization='yes'">
+                                          <span v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')" class="emoji "
+                                                @click.stop="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review,categ),feel=review.classification_feeling[categ],old_item_category=categ,feeling_categorization='yes'">
                                                 <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
                                                 <span v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
                                                 <span v-if="review.classification_feeling[categ] == 'negative'">😕</span>
@@ -438,15 +438,17 @@ const modal = ref({
     type: ''
 });
 provide('modal', modal);
-const feel = ref('okay');
-const feel_review = ref('okay');
+const feel = ref(null);
+const feel_review = ref(null);
 const id = ref('');
 const old_item_category = ref('');
-const old_item_feeling = ref('');
+const old_item_feeling = ref(null);
 const selectedReview = ref(null);
 const feeling_categorization = ref(null);
+const feelingCustomer = ref(null);
 provide('feeling', feel);
 provide('feeling_review', feel_review);
+provide('feelingCustomer', feelingCustomer);
 const category = ref('');
 const reviewFeedbackData = inject('reviewFeedbackData');
 const calculSentimentAnalysis = inject('calculSentimentAnalysis');
@@ -456,24 +458,22 @@ const editReview = (review,_category='') => {
     if (_category != '' && _category != 'null' && _category != null) {
 
         old_item_feeling.value = review.classification_feeling[_category];
-        
-
-        if (feel.value == 'neutre') feel.value = 'neutral';
-
+        feel.value=review.classification_feeling[_category];
+        feelingCustomer.value = feel.value;
         id.value = review.id;
-
+        if (feel.value == 'neutre') feel.value = 'neutral';
         review.classification_feeling[_category] = feel.value;
         selectedReview.value = review;
         category.value = review.category
 
-        
-        console.log(old_item_feeling.value)
+ 
         showModal.value = true;
 
     } else {
-        console.log(feel_review.value)
-    review.feeling = feel_review.value;
 
+    feel_review.value = review.feeling;
+  
+    feelingCustomer.value = feel_review.value;
     id.value = review.id;
     selectedReview.value = review;
     showModal.value = true;

@@ -10,25 +10,31 @@
       <el-table-column label="Name" prop="name" align="center" style="width: 5%; min-width: 200px;" />
       <el-table-column label="Establishment" prop="establishment_name" align="center" style="width: 5%; min-width: 400px;" />
       <el-table-column label="Screen Template" prop="screentemplate_name" align="center" style="width: 10%; min-width: 4%;" />
-      <el-table-column label="Advantages" align="center" style="width: 40%; min-width: 400px;" >
+      <el-table-column label="Advantages" align="left" style="width: 40%; min-width: 400px;" >
 
       <template #default="scope">
-      <div v-if="scope.row.advantages && scope.row.advantages.length > 0">
-        <div v-for="adv_screen,index in scope.row.advantages" :key="adv_screen">
 
-                <div @click="showModal = true,screen_id = scope.row,type='edit',advantage_selected=['/api/advantages/'+adv_screen.adv_id],advantage_screen_selected={id:adv_screen.adv_id,name:adv_screen.adv_name,advantage_screen:adv_screen.id}" v-if="adv_screen != ''" class="advantage_screen_list-container"
-                  >
-                 
-                    <span v-if="index == scope.row.advantage_names.split(',').length - 1"   class="advantage_screen_list">{{
-                        adv_screen.adv_name }}
-                    </span>
-                    <span v-else  class="advantage_screen_list">{{
-                        adv_screen.adv_name }} ,
-                    </span>
+          <div v-if="scope.row.advantages && scope.row.advantages.length > 0">
+                <div v-for="adv_screen,index in scope.row.advantages" :key="adv_screen">
+
+                         <el-tooltip placement="left">
+                            <template #content> See this advantage </template>
+                              <div @click="setAdvantageScreenProps(adv_screen),showModal = true,screen_id = scope.row,type='edit',advantage_selected=['/api/advantages/'+adv_screen.adv_id],advantage_screen_selected={id:adv_screen.adv_id,name:adv_screen.adv_name,advantage_screen:adv_screen.id}" v-if="adv_screen != ''" class="advantage_screen_list-container"
+                              >
+                             
+                                <span v-if="index == scope.row.advantage_names.split(',').length - 1"   class="advantage_screen_list">{{
+                                    adv_screen.adv_name }}
+                                </span>
+                                <span v-else  class="advantage_screen_list">{{
+                                    adv_screen.adv_name }} ,
+                                </span>
+
+                            </div>
+                        </el-tooltip>
 
                 </div>
         </div>
-      </div>
+      
       </template>
 
       </el-table-column>
@@ -103,7 +109,7 @@ const emit = defineEmits(['edit']);
 
 const screens = inject('screens')
 const advantage_screen_selected = ref(null);
-const advantage_selected = ref(null);
+const advantage_selected = ref([]);
 const advantages = inject('advantages');
 provide('advantage',advantage_selected);
 provide('advantage_screen_selected',advantage_screen_selected)
@@ -141,7 +147,26 @@ const seconde_to = ref();
 provide('seconde_to',seconde_to);
 
 
+const setAdvantageScreenProps=(_adv_screen)=>{
+  date_from.value = _adv_screen.date_from;
+  date_to.value = _adv_screen.date_to;
+  category.value = _adv_screen.category;
+  advantage_screen.value.d0 = _adv_screen.d0;
+  advantage_screen.value.d1 = _adv_screen.d1;
+  advantage_screen.value.d2 = _adv_screen.d2;
+  advantage_screen.value.d3 = _adv_screen.d3;
+  advantage_screen.value.d4 = _adv_screen.d4;
+  advantage_screen.value.d5 = _adv_screen.d5;
+  advantage_screen.value.d6 = _adv_screen.d6;
+  hour_from.value = _adv_screen.hour_from;
+  minute_from.value = _adv_screen.minute_from;
+  seconde_from.value = _adv_screen.seconde_from;
+  hour_to.value = _adv_screen.hour_to;
+  minute_to.value = _adv_screen.minute_to;
+  seconde_to.value = _adv_screen.seconde_to;
+  console.log(_adv_screen)
 
+}
 
 
 let tableData = computed(() => {
@@ -294,5 +319,12 @@ button i.uil-edit {
     border-radius: 8px;
     padding: 0 8px;
     cursor: pointer
+}
+.advantage_screen_list:hover {
+    background: var(--color-danger);
+    color: white;
+}
+el-table-column:hover .advantage_screen_list{
+      background: white !important;
 }
 </style>
