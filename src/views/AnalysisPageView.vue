@@ -418,6 +418,7 @@ let reviewFeedbackData = ref({
     feeling: 0
 });
 
+// calcul sentiment analysis
 const calculSentimentAnalysis = (_score) =>{
 
         
