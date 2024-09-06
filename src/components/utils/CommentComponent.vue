@@ -110,7 +110,7 @@
                             </el-tooltip>
                         </div>
                     </div>
-                    <div v-if="showEmoji & baseURL == 'https://api-dev.nexties.fr/api'">
+                    <div v-if="showEmoji">
                         <span v-if="review.feeling" class="emoji mx-1"
                             @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling_review', review,null),feel_review=review.feeling,feeling_categorization=null">
                             <!-- have classification -->
