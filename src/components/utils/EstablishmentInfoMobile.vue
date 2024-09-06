@@ -126,6 +126,8 @@ const loading = computed(() => {
     }
     .smallClass {
         margin-top: 0px !important;
+        margin-left: 0 !important;
+        height: auto !important;
     }
     .largeClass {
         margin-top: 0px !important;
