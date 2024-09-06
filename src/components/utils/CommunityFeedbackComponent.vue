@@ -12,7 +12,7 @@
                     :style="{ 'width': reviewFeedbackData.width + '%', 'background': `linear-gradient(90deg, rgba(255,255,0,1) 0%, rgba( ${reviewFeedbackData.red},${reviewFeedbackData.green},0,1) 100%)` }">
                 </div>
                 <div v-else class="h-2 rounded review-feedback__negative"
-                    :style="{ 'width': reviewFeedbackData.width + '%', 'background': `linear-gradient(90deg, rgba(255,255,0,1) 0%, rgba( ${reviewFeedbackData.red},${reviewFeedbackData.green},0,1) 100%)` }">
+                    :style="{ 'width': reviewFeedbackData.width + '%', 'background': `linear-gradient(to left, red -20%, rgba( ${reviewFeedbackData.red},${reviewFeedbackData.green},0,1) 70%)` }">
                 </div>
                 <div class="review-feedback__labels">
                     <span>Negative</span>
