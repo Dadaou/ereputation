@@ -44,7 +44,7 @@
                 <h2 v-if="socials.length > 0">{{ $t("success_text2") }}</h2>
                 <ul v-if="socials.length > 0" class="social">
                     <li v-for="link in socials" :key="link.id">
-                        <div  @click="handleClick($event, link)">
+                        <a :href="link.url" target="_blank" @click="handleClick($event, link)">
                             <el-tooltip :content="`${$t('success_text2')} ${link.name}`" placement="top">
                                 <img v-if="link.name.toLowerCase().includes('facebook')"
                                     src="@/assets/images/logo/Facebook.svg" alt="Facebook">
@@ -59,7 +59,7 @@
                                 <Icon icon="logos:linkedin-icon" width="2rem" height="2rem"
                                     v-if="link.name.toLowerCase().includes('linkedin')"></Icon>
                             </el-tooltip>
-                        </div>
+                        </a>
                     </li>
                 </ul>
             </div>
