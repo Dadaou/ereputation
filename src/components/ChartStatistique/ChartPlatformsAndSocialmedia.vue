@@ -20,7 +20,7 @@
 
             <span v-if="IsValueOkay(source)">source : {{ source }}<br></span>
 
-            <span v-if="IsValueOkay(units)">units :
+            <span v-if="IsValueOkay(units)">services :
                 <span v-for="(unit_id, index) in units" :key="unit_id">
                     <span v-for="unite in unites" :key="unite.id">
                         <span v-if="unite.id == unit_id">
@@ -39,7 +39,7 @@
                     </span>
                 </span>
             </span>
-            <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)">date :
+            <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)">
                 from {{ formattedStartDate }} to {{ formattedEndDate }}
             </span>
         </div>

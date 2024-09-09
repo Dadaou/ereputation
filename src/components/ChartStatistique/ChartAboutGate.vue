@@ -8,8 +8,8 @@
         </div>
     </div>
     <div v-else class="content-message">
-        <div>No interactions for
-            <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'">establishments
+        <div>No interactions 
+            <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'">for establishments
                 <span v-for="(estab_id, index) in establishment" :key="estab_id" style="display: inline;">
                     <span v-for="estab_name in establishments" :key="estab_name.id" style="display: inline;">
                         <span v-if="estab_name.id == estab_id" style="display: inline;">
@@ -18,7 +18,7 @@
                     </span>
                 </span>
             </span><br>
-            <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)">date :
+            <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)">
                 from {{ formattedStartDate }} to {{ formattedEndDate }}
             </span>
         </div>

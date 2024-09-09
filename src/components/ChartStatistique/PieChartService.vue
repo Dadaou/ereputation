@@ -1,13 +1,13 @@
 <template>
 
-    <h3>Number of form submitted by Units</h3>
+    <h3>Number of form submitted by Services</h3>
     <div v-if="hasData">
         <div class="chart-container">
             <apexchart type="donut" height="480"  :options="chartOptions" :series="series"></apexchart>
         </div>
     </div>
     <div v-else class="no_data">
-        No forms submitted for units <br>
+        No forms submitted for services <br>
         <div>
             <div v-if="IsValueOkay(establishment) && establishment[0] != 'all'">of establishments
                 <span v-for="estab_id, index in establishment" :key="estab_id">
@@ -20,7 +20,7 @@
                 </span>
             </div>
             <div v-else-if="IsValueOkay(units)">
-                for unit
+                for service
                 <span v-for="unit_id, index in units" :key="unit_id">
                     <span v-for="unite in unites" :key="unite.id">
                         <span v-if="unite.id == unit_id">
@@ -30,7 +30,7 @@
                     </span>
                 </span>
             </div>
-            <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)">date :
+            <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)">
                 from {{ formattedStartDate }} to {{ formattedEndDate }}
             </span>
         </div>
