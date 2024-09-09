@@ -12,7 +12,7 @@
                 <h2 v-if="links.length > 0">{{ $t("success_text") }}</h2>
                 <ul v-if="links.length > 0" class="logoSrc">
                     <li v-for="link in links" :key="link.id">
-                        <div @click="handleClick($event,link)">
+                        <a :href="link.url" target="_blank" @click="handleClick($event, link)">
                             <el-tooltip :content="`${$t('success_text')} ${link.name}`" placement="top">
                                 <img v-if="link.name.toLowerCase().includes('booking')"
                                     src="@/assets/images/logo/Booking.svg" alt="Booking" width="24" height="24">
@@ -38,7 +38,7 @@
                                     alt="Yelp" width="24" height="24">
 
                             </el-tooltip>
-                        </div>
+                        </a>
                     </li>
                 </ul>
                 <h2 v-if="socials.length > 0">{{ $t("success_text2") }}</h2>
