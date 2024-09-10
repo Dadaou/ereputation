@@ -420,8 +420,9 @@ const calculSentimentAnalysis = (_score) =>{
             feeling: feeling,
             score: _score
         }
-
+console.log(_reviewFeedbackData)
         return _reviewFeedbackData;
+        
 }
 
 const updateFeeling = (newFeedbackData) =>{
