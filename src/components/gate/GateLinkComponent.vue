@@ -162,7 +162,7 @@ const logoSrc = computed(() => {
 
 .gate__logoSrc {
     width: 100px;
-    height: 80px;
+    /* height: 70%; */
     margin-bottom: 5px;
     border-radius: 6px;
     object-fit: cover;
