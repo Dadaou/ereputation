@@ -315,7 +315,7 @@
                 <span> {{ desc.text }} </span>
             </template>
         </el-tooltip>
-        <BaseLegend v-if="activeName !== 'trends' && activeName !== 'analysis_competitors'"
+        <BaseLegend v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' && legendData.length > 0"
             :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData" :alignment="'vertical'">
         </BaseLegend>
     </div>
@@ -496,24 +496,25 @@ const ratings = ref([])
 
 const salesAnalysis = ref(null)
 
+
 const ratingsCondition1 = computed(() => {
     let data = ratings.value;
-    data = data.filter(value => value.avg_rating >= 4)
-    console.log('>= 4',ratings.value)
+    data = data.filter(value => value.avg_rating >= 0.5)
+    console.log('>= 0.5',ratings.value)
     return data
 })
 
 const ratingsCondition2 = computed(() => {
     let data = ratings.value;
-    data = data.filter(value => value.avg_rating < 4 && value.avg_rating >= 3)
-    console.log('< 4 && >= 3',ratings.value)
+    data = data.filter(value => value.avg_rating < 0.5 && value.avg_rating >= 0)
+    console.log('< 0.5 && >= 0',ratings.value)
     return data
 })
 
 const ratingsCondition3 = computed(() => {
     let data = ratings.value;
-    data = data.filter(value => value.avg_rating < 3)
-    console.log('< 3',ratings.value)
+    data = data.filter(value => value.avg_rating < 0)
+    console.log('< 0',ratings.value)
     return data
 })
 
@@ -819,7 +820,7 @@ const transformData = (chartData) => {
             })
             ratings.value.push({
                 label: label,
-                avg_rating: calculateAvg(data),
+                avg_rating: calculateAvg(scores),
                 color: color
             })
 
@@ -840,7 +841,7 @@ const transformData = (chartData) => {
     })
 
     ratingChart.value = plotData2;
-    confidenceChart.value = plotData1;
+    
     avgScore.value = score / scoreLength;
 
     if (legends.length > 0) {
@@ -858,8 +859,17 @@ const transformData = (chartData) => {
             });
         });
     }
-    if (label_category.length <= 0) label_category = categoryFilters.value;
 
+    if (label_category.length <= 0) label_category = ['123'];
+    let missing_category = getReviewsNoClassificate(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, label_category, language.value)
+   console.log(missing_category)
+    let newDatasets={
+        labels:plotData1.labels,
+        datasets:plotData1.datasets.filter((_dat)=>!_dat.label.includes(missing_category))
+    }
+    confidenceChart.value = newDatasets;
+   
+     
     loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, label_category, language.value)
 }
 
@@ -903,8 +913,59 @@ const starFilter = (star) => {
 
 watch([start_date, end_date, selectedWebsites, categoryFilters], () => {
     categoryFilters.value = categoryFilters.value.length > 0 ? categoryFilters.value : ['all']
+    
     loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
 })
+
+
+const getReviewsNoClassificate = async (tag, page, limit, current, dateStart, dateEnd, source, stars, category, language) => {
+  
+
+    let apiBase = '/review/by_establishment';
+    let apiParams = `tag=${tag}&page=${page}&limit=${limit}&platform=${'all'}`;
+
+    if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
+        apiParams += `&from=${dateStart}&to=${dateEnd}`;
+    }
+
+
+    if (category != 'all') {
+        apiParams += `&category=${category.join(',')}`
+    }
+
+    const api = apiBase + '?' + apiParams;
+
+    const response = await new Promise((resolve) => {
+        services.get_Record(api, (response) => {
+            resolve(response)
+        });
+    });
+
+    if (response.status == 200) {
+
+       let reviews_missing_categ = '';
+       
+        response.data['data'].forEach((_rev)=>{
+
+            _rev.classifications.forEach((_cat)=>{
+
+                if (_cat.feeling == null || _cat.feeling == '' || _cat.feeling == 'null') {
+                    if (reviews_missing_categ == '') {
+                        reviews_missing_categ = _cat.category
+                    } else {
+                        reviews_missing_categ = reviews_missing_categ+','+ _cat.category
+                    }
+                }
+            })
+        })
+        console.log(reviews_missing_categ)
+        return reviews_missing_categ;
+    }
+}
+
+
 
 const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source, stars, category, language) => {
     optionsReview.value.current = current;
