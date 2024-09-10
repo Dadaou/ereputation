@@ -133,6 +133,11 @@ const router = createRouter({
           path: '/customer/:tag/establishment/:id/boost',
           name: 'BoostAdvantage',
           component: () => import('@Views/BoostAdvantagePageView.vue')
+        },
+        {
+          path: '/customer/:tag/screens/:screen',
+          name: 'ScreenPage',
+          component: () => import('@Views/ScreenPageView.vue')
         }
       ]
     },

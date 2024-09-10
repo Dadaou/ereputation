@@ -48,7 +48,7 @@
           
             <el-tooltip placement="top">
               <template #content> See this screen </template>
-              <el-button style="margin-left: 2px;" size="small" @click="handleSee(scope.$index, scope.row)"><i
+              <el-button style="margin-left: 2px;" size="small" @click="handleSee(scope.row.id, scope.row)"><i
                   class="uil uil-presentation"></i></el-button>
             </el-tooltip>
             <el-tooltip placement="top">
@@ -97,7 +97,7 @@ import 'element-plus/es/components/popconfirm/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
 import services from '@Services/services.js';
-
+import { useRoute, useRouter } from "vue-router";
 
 const ScreenAdvantageModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/ScreenAdvantageModalComponent.vue')
@@ -114,6 +114,7 @@ const advantages = inject('advantages');
 provide('advantage',advantage_selected);
 provide('advantage_screen_selected',advantage_screen_selected)
 const screen_id = ref(null);
+console.log(screen_id)
 const type = ref('add');
 provide('type',type);
 
@@ -167,6 +168,14 @@ const setAdvantageScreenProps=(_adv_screen)=>{
   console.log(_adv_screen)
 
 }
+
+const route = useRoute();
+const router = useRouter();
+const handleSee = (screenId, row) => {
+  const tag = route.params.tag;
+  const link = router.resolve({ name: 'ScreenPage', params: { tag: tag, screen: screenId }});
+  window.open(link.href, '_blank');
+};
 
 
 let tableData = computed(() => {
