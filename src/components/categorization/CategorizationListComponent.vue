@@ -58,12 +58,12 @@ const router = useRouter()
 
 const filterTableData = computed(() => {
   let filterdata = categories.value;
-  // filterdata = categories.value.filter(
-  //   (data) =>
-  //     !search.value ||
-  //     data.category.toLowerCase().includes(search.value.toLowerCase()) ||
-  //     data.establishment_name.toLowerCase().includes(search.value.toLowerCase())
-  // )
+  filterdata = categories.value.filter(
+    (data) =>
+      !search.value ||
+      data.category.toLowerCase().includes(search.value.toLowerCase()) ||
+      data.establishment_name.toLowerCase().includes(search.value.toLowerCase())
+  )
   return filterdata
 })
 
