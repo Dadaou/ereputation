@@ -77,7 +77,7 @@
                                                 <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg" :virtual-ref="buttonRefCateg" virtual-triggering
                                                     popper-class="singleton-tooltip" placement="top">
                                                     <template #content>
-                                                        <span>Click to add review feeling</span>
+                                                        <span>Click to add category feeling</span>
                                                     </template>
                                                 </el-tooltip>
                                                
@@ -89,6 +89,20 @@
 
                                 </div>
                             </div>
+
+                            <i class="uil uil-question-circle"
+                                style="color: var(--color-warning); font-size: 18px; cursor: pointer;margin: 1px;" @mouseover="(e) => {
+                                    buttonRef = e.currentTarget
+                                    visible = true
+                                }" @mouseleave="() => visible = false"
+                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null)">
+                            </i>
+                            <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
+                                popper-class="singleton-tooltip" placement="top">
+                                <template #content>
+                                    <span>Click to add category</span>
+                                </template>
+                            </el-tooltip>
 
                          
 
@@ -204,6 +218,20 @@
 
                                 </div>
                             </div>
+
+                            <i class="uil uil-question-circle"
+                                style="color: var(--color-warning); font-size: 18px; cursor: pointer;margin: 1px;" @mouseover="(e) => {
+                                    buttonRef = e.currentTarget
+                                    visible = true
+                                }" @mouseleave="() => visible = false"
+                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null)">
+                            </i>
+                            <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
+                                popper-class="singleton-tooltip" placement="top">
+                                <template #content>
+                                    <span>Click to add category</span>
+                                </template>
+                            </el-tooltip>
 
                          
 
@@ -618,7 +646,8 @@ const updateReview = async () => {
             await feedbackStore.updateReviewCategory(id.value, modal.value.action, old_cat, cur_cat, false, response => {
                 // Do nothing
             })
-
+            console.log(selectedReview.value.category)
+            console.log(old_item_category.value)
             if (modal.value.action == 'add' && !selectedReview.value.category) {
                 selectedReview.value.category = cur_cat;
                 selectedReview.value.classification_feeling=[];
