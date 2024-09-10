@@ -9,7 +9,7 @@
     </div>
     <div v-else class="content-message">
         <div>No interactions 
-            <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'">for establishments
+            <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'">for establishments :
                 <span v-for="(estab_id, index) in establishment" :key="estab_id" style="display: inline;">
                     <span v-for="estab_name in establishments" :key="estab_name.id" style="display: inline;">
                         <span v-if="estab_name.id == estab_id" style="display: inline;">

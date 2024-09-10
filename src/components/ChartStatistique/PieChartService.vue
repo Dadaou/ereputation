@@ -7,9 +7,9 @@
         </div>
     </div>
     <div v-else class="no_data">
-        No forms submitted for services <br>
+        No forms submitted by services <br>
         <div>
-            <div v-if="IsValueOkay(establishment) && establishment[0] != 'all'">of establishments
+            <div v-if="IsValueOkay(establishment) && establishment[0] != 'all'">for establishments : 
                 <span v-for="estab_id, index in establishment" :key="estab_id">
                     <span v-for="estab_name in establishments" :key="estab_name.id">
                         <span v-if="estab_name.id == estab_id">
@@ -20,7 +20,7 @@
                 </span>
             </div>
             <div v-else-if="IsValueOkay(units)">
-                for service
+                for service :
                 <span v-for="unit_id, index in units" :key="unit_id">
                     <span v-for="unite in unites" :key="unite.id">
                         <span v-if="unite.id == unit_id">

@@ -7,8 +7,8 @@
         </div>
     </div>
     <div v-else class="content-message">
-        <div>No clicks for <br>
-            <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'"> establishment :
+        <div>No clicks <br>
+            <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'">for establishments :
                 <span v-for="(estab_id, index) in establishment" :key="estab_id">
                     <span v-for="estab_name in establishments" :key="estab_name.id">
                         <span v-if="estab_name.id == estab_id">
@@ -18,27 +18,8 @@
                 </span><br>
             </span>
 
-            <span v-if="IsValueOkay(source)">source : {{ source }}<br></span>
+            <span v-if="IsValueOkay(source)">for source : {{ source }}<br></span>
 
-            <span v-if="IsValueOkay(units)">services :
-                <span v-for="(unit_id, index) in units" :key="unit_id">
-                    <span v-for="unite in unites" :key="unite.id">
-                        <span v-if="unite.id == unit_id">
-                            {{ unite.name }}<span v-if="index !== units.length - 1">, </span>
-                        </span>
-                    </span>
-                </span><br>
-            </span>
-
-            <span v-if="IsValueOkay(staff)"> staff :
-                <span v-for="(staff_id, index) in staff" :key="staff_id">
-                    <span v-for="staff_name in staffs" :key="staff_name.id">
-                        <span v-if="staff_name.id == staff_id">
-                            {{ staff_name.name }}<span v-if="index !== staff.length - 1">, </span>
-                        </span>
-                    </span>
-                </span>
-            </span>
             <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)">
                 from {{ formattedStartDate }} to {{ formattedEndDate }}
             </span>

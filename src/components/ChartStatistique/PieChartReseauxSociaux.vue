@@ -8,8 +8,8 @@
         </div>
     </div>
     <div v-else class="no_data">
-        No clicks for <br>
-        <div v-if="IsValueOkay(establishment) && establishment[0] != 'all'">establishments
+        No clicks <br>
+        <div v-if="IsValueOkay(establishment) && establishment[0] != 'all'">for establishments :
 
             <span v-for="estab_id, index in establishment" :key="estab_id">
                 <span v-for="estab_name in establishments" :key="estab_name.id">
