@@ -95,7 +95,7 @@
                                     buttonRef = e.currentTarget
                                     visible = true
                                 }" @mouseleave="() => visible = false"
-                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null)">
+                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null),addExisteCategorie='yes'">
                             </i>
                             <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
                                 popper-class="singleton-tooltip" placement="top">
@@ -224,7 +224,7 @@
                                     buttonRef = e.currentTarget
                                     visible = true
                                 }" @mouseleave="() => visible = false"
-                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null)">
+                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null),addExisteCategorie='yes'">
                             </i>
                             <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
                                 popper-class="singleton-tooltip" placement="top">
@@ -474,6 +474,7 @@ const old_item_feeling = ref(null);
 const selectedReview = ref(null);
 const feeling_categorization = ref(null);
 const feelingCustomer = ref(null);
+const addExisteCategorie = ref(null);
 provide('feeling', feel);
 provide('feeling_review', feel_review);
 provide('feelingCustomer', feelingCustomer);
@@ -646,8 +647,8 @@ const updateReview = async () => {
             await feedbackStore.updateReviewCategory(id.value, modal.value.action, old_cat, cur_cat, false, response => {
                 // Do nothing
             })
-            console.log(selectedReview.value.category)
-            console.log(old_item_category.value)
+          
+
             if (modal.value.action == 'add' && !selectedReview.value.category) {
                 selectedReview.value.category = cur_cat;
                 selectedReview.value.classification_feeling=[];
@@ -675,23 +676,30 @@ const updateReview = async () => {
                            } else {
 
                            
-                                    if (new_cat != '') {
+                                   if (addExisteCategorie.value) {
 
-                                        if (selectedReview.value.category.split(';')[i] == old_item_category.value) {
-                                            new_cat = new_cat+';'+category.value;
+                                    new_cat = selectedReview.value.category+';'+category.value;
+
+                                   } else {
+
+                                         if (new_cat != '') {
+
+                                            if (selectedReview.value.category.split(';')[i] == old_item_category.value) {
+                                                new_cat = new_cat+';'+category.value;
+                                            } else {
+                                                new_cat = new_cat+';'+selectedReview.value.category.split(';')[i];
+                                            }
+                                    
                                         } else {
-                                            new_cat = new_cat+';'+selectedReview.value.category.split(';')[i];
+                                            
+                                            if (selectedReview.value.category.split(';')[i] == old_item_category.value) {
+                                                 new_cat = category.value;
+                                            } else {
+                                                new_cat = selectedReview.value.category.split(';')[i];
+                                            }
+                                           
                                         }
-                                
-                                    } else {
-                                        
-                                        if (selectedReview.value.category.split(';')[i] == old_item_category.value) {
-                                             new_cat = category.value;
-                                        } else {
-                                            new_cat = selectedReview.value.category.split(';')[i];
-                                        }
-                                       
-                                    }
+                                   }
                                    
                        
                            }

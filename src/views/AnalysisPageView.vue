@@ -18,7 +18,17 @@
                         :ratings="ratingsCondition3" condition='condition3' v-if="ratingsCondition3.length > 0"
                         class="mb-4" @labelChange="handleLabelChange" />
 
-                    <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']">
+                    <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']" v-if="visibleData.length > 0">
+                        <div class="containerChart" ref="scrollContainer1"
+                            @scroll="syncScroll('scrollContainer1', 'scrollContainer2')">
+                            <div :class="['containerBody', !isLoading ? '' : 'loading']">
+                                <Bar :data="ratingChart" id="rating" :options="options" />
+                            </div>
+                        </div>
+
+                        <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
+                    </div>
+                    <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']" v-else style="display:none">
                         <div class="containerChart" ref="scrollContainer1"
                             @scroll="syncScroll('scrollContainer1', 'scrollContainer2')">
                             <div :class="['containerBody', !isLoading ? '' : 'loading']">
@@ -29,7 +39,17 @@
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
 
-                    <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']">
+                    <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']" v-if="showConfidenceChart">
+                        <div class="containerChart" ref="scrollContainer2"
+                            @scroll="syncScroll('scrollContainer2', 'scrollContainer1')">
+                            <div :class="['containerBody2 mt-5', !isLoading ? '' : 'loading']">
+                                <Line :data="confidenceChart" id="confidence" :options="newOptions" />
+                            </div>
+                        </div>
+
+                        <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
+                    </div>
+                    <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']" v-else style="display:none">
                         <div class="containerChart" ref="scrollContainer2"
                             @scroll="syncScroll('scrollContainer2', 'scrollContainer1')">
                             <div :class="['containerBody2 mt-5', !isLoading ? '' : 'loading']">
@@ -307,7 +327,7 @@
             }" :default="timePeriods[0]" /> -->
         </div>
 
-        <CommunityFeedbackComponent v-if="activeName !== 'trends' && activeName !== 'analysis_competitors'"
+        <CommunityFeedbackComponent v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' && showConfidenceChart"
             :reviewFeedbackData="services.getScoreColor(avgScore)" />
         <el-tooltip ref="tooltipRef" :visible="desc.visible" :virtual-ref="buttonRef" virtual-triggering
             popper-class="singleton-tooltip" placement="top">
@@ -492,6 +512,8 @@ const confidenceChart = ref({
     labels: [],
     datasets: []
 })
+const showConfidenceChart=ref(true);
+const showRatingChart=ref(true)
 const ratings = ref([])
 
 const salesAnalysis = ref(null)
@@ -500,21 +522,21 @@ const salesAnalysis = ref(null)
 const ratingsCondition1 = computed(() => {
     let data = ratings.value;
     data = data.filter(value => value.avg_rating >= 0.5)
-    console.log('>= 0.5',ratings.value)
+   
     return data
 })
 
 const ratingsCondition2 = computed(() => {
     let data = ratings.value;
     data = data.filter(value => value.avg_rating < 0.5 && value.avg_rating >= 0)
-    console.log('< 0.5 && >= 0',ratings.value)
+   
     return data
 })
 
 const ratingsCondition3 = computed(() => {
     let data = ratings.value;
     data = data.filter(value => value.avg_rating < 0)
-    console.log('< 0',ratings.value)
+ 
     return data
 })
 
@@ -799,10 +821,10 @@ const transformData = (chartData) => {
         const { avg_score, feeling, scores, data, label } = category
         // const color = services.generateColor(label)
         const color = colors[index]
-        const allScoresZero = scores.every(score => score === 0)
-
+        const allScoresZero = scores.every(score => score == 0)
+       
         if (!allScoresZero) {
-      
+             
             plotData1.datasets.push({
                 label: label,
                 backgroundColor: color,
@@ -841,8 +863,11 @@ const transformData = (chartData) => {
     })
 
     ratingChart.value = plotData2;
+      if (plotData2.datasets.length <= 0) {
+            showRatingChart.value = false;
+        }
     
-    avgScore.value = score / scoreLength;
+  
 
     if (legends.length > 0) {
         legendData.value = []
@@ -861,14 +886,49 @@ const transformData = (chartData) => {
     }
 
     if (label_category.length <= 0) label_category = ['123'];
-    let missing_category = getReviewsNoClassificate(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, label_category, language.value)
-   console.log(missing_category)
-    let newDatasets={
-        labels:plotData1.labels,
-        datasets:plotData1.datasets.filter((_dat)=>!_dat.label.includes(missing_category))
-    }
-    confidenceChart.value = newDatasets;
+    let missing_category_response = getReviewsNoClassificate(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, label_category, language.value)
+
+   missing_category_response.then((rep)=>{
+        let newDatasetsFilter={
+            labels:plotData1.labels,
+            datasets:plotData1.datasets.filter(_dat=>rep.includes(_dat.label) == false)
+        }
+
+        if (newDatasetsFilter.datasets.length <= 0) {
+            showConfidenceChart.value = false;
+           
+            //  newDatasets.datasets.forEach((_newData)=>{
+
+            // });
+        }else{
+
+            confidenceChart.value = newDatasetsFilter;
    
+             let sommeAvgScore=0;
+            newDatasetsFilter.datasets.forEach((_data)=>{
+                  let sommeScore=0;
+                _data.data.forEach((_sc)=>{
+                    if (sommeScore == 0) {
+                        sommeScore = _sc;
+                    } else {
+                        sommeScore = (sommeScore + _sc)/2;
+                       
+                    }
+                })
+
+                sommeAvgScore = sommeAvgScore + sommeScore;
+                    
+            })
+              
+            avgScore.value = sommeAvgScore/newDatasetsFilter.datasets.length;
+
+            
+              showConfidenceChart.value = true;
+        }
+     
+        
+   })
+
      
     loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, label_category, language.value)
 }
@@ -936,7 +996,7 @@ const getReviewsNoClassificate = async (tag, page, limit, current, dateStart, da
     }
 
     const api = apiBase + '?' + apiParams;
-
+    let reviews_missing_categ = '';
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
@@ -945,22 +1005,49 @@ const getReviewsNoClassificate = async (tag, page, limit, current, dateStart, da
 
     if (response.status == 200) {
 
-       let reviews_missing_categ = '';
        
-        response.data['data'].forEach((_rev)=>{
+       let cats=[];
+       const responses = response.data['data'];
+        let allCategories=[];
 
+       
+        responses.forEach((_rev)=>{
+           
             _rev.classifications.forEach((_cat)=>{
-
-                if (_cat.feeling == null || _cat.feeling == '' || _cat.feeling == 'null') {
-                    if (reviews_missing_categ == '') {
-                        reviews_missing_categ = _cat.category
-                    } else {
-                        reviews_missing_categ = reviews_missing_categ+','+ _cat.category
-                    }
-                }
-            })
+                  
+                 if (_cat.feeling != null) {
+                     cats.push(_cat.category);
+                 }
+                 allCategories.push(_cat.category);
+            });
+           
         })
-        console.log(reviews_missing_categ)
+
+     
+        allCategories.forEach((_cat)=>{
+
+            let isMissing=true;
+
+            cats.forEach((_val)=>{
+
+                if (_val == _cat) {
+                    isMissing = false
+                }
+
+            });
+
+            if (isMissing) {
+
+                    if (reviews_missing_categ == '') {
+                        reviews_missing_categ = _cat
+                    } else {
+                        reviews_missing_categ = reviews_missing_categ+','+ _cat
+                    }
+
+            }
+
+        })
+
         return reviews_missing_categ;
     }
 }
