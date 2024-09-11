@@ -358,9 +358,11 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         apiParams += `&from=${dateStart}&to=${dateEnd}`;
     }
 
-    const platformValue = platform.value;
-
-    source = IsValueOkay(platformValue) ? platformValue : 'all';
+    if (route.params.type === 'intern') {
+        source = 'App (Private)';
+    } else {
+        source = IsValueOkay(platform.value) ? platform.value : 'all';
+    }
 
     if (source !== 'App (Private)') {
         source = source.toLowerCase();
