@@ -373,6 +373,11 @@ const router = createRouter({
               component: () => import('@Views/StatistiquePageView.vue')
             },
             {
+              path: 'customer/:tag/establishment/categorization',
+              name: 'Categorization',
+              component: () => import('@Views/CategorizationPageView.vue')
+            },
+            {
               path: 'customers',
               name: 'CustomersList',
               component: () => import('@Views/CustomerListView.vue')
