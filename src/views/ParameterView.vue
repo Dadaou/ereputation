@@ -267,11 +267,13 @@ const allStaffs = ref([])
 const allAdvantages = ref([])
 const allCategories = ref([])
 const allUnits = ref([])
+const allUniverses = ref([])
 const allPartnerships = ref({})
 const allLinks = ref([])
 const providers = ref([])
 
 provide('staffs', allStaffs)
+provide('allUniverses', allUniverses)
 provide('events', allEvents)
 provide('advantages', allAdvantages)
 provide('categories', allCategories)
@@ -410,6 +412,8 @@ const transformData = (data) => {
                 establishment_gps,
                 establishment_rank,
                 competitor_competitor_tag,
+                universe_id,
+                universe_name,
                 competitor_id
             } = establishment;
 
@@ -432,6 +436,8 @@ const transformData = (data) => {
                     rank: establishment_rank,
                     gps: establishment_gps,
                     media: url_source,
+                    universe_id:universe_id,
+                    universe_name:universe_name,
                     establishments: [competitorName],
                     competitors: [{
                         competitor_id: competitor_id,
@@ -546,6 +552,8 @@ const loadCategories = async () => {
     }
 }
 
+
+
 const loadUnits = async () => {
     try {
         const response = await new Promise((resolve) => {
@@ -560,6 +568,23 @@ const loadUnits = async () => {
             allUnits.value = data.flat()
         } else {
             console.error('Error fetching units:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const loadUniverseList = async () => {
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`/customer/universe/list`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            allUniverses.value = response.data
+        } else {
+            console.error('Error fetching universe:', response);
         }
     } catch (error) {
         console.error(error);
@@ -666,6 +691,7 @@ onBeforeMount(async () => {
     await loadUnits();
     await loadProviders();
     await reloadLink();
+    await loadUniverseList();
 });
 
 </script>

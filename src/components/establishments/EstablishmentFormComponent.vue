@@ -69,8 +69,8 @@
                 <div>
                     <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
                         <span>*</span></label>
-                    <el-select v-model="data.category" placeholder="" size="large" filterable>
-                        <el-option v-for="item in categories" :key="item" :label="item" :value="item" />
+                    <el-select v-model="data.universe_id" placeholder="" size="large" filterable>
+                        <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.id" />
                     </el-select>
                 </div>
             </div>
@@ -100,8 +100,8 @@
                 <!--  <div class="col-span-2">
                     <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
                         <span>*</span></label>
-                    <el-select v-model="data.category" placeholder="" size="large">
-                        <el-option v-for="item in categories" :key="item" :label="item" :value="item" />
+                    <el-select v-model="data.universe_id" placeholder="" size="large">
+                        <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.id" />
                     </el-select>
                 </div> -->
                 <!-- <div>
@@ -148,7 +148,7 @@ import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
 import { useRouter, useRoute } from 'vue-router';
-import { countries, categories, competitor_countries } from '@Services/input-list.js';
+import { countries, competitor_countries } from '@Services/input-list.js';
 
 const router = useRouter();
 const route = useRoute();
@@ -161,7 +161,8 @@ const userStore = useUserStore();
 const establishment_to_update = inject('establishment_to_update');
 const imgHasChanged = ref(false);
 const cleanEstablishmentForm = inject('clearEstablishmentForm');
-
+const categories = inject('allUniverses');
+console.log(categories)
 
 const onDragOver = (event) => {
     imageInputHover.value = true; 
@@ -249,15 +250,16 @@ const submit = async () => {
 
     const establishmentData = { ...data.value, customer: `${userStore.user.customer.tag}` };
 
-    if (establishmentData.category
+    if (establishmentData.universe_id
         && establishmentData.country
         && establishmentData.city
         && establishmentData.zipcode
-        && establishmentData.category
+        && establishmentData.universe_id
         && establishmentData.name
         && establishmentData.address1) {
 
-        formData.append('category', establishmentData.category);
+        // formData.append('category', establishmentData.category);
+        formData.append('universe', establishmentData.universe_id);
         formData.append('country', establishmentData.country);
         formData.append('customer', `${userStore.user.customer.tag}`)
         showSpinner.value = true;
@@ -328,6 +330,7 @@ watch(establishment_to_update, () => {
         data.value['address1'] = establishment_to_update.value.address || "";
         previewImage.value = establishment_to_update.value.media || "";
         type.value = 'Edit';
+
     }
 });
 

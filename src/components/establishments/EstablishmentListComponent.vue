@@ -22,7 +22,7 @@
                     </el-tooltip>
                 </template>
             </el-table-column>
-            <el-table-column label="Category" prop="category" style="width: 15%; min-width: 200px;" />
+            <el-table-column label="Category" prop="universe_name" style="width: 15%; min-width: 200px;" />
             <el-table-column label="Address" prop="address" style="width: 25%; min-width: 200px;" />
             <el-table-column label="Country" prop="country" style="width: 15%; min-width: 200px;"
                 :header-style="{ fontSize: '12px' }" />
@@ -129,6 +129,8 @@ const establishments = computed(() => {
                 zipcode: establishment.zipcode,
                 positionning: establishment.positionning,
                 id: establishment.id,
+                universe_id : establishment.universe_id,
+                universe_name : establishment.universe_name,
                 disable: establishment.disable
             })
         });
