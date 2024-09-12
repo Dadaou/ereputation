@@ -412,6 +412,8 @@ const transformData = (data) => {
                 establishment_gps,
                 establishment_rank,
                 competitor_competitor_tag,
+                universe_id,
+                universe_name,
                 competitor_id
             } = establishment;
 
@@ -434,6 +436,8 @@ const transformData = (data) => {
                     rank: establishment_rank,
                     gps: establishment_gps,
                     media: url_source,
+                    universe_id:universe_id,
+                    universe_name:universe_name,
                     establishments: [competitorName],
                     competitors: [{
                         competitor_id: competitor_id,

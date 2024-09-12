@@ -289,6 +289,7 @@ const transformData = (data) => {
     let tag = ''
     for (const [competitorName, establishments] of Object.entries(data)) {
         establishments.forEach(establishment => {
+          
             const {
                 establishment_competitor_tag,
                 establishment_category,
