@@ -1,41 +1,107 @@
 <template>
   <div class="subscription__container">
     <div class="subscription-page-header">
-      <div class="container" style="padding-inline: 16px;">
+      <div class="next-container" style="padding-inline: 16px;">
         <a :href="baseurl" class="flex items-center">
           <div v-if="appStore.account && appStore.account.logo" class="nav-logo">
-            <img :src="appStore.account.logo">
+            <img :src="linkystar" alt="logo" />
           </div>
-          <span v-else-if="appStore.account && appStore.account.brand"
-            class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
-              appStore.account.brand }}</span>
+          <span class="subscription-menu active">My account</span>
         </a>
-        <RouterLink :to="`/`" class="relative p-2 login-link">
-          <span class="font-bolder"> Sign In</span>
-        </RouterLink>
+        <div class="subscription__right-nav">
+          <RouterLink :to="`/`" class="relative p-2 login-link mr-6">
+            <span class="font-bolder"> Login</span>
+          </RouterLink>
+          <div class="feedback__option">
+            <a href="https://wa.me/message/IZFK26272CXFB1" target="_blank">
+              <i class="fa fa-whatsapp"></i>
+            </a>
+            <LanguageMenuDropdown :current="currentLanguage" @select="(language) => selectCurrentLanguage(language)" />
+          </div>
+        </div>
       </div>
     </div>
-    <el-tabs v-model="activeName" type="card" class="demo-tabs subscription-tabs container">
-      <el-tab-pane name="plan">
-        <div class="tab-pane-header">
-          <h6>STEP 1 OF 3</h6>
-          <div class="app__title">
-            <h1>Choose your plan</h1>
-          </div>
-        </div>
-        <div v-if="plans" class="plan-container" ref="planContainer">
-          <plan-card v-for="item in plans" :key="item.tag" :data="item" @selected="setPlan"></plan-card>
-        </div>
-      </el-tab-pane>
+    <el-tabs v-model="activeName" type="card" class="demo-tabs subscription-tabs next-container">
+
       <el-tab-pane name="user-info">
         <div class="tab-pane-header">
-          <h6>STEP 2 OF 3</h6>
-          <div class="app__title">
-            <h1>Fill your account informations</h1>
+          <!-- <h6>STEP 2 OF 3</h6> -->
+          <div class="section__title">
+            <p class="mt-4">Please fill out the form to create your account</p>
           </div>
         </div>
-        <form @submit.prevent="submitUserForm">
+        <div class="tab__pane-body w-full">
           <div class="form-group">
+
+            <div class="features-list">
+              <ul>
+                <li>Unified QR Codes Hub</li>
+                <ul class="sub-list-price no-icon">
+                  <li>High Definition</li>
+                  <li>Customizable</li>
+                </ul>
+
+                <li>Branded Mobile Website, 5 sections</li>
+                <ul class="sub-list-price no-icon">
+                  <li>MENUS</li>
+                  <li>INFOS</li>
+                  <li>REVIEWS</li>
+                  <li>OFFERS</li>
+                  <li>FOLLOW US</li>
+                </ul>
+                <li>Offers Program Platform</li>
+                <ul class="sub-list-price no-icon">
+                  <li>Partners Management</li>
+                  <li>Digital Ticketing</li>
+                  <li>Automated Emailing</li>
+                  <li>Analytics</li>
+                  <li>Lead Generation</li>
+                </ul>
+              </ul>
+            </div>
+
+            <!-- <div className="features-list">
+                <ul>
+                  <li>Unified QR Codes Hub</li>
+                  <ul className="sub-list-price no-icon">
+                    <li>High Definition</li>
+                    <li>Customizable</li>
+                  </ul>
+
+                  <li>Branded Mobile Website, 5 sections</li>
+                  <ul className="sub-list-price no-icon">
+                    <li>MENUS</li>
+                    <li>INFOS</li>
+                    <li>REVIEWS</li>
+                    <li>OFFERS</li>
+                    <li>FOLLOW US</li>
+                  </ul>
+                  <li>Offers Program Platform</li>
+                  <ul className="sub-list-price no-icon">
+                    <li>Partners Management</li>
+                    <li>Digital Ticketing</li>
+                    <li>Automated Emailing</li>
+                    <li>Analytics</li>
+                    <li>Lead Generation</li>
+                  </ul>
+
+                  <li>Review Analysis</li>
+                  <ul className="sub-list-price no-icon">
+                    <li>Internal Survey per Category</li>
+                    <li>1 source </li>
+                    <li>Filters (weather, event)</li>
+                    <li>1 hashtag</li>
+                  </ul>
+
+                  <li>Competitor Monitoring</li>
+                  <ul className="sub-list-price no-icon">
+                    <li>1 competitor</li>
+                  </ul>
+                </ul>
+              </div> -->
+
+          </div>
+          <form class="form-group" @submit.prevent="submitForm">
             <p class="mb-5">User informations</p>
             <div class="w-full">
               <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First
@@ -44,46 +110,96 @@
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
             </div>
             <div class="w-full">
-              <label for="ulast_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last
+              <label for="ulast_name" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Last
                 name <span>*</span></label>
               <input v-model="planInfo.uLName" type="text" id="ulast_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
             </div>
             <div class="w-full">
-              <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
+              <label for="email" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Email
                 <span>*</span></label>
               <input v-model="planInfo.uEmail" type="email" id="email"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
             </div>
             <div class="w-full">
-              <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password
+              <label for="password" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Password
                 <span>*</span></label>
               <input v-model="planInfo.uPassword" type="password" id="password"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
             </div>
             <div class="w-full">
-              <label for="cpassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm
+              <label for="cpassword" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Confirm
                 password
                 <span>*</span></label>
               <input v-model="planInfo.uCPassword" type="password" id="cpassword"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
             </div>
-          </div>
-          <div class="navigation-container">
-            <button type="button" class="btn btn-primary-3 btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-              @click="activeName = 'plan'">Previous</button>
-            <button type="submit" class="btn btn-primary-3 btn-navigation"
-              :class="showSpinner == true ? 'isLoaded' : ''" style="margin-top: 12px; border-radius: 2px;">
-              <SpinnerComponent v-if="showSpinner == true" :color="'red'" /> <span v-else>Next</span>
-            </button>
-          </div>
-        </form>
+            <p class="mb-5 mt-6">Company informations</p>
+            <div class="w-full">
+              <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
+                name <span>*</span></label>
+              <input v-model="planInfo.cName" type="text" id="company_name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
+            </div>
+            <div class="w-full">
+              <label for="address" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Address
+                <span>*</span></label>
+              <input v-model="planInfo.cAdress" type="text" id="address"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
+            </div>
+            <div class="w-full">
+              <label for="saddress" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Secondary
+                address</label>
+              <input v-model="planInfo.cSAdress" type="text" id="saddress"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+            </div>
+            <div class="w-full">
+              <div class="grid gap-6 md:grid-cols-4">
+                <div>
+                  <label for="zip" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">ZIP Code
+                    <span>*</span></label>
+                  <input v-model="planInfo.cZip" type="text" id="zip"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
+                </div>
+                <div>
+                  <label for="city" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">City
+                    <span>*</span></label>
+                  <input v-model="planInfo.cCity" type="text" id="city"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
+                </div>
+                <div class="md:col-span-2 mb-0">
+                  <label for="country"
+                    class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Country</label>
+                  <select v-model="planInfo.cCountry" id="country"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
+                    <option v-for="(country, index) in countries" :key="index">{{ country.name }}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="w-full inline-flex items-center gap-2 mt-5">
+                <input v-model="planInfo.acceptConditions" type="checkbox" id="coding" name="interest" value="coding"
+                  required />
+                <label for="coding">I read and accept <a href="" class="terms-conditions-link">Terms and
+                    Conditions</a>
+                  of
+                  service.</label>
+              </div>
+            </div>
+            <div class="navigation-container">
+              <!-- <button type="button" class="btn btn-primary-3 btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+              @click="activeName = 'plan'">Previous</button> -->
+              <button type="submit" class="btn btn-primary-3 btn-navigation"
+                :class="showSpinner == true ? 'isLoaded' : ''" style="margin-top: 12px; border-radius: 2px;">
+                <SpinnerComponent v-if="showSpinner == true" :color="'red'" /> <span v-else>Create my account</span>
+              </button>
+            </div>
+          </form>
+        </div>
       </el-tab-pane>
-      <el-tab-pane name="company-info">
+      <!-- <el-tab-pane name="company-info">
         <div class="tab-pane-header">
-          <h6>STEP 2 OF 3</h6>
-          <div class="app__title">
-            <h1>Fill your account informations</h1>
+          <div class="section__title">
+            <p class="mt-4">Please fill out the form to create your account</p>
           </div>
         </div>
         <form @submit.prevent="submitCompanyForm">
@@ -153,13 +269,13 @@
             </button>
           </div>
         </form>
-      </el-tab-pane>
+      </el-tab-pane> -->
 
       <el-tab-pane name="checkout">
         <div class="tab-pane-header">
           <h6>STEP 3 OF 3</h6>
-          <div class="app__title">
-            <h1>Checkout</h1>
+          <div class="section__title">
+            <p class="mt-4">Checkout</p>
           </div>
         </div>
         <div class="w-full">
@@ -170,8 +286,8 @@
             <div class="shrink-0 lg:order-2">
               <div v-if="planInfo && planInfo.plan" class="summary-card">
                 <div class="summary-card__content">
-                  <div class="app__title">
-                    <h1>Order Summary</h1>
+                  <div class="section__title">
+                    <p class="mt-4">Order Summary</p>
                   </div>
                   <table class="w-full">
                     <tr>
@@ -192,8 +308,8 @@
               </div>
               <div class="summary-card shrink-0 lg:order-2 my-4">
                 <div class="summary-card__content">
-                  <div class="app__title">
-                    <h1>Payment information</h1>
+                  <div class="section__title">
+                    <p class="mt-4">Payment information</p>
                   </div>
                   <label for="cardName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name on
                     card
@@ -238,9 +354,17 @@ import { useRouter } from 'vue-router';
 import { h } from 'vue'
 import { ElMessage } from 'element-plus';
 import { countries } from '@Services/input-list.js';
+import linkystar from '@/assets/images/logo/LinkyStar.png'
+import { current } from '@Services/languages.js';
+import { useI18n } from "vue-i18n";
+// import { i18n } from '@/i18n';
 
 const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
+)
+
+const LanguageMenuDropdown = defineAsyncComponent(
+  () => import("@Components/utils/LanguageMenuDropdownComponent.vue")
 )
 
 const baseurl = window.location.origin;
@@ -249,6 +373,13 @@ const planInfo = ref({});
 const showSpinner = ref(false)
 const userCreated = ref(false)
 const app_url = inject('app_url');
+const { locale } = useI18n();
+
+
+const submitForm = async () => {
+  await submitUserForm()
+  await submitCompanyForm()
+}
 
 const submitUserForm = async () => {
   showSpinner.value = true;
@@ -261,6 +392,23 @@ const submitUserForm = async () => {
   showSpinner.value = false;
 
 }
+
+const currentLanguage = ref(current);
+
+const selectCurrentLanguage = (language) => {
+  let svgString = language.svg;
+
+  svgString = svgString.replace('class="h-3.5 w-3.5 rounded-full me-2"', 'class="w-5 h-5 rounded-full me-3"');
+  currentLanguage.value = {
+    name: language.name,
+    code: language.code,
+    svg: svgString
+  }
+
+  localStorage.setItem("langue", language.code)
+
+  locale.value = language.bb;
+};
 
 const submitCompanyForm = async () => {
   showSpinner.value = true;
@@ -300,7 +448,7 @@ const plans = ref([]);
 
 const chatID = ref(import.meta.env.VITE_3CX_CHAT_ID);
 
-const activeName = ref('plan');
+const activeName = ref('user-info');
 const activeStaffTab = ref('plan_list')
 const plan_to_update = ref(null);
 provide('plan_to_update', plan_to_update);
@@ -487,18 +635,64 @@ const loadPaymentForm = async () => {
 };
 </script>
 <style>
+.features-list {
+  margin-top: 30px;
+}
+
+.features-list ul {
+  padding: 0;
+  margin: 0;
+}
+
+.features-list ul li {
+  margin-top: 10px;
+  position: relative;
+  font-size: 18px;
+  padding-left: 25px;
+  color: #02021e;
+  font-weight: 500;
+}
+
+.features-list ul li.no::before,
+.features-list ul li.not::before {
+  content: "\f00d";
+  color: #080f1e;
+}
+
+.features-list ul li::before {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  font-family: "Font Awesome 5 Pro";
+  content: "\f00c";
+  color: #1a1aff;
+  font-size: 16px;
+}
+
+.sub-list-price {
+  margin-left: 30px !important;
+
+}
+
+.sub-list-price li {
+  margin-top: 0 !important;
+  font-size: 14px !important;
+  line-height: 220%;
+}
+
+.no-icon li::before {
+  content: none !important;
+}
 
 .nav-logo {
-  height: 48px;
   margin-right: 24px;
-  padding: 8px 16px;
   background-color: var(--color-white);
   border-radius: 24px;
 }
 
 .nav-logo img {
-  width: auto;
-  height: 100%;
+  width: 186px;
+  height: auto;
 }
 
 button.isLoaded {
@@ -525,18 +719,16 @@ button.isLoaded {
 }
 
 .subscription-page-header {
-  width: 100vw;
-  height: 5rem;
   position: fixed;
   top: 0;
-  z-index: 11;
-  color: var(--color-white);
-  background: rgb(66, 72, 144);
-  background: linear-gradient(180deg, rgba(216, 217, 226, 1) 0%, white 100%);
-  border-bottom: 1px solid rgba(66, 72, 144, .1);
+  width: 100%;
+  z-index: 99;
+  background-color: #FFFFFF;
+  box-shadow: 0px 1px 10px 0px rgba(0, 0, 0, 0);
+  padding-block: 30px;
 }
 
-.subscription-page-header .container {
+.subscription-page-header .next-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -568,12 +760,6 @@ button.isLoaded {
   color: #112;
 }
 
-.subscription-tabs .tab-pane-header h1 {
-  font-size: 32px;
-  font-weight: 600;
-  margin-block: 16px;
-}
-
 .subscription-tabs {
   margin-top: 80px;
 }
@@ -603,22 +789,130 @@ button.isLoaded {
   padding-bottom: 100px;
 }
 
-@media (min-width: 768px) and (max-width: 1024px) {
+.subscription-menu.active {
+  font-family: "GeneralSans", Sans-serif;
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  text-decoration: none;
+  outline: none !important;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.35s ease-in-out;
+  font-weight: 500;
+  color: #2da8e0 !important;
+  display: inline-block;
+  text-transform: capitalize;
+  line-height: 1;
+}
+
+.next-container {
+  width: 100%;
+  padding-right: var(--bs-gutter-x, .75rem);
+  padding-left: var(--bs-gutter-x, .75rem);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.section__title {
+  font-size: 20px !important;
+  font-weight: 400 !important;
+  line-height: 28px !important;
+  color: #617686 !important;
+  text-align: center !important;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-family: "GeneralSans", sans-serif;
+  margin-bottom: 30px;
+}
+
+.feedback__option {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.feedback__option i {
+  font-size: 35px;
+}
+
+.subscription__right-nav {
+  display: inline-flex;
+
+}
+
+.form-group {
+  box-sizing: border-box;
+  margin: 0;
+  border: 0;
+  outline: 0;
+  background-color: #fff;
+  padding: 40px 45px;
+  box-shadow: 0px 4px 80px rgba(8, 15, 30, 0.06);
+  border-radius: 10px;
+  width: 48%;
+}
+
+.tab__pane-body {
+  display: inline-flex;
+  column-gap: 20px;
+}
+
+
+/* Ajustements pour les mobiles */
+
+@media (max-width: 500px) {
   form {
-    margin: 0 50px;
+    margin: 0 10px;
   }
 }
 
-/* Ajustements pour les mobiles */
 @media (max-width: 768px) {
   form {
     margin: 0 25px;
   }
 }
 
-@media (max-width: 500px) {
+@media (min-width: 768px) and (max-width: 1024px) {
   form {
-    margin: 0 10px;
+    margin: 0 50px;
+  }
+}
+
+@media (min-width: 576px) {
+
+  .next-container {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 768px) {
+
+  .next-container {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 992px) {
+
+  .next-container {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1200px) {
+
+  .next-container {
+    max-width: 1140px;
+  }
+}
+
+@media (min-width: 1400px) {
+
+  .next-container {
+    max-width: 1320px;
   }
 }
 </style>
