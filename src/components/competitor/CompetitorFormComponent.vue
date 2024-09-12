@@ -86,8 +86,8 @@
                 <div class="col-span-2">
                     <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
                         <span>*</span></label>
-                    <el-select v-model="data.category" placeholder="" size="large">
-                        <el-option v-for="item in categories" :key="item" :label="item" :value="item" />
+                    <el-select v-model="data.universe_id" placeholder="" size="large">
+                        <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.id" />
                     </el-select>
                 </div>
                 <div>
@@ -159,7 +159,7 @@ import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
 import { useRoute, useRouter } from 'vue-router';
-import { countries, competitor_countries, categories } from '@Services/input-list.js';
+import { countries, competitor_countries } from '@Services/input-list.js';
 
 const previewImage = ref(null);
 const imageInputHover = ref(false);
@@ -182,6 +182,7 @@ const competitor = ref(null)
 const emit = defineEmits(['reload']);
 const router = useRouter();
 const route = useRoute();
+const categories = inject('allUniverses');
 
 const competitorsData = inject('competitorsData')
 
@@ -219,15 +220,16 @@ const submit = async () => {
 
     const establishmentData = { ...data.value };
 
-    if (establishmentData.category
+    if (establishmentData.universe_id
         && establishmentData.country
         && establishmentData.city
         && establishmentData.zipcode
-        && establishmentData.category
+        && establishmentData.universe_id
         && establishmentData.name
         && establishmentData.address1) {
 
-        formData.append('category', establishmentData.category);
+        // formData.append('category', establishmentData.category);
+        formData.append('universe', establishmentData.universe_id);
         formData.append('country', establishmentData.country);
         formData.append('customer', null)
         showSpinner.value = true;
@@ -301,6 +303,8 @@ const transformData = (data) => {
                 establishment_gps,
                 establishment_rank,
                 competitor_competitor_tag,
+                universe_id,
+                universe_name,
                 competitor_id
             } = establishment;
 
@@ -323,6 +327,8 @@ const transformData = (data) => {
                     rank: establishment_rank,
                     gps: establishment_gps,
                     media: url_source,
+                    universe_id:universe_id,
+                    universe_name:universe_name,
                     establishments: [competitorName],
                     competitors: [{
                         competitor_id: competitor_id,
@@ -391,6 +397,7 @@ watch(establishment_to_update, () => {
         data.value['address1'] = establishment_to_update.value.address || "";
         previewImage.value = establishment_to_update.value.media || "";
         type.value = 'Edit';
+        console.log(data.value)
     }
 });
 
