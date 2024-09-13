@@ -2,7 +2,8 @@
     <div v-if="exist" class="feedback__form">
         <div class="feedback">
             <div v-for="(item, index) in useCategories" :key="index">
-                <button class="accordion gate__menu" :class="[item.active ? 'clicked' : '']" @click="toggleMenu(item)">
+                <button 
+                v-if="item.label != 'Menus' || (item.label == 'Menus' && (establishment.universe_name == 'Hotel' || establishment.universe_name == 'hotel' || establishment.universe_name == 'restaurant' || establishment.universe_name == 'Restaurant'))" class="accordion gate__menu" :class="[item.active ? 'clicked' : '']" @click="toggleMenu(item)">
                     <span class="icon-container">
                         <Icon :icon="item.icon" width="25px" />
                     </span>
