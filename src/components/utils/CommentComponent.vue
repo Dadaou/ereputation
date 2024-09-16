@@ -201,7 +201,7 @@
                                                     buttonRefCateg = e.currentTarget
                                                     visibleCateg = true
                                                 }" @mouseleave="() => visibleCateg = false"
-                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review,categ),old_item_category=categ,feeling_categorization='yes'">
+                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review,categ,),feeling_new_category='yes',feel=review.classification_feeling[categ],old_item_category=categ,feeling_categorization='yes'">
                                                 </i>
                                                 <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg" :virtual-ref="buttonRefCateg" virtual-triggering
                                                     popper-class="singleton-tooltip" placement="top">
