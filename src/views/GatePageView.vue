@@ -12,8 +12,8 @@
                 <div class="panel" v-if="item.active">
                     <div v-if="category == 'reviews'"
                         class="list__container">
-                        <div v-if="category == 'reviews'" class="whatsapplink">
-                            <a v-if="establishment.whatsapp" :href="`${establishment.whatsapp}`" target="_blank">
+                        <div v-if="category == 'reviews' && establishment.whatsapp" class="whatsapplink">
+                            <a :href="`${establishment.whatsapp}`" target="_blank">
                                 <i class="fa fa-whatsapp"></i>
                             </a>
                         </div>

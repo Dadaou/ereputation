@@ -39,7 +39,7 @@
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
 
-                    <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']" v-if="showConfidenceChart">
+                    <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']" v-if="showConfidenceChart && noScore !== false">
                         <div class="containerChart" ref="scrollContainer2"
                             @scroll="syncScroll('scrollContainer2', 'scrollContainer1')">
                             <div :class="['containerBody2 mt-5', !isLoading ? '' : 'loading']">
@@ -327,7 +327,7 @@
             }" :default="timePeriods[0]" /> -->
         </div>
 
-        <CommunityFeedbackComponent v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' && showConfidenceChart"
+        <CommunityFeedbackComponent v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' && showConfidenceChart && noScore !== false"
             :reviewFeedbackData="services.getScoreColor(avgScore)" />
         <el-tooltip ref="tooltipRef" :visible="desc.visible" :virtual-ref="buttonRef" virtual-triggering
             popper-class="singleton-tooltip" placement="top">
@@ -426,6 +426,7 @@ const dataLoading = ref(false)
 const isLoading = ref(false)
 let establishment = ref({});
 const categories = ref([])
+let noScore = ref(false);
 provide('categories', categories)
 const avgScore = ref(0)
 
@@ -816,14 +817,17 @@ const transformData = (chartData) => {
     let legends = []
     ratings.value = []
     let label_category=[];
-   
+    
     datasets.forEach((category, index) => {
         const { avg_score, feeling, scores, data, label } = category
         // const color = services.generateColor(label)
         const color = colors[index]
         const allScoresZero = scores.every(score => score == 0)
-       
         if (!allScoresZero) {
+            noScore.value =true;
+        }
+       
+        // if (!allScoresZero) {
              
             plotData1.datasets.push({
                 label: label,
@@ -847,7 +851,7 @@ const transformData = (chartData) => {
             })
 
             label_category.push(label);
-        }
+        // }
 
         if (avg_score != 0) {
             scoreLength++;
@@ -885,7 +889,13 @@ const transformData = (chartData) => {
         });
     }
 
-    if (label_category.length <= 0) label_category = ['123'];
+    if (label_category.length <= 0) {
+        if (legends.length > 0) {
+            label_category = ['all'];
+        } else {
+            label_category = ['123'];
+        }
+    }
     let missing_category_response = getReviewsNoClassificate(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, label_category, language.value)
 
    missing_category_response.then((rep)=>{
