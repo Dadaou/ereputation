@@ -530,25 +530,25 @@ const calculFeelingScore = (_reviews,_selectedReview,_feeling,type) =>{
         _review.classifications.forEach(_classification =>{
 
             if (_classification.feeling != '' && _classification.feeling != null && 
-                _classification.feeling != 'null' && _classification.classification_confidence) {
+                _classification.feeling != 'null' && _classification.classification_confidence_feeling) {
 
                     if (_classification.id == _selectedReview.id && type == 'category') {
                         _classification.feeling = _feeling;
                     }
 
                     if (_classification.feeling == 'positive') {
-                       sommeFeeling = sommeFeeling + (_classification.classification_confidence * 1);
+                       sommeFeeling = sommeFeeling + (_classification.classification_confidence_feeling * 1);
                        kFeeling++;
 
                     } else {
 
                         if (_classification.feeling == 'negative') {
 
-                           sommeFeeling = sommeFeeling + (_classification.classification_confidence * -1);
+                           sommeFeeling = sommeFeeling + (_classification.classification_confidence_feeling * -1);
                             kFeeling++;
 
                         } else {
-                           sommeFeeling = sommeFeeling + (_classification.classification_confidence * 0);
+                           sommeFeeling = sommeFeeling + (_classification.classification_confidence_feeling * 0);
                             kFeeling++;
                         }
 
