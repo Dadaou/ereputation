@@ -1167,6 +1167,7 @@ onBeforeMount(async () => {
     await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
     //await loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value)
     appStore.isLoading = false;
+    
 
 });
 
