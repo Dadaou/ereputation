@@ -808,7 +808,10 @@ watch([categoryFilters, end_date, start_date], async () => {
 })
 
 const transformData = (chartData) => {
-    const { labels, datasets } = chartData;
+
+
+
+    const { labels, datasets,categorizations } = chartData;
     //scores or confidence chart
     let plotData1 = {
         labels: labels,
@@ -839,8 +842,15 @@ const transformData = (chartData) => {
             noScore.value =true;
            
         }
-       
-        // if (!allScoresZero) {
+       let categoryShow=false;
+       categorizations.forEach((_categorization)=>{
+
+            if (_categorization.category == label) {
+                categoryShow = true;
+            }
+
+       });
+        if (categoryShow == true) {
              
             plotData1.datasets.push({
                 label: label,
@@ -864,12 +874,14 @@ const transformData = (chartData) => {
             })
 
             label_category.push(label);
-        // }
 
-        if (avg_score != 0) {
-            scoreLength++;
-            score += avg_score;
+              if (avg_score != 0) {
+                scoreLength++;
+                score += avg_score;
+                }
         }
+
+      
 
         legends.push({
             label: label,
@@ -909,41 +921,22 @@ const transformData = (chartData) => {
             label_category = ['123'];
         }
     }
-    let missing_category_response = getReviewsNoClassificate(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, label_category, language.value)
+    //let missing_category_response = getReviewsNoClassificate(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, label_category, language.value)
 
-   missing_category_response.then((rep)=>{
-        let newDatasetsFilter={
-            labels:plotData1.labels,
-            datasets:plotData1.datasets.filter(_dat=>rep.includes(_dat.label) == false)
-        }
+   // missing_category_response.then((rep)=>{
+        // let newDatasetsFilter={
+        //     labels:plotData1.labels,
+        //     datasets:plotData1.datasets.filter(_dat=>rep.includes(_dat.label) == false)
+        // }
 
       
-        if (newDatasetsFilter.datasets.length <= 0 || noScore == false) {
+        if ( noScore == false) {
             showConfidenceChart.value = false;
             noScore.value=false
-           
-            //  newDatasets.datasets.forEach((_newData)=>{
-
-            // });
+ 
         }else{
 
-            confidenceChart.value = newDatasetsFilter;
-   
-            //  let sommeAvgScore=0;
-            // newDatasetsFilter.datasets.forEach((_data)=>{
-            //       let sommeScore=0;
-            //     _data.data.forEach((_sc)=>{
-            //         if (sommeScore == 0) {
-            //             sommeScore = _sc;
-            //         } else {
-            //             sommeScore = (sommeScore + _sc)/2;
-                       
-            //         }
-            //     })
-
-            //     sommeAvgScore = sommeAvgScore + sommeScore;
-                    
-            // })
+             confidenceChart.value = plotData1;
               
             if (scoreLength > 0) {
                 avgScore.value = score/scoreLength;
@@ -958,9 +951,9 @@ const transformData = (chartData) => {
         }
      
         
-   })
+   // })
 
-     
+  
     loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, label_category, language.value)
 }
 
@@ -1167,7 +1160,7 @@ onBeforeMount(async () => {
     await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
     //await loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value)
     appStore.isLoading = false;
-    
+
 
 });
 
