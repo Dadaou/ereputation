@@ -335,9 +335,13 @@
                 <span> {{ desc.text }} </span>
             </template>
         </el-tooltip>
-        <BaseLegend v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' && legendData.length > 0"
-            :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData" :alignment="'vertical'">
-        </BaseLegend>
+        <div class="content_legend" v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' && legendData.length > 0">
+            <div v-for="(item, index) in legendData" :key="index">
+                <div class="container_legend" @click="handleLegendChange(item.name)">
+                    <div class="card_legend" :style="{ backgroundColor: item.color}"></div> {{ item.name }}
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script setup>
@@ -682,6 +686,10 @@ const calculateAvg = (data) => {
 const handleCategoryDropdown = (type) => {
     const filters = type == 'other' ? categoryFilters.value.filter(category => category != 'all') : ['all']
     categoryFilters.value = categoryFilters.value.length > 0 ? filters : ['all']
+}
+
+const handleLegendChange = (name) => {
+    categoryFilters.value = [name];
 }
 
 const onChange = () => {
@@ -1403,5 +1411,29 @@ p {
 
 .fade-in.show {
     opacity: 1;
+}
+
+.content_legend {
+    border: 1px solid var(--light-color-bg2);
+    border-radius: 10px;
+    height: auto;
+    padding: 15px;
+    margin: 15px auto;
+    margin-top: 15px !important;
+}
+
+.container_legend {
+    gap: 3px;
+    align-items: center;
+    display: flex;
+}
+
+.container_legend:hover {
+    cursor:pointer;
+}
+
+.card_legend {
+    width:16px;
+    height: 12px;
 }
 </style>

@@ -2,12 +2,8 @@
     <div class="filters">
         <div class="row">
             <div class="select_info">
-                <el-select v-model="selectedCategory" placeholder="Select categories" size="large">
-                    <el-option v-for="(item, index) in [...new Map(categoriesall.map((item) => [item.category, item])).values()]" 
-                        :key="index"
-                        :label="item.category"
-                        :value="item.id"
-                    />
+                <el-select v-model="review_category" placeholder="Select categories" size="large">
+                    <el-option v-for="(item, index) in categoriesall" :key="index" :label="capitalize(item)" :value="item" />
                 </el-select>
 
             </div>
@@ -58,7 +54,7 @@ const userStore = useUserStore();
 const userId = userStore.user.id;
 
 
-const selectedCategory = ref(null);
+const review_category = ref(null);
 
 const categories = ref([
     { label: 'All', value: 'all' },
@@ -74,27 +70,22 @@ provide('categoryall', categoryall)
 const categoriesall = ref([])
 provide('categoriesall', categoriesall)
 
-const types = ref([
-    { label: 'Global', value: 'global' },
-    { label: 'Score', value: 'score' },
-]);
 
-const type = ref('global');
 const categoryFilters = ref('all');
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 
-watch([type, categoryFilters, start_date, end_date], async () => {
+watch([review_category, categoryFilters, start_date, end_date], async () => {
     if (start_date.value && end_date.value) {
-        await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, type.value);
+        await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, review_category.value);
     }
 });
 
 const IsValueOkay = (value) => (value !== '' && value !== 0 && value !== null && value !== undefined);
 
-const loadEstablishment = async (tag, category, dateStart, dateEnd, note) => {
-    let uri = 'get/establishment/classement';
-    let params = `tag=${tag}&category=${category}&note=${note}&user_id=${userId}`;
+const loadEstablishment = async (tag, category, dateStart, dateEnd, review_category) => {
+    let uri = 'get/establishment/categorization/classement';
+    let params = `tag=${tag}&category=${category}&review_category=${review_category}&user_id=${userId}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
@@ -112,23 +103,14 @@ const loadEstablishment = async (tag, category, dateStart, dateEnd, note) => {
 
     if (response.status === 200) {
         establishments.value = response.data.map(objet => {
-            if (note === 'global') {
-                objet.rating = objet.note;
-            }
-            objet.reviews_count = {
-                '5 ': objet.stars ? objet.stars['5 stars'] : 0,
-                '4 ': objet.stars ? objet.stars['4 stars'] : 0,
-                '3 ': objet.stars ? objet.stars['3 stars'] : 0,
-                '2 ': objet.stars ? objet.stars['2 stars'] : 0,
-                '1 ': objet.stars ? objet.stars['1 star'] : 0,
-            };
-            return { ...objet, isGlobal: (note === 'global') };
+            objet.categories
+            return { ...objet };
         });
     }
 };
 
 const loadCategories = async (tag) => {
-    const api = `customer/establishments/categories?tag=${tag}`;
+    const api = `customer/establishments/categorizations?tag=${tag}`;
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             console.log("Category response", response.data);
@@ -143,9 +125,14 @@ const loadCategories = async (tag) => {
     }
 }
 
+const capitalize = (str) => {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 onMounted(async () => {
     if (start_date.value && end_date.value) {
-        await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, type.value);
+        await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, review_category.value);
         await loadCategories(customerTag.value);
         dataLoading.value = false;
     }
