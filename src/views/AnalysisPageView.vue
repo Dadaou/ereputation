@@ -5,17 +5,17 @@
                 <el-tab-pane label="Categorization" name="categorization">
 
                     <AnalysisCategory text="Your customers appreciated your establishment for the following services"
-                        :ratings="ratingsCondition1" condition='condition1' v-if="ratingsCondition1.length > 0"
+                        :ratings="ratingsCondition1" condition='condition1' v-if="ratingsCondition1.length > 0 && noScore !==false"
                         class="mb-4" @labelChange="handleLabelChange" />
 
                     <AnalysisCategory
                         text="Your customers believe that you can improve the quality of the following services"
-                        :ratings="ratingsCondition2" condition='condition2' v-if="ratingsCondition2.length > 0"
+                        :ratings="ratingsCondition2" condition='condition2' v-if="ratingsCondition2.length > 0 && noScore !==false"
                         class="mb-4" @labelChange="handleLabelChange" />
 
                     <AnalysisCategory
                         text="It is necessary to establish actions in order to improve the following areas"
-                        :ratings="ratingsCondition3" condition='condition3' v-if="ratingsCondition3.length > 0"
+                        :ratings="ratingsCondition3" condition='condition3' v-if="ratingsCondition3.length > 0 && noScore !==false"
                         class="mb-4" @labelChange="handleLabelChange" />
 
                     <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']" v-if="visibleData.length > 0">
@@ -328,7 +328,7 @@
         </div>
 
         <CommunityFeedbackComponent v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' && showConfidenceChart && noScore !== false"
-            :reviewFeedbackData="services.getScoreColor(avgScore)" />
+            :reviewFeedbackData="reviewFeedbackData" />
         <el-tooltip ref="tooltipRef" :visible="desc.visible" :virtual-ref="buttonRef" virtual-triggering
             popper-class="singleton-tooltip" placement="top">
             <template #content>
@@ -518,6 +518,8 @@ const showRatingChart=ref(true)
 const ratings = ref([])
 
 const salesAnalysis = ref(null)
+
+
 
 
 const ratingsCondition1 = computed(() => {
@@ -817,14 +819,17 @@ const transformData = (chartData) => {
     let legends = []
     ratings.value = []
     let label_category=[];
+     noScore.value=false;
     
     datasets.forEach((category, index) => {
         const { avg_score, feeling, scores, data, label } = category
         // const color = services.generateColor(label)
         const color = colors[index]
         const allScoresZero = scores.every(score => score == 0)
+       
         if (!allScoresZero) {
             noScore.value =true;
+           
         }
        
         // if (!allScoresZero) {
@@ -904,8 +909,10 @@ const transformData = (chartData) => {
             datasets:plotData1.datasets.filter(_dat=>rep.includes(_dat.label) == false)
         }
 
-        if (newDatasetsFilter.datasets.length <= 0) {
+      
+        if (newDatasetsFilter.datasets.length <= 0 || noScore == false) {
             showConfidenceChart.value = false;
+            noScore.value=false
            
             //  newDatasets.datasets.forEach((_newData)=>{
 
@@ -914,26 +921,32 @@ const transformData = (chartData) => {
 
             confidenceChart.value = newDatasetsFilter;
    
-             let sommeAvgScore=0;
-            newDatasetsFilter.datasets.forEach((_data)=>{
-                  let sommeScore=0;
-                _data.data.forEach((_sc)=>{
-                    if (sommeScore == 0) {
-                        sommeScore = _sc;
-                    } else {
-                        sommeScore = (sommeScore + _sc)/2;
+            //  let sommeAvgScore=0;
+            // newDatasetsFilter.datasets.forEach((_data)=>{
+            //       let sommeScore=0;
+            //     _data.data.forEach((_sc)=>{
+            //         if (sommeScore == 0) {
+            //             sommeScore = _sc;
+            //         } else {
+            //             sommeScore = (sommeScore + _sc)/2;
                        
-                    }
-                })
+            //         }
+            //     })
 
-                sommeAvgScore = sommeAvgScore + sommeScore;
+            //     sommeAvgScore = sommeAvgScore + sommeScore;
                     
-            })
+            // })
               
-            avgScore.value = sommeAvgScore/newDatasetsFilter.datasets.length;
+            if (scoreLength > 0) {
+                avgScore.value = score/scoreLength;
+            } else {
+                avgScore.value = 0;
+            }
 
-            
+            let feeling_score = calculSentimentAnalysis(avgScore.value);
+            reviewFeedbackData.value = feeling_score;
               showConfidenceChart.value = true;
+
         }
      
         
@@ -983,8 +996,8 @@ const starFilter = (star) => {
 
 watch([start_date, end_date, selectedWebsites, categoryFilters], () => {
     categoryFilters.value = categoryFilters.value.length > 0 ? categoryFilters.value : ['all']
-    
-    loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
+    //loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
+   loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
 })
 
 
