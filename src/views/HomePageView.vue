@@ -11,7 +11,7 @@
                         :to="{ name: 'EstablishmentRanking', params: { tag: tag } }">
                         <Icon :icon="'solar:cup-first-bold'" width="25"></Icon>
                     </RouterLink>
-                    <RouterLink class="search__icon"
+                    <RouterLink v-if="establishments.length > 1" class="search__icon"
                         :to="{ name: 'Categorization', params: { tag: tag } }">
                         <Icon :icon="'carbon:category-new-each'" width="25"></Icon>
                     </RouterLink>
