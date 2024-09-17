@@ -1,4 +1,5 @@
 <template>
+  <div style="color:gray;">You have the option to add your own categories below</div>
   <div class="search">
     <el-input v-model="search" size="small" placeholder="Type to search" />
   </div>

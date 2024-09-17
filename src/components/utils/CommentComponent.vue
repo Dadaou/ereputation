@@ -72,7 +72,7 @@
                                                     buttonRefCateg = e.currentTarget
                                                     visibleCateg = true
                                                 }" @mouseleave="() => visibleCateg = false"
-                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review,categ),old_item_category=categ,feeling_categorization='yes'">
+                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review,categ,),feeling_new_category='yes',feel=review.classification_feeling[categ],old_item_category=categ,feeling_categorization='yes'">
                                                 </i>
                                                 <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg" :virtual-ref="buttonRefCateg" virtual-triggering
                                                     popper-class="singleton-tooltip" placement="top">
@@ -201,7 +201,7 @@
                                                     buttonRefCateg = e.currentTarget
                                                     visibleCateg = true
                                                 }" @mouseleave="() => visibleCateg = false"
-                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review,categ),old_item_category=categ,feeling_categorization='yes'">
+                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review,categ,),feeling_new_category='yes',feel=review.classification_feeling[categ],old_item_category=categ,feeling_categorization='yes'">
                                                 </i>
                                                 <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg" :virtual-ref="buttonRefCateg" virtual-triggering
                                                     popper-class="singleton-tooltip" placement="top">
@@ -398,7 +398,8 @@ const buttonRef2 = ref()
 const tooltipRef2 = ref()
 const visible = ref(false)
 const visibleCateg = ref(false)
-const visible2 = ref(false)
+const visible2 = ref(false);
+const feeling_new_category = ref(null);
  const baseURL = ref(import.meta.env.VITE_APP_API_URL);
 
 const getFeeling = (categ,feel)=>{
@@ -494,7 +495,8 @@ const editReview = (review,_category='') => {
         review.classification_feeling[_category] = feel.value;
         selectedReview.value = review;
         category.value = review.category
-
+        console.log(selectedReview)
+          console.log(feel.value)
  
         showModal.value = true;
 
@@ -528,25 +530,25 @@ const calculFeelingScore = (_reviews,_selectedReview,_feeling,type) =>{
         _review.classifications.forEach(_classification =>{
 
             if (_classification.feeling != '' && _classification.feeling != null && 
-                _classification.feeling != 'null' && _classification.classification_confidence) {
+                _classification.feeling != 'null' && _classification.classification_confidence_feeling) {
 
                     if (_classification.id == _selectedReview.id && type == 'category') {
                         _classification.feeling = _feeling;
                     }
 
                     if (_classification.feeling == 'positive') {
-                       sommeFeeling = sommeFeeling + (_classification.classification_confidence * 1);
+                       sommeFeeling = sommeFeeling + (_classification.classification_confidence_feeling * 1);
                        kFeeling++;
 
                     } else {
 
                         if (_classification.feeling == 'negative') {
 
-                           sommeFeeling = sommeFeeling + (_classification.classification_confidence * -1);
+                           sommeFeeling = sommeFeeling + (_classification.classification_confidence_feeling * -1);
                             kFeeling++;
 
                         } else {
-                           sommeFeeling = sommeFeeling + (_classification.classification_confidence * 0);
+                           sommeFeeling = sommeFeeling + (_classification.classification_confidence_feeling * 0);
                             kFeeling++;
                         }
 
@@ -705,7 +707,9 @@ const updateReview = async () => {
                            }
                         }
 
-
+                        if (feeling_new_category.value) {
+                            selectedReview.value.classification_feeling[category.value]=selectedReview.value.classification_feeling[old_item_category.value]
+                        }
                     
                         selectedReview.value.category = new_cat;
 
@@ -754,7 +758,8 @@ const handleModal = (text, action, icon, type, review,category='') => {
 }
 
 .category_mobile{
-    width:100%
+    width:100%;
+    align-items:center
 }
 @media screen and (max-width: 975px) {
     .category_container_mobile{

@@ -42,6 +42,11 @@
                                             <span class="score">{{ stars }}</span><i class="fa fa-star " aria-hidden="true"></i>: {{ count }} 
                                         </div>
                                     </div>
+                                    <div class="reviews-category" >
+                                        <div class="reviews-box" v-if="company.categories" v-for="(cat, category) in sortedReviews(company.categories)" :key="category">
+                                            <span class="score">{{ capitalize(category) }}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -169,7 +174,10 @@ const redirectToReviews = (star,id) =>{
     },
   });
 }
-
+const capitalize = (str) => {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+};
 </script>
 <style scoped>
 .reviews-count{
@@ -454,5 +462,18 @@ const redirectToReviews = (star,id) =>{
 }
 .fade-in.show {
     opacity: 1;
+}
+.establishment-rank-view .reviews-category {
+    display: flex;
+    border-radius: 5px;
+    margin-bottom: -9px;
+    margin-top: 15px;
+    margin-right: -130px;
+    margin-left: -214px;
+}
+.reviews-box {
+    background-color:#8080803b;
+    padding: 1px;
+    border-radius: 2px;
 }
 </style>

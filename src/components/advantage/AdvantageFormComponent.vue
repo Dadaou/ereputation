@@ -133,7 +133,7 @@
                             <!-- <span>*</span> -->
                             <Tooltip text="To use after the [date]" />
                         </label>
-                        <el-date-picker v-model="dateEnd" :size="'large'" />
+                        <el-date-picker v-model="dateTo" :size="'large'" />
                     </div>
                 </div>
                 <div>
@@ -200,7 +200,7 @@ const userStore = useUserStore();
 const showSpinner = ref(false);
 
 const dateFrom = ref(null);
-const dateEnd = ref(null);
+const dateTo = ref(null);
 const expiredAt = ref(null);
 const description = ref(null);
 const category = ref('');
@@ -221,6 +221,8 @@ const metrics = ref(['Percent', 'Amount'])
 
 watch(advantage_to_update, () => {
     if (advantage_to_update.value != null) {
+        dateFrom.value = advantage_to_update.value["date_from"];
+        dateTo.value = advantage_to_update.value["date_to"];
         expiredAt.value = advantage_to_update.value["expired_at"];
         category.value = advantage_to_update.value["category"];
         code.value = advantage_to_update.value["code"];
@@ -233,6 +235,9 @@ watch(advantage_to_update, () => {
         advantageLimit.value = advantage_to_update.value["advantageLimit"];
         description.value = advantage_to_update.value["description"];
         type.value = 'edit';
+
+        console.log("dateFrom:", dateFrom.value);
+        console.log("dateTo:", dateTo.value);
     }
 })
 
@@ -248,6 +253,8 @@ const loadData = (_advantage, advantage, establishment) => {
         metric: _advantage.metric,
         scope: _advantage.scope,
         expired_at: _advantage.expiredAt ? moment(_advantage.expiredAt).format('YYYY-MM-DD') : null,
+        date_from: _advantage.dateFrom ? moment(_advantage.dateFrom).format('YYYY-MM-DD') : null,
+        date_to: _advantage.dateTo ? moment(_advantage.dateTo).format('YYYY-MM-DD') : null,
         establishment_name: establishment[1],
         establishment_id: establishment[0].split('/')[3],
         enable: true
@@ -268,6 +275,8 @@ const updateData = (_advantage, establishment) => {
         metric: _advantage.metric,
         scope: _advantage.scope,
         expired_at: _advantage.expiredAt ? moment(_advantage.expiredAt).format('YYYY-MM-DD') : null,
+        date_from: _advantage.dateFrom ? moment(_advantage.dateFrom).format('YYYY-MM-DD') : null,
+        date_to: _advantage.dateTo ? moment(_advantage.dateTo).format('YYYY-MM-DD') : null,
         establishment_name: establishment[1],
         establishment_id: establishment[0].split('/')[3],
         enable: true
@@ -280,7 +289,7 @@ const updateData = (_advantage, establishment) => {
 
 const resetForm = () => {
     dateFrom.value = null;
-    dateEnd.value = null;
+    dateTo.value = null;
     expiredAt.value = null;
     description.value = null;
     category.value = '';
@@ -310,7 +319,7 @@ const submit = async () => {
         "expiredAt": expiredAt.value,
         "advantageLimit": (advantageLimit.value=="") ? null : advantageLimit.value,
         "dateFrom": dateFrom.value,
-        "dateTo": dateEnd.value,
+        "dateTo": dateTo.value,
     }
 
     try {
@@ -370,7 +379,7 @@ const selectAdvantage = (advantage) => {
     }
 
     dateFrom.value = advantage.From ? new Date(advantage.From) : advantage.From;
-    dateEnd.value = advantage.To ? new Date(advantage.To) : advantage.To;
+    dateTo.value = advantage.To ? new Date(advantage.To) : advantage.To;
     expiredAt.value = advantage.Expired_at ? new Date(advantage.Expired_at) : advantage.Expired_at;
     description.value = advantage.description;
     category.value = capitalize(advantage.Category);

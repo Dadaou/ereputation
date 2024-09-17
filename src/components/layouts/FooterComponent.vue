@@ -23,7 +23,11 @@
             </ul>
             <ul v-else></ul>
             <!-- <span v-if="!isFeedback"><i class="uil uil-copyright"></i>2024, all rights reserved</span> -->
-            <span v-if="appStore.account && appStore.account.brand">
+          <!--   <span v-if="appStore.account && appStore.account.brand">
+              Powered by 
+              <a href="#" @click="handleBrandClick">Linkystar</a>
+            </span> -->
+              <span>
               Powered by 
               <a href="#" @click="handleBrandClick">Linkystar</a>
             </span>
@@ -78,11 +82,14 @@ onBeforeMount(async () => {
 });
 
 const handleBrandClick = () => {
-  if (appStore.account && appStore.account.website) {
-    window.open(appStore.account.website, '_blank');
-  } else {
-    alert('Website information is not available.');
-  }
+        window.open('https://linkystar.com', '_blank');
+  // if (appStore.account && appStore.account.website) {
+    
+  //   // window.open(appStore.account.website, '_blank');
+
+  // } else {
+  //   alert('Website information is not available.');
+  // }
 };
 </script>
 

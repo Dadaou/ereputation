@@ -5,17 +5,17 @@
                 <el-tab-pane label="Categorization" name="categorization">
 
                     <AnalysisCategory text="Your customers appreciated your establishment for the following services"
-                        :ratings="ratingsCondition1" condition='condition1' v-if="ratingsCondition1.length > 0"
+                        :ratings="ratingsCondition1" condition='condition1' v-if="ratingsCondition1.length > 0 && noScore !==false"
                         class="mb-4" @labelChange="handleLabelChange" />
 
                     <AnalysisCategory
                         text="Your customers believe that you can improve the quality of the following services"
-                        :ratings="ratingsCondition2" condition='condition2' v-if="ratingsCondition2.length > 0"
+                        :ratings="ratingsCondition2" condition='condition2' v-if="ratingsCondition2.length > 0 && noScore !==false"
                         class="mb-4" @labelChange="handleLabelChange" />
 
                     <AnalysisCategory
                         text="It is necessary to establish actions in order to improve the following areas"
-                        :ratings="ratingsCondition3" condition='condition3' v-if="ratingsCondition3.length > 0"
+                        :ratings="ratingsCondition3" condition='condition3' v-if="ratingsCondition3.length > 0 && noScore !==false"
                         class="mb-4" @labelChange="handleLabelChange" />
 
                     <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']" v-if="visibleData.length > 0">
@@ -39,7 +39,7 @@
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
 
-                    <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']" v-if="showConfidenceChart">
+                    <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']" v-if="showConfidenceChart && noScore !== false">
                         <div class="containerChart" ref="scrollContainer2"
                             @scroll="syncScroll('scrollContainer2', 'scrollContainer1')">
                             <div :class="['containerBody2 mt-5', !isLoading ? '' : 'loading']">
@@ -327,17 +327,21 @@
             }" :default="timePeriods[0]" /> -->
         </div>
 
-        <CommunityFeedbackComponent v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' && showConfidenceChart"
-            :reviewFeedbackData="services.getScoreColor(avgScore)" />
+        <CommunityFeedbackComponent v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' && showConfidenceChart && noScore !== false"
+            :reviewFeedbackData="reviewFeedbackData" />
         <el-tooltip ref="tooltipRef" :visible="desc.visible" :virtual-ref="buttonRef" virtual-triggering
             popper-class="singleton-tooltip" placement="top">
             <template #content>
                 <span> {{ desc.text }} </span>
             </template>
         </el-tooltip>
-        <BaseLegend v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' && legendData.length > 0"
-            :class="['legend', !isLoading ? '' : 'loading']" :LegendData="legendData" :alignment="'vertical'">
-        </BaseLegend>
+        <div class="content_legend" v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' && legendData.length > 0">
+            <div v-for="(item, index) in legendData" :key="index">
+                <div class="container_legend" @click="handleLegendChange(item.name)">
+                    <div class="card_legend" :style="{ backgroundColor: item.color}"></div> {{ item.name }}
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script setup>
@@ -426,6 +430,7 @@ const dataLoading = ref(false)
 const isLoading = ref(false)
 let establishment = ref({});
 const categories = ref([])
+let noScore = ref(false);
 provide('categories', categories)
 const avgScore = ref(0)
 
@@ -517,6 +522,8 @@ const showRatingChart=ref(true)
 const ratings = ref([])
 
 const salesAnalysis = ref(null)
+
+
 
 
 const ratingsCondition1 = computed(() => {
@@ -681,6 +688,10 @@ const handleCategoryDropdown = (type) => {
     categoryFilters.value = categoryFilters.value.length > 0 ? filters : ['all']
 }
 
+const handleLegendChange = (name) => {
+    categoryFilters.value = [name];
+}
+
 const onChange = () => {
     loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value);
 };
@@ -797,7 +808,10 @@ watch([categoryFilters, end_date, start_date], async () => {
 })
 
 const transformData = (chartData) => {
-    const { labels, datasets } = chartData;
+
+
+
+    const { labels, datasets,categorizations } = chartData;
     //scores or confidence chart
     let plotData1 = {
         labels: labels,
@@ -816,7 +830,8 @@ const transformData = (chartData) => {
     let legends = []
     ratings.value = []
     let label_category=[];
-   
+     noScore.value=false;
+    
     datasets.forEach((category, index) => {
         const { avg_score, feeling, scores, data, label } = category
         // const color = services.generateColor(label)
@@ -824,6 +839,18 @@ const transformData = (chartData) => {
         const allScoresZero = scores.every(score => score == 0)
        
         if (!allScoresZero) {
+            noScore.value =true;
+           
+        }
+       let categoryShow=false;
+       categorizations.forEach((_categorization)=>{
+
+            if (_categorization.category == label) {
+                categoryShow = true;
+            }
+
+       });
+        if (categoryShow == true) {
              
             plotData1.datasets.push({
                 label: label,
@@ -847,12 +874,14 @@ const transformData = (chartData) => {
             })
 
             label_category.push(label);
+
+              if (avg_score != 0) {
+                scoreLength++;
+                score += avg_score;
+                }
         }
 
-        if (avg_score != 0) {
-            scoreLength++;
-            score += avg_score;
-        }
+      
 
         legends.push({
             label: label,
@@ -885,51 +914,46 @@ const transformData = (chartData) => {
         });
     }
 
-    if (label_category.length <= 0) label_category = ['123'];
-    let missing_category_response = getReviewsNoClassificate(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, label_category, language.value)
-
-   missing_category_response.then((rep)=>{
-        let newDatasetsFilter={
-            labels:plotData1.labels,
-            datasets:plotData1.datasets.filter(_dat=>rep.includes(_dat.label) == false)
+    if (label_category.length <= 0) {
+        if (legends.length > 0) {
+            label_category = ['all'];
+        } else {
+            label_category = ['123'];
         }
+    }
+    //let missing_category_response = getReviewsNoClassificate(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, label_category, language.value)
 
-        if (newDatasetsFilter.datasets.length <= 0) {
+   // missing_category_response.then((rep)=>{
+        // let newDatasetsFilter={
+        //     labels:plotData1.labels,
+        //     datasets:plotData1.datasets.filter(_dat=>rep.includes(_dat.label) == false)
+        // }
+
+      
+        if ( noScore == false) {
             showConfidenceChart.value = false;
-           
-            //  newDatasets.datasets.forEach((_newData)=>{
-
-            // });
+            noScore.value=false
+ 
         }else{
 
-            confidenceChart.value = newDatasetsFilter;
-   
-             let sommeAvgScore=0;
-            newDatasetsFilter.datasets.forEach((_data)=>{
-                  let sommeScore=0;
-                _data.data.forEach((_sc)=>{
-                    if (sommeScore == 0) {
-                        sommeScore = _sc;
-                    } else {
-                        sommeScore = (sommeScore + _sc)/2;
-                       
-                    }
-                })
-
-                sommeAvgScore = sommeAvgScore + sommeScore;
-                    
-            })
+             confidenceChart.value = plotData1;
               
-            avgScore.value = sommeAvgScore/newDatasetsFilter.datasets.length;
+            if (scoreLength > 0) {
+                avgScore.value = score/scoreLength;
+            } else {
+                avgScore.value = 0;
+            }
 
-            
+            let feeling_score = calculSentimentAnalysis(avgScore.value);
+            reviewFeedbackData.value = feeling_score;
               showConfidenceChart.value = true;
+
         }
      
         
-   })
+   // })
 
-     
+  
     loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, label_category, language.value)
 }
 
@@ -973,8 +997,8 @@ const starFilter = (star) => {
 
 watch([start_date, end_date, selectedWebsites, categoryFilters], () => {
     categoryFilters.value = categoryFilters.value.length > 0 ? categoryFilters.value : ['all']
-    
-    loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
+    //loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
+   loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
 })
 
 
@@ -1136,6 +1160,7 @@ onBeforeMount(async () => {
     await loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
     //await loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value)
     appStore.isLoading = false;
+
 
 });
 
@@ -1380,5 +1405,29 @@ p {
 
 .fade-in.show {
     opacity: 1;
+}
+
+.content_legend {
+    border: 1px solid var(--light-color-bg2);
+    border-radius: 10px;
+    height: auto;
+    padding: 15px;
+    margin: 15px auto;
+    margin-top: 15px !important;
+}
+
+.container_legend {
+    gap: 3px;
+    align-items: center;
+    display: flex;
+}
+
+.container_legend:hover {
+    cursor:pointer;
+}
+
+.card_legend {
+    width:16px;
+    height: 12px;
 }
 </style>
