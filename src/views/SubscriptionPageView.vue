@@ -6,7 +6,7 @@
           <div v-if="appStore.account && appStore.account.logo" class="nav-logo">
             <img :src="linkystar" alt="logo" />
           </div>
-          <span class="subscription-menu active">My account</span>
+          <span class="subscription-menu">My account</span>
         </a>
         <div class="subscription__right-nav">
           <RouterLink :to="`/`" class="relative p-2 login-link mr-6">
@@ -31,34 +31,38 @@
           </div>
         </div>
         <div class="tab__pane-body w-full">
-          <div class="form-group">
 
-            <div class="features-list">
-              <ul>
-                <li>Unified QR Codes Hub</li>
-                <ul class="sub-list-price no-icon">
-                  <li>High Definition</li>
-                  <li>Customizable</li>
-                </ul>
-
-                <li>Branded Mobile Website, 5 sections</li>
-                <ul class="sub-list-price no-icon">
-                  <li>MENUS</li>
-                  <li>INFOS</li>
-                  <li>REVIEWS</li>
-                  <li>OFFERS</li>
-                  <li>FOLLOW US</li>
-                </ul>
-                <li>Offers Program Platform</li>
-                <ul class="sub-list-price no-icon">
-                  <li>Partners Management</li>
-                  <li>Digital Ticketing</li>
-                  <li>Automated Emailing</li>
-                  <li>Analytics</li>
-                  <li>Lead Generation</li>
-                </ul>
-              </ul>
+          <div class="form-group features-list w-50">
+            <div class="d-inline-flex align-center justify-start mb-5">
+              <span class="plan-name mr-2">Lead Gen</span>
+              <a href="http://localhost:3000/pricing" title="change plan"><i
+                  class="uil uil-edit change-plan-icon"></i></a>
             </div>
+            <ul>
+              <AdvantageList text="Unified QR Codes Hub" />
+              <ul class="sub-list-price no-icon mb-4">
+                <li>High Definition</li>
+                <li>Customizable</li>
+              </ul>
+
+              <AdvantageList text="Branded Mobile Website, 5 sections" />
+              <ul class="sub-list-price no-icon mb-4">
+                <li>MENUS</li>
+                <li>INFOS</li>
+                <li>REVIEWS</li>
+                <li>OFFERS</li>
+                <li>FOLLOW US</li>
+              </ul>
+
+              <AdvantageList text="Offers Program Platform" />
+              <ul class="sub-list-price no-icon mb-4">
+                <li>Partners Management</li>
+                <li>Digital Ticketing</li>
+                <li>Automated Emailing</li>
+                <li>Analytics</li>
+                <li>Lead Generation</li>
+              </ul>
+            </ul>
 
             <!-- <div className="features-list">
                 <ul>
@@ -185,11 +189,13 @@
                   service.</label>
               </div>
             </div>
-            <div class="navigation-container">
-              <!-- <button type="button" class="btn btn-primary-3 btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+            <p class="my-5">Already have an account? Click the link below to access your dashboard:<a href="/sign-in"
+                class="register-link mx-3">Login</a></p>
+            <div class="d-inline-flex justify-content-between align-items-center mt-5 mb-5">
+              <!-- <button type="button" class="btn subscription-button btn-navigation" style="margin-top: 12px; border-radius: 2px;"
               @click="activeName = 'plan'">Previous</button> -->
-              <button type="submit" class="btn btn-primary-3 btn-navigation"
-                :class="showSpinner == true ? 'isLoaded' : ''" style="margin-top: 12px; border-radius: 2px;">
+              <button type="submit" class="btn subscription-button" :class="showSpinner == true ? 'isLoaded' : ''"
+                style="margin-top: 12px; border-radius: 2px;">
                 <SpinnerComponent v-if="showSpinner == true" :color="'red'" /> <span v-else>Create my account</span>
               </button>
             </div>
@@ -256,14 +262,14 @@
             </div>
           </div>
           <div class="navigation-container">
-            <button type="button" class="btn btn-primary-3 btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+            <button type="button" class="btn subscription-button btn-navigation" style="margin-top: 12px; border-radius: 2px;"
               @click="activeName = 'user-info'">Previous</button>
-            <button type="submit" v-if="planInfo.acceptConditions" class="btn btn-primary-3 btn-navigation"
+            <button type="submit" v-if="planInfo.acceptConditions" class="btn subscription-button btn-navigation"
               :class="showSpinner == true ? 'isLoaded' : ''" style="margin-top: 12px; border-radius: 2px;">
               <SpinnerComponent v-if="showSpinner == true" :color="'red'" /> <span v-else>Sign In</span>
             </button>
             <button v-if="userCreated && planInfo.acceptConditions" type="button"
-              class="btn btn-primary-3 btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+              class="btn subscription-button btn-navigation" style="margin-top: 12px; border-radius: 2px;"
               @click="activeName = 'checkout'">
               Back
             </button>
@@ -320,7 +326,7 @@
                   <div id="card-errors" role="alert"></div>
                   <div id="card-success" role="alert"></div>
                   <div class="flex items-center justify-end" style="text-align: right;"><button id="processPaymentBtn"
-                      class="btn btn-primary-3" :class="showSpinner == true ? 'isLoaded' : ''"
+                      class="btn subscription-button" :class="showSpinner == true ? 'isLoaded' : ''"
                       style="margin-top: 12px; border-radius: 2px; width: 208px;" @click="() => subscribe()">
                       <SpinnerComponent v-if="showSpinner == true" :color="'red'" /> <span v-else>Process to
                         payment</span>
@@ -330,7 +336,7 @@
             </div>
           </div>
         </div>
-        <button class="btn btn-primary-3 btn-navigation" style="margin-top: 12px; border-radius: 2px;"
+        <button class="btn subscription-button btn-navigation" style="margin-top: 12px; border-radius: 2px;"
           @click="activeName = 'company-info'">Previous</button>
       </el-tab-pane>
     </el-tabs>
@@ -366,6 +372,8 @@ const SpinnerComponent = defineAsyncComponent(() =>
 const LanguageMenuDropdown = defineAsyncComponent(
   () => import("@Components/utils/LanguageMenuDropdownComponent.vue")
 )
+
+const AdvantageList = defineAsyncComponent(() => import("@Components/subscription/AdvantageList.vue"))
 
 const baseurl = window.location.origin;
 
@@ -635,38 +643,29 @@ const loadPaymentForm = async () => {
 };
 </script>
 <style>
+.subscription-button {
+  /* height: 40px; */
+  cursor: pointer;
+  transition: var(--transition);
+  background-color: #2da8e0 !important;
+}
+
 .features-list {
   margin-top: 30px;
 }
 
-.features-list ul {
+/* .features-list ul {
   padding: 0;
   margin: 0;
-}
+} */
 
 .features-list ul li {
   margin-top: 10px;
   position: relative;
-  font-size: 18px;
+  /* font-size: 18px; */
   padding-left: 25px;
-  color: #02021e;
-  font-weight: 500;
-}
-
-.features-list ul li.no::before,
-.features-list ul li.not::before {
-  content: "\f00d";
-  color: #080f1e;
-}
-
-.features-list ul li::before {
-  position: absolute;
-  left: 0;
-  top: 2px;
-  font-family: "Font Awesome 5 Pro";
-  content: "\f00c";
-  color: #1a1aff;
-  font-size: 16px;
+  /* color: #02021e; */
+  font-weight: 400;
 }
 
 .sub-list-price {
@@ -688,6 +687,13 @@ const loadPaymentForm = async () => {
   margin-right: 24px;
   background-color: var(--color-white);
   border-radius: 24px;
+}
+
+.register-link {
+  /* font-size: .80rem !important; */
+  color: #2da8e0 !important;
+  font-weight: 700;
+  text-decoration: underline !important;
 }
 
 .nav-logo img {
@@ -789,17 +795,15 @@ button.isLoaded {
   padding-bottom: 100px;
 }
 
-.subscription-menu.active {
-  font-family: "GeneralSans", Sans-serif;
-  --bs-gutter-x: 1.5rem;
-  --bs-gutter-y: 0;
+.subscription-menu {
+  font-family: 'Montserrat', sans-serif;
   text-decoration: none;
   outline: none !important;
   cursor: pointer;
   font-size: 16px;
   transition: all 0.35s ease-in-out;
   font-weight: 500;
-  color: #2da8e0 !important;
+  color: #02021e !important;
   display: inline-block;
   text-transform: capitalize;
   line-height: 1;
@@ -855,11 +859,23 @@ button.isLoaded {
   width: 48%;
 }
 
+.form-group.features-list {
+  box-shadow: none;
+}
+
 .tab__pane-body {
   display: inline-flex;
   column-gap: 20px;
 }
 
+.plan-name {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+}
+
+.change-plan-icon {
+  color: #2da8e0;
+}
 
 /* Ajustements pour les mobiles */
 
