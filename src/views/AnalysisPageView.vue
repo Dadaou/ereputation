@@ -69,7 +69,7 @@
                             }" />
                         </div>
                         <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
-                            @reloadData="(review) => reloadData(review)" :categories="categories" @update-feeling="updateFeeling" />
+                            @reloadData="(review) => reloadData(review)" :categories="categories" @update-feeling="updateFeeling" via='analysis' />
                         <div v-else role="status"
                             class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
                             v-for="index in 5" :key="index">
@@ -831,6 +831,7 @@ const transformData = (chartData) => {
     ratings.value = []
     let label_category=[];
      noScore.value=false;
+   
     
     datasets.forEach((category, index) => {
         const { avg_score, feeling, scores, data, label } = category
@@ -838,21 +839,32 @@ const transformData = (chartData) => {
         const color = colors[index]
         const allScoresZero = scores.every(score => score == 0)
        
-        if (!allScoresZero) {
-            noScore.value =true;
-           
-        }
+      
        let categoryShow=false;
+       let addInChart = false;
        categorizations.forEach((_categorization)=>{
 
             if (_categorization.category == label) {
                 categoryShow = true;
             }
 
+            if (_categorization.category == label && _categorization.feeling) {
+                addInChart = true;
+             
+            }
+
        });
+
+         if (!allScoresZero && addInChart == true) {
+            noScore.value =true;
+           
+        }
+
+
         if (categoryShow == true) {
              
-            plotData1.datasets.push({
+            if (addInChart == true) {
+                plotData1.datasets.push({
                 label: label,
                 backgroundColor: color,
                 borderColor: color,
@@ -860,7 +872,8 @@ const transformData = (chartData) => {
                 // pointRadius: 0,
                 // fill: false,
                 tension: 0.1
-            })
+                })
+            }
             plotData2.datasets.push({
                 label: label,
                 backgroundColor: color,
@@ -929,8 +942,8 @@ const transformData = (chartData) => {
         //     datasets:plotData1.datasets.filter(_dat=>rep.includes(_dat.label) == false)
         // }
 
-      
-        if ( noScore == false) {
+        console.log(noScore.value)
+        if ( noScore.value == false ) {
             showConfidenceChart.value = false;
             noScore.value=false
  
