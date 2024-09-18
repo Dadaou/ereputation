@@ -33,12 +33,11 @@
         <div class="tab__pane-body w-full">
 
           <div class="form-group features-list w-50">
-            <div class="d-inline-flex align-center justify-start mb-5">
-              <span class="plan-name mr-2">Lead Gen</span>
-              <a href="http://localhost:3000/pricing" title="change plan"><i
-                  class="uil uil-edit change-plan-icon"></i></a>
+            <div v-if="planInfo && planInfo.planName" class="d-inline-flex align-center justify-start mb-5">
+              <span class="plan-name mr-2">{{ planInfo.planName }}</span>
+              <a :href="`${referrerUrl}pricing`" title="change plan"><i class="uil uil-edit change-plan-icon"></i></a>
             </div>
-            <ul>
+            <ul v-if="planInfo && planInfo.planName == 'Lead-Gen'">
               <AdvantageList text="Unified QR Codes Hub" />
               <ul class="sub-list-price no-icon mb-4">
                 <li>High Definition</li>
@@ -63,46 +62,40 @@
                 <li>Lead Generation</li>
               </ul>
             </ul>
-
-            <!-- <div className="features-list">
-                <ul>
-                  <li>Unified QR Codes Hub</li>
-                  <ul className="sub-list-price no-icon">
-                    <li>High Definition</li>
-                    <li>Customizable</li>
-                  </ul>
-
-                  <li>Branded Mobile Website, 5 sections</li>
-                  <ul className="sub-list-price no-icon">
-                    <li>MENUS</li>
-                    <li>INFOS</li>
-                    <li>REVIEWS</li>
-                    <li>OFFERS</li>
-                    <li>FOLLOW US</li>
-                  </ul>
-                  <li>Offers Program Platform</li>
-                  <ul className="sub-list-price no-icon">
-                    <li>Partners Management</li>
-                    <li>Digital Ticketing</li>
-                    <li>Automated Emailing</li>
-                    <li>Analytics</li>
-                    <li>Lead Generation</li>
-                  </ul>
-
-                  <li>Review Analysis</li>
-                  <ul className="sub-list-price no-icon">
-                    <li>Internal Survey per Category</li>
-                    <li>1 source </li>
-                    <li>Filters (weather, event)</li>
-                    <li>1 hashtag</li>
-                  </ul>
-
-                  <li>Competitor Monitoring</li>
-                  <ul className="sub-list-price no-icon">
-                    <li>1 competitor</li>
-                  </ul>
-                </ul>
-              </div> -->
+            <ul v-else>
+              <AdvantageList text="Unified QR Codes Hub" />
+              <ul className="sub-list-price no-icon mb-4">
+                <li>High Definition</li>
+                <li>Customizable</li>
+              </ul>
+              <AdvantageList text="Branded Mobile Website, 5 sections" />
+              <ul className="sub-list-price no-icon mb-4">
+                <li>MENUS</li>
+                <li>INFOS</li>
+                <li>REVIEWS</li>
+                <li>OFFERS</li>
+                <li>FOLLOW US</li>
+              </ul>
+              <AdvantageList text="Offers Program Platform" />
+              <ul className="sub-list-price no-icon mb-4">
+                <li>Partners Management</li>
+                <li>Digital Ticketing</li>
+                <li>Automated Emailing</li>
+                <li>Analytics</li>
+                <li>Lead Generation</li>
+              </ul>
+              <AdvantageList text="Review Analysis" />
+              <ul className="sub-list-price no-icon mb-4">
+                <li>Internal Survey per Category</li>
+                <li>1 source </li>
+                <li>Filters (weather, event)</li>
+                <li>1 hashtag</li>
+              </ul>
+              <AdvantageList text="Competitor Monitoring" />
+              <ul className="sub-list-price no-icon mb-4">
+                <li>1 competitor</li>
+              </ul>
+            </ul>
 
           </div>
           <form class="form-group" @submit.prevent="submitForm">
@@ -345,7 +338,7 @@
 </template>
 
 <script setup>
-import { ref, provide, onBeforeMount, defineAsyncComponent, inject } from 'vue';
+import { ref, provide, onBeforeMount, defineAsyncComponent, inject, onMounted } from 'vue';
 import { ElTabs, ElTabPane } from 'element-plus';
 import PlanCard from '@Components/subscription/PlanCard.vue';
 import SubscriptionSummary from '@Components/subscription/SubscriptionSummary.vue';
@@ -356,7 +349,7 @@ import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 // import { loadStripe } from '@stripe/stripe-js';
 import { Stripe } from 'stripe';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { h } from 'vue'
 import { ElMessage } from 'element-plus';
 import { countries } from '@Services/input-list.js';
@@ -385,8 +378,8 @@ const { locale } = useI18n();
 
 
 const submitForm = async () => {
-  await submitUserForm()
-  await submitCompanyForm()
+  // await submitUserForm()
+  // await submitCompanyForm()
 }
 
 const submitUserForm = async () => {
@@ -462,6 +455,8 @@ const plan_to_update = ref(null);
 provide('plan_to_update', plan_to_update);
 provide('plan_activeTab', activeStaffTab);
 
+const referrerUrl = ref(null);
+
 const postErrorMsg = ref(null);
 
 const activeEventTab = ref('account_list')
@@ -482,14 +477,20 @@ provide('checkout_to_update', checkout_to_update);
 
 const router = useRouter();
 
-const setPlan = (data, eNumber, total) => {
-  planInfo.value['planName'] = data.name;
-  planInfo.value['plan'] = data;
-  planInfo.value['total'] = total;
-  planInfo.value['establishmentNumber'] = eNumber;
-  activeName.value = 'user-info';
-  generatePaymentIntention();
-  loadPaymentForm();
+const setPlan = (code, quantity, unity) => {
+  // planInfo.value['planName'] = data.name;
+  // planInfo.value['plan'] = data;
+  // planInfo.value['total'] = total;
+  // planInfo.value['establishmentNumber'] = eNumber;
+  // activeName.value = 'user-info';
+  // generatePaymentIntention();
+  // loadPaymentForm();
+  if (code == '657b0feaa0258') {
+    planInfo.value['planName'] = 'All Inclusive'
+  } else {
+    planInfo.value['planName'] = 'Lead-Gen'
+  }
+
 }
 
 const createAccount = async () => {
@@ -589,8 +590,16 @@ const activateAccount = async (app_url) => {
 }
 
 const appStore = useAppStore();
+const route = useRoute();
 
 onBeforeMount(async () => {
+
+  const { c, q, u } = route.query
+
+  if (c && q && u) {
+    setPlan(c, q, u)
+  }
+
   const response = await new Promise((resolve) => {
     services.get_Record('plan/list', (response) => {
       resolve(response)
@@ -604,6 +613,10 @@ onBeforeMount(async () => {
     const data = response.data
     plans.value = data.sort((a, b) => a.id - b.id);
   }
+})
+
+onMounted(() => {
+  referrerUrl.value = document.referrer;
 })
 
 const generatePaymentIntention = async () => {
@@ -888,6 +901,16 @@ button.isLoaded {
 @media (max-width: 768px) {
   form {
     margin: 0 25px;
+  }
+
+  .tab__pane-body {
+    display: flex;
+    flex-direction: column;
+    column-gap: 20px;
+  }
+
+  .form-group {
+    width: 100%;
   }
 }
 
