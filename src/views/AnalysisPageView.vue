@@ -892,16 +892,18 @@ const transformData = (chartData) => {
                 scoreLength++;
                 score += avg_score;
                 }
-        }
 
-      
-
-        legends.push({
+            legends.push({
             label: label,
             color: color,
             avg_score,
             feeling
-        })
+            })
+        }
+
+      
+
+     
     })
 
     ratingChart.value = plotData2;
