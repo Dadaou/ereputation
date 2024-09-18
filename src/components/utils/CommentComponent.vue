@@ -557,7 +557,8 @@ const calculFeelingScore = (_reviews,_selectedReview,_feeling,type) =>{
         })
     });
 
-       _reviews.forEach(_review =>{
+     if (props.via != 'analysis') {
+          _reviews.forEach(_review =>{
 
             if (_review.feeling != '' && _review.feeling != null && 
                 _review.feeling != 'null' && _review.confidence) {
@@ -585,7 +586,8 @@ const calculFeelingScore = (_reviews,_selectedReview,_feeling,type) =>{
                     }
             }
         
-    });
+        });
+     }
 
     if (kFeeling > 0) {
         console.log(sommeFeeling/kFeeling);
