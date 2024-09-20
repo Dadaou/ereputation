@@ -478,15 +478,17 @@ const capitalize = (str) => {
     overflow-x: scroll;
     display: flex;
     border-radius: 5px;
-    margin-bottom: -9px;
+    margin-bottom: -21px;
     margin-top: 15px;
     margin-right: -130px;
     margin-left: -214px;
 }
-
+.establishment-rank-view .reviews-category::-webkit-scrollbar {
+    height: 4px; 
+}
 .reviews-box {
     background-color: #8080803b;
-    padding: 5px; 
+    padding: 3px; 
     margin: 5px 2px; 
     display: flex;
     border-radius: 2px;
