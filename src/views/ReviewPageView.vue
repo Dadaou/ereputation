@@ -195,6 +195,18 @@
                 <span class="text-xs font-medium">{{ star.value }}</span>
             </div>
         </div>
+        <!-- <div class="reviews__star">
+        <div v-if="star in filtre" :key="star.label" class="flex items-center mt-1">
+                        <a href="#" :style="{'width':'8%'}" :class="{ 'text-blue-500': selectedStars === star.intVal }" class="text-xs font-medium hover:underline" @click.prevent="starFilter(star.intVal)">
+                            {{ star.label }} <i class="fa fa-star " aria-hidden="true"></i>
+                        </a>
+                        <div class="star__bar h-3 bg-gray-200 rounded mx-2 flex-grow">
+                            <div class="star__bar-fill h-3 bg-yellow-300 rounded" :style="{ 'width': `${star.percentage}%` }">
+                            </div>
+                        </div>
+                        <span class="text-xs font-medium">{{ star.value }}</span>
+                    </div>
+        </div> -->
         <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
     </div>
 </template>
@@ -552,7 +564,16 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
 
     if (response.status == 200) {
         if (response.data && response.data.data) {
-            starsData.value = formatStarsData(response.data.data)
+            starsData.value = formatStarsData(response.data.data);
+            if (selectedStars.value === '0') {
+                return starsData.value;
+            } else {
+                const filtre = starsData.value.filter(star => {
+                     return parseInt(star.label) === parseInt(selectedStars.value);
+                });
+                console.log(filtre)
+                return filtre;
+            }
         }
     }
 }

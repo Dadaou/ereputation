@@ -697,9 +697,16 @@ const loadPaymentForm = async () => {
 }
 
 .nav-logo {
+  height: 48px;
   margin-right: 24px;
+  padding: 8px 16px;
   background-color: var(--color-white);
   border-radius: 24px;
+}
+
+.nav-logo img {
+  width: auto;
+  height: 100%;
 }
 
 .register-link {
@@ -709,10 +716,6 @@ const loadPaymentForm = async () => {
   text-decoration: underline !important;
 }
 
-.nav-logo img {
-  width: 186px;
-  height: auto;
-}
 
 button.isLoaded {
   display: flex;

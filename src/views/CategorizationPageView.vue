@@ -2,9 +2,11 @@
     <div class="filters">
         <div class="row">
             <div class="select_info">
-                <el-select v-model="review_category" placeholder="Select categories" size="large">
-                    <el-option v-for="(item, index) in categoriesall" :key="index" :label="capitalize(item)" :value="item" />
-                </el-select>
+                <div class="select_info">
+                    <el-select v-model="review_category" placeholder="Select categories" size="large">
+                        <el-option v-for="(item, index) in categoriesall" :key="index" :label="item" :value="item" />
+                    </el-select>
+                </div>
 
             </div>
             <div class="catfiltre">
@@ -53,8 +55,7 @@ const customerTag = inject('tag');
 const userStore = useUserStore();
 const userId = userStore.user.id;
 
-
-const review_category = ref(null);
+const review_category = ref('');
 
 const categories = ref([
     { label: 'All', value: 'all' },
@@ -64,33 +65,34 @@ const categories = ref([
     { label: 'Other', value: 'Other' },
 ]);
 
-const categoryall = ref(['all'])
-provide('categoryall', categoryall)
 
 const categoriesall = ref([])
 provide('categoriesall', categoriesall)
-
 
 const categoryFilters = ref('all');
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 
-watch([review_category, categoryFilters, start_date, end_date], async () => {
+watch([review_category, categoryFilters, start_date, end_date,categoriesall], async () => {
     if (start_date.value && end_date.value) {
-        await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, review_category.value);
+        await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, review_category.value, categoriesall.value);
     }
 });
 
 const IsValueOkay = (value) => (value !== '' && value !== 0 && value !== null && value !== undefined);
 
-const loadEstablishment = async (tag, category, dateStart, dateEnd, review_category) => {
+const loadEstablishment = async (tag, category, dateStart, dateEnd, review_category,categoriesall) => {
     let uri = 'get/establishment/categorization/classement';
-    let params = `tag=${tag}&category=${category}&review_category=${review_category}&user_id=${userId}`;
+    let params = `tag=${tag}&category=${category}&user_id=${userId}&categories=${categoriesall}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
         dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
         params += `&from=${dateStart}&to=${dateEnd}`;
+    }
+
+    if(IsValueOkay(review_category)){
+        params += `&review_category=${review_category}`
     }
 
     uri = `${uri}?${params}`;
@@ -113,7 +115,6 @@ const loadCategories = async (tag) => {
     const api = `customer/establishments/categorizations?tag=${tag}`;
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
-            console.log("Category response", response.data);
             resolve(response);
         });
     });
@@ -125,9 +126,23 @@ const loadCategories = async (tag) => {
     }
 }
 
-const capitalize = (str) => {
-    if (!str) return '';
-    return str.charAt(0).toUpperCase() + str.slice(1);
+// const capitalize = (str) => {
+//     if (!str) return '';
+//     return str.charAt(0).toUpperCase() + str.slice(1);
+// };
+
+watch(review_category, () => {
+  if (review_category.value) {
+    reorderCategories();
+    loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, review_category.value);
+  }
+});
+
+const reorderCategories = () => {
+    const selectedCategory = categoriesall.value.find(c => c === review_category.value);
+    if (selectedCategory) {
+        categoriesall.value = [selectedCategory].concat(categoriesall.value.filter(c => c !== selectedCategory));
+    }
 };
 
 onMounted(async () => {

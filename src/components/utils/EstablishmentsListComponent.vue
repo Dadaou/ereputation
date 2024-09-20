@@ -43,8 +43,8 @@
                                         </div>
                                     </div>
                                     <div class="reviews-category" >
-                                        <div class="reviews-box" v-if="company.categories" v-for="(cat, category) in sortedReviews(company.categories)" :key="category">
-                                            <span class="score">{{ capitalize(category) }}</span>
+                                        <div class="reviews-box" v-if="company.categories" v-for="(cat, category) in sortedReviews(company.categories)" :key="category" @click="redirectToReviewsCategory(route.params.tag)">
+                                            <span>{{ capitalize(category) }}:{{ cat }} </span>
                                         </div>
                                     </div>
                                 </div>
@@ -121,6 +121,7 @@ const goToCompany = (establishment) => {
                 id: establishment.competitor_tag,
                 tag: tag.value
             },
+          
         });
     }, 100);
 };
@@ -171,9 +172,17 @@ const redirectToReviews = (star,id) =>{
     params:{tag,id},
     query: {
       stars: star,
+      competitors : id
     },
   });
 }
+
+const redirectToReviewsCategory = () => {
+    router.push({
+        name: 'CategorizationReview'
+    })
+}
+
 const capitalize = (str) => {
     if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -463,17 +472,33 @@ const capitalize = (str) => {
 .fade-in.show {
     opacity: 1;
 }
+
 .establishment-rank-view .reviews-category {
+    max-width:500px;
+    overflow-x: scroll;
     display: flex;
     border-radius: 5px;
-    margin-bottom: -9px;
+    margin-bottom: -21px;
     margin-top: 15px;
     margin-right: -130px;
     margin-left: -214px;
 }
+.establishment-rank-view .reviews-category::-webkit-scrollbar {
+    height: 4px; 
+}
 .reviews-box {
-    background-color:#8080803b;
-    padding: 1px;
+    background-color: #8080803b;
+    padding: 3px; 
+    margin: 5px 2px; 
+    display: flex;
     border-radius: 2px;
+}
+
+.reviews-box:hover {
+    cursor: pointer
+}
+
+.reviews-box .reviews-score {
+    
 }
 </style>
