@@ -99,6 +99,8 @@
 
           </div>
           <form class="form-group" @submit.prevent="submitForm">
+            <p class="my-5">Already have an account? Click the link below to access your dashboard:<a href="/sign-in"
+                class="register-link mx-3">Login</a></p>
             <p class="mb-5">User informations</p>
             <div class="w-full">
               <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First
@@ -131,7 +133,7 @@
               <input v-model="planInfo.uCPassword" type="password" id="cpassword"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
             </div>
-            <p class="mb-5 mt-6">Company informations</p>
+            <p class="mb-5 mt-8">Company informations</p>
             <div class="w-full">
               <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
                 name <span>*</span></label>
@@ -182,8 +184,7 @@
                   service.</label>
               </div>
             </div>
-            <p class="my-5">Already have an account? Click the link below to access your dashboard:<a href="/sign-in"
-                class="register-link mx-3">Login</a></p>
+
             <div class="d-inline-flex justify-content-between align-items-center mt-5 mb-5">
               <!-- <button type="button" class="btn subscription-button btn-navigation" style="margin-top: 12px; border-radius: 2px;"
               @click="activeName = 'plan'">Previous</button> -->
@@ -330,7 +331,7 @@
           </div>
         </div>
         <button class="btn subscription-button btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-          @click="activeName = 'company-info'">Previous</button>
+          @click="activeName = 'user-info'">Previous</button>
       </el-tab-pane>
     </el-tabs>
     <call-us-selector phonesystem-url="https://m-unit.on3cx.fr:5001" :party="chatID"></call-us-selector>
@@ -378,8 +379,8 @@ const { locale } = useI18n();
 
 
 const submitForm = async () => {
-  // await submitUserForm()
-  // await submitCompanyForm()
+  await submitUserForm()
+  await submitCompanyForm()
 }
 
 const submitUserForm = async () => {
@@ -387,8 +388,6 @@ const submitUserForm = async () => {
   if (planInfo.value.uPassword && planInfo.value.uCPassword && planInfo.value.uPassword != planInfo.value.uCPassword) {
     postErrorMsg.value = "Passwords don't match!";
     showPostErrorMsg();
-  } else {
-    activeName.value = 'company-info';
   }
   showSpinner.value = false;
 
@@ -487,8 +486,10 @@ const setPlan = (code, quantity, unity) => {
   // loadPaymentForm();
   if (code == '657b0feaa0258') {
     planInfo.value['planName'] = 'All Inclusive'
+    planInfo.value['plan'] = { tag: '66e2cc89a2fa1' }
   } else {
     planInfo.value['planName'] = 'Lead-Gen'
+    planInfo.value['plan'] = { tag: '66e2cc52f03f4' }
   }
 
 }
@@ -506,13 +507,16 @@ const createAccount = async () => {
       country: planInfo.value.cCountry,
       address1: planInfo.value.cAdress,
       address2: planInfo.value.cSAdress,
-      plan: planInfo.value.plan.tag
+      plan: planInfo.value.plan.tag,
+      partner: import.meta.env.VITE_PARTNER_CODE
     }, (response) => {
       resolve(response)
     }, true, true);
   });
 
-  if (response) {
+  if (response && response.data) {
+    console.log(response)
+    await createSubscription(app_url.value, response.data.customer);
     return response;
   }
 }
@@ -539,7 +543,7 @@ const subscribe = async () => {
       if (result.paymentIntent.status === 'succeeded') {
         displaySuccess.textContent = 'Payment send with success.';
         card.clear();
-        activateAccount(app_url.value);
+        createSubscription(app_url.value);
 
         displaySuccess.textContent = '';
       }
@@ -551,41 +555,37 @@ const subscribe = async () => {
   }
 }
 
-const activateAccount = async (app_url) => {
+const createSubscription = async (app_url, customer) => {
   const response = await new Promise((resolve) => {
     services.post_Record('subscription/create', {
-      customer: planInfo.value.customer,
+      customer: customer.tag,
       plan: planInfo.value.plan.tag,
       amount: planInfo.value.total,
       email: planInfo.value.uEmail,
       updated_at: moment().format('YYYY-MM-DD'),
       expired_at: moment().add(366, 'days').format('YYYY-MM-DD'),
-      card_name: planInfo.value.cardName,
+      // card_name: planInfo.value.cardName,
       app_url: app_url
     }, (response) => {
       resolve(response)
     }, true, true);
   });
 
-  if (response.status == 200 && response.data) {
-    if (response.data != "ok") {
-      ElMessage({
-        message: h('p', null, [
-          h('h4', { style: "color: #f75842; font-weight: bold;" }, 'Information:'),
-          h('span', { style: "font-size: 13px;" }, "An error was occured!"),
-        ]),
-      })
-    } else {
-      ElMessage({
-        message: h('p', null, [
-          h('h4', { style: "color: #f75842; font-weight: bold;" }, 'Information:'),
-          h('span', { style: "font-size: 13px;" }, "Your account has been successfully created! You will be redirected to the login page in 3s..."),
-        ]),
-      })
-      setTimeout(() => {
-        router.push(`/`);
-      }, 5000);
-    }
+  if (response.status == 201 && response.data) {
+    ElMessage({
+      message: h('p', null, [
+        h('h4', { style: "color: #f75842; font-weight: bold;" }, 'Information:'),
+        h('span', { style: "font-size: 13px;" }, "Your account has been successfully created!"),
+      ]),
+    })
+  }
+  else {
+    ElMessage({
+      message: h('p', null, [
+        h('h4', { style: "color: #f75842; font-weight: bold;" }, 'Information:'),
+        h('span', { style: "font-size: 13px;" }, "An error was occured!"),
+      ]),
+    })
   }
 }
 
