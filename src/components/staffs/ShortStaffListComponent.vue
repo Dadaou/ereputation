@@ -43,6 +43,9 @@
           <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
         </template>
         <template #default="scope">
+          <el-button size="small" @click="redirectToQRCode(scope.row.tag, scope.row.establishment_tag)">
+            <i class="uil uil-print"></i>
+          </el-button>
           <el-tooltip :content="`Click to enter ${scope.row.firstname} ${scope.row.lastname}'s feedback formulary`"
             placement="top">
             <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
@@ -70,7 +73,7 @@ import { computed, ref, inject, defineAsyncComponent } from 'vue';
 import moment from 'moment';
 import { useStaffStore } from "@Stores/staff.js";
 import services from '@Services/services.js';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput, ElTooltip } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
@@ -84,6 +87,7 @@ const QrCodeModalComponent = defineAsyncComponent(() =>
 )
 
 const router = useRouter()
+const route = useRoute()
 const baseurl = window.location.origin;
 const showModal = ref(false);
 const staffStore = useStaffStore();
@@ -154,6 +158,11 @@ const handleDelete = async (index, staff) => {
     }
   })
 };
+
+const redirectToQRCode = async (tag, establishment_tag) => {
+  const link = `/customer/${route.params.tag}/establishment/${establishment_tag}/qr_code_document_preview?section=staffs&tag=${tag}`;
+  router.push(link);
+}
 
 </script>
 <style scoped>

@@ -25,6 +25,9 @@
                 </template>
                 <template #default="scope">
                     <div class="vertical-buttons">
+                        <el-button size="small" @click="redirectToQRCode(route.params.tag, scope.row.tag)">
+                            <i class="uil uil-print"></i>
+                        </el-button>
                         <el-tooltip :content="`Click to enter ${scope.row.name}'s gates page`" placement="top">
                             <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
                                     class="uil uil-external-link-alt"></i></a>
@@ -134,6 +137,11 @@ const goToCompany = (customerTag, establishmentTag) => {
             },
         });
     }, 100);
+}
+
+const redirectToQRCode = async (customer, establishment) => {
+    const link = `/customer/${customer}/establishment/${establishment}/qr_code_document_preview?section=gates`;
+    router.push(link);
 }
 
 const urlPattern = (urlTemplate) => {

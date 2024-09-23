@@ -4,8 +4,10 @@
       <div>
         <div class="template__filter">
           <div class="section-title">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
-              <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h4.5L14 4.5zM10.5 4a.5.5 0 0 1-.5-.5V1.5H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4h-2.5z"/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-file-earmark" viewBox="0 0 16 16">
+              <path
+                d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h4.5L14 4.5zM10.5 4a.5.5 0 0 1-.5-.5V1.5H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4h-2.5z" />
             </svg>
             Choose a Template
           </div>
@@ -14,8 +16,10 @@
               @click="changeValue(item)" />
           </el-select>
           <div v-if="template" class="template-size">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-fullscreen" viewBox="0 0 16 16">
-              <path d="M.5 2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H1.707l3.147 3.146a.5.5 0 1 1-.708.708L1 3.707V7a.5.5 0 0 1-1 0v-4zm15 11a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1 0-1h3.293l-3.147-3.146a.5.5 0 0 1 .708-.708L15 12.293V9a.5.5 0 0 1 1 0v4z"/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-arrows-fullscreen" viewBox="0 0 16 16">
+              <path
+                d="M.5 2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H1.707l3.147 3.146a.5.5 0 1 1-.708.708L1 3.707V7a.5.5 0 0 1-1 0v-4zm15 11a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1 0-1h3.293l-3.147-3.146a.5.5 0 0 1 .708-.708L15 12.293V9a.5.5 0 0 1 1 0v4z" />
             </svg>
             Template Size: {{ template.size.toUpperCase() }}
           </div>
@@ -53,7 +57,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, watch, ref, computed } from 'vue';
+import { onBeforeMount, watch, ref, computed, inject } from 'vue';
 import { useAppStore } from "@Stores/app.js";
 import { useQrStore } from "@Stores/qrtemplate.js";
 import { useRoute } from "vue-router";
@@ -66,6 +70,7 @@ import 'element-plus/es/components/select/style/css';
 import html2canvas from 'html2canvas';
 import { h } from 'vue'
 
+const app_url = inject('app_url')
 const appStore = useAppStore();
 appStore.setCurrentPage({
   title1: "",
@@ -179,6 +184,8 @@ const generateCore = async () => {
   const canvas = document.createElement('canvas');
   canvas.width = 500;
   canvas.height = 500;
+
+  console.log(qrData)
   const qrCanvas = await QRCode.toCanvas(canvas, qrData, { width: 500, errorCorrectionLevel: 'H' });
   const qrCodeDataURL = qrCanvas.toDataURL('image/png', 1.0); // Convert to base64
   tmp = tmp.replace('{{qrcodeimg}}', `<img src="${qrCodeDataURL}" style="width: 100%;">`)
@@ -246,8 +253,25 @@ onBeforeMount(async () => {
   });
 
   let section = route.query.section
-  if (section)
+
+  if (section) {
+
+    switch (section) {
+      case 'establishment': {
+        qrStore.setQrCodeValue(`${app_url.value}/public/${route.params.tag}/establishment/${route.params.id}/feedback`)
+        break
+      }
+      case 'units':
+      case 'staffs': {
+        qrStore.setQrCodeValue(`${app_url.value}/public/${route.params.tag}/establishment/${route.params.id}/${section}/${route.query.tag}/feedback`)
+        break
+      }
+      case 'gates': {
+        qrStore.setQrCodeValue(`${app_url.value}/public/${route.params.tag}/establishment/${route.params.id}/gates`)
+      }
+    }
     section = section.charAt(0).toUpperCase() + section.slice(1)
+  }
 
   appStore.setBreadcrumbs([
     {
@@ -261,11 +285,30 @@ onBeforeMount(async () => {
       isCurrent: true
     }
   ])
+
+  let categ = route.query.section
+
+  switch (route.query.section) {
+    case 'gates':
+      categ = 'gate'
+      break
+    case 'units':
+      categ = 'services'
+      break
+    case 'staffs':
+      categ = 'staff'
+      break
+  }
+
   const res = await qrStore.getTemplates(route.params.tag, route.params.id)
+  console.log(res)
   if (res.length > 0) {
-    templates.value = res.filter((item) => item.category == route.query.section && (item.establishment_tag == null || item.establishment_tag == route.params.id));
-    template.value = templates.value[0]
-    templateId.value = template.value.id
+    templates.value = res.filter((item) => item.category == categ && (item.establishment_tag == null || item.establishment_tag == route.params.id));
+    console.log(templates.value)
+    if (templates.value.length > 0) {
+      template.value = templates.value[0]
+      templateId.value = template.value.id
+    }
   }
 
 });
@@ -312,7 +355,8 @@ watch(template, () => {
 
 .section-title svg {
   font-size: 20px;
-  margin-right: 23px; /* Adjusted margin-right */
+  margin-right: 23px;
+  /* Adjusted margin-right */
   color: #3498db;
 }
 
@@ -334,7 +378,8 @@ watch(template, () => {
 
 .template-size svg {
   font-size: 18px;
-  margin-right: 33px; /* Adjusted margin-right */
+  margin-right: 33px;
+  /* Adjusted margin-right */
   color: #3498db;
 }
 

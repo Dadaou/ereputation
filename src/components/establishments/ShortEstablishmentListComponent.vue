@@ -20,16 +20,16 @@
                 </template>
             </el-table-column>
             <el-table-column label="Reviews" prop="totalReviews" style="width: 20%; min-width: 300px;">
-        <template #default="scope">
-          <div class="reviews-link">
-            <el-tooltip :content="'Reviews ' + scope.row.name" placement="top">
-             <span @click="redirectToReviews(route.params.tag, scope.row.tag)">
-                {{scope.row.totalReviews }}
-             </span>  
-            </el-tooltip>
-          </div>
-        </template>
-      </el-table-column>
+                <template #default="scope">
+                    <div class="reviews-link">
+                        <el-tooltip :content="'Reviews ' + scope.row.name" placement="top">
+                            <span @click="redirectToReviews(route.params.tag, scope.row.tag)">
+                                {{ scope.row.totalReviews }}
+                            </span>
+                        </el-tooltip>
+                    </div>
+                </template>
+            </el-table-column>
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
                 <template #header>
                     <el-input v-model="search" size="small" placeholder="Type to search" class="search" />
@@ -103,13 +103,13 @@ const start_date = inject('start_date');
 const end_date = inject('end_date');
 const companies = ref([])
 
-const redirectToReviews = async(customer, establishment)=>{
+const redirectToReviews = async (customer, establishment) => {
     start_date.value = moment(new Date('2010-01-01')).format('YYYY-M-DD')
     end_date.value = moment().format('YYYY-M-DD') // null is to get the current date
     router.push(`/customer/${customer}/establishment/${establishment}/reviews/intern`)
 }
 
-const redirectToQRCode = async(customer, establishment)=> {
+const redirectToQRCode = async (customer, establishment) => {
     const link = `/customer/${customer}/establishment/${establishment}/qr_code_document_preview?section=establishment`;
     router.push(link);
 }
@@ -117,30 +117,30 @@ const establishments = computed(() => {
     let data = [];
     let filteredData = [];
     // if (userStore.user && userStore.user.customer && userStore.user.customer.establishments) {
-        // data = userStore.user.customer.establishments;
-        data = companies.value
-        data.forEach(establishment => {
-            filteredData.push({
-                name: establishment.name,
-                media: (establishment.url_source) ? establishment.url_source : '',
-                tag: establishment.competitor_tag,
-                uri: `/api/establishments/${establishment.id}`,
-                gps: establishment.locality_gps,
-                country: establishment.country,
-                city: establishment.city,
-                category: establishment.category,
-                address: establishment.address1,
-                rank: establishment.rank,
-                region: establishment.region,
-                zipcode: establishment.zipcode,
-                positionning: establishment.positionning,
-                id: establishment.id,
-                disable: establishment.disable,
-                totalReviews: establishment.totalReviews,
-                establishment_competitor_tag: establishment.establishment_competitor_tag,
-                link: `${baseurl}/public/${route.params.tag}/establishment/${establishment.competitor_tag}/feedback`
-            })
-        });
+    // data = userStore.user.customer.establishments;
+    data = companies.value
+    data.forEach(establishment => {
+        filteredData.push({
+            name: establishment.name,
+            media: (establishment.url_source) ? establishment.url_source : '',
+            tag: establishment.competitor_tag,
+            uri: `/api/establishments/${establishment.id}`,
+            gps: establishment.locality_gps,
+            country: establishment.country,
+            city: establishment.city,
+            category: establishment.category,
+            address: establishment.address1,
+            rank: establishment.rank,
+            region: establishment.region,
+            zipcode: establishment.zipcode,
+            positionning: establishment.positionning,
+            id: establishment.id,
+            disable: establishment.disable,
+            totalReviews: establishment.totalReviews,
+            establishment_competitor_tag: establishment.establishment_competitor_tag,
+            link: `${baseurl}/public/${route.params.tag}/establishment/${establishment.competitor_tag}/feedback`
+        })
+    });
     //}
     filteredData = filteredData.filter((data) => {
         return !search.value || data.name.toLowerCase().includes(search.value.toLowerCase()) || data.category.toLowerCase().includes(search.value.toLowerCase())
@@ -204,8 +204,8 @@ const getValueUrl = (url, urlTemplate) => {
     return null;
 }
 
-const getParametersEstablishments = async(customer)=>{
-    
+const getParametersEstablishments = async (customer) => {
+
     try {
         const userId = userStore.user.id;
         const response = await new Promise((resolve) => {
@@ -214,12 +214,12 @@ const getParametersEstablishments = async(customer)=>{
             });
         });
         if (response.status == 200) {
-         companies.value = response.data
+            companies.value = response.data
         }
     } catch (error) {
-      console.log(error)
+        console.log(error)
     }
-  }
+}
 
 watch([provider, link], () => {
     let urlTemplate;
@@ -233,7 +233,7 @@ watch([provider, link], () => {
 
 onBeforeMount(async () => {
     try {
-        await getParametersEstablishments (route.params.tag)
+        await getParametersEstablishments(route.params.tag)
         const response = await new Promise((resolve, reject) => {
             services.get_Record(`providers`, (response) => {
                 resolve(response);
@@ -406,7 +406,7 @@ img.establishment_img {
     align-self: center;
 }
 
-.reviews-link span{
+.reviews-link span {
     cursor: pointer;
 }
 
@@ -444,13 +444,17 @@ img.establishment_img {
 }
 
 .table__container {
-    overflow-x: auto; /* Enable horizontal scrolling */
-    width: 85%; /* Make sure the container takes full width */
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+    overflow-x: auto;
+    /* Enable horizontal scrolling */
+    width: 85%;
+    /* Make sure the container takes full width */
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scrolling for iOS */
 }
 
 .el-table {
-    min-width: 600px; /* Ensure the table has a minimum width to trigger scrolling */
+    min-width: 600px;
+    /* Ensure the table has a minimum width to trigger scrolling */
 }
 
 .search {
