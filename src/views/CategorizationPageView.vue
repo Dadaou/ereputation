@@ -419,7 +419,7 @@ onMounted(async () => {
         display: flex;
         align-items: center;
         margin-top: -5px;
-        margin-left: -120px;
+        margin-left: -10px;
         padding-right: 60px;
     }
 .establishment-rank-view :deep(.reviews){
@@ -434,7 +434,7 @@ onMounted(async () => {
         display: flex;
         align-items: center;
         margin-top: -5px;
-        margin-left: -120px;
+        margin-left: -10px;
         padding-right: 60px;
     }
 .establishment-rank-view :deep(.reviews){

@@ -391,6 +391,12 @@ const capitalize = (str) => {
     }
 }
 
+@media screen and (max-width:1260px) {
+    .establishment-rank-view .reviews-category {
+        max-width: 400px !important;
+    }
+}
+
 @media screen and (max-width:779px) {
     .society__item label {
         font-size: 13px;
@@ -403,6 +409,17 @@ const capitalize = (str) => {
 
     .society__item div {
         font-size: 12px;
+    }
+
+    .establishment-rank-view .reviews-category {
+        max-width: 400px !important;
+    }
+}
+
+@media screen and (max-width:768px) {
+    .establishment-rank-view .reviews-category {
+        max-width: 400px !important;
+        margin-bottom: -42px !important;
     }
 }
 
@@ -445,6 +462,24 @@ const capitalize = (str) => {
 
     .society__name {
         width: 200px;
+    }
+    .establishment-rank-view .reviews-category {
+        max-width: 430px !important;
+        margin-left: 0 !important;
+    }
+}
+
+@media (max-width: 500px) {
+    .establishment-rank-view .reviews-category {
+        max-width: 350px !important;
+        margin-left: 0 !important;
+    }
+}
+
+@media (max-width: 400px) {
+    .establishment-rank-view .reviews-category {
+        max-width: 300px !important;
+        margin-left: 0 !important;
     }
 }
 
