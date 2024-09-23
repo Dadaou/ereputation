@@ -29,7 +29,7 @@ import { useWindowSize } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
 import session from '@Services/session.js';
-
+import { useCompanyStore } from "@Stores/company.js";
 
 const SpinnerComponent = defineAsyncComponent(() =>
     import('@Components/utils/SpinnerComponent.vue')
@@ -42,7 +42,7 @@ const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
 const appStore = useAppStore();
-
+const companiesStore = useCompanyStore();
 const chatID = ref(import.meta.env.VITE_3CX_CHAT_ID);
 
 const page = ref({
@@ -100,8 +100,17 @@ const submit = async () => {
 
 const navigateUser = (user) => {
     const roles = user.roles;
-    let defaultRoute = { name: "Home" };
-    router.push(defaultRoute).catch((e) => e);
+    const establishments = ref([]);
+    let defaultRoute = "";
+    companiesStore.getEstablishments(user.customer.tag).then((data) => {
+            establishments.value = data
+            if (establishments.value.length === 0) {
+                defaultRoute = { name: "Step" };
+            }else {
+                defaultRoute = { name: "Home" };
+            }
+            router.push(defaultRoute).catch((e) => e);
+        });
 }
 /**
  * Navbar Handler

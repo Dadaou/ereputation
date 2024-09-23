@@ -392,7 +392,20 @@ const router = createRouter({
               name: 'HomeViewForUserConnected',
               beforeEnter: [checkNavigation],
               component: () => import('@Views/HomeViewForUserConnected.vue')
-            }
+            },
+          ]
+        },
+        {
+          path: '/step',
+          name: 'Step',
+          beforeEnter: [CheckAccess],
+          component: () => import('@Views/HomeStepPageView.vue'),
+          children: [
+            {
+              path: 'customer/:tag',
+              name: 'StepView',
+              component: () => import('@Views/StepPageView.vue')
+            },
           ]
         },
         {

@@ -1,42 +1,39 @@
 <template>
-    <div class="main__container">
-        <!--   <HeadComponent :page="page"></HeadComponent> -->
-        <div class=" container client__container ">
-            <div v-if="!dataLoading" class="header">
-                <div class="header_navigation">
-                    <RouterLink class="search__icon" :to="{ name: 'EstablishmentList', params: { tag: tag } }">
-                        <Icon :icon="'ion:list'" width="26"></Icon>
-                    </RouterLink>
-                    <RouterLink v-if="show && establishments.length > 1" class="search__icon"
-                        :to="{ name: 'EstablishmentRanking', params: { tag: tag } }">
-                        <Icon :icon="'solar:cup-first-bold'" width="25"></Icon>
-                    </RouterLink>
-                    <RouterLink v-if="establishments.length > 1" class="search__icon"
-                        :to="{ name: 'Categorization', params: { tag: tag } }">
-                        <Icon :icon="'carbon:category'" width="25"></Icon>
-                    </RouterLink>
-                    <RouterLink class="search__icon"
-                        :to="{ name: 'EstablishmentListByTrend', params: { tag: tag } }">
-                        <Icon :icon="'gg:trending'" width="25"></Icon>
-                    </RouterLink>
-                    <RouterLink class="search__icon"
-                        :to="{ name: 'Analytic', params: { tag: tag } }">
-                        <Icon :icon="'uim:chart-pie'" width="25"></Icon>
-                    </RouterLink>
+        <div class="main__container">
+            <div class=" container client__container ">
+                <div v-if="!dataLoading" class="header">
+                    <div class="header_navigation">
+                        <RouterLink class="search__icon" :to="{ name: 'EstablishmentList', params: { tag: tag } }">
+                            <Icon :icon="'ion:list'" width="26"></Icon>
+                        </RouterLink>
+                        <RouterLink v-if="show && establishments.length > 1" class="search__icon"
+                            :to="{ name: 'EstablishmentRanking', params: { tag: tag } }">
+                            <Icon :icon="'solar:cup-first-bold'" width="25"></Icon>
+                        </RouterLink>
+                        <RouterLink v-if="establishments.length > 1" class="search__icon"
+                            :to="{ name: 'Categorization', params: { tag: tag } }">
+                            <Icon :icon="'carbon:category'" width="25"></Icon>
+                        </RouterLink>
+                        <RouterLink class="search__icon" :to="{ name: 'EstablishmentListByTrend', params: { tag: tag } }">
+                            <Icon :icon="'gg:trending'" width="25"></Icon>
+                        </RouterLink>
+                        <RouterLink class="search__icon" :to="{ name: 'Analytic', params: { tag: tag } }">
+                            <Icon :icon="'uim:chart-pie'" width="25"></Icon>
+                        </RouterLink>
+
+                    </div>
+                    <h1 v-if="route.name == 'Analytic'">Analytics</h1>
+                    <button
+                        v-if="userStore.user.partner && userStore.user.roles.includes('ROLE_PARTNER') && route.name !== 'CustomersList'"
+                        @click="backToCustomer">
+                        <i class="uil uil-arrow-left"></i>Back</button>
 
                 </div>
-                <h1 v-if="route.name == 'Analytic'">Analytics</h1>
-                <button
-                    v-if="userStore.user.partner && userStore.user.roles.includes('ROLE_PARTNER') && route.name !== 'CustomersList'"
-                    @click="backToCustomer">
-                    <i class="uil uil-arrow-left"></i>Back</button>
-                    
+                <RouterView v-if="route.name != 'Analytic'" />
             </div>
-            <RouterView v-if="route.name != 'Analytic'"/>
+            <RouterView v-if="route.name == 'Analytic'" />
         </div>
-        <RouterView v-if="route.name == 'Analytic'"/>
-    </div>
-   
+
 </template>
 
 <script setup>
@@ -67,7 +64,7 @@ const backToCustomer = () => {
 };
 
 const show = computed(() => {
-    let routeName = ['EstablishmentList', 'EstablishmentRanking', 'EstablishmentListByTrend','Analytic','Categorization', undefined];
+    let routeName = ['EstablishmentList', 'EstablishmentRanking', 'EstablishmentListByTrend', 'Analytic', 'Categorization', undefined];
     return routeName.includes(route.name)
 });
 
@@ -85,7 +82,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-
 h1 {
     font-size: 18px;
     font-weight: 600;
@@ -94,6 +90,7 @@ h1 {
     position: absolute;
     top: 50px;
 }
+
 .header {
     display: flex;
     justify-content: space-between;
