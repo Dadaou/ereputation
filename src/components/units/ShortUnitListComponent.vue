@@ -39,6 +39,9 @@
         </template>
         <template #default="scope">
           <div class="action-buttons">
+            <el-button size="small" @click="redirectToQRCode(scope.row.tag, scope.row.establishment_competitor_tag)">
+              <i class="uil uil-print"></i>
+            </el-button>
             <el-tooltip :content="`Click to enter ${scope.row.name}'s feedback formulary`" placement="top">
               <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
                   class="uil uil-external-link-alt"></i></a>
@@ -65,9 +68,9 @@
 <script setup>
 import { computed, ref, inject, defineAsyncComponent } from 'vue';
 import { ElTable, ElPopconfirm, ElTableColumn, ElButton, ElInput, ElTooltip, ElMessage } from 'element-plus';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from "@Stores/user.js";
-import { useAppStore } from "@Stores/app.js";
+// import { useAppStore } from "@Stores/app.js";
 import { useStaffStore } from "@Stores/staff.js";
 import 'element-plus/es/components/message/style/css';
 import 'element-plus/es/components/table/style/css';
@@ -82,8 +85,9 @@ const QrCodeModalComponent = defineAsyncComponent(() =>
 )
 
 const userStore = useUserStore();
-const appStore = useAppStore();
+// const appStore = useAppStore();
 const router = useRouter();
+const route = useRoute()
 const units = inject('units');
 const search = ref('');
 const showModal = ref(false);
@@ -165,6 +169,11 @@ const handleEdit = (index, unit) => {
   staffStore.setUnit(unit);
   router.push({ name: 'Parameters', params: { tab: 'services', sub_tab: 'services_form' } });
 };
+
+const redirectToQRCode = async (tag, establishment_tag) => {
+  const link = `/customer/${route.params.tag}/establishment/${establishment_tag}/qr_code_document_preview?section=units&tag=${tag}`;
+  router.push(link);
+}
 </script>
 
 <style scoped>
@@ -183,7 +192,7 @@ img.establishment_img {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-
+  flex-wrap: wrap;
 }
 
 .el-table th {
@@ -318,6 +327,7 @@ button i.uil-edit {
   .el-table--fit {
     font-size: 11px !important;
   }
+
   .action-buttons {
     display: block;
   }
