@@ -43,7 +43,7 @@
                                         </div>
                                     </div>
                                     <div class="reviews-category" >
-                                        <div class="reviews-box" v-if="company.categories" v-for="(cat, category) in sortedReviews(company.categories)" :key="category" @click="redirectToReviewsCategory(route.params.tag)">
+                                        <div class="reviews-box" v-if="company.categories" v-for="(cat, category) in sortedCategory(company.categories)" :key="category" @click="redirectToReviewsCategory(route.params.tag)">
                                             <span>{{ capitalize(category) }}:{{ cat }} </span>
                                         </div>
                                     </div>
@@ -158,6 +158,13 @@ const widthimage = ((event, id) => {
 
 const sortedReviews = (reviews) => {
   return Object.entries(reviews).sort((a, b) => b[0] - a[0]).reduce((obj, [k, v]) => {
+    obj[k] = v;
+    return obj;
+  }, {});
+};
+
+const sortedCategory = (categories) => {
+   return Object.entries(categories).sort((a, b) => b[0] - a[0]).reduce((obj, [k, v]) => {
     obj[k] = v;
     return obj;
   }, {});
@@ -498,7 +505,4 @@ const capitalize = (str) => {
     cursor: pointer
 }
 
-.reviews-box .reviews-score {
-    
-}
 </style>

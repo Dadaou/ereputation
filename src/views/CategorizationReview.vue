@@ -1,23 +1,82 @@
 <template>
-    <div class="admin__container">
-        <div class="filtre_content p-4">
-            <div class="left__side">
-
-            </div>
-        </div>
-    </div>
+     <div class="reviews__content">
+                        <div class="reviews__pagination">
+                            <!-- <PaginationComponent :options="optionsReview" v-if="visibleData.length > 0" @next="(option) => {
+                                loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
+                            }" @prev="(option) => {
+                                loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
+                            }" /> -->
+                        </div>
+                        <CommentComponent />
+                        <div role="status"
+                            class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
+                            >
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                        <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-1"></div>
+                                        <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                    </div>
+                                    <div class="h-7 bg-gray-300 dark:bg-gray-700 w-7"></div>
+                                </div>
+                                <div>
+                                    <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                    <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700 mb-1"></div>
+                                    <div class="w-full h-5 bg-gray-200 rounded-2 dark:bg-gray-700"></div>
+                                </div>
+                            </div>
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <div class="no-comment" >
+                            No reviews meet to the current filters
+                        </div>
+                    </div>
 </template>
 
 <style scoped>
-.filtre_content {
-    width: 100% !important;
+.review-card {
+    width: 450px;
+    border: 1px solid #e4e7ed;
+    border-radius: 12px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.admin__container {
-    gap: 2rem;
-    margin-right: 5%;
-    margin-left: 5%;
-    margin-top: 120px !important;
-    overflow-x: hidden;
+.review-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.avatar {
+    margin-right: 10px;
+}
+
+.username {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.details {
+    font-size: 12px;
+    color: #828282;
+    margin-top: 5px;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.review-content p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #4f4f4f;
 }
 </style>
