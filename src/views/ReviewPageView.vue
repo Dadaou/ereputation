@@ -593,17 +593,17 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
 
 
 
-    if (isValueOkay(starParams)) {
+    if (IsValueOkay(starParams)) {
         apiParams += `&star=${starParams} stars`;
         
-    } else if (isValueOkay(stars) || route.query.star_filter) {
+    } else if (IsValueOkay(selectedStars.value) || route.query.star_filter) {
        
         if (route.query.star_filter) {
             
             apiParams += `&star=${route.query.star_filter}`;
 
         } else {
-            apiParams += `&star=${stars}`;
+            apiParams += `&star=${selectedStars.value}`;
         }
        
     }
@@ -632,9 +632,9 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
         }
     }
 }
-onBeforeMount(async (tag, dateStart, dateEnd, source) => {
-  await loadStarData("66a246fe4c106", dateStart, dateEnd, source);
-});
+// onBeforeMount(async (tag, dateStart, dateEnd, source) => {
+//   await loadStarData("66a246fe4c106", dateStart, dateEnd, source);
+// });
 const loadCategories = async (tag) => {
     const api = `establishment/${tag}/categories`
     const response = await new Promise((resolve) => {
