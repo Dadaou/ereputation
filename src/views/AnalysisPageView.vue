@@ -467,7 +467,8 @@ const calculSentimentAnalysis = (_score) =>{
             feeling: feeling,
             score: _score
         }
-
+        console.log(_score)
+           console.log(rawWidth)
         return _reviewFeedbackData;
 }
 
@@ -888,10 +889,12 @@ const transformData = (chartData) => {
 
             label_category.push(label);
 
-              if (avg_score != 0) {
+             scores.forEach((_sco)=>{
+                 if (_sco != 0) {
                 scoreLength++;
-                score += avg_score;
+                score += _sco;
                 }
+             })
 
             legends.push({
             label: label,
