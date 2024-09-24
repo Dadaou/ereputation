@@ -209,7 +209,7 @@ import CommentComponent from '@Components/utils/CommentComponent.vue';
 import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import CommunityFeedbackComponent from "@Components/utils/CommunityFeedbackComponent.vue";
-import { ref, watch, onBeforeMount, inject, defineAsyncComponent, onMounted,computed } from 'vue';
+import { ref, watch, onBeforeMount, inject,provide, defineAsyncComponent, onMounted,computed } from 'vue';
 import { ElDatePicker, ElOption, ElSelect } from 'element-plus';
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
@@ -343,11 +343,48 @@ const reloadData = (reviewUpdated) => {
     })
 }
 
+const calculSentimentAnalysis = (_score) =>{
+
+        
+        let rawWidth = _score * 100 / 2
+        let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
+        let feeling = rawWidth > 0 ? 1 : -1
+        let red = 255
+        let green = 255
+        if (feeling == -1) {
+            red = 255
+            green = 255 - ((_score * 100 * 255) / 100)
+        } else {
+            green = 255
+            red = 255 - ((_score * 100 * 255) / 100)
+        }
+
+       let _reviewFeedbackData = {
+            width: width,
+            red: red,
+            green: green,
+            feeling: feeling,
+            score: _score
+        }
+
+        return _reviewFeedbackData;
+        
+}
+
+const updateFeeling = (newFeedbackData) =>{
+   
+    reviewFeedbackData.value = newFeedbackData;
+}
+
+provide('reviewFeedbackData',reviewFeedbackData);
+provide('calculSentimentAnalysis',calculSentimentAnalysis);
+
 const IsValueOkay = (value) => (value == '' || value == 'Global' || value == 0 || value == null || value == undefined) ? false : true;
 const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source, stars, category, language) => {
     options.value.current = current;
     options.value.page = page;
     reviews_loader.value = true;
+     feedbackLoading.value = true;
 
     let apiBase = '/review/by_establishment';
     let apiParams = `tag=${tag}&page=${page}&limit=${limit}`;
@@ -384,8 +421,17 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     if (isValueOkay(starParams)) {
         starQueryPart = `&star=${starParams} stars`;
         
-    } else if (isValueOkay(stars)) {
-        starQueryPart = `&star=${stars}`;
+    } else if (isValueOkay(stars) || route.query.star_filter) {
+       
+        if (route.query.star_filter) {
+            
+            starQueryPart = `&star=${route.query.star_filter}`;
+
+             console.log("star filter",route.query.star_filter)
+        } else {
+            starQueryPart = `&star=${stars}`;
+             console.log("stars filter",stars)
+        }
        
     }
 
@@ -441,6 +487,9 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         reviews_loader.value = false;
         options.value.max = response.data['count'];
         visibleData.value = response.data['data'];
+        let feeling_score = calculSentimentAnalysis(response.data['feeling_score']);
+       reviewFeedbackData.value = feeling_score;
+        feedbackLoading.value = false
     }
 }
 
@@ -495,31 +544,31 @@ const loadFeelingData = async (tag, dateStart, dateEnd, source) => {
     });
 
     if (response.status == 200) {
-        const score = response.data[tag]
-        let rawWidth = score * 100 / 2
-        let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
-        let feeling = rawWidth > 0 ? 1 : -1
-        let red = 255
-        let green = 255
-        if (feeling == -1) {
-            red = 255
-            green = 255 - ((score * 100 * 255) / 100)
-        } else {
-            green = 255
-            red = 255 - ((score * 100 * 255) / 100)
-        }
+        // const score = response.data[tag]
+        // let rawWidth = score * 100 / 2
+        // let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
+        // let feeling = rawWidth > 0 ? 1 : -1
+        // let red = 255
+        // let green = 255
+        // if (feeling == -1) {
+        //     red = 255
+        //     green = 255 - ((score * 100 * 255) / 100)
+        // } else {
+        //     green = 255
+        //     red = 255 - ((score * 100 * 255) / 100)
+        // }
 
 
 
-        reviewFeedbackData.value = {
-            width: width,
-            red: red,
-            green: green,
-            feeling: feeling,
-            score: score
-        }
+        // reviewFeedbackData.value = {
+        //     width: width,
+        //     red: red,
+        //     green: green,
+        //     feeling: feeling,
+        //     score: score
+        // }
 
-        feedbackLoading.value = false
+        // feedbackLoading.value = false
     }
 }
 
@@ -540,6 +589,23 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
     if (IsValueOkay(source)) {
         source = (source == 'App (Private)') ? source : source.toLowerCase();
         apiParams += `&platform=${source}`
+    }
+
+
+
+    if (isValueOkay(starParams)) {
+        apiParams += `&star=${starParams} stars`;
+        
+    } else if (isValueOkay(stars) || route.query.star_filter) {
+       
+        if (route.query.star_filter) {
+            
+            apiParams += `&star=${route.query.star_filter}`;
+
+        } else {
+            apiParams += `&star=${stars}`;
+        }
+       
     }
 
     const api = apiBase + '?' + apiParams;

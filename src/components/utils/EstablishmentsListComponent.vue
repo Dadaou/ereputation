@@ -178,7 +178,7 @@ const redirectToReviews = (star,id) =>{
     name: 'Review',
     params:{tag,id},
     query: {
-      stars: star,
+      star_filter: star,
       competitors : id
     },
   });
