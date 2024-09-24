@@ -43,7 +43,7 @@
                                         </div>
                                     </div>
                                     <div class="reviews-category" >
-                                        <div class="reviews-box" v-if="company.categories" v-for="(cat, category) in sortedCategory(company.categories)" :key="category" @click="redirectToReviewsCategory(route.params.tag)">
+                                        <div class="reviews-box" v-if="company.categories" v-for="(cat, category) in sortedCategory(company.categories)" :key="category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag)">
                                             <span>{{ capitalize(category) }}:{{ cat }} </span>
                                         </div>
                                     </div>
@@ -184,10 +184,14 @@ const redirectToReviews = (star,id) =>{
   });
 }
 
-const redirectToReviewsCategory = () => {
+const redirectToReviewsCategory = (tag, id) => {
     router.push({
-        name: 'CategorizationReview'
-    })
+        name: 'CategorizationReview',
+        params: {
+            tag: tag,
+            id: id
+        }
+    });
 }
 
 const capitalize = (str) => {

@@ -49,6 +49,7 @@ const EstablishmentsListComponent = defineAsyncComponent(() =>
     import('@Components/utils/EstablishmentsListComponent.vue')
 );
 
+
 const establishments = ref([]);
 const dataLoading = ref(true);
 const customerTag = inject('tag');

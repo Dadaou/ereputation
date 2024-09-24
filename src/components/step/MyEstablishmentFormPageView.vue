@@ -4,7 +4,7 @@
         <h1 class="title">My establishment</h1>
         <h1>Let's start by setting up your first establishment </h1>
         <div class="table__container">
-            <form id="establishmentForm" @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
+            <form id="establishmentForm" @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4">
                 <div class="grid gap-6 mb-6 md:grid-cols-2">
                     <div class="md:order-2">
                         <div class="image-selector border-gray-300" @dragover.prevent="onDragOver"
@@ -119,7 +119,6 @@
 import { ref, inject, watch } from 'vue';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
-
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import { ElMessage, ElOption, ElSelect } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
@@ -154,7 +153,6 @@ const onDrop = (event) => {
         const file = files[0];
         if (isImageFile(file)) {
             updateImageFromFile(file);
-            // Définir manuellement les fichiers de l'élément input
             document.getElementById('imgInput').files = event.dataTransfer.files;
             imgHasChanged.value = true;
         } else {
@@ -409,9 +407,8 @@ input {
 }
 
 .table__container {
-    /* overflow-x: scroll; */
     overflow-y: auto;
-    width: 85%;
+    width: 100%;
 }
 
 form button {
@@ -419,22 +416,14 @@ form button {
 }
 
 @media screen and (min-width: 480px) {
-
-    .table__container {
-        width: 100%;
-    }
-
     form button {
         width: 12rem !important;
     }
 }
 
 @media screen and (max-width: 800px) {
-
-    .table__container,
     .security__header {
-        width: 84%;
-        /* Occuper toute la largeur sur les petits écrans */
+        width: 100%;
     }
 }
 </style>
