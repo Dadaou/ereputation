@@ -23,18 +23,45 @@
       'width': '100%',
     }">
       <div class="colSmall">
-        <GroupedBarChart class="chart" :plot-data="plotdata.notes" x-key="date" :width="custom_width.chart" :height="200"
+
+       <!-- <GroupedBarChart style="display: none !important;" class="chart" :plot-data="plotdata.notes" x-key="date" :width="custom_width.chart" :height="200"
           :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Reviews"
           :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
-          :y-tick-format="d => `${d}`" />
+          :y-tick-format="d => `${d}`" /> -->
+
+          <div class="chart" x-key="date" :width="custom_width.chart" :height="200" 
+              :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Reviews"
+            :y-tick-format="d => `${d}`">
+              
+                    <Line class="chart" x-key="date" :width="custom_width.chart" :height="200" 
+              :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Reviews"
+            :y-tick-format="d => `${d}`"  :data="eventChartValue" id="confidence" :options="newOptions" 
+                    />
+              
+
+              <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
+            </div>
+
       </div>
-      <div class="colLarge" id="colLar">
-        <div class="boxLarge">
-          <GroupedBarChart class="chart" :plot-data="plotdata.notes" x-key="date" :width="custom_width.chart" :height="200"
+      <!-- <div class="colLarge" id="colLar">
+        <div class="boxLarge"> -->
+        <div class="" id="">
+          <div class="">
+      <!--   <GroupedLineChart  class="chart" :plot-data="plotdata.notes" x-key="date" :width="custom_width.chart" :height="200"
             :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Reviews"
             :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
-            :y-tick-format="d => `${d}`" />
-          <div id="chartEvents" style="min-height: 60px; width: 100%; position: relative;"></div>
+            :y-tick-format="d => `${d}`" /> -->
+
+           <div  >
+              
+                    <Line :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" :width="custom_width.chart" :height="200"  :data="eventChartValue" id="confidence" :options="newOptions" 
+                    />
+              
+
+              <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
+            </div>
+            
+          <div id="chartEvents" style="min-height: 60px; width: 100%;position: relative;"></div>
         </div>
       </div>
     </div>
@@ -52,6 +79,31 @@ import { ElTooltip } from 'element-plus';
 import { computed, onMounted, ref, watch, inject, onBeforeMount, defineAsyncComponent,nextTick } from 'vue';
 import services from '@Services/services.js';
 import { useRoute, useRouter } from "vue-router";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    BarElement,
+    LineElement,
+    ArcElement,
+    Title,
+    Tooltip,
+    Legend
+} from 'chart.js';
+
+import { Line, Bar } from 'vue-chartjs'
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    BarElement,
+    ArcElement,
+    Title,
+    Tooltip,
+    Legend
+)
 
 const props = defineProps({
   width: {
@@ -63,6 +115,61 @@ const props = defineProps({
     required: true
   }
 });
+
+const newOptions = {
+    maintainAspectRatio: false,
+    scales: {
+    },
+    plugins: {
+        legend: {
+            display: false,
+        },
+        zoom: {
+            pan: {
+                enabled: true,
+                mode: 'x',
+            },
+            zoom: {
+                wheel: {
+                    enabled: true,
+                },
+                pinch: {
+                    enabled: true,
+                },
+                mode: 'x',
+            }
+        },
+        beforeDraw: function (chart) {
+            var ctx = chart.ctx;
+            chart.data.datasets.forEach(function (dataset, i) {
+                var meta = chart.getDatasetMeta(i);
+                if (!meta.hidden) {
+                    meta.data.forEach(function (element, index) {
+                        // Dessiner le texte sous chaque barre en fonction de sa valeur
+                        var dataValue = dataset.data[index];
+                        var text = '';
+                        if (dataValue > 0.2) {
+                            text = 'Positif';
+                        } else if (dataValue < -0.2) {
+                            text = 'Négatif';
+                        } else {
+                            text = 'Neutre';
+                        }
+                        var fontSize = 12;
+                        var fontStyle = 'normal';
+                        var fontFamily = 'Arial';
+                        ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+                        var textWidth = ctx.measureText(text).width;
+                        var elementX = element._model.x;
+                        var elementY = element._model.y + 20; // Ajuster la valeur pour positionner le texte sous les barres
+                        ctx.fillStyle = 'black';
+                        ctx.fillText(text, elementX - textWidth / 2, elementY);
+                    });
+                }
+            });
+        }
+    }
+};
 
 const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
@@ -76,6 +183,7 @@ const type = inject('type');
 const date = inject('date');
 const chartLoading = inject('chartLoading');
 const loading = ref(true);
+const eventChartValue = ref([]);
 const plotdata = ref({ notes: [], events_per_date: [] });
 const custom_width = computed(() => {
   let nb = plotdata.value.events_per_date.length;
@@ -192,7 +300,7 @@ const hashString = (inputString) => {
   }
   return hash;
 }
-
+const colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
 const generateColor = (text) => {
   const inputString = text;
   const hash = hashString(inputString);
@@ -232,7 +340,29 @@ const getPlotData = async (period, rangedate, next) => {
   });
   if (response.status == 200) {
     data = response.data;
-    decomposeData(data.notes)
+    decomposeData(data.notes);
+      let plotData1 = {
+        labels: [],
+        datasets: []
+      }
+      let scores=[];
+        data.notes.forEach((_note)=>{
+        scores.push(_note.note);
+        plotData1.labels.push(_note.date)
+      });
+       
+       plotData1.datasets.push({
+              label: 'Note',
+              backgroundColor: colors[2],
+              borderColor: colors[2],
+              data: scores,
+              // pointRadius: 0,
+              // fill: false,
+              tension: 0.1
+              })
+     
+     eventChartValue.value=plotData1;
+     console.log(eventChartValue.value)
   }
   next(data);
 }
@@ -245,9 +375,32 @@ onBeforeMount(async () => {
     })
   });
   plotdata.value = response;
+
   if (plotdata.value) {
     deleteEvents()
     positionEvent()
+      let plotData1 = {
+        labels: [],
+        datasets: []
+      }
+      let scores=[];
+       let c=0;
+        response.notes.forEach((_note)=>{
+        scores.push(_note.note);
+        plotData1.labels.push(_note.date)
+      });
+     plotData1.datasets.push({
+              label: 'Note',
+              backgroundColor: colors[2],
+              borderColor: colors[2],
+              data: scores,
+              // pointRadius: 0,
+              // fill: false,
+              tension: 0.1
+              })
+     
+     eventChartValue.value=plotData1;
+     console.log(response)
   }
   loading.value = false;
 })
