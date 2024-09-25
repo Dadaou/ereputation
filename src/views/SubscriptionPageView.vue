@@ -196,80 +196,6 @@
           </form>
         </div>
       </el-tab-pane>
-      <!-- <el-tab-pane name="company-info">
-        <div class="tab-pane-header">
-          <div class="section__title">
-            <p class="mt-4">Please fill out the form to create your account</p>
-          </div>
-        </div>
-        <form @submit.prevent="submitCompanyForm">
-          <div class="form-group">
-            <p class="mb-5">Company informations</p>
-            <div class="w-full">
-              <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
-                name <span>*</span></label>
-              <input v-model="planInfo.cName" type="text" id="company_name"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-            </div>
-            <div class="w-full">
-              <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address
-                <span>*</span></label>
-              <input v-model="planInfo.cAdress" type="text" id="address"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-            </div>
-            <div class="w-full">
-              <label for="saddress" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Secondary
-                address</label>
-              <input v-model="planInfo.cSAdress" type="text" id="saddress"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-            </div>
-            <div class="w-full">
-              <div class="grid gap-6 md:grid-cols-4">
-                <div>
-                  <label for="zip" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ZIP Code
-                    <span>*</span></label>
-                  <input v-model="planInfo.cZip" type="text" id="zip"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-                </div>
-                <div>
-                  <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City
-                    <span>*</span></label>
-                  <input v-model="planInfo.cCity" type="text" id="city"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-                </div>
-                <div class="md:col-span-2 mb-4">
-                  <label for="country"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country</label>
-                  <select v-model="planInfo.cCountry" id="country"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-                    <option v-for="(country, index) in countries" :key="index">{{ country.name }}</option>
-                  </select>
-                </div>
-              </div>
-              <div class="w-full inline-flex items-center gap-2 mt-5">
-                <input v-model="planInfo.acceptConditions" type="checkbox" id="coding" name="interest" value="coding"
-                  required />
-                <label for="coding">I read and accept <a href="" class="terms-conditions-link">Terms and Conditions</a>
-                  of
-                  service.</label>
-              </div>
-            </div>
-          </div>
-          <div class="navigation-container">
-            <button type="button" class="btn subscription-button btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-              @click="activeName = 'user-info'">Previous</button>
-            <button type="submit" v-if="planInfo.acceptConditions" class="btn subscription-button btn-navigation"
-              :class="showSpinner == true ? 'isLoaded' : ''" style="margin-top: 12px; border-radius: 2px;">
-              <SpinnerComponent v-if="showSpinner == true" :color="'red'" /> <span v-else>Sign In</span>
-            </button>
-            <button v-if="userCreated && planInfo.acceptConditions" type="button"
-              class="btn subscription-button btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-              @click="activeName = 'checkout'">
-              Back
-            </button>
-          </div>
-        </form>
-      </el-tab-pane> -->
 
       <el-tab-pane name="checkout">
         <div class="tab-pane-header">
@@ -341,14 +267,13 @@
 <script setup>
 import { ref, provide, onBeforeMount, defineAsyncComponent, inject, onMounted } from 'vue';
 import { ElTabs, ElTabPane } from 'element-plus';
-import PlanCard from '@Components/subscription/PlanCard.vue';
 import SubscriptionSummary from '@Components/subscription/SubscriptionSummary.vue';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
 import moment from 'moment';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
-// import { loadStripe } from '@stripe/stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import { Stripe } from 'stripe';
 import { useRouter, useRoute } from 'vue-router';
 import { h } from 'vue'
@@ -381,6 +306,7 @@ const { locale } = useI18n();
 const submitForm = async () => {
   await submitUserForm()
   await submitCompanyForm()
+  await subscribe()
 }
 
 const submitUserForm = async () => {
@@ -435,20 +361,12 @@ const showPostErrorMsg = () => {
   })
 }
 
-let stripeClient = null;
-let stripeServer = null;
-let stripeElements = null;
-let paymentElements = null;
-let paymentIntent = null;
-let card = null;
-let displayError = null;
-let displaySuccess = null;
-
 const plans = ref([]);
 
 const chatID = ref(import.meta.env.VITE_3CX_CHAT_ID);
 
 const activeName = ref('user-info');
+// const activeName = ref('checkout');
 const activeStaffTab = ref('plan_list')
 const plan_to_update = ref(null);
 provide('plan_to_update', plan_to_update);
@@ -459,8 +377,6 @@ const referrerUrl = ref(null);
 const postErrorMsg = ref(null);
 
 const activeEventTab = ref('account_list')
-// const selectedPlan = ref('');
-const planContainer = ref(null);
 
 provide('account_activeTab', activeEventTab);
 
@@ -477,13 +393,6 @@ provide('checkout_to_update', checkout_to_update);
 const router = useRouter();
 
 const setPlan = (code, quantity, unity) => {
-  // planInfo.value['planName'] = data.name;
-  // planInfo.value['plan'] = data;
-  // planInfo.value['total'] = total;
-  // planInfo.value['establishmentNumber'] = eNumber;
-  // activeName.value = 'user-info';
-  // generatePaymentIntention();
-  // loadPaymentForm();
   if (code == '657b0feaa0258') {
     planInfo.value['planName'] = 'All Inclusive'
     planInfo.value['plan'] = { tag: '66e2cc89a2fa1' }
@@ -491,6 +400,10 @@ const setPlan = (code, quantity, unity) => {
     planInfo.value['planName'] = 'Lead-Gen'
     planInfo.value['plan'] = { tag: '66e2cc52f03f4' }
   }
+
+  planInfo.value['quantity'] = quantity
+  planInfo.value['unit'] = unity
+  planInfo.value['code'] = code
 
 }
 
@@ -521,37 +434,202 @@ const createAccount = async () => {
   }
 }
 
-const subscribe = async () => {
-  showSpinner.value = true;
-
-  const processPaymentBtn = document.querySelector("#processPaymentBtn");
-  if (!processPaymentBtn.hasAttribute('disabled')) {
-    processPaymentBtn.setAttribute('disabled', 'true');
-
-    const result = await stripeClient.confirmCardPayment(paymentIntent.client_secret, {
-      payment_method: {
-        card,
-        billing_details: {
-          email: planInfo.value.uEmail
-        }
-      }
-    })
-
-    if (result.error) {
-      displayError.textContent = result.error.message;
-    } else {
-      if (result.paymentIntent.status === 'succeeded') {
-        displaySuccess.textContent = 'Payment send with success.';
-        card.clear();
-        createSubscription(app_url.value);
-
-        displaySuccess.textContent = '';
-      }
+const selectedPrice = (code, quantity, unit) => {
+  const prices = [
+    {
+      "id": "price_1PyEamFQpK06t3MIDIekuHxa",
+      "product_id": "prod_QpuPbDZErHmA7F",
+      "name": "Additionnal Pack Review Analysis",
+      "code": "",
+      "quantity": "",
+      "unit": ""
+    },
+    {
+      "id": "price_1PyELLFQpK06t3MIjxc86LTJ",
+      "product_id": "prod_Qpu9yYXS7pGQGU",
+      "name": "Lead Gen up 150 Year",
+      "code": "657b0fbfdca0b",
+      "quantity": "h",
+      "unit": "y"
+    },
+    {
+      "id": "price_1PyEKmFQpK06t3MI267aXKzz",
+      "product_id": "prod_Qpu9QEHU4qWVbN",
+      "name": "Lead Gen up 150 Semester",
+      "code": "657b0fbfdca0b",
+      "quantity": "h",
+      "unit": "s"
+    },
+    {
+      "id": "price_1PyEK3FQpK06t3MIRGxCh0oz",
+      "product_id": "prod_Qpu80zCKTQ06UI",
+      "name": "Lead Gen up 150 Month",
+      "code": "657b0fbfdca0b",
+      "quantity": "h",
+      "unit": "m"
+    },
+    {
+      "id": "price_1PyE4pFQpK06t3MIfmhR4Epj",
+      "product_id": "prod_QptshBD8AWfFQ5",
+      "name": "Lead Gen 21-150 Year",
+      "code": "657b0fbfdca0b",
+      "quantity": "m",
+      "unit": "y"
+    },
+    {
+      "id": "price_1PyE4AFQpK06t3MIzQ3GcMSv",
+      "product_id": "prod_QptrDbWl1VNa2f",
+      "name": "Lead Gen 21-150 Semester",
+      "code": "657b0fbfdca0b",
+      "quantity": "m",
+      "unit": "s"
+    },
+    {
+      "id": "price_1PyDjOFQpK06t3MIka2ruipE",
+      "product_id": "prod_QptWZRuMtApZJx",
+      "name": "Lead Gen 21-150 Month",
+      "code": "657b0fbfdca0b",
+      "quantity": "m",
+      "unit": "m"
+    },
+    {
+      "id": "price_1PyDhmFQpK06t3MIATW1pQmz",
+      "product_id": "prod_QptU3KVaMnWVc1",
+      "name": "Lead Gen 1-20 Year",
+      "code": "657b0fbfdca0b",
+      "quantity": "l",
+      "unit": "y"
+    },
+    {
+      "id": "price_1PyDbMFQpK06t3MIxYU2C6gI",
+      "product_id": "prod_QptOvMtC5zDbis",
+      "name": "Lead Gen 1-20 Semester",
+      "code": "657b0fbfdca0b",
+      "quantity": "l",
+      "unit": "s"
+    },
+    {
+      "id": "price_1PyDC5FQpK06t3MI8vK8vq6f",
+      "product_id": "prod_QpsyYZ0I7IceDN",
+      "name": "Lead Gen 1-20 Month",
+      "code": "657b0fbfdca0b",
+      "quantity": "l",
+      "unit": "m"
+    },
+    ////////////////////////////////////
+    {
+      "id": "price_1Q2wFaFQpK06t3MIlTMTqPNq",
+      "product_id": "prod_QulnUT5cHjET69",
+      "name": "All Inclusive up 150 Year",
+      "code": "657b0feaa0258",
+      "quantity": "h",
+      "unit": "y"
+    },
+    {
+      "id": "price_1Q2wF2FQpK06t3MIygGEeMSP",
+      "product_id": "prod_QulmQakSouDb2R",
+      "name": "All Inclusive 21-150 Year",
+      "code": "657b0feaa0258",
+      "quantity": "m",
+      "unit": "y"
+    },
+    {
+      "id": "price_1Q2wEIFQpK06t3MI5DiQnr27",
+      "product_id": "prod_QullXn1qtJbqu5",
+      "name": "All Inclusive 1-20 Year",
+      "code": "657b0feaa0258",
+      "quantity": "l",
+      "unit": "y"
+    },
+    {
+      "id": "price_1Q2wDKFQpK06t3MIljgjl8CJ",
+      "product_id": "prod_QulkQj3Y3yQ5xH",
+      "name": "All Inclusive up 150 Semester",
+      "code": "657b0feaa0258",
+      "quantity": "h",
+      "unit": "s"
+    },
+    {
+      "id": "price_1Q2wCbFQpK06t3MILCb3F7yG",
+      "product_id": "prod_Qulk7hmzESHrh4",
+      "name": "All Inclusive 21-150 Semester",
+      "code": "657b0feaa0258",
+      "quantity": "m",
+      "unit": "s"
+    },
+    {
+      "id": "price_1Q2wBjFQpK06t3MIOOdCO1SN",
+      "product_id": "prod_QuljnsMUr3lMTY",
+      "name": "All Inclusive 1-20 Semester",
+      "code": "657b0feaa0258",
+      "quantity": "l",
+      "unit": "s"
+    },
+    {
+      "id": "price_1Q2wAAFQpK06t3MImDX8lOke",
+      "product_id": "prod_QulhCQr8QYRied",
+      "name": "All Inclusive up 150 Month",
+      "code": "657b0feaa0258",
+      "quantity": "h",
+      "unit": "m"
+    },
+    {
+      "id": "price_1Q2w9nFQpK06t3MIDyPfFrAo",
+      "product_id": "prod_QulhgyS9fMBoQj",
+      "name": "All Inclusive 21-150 Month",
+      "code": "657b0feaa0258",
+      "quantity": "m",
+      "unit": "m"
+    },
+    {
+      "id": "price_1Q2w8YFQpK06t3MIKPktWxNf",
+      "product_id": "prod_QulfSjY5Ms8Oeu",
+      "name": "All Inclusive 1-20 Month",
+      "code": "657b0feaa0258",
+      "quantity": "l",
+      "unit": "m"
     }
+  ]
+  return prices.find(price => price.code === code && price.quantity === quantity && price.unit === unit) || null;
+}
 
-    showSpinner.value = false;
+const subscribe = async () => {
 
-    processPaymentBtn.removeAttribute('disabled');
+  const price = selectedPrice(planInfo.value.code, planInfo.value.quantity, planInfo.value.unit)
+
+  if (price) {
+    console.log(price)
+    const stripeServer = Stripe(import.meta.env.VITE_SECRET_STRIPE_KEY);
+
+    try {
+      const session = await stripeServer.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price: price.id, // ID du prix du produit (récupéré depuis le tableau de bord Stripe)
+            quantity: 1,
+          },
+        ],
+        mode: 'subscription',
+        success_url: `${app_url.value}/sign-up/${planInfo.value.customer}/validation`, // URL de succès après paiement
+        cancel_url: `${app_url.value}/sign-up/${planInfo.value.customer}/cancel`,   // URL en cas d'annulation du paiement
+      });
+
+      const sessionId = session.id;
+
+      const stripe = await loadStripe(import.meta.env.VITE_PUBLIC_STRIPE_KEY);; // Remplace par ta clé publique Stripe
+
+      // Rediriger l'utilisateur vers Stripe Checkout
+      const { error } = await stripe.redirectToCheckout({ sessionId: sessionId });
+
+      if (error) {
+        console.error('Erreur lors de la redirection vers Stripe:', error);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la création de la session de paiement:', error)
+    }
+  } else {
+    console.error("Aucun plan n'a été trouvé!!!")
   }
 }
 
@@ -615,49 +693,14 @@ onBeforeMount(async () => {
   }
 })
 
-onMounted(() => {
+onMounted(async () => {
   referrerUrl.value = document.referrer;
 })
 
-const generatePaymentIntention = async () => {
-  try {
-    stripeServer = Stripe(import.meta.env.VITE_SECRET_STRIPE_KEY);
-    paymentIntent = await stripeServer.paymentIntents.create({
-      amount: planInfo.value.total * 100,
-      currency: 'usd',
-      description: `Payment for ${planInfo.value.establishmentNumber && planInfo.value.establishmentNumber > 0 ? planInfo.value.establishmentNumber : 1} establishment(s) with the plan ${planInfo.value.plan.name}.`,
-      statement_descriptor: 'Payment plan e-rep.',
-      metadata: {
-        product_uuid: "prod_PJ8c4FT7hctl4S"
-      }
-    })
-  } catch (e) {
-    console.log(e);
-  }
-}
 
-const loadPaymentForm = async () => {
-  const stripe = () => import("@stripe/stripe-js");
-  stripeClient = await stripe.loadStripe(import.meta.env.VITE_PUBLIC_STRIPE_KEY);
-
-  stripeElements = stripeClient.elements();
-  card = stripeElements.create('card');
-  displayError = document.querySelector('#card-errors');
-  displaySuccess = document.querySelector('#card-success');
-  card.mount('#card-element');
-
-  card.addEventListener('change', ({ error }) => {
-    if (error) {
-      displayError.textContent = error.message;
-    } else {
-      displayError.textContent = '';
-    }
-  })
-};
 </script>
 <style>
 .subscription-button {
-  /* height: 40px; */
   cursor: pointer;
   transition: var(--transition);
   background-color: #2da8e0 !important;
@@ -667,17 +710,10 @@ const loadPaymentForm = async () => {
   margin-top: 30px;
 }
 
-/* .features-list ul {
-  padding: 0;
-  margin: 0;
-} */
-
 .features-list ul li {
   margin-top: 10px;
   position: relative;
-  /* font-size: 18px; */
   padding-left: 25px;
-  /* color: #02021e; */
   font-weight: 400;
 }
 
@@ -710,7 +746,6 @@ const loadPaymentForm = async () => {
 }
 
 .register-link {
-  /* font-size: .80rem !important; */
   color: #2da8e0 !important;
   font-weight: 700;
   text-decoration: underline !important;
