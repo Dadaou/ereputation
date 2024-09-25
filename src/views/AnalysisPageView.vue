@@ -467,7 +467,8 @@ const calculSentimentAnalysis = (_score) =>{
             feeling: feeling,
             score: _score
         }
-
+        console.log(_score)
+           console.log(rawWidth)
         return _reviewFeedbackData;
 }
 
@@ -888,10 +889,12 @@ const transformData = (chartData) => {
 
             label_category.push(label);
 
-              if (avg_score != 0) {
+             scores.forEach((_sco)=>{
+                 if (_sco != 0) {
                 scoreLength++;
-                score += avg_score;
+                score += _sco;
                 }
+             })
 
             legends.push({
             label: label,
@@ -944,7 +947,6 @@ const transformData = (chartData) => {
         //     datasets:plotData1.datasets.filter(_dat=>rep.includes(_dat.label) == false)
         // }
 
-        console.log(noScore.value)
         if ( noScore.value == false ) {
             showConfidenceChart.value = false;
             noScore.value=false
@@ -952,6 +954,7 @@ const transformData = (chartData) => {
         }else{
 
              confidenceChart.value = plotData1;
+             console.log(confidenceChart.value)
               
             if (scoreLength > 0) {
                 avgScore.value = score/scoreLength;

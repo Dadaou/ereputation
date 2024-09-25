@@ -49,6 +49,7 @@ const EstablishmentsListComponent = defineAsyncComponent(() =>
     import('@Components/utils/EstablishmentsListComponent.vue')
 );
 
+
 const establishments = ref([]);
 const dataLoading = ref(true);
 const customerTag = inject('tag');
@@ -83,12 +84,16 @@ const IsValueOkay = (value) => (value !== '' && value !== 0 && value !== null &&
 
 const loadEstablishment = async (tag, category, dateStart, dateEnd, review_category,categoriesall) => {
     let uri = 'get/establishment/categorization/classement';
-    let params = `tag=${tag}&category=${category}&user_id=${userId}&categories=${categoriesall}`;
+    let params = `tag=${tag}&category=${category}&user_id=${userId}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
         dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
         params += `&from=${dateStart}&to=${dateEnd}`;
+    }
+
+    if(IsValueOkay(categoriesall)){
+        params += `&categories=${categoriesall}`
     }
 
     if(IsValueOkay(review_category)){

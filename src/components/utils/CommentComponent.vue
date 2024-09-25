@@ -534,6 +534,7 @@ const calculFeelingScore = (_reviews,_selectedReview,_feeling,type) =>{
 
                     if (_classification.id == _selectedReview.id && type == 'category') {
                         _classification.feeling = _feeling;
+                        _classification.classification_confidence_feeling = 1;
                     }
 
                     if (_classification.feeling == 'positive') {
@@ -565,6 +566,7 @@ const calculFeelingScore = (_reviews,_selectedReview,_feeling,type) =>{
 
                     if (_review.id == _selectedReview.id && type == 'review') {
                         _review.feeling = _feeling;
+                        _review.confidence = 1;
                     }
 
                     if (_review.feeling == 'positive') {

@@ -8,12 +8,20 @@
         <h2 v-if="reviewFeedbackData.score == 0">Mostly Neutral</h2>
         <div class="reviews__content1 my-4">
             <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700" style="position: relative">
+
+                  <el-tooltip :content="`${reviewFeedbackData.score.toFixed(2)}`" placement="top">
+                      
+                  
+
                 <div v-if="reviewFeedbackData.feeling > 0" class="h-2 rounded review-feedback__positive"
                     :style="{ 'width': reviewFeedbackData.width + '%', 'background': `linear-gradient(90deg, rgba(255,255,0,1) 0%, rgba( ${reviewFeedbackData.red},${reviewFeedbackData.green},0,1) 100%)` }">
                 </div>
                 <div v-else class="h-2 rounded review-feedback__negative"
                     :style="{ 'width': reviewFeedbackData.width + '%', 'background': `linear-gradient(to left, red -20%, rgba( ${reviewFeedbackData.red},${reviewFeedbackData.green},0,1) 70%)` }">
                 </div>
+
+                  </el-tooltip>
+
                 <div class="review-feedback__labels">
                     <span>Negative</span>
                     <span>Neutral</span>
@@ -24,6 +32,9 @@
     </div>
 </template>
 <script setup>
+import {
+ElTooltip
+} from 'element-plus'
 const props = defineProps({
     reviewsConfidence: {
         type: Number,
