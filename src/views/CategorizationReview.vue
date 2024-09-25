@@ -1,5 +1,4 @@
 <template>
-
     <div>
         <div class="breadcrumb">
             <BreadcrumbComponent :data="appStore.breadcrumbs" :tag="customerTag" />
@@ -153,8 +152,8 @@
                                 <PaginationComponent :options="optionsReview" v-if="visibleData.length > 0" @next="(option) => {
                                     loadReviews(companyTag, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
                                 }" @prev="(option) => {
-                                loadReviews(companyTag, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
-                            }" />
+                                    loadReviews(companyTag, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
+                                }" />
                             </div>
                             <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
                                 @reloadData="(review) => reloadData(review)" :categories="categories"
@@ -187,8 +186,8 @@
                                 <PaginationComponent :options="optionsReview" v-if="visibleData.length > 0" @next="(option) => {
                                     loadReviews(companyTag, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
                                 }" @prev="(option) => {
-                                loadReviews(companyTag, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
-                            }" />
+                                    loadReviews(companyTag, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
+                                }" />
                             </div>
                         </div>
                     </div>
@@ -213,30 +212,6 @@ import CommentComponent from '@Components/utils/CommentComponent.vue';
 import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    BarElement,
-    LineElement,
-    ArcElement,
-    Title,
-    Tooltip,
-    Legend
-} from 'chart.js';
-
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    BarElement,
-    ArcElement,
-    Title,
-    Tooltip,
-    Legend
-)
 
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
@@ -440,7 +415,7 @@ onBeforeMount(async () => {
             appStore.setBreadcrumbs([
                 {
                     title: establishment.value.name,
-                    path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                    path: `/customer/${route.params.tag}/establishment/`,
                     isCurrent: false,
                 },
                 {
@@ -747,6 +722,7 @@ p {
 .right__side {
     margin-top: -23px !important;
 }
+
 .right__side .establishment .establishment__img {
     width: 100%;
     height: 160px;

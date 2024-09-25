@@ -42,9 +42,12 @@
                                             <span class="score">{{ stars }}</span><i class="fa fa-star " aria-hidden="true"></i>: {{ count }} 
                                         </div>
                                     </div>
-                                    <div class="reviews-category" >
-                                        <div class="reviews-box" v-if="company.categories" v-for="(cat, category) in sortedCategory(company.categories)" :key="category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag)">
-                                            <span>{{ capitalize(category) }}:{{ cat }} </span>
+                                    <div class="reviews-category">
+                                        <div class="reviews-boxs" v-if="company.categories">
+                                            <div class="reviews-box" v-for="(cat, category) in sortedCategory(company.categories)" :key="category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag)">
+                                                <span class="reviews-loader" v-if="category === ''"></span>
+                                                <span class="reviews-title" v-else>{{ capitalize(category) }}:{{ cat }} </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -164,7 +167,10 @@ const sortedReviews = (reviews) => {
 };
 
 const sortedCategory = (categories) => {
-   return Object.entries(categories).sort((a, b) => b[0] - a[0]).reduce((obj, [k, v]) => {
+  if (!categories || typeof categories !== 'object') {
+    return {};
+  }
+  return Object.entries(categories).sort((a, b) => b[0] - a[0]).reduce((obj, [k, v]) => {
     obj[k] = v;
     return obj;
   }, {});
@@ -396,7 +402,7 @@ const capitalize = (str) => {
 }
 
 @media screen and (max-width:1260px) {
-    .establishment-rank-view .reviews-category {
+    .establishment-rank-view .reviews-category .reviews-boxs{
         max-width: 400px !important;
     }
 }
@@ -415,13 +421,13 @@ const capitalize = (str) => {
         font-size: 12px;
     }
 
-    .establishment-rank-view .reviews-category {
+    .establishment-rank-view .reviews-category .reviews-boxs{
         max-width: 400px !important;
     }
 }
 
 @media screen and (max-width:768px) {
-    .establishment-rank-view .reviews-category {
+    .establishment-rank-view .reviews-category .reviews-boxs{
         max-width: 400px !important;
         margin-bottom: -42px !important;
     }
@@ -467,21 +473,22 @@ const capitalize = (str) => {
     .society__name {
         width: 200px;
     }
-    .establishment-rank-view .reviews-category {
+    .establishment-rank-view .reviews-category .reviews-boxs{
         max-width: 430px !important;
         margin-left: 0 !important;
+        margin-bottom: -30px !important;
     }
 }
 
 @media (max-width: 500px) {
-    .establishment-rank-view .reviews-category {
+    .establishment-rank-view .reviews-category .reviews-boxs{
         max-width: 350px !important;
         margin-left: 0 !important;
     }
 }
 
 @media (max-width: 400px) {
-    .establishment-rank-view .reviews-category {
+    .establishment-rank-view .reviews-category .reviews-boxs{
         max-width: 300px !important;
         margin-left: 0 !important;
     }
@@ -519,7 +526,7 @@ const capitalize = (str) => {
     opacity: 1;
 }
 
-.establishment-rank-view .reviews-category {
+.establishment-rank-view .reviews-boxs {
     max-width:500px;
     overflow-x: scroll;
     display: flex;
@@ -529,19 +536,41 @@ const capitalize = (str) => {
     margin-right: -130px;
     margin-left: -214px;
 }
-.establishment-rank-view .reviews-category::-webkit-scrollbar {
+
+.establishment-rank-view .reviews-boxs::-webkit-scrollbar {
     height: 4px; 
 }
-.reviews-box {
+
+.reviews-box .reviews-title {
     background-color: #8080803b;
     padding: 3px; 
     margin: 5px 2px; 
     display: flex;
-    border-radius: 2px;
+    border-radius: 5px;
 }
 
 .reviews-box:hover {
     cursor: pointer
 }
 
+.reviews-loader {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 5px;
+  margin-top: 8px;
+  border: 4px solid rgba(0, 0, 0, .1);
+  border-radius: 50%;
+  border-top-color: var(--color-primary);
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 </style>
