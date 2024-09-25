@@ -24,12 +24,12 @@
     <el-tabs v-model="activeName" type="card" class="demo-tabs subscription-tabs next-container">
 
       <el-tab-pane name="user-info">
-        <div class="tab-pane-header">
-          <!-- <h6>STEP 2 OF 3</h6> -->
+        <!--<div class="tab-pane-header">
+           <h6>STEP 2 OF 3</h6> 
           <div class="section__title">
-            <p class="mt-4">Please fill out the form to create your account</p>
+            
           </div>
-        </div>
+        </div>-->
         <div class="tab__pane-body w-full">
 
           <div class="form-group features-list w-50">
@@ -101,7 +101,8 @@
           <form class="form-group" @submit.prevent="submitForm">
             <p class="my-5">Already have an account? Click the link below to access your dashboard:<a href="/sign-in"
                 class="register-link mx-3">Login</a></p>
-            <p class="mb-5">User informations</p>
+            <p class="my-4">Please fill out the form to create your account</p>
+            <!-- <p class="mb-5">User informations</p> -->
             <div class="w-full">
               <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First
                 name <span>*</span></label>
@@ -133,7 +134,7 @@
               <input v-model="planInfo.uCPassword" type="password" id="cpassword"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
             </div>
-            <p class="mb-5 mt-8">Company informations</p>
+            <!-- <p class="mb-5 mt-8">Company informations</p> -->
             <div class="w-full">
               <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
                 name <span>*</span></label>
@@ -342,7 +343,7 @@ const submitCompanyForm = async () => {
     if (response.status == 200) {
       planInfo.value.customer = response.data.customer.tag;
       showSpinner.value = false;
-      activeName.value = 'checkout';
+      // activeName.value = 'checkout';
       userCreated.value = true
     } else {
       showSpinner.value = false;
@@ -704,6 +705,15 @@ onMounted(async () => {
   cursor: pointer;
   transition: var(--transition);
   background-color: #2da8e0 !important;
+  color: white;
+  border-radius: 12px;
+  min-width: 200px;
+  text-align: center;
+}
+
+.subscription-button:hover {
+  font-weight: 600;
+  transition: var(--transition);
 }
 
 .features-list {
