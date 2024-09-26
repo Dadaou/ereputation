@@ -213,6 +213,10 @@ onBeforeUnmount(() => {
 
 }
 
+.discount-content {
+    gap: 28px;
+}
+
 .bg__circle {
     position: absolute;
     background: white;
@@ -226,7 +230,6 @@ onBeforeUnmount(() => {
 
 .screen__content * {
     z-index: 9;
-
 }
 
 .boost__title {
@@ -355,7 +358,7 @@ onBeforeUnmount(() => {
     }
 
     .boost_sold {
-        margin-right: 200px;
+        margin-right: 42px;
         margin-top: -150px;
         font-size: 3.8rem;
     }
