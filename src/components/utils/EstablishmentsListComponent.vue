@@ -44,9 +44,9 @@
                                     </div>
                                     <div class="reviews-category">
                                         <div class="reviews-boxs" v-if="company.categories">
-                                            <div class="reviews-box" v-for="(cat, category) in sortedCategory(company.categories)" :key="category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag)">
+                                            <div class="reviews-box" v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag)">
                                                 <span class="reviews-loader" v-if="category === ''"></span>
-                                                <span class="reviews-title" v-else>{{ capitalize(category) }}:{{ cat }} </span>
+                                                <span class="reviews-title" v-else :style="{ backgroundColor: colors[index % colors.length] }">{{ capitalize(category) }}:{{ cat }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -114,6 +114,7 @@ const props = defineProps({
 const establishment = ref(null);
 const showModal = ref(false);
 const baseurl = window.location.origin;
+const colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
 
 const goToCompany = (establishment) => {
     appStore.isLoading = true;
@@ -542,11 +543,11 @@ const capitalize = (str) => {
 }
 
 .reviews-box .reviews-title {
-    background-color: #8080803b;
     padding: 3px; 
     margin: 5px 2px; 
     display: flex;
     border-radius: 5px;
+    color:white;
 }
 
 .reviews-box:hover {
