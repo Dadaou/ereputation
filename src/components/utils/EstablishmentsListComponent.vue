@@ -44,9 +44,9 @@
                                     </div>
                                     <div class="reviews-category">
                                         <div class="reviews-boxs" v-if="company.categories">
-                                            <div class="reviews-box" v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag)">
+                                            <div class="reviews-box" v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category">
                                                 <span class="reviews-loader" v-if="category === ''"></span>
-                                                <span class="reviews-title" v-else :style="{ backgroundColor: colors[index % colors.length] }">{{ capitalize(category) }}:{{ cat }}</span>
+                                                <span class="reviews-title" v-else :style="{ backgroundColor: colors[index % colors.length] }"  @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">{{ capitalize(category) }}:{{ cat }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -191,14 +191,18 @@ const redirectToReviews = (star,id) =>{
   });
 }
 
-const redirectToReviewsCategory = (tag, id) => {
+const redirectToReviewsCategory = (tag, id, category) => {
     router.push({
         name: 'CategorizationReview',
         params: {
             tag: tag,
             id: id
+        },
+        query: {
+            category : category,
         }
     });
+    console.log("category",category)
 }
 
 const capitalize = (str) => {
