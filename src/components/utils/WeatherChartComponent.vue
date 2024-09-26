@@ -23,21 +23,37 @@
         'width': '100%',
      }">
      <div class="colSmall">
-       <GroupedBarChart class="chart" :plot-data="data" x-key="name" :width="custom_width" :height="200"
+       <GroupedBarChart style="display: none;" class="chart" :plot-data="data" x-key="name" :width="custom_width" :height="200"
         :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
         :x-tick-format="d => `${d}`" :margin="{ top: 20, bottom: 35, left: 30, right: 20 }"/>
         <!--  <div id="weatherIcons" style="height: 58px; width: 100%; position: relative;">
          </div> -->
      </div>
-     <div class="colLarge" id="colLarge">
-      <div class="boxLarge">
-        <GroupedBarChart class="chart" :plot-data="data" x-key="name" :width="custom_width" :height="200"
+
+    <div class="colLarge" id="colLarge">
+      <div class="boxLarge"> 
+ <!--    <div class="" id="">
+      <div class=""> -->
+
+        <GroupedBarChart  class="chart" :plot-data="data" x-key="name" :width="custom_width" :height="200"
         :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
-        :x-tick-format="d => `${d}`" :margin="{ top: 20, bottom: 35, left: 30, right: 20 }"/>
+        :x-tick-format="d => `${d}`" :margin="{ top: 20, bottom: 35, left: 30, right: 20 }"/> 
+
+          <!--   <div class="chart" >
+              
+                    <Line :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" :width="custom_width" :height="200"  :data="weatherChartValue" id="confidence" :options="newOptions" 
+                    /> -->
+              
+
+               <!-- <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />  -->
+            <!-- </div>  -->
+
         <div id="weatherIcons" style="height: 58px; width: 100%; position: relative;">
         </div>
+
       </div>
      </div>
+
     </div>
     <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'"></BaseLegend>
   </div>
@@ -50,9 +66,76 @@ const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
 );
 
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    BarElement,
+    LineElement,
+    ArcElement,
+    Title,
+    Tooltip,
+    Legend
+} from 'chart.js';
+
+import { Line, Bar } from 'vue-chartjs'
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    BarElement,
+    ArcElement,
+    Title,
+    Tooltip,
+    Legend
+)
+  const colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
+const newOptions = {
+    maintainAspectRatio: false,
+    // scales: {
+    // },
+    // plugins: {
+    //     legend: {
+    //         display: false,
+    //     }
+        // beforeDraw: function (chart) {
+        //     var ctx = chart.ctx;
+        //     chart.data.datasets.forEach(function (dataset, i) {
+        //         var meta = chart.getDatasetMeta(i);
+        //         if (!meta.hidden) {
+        //             meta.data.forEach(function (element, index) {
+        //                 // Dessiner le texte sous chaque barre en fonction de sa valeur
+        //                 var dataValue = dataset.data[index];
+        //                 var text = '';
+        //                 if (dataValue > 0.2) {
+        //                     text = 'Positif';
+        //                 } else if (dataValue < -0.2) {
+        //                     text = 'Négatif';
+        //                 } else {
+        //                     text = 'Neutre';
+        //                 }
+        //                 var fontSize = 12;
+        //                 var fontStyle = 'normal';
+        //                 var fontFamily = 'Arial';
+        //                 ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+        //                 var textWidth = ctx.measureText(text).width;
+        //                 var elementX = element._model.x;
+        //                 var elementY = element._model.y + 20; // Ajuster la valeur pour positionner le texte sous les barres
+        //                 ctx.fillStyle = 'black';
+        //                 ctx.fillText(text, elementX - textWidth / 2, elementY);
+        //             });
+        //         }
+        //     });
+        // }
+    // }
+};
+
 const chartLoading = inject('chartLoading');
 const legendData = inject('legendData');
 const data = inject('data');
+const weatherChartValue = ref([]);
 const icons = inject('icons');
 const el = ref(null);
 const chartWidth = inject('chartWidth');
@@ -100,6 +183,7 @@ const positionIcons = () => {
 
   const weathers = document.getElementById("weatherIcons");
 
+
   for (let i = 0; i < positions.length; i++) {
     let textNode = document.createElement("span");
     let tempTextNode = document.createElement("span");
@@ -119,9 +203,35 @@ useResizeObserver(el, (entries) => {
   chartWidth.value = Math.abs(width);
 });
 
+const transformData=(_data)=>{
+    let plotData1 = {
+        labels: [],
+        datasets: []
+      }
+      let scores=[0];
+        _data.value.forEach((_note)=>{
+        scores.push(_note.reviews);
+        plotData1.labels.push(_note.name)
+      });
+        scores.push(5);
+       plotData1.datasets.push({
+              label: 'Note',
+              backgroundColor: colors[2],
+              borderColor: colors[2],
+              data: scores,
+              // pointRadius: 0,
+              // fill: false,
+              tension: 0.1
+              })
+     console.log(data.value)
+     weatherChartValue.value=plotData1;
+}
+
 onMounted(() => {
   deleteIcons();
   positionIcons();
+  transformData(data)
+ 
 });
 
 watch(data, () => {
@@ -130,6 +240,7 @@ watch(data, () => {
     ;
 });
 watch(() => data.value , () => {
+      transformData(data)
     nextTick(() => {
         const colLargeElement = document.getElementById("colLarge");
         if (colLargeElement) {
@@ -140,6 +251,7 @@ watch(() => data.value , () => {
             colLargeElement.scrollLeft = longueur;
         }
     });
+
 }, { immediate: true, deep: true });
 </script>
 
