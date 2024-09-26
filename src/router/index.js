@@ -391,7 +391,7 @@ const router = createRouter({
           ]
         },
         {
-          path: '/step',
+          path: '/first-step',
           name: 'Step',
           beforeEnter: [CheckAccess],
           component: () => import('@Views/HomeStepPageView.vue'),
