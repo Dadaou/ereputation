@@ -544,7 +544,7 @@ const capitalize = (str) => {
 
 .reviews-box .reviews-title {
     padding: 3px; 
-    margin: 5px 2px; 
+    margin: 5px 4px; 
     display: flex;
     border-radius: 5px;
     color:white;
