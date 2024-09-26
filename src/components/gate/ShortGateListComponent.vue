@@ -114,7 +114,7 @@ const establishments = computed(() => {
                 positionning: establishment.positionning,
                 id: establishment.id,
                 disable: establishment.disable,
-                link: `${baseurl}/public/${route.params.tag}/establishment/${establishment.competitor_tag}/gates`
+                link: `${baseurl}/public/${route.params.tag}/establishment/${establishment.competitor_tag}/gates?preview=true`
             })
         });
     }
