@@ -52,7 +52,7 @@
             :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
             :y-tick-format="d => `${d}`" /> -->
 
-             <LineChart class="chart" :plot-data="plotdata.notes"
+            <!--  <LineChart class="chart" :plot-data="plotdata.notes"
                        x-key="date"
                        :width="custom_width.chart"
                        :height="200"
@@ -65,17 +65,17 @@
                        :show-points="true"
                        :point-radius="3"
                        :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
-                       :x-tick-format="d => moment(new Date(d)).format('YYY-MM-DD')" />
+                       :x-tick-format="d => moment(new Date(d)).format('YYY-MM-DD')" /> -->
 
 
-         <!--    <div  >
+             <div  >
               
                     <Line :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" :width="custom_width.chart" :height="200"  :data="eventChartValue" id="confidence" :options="newOptions" 
                     />
               
 
               <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
-            </div> -->
+            </div>
             
           <div id="chartEvents" style="min-height: 60px; width: 100%;position: relative;"></div>
         </div>
