@@ -201,7 +201,6 @@ onMounted(async () => {
 	display: flex;
 	justify-content: space-between;
 	width: 100%;
-	margin-bottom: 10px;
 }
 
 .select_info, .catfiltre, .date_picker {
