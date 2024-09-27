@@ -774,13 +774,13 @@ onBeforeMount(async () => {
             });
 
             appStore.setBreadcrumbs([
-                // {
-                //     title: establishment.value.name,
-                //     path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
-                //     isCurrent: false,
-                // },
                 {
-                    title: "Categorization",
+                    title: establishment.value.name,
+                    path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                    isCurrent: false,
+                },
+                {
+                    title: "Category-based ranking",
                     path: `${route.path}`,
                     isCurrent: true
                 }
@@ -1053,6 +1053,7 @@ p {
 }
 
 .container_legend {
+    font-size: 14px !important;
     gap: 3px;
     align-items: center;
     display: flex;

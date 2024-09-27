@@ -154,6 +154,12 @@ const router = createRouter({
           component: () => import('@Views/AnalysisPageView.vue')
         },
         {
+          path: 'customer/:tag/categorization/:id/review',
+          name: 'CategorizationReview',
+          beforeEnter: [CheckAccess],
+          component: () => import('@Views/CategorizationReviewPageView.vue'),
+        },
+        {
           path: '/customer/:tag/establishment/:id',
           name: 'Establishment',
           beforeEnter: [CheckAccess],
@@ -407,20 +413,6 @@ const router = createRouter({
               path: 'customer/:tag',
               name: 'StepView',
               component: () => import('@Views/StepPageView.vue')
-            },
-          ]
-        },
-        {
-          path: '/',
-          name: 'establishmentLayout',
-          component: EstablishmentLayout,
-          redirect: '/',
-          children: [
-            {
-              path: 'customer/:tag/categorization/:id/review',
-              name: 'CategorizationReview',
-              beforeEnter: [CheckAccess],
-              component: () => import('@Views/CategorizationReviewPageView.vue'),
             },
           ]
         },
