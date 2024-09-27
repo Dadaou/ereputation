@@ -283,6 +283,7 @@ import { countries } from '@Services/input-list.js';
 import linkystar from '@/assets/images/logo/LinkyStar.png'
 import { current } from '@Services/languages.js';
 import { useI18n } from "vue-i18n";
+import { tsvFormatBody } from 'd3';
 // import { i18n } from '@/i18n';
 
 const SpinnerComponent = defineAsyncComponent(() =>
@@ -307,7 +308,7 @@ const { locale } = useI18n();
 const submitForm = async () => {
   await submitUserForm()
   await submitCompanyForm()
-  await subscribe()
+  // await subscribe()
 }
 
 const submitUserForm = async () => {
@@ -341,6 +342,7 @@ const submitCompanyForm = async () => {
   showSpinner.value = true;
   createAccount().then((response) => {
     if (response.status == 200) {
+      console.log(response.data)
       planInfo.value.customer = response.data.customer.tag;
       showSpinner.value = false;
       // activeName.value = 'checkout';
@@ -409,21 +411,23 @@ const setPlan = (code, quantity, unity) => {
 }
 
 const createAccount = async () => {
+  const body = {
+    name: planInfo.value.cName,
+    firstname: planInfo.value.uFName,
+    lastname: planInfo.value.uLName,
+    password: planInfo.value.uPassword,
+    email: planInfo.value.uEmail,
+    city: planInfo.value.cCity,
+    zipcode: planInfo.value.cZip,
+    country: planInfo.value.cCountry,
+    address1: planInfo.value.cAdress,
+    address2: planInfo.value.cSAdress,
+    plan: planInfo.value.plan.tag,
+    partner: import.meta.env.VITE_PARTNER_CODE
+  }
+  console.log(tsvFormatBody)
   const response = await new Promise((resolve,) => {
-    services.post_Record('account/create', {
-      name: planInfo.value.cName,
-      firstname: planInfo.value.uFName,
-      lastname: planInfo.value.uLName,
-      password: planInfo.value.uPassword,
-      email: planInfo.value.uEmail,
-      city: planInfo.value.cCity,
-      zipcode: planInfo.value.cZip,
-      country: planInfo.value.cCountry,
-      address1: planInfo.value.cAdress,
-      address2: planInfo.value.cSAdress,
-      plan: planInfo.value.plan.tag,
-      partner: import.meta.env.VITE_PARTNER_CODE
-    }, (response) => {
+    services.post_Record('account/create', body, (response) => {
       resolve(response)
     }, true, true);
   });
@@ -599,7 +603,8 @@ const subscribe = async () => {
   const price = selectedPrice(planInfo.value.code, planInfo.value.quantity, planInfo.value.unit)
 
   if (price) {
-    console.log(price)
+    // console.log(price)
+    console.log(planInfo.value)
     const stripeServer = Stripe(import.meta.env.VITE_SECRET_STRIPE_KEY);
 
     try {
@@ -612,8 +617,8 @@ const subscribe = async () => {
           },
         ],
         mode: 'subscription',
-        success_url: `${app_url.value}/sign-up/${planInfo.value.customer}/validation`, // URL de succès après paiement
-        cancel_url: `${app_url.value}/sign-up/${planInfo.value.customer}/cancel`,   // URL en cas d'annulation du paiement
+        success_url: `${app_url.value}/sign-up/subscription?session_id={CHECKOUT_SESSION_ID}&c=${planInfo.value.customer}`, // URL de succès après paiement
+        cancel_url: `${app_url.value}/sign-in`,   // URL en cas d'annulation du paiement
       });
 
       const sessionId = session.id;
