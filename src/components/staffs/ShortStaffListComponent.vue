@@ -109,7 +109,7 @@ const filterTableData = computed(() => {
   let filterdata = tableData.value;
 
   filterdata = filterdata.map((value) => {
-    value.link = `${baseurl}/public/${tag.value}/establishment/${value.establishment_tag}/staffs/${value.tag}/feedback`
+    value.link = `${baseurl}/public/${tag.value}/establishment/${value.establishment_tag}/staffs/${value.tag}/feedback?preview=true`
     return value
   })
 

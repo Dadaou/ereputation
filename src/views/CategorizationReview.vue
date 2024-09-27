@@ -351,6 +351,13 @@ watch([start_date, end_date, selectedWebsites, categoryFilters], () => {
     loadReviews(companyTag, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
 })
 
+watch(() => route.query.category, (newCategoryFilter) => {
+    if (newCategoryFilter) {
+        categoryFilters.value = newCategoryFilter.split(',');
+    } else {
+        categoryFilters.value = ['all'];
+    }
+}, { immediate: true });
 
 const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source, stars, category, language) => {
     optionsReview.value.current = current;
@@ -430,6 +437,7 @@ onBeforeMount(async () => {
             appStore.isLoading = false;
         }
     })
+    
     await loadCategories(companyId)
     await loadReviews(companyTag, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value)
     appStore.isLoading = false;

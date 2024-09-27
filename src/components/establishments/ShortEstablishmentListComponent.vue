@@ -138,7 +138,7 @@ const establishments = computed(() => {
             disable: establishment.disable,
             totalReviews: establishment.totalReviews,
             establishment_competitor_tag: establishment.establishment_competitor_tag,
-            link: `${baseurl}/public/${route.params.tag}/establishment/${establishment.competitor_tag}/feedback`
+            link: `${baseurl}/public/${route.params.tag}/establishment/${establishment.competitor_tag}/feedback?preview=true`
         })
     });
     //}

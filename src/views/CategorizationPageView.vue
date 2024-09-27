@@ -24,7 +24,10 @@
     </div>
     <div class="society__list mt-5" v-if="establishments.length > 0">
         <suspense>
-            <div class="establishment-rank-view">
+            <template v-if="dataLoading">
+                <establishment-list-loaded-component :nb="3" />
+            </template>
+            <div v-else class="establishment-rank-view">
                 <establishments-list-component :establishments="establishments" :tag="customerTag" :start_date="start_date" :end_date="end_date"/>
             </div>
             <template #fallback>
@@ -83,6 +86,7 @@ watch([review_category, categoryFilters, start_date, end_date,categoriesall], as
 const IsValueOkay = (value) => (value !== '' && value !== 0 && value !== null && value !== undefined);
 
 const loadEstablishment = async (tag, category, dateStart, dateEnd, review_category,categoriesall) => {
+    dataLoading.value = true; 
     let uri = 'get/establishment/categorization/classement';
     let params = `tag=${tag}&category=${category}&user_id=${userId}`;
 
@@ -105,10 +109,12 @@ const loadEstablishment = async (tag, category, dateStart, dateEnd, review_categ
     const response = await new Promise((resolve) => {
         services.get_Record(uri, (response) => {
             resolve(response);
+            dataLoading.value = false;  
         });
     });
 
     if (response.status === 200) {
+        dataLoading.value = false;  
         establishments.value = response.data.map(objet => {
             objet.categories
             return { ...objet };
@@ -201,7 +207,6 @@ onMounted(async () => {
 	display: flex;
 	justify-content: space-between;
 	width: 100%;
-	margin-bottom: 10px;
 }
 
 .select_info, .catfiltre, .date_picker {

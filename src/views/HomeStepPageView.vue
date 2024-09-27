@@ -8,10 +8,29 @@
             <h1>This initial setup will assist you in configuring your establishment, and upon completion, you will
                 be able to fully leverage the potential of Linkystar.</h1>
             <br>
-            <h1 @click="addEstablishment" class="redirect">Let’s get Started!</h1>
+
+            <h1 @click="addEstablishment" class="redirect">
+                <span class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-arrow-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M10.354 3.646a.5.5 0 0 0 0 .708L13.207 7H1.5a.5.5 0 0 0 0 1h11.707l-2.853 2.646a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z" />
+                    </svg>
+                </span>
+                Let’s get Started!
+            </h1>
             <br>
-            <h1 @click="navigateHome" class="redirect">No, thank you. I will set up my platform without the
-                assistant</h1>
+            <h1 @click="navigateHome" class="redirect">
+                <span class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-arrow-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M10.354 3.646a.5.5 0 0 0 0 .708L13.207 7H1.5a.5.5 0 0 0 0 1h11.707l-2.853 2.646a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z" />
+                    </svg>
+                </span>
+                No, thank you. I will set up my platform without the
+                assistant
+            </h1>
         </div>
     </div>
     <router-view></router-view>
@@ -30,7 +49,7 @@ const isChildRoute = ref(false);
 
 
 const checkIfChildRoute = () => {
-    isChildRoute.value = route.path.includes('/step/customer');
+    isChildRoute.value = route.path.includes('/first-step/customer');
 };
 
 
@@ -65,6 +84,13 @@ const navigateHome = () => {
     min-height: calc(100dvh - 280px);
 }
 
+.icon {
+    margin-top: .2rem;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+
 .container {
     margin-top: 10rem;
 }
@@ -80,6 +106,7 @@ const navigateHome = () => {
 .redirect {
     cursor: pointer;
     font-weight: 600;
+    display: flex;
 }
 
 .redirect:hover {

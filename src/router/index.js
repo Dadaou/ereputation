@@ -283,11 +283,18 @@ const router = createRouter({
           name: 'UnitFeedBack',
           component: () => import('@Components/units/UnitFeedbackComponent.vue'),
           beforeEnter: (to, from, next) => {
+            
             if (!to.params.rfuid) {
               const rfuid = generateRandomString(16)
               next({ name: 'UnitFeedBack', params: { ...to.params, rfuid } })
             } else {
-              next()
+              if (to.params.rfuid == 'preview') {
+                    const rfuid = generateRandomString(16);
+                    next({ name: 'UnitFeedBack', params: { ...to.params, rfuid },query:{preview:true} })
+              } else {
+                next()
+              }
+              
             }
           }
         },
@@ -391,7 +398,7 @@ const router = createRouter({
           ]
         },
         {
-          path: '/step',
+          path: '/first-step',
           name: 'Step',
           beforeEnter: [CheckAccess],
           component: () => import('@Views/HomeStepPageView.vue'),

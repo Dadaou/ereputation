@@ -136,7 +136,7 @@ const add = () => {
 const filterTableData = computed(() => {
   let filterdata = units.value.map((unit) => {
     unit.media = getEstablishmentImage(unit.establishment_name);
-    unit.link = `${baseurl}/public/${tag.value}/establishment/${unit.establishment_competitor_tag}/units/${unit.tag}/feedback`;
+    unit.link = `${baseurl}/public/${tag.value}/establishment/${unit.establishment_competitor_tag}/units/${unit.tag}/feedback/${'preview'}`;
     return unit;
   });
 
@@ -174,6 +174,7 @@ const redirectToQRCode = async (tag, establishment_tag) => {
   const link = `/customer/${route.params.tag}/establishment/${establishment_tag}/qr_code_document_preview?section=units&tag=${tag}`;
   router.push(link);
 }
+
 </script>
 
 <style scoped>

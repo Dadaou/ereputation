@@ -24,12 +24,12 @@
     }">
       <div class="colSmall">
 
-       <!-- <GroupedBarChart style="display: none !important;" class="chart" :plot-data="plotdata.notes" x-key="date" :width="custom_width.chart" :height="200"
+        <GroupedBarChart style="display: none !important;" class="chart" :plot-data="plotdata.notes" x-key="date" :width="custom_width.chart" :height="200"
           :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Reviews"
           :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
-          :y-tick-format="d => `${d}`" /> -->
+          :y-tick-format="d => `${d}`" />
 
-          <div class="chart" x-key="date" :width="custom_width.chart" :height="200" 
+         <!--  <div class="chart" x-key="date" :width="custom_width.chart" :height="200" 
               :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Reviews"
             :y-tick-format="d => `${d}`">
               
@@ -40,19 +40,35 @@
               
 
               <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
-            </div>
+            </div> -->
 
       </div>
-      <!-- <div class="colLarge" id="colLar">
-        <div class="boxLarge"> -->
-        <div class="" id="">
+    <!--    <div class="colLarge" id="colLar">
+        <div class="boxLarge">
+ -->     <div class="" id="">
           <div class="">
-      <!--   <GroupedLineChart  class="chart" :plot-data="plotdata.notes" x-key="date" :width="custom_width.chart" :height="200"
+           <!--   <GroupedBarChart  style="display: none;" class="chart" :plot-data="plotdata.notes" x-key="date" :width="custom_width.chart" :height="200"
             :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" x-axis-label="Dates" y-axis-label="Reviews"
             :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
             :y-tick-format="d => `${d}`" /> -->
 
-           <div  >
+            <!--  <LineChart class="chart" :plot-data="plotdata.notes"
+                       x-key="date"
+                       :width="custom_width.chart"
+                       :height="200"
+                       :margin="{ top: 20, bottom: 35, left: 55, right: 20 }"
+                       :use-time-scale-x-axis="true"
+                       :x-axis-label-shift="{dy: -5}"
+                       x-axis-label="Dates"
+                       :y-min="0"
+                       y-axis-label="Reviews"
+                       :show-points="true"
+                       :point-radius="3"
+                       :colors="['#337ecc', '#f75842', '#00BFFF', '#87CEFA', '#87CEEB', '#ADD8E6', '#B0C4DE', '#4169E1']"
+                       :x-tick-format="d => moment(new Date(d)).format('YYY-MM-DD')" /> -->
+
+
+             <div  >
               
                     <Line :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" :width="custom_width.chart" :height="200"  :data="eventChartValue" id="confidence" :options="newOptions" 
                     />
@@ -118,57 +134,42 @@ const props = defineProps({
 
 const newOptions = {
     maintainAspectRatio: false,
-    scales: {
-    },
-    plugins: {
-        legend: {
-            display: false,
-        },
-        zoom: {
-            pan: {
-                enabled: true,
-                mode: 'x',
-            },
-            zoom: {
-                wheel: {
-                    enabled: true,
-                },
-                pinch: {
-                    enabled: true,
-                },
-                mode: 'x',
-            }
-        },
-        beforeDraw: function (chart) {
-            var ctx = chart.ctx;
-            chart.data.datasets.forEach(function (dataset, i) {
-                var meta = chart.getDatasetMeta(i);
-                if (!meta.hidden) {
-                    meta.data.forEach(function (element, index) {
-                        // Dessiner le texte sous chaque barre en fonction de sa valeur
-                        var dataValue = dataset.data[index];
-                        var text = '';
-                        if (dataValue > 0.2) {
-                            text = 'Positif';
-                        } else if (dataValue < -0.2) {
-                            text = 'Négatif';
-                        } else {
-                            text = 'Neutre';
-                        }
-                        var fontSize = 12;
-                        var fontStyle = 'normal';
-                        var fontFamily = 'Arial';
-                        ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
-                        var textWidth = ctx.measureText(text).width;
-                        var elementX = element._model.x;
-                        var elementY = element._model.y + 20; // Ajuster la valeur pour positionner le texte sous les barres
-                        ctx.fillStyle = 'black';
-                        ctx.fillText(text, elementX - textWidth / 2, elementY);
-                    });
-                }
-            });
-        }
-    }
+    // scales: {
+    // },
+    // plugins: {
+    //     legend: {
+    //         display: false,
+    //     }
+        // beforeDraw: function (chart) {
+        //     var ctx = chart.ctx;
+        //     chart.data.datasets.forEach(function (dataset, i) {
+        //         var meta = chart.getDatasetMeta(i);
+        //         if (!meta.hidden) {
+        //             meta.data.forEach(function (element, index) {
+        //                 // Dessiner le texte sous chaque barre en fonction de sa valeur
+        //                 var dataValue = dataset.data[index];
+        //                 var text = '';
+        //                 if (dataValue > 0.2) {
+        //                     text = 'Positif';
+        //                 } else if (dataValue < -0.2) {
+        //                     text = 'Négatif';
+        //                 } else {
+        //                     text = 'Neutre';
+        //                 }
+        //                 var fontSize = 12;
+        //                 var fontStyle = 'normal';
+        //                 var fontFamily = 'Arial';
+        //                 ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+        //                 var textWidth = ctx.measureText(text).width;
+        //                 var elementX = element._model.x;
+        //                 var elementY = element._model.y + 20; // Ajuster la valeur pour positionner le texte sous les barres
+        //                 ctx.fillStyle = 'black';
+        //                 ctx.fillText(text, elementX - textWidth / 2, elementY);
+        //             });
+        //         }
+        //     });
+        // }
+    // }
 };
 
 const SpinnerComponent = defineAsyncComponent(() =>
@@ -341,16 +342,23 @@ const getPlotData = async (period, rangedate, next) => {
   if (response.status == 200) {
     data = response.data;
     decomposeData(data.notes);
+    plotdata.value=data;
+ 
+// ;
+//         if (plotdata.value) {
+//     deleteEvents()
+//     positionEvent()
+//   }
       let plotData1 = {
         labels: [],
         datasets: []
       }
-      let scores=[];
+      let scores=[0];
         data.notes.forEach((_note)=>{
         scores.push(_note.note);
         plotData1.labels.push(_note.date)
       });
-       
+        scores.push(5);
        plotData1.datasets.push({
               label: 'Note',
               backgroundColor: colors[2],
@@ -362,7 +370,7 @@ const getPlotData = async (period, rangedate, next) => {
               })
      
      eventChartValue.value=plotData1;
-     console.log(eventChartValue.value)
+     console.log(data)
   }
   next(data);
 }
@@ -375,6 +383,7 @@ onBeforeMount(async () => {
     })
   });
   plotdata.value = response;
+ 
 
   if (plotdata.value) {
     deleteEvents()
@@ -383,12 +392,13 @@ onBeforeMount(async () => {
         labels: [],
         datasets: []
       }
-      let scores=[];
+      let scores=[0];
        let c=0;
         response.notes.forEach((_note)=>{
         scores.push(_note.note);
         plotData1.labels.push(_note.date)
       });
+        scores.push(5);
      plotData1.datasets.push({
               label: 'Note',
               backgroundColor: colors[2],
@@ -400,7 +410,7 @@ onBeforeMount(async () => {
               })
      
      eventChartValue.value=plotData1;
-     console.log(response)
+     console.log( plotdata.value)
   }
   loading.value = false;
 })

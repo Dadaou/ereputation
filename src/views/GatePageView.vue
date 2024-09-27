@@ -238,13 +238,15 @@ onBeforeMount(async () => {
 });
 
 onMounted(() => {
-    try {
-        if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
-            window.FingerprintApp.default.main();
+   if (!route.query.preview) {
+         try {
+            if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
+                window.FingerprintApp.default.main();
+            }
+        } catch (error) {
+            console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
         }
-    } catch (error) {
-        console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
-    }
+   }
 })
 
 </script>
