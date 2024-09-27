@@ -5,7 +5,8 @@
     <div class="comment-text">
       <p>{{ comment.comment }}</p>
       <div>
-        <span class="emoji mx-1" v-if="comment.feeling">
+        <span class="emoji mx-1" v-if="comment.feeling" 
+        @click="handleModal('Edit comment feeling', 'edit', 'uil-edit', 'feeling', comment)">
           <span v-if="comment.feeling == 'positive'">😀</span>
           <span v-if="comment.feeling == 'neutre' || comment.feeling == 'neutral'">😐</span>
           <span v-if="comment.feeling == 'negative'">😕</span>
@@ -34,6 +35,43 @@
         </a>
       </el-tooltip>
     </div>
+
+
+
+    <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
+      <template #content>
+        <div class="modal__header">
+          <div class="modal__title">
+            <h3 class="font-semibold text-gray-900 dark:text-white">
+              <i class="uil uil-edit"></i> {{ modal.text }}
+            </h3>
+          </div>
+          <div class="modal__close">
+            <i class="uil uil-times-circle" @click="showModal = false"></i>
+          </div>
+        </div>
+        <div class="mb-6 feedback__rating">
+          <FeelingFeedbackComponent v-if="modal.type == 'feeling'" @updateValue="(feeling) => {
+            feel = feeling
+          }" />
+
+          <el-select v-else v-model="category" filterable placeholder="select categories" size="large">
+            <el-option key="0" label="" value="" />
+            <el-option v-for="(item, index) in categories" :key="index + 1" :label="item.category"
+              :value="item.category" />
+          </el-select>
+
+        </div>
+        <div class="mt-5 download__qr_btn">
+          <button class="btn__light_secondary" @click="updateReview">
+            <i class="uil uil-save"></i> {{ modal.action == "modify" ? 'Save' : 'Add' }}
+          </button>
+        </div>
+      </template>
+    </ModalComponent>
+
+
+
   </div>
 </template>
 <script setup>
@@ -42,6 +80,11 @@ import { ElProgress, ElTooltip } from 'element-plus';
 import { Icon } from '@iconify/vue';
 import 'element-plus/es/components/progress/style/css'
 import moment from 'moment';
+import ModalComponent from '@Components/utils/ModalComponent.vue';
+import { provide,computed,ref } from 'vue';
+import services from '@Services/services.js'
+import { useWindowSize } from '@vueuse/core';
+import FeelingFeedbackComponent from '@Components/utils/FeelingFeedbackComponent.vue';
 
 const props = defineProps({
   comment: {
@@ -54,6 +97,27 @@ const percentage = (confidence) => {
   confidence = Math.abs(confidence) * 50 * n
   return Math.floor(confidence);
 }
+const { width, height } = useWindowSize();
+const showModal = ref(false);
+const feelingCustomer = ref(null);
+provide('feelingCustomer', feelingCustomer);
+
+const modal = ref({
+  text: '',
+  action: '',
+  icon: '',
+  type: ''
+})
+
+const feel = ref('neutral');
+const id = ref('');
+const selectedReview = ref(null);
+
+const modalWidth = computed(() => {
+  let windowSize = 1500;
+  let gap = (windowSize - width.value) / 19;
+  return gap + 35;
+})
 
 const customColorMethod = (percentage) => {
   if (percentage < 30) {
@@ -64,6 +128,58 @@ const customColorMethod = (percentage) => {
   }
   return '#67c23a'
 };
+
+const editComment = (_comment) => {
+  feel.value = _comment.feeling;
+  id.value = _comment.id;
+  selectedReview.value = _comment;
+  feelingCustomer.value = feel.value;
+  if (feel.value == 'neutre') feel.value = 'neutral';
+  showModal.value = true;
+}
+
+
+
+const updateReview = async () => {
+
+  let updatedValue = {
+    feeling: feel.value,
+    confidence: 1,
+  }
+  selectedReview.value.feeling = feel.value;
+
+  try {
+    showModal.value = false;
+    if (modal.value.type == 'feeling') {
+      
+       await services.patchRecord('social_comments', id.value, updatedValue, (response) => {
+        console.log(response)
+        // next(response)
+      })
+    } else {
+      // await feedbackStore.updateReviewCategory(id.value, modal.value.action, selectedReview.value.category, category.value, true, response => {
+      //   // Do nothing
+      // })
+      // selectedReview.value.category = category.value
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+
+const handleModal = (text, action, icon, type, _commentaire) => {
+  showModal.value = true
+  modal.value = {
+    text: text,
+    action: action,
+    icon: icon,
+    type: type
+  }
+  editComment(_commentaire)
+};
+
 </script>
 <style scoped>
 .post-date {
@@ -118,5 +234,8 @@ const customColorMethod = (percentage) => {
 
 .comment-likes i {
   margin-right: 5px;
+}
+.emoji {
+  cursor: pointer;
 }
 </style>

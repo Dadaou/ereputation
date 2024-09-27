@@ -198,6 +198,8 @@ const tooltipRef2 = ref()
 const visible = ref(false)
 const visible2 = ref(false)
 const showModal = ref(false);
+const feelingCustomer = ref(null);
+provide('feelingCustomer', feelingCustomer);
 const modal = ref({
   text: '',
   action: '',
@@ -258,9 +260,10 @@ const showComments = async (id) => {
 
 const editPost = (post) => {
   feel.value = post.feeling;
-  post.feeling = feel.value;
+  // post.feeling = feel.value;
   id.value = post.id;
   selectedReview.value = post;
+  feelingCustomer.value = feel.value;
   category.value = post.category
 
 
