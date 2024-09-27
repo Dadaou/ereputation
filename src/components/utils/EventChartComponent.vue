@@ -353,11 +353,12 @@ const getPlotData = async (period, rangedate, next) => {
         labels: [],
         datasets: []
       }
-      let scores=[0];
+      let scores=[];
         data.notes.forEach((_note)=>{
         scores.push(_note.note);
         plotData1.labels.push(_note.date)
       });
+        scores.push(0);
         scores.push(5);
        plotData1.datasets.push({
               label: 'Note',
@@ -392,12 +393,13 @@ onBeforeMount(async () => {
         labels: [],
         datasets: []
       }
-      let scores=[0];
+      let scores=[];
        let c=0;
         response.notes.forEach((_note)=>{
         scores.push(_note.note);
         plotData1.labels.push(_note.date)
       });
+         scores.push(0);
         scores.push(5);
      plotData1.datasets.push({
               label: 'Note',

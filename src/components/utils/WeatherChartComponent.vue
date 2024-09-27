@@ -30,26 +30,39 @@
          </div> -->
      </div>
 
-    <div class="colLarge" id="colLarge">
-      <div class="boxLarge"> 
- <!--    <div class="" id="">
-      <div class=""> -->
+ <!--    <div class="colLarge" id="colLarge">
+      <div class="boxLarge">  -->
+    <div class="" id="">
+      <div class="">
 
-        <GroupedBarChart  class="chart" :plot-data="data" x-key="name" :width="custom_width" :height="200"
-        :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
-        :x-tick-format="d => `${d}`" :margin="{ top: 20, bottom: 35, left: 30, right: 20 }"/> 
-
-          <!--   <div class="chart" >
+             <div  >
               
-                    <Line :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" :width="custom_width" :height="200"  :data="weatherChartValue" id="confidence" :options="newOptions" 
-                    /> -->
+                    <Line class="" :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" :width="custom_width" :height="200"  :data="weatherChartValue" id="confidence" :options="newOptions" 
+                    /> 
               
 
-               <!-- <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />  -->
-            <!-- </div>  -->
+                <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" /> 
+            </div>
 
-        <div id="weatherIcons" style="height: 58px; width: 100%; position: relative;">
-        </div>
+            <div id="weatherIcons" style="height: 58px; width: 100%; position: relative;">
+            </div>
+
+         <!--    <LineChart class="chart" :plot-data="data"
+                       x-key="name"
+                       :width="custom_width"
+                       :height="200"
+                       :margin="{ top: 20, bottom: 35, left: 30, right: 20 }"
+                       :use-time-scale-x-axis="true"
+                       :x-axis-label-shift="{dy: -5}"
+                       x-axis-label="Dates"
+                       :y-min="0"
+                       y-axis-label="Reviews"
+                       :show-points="true"
+                       :point-radius="3"
+                       :colors="['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']"
+                       :x-tick-format="d => `${d}`" /> -->
+
+     
 
       </div>
      </div>
@@ -176,9 +189,20 @@ const positionIcons = () => {
 
   const elements = document.querySelectorAll(".weather__chart .boxLarge .xaxis g.tick");
 
+  let intervale=38;
+  let count = 0;
+  data.value.forEach(e => {
+    // if (intervale > 38) {
+    //      // positions.push((e.getAttribute("transform").split(',')[0]).split('(')[1] -intervale);
 
-  elements.forEach(e => {
-    positions.push((e.getAttribute("transform").split(',')[0]).split('(')[1]);
+    // } else {
+    //      positions.push((e.getAttribute("transform").split(',')[0]).split('(')[1]);
+    // }
+    // console.log((e.getAttribute("transform").split(',')[0]).split('(')[1])
+         positions.push(intervale);
+          intervale+=88
+    
+
   })
 
   const weathers = document.getElementById("weatherIcons");
@@ -189,8 +213,8 @@ const positionIcons = () => {
     let tempTextNode = document.createElement("span");
     textNode.innerHTML = icons.value[i]['code'];
     tempTextNode.innerHTML = `${icons.value[i]['temperature'].toFixed(0)} ${icons.value[i]['unit']}`;
-    textNode.setAttribute("style", `left: calc(${positions[i]}px - 12px); opacity: 1; top: -4px; position: absolute; font-size: 28px; cursor: pointer;`);
-    tempTextNode.setAttribute("style", `left: calc(${positions[i]}px - 15px); opacity: 1; top: 28px; position: absolute; font-size: 14px; font-weight:500; cursor: pointer; width: 40px;`);
+    textNode.setAttribute("style", `left: calc(${positions[i]}px - 12px); opacity: 1; top: -4px; position: absolute; font-size: 28px; cursor: pointer;width: 40px;`);
+    tempTextNode.setAttribute("style", `left: calc(${positions[i]}px - 12px); opacity: 1; top: 28px; position: absolute; font-size: 14px;  cursor: pointer; width: 40px;`);
     textNode.setAttribute("title", icons.value[i]['title']);
     weathers.appendChild(textNode);
     weathers.appendChild(tempTextNode);
@@ -208,12 +232,14 @@ const transformData=(_data)=>{
         labels: [],
         datasets: []
       }
-      let scores=[0];
+      let scores=[];
         _data.value.forEach((_note)=>{
         scores.push(_note.reviews);
         plotData1.labels.push(_note.name)
       });
+        scores.push(0);
         scores.push(5);
+
        plotData1.datasets.push({
               label: 'Note',
               backgroundColor: colors[2],
@@ -231,6 +257,17 @@ onMounted(() => {
   deleteIcons();
   positionIcons();
   transformData(data)
+
+    nextTick(() => {
+        const colLargeElement = document.getElementById("colLarge");
+        if (colLargeElement) {
+            const div = document.getElementsByClassName("chart")[0].children;
+            const widthp = parseInt(div[0].getAttribute("width"));
+            const longueur = widthp * data.value.length;
+            colLargeElement.scrollLeft += longueur;
+            colLargeElement.scrollLeft = longueur;
+        }
+    });
  
 });
 
