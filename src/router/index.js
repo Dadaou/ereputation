@@ -411,10 +411,18 @@ const router = createRouter({
           ]
         },
         {
-          path: 'customer/:tag/categorization/:id/review',
-          name: 'CategorizationReview',
-          beforeEnter: [CheckAccess],
-          component: () => import('@Views/CategorizationReview.vue'),
+          path: '/',
+          name: 'establishmentLayout',
+          component: EstablishmentLayout,
+          redirect: '/',
+          children: [
+            {
+              path: 'customer/:tag/categorization/:id/review',
+              name: 'CategorizationReview',
+              beforeEnter: [CheckAccess],
+              component: () => import('@Views/CategorizationReviewPageView.vue'),
+            },
+          ]
         },
         {
           path: '/customer/:tag/account',
