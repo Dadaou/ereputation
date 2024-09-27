@@ -246,13 +246,17 @@ onBeforeMount(async () => {
 })
 const requiredinput = ref('');
 onMounted(() => {
-    try {
+   
+   if (!route.query.preview) {
+    
+        try {
         if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
             window.FingerprintApp.default.main();
         }
-    } catch (error) {
-        console.error("Une erreur s'est produite lors de l'exécution de FingerprintG2A :", error);
-    }
+        } catch (error) {
+            console.error("Une erreur s'est produite lors de l'exécution de FingerprintG2A :", error);
+        }
+   }
 
     appStore.setCurrentPage({
         title1: t("feedback.title1"),
