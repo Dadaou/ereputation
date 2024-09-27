@@ -26,6 +26,13 @@
         <span v-else-if="logo && logo.name" class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
           logo.name }}</span>
       </div>
+
+      <div v-if="showHomeName" class="inline-flex justify-center items-center gap-2">
+        <Icon :icon="homePageUrls[route.name].icon" width="26"></Icon> <span class="home-name">{{
+          homePageUrls[route.name].label != 'Customer' ?
+            homePageUrls[route.name].label : userStore.customer.name }}</span>
+      </div>
+
       <div class="nav-dropdown">
         <div v-if="isFeedback" class="feedback__option">
           <a v-if="establishement?.whatsapp == null" href="https://wa.me/message/IZFK26272CXFB1" target="_blank">
@@ -34,11 +41,10 @@
           <a v-else :href="establishement?.whatsapp" target="_blank">
             <i class="fa fa-whatsapp"></i>
           </a>
-          <LanguageMenuDropdown :current="currentLanguage"
-          @select="(language) => selectCurrentLanguage(language)" />
+          <LanguageMenuDropdown :current="currentLanguage" @select="(language) => selectCurrentLanguage(language)" />
         </div>
-       
-        
+
+
         <UserDropdownMenu v-if="userStore.authenticated && !isFeedback" :user="{
           name: `${userStore.user.firstname} ${userStore.user.lastname}`,
           initial: userStore.getInitials(userStore.user.firstname, userStore.user.lastname),
@@ -77,8 +83,9 @@ import { useI18n } from "vue-i18n";
 import { i18n } from '@/i18n';
 import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import { languages, current } from '@Services/languages.js';
-import { mainMenu, publicUrls, privateUrls } from '@Services/routes.js';
+import { mainMenu, publicUrls, privateUrls, homePageUrls } from '@Services/routes.js';
 import services from '@Services/services.js'
+import { Icon } from '@iconify/vue';
 
 const UserDropdownMenu = defineAsyncComponent(
   () => import("@Components/utils/UserMenuDropdownComponent.vue")
@@ -116,6 +123,10 @@ const isFeedback = computed(() => {
 
 const showMenu = computed(() => {
   return privateUrls.includes(route.name)
+})
+
+const showHomeName = computed(() => {
+  return Object.keys(homePageUrls).includes(route.name)
 })
 
 const signOut = async () => {
@@ -235,7 +246,7 @@ onBeforeMount(async () => {
   if (route.params.tag) {
     logo.value = await appStore.getCustomerLogo(route.params.tag)
     var est = appStore.getEstablishement()
-    est.then((result)=>{
+    est.then((result) => {
       establishement.value = result
     })
   }
@@ -343,6 +354,11 @@ ul.menu .router-link-exact-active {
 .nav__onScroll a.btn:hover {
   color: var(--color-white);
   border-color: var(--color-danger);
+}
+
+.home-name {
+  font-weight: 600;
+  font-size: 14px;
 }
 
 @media screen and (max-width:1000px) {
