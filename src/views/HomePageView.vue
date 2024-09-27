@@ -1,38 +1,38 @@
 <template>
-        <div class="main__container">
-            <div class=" container client__container ">
-                <div v-if="!dataLoading" class="header">
-                    <div class="header_navigation">
-                        <RouterLink class="search__icon" :to="{ name: 'EstablishmentList', params: { tag: tag } }">
-                            <Icon :icon="'ion:list'" width="26"></Icon>
-                        </RouterLink>
-                        <RouterLink v-if="show && establishments.length > 1" class="search__icon"
-                            :to="{ name: 'EstablishmentRanking', params: { tag: tag } }">
-                            <Icon :icon="'solar:cup-first-bold'" width="25"></Icon>
-                        </RouterLink>
-                        <RouterLink v-if="establishments.length > 1" class="search__icon"
-                            :to="{ name: 'Categorization', params: { tag: tag } }">
-                            <Icon :icon="'carbon:category'" width="25"></Icon>
-                        </RouterLink>
-                        <RouterLink class="search__icon" :to="{ name: 'EstablishmentListByTrend', params: { tag: tag } }">
-                            <Icon :icon="'gg:trending'" width="25"></Icon>
-                        </RouterLink>
-                        <RouterLink class="search__icon" :to="{ name: 'Analytic', params: { tag: tag } }">
-                            <Icon :icon="'uim:chart-pie'" width="25"></Icon>
-                        </RouterLink>
-
-                    </div>
-                    <h1 v-if="route.name == 'Analytic'">Analytics</h1>
-                    <button
-                        v-if="userStore.user.partner && userStore.user.roles.includes('ROLE_PARTNER') && route.name !== 'CustomersList'"
-                        @click="backToCustomer">
-                        <i class="uil uil-arrow-left"></i>Back</button>
+    <div class="main__container">
+        <div class=" container client__container ">
+            <div v-if="!dataLoading" class="header">
+                <div class="header_navigation">
+                    <RouterLink class="search__icon" :to="{ name: 'EstablishmentList', params: { tag: tag } }">
+                        <Icon :icon="'ion:list'" width="26"></Icon>
+                    </RouterLink>
+                    <RouterLink v-if="show && establishments.length > 1" class="search__icon"
+                        :to="{ name: 'EstablishmentRanking', params: { tag: tag } }">
+                        <Icon :icon="'solar:cup-first-bold'" width="25"></Icon>
+                    </RouterLink>
+                    <RouterLink v-if="establishments.length > 1" class="search__icon"
+                        :to="{ name: 'Categorization', params: { tag: tag } }">
+                        <Icon :icon="'carbon:category'" width="25"></Icon>
+                    </RouterLink>
+                    <RouterLink class="search__icon" :to="{ name: 'EstablishmentListByTrend', params: { tag: tag } }">
+                        <Icon :icon="'gg:trending'" width="25"></Icon>
+                    </RouterLink>
+                    <RouterLink class="search__icon" :to="{ name: 'Analytic', params: { tag: tag } }">
+                        <Icon :icon="'uim:chart-pie'" width="25"></Icon>
+                    </RouterLink>
 
                 </div>
-                <RouterView v-if="route.name != 'Analytic'" />
+                <h1 v-if="route.name == 'Analytic'">Analytics</h1>
+                <button
+                    v-if="userStore.user.partner && userStore.user.roles.includes('ROLE_PARTNER') && route.name !== 'CustomersList'"
+                    @click="backToCustomer">
+                    <i class="uil uil-arrow-left"></i>Back</button>
+
             </div>
-            <RouterView v-if="route.name == 'Analytic'" />
+            <RouterView v-if="route.name != 'Analytic'" />
         </div>
+        <RouterView v-if="route.name == 'Analytic'" />
+    </div>
 
 </template>
 
@@ -127,7 +127,8 @@ h1 {
     /* height: inherit;*/
     display: flex;
     gap: 1rem;
-    width: 50%;
+    /* width: 50%; */
+    width: var(--container-width-lg);
     flex-direction: column;
     margin-bottom: 20px;
 }
@@ -234,28 +235,41 @@ h1 {
     }
 }
 
-@media screen and (max-width:1163px) {
+/* @media screen and (max-width:1163px) {
     .client__container {
         width: 55% !important;
     }
-}
+} */
 
-@media screen and (max-width:1163px) {
+/* @media screen and (max-width:1163px) {
     .client__container {
         width: 60% !important;
     }
-}
+} */
 
-@media screen and (max-width:964px) {
+/* @media screen and (max-width:964px) {
     .client__container {
         width: 65% !important;
+    }
+} */
+
+
+@media screen and (max-width:1024px) {
+    .client__container {
+        width: var(--container-width-md);
+    }
+}
+
+@media screen and (max-width:975px) {
+    .client__container {
+        width: 96% !important;
     }
 }
 
 @media screen and (max-width:884px) {
-    .client__container {
+    /* .client__container {
         width: 70% !important;
-    }
+    } */
 
     .client__container__head {
         font-size: 18px;
@@ -263,9 +277,9 @@ h1 {
 }
 
 @media screen and (max-width:779px) {
-    .client__container {
+    /* .client__container {
         width: 80% !important;
-    }
+    } */
 
     .client__container__head {
         font-size: 16px;
@@ -273,9 +287,9 @@ h1 {
 }
 
 @media screen and (max-width:670px) {
-    .client__container {
+    /* .client__container {
         width: var(--container-width-md) !important;
-    }
+    } */
 }
 
 @media screen and (max-width:600px) {
