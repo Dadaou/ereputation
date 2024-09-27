@@ -1,32 +1,36 @@
 <template>
-	<div v-if="userStore.customer">
-		<div v-if="!dataLoading">
-	        <div class="client__container__head" v-if="establishments.length > 0">
-	           Welcome <b>{{ userStore.customer.name }}</b>! Your establishments are listed below. <span>({{ establishments.length }} found)</span>
-	        </div>
-	        <div class="client__container__head" v-else>
-	           Welcome <b>{{ userStore.customer.name }}</b>! No companies found yet.
-	        </div>
-	    </div>
-	    <div v-else>
-	        <div class="client__container__head">
-	            Welcome <b>{{ userStore.customer.name }}</b>! Your establishments are listed below. <span>({{ establishments.length }} found)</span>
-	        </div>
-	    </div>
-	    <div class="society__list mt-5" v-if="establishments.length > 0">
-	        <suspense>
-	            <div class="establishment-home">
-                <establishments-list-component :establishments="establishments" :tag='customerTag' />
+    <div v-if="userStore.customer">
+        <div v-if="!dataLoading">
+            <div class="client__container__head" v-if="establishments.length > 0">
+                Welcome <b>{{ userStore.customer.name }}</b>! Your establishments are listed below. <span>({{
+                    establishments.length }} found)</span>
             </div>
-                 <template #fallback>
-	                <establishment-list-loaded-component :nb="3" />
-	            </template>
-	        </suspense>
-	    </div>
-	</div>
-	<div v-else>
-		We're sorry, but we couldn't find the customer associated with the provided tag. Please double-check the tag and try again. If you continue to experience issues, please contact our support team for assistance.
-	</div>
+            <div class="client__container__head" v-else>
+                Welcome <b>{{ userStore.customer.name }}</b>! No companies found yet.
+            </div>
+        </div>
+        <div v-else>
+            <div class="client__container__head">
+                Welcome <b>{{ userStore.customer.name }}</b>! Your establishments are listed below. <span>({{
+                    establishments.length }} found)</span>
+            </div>
+        </div>
+        <div class="society__list mt-3" v-if="establishments.length > 0">
+            <suspense>
+                <div class="establishment-home">
+                    <establishments-list-component :establishments="establishments" :tag='customerTag' />
+                </div>
+                <template #fallback>
+                    <establishment-list-loaded-component :nb="3" />
+                </template>
+            </suspense>
+        </div>
+    </div>
+    <div v-else>
+        We're sorry, but we couldn't find the customer associated with the provided tag. Please double-check the tag and
+        try
+        again. If you continue to experience issues, please contact our support team for assistance.
+    </div>
 </template>
 <script setup>
 import { ref, onBeforeMount, onMounted, defineAsyncComponent, inject, computed } from 'vue';
@@ -51,25 +55,25 @@ const router = useRouter();
 const customerTag = inject('tag');
 const customer = ref(null)
 
-const loadCustomer = async(partner)=>{
-	// appStore.isLoading = true
-	const response = await new Promise((resolve) => {
+const loadCustomer = async (partner) => {
+    // appStore.isLoading = true
+    const response = await new Promise((resolve) => {
         services.get_Record(`partner/customer?id=${partner}`, (response) => {
             resolve(response)
         });
     });
 
     if (response.status == 200) {
-    	response.data.forEach(item=>{
-    		if(item.tag == customerTag.value){
-	    		userStore.customer = {
-	    			name: item.name,
-				  	address: `${item.zipcode} ${item.city}`,
-				  	country: item.country,
-				  	tag: item.tag
-	    		}
-    		}
-    	})
+        response.data.forEach(item => {
+            if (item.tag == customerTag.value) {
+                userStore.customer = {
+                    name: item.name,
+                    address: `${item.zipcode} ${item.city}`,
+                    country: item.country,
+                    tag: item.tag
+                }
+            }
+        })
         // appStore.isLoading = false
     }
 };
@@ -78,29 +82,30 @@ onBeforeMount(async () => {
     // appStore.isLoading = true;
     dataLoading.value = true;
 
-    if(userStore.user.roles.includes("ROLE_PARTNER") && userStore.user.partner && userStore.customer.tag !== customerTag.value){
-    	userStore.customer = null
-    	await loadCustomer(userStore.user.partner.id)
+    if (userStore.user.roles.includes("ROLE_PARTNER") && userStore.user.partner && userStore.customer.tag !== customerTag.value) {
+        userStore.customer = null
+        await loadCustomer(userStore.user.partner.id)
     }
 });
 
-onMounted(async()=>{
-	if (userStore.user) {
+onMounted(async () => {
+    if (userStore.user) {
         companiesStore.getEstablishments(customerTag.value).then((data) => {
             establishments.value = data;
-            if(userStore.user.customer){
+            if (userStore.user.customer) {
                 userStore.user.customer['establishments'] = establishments.value;
                 userStore.customer = userStore.user.customer
             }
             dataLoading.value = false
         })
-    } 
+    }
 });
 </script>
 <style scoped>
 .establishment-home :deep(.list__actions) {
-  margin-top: 15px;
+    margin-top: 15px;
 }
+
 .establishment__link label,
 .establishment__link {
     cursor: pointer !important;

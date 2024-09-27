@@ -28,7 +28,8 @@
       </div>
 
       <div v-if="showHomeName" class="inline-flex justify-center items-center gap-2">
-        <Icon :icon="homePageUrls[route.name].icon" width="26"></Icon> <span class="home-name">{{
+        <Icon v-if="homePageUrls[route.name].label != 'Customer'" :icon="homePageUrls[route.name].icon" width="26">
+        </Icon> <span class="home-name">{{
           homePageUrls[route.name].label != 'Customer' ?
             homePageUrls[route.name].label : userStore.customer.name }}</span>
       </div>
