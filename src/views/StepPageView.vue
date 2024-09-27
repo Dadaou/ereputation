@@ -19,7 +19,7 @@ import Myestablichment from '../components/step/MyEstablishmentFormPageView.vue'
 import Mypublicform from '../components/step/MyPublicFormPageView.vue';
 import Platformready from '../components/step/PlatformReadyPageView.vue';
 
-const steps = ref([1, 2, 3]);
+const steps = ref([1, 2]);
 const currentStep = ref(1);
 
 const navigateToStep = (step) => {
