@@ -22,7 +22,7 @@
                     </RouterLink>
 
                 </div>
-                <h1 v-if="route.name == 'Analytic'">Analytics</h1>
+                <!-- <h1 v-if="route.name == 'Analytic'">Analytics</h1> -->
                 <button
                     v-if="userStore.user.partner && userStore.user.roles.includes('ROLE_PARTNER') && route.name !== 'CustomersList'"
                     @click="backToCustomer">
