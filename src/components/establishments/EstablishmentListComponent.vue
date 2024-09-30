@@ -22,6 +22,7 @@
                     </el-tooltip>
                 </template>
             </el-table-column>
+            <el-table-column label="Language" align="center" prop="language" style="width: 15%; min-width: 200px;" />
             <el-table-column label="Category" prop="universe_name" style="width: 15%; min-width: 200px;" />
             <el-table-column label="Address" prop="address" style="width: 25%; min-width: 200px;" />
             <el-table-column label="Country" prop="country" style="width: 15%; min-width: 200px;"
