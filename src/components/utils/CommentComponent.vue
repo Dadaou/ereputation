@@ -142,7 +142,7 @@
                           
                         </span>
                         <span class="emoji mx-1" v-else>
-                            <i class="uil-plus-circle"
+                            <i class="uil-question-circle"
                                 style="color: var(--color-warning); font-size: 18px; cursor: pointer" @mouseover="(e) => {
                                     buttonRef2 = e.currentTarget
                                     visible2 = true
