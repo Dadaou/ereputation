@@ -1,7 +1,7 @@
 <template>
     <div class="left__side">
-        <div id="ttv__container">
-            <el-tabs v-model="activeName" type="card" class="demo-tabs">
+        <div id="ttv__container" style="margin-top:10px">
+            <el-tabs v-model="activeName" @tab-click="() =>updateStartDate(start_date)" type="card" class="demo-tabs">
                 <el-tab-pane label="Event" name="events">
                   <EventView/> 
                 </el-tab-pane>
@@ -178,7 +178,13 @@ const start_date = inject('start_date');
 const end_date = inject('end_date');
 const date = ref([start_date.value, end_date.value])
 provide('date', date);
+ provide('start_date',start_date);
 provide('type', selectedTimePeriod);
+
+const updateStartDate=(_start_date)=>{
+    start_date.value = moment(_start_date).add(1, "day").format("YYYY-MM-DD");
+    console.log(start_date.value)
+}
 
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
