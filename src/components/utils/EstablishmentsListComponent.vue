@@ -38,14 +38,20 @@
                         <span>{{ company.address1 }}, {{ company.city }}</span>
                     </div>
                 </div>
-                <RatingComponent class="rating__content" :reviews="company.totalReviews"
-                    :rating="Number(company.rating).toFixed(1)" :score="company.score" :feeling="company.feeling"
-                    :company="company" />
+                <div class="stat__content">
+                    <RatingComponent class="rating__content" :reviews="company.totalReviews"
+                        :rating="Number(company.rating).toFixed(1)" :score="company.score" :feeling="company.feeling"
+                        :company="company" />
+                    <div class="list__actions">
+                        <button class="btn" @click="goToCompany(company)">More details</button>
+
+                    </div>
+                </div>
 
             </div>
         </div>
         <!-- <div v-if="company.categories" class="category_container_mobile"></div> -->
-        <div class="category_container_mobile">
+        <div v-if="company.categories" class="category_container_mobile">
             <div class="inline-flex category_mobile">
 
                 <div v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category">
@@ -137,10 +143,6 @@
                             count }}
                     </div>
                 </div>
-
-            </div>
-            <div class="list__actions">
-                <button class="btn" @click="goToCompany(company)">More details</button>
 
             </div>
         </div>
@@ -336,7 +338,6 @@ const capitalize = (str) => {
     align-items: center;
     justify-content: space-between;
     /* border: 2px solid green; */
-    height: 32px;
 }
 
 .category_container_mobile::-webkit-scrollbar {
@@ -496,15 +497,22 @@ div.review-box {
     color: var(--color-primary)
 }
 
+.stat__content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
 .rating__content {
     padding-top: 15px;
-    margin-right: 10px;
 }
 
 .list__actions {
     display: flex;
     justify-content: flex-end;
-    margin-right: 10px;
+    /* margin-right: 10px; */
 }
 
 .list__actions button {

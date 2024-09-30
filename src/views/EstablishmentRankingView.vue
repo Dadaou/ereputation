@@ -151,7 +151,7 @@ onMounted(async () => {
 .establishment-rank-view :deep(.list__actions) {
     display: flex;
     justify-content: flex-end;
-    margin-right: 10px;
+    /* margin-right: 10px; */
     /* margin-top: -8px; */
 }
 
