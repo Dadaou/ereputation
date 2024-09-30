@@ -1,6 +1,6 @@
 <template>
     <div class="left__side">
-        <div id="ttv__container" style="margin-top:10px">
+        <div id="ttv__container">
             <el-tabs v-model="activeName" @tab-click="() =>updateStartDate(start_date)" type="card" class="demo-tabs">
                 <el-tab-pane label="Event" name="events">
                   <EventView/> 

@@ -44,7 +44,7 @@ const appStore = useAppStore();
 
 .left__side {
     width: 80%;
-    padding: 50px 5px;
+    padding: 25px 5px;
 }
 
 .left__side .head {
