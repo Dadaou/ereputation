@@ -27,7 +27,7 @@
             </template>
             <div v-else class="establishment-rank-view">
                 <establishments-list-component :establishments="establishments" :tag="customerTag"
-                    :start_date="start_date" :end_date="end_date" />
+                    :start_date="start_date" :end_date="end_date" :loading="loading" />
             </div>
             <template #fallback>
                 <establishment-list-loaded-component :nb="3" />
@@ -75,10 +75,16 @@ provide('categoriesall', categoriesall)
 const categoryFilters = ref('all');
 const start_date = inject('start_date');
 const end_date = inject('end_date');
+const loading = ref(true);
 
 watch([review_category, categoryFilters, start_date, end_date, categoriesall], async () => {
     if (start_date.value && end_date.value) {
-        await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, review_category.value, categoriesall.value);
+        loading.value = true;
+        try {
+            await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, review_category.value, categoriesall.value);
+        } finally {
+            // loading.value = false;
+        }
     }
 });
 
@@ -86,6 +92,7 @@ const IsValueOkay = (value) => (value !== '' && value !== 0 && value !== null &&
 
 const loadEstablishment = async (tag, category, dateStart, dateEnd, review_category, categoriesall) => {
     dataLoading.value = true;
+    loading.value = true;
     let uri = 'get/establishment/categorization/classement';
     let params = `tag=${tag}&category=${category}&user_id=${userId}`;
 
@@ -105,20 +112,29 @@ const loadEstablishment = async (tag, category, dateStart, dateEnd, review_categ
 
     uri = `${uri}?${params}`;
 
-    const response = await new Promise((resolve) => {
-        services.get_Record(uri, (response) => {
-            resolve(response);
-            dataLoading.value = false;
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(uri, (response) => {
+                resolve(response);
+            });
         });
-    });
 
-    if (response.status === 200) {
+        if (response.status === 200) {
+            establishments.value = response.data.map(objet => {
+                return { ...objet };
+            });
+        }
+    } catch (error) {
+        console.error("Error loading establishments:", error);
+    } finally {
         dataLoading.value = false;
-        establishments.value = response.data.map(objet => {
-            objet.categories
-            return { ...objet };
-        });
     }
+    if (dataLoading.value === false) {
+        setTimeout(() => {
+            loading.value = false;
+        }, 3000);
+    }
+
 };
 
 const loadCategories = async (tag) => {
@@ -128,7 +144,7 @@ const loadCategories = async (tag) => {
             resolve(response);
         });
     });
-
+    // loading.value = false;
     if (response.status == 200) {
         if (response.data) {
             categoriesall.value = response.data;
@@ -144,22 +160,22 @@ const loadCategories = async (tag) => {
 watch(review_category, () => {
     if (review_category.value) {
         reorderCategories();
-        loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, review_category.value);
     }
 });
 
 const reorderCategories = () => {
     const selectedCategory = categoriesall.value.find(c => c === review_category.value);
     if (selectedCategory) {
+        console.log(loading.value)
         categoriesall.value = [selectedCategory].concat(categoriesall.value.filter(c => c !== selectedCategory));
     }
 };
 
 onMounted(async () => {
     if (start_date.value && end_date.value) {
+        loading.value = true;
         await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, review_category.value);
         await loadCategories(customerTag.value);
-        dataLoading.value = false;
     }
 });
 

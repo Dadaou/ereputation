@@ -47,7 +47,7 @@
         <!-- <div v-if="company.categories" class="category_container_mobile"></div> -->
         <div class="category_container_mobile">
             <div class="inline-flex category_mobile">
-                <span class="reviews-loader" v-if="company.categories && category === ''"></span>
+                <span class="reviews-loader" v-if="loading"></span>
                 <div v-else v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category">
 
                     <div class="review__category-container ml-1">
@@ -193,6 +193,10 @@ const props = defineProps({
         type: String,
         required: true
     },
+    loading: {
+        type: Boolean,
+        required: false,
+    }
 
 });
 
@@ -350,7 +354,7 @@ const capitalize = (str) => {
 .category_mobile {
     /* width:100%; */
     align-items: center;
-    overflow-x: auto;
+    /* overflow-x: auto; */
     margin-right: 12px;
 }
 
