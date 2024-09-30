@@ -9,34 +9,22 @@
             </div>
             <div class="catfiltre">
                 <el-select v-model="categoryFilters" size="large" class="custom-width">
-                    <el-option v-for="(item, index) in categories" :key="index" :label="item.label" :value="item.value" />
+                    <el-option v-for="(item, index) in categories" :key="index" :label="item.label"
+                        :value="item.value" />
                 </el-select>
             </div>
         </div>
         <div class="bottom-row">
             <div class="date_pick">
-                <el-date-picker 
-                    v-model="selectedDate" 
-                    type="date" 
-                    format="YYYY-MM-DD"
-                    value-format="YYYY-MM-DD"
-                    placeholder="Select Date" 
-                    size="large"
-                    @change="handleDateChange"
-                    class="custom-width"
-                />
-                <Tooltip :text="info_bulle_text1" /> 
+                <el-date-picker v-model="selectedDate" type="date" format="YYYY-MM-DD" value-format="YYYY-MM-DD"
+                    placeholder="Select Date" size="large" @change="handleDateChange" class="custom-width" />
+                <Tooltip :text="info_bulle_text1" />
             </div>
             <div class="or-text">
                 OR
             </div>
             <div class="number_days">
-                <el-input-number 
-                    v-model="days" 
-                    :min="1" 
-                    size="large" 
-                    class="custom-width"
-                />
+                <el-input-number v-model="days" :min="1" size="large" class="custom-width" />
                 <Tooltip :text="info_bulle_text2" />
             </div>
         </div>
@@ -44,7 +32,8 @@
     <div class="society__list mt-5" v-if="establishments.length > 0">
         <suspense>
             <div class="establishment-rank-view">
-            <establishments-list-component :establishments="establishments" :tag='customerTag' :selectedDate="selectedDate" />
+                <establishments-list-component :establishments="establishments" :tag='customerTag'
+                    :selectedDate="selectedDate" />
             </div>
             <template #fallback>
                 <establishment-list-loaded-component :nb="3" />
@@ -106,25 +95,25 @@ const selectedDate = ref(null);
 provide('selectedDate', selectedDate);
 
 const handleDateChange = (value) => {
-  if (value) {
-    days.value = null;
-    selectedDate.value = moment(value).format('YYYY-MM-DD'); 
-  } else {
-    selectedDate.value = null;
-  }
+    if (value) {
+        days.value = null;
+        selectedDate.value = moment(value).format('YYYY-MM-DD');
+    } else {
+        selectedDate.value = null;
+    }
 };
 
 watch(days, (newDays) => {
-  if (newDays !== null) {
-    selectedDate.value = null;
-  }
+    if (newDays !== null) {
+        selectedDate.value = null;
+    }
 });
 
-watch([type, categoryFilters, days, selectedDate,start_date, end_date], async () => {
-    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value,start_date.value, end_date.value);
+watch([type, categoryFilters, days, selectedDate, start_date, end_date], async () => {
+    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value, start_date.value, end_date.value);
 });
 
-const loadEstablishment = async (tag, category, days, note, date,dateStart, dateEnd) => {
+const loadEstablishment = async (tag, category, days, note, date, dateStart, dateEnd) => {
     let uri = 'get/establishment/trend';
     let params = `tag=${tag}&category=${category}&note=${note}&user_id=${userId}`;
 
@@ -141,7 +130,7 @@ const loadEstablishment = async (tag, category, days, note, date,dateStart, date
             resolve(response);
         });
     });
-    
+
     if (response.status == 200) {
         establishments.value = response.data.map((objet) => {
             // Extraction des dates start_date et end_date
@@ -151,7 +140,7 @@ const loadEstablishment = async (tag, category, days, note, date,dateStart, date
             // Stockage des valeurs dans l'état
             start_date.value = start_date_extracted;
             end_date.value = end_date_extracted;
-              // vérifier  le format des  dates
+            // vérifier  le format des  dates
             if (start_date_extracted) {
                 start_date.value = moment(start_date_extracted).format('YYYY-MM-DD');
                 console.log(start_date.value);
@@ -159,7 +148,7 @@ const loadEstablishment = async (tag, category, days, note, date,dateStart, date
             if (end_date_extracted) {
                 end_date.value = moment(end_date_extracted).format('YYYY-MM-DD');
             }
-            
+
             objet.reviews_count = {
                 '5 ': objet.stars ? objet.stars['5 stars'] : 0,
                 '4 ': objet.stars ? objet.stars['4 stars'] : 0,
@@ -168,7 +157,7 @@ const loadEstablishment = async (tag, category, days, note, date,dateStart, date
                 '1 ': objet.stars ? objet.stars['1 star'] : 0,
             };
             return { ...objet, ratio: objet.ratio_value, ratio_text: objet.ratio, isTrends: true };
-            
+
         });
     } else {
         console.error('Error loading establishments:', response);
@@ -176,68 +165,65 @@ const loadEstablishment = async (tag, category, days, note, date,dateStart, date
 };
 
 onMounted(async () => {
-    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value,start_date.value, end_date.value);
+    await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value, start_date.value, end_date.value);
     dataLoading.value = false;
 });
 </script>
 <style scoped>
 .establishment-rank-view :deep(.reviews-count) {
-  display: flex;
-  padding: 5px;
-  border-radius: 5px;
-  margin-top: 40px;
-  margin-right: -130px;
-  margin-left: -235px;
+    display: flex;
+    /* padding: 5px; */
+    border-radius: 5px;
 }
 
-.establishment-rank-view :deep(.review-box)  {
-  display: flex;
-  align-items: center;
-  background: #F5F5F5;
-  padding: 2px;
-  margin-top: -2.1px;
-  border-radius: 5px;
-  margin-left: 12px;
-  cursor: pointer;
-}
-@media (min-width: 100px) and (max-width: 600px){
-    .establishment-rank-view :deep(.review-box)  {
-    justify-content: center;
-    margin-left: 0%;
-    }
-    .establishment-rank-view :deep(.reviews-count)  {
-    justify-content: center;
-    margin-left: 0%;
-
-    }
+.establishment-rank-view :deep(.review-box) {
+    display: flex;
+    align-items: center;
+    background: #F5F5F5;
+    padding: 2px;
+    margin-top: -2.1px;
+    border-radius: 5px;
+    margin-right: 12px;
+    cursor: pointer;
 }
 
-@media (min-width: 336px) and (max-width: 389px){
-    .establishment-rank-view :deep(.review-box)  {
-    justify-content: center;
-    margin-left: 0%;
-    margin-top: 50px;
-    }
-    .establishment-rank-view :deep(.reviews-count)  {
-    justify-content: center;
-    margin-left: 0%;
-    margin-top: 50px;
-    }
-}
-
-@media (min-width: 100px) and (max-width: 335px){
-    .establishment-rank-view :deep(.review-box)  {
+@media (min-width: 100px) and (max-width: 600px) {
+    .establishment-rank-view :deep(.review-box) {
         justify-content: center;
-    margin-right: 1%;
-    margin-top: 80px;
-    z-index: 999;
+        margin-left: 0%;
     }
-    .establishment-rank-view :deep(.reviews-count)  {
+
+    .establishment-rank-view :deep(.reviews-count) {
         justify-content: center;
-        margin-left: -80px;
-    margin-top: 80px;
-    z-index: 999;
-    
+        margin-left: 0%;
+
+    }
+}
+
+@media (min-width: 336px) and (max-width: 389px) {
+    .establishment-rank-view :deep(.review-box) {
+        justify-content: center;
+        margin-left: 0%;
+        /* margin-top: 50px; */
+    }
+
+    .establishment-rank-view :deep(.reviews-count) {
+        justify-content: center;
+        margin-left: 0%;
+    }
+}
+
+@media (min-width: 100px) and (max-width: 335px) {
+    .establishment-rank-view :deep(.review-box) {
+        justify-content: center;
+        margin-right: 1%;
+        /* margin-top: 80px; */
+        z-index: 999;
+    }
+
+    .establishment-rank-view :deep(.reviews-count) {
+        justify-content: center;
+
     }
 }
 
@@ -263,6 +249,7 @@ onMounted(async () => {
     align-items: center;
     gap: 5rem;
 }
+
 .bottom-row {
     display: flex;
     justify-content: space-between;
@@ -281,8 +268,10 @@ onMounted(async () => {
 .catfiltre {
     display: flex;
     align-items: center;
-    flex: 0 1 44%; /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
-    max-width: 300px; /* Vous pouvez ajuster cette valeur selon vos besoins */
+    flex: 0 1 44%;
+    /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
+    max-width: 300px;
+    /* Vous pouvez ajuster cette valeur selon vos besoins */
     padding-right: 17px;
 }
 
@@ -298,271 +287,289 @@ onMounted(async () => {
 .custom-width {
     width: 100%;
 }
+
 @media (min-width: 1920px) {
     .filters {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-.top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 5rem;
-}
-.bottom-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-}
+    .top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 5rem;
+    }
 
-.select_info,
-.date_pick,
-.number_days {
-    display: flex;
-    align-items: center;
-    flex: 1;
-}
+    .bottom-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
 
-.catfiltre {
-    display: flex;
-    align-items: center;
-    flex: 0 1 46%; /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
-    max-width: 600px; /* Vous pouvez ajuster cette valeur selon vos besoins */
-    padding-right: 17px;
-}
+    .select_info,
+    .date_pick,
+    .number_days {
+        display: flex;
+        align-items: center;
+        flex: 1;
+    }
 
-.or-text {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 1rem;
-    font-weight: bold;
-    font-size: 10px;
-}
+    .catfiltre {
+        display: flex;
+        align-items: center;
+        flex: 0 1 46%;
+        /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
+        max-width: 600px;
+        /* Vous pouvez ajuster cette valeur selon vos besoins */
+        padding-right: 17px;
+    }
 
-.custom-width {
-    width: 100%;
-}
+    .or-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 1rem;
+        font-weight: bold;
+        font-size: 10px;
+    }
+
+    .custom-width {
+        width: 100%;
+    }
 }
 
 @media (min-width: 501) and (max-width: 768px) {
     .filters {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-.top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 5rem;
-}
-.bottom-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-}
+    .top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 5rem;
+    }
 
-.select_info,
-.date_pick,
-.number_days {
-    display: flex;
-    align-items: center;
-    flex: 1;
-}
+    .bottom-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
 
-.catfiltre {
-    display: flex;
-    align-items: center;
-    flex: 0 1 41%; /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
-    max-width: 300px; /* Vous pouvez ajuster cette valeur selon vos besoins */
-    padding-right: 17px;
-}
+    .select_info,
+    .date_pick,
+    .number_days {
+        display: flex;
+        align-items: center;
+        flex: 1;
+    }
 
-.or-text {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 1rem;
-    font-weight: bold;
-    font-size: 10px;
-}
+    .catfiltre {
+        display: flex;
+        align-items: center;
+        flex: 0 1 41%;
+        /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
+        max-width: 300px;
+        /* Vous pouvez ajuster cette valeur selon vos besoins */
+        padding-right: 17px;
+    }
 
-.custom-width {
-    width: 100%;
-}
+    .or-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 1rem;
+        font-weight: bold;
+        font-size: 10px;
+    }
+
+    .custom-width {
+        width: 100%;
+    }
 }
 
 @media (max-width: 500px) {
     .filters {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 5rem;
+    }
+
+    .bottom-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .select_info,
+    .date_pick,
+    .number_days {
+        display: flex;
+        align-items: center;
+        flex: 1;
+    }
+
+    .catfiltre {
+        display: flex;
+        align-items: center;
+        flex: 0 1 39.5%;
+        /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
+        max-width: 300px;
+        /* Vous pouvez ajuster cette valeur selon vos besoins */
+        padding-right: 17px;
+    }
+
+    .or-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 1rem;
+        font-weight: bold;
+        font-size: 10px;
+    }
+
+    .custom-width {
+        width: 100%;
+    }
 }
 
-.top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 5rem;
-}
-.bottom-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-}
-
-.select_info,
-.date_pick,
-.number_days {
-    display: flex;
-    align-items: center;
-    flex: 1;
-}
-
-.catfiltre {
-    display: flex;
-    align-items: center;
-    flex: 0 1 39.5%; /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
-    max-width: 300px; /* Vous pouvez ajuster cette valeur selon vos besoins */
-    padding-right: 17px;
-}
-
-.or-text {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 1rem;
-    font-weight: bold;
-    font-size: 10px;
-}
-
-.custom-width {
-    width: 100%;
-}
-}
 @media (min-width: 400px) and (max-width: 415px) {
     .filters {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 5rem;
+    }
+
+    .bottom-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .select_info,
+    .date_pick,
+    .number_days {
+        display: flex;
+        align-items: center;
+        flex: 1;
+    }
+
+    .catfiltre {
+        display: flex;
+        align-items: center;
+        flex: 0 1 38.5%;
+        /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
+        max-width: 300px;
+        /* Vous pouvez ajuster cette valeur selon vos besoins */
+        padding-right: 17px;
+    }
+
+    .or-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 1rem;
+        font-weight: bold;
+        font-size: 10px;
+    }
+
+    .custom-width {
+        width: 100%;
+    }
 }
 
-.top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 5rem;
-}
-.bottom-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-}
-
-.select_info,
-.date_pick,
-.number_days {
-    display: flex;
-    align-items: center;
-    flex: 1;
-}
-
-.catfiltre {
-    display: flex;
-    align-items: center;
-    flex: 0 1 38.5%; /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
-    max-width: 300px; /* Vous pouvez ajuster cette valeur selon vos besoins */
-    padding-right: 17px;
-}
-
-.or-text {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 1rem;
-    font-weight: bold;
-    font-size: 10px;
-}
-
-.custom-width {
-    width: 100%;
-}
-}
 @media (max-width: 390px) {
     .filters {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-.top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 3rem;
-}
-.bottom-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0rem;
-}
+    .top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 3rem;
+    }
 
-.select_info,
-.date_pick,
-.number_days {
-    display: flex;
-    align-items: center;
-    flex: 1;
-}
+    .bottom-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0rem;
+    }
 
-.catfiltre {
-    display: flex;
-    align-items: center;
-    flex: 0 1 43%; /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
-    max-width: 300px; /* Vous pouvez ajuster cette valeur selon vos besoins */
-    padding-right: 17px;
-}
+    .select_info,
+    .date_pick,
+    .number_days {
+        display: flex;
+        align-items: center;
+        flex: 1;
+    }
 
-.or-text {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 1rem;
-    font-weight: bold;
-    font-size: 10px;
-}
+    .catfiltre {
+        display: flex;
+        align-items: center;
+        flex: 0 1 43%;
+        /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
+        max-width: 300px;
+        /* Vous pouvez ajuster cette valeur selon vos besoins */
+        padding-right: 17px;
+    }
 
-.custom-width {
-    width: 100%;
-}
+    .or-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 1rem;
+        font-weight: bold;
+        font-size: 10px;
+    }
+
+    .custom-width {
+        width: 100%;
+    }
 }
 </style>

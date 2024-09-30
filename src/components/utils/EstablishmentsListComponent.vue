@@ -4,13 +4,16 @@
             <swiper v-if="company.url_source !== null" @click="goToCompany(company)" class="society__logo"
                 :modules="[Virtual]" :slides-per-view="1" :space-between="10" :virtual="true">
                 <swiper-slide v-show="mediaStore.isImageFile(image)" v-for="image in company.url_source" :key="image">
-                    <img :src="company.url_source" :class="widthimage(company.url_source, company.competitor_tag)" :id="company.competitor_tag">
+                    <img :src="company.url_source" :class="widthimage(company.url_source, company.competitor_tag)"
+                        :id="company.competitor_tag">
                 </swiper-slide>
             </swiper>
-            <swiper v-else @click="goToCompany(company)" class="society__logo" :modules="[Virtual]" :slides-per-view="1" :space-between="10" :virtual="true">
+            <swiper v-else @click="goToCompany(company)" class="society__logo" :modules="[Virtual]" :slides-per-view="1"
+                :space-between="10" :virtual="true">
                 <swiper-slide>
                     <div role="status" class="society__logo bg-gray-300 rounded-sm">
-                        <svg class="text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                        <svg class="text-gray-200 dark:text-gray-600" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                             <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
                             <path
                                 d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
@@ -19,148 +22,130 @@
                 </swiper-slide>
             </swiper>
             <div class="list__main__content">
-                <div class="list__main__info">
-                    <div class="society__item">
-                        <div class="society__main__info">
-                            <div class="item__head">
-                                <div class="society__info">
-                                    <a class="establishment__link" @click="goToCompany(company)">
-                                        <label class="society__name">{{ company.name }} {{ company.score ? `(${company.score})` : '' }}</label>
-                                    </a>
-                                    <div class="society__category">
-                                        <i
-                                            :class="['uil', company.category == 'Restaurant' ? 'uil-restaurant' : '', company.category == 'Hotel' ? 'uil-bed-double' : '', company.category == 'Residence' ? 'uil-home' : '', company.category == 'Other' ? 'uil-home ' : '', company.category == 'Event' ? 'uil-schedule' : '']">
-                                        </i>
-                                        <span>{{ company.category }}</span>
-                                    </div>
-                                    <div class="society__location" v-if="company.address1 != null && company.city != null">
-                                        <i class="uil uil-location-point"></i>
-                                        <span>{{ company.address1 }}, {{ company.city }}</span>
-                                    </div>
-                                    <div class="reviews-count">
-                                        <div class="review-box" v-if="company.reviews_count" v-for="(count, stars) in sortedReviews(company.reviews_count)" :key="stars" @click="redirectToReviews(stars, company.competitor_tag)">
-                                            <span class="score">{{ stars }}</span><i class="fa fa-star " aria-hidden="true"></i>: {{ count }} 
-                                        </div>
-                                    </div>
-
-                                
-                                    <!-- 
-                                      <div class="reviews-category">
-                                        <div class="reviews-boxes" v-if="company.categories">
-                                            <div style="border: 1px solid black;width: max-content;" class="reviews-boxe" v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category">
-                                                <span class="reviews-loader" v-if="category === ''"></span>
-                                                <span class="reviews-title" v-else :style="{ backgroundColor: colors[index % colors.length] }"  @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">{{ capitalize(category) }} : {{ cat }}</span>
-                                            </div>
-                                        </div>
-
-                                        <div  class="h-2 rounded review-feedback__positive"
-                                            :style="{ 'width': 100 + '%', 'background': `linear-gradient(90deg,rgba( ${100},${200},0,1) 25%, rgba(255,255,0,1) 75%, red 100%)` }">
-                                        </div>                                      
-                                    </div>
-                                    -->
-                                  
-
-                                  
-                                   
-                                </div>
-                            </div>
-                        </div>
+                <div class="society__info">
+                    <a class="establishment__link" @click="goToCompany(company)">
+                        <label class="society__name">{{ company.name }} {{ company.score ?
+                            `(${company.score})` : '' }}</label>
+                    </a>
+                    <div class="society__category">
+                        <i
+                            :class="['uil', company.category == 'Restaurant' ? 'uil-restaurant' : '', company.category == 'Hotel' ? 'uil-bed-double' : '', company.category == 'Residence' ? 'uil-home' : '', company.category == 'Other' ? 'uil-home ' : '', company.category == 'Event' ? 'uil-schedule' : '']">
+                        </i>
+                        <span>{{ company.category }}</span>
                     </div>
-                    <RatingComponent class="rating__content" :reviews="company.totalReviews" :rating="Number(company.rating).toFixed(1)" :score="company.score" :feeling="company.feeling" :company="company" />
+                    <div class="society__location" v-if="company.address1 != null && company.city != null">
+                        <i class="uil uil-location-point"></i>
+                        <span>{{ company.address1 }}, {{ company.city }}</span>
+                    </div>
                 </div>
-                <div class="list__actions">
-                    <button class="btn" @click="goToCompany(company)">More details</button>
-              
-                </div>
-
-
-
+                <RatingComponent class="rating__content" :reviews="company.totalReviews"
+                    :rating="Number(company.rating).toFixed(1)" :score="company.score" :feeling="company.feeling"
+                    :company="company" />
 
             </div>
-
         </div>
+        <!-- <div v-if="company.categories" class="category_container_mobile"></div> -->
+        <div class="category_container_mobile">
+            <div class="inline-flex category_mobile">
+
+                <div v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category">
+
+                    <div v-if="category != ''" class="review__category-container ml-1">
+
+                        <span :style="{ backgroundColor: colorBetweenRedYellowGreen(cat) }" class="review__category"
+                            @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
+                            {{ capitalize(category) }} :
+
+                            <span class="emoji ">
+                                {{ cat }}
+                            </span>
+
+                        </span>
 
 
-         <!-- category List -->
+                        <!-- <span v-if="cat > 0.9" :style="{ backgroundColor: colors[1] }" class="review__category"
+                            @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
+                            {{ capitalize(category) }} :
 
+                            <span class="emoji ">
+                                {{ cat }}
+                            </span>
 
-         <div v-if="company.categories" class="category_container_mobile" >
-               <div class="inline-flex category_mobile">
-                            
-                            <div  v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category">
+                        </span>
 
-                                <div v-if="category != ''" class="review__category-container ml-1"
-                                  >
-                                 
+                        <span v-if="cat > 0.5 && cat <= 0.9" :style="{ backgroundColor: colors[2] }"
+                            class="review__category"
+                            @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
+                            {{ capitalize(category) }} :
 
-                                  <span v-if="cat > 0.9" :style="{ backgroundColor: colors[1] }" class="review__category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
-                                        {{ capitalize(category) }} : 
+                            <span class="emoji ">
+                                {{ cat }}
+                            </span>
 
-                                          <span  class="emoji ">
-                                            {{ cat }}
-                                          </span>
-                                          
-                                    </span>
+                        </span>
 
-                                  <span v-if="cat > 0.5 && cat <= 0.9" :style="{ backgroundColor: colors[2] }" class="review__category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
-                                        {{ capitalize(category) }} : 
+                        <span v-if="cat >= 0 && cat < 0.5" :style="{ backgroundColor: colors[3] }"
+                            class="review__category"
+                            @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
+                            {{ capitalize(category) }} :
 
-                                          <span  class="emoji ">
-                                            {{ cat }}
-                                          </span>
-                                          
-                                    </span>
+                            <span class="emoji ">
+                                {{ cat }}
+                            </span>
 
-                                    <span v-if="cat >= 0 && cat < 0.5" :style="{ backgroundColor: colors[3] }" class="review__category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
-                                        {{ capitalize(category) }} : 
+                        </span>
 
-                                          <span  class="emoji ">
-                                            {{ cat }}
-                                          </span>
-                                          
-                                    </span>
+                        <span v-if="cat >= -0.5 && cat < 0" :style="{ backgroundColor: colors[5] }"
+                            class="review__category"
+                            @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
+                            {{ capitalize(category) }} :
 
-                                    <span v-if="cat >= -0.5 && cat < 0" :style="{ backgroundColor: colors[5] }" class="review__category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
-                                        {{ capitalize(category) }} : 
+                            <span class="emoji ">
+                                {{ cat }}
+                            </span>
 
-                                          <span  class="emoji ">
-                                            {{ cat }}
-                                          </span>
-                                          
-                                    </span>
+                        </span>
 
-                                    <span v-if="cat > -0.8 && cat < -0.5" :style="{ backgroundColor: colors[6] }" class="review__category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
-                                        {{ capitalize(category) }} : 
+                        <span v-if="cat > -0.8 && cat < -0.5" :style="{ backgroundColor: colors[6] }"
+                            class="review__category"
+                            @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
+                            {{ capitalize(category) }} :
 
-                                          <span  class="emoji ">
-                                            {{ cat }}
-                                          </span>
-                                          
-                                    </span>
+                            <span class="emoji ">
+                                {{ cat }}
+                            </span>
 
-                                    <span v-if="cat <= -0.8" :style="{ backgroundColor: colors[7] }" class="review__category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
-                                        {{ capitalize(category) }} : 
+                        </span>
 
-                                          <span  class="emoji ">
-                                            {{ cat }}
-                                          </span>
-                                          
-                                    </span>
+                        <span v-if="cat <= -0.8" :style="{ backgroundColor: colors[7] }" class="review__category"
+                            @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
+                            {{ capitalize(category) }} :
 
-                                </div>
-                            </div>
+                            <span class="emoji ">
+                                {{ cat }}
+                            </span>
 
+                        </span> -->
 
+                    </div>
+                </div>
+
+                <div class="reviews-count" v-if="company.reviews_count">
+                    <div class="review-box" v-for="(count, stars) in sortedReviews(company.reviews_count)" :key="stars"
+                        @click="redirectToReviews(stars, company.competitor_tag)">
+                        <span class="score">{{ stars }}</span><i class="fa fa-star " aria-hidden="true"></i>: {{
+                            count }}
+                    </div>
                 </div>
 
             </div>
-            <div  class="h-2 rounded review-feedback__positive"
-                    :style="{ 'width': 100 + '%', 'background': `linear-gradient(90deg,rgba( ${100},${200},0,1) 25%, rgba(255,255,0,1) 75%, red 100%)` }">
-            </div>  
-            <!-- Fin category List -->
+            <div class="list__actions">
+                <button class="btn" @click="goToCompany(company)">More details</button>
 
-
+            </div>
+        </div>
     </div>
+
     <QrCodeModalComponent v-if="establishment"
         :qrcodeValue="`${baseurl}/public/${tag}/establishment/${establishment.competitor_tag}/feedback`"
         :showModal="showModal" :filename="`${establishment.name}-feedback-link`" @close="showModal = false"
@@ -174,7 +159,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Virtual } from 'swiper/modules';
 import { useMediaStore } from "@Stores/media.js";
 import { useAppStore } from "@Stores/app.js";
-import { useRouter,useRoute } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import 'swiper/css';
 import { useUserStore } from "@Stores/user.js";
 import { ElProgress, ElTooltip } from 'element-plus';
@@ -216,7 +201,30 @@ const showModal = ref(false);
 const baseurl = window.location.origin;
 //const colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
 
-const colors = ['#008000','#009900','#66A300 ','#AABB00','#CCFF00', '#FFCC00', '#FF6600', '#FF0000']
+const colors = ['#008000', '#009900', '#66A300 ', '#AABB00', '#CCFF00', '#FFCC00', '#FF6600', '#FF0000']
+
+const colorBetweenRedYellowGreen = (t) => {
+    // Normaliser t dans l'intervalle [0, 1] à partir de [-1, 1]
+    t = (t + 1) / 2; // Transformation de [-1, 1] à [0, 1]
+
+    let r, g, b;
+
+    if (t <= 0.5) {
+        // Interpolation entre le rouge et le jaune
+        t = t * 2; // Normaliser t dans cette moitié [0, 0.5] -> [0, 1]
+        r = 255;
+        g = Math.round(255 * t);
+        b = 0;
+    } else {
+        // Interpolation entre le jaune et le vert
+        t = (t - 0.5) * 2; // Normaliser t dans cette moitié [0.5, 1] -> [0, 1]
+        r = Math.round(255 * (1 - t));
+        g = 255;
+        b = 0;
+    }
+
+    return `rgba(${r}, ${g}, ${b}, .5)`;
+}
 
 const goToCompany = (establishment) => {
     appStore.isLoading = true;
@@ -227,7 +235,7 @@ const goToCompany = (establishment) => {
                 id: establishment.competitor_tag,
                 tag: tag.value
             },
-          
+
         });
     }, 100);
 };
@@ -263,34 +271,34 @@ const widthimage = ((event, id) => {
 });
 
 const sortedReviews = (reviews) => {
-  return Object.entries(reviews).sort((a, b) => b[0] - a[0]).reduce((obj, [k, v]) => {
-    obj[k] = v;
-    return obj;
-  }, {});
+    return Object.entries(reviews).sort((a, b) => b[0] - a[0]).reduce((obj, [k, v]) => {
+        obj[k] = v;
+        return obj;
+    }, {});
 };
 
 const sortedCategory = (categories) => {
-  if (!categories || typeof categories !== 'object') {
-    return {};
-  }
-  return Object.entries(categories).sort((a, b) => b[0] - a[0]).reduce((obj, [k, v]) => {
-    obj[k] = v;
-    return obj;
-  }, {});
+    if (!categories || typeof categories !== 'object') {
+        return {};
+    }
+    return Object.entries(categories).sort((a, b) => b[0] - a[0]).reduce((obj, [k, v]) => {
+        obj[k] = v;
+        return obj;
+    }, {});
 };
 
 const emit = defineEmits(['redirect-to-reviews']);
 
-const redirectToReviews = (star,id) =>{
-    const {tag} = route.params
+const redirectToReviews = (star, id) => {
+    const { tag } = route.params
     router.push({
-    name: 'Review',
-    params:{tag,id},
-    query: {
-      star_filter: star,
-      competitors : id
-    },
-  });
+        name: 'Review',
+        params: { tag, id },
+        query: {
+            star_filter: star,
+            competitors: id
+        },
+    });
 }
 
 const redirectToReviewsCategory = (tag, id, category) => {
@@ -301,10 +309,10 @@ const redirectToReviewsCategory = (tag, id, category) => {
             id: id
         },
         query: {
-            category : category,
+            category: category,
         }
     });
-    console.log("category",category)
+    console.log("category", category)
 }
 
 const capitalize = (str) => {
@@ -313,33 +321,37 @@ const capitalize = (str) => {
 };
 </script>
 <style scoped>
-
-
-
-.category_container_mobile{
-  
-    overflow-x:scroll ;
-    white-space:nowrap;
-    width: 70%;
-    position: relative;
-    bottom: 0;
-    left: 0;
+.category_container_mobile {
+    /* overflow-x: auto; */
+    white-space: nowrap;
+    /* width: 70%; */
+    width: 100%;
+    /* position: relative; */
+    /* bottom: 0;
+    left: 0; */
     scrollbar-width: thin;
     /* scrollbar-color: #008c #f1f1f1; */
-    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    /* border: 2px solid green; */
+    height: 32px;
 }
 
-.category_container_mobile::-webkit-scrollbar{
-  
-  height: 8px;
-  width: 8px;
-  border-radius: 10px;
-  
+.category_container_mobile::-webkit-scrollbar {
+
+    height: 8px;
+    width: 8px;
+    border-radius: 10px;
+
 }
 
-.category_mobile{
+.category_mobile {
     /* width:100%; */
-    align-items:center
+    align-items: center;
+    overflow-x: auto;
+    margin-right: 12px;
 }
 
 .review__category-container {
@@ -361,12 +373,7 @@ const capitalize = (str) => {
 }
 
 
-
-.reviews-count{
-    margin: -19px;
-}
-
-.reviews-count h2{
+.reviews-count h2 {
     margin-left: 10px;
     font-weight: bold;
 }
@@ -378,6 +385,9 @@ const capitalize = (str) => {
     margin-bottom: 30px;
     border: 2px solid var(--light-color-bg1);
     transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .list__item:hover {
@@ -395,9 +405,10 @@ const capitalize = (str) => {
     gap: 1rem;
     font-size: 15px;
     color: var(--color-bg2);
-    justify-content: flex-start;
+    justify-content: space-between;
     flex-direction: row;
     transition: var(--transition);
+    /* border: 2px solid red; */
 }
 
 .society__logo {
@@ -405,8 +416,8 @@ const capitalize = (str) => {
     height: 95px;
     z-index: 0;
     transform: var(--transition);
-    display:flex;
-    justify-content:center;
+    display: flex;
+    justify-content: center;
     border-radius: 5px;
 
     /*margin-inline: 8px !important;*/
@@ -420,24 +431,30 @@ const capitalize = (str) => {
     height: 100%;
     width: 100%;
     object-fit: cover;
-   
-    
+
+
 }
 
-.society__location  {
-  
+.society__location {
+
     width: 250px;
 }
 
 .society__location span {
-    height: 35px;
+    /* height: 35px; */
     width: 150px;
 }
 
 
 .list__main__content {
-    width: 100%;
+    /* width: 100%; */
     transition: var(--transition);
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    /* border: 1px yellow solid; */
+    width: 100%;
 }
 
 .list__main__info {
@@ -456,12 +473,14 @@ const capitalize = (str) => {
     gap: 1rem;
 }
 
-.society__item div {
+.society__info div,
+.review-box span,
+div.review-box {
     font-size: 13px;
     font-weight: 500;
 }
 
-.society__item i {
+.review-box i {
     color: var(--color-danger);
     margin-right: 5px;
 }
@@ -471,7 +490,7 @@ const capitalize = (str) => {
     justify-content: space-between;
 }
 
-.society__item label {
+.society__info label {
     font-size: 14px;
     font-weight: bold;
     color: var(--color-primary)
@@ -495,7 +514,7 @@ const capitalize = (str) => {
     font-size: 13px;
     font-weight: 500;
     padding: 2px 6px;
-    margin-top: -5px;
+    /* margin-top: -5px; */
 }
 
 .list__actions button:hover {
@@ -550,6 +569,7 @@ const capitalize = (str) => {
 .modal__close i:hover {
     transform: rotate(360deg);
 }
+
 @media screen and (max-width:1440px) {
     .society__location {
         display: flex;
@@ -558,13 +578,13 @@ const capitalize = (str) => {
 }
 
 @media screen and (max-width:1260px) {
-    .establishment-rank-view .reviews-category .reviews-boxs{
+    .establishment-rank-view .reviews-category .reviews-boxs {
         max-width: 400px !important;
     }
 }
 
 @media screen and (max-width:779px) {
-    .society__item label {
+    .society__info label {
         font-size: 13px;
     }
 
@@ -573,17 +593,18 @@ const capitalize = (str) => {
         width: 200px;
     }
 
-    .society__item div {
+    .society__info div {
         font-size: 12px;
     }
 
-    .establishment-rank-view .reviews-category .reviews-boxs{
+    .establishment-rank-view .reviews-category .reviews-boxs {
         max-width: 400px !important;
     }
+
 }
 
 @media screen and (max-width:768px) {
-    .establishment-rank-view .reviews-category .reviews-boxs{
+    .establishment-rank-view .reviews-category .reviews-boxs {
         max-width: 400px !important;
         margin-bottom: -42px !important;
     }
@@ -605,8 +626,8 @@ const capitalize = (str) => {
 
     .list__actions button {
         flex-grow: 1;
-        margin: 19px 0px 0px 0px;
-        padding: 5px 0px;
+        /* margin: 19px 0px 0px 0px; */
+        padding: 5px;
         background-color: var(--color-primary);
         color: white;
     }
@@ -622,14 +643,15 @@ const capitalize = (str) => {
         line-height: 1.2;
     }
 
-    .society__item label {
+    .society__info label {
         font-size: 14px;
     }
 
     .society__name {
         width: 200px;
     }
-    .establishment-rank-view .reviews-category .reviews-boxs{
+
+    .establishment-rank-view .reviews-category .reviews-boxs {
         max-width: 430px !important;
         margin-left: 0 !important;
         margin-bottom: -30px !important;
@@ -637,14 +659,18 @@ const capitalize = (str) => {
 }
 
 @media (max-width: 500px) {
-    .establishment-rank-view .reviews-category .reviews-boxs{
+    .establishment-rank-view .reviews-category .reviews-boxs {
         max-width: 350px !important;
         margin-left: 0 !important;
+    }
+
+    .category_mobile {
+        padding: 0 8px;
     }
 }
 
 @media (max-width: 400px) {
-    .establishment-rank-view .reviews-category .reviews-boxs{
+    .establishment-rank-view .reviews-category .reviews-boxs {
         max-width: 300px !important;
         margin-left: 0 !important;
     }
@@ -658,32 +684,35 @@ const capitalize = (str) => {
     .society__name {
         width: 200px;
     }
-  }
-  
-.smallClass{
-    width: auto! important;
-    height: 100%! important;
-    margin:auto;
-    vertical-align: middle;
-    
 }
-.largeClass{
-    width: 100%! important;
-    height: auto! important;
-    margin:auto;
+
+.smallClass {
+    width: auto ! important;
+    height: 100% ! important;
+    margin: auto;
     vertical-align: middle;
-    margin-top:10px;
+
 }
+
+.largeClass {
+    width: 100% ! important;
+    height: auto ! important;
+    margin: auto;
+    vertical-align: middle;
+    margin-top: 10px;
+}
+
 .fade-in {
     opacity: 0;
     transition: opacity 1s ease-in;
 }
+
 .fade-in.show {
     opacity: 1;
 }
 
 .establishment-rank-view .reviews-boxs {
-    max-width:500px;
+    max-width: 500px;
     overflow-x: scroll;
     display: flex;
     border-radius: 5px;
@@ -694,15 +723,15 @@ const capitalize = (str) => {
 }
 
 .establishment-rank-view .reviews-boxs::-webkit-scrollbar {
-    height: 4px; 
+    height: 4px;
 }
 
 .reviews-box .reviews-title {
-    padding: 3px; 
-    margin: 5px 4px; 
+    padding: 3px;
+    margin: 5px 4px;
     display: flex;
     border-radius: 5px;
-    color:white;
+    color: white;
 }
 
 .reviews-box:hover {
@@ -710,23 +739,24 @@ const capitalize = (str) => {
 }
 
 .reviews-loader {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin-left: 5px;
-  margin-top: 8px;
-  border: 4px solid rgba(0, 0, 0, .1);
-  border-radius: 50%;
-  border-top-color: var(--color-primary);
-  animation: spin 1s ease-in-out infinite;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    margin-top: 8px;
+    border: 4px solid rgba(0, 0, 0, .1);
+    border-radius: 50%;
+    border-top-color: var(--color-primary);
+    animation: spin 1s ease-in-out infinite;
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>
