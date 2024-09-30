@@ -156,6 +156,12 @@
                     <span v-if="!dataLoading" class="society__location">{{ establishment.category }}</span>
                     <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
                 </div>
+                <div class="society__location" v-if="establishment.country != null">
+                    <i class="uil uil-map"></i>
+                    <span v-if="!dataLoading" class="society__location">
+                        {{ establishment.country }}</span>
+                    <span v-else class="h-3 mt-1 bg-gray-200 dark:bg-gray-700 w-full mb-4"></span>
+                </div>
                 <div class="society__location">
                     <i class="uil uil-location-point"></i>
                     <span v-if="!dataLoading" class="society__location">{{
@@ -891,6 +897,10 @@ const widthimage = (event) => {
 }
 </script>
 <style scoped>
+.reviews__content {
+    margin-top: 0px !important;
+}
+
 .containerBody,
 .containerBody2 {
     min-width: 100% !important;
@@ -1087,5 +1097,10 @@ p {
 .card_legend {
     width: 16px;
     height: 12px;
+}
+
+.society__location {
+    font-size: 13px;
+    font-weight: 500;
 }
 </style>
