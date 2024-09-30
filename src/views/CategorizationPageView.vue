@@ -2,12 +2,9 @@
     <div class="filters">
         <div class="row">
             <div class="select_info">
-                <div class="select_info">
-                    <el-select v-model="review_category" placeholder="Select categories" size="large">
-                        <el-option v-for="(item, index) in categoriesall" :key="index" :label="item" :value="item" />
-                    </el-select>
-                </div>
-
+                <el-select v-model="review_category" placeholder="Select categories" size="large">
+                    <el-option v-for="(item, index) in categoriesall" :key="index" :label="item" :value="item" />
+                </el-select>
             </div>
             <div class="catfiltre">
                 <el-select v-model="categoryFilters" size="large">
@@ -240,12 +237,15 @@ onMounted(async () => {
 }
 
 @media (max-width: 768px) {
-    .select_info {
+
+    .select_info,
+    .catfiltre,
+    .date_picker {
         display: flex;
         align-items: center;
         flex-grow: 1;
-        max-width: 318px;
-        margin-right: 10px;
+        max-width: calc(100% - 8px);
+        /* margin-right: 10px; */
     }
 
     .row {
@@ -255,9 +255,10 @@ onMounted(async () => {
     .filters>* {
         flex-basis: 100%;
         margin-bottom: 10px;
-        width: 500px;
+        /* width: 500px; */
         gap: 0.5rem;
-        margin-left: 200px;
+        /* margin-left: 200px; */
+        margin-inline: 8px;
     }
 
     .establishment-rank-view :deep(.reviews-count) {
@@ -300,8 +301,8 @@ onMounted(async () => {
         display: flex;
         align-items: center;
         flex-grow: 1;
-        max-width: 318px;
-        margin-right: 10px;
+        /* max-width: 318px; */
+        /* margin-right: 10px; */
     }
 
     .row {
@@ -311,9 +312,9 @@ onMounted(async () => {
     .filters>* {
         flex-basis: 100%;
         margin-bottom: 10px;
-        width: 500px;
+        /* width: 500px; */
         gap: 0.5rem;
-        margin-left: 200px;
+        /* margin-left: 200px; */
     }
 
     .establishment-rank-view :deep(.reviews-count) {
@@ -357,8 +358,8 @@ onMounted(async () => {
         display: flex;
         align-items: center;
         flex-grow: 1;
-        max-width: 318px;
-        margin-right: 10px;
+        /* max-width: 318px; */
+        /* margin-right: 10px; */
     }
 
     .row {
@@ -370,7 +371,7 @@ onMounted(async () => {
         margin-bottom: 10px;
         width: 500px;
         gap: 0.5rem;
-        margin-left: 200px;
+        /* margin-left: 200px; */
     }
 
     .establishment-rank-view :deep(.reviews-count) {
