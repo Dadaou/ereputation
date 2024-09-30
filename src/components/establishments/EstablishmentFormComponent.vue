@@ -30,15 +30,8 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                     </div>
 
-                    <div  class="mb-6">
-                        <label for="language" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Language
-                            <span>*</span></label>
-                        <el-select v-model="data.language" placeholder="" size="large" filterable ref="selectLanguage">
-                            <el-option v-for="(language, index) in ['fr','en','es']" :key="index" :label="language"
-                                :value="language" />
-                        </el-select>
-                    </div>
-                    <div>
+                
+                    <div class="mb-6">
                         <label for="address1"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address 1
                             <span>*</span></label>
@@ -96,6 +89,14 @@
                     <input type="text" id="rank" name="rank" v-model="data.rank"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
+                    <div>
+                        <label for="language" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Language
+                            <span>*</span></label>
+                        <el-select v-model="data.language" placeholder="" size="large" filterable ref="selectLanguage">
+                            <el-option v-for="(language, index) in ['fr','en','es']" :key="index" :label="language"
+                                :value="language" />
+                        </el-select>
+                    </div>
                 <div>
                     <label for="positionning"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">positionning
