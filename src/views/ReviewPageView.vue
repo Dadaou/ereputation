@@ -308,7 +308,8 @@ let reviewFeedbackData = ref({
     width: 0,
     red: 0,
     green: 0,
-    feeling: 0
+    feeling: 0,
+    score:0
 });
 
 const options = ref({
