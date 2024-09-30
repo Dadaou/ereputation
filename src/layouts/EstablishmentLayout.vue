@@ -65,7 +65,7 @@ const customerTag = inject('tag');
 
 .left__side {
     width: calc(100% - 400px);
-    padding: 50px 5px;
+    padding: 25px 5px;
 }
 
 .left__side .head {
@@ -79,7 +79,7 @@ const customerTag = inject('tag');
 
 .right__side {
     width: 400px;
-    padding: 50px 0px;
+    padding: 25px 0px;
 }
 
 /*.main__container,
@@ -242,7 +242,7 @@ const customerTag = inject('tag');
         width: 70%;
     }
     .right__side {
-        margin-top: 9px;
+        /* margin-top: 9px; */
     }
 
     .right__side {
@@ -280,7 +280,7 @@ const customerTag = inject('tag');
         display: flex;
         justify-content: space-between;
         margin: auto;
-        margin-top: 50px;
+        margin-top: 25px;
         width: inherit;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
         border: 1px solid var(--light-color-bg2);

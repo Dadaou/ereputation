@@ -537,7 +537,7 @@ textarea {
   width: var(--container-width-lg);
   margin: auto;
   position: relative;
-  top: 2rem;
+  top: .8rem;
 }
 
 .all__content {
