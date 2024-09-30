@@ -178,7 +178,7 @@ onMounted(async () => {
     display: flex;
     align-items: center;
     flex-grow: 1;
-    max-width: 300px;
+    /* max-width: 300px; */
     margin-right: 10px;
 }
 
@@ -207,8 +207,8 @@ onMounted(async () => {
         display: flex;
         align-items: center;
         flex-grow: 1;
-        max-width: 318px;
-        margin-right: 10px;
+        /* max-width: 318px; */
+        /* margin-right: 10px; */
     }
 
     .row {
@@ -218,9 +218,9 @@ onMounted(async () => {
     .filters>* {
         flex-basis: 100%;
         margin-bottom: 10px;
-        width: 500px;
+        /* width: 500px; */
         gap: 0.5rem;
-        margin-left: 200px;
+        /* margin-left: 200px; */
     }
 
     .establishment-rank-view :deep(.reviews-count) {
@@ -263,8 +263,8 @@ onMounted(async () => {
         display: flex;
         align-items: center;
         flex-grow: 1;
-        max-width: 318px;
-        margin-right: 10px;
+        /* max-width: 318px; */
+        /* margin-right: 10px; */
     }
 
     .row {
@@ -274,9 +274,9 @@ onMounted(async () => {
     .filters>* {
         flex-basis: 100%;
         margin-bottom: 10px;
-        width: 500px;
+        /* width: 500px; */
         gap: 0.5rem;
-        margin-left: 200px;
+        /* margin-left: 200px; */
     }
 
     .establishment-rank-view :deep(.reviews-count) {
@@ -320,8 +320,8 @@ onMounted(async () => {
         display: flex;
         align-items: center;
         flex-grow: 1;
-        max-width: 318px;
-        margin-right: 10px;
+        /* max-width: 318px; */
+        /* margin-right: 10px; */
     }
 
     .row {
@@ -331,9 +331,9 @@ onMounted(async () => {
     .filters>* {
         flex-basis: 100%;
         margin-bottom: 10px;
-        width: 500px;
+        /* width: 500px; */
         gap: 0.5rem;
-        margin-left: 200px;
+        /* margin-left: 200px; */
     }
 
     .establishment-rank-view :deep(.reviews-count) {
