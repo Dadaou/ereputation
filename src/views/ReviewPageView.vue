@@ -636,18 +636,38 @@ const loadStarData = async (tag, dateStart, dateEnd, source) => {
 //   await loadStarData("66a246fe4c106", dateStart, dateEnd, source);
 // });
 const loadCategories = async (tag) => {
-    const api = `establishment/${tag}/categories`
-    const response = await new Promise((resolve) => {
-        services.get_Record(api, (response) => {
-            resolve(response)
+      const api = `customer/establishment/categorizations?tag=${tag}`
+        const response = await new Promise((resolve) => {
+            services.get_Record(api, (response) => {
+                resolve(response)
+            });
         });
-    });
 
-    if (response.status == 200) {
-        if (response.data && response.data.data) {
-            categories.value = response.data.data
+        if (response.status == 200) {
+             if (response.data) {
+                let cats=[];
+                response.data.forEach((_cat,_index)=>{
+                    cats.push({id:_index,category:_cat});
+                });
+
+                categories.value = cats;
+            }
+            // if (response.data && response.data.data) {
+            //     categories.value = response.data.data
+            // }
         }
-    }
+    // const api = `establishment/${tag}/categories`
+    // const response = await new Promise((resolve) => {
+    //     services.get_Record(api, (response) => {
+    //         resolve(response)
+    //     });
+    // });
+
+    // if (response.status == 200) {
+    //     if (response.data && response.data.data) {
+    //         categories.value = response.data.data
+    //     }
+    // }
 }
 
 onBeforeMount(async () => {
