@@ -102,9 +102,9 @@ onMounted(async () => {
 });
 </script>
 <style scoped>
-.establishment-home :deep(.list__actions) {
+/* .establishment-home :deep(.list__actions) {
     margin-top: 15px;
-}
+} */
 
 .establishment__link label,
 .establishment__link {

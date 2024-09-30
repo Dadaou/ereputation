@@ -9,7 +9,8 @@
             </div>
             <div class="catfiltre">
                 <el-select v-model="categoryFilters" size="large">
-                    <el-option v-for="(item, index) in categories" :key="index" :label="item.label" :value="item.value" />
+                    <el-option v-for="(item, index) in categories" :key="index" :label="item.label"
+                        :value="item.value" />
                 </el-select>
             </div>
             <div class="date_picker">
@@ -131,67 +132,67 @@ onMounted(async () => {
 
 <style scoped>
 .establishment-rank-view :deep(.reviews-count) {
-  display: flex;
-  padding: 5px;
-  border-radius: 5px;
-  margin-top: 40px;
-  margin-right: -130px;
-  margin-left: -235px;
+    display: flex;
+    /* padding: 5px; */
+    border-radius: 5px;
 }
 
 .establishment-rank-view :deep(.review-box) {
-  display: flex;
-  align-items: center;
-  background: #F5F5F5;
-  padding: 2px;
-  margin-top: -2.1px;
-  border-radius: 5px;
-  margin-left: 12px;
-  cursor: pointer;
+    display: flex;
+    align-items: center;
+    background: #F5F5F5;
+    padding: 2px;
+    margin-top: -2.1px;
+    border-radius: 5px;
+    margin-right: 12px;
+    cursor: pointer;
 }
 
-.establishment-rank-view :deep(.list__actions)  {
+.establishment-rank-view :deep(.list__actions) {
     display: flex;
     justify-content: flex-end;
     margin-right: 10px;
-	margin-top: -8px;
+    /* margin-top: -8px; */
 }
+
 .filters {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	padding: 10px;
-	background-color: #f5f5f5;
-	border-radius: 5px;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.row {
-	display: flex;
-	justify-content: space-between;
-	width: 100%;
-	margin-bottom: 10px;
-}
-
-.select_info, .catfiltre, .date_picker {
-	display: flex;
-	align-items: center;
-	flex-grow: 1;
-	max-width: 300px;
-	margin-right: 10px;
-}
-
-@media (min-width: 1500px) {
-	.filters {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
     padding: 10px;
     background-color: #f5f5f5;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.select_info,
+.catfiltre,
+.date_picker {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    max-width: 300px;
+    margin-right: 10px;
+}
+
+@media (min-width: 1500px) {
+    .filters {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
     .filters>* {
         flex-basis: 100%;
@@ -202,239 +203,240 @@ onMounted(async () => {
 }
 
 @media (max-width: 768px) {
-	.select_info {
-	display: flex;
-	align-items: center;
-	flex-grow: 1;
-	max-width: 318px;
-	margin-right: 10px;
-}
+    .select_info {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        max-width: 318px;
+        margin-right: 10px;
+    }
+
     .row {
         flex-direction: column;
     }
+
     .filters>* {
         flex-basis: 100%;
         margin-bottom: 10px;
         width: 500px;
         gap: 0.5rem;
-		margin-left: 200px;
+        margin-left: 200px;
     }
-	.establishment-rank-view :deep(.reviews-count) {
-  display: flex;
-  padding: 8px;
-  border-radius: 5px;
-  margin-top: 20px;
-  margin-right: 90px;
-  margin-left: -16px;
-  
-}
 
-.establishment-rank-view :deep(.review-box) {
-  display: flex;
-  align-items: center;
-  background: #F5F5F5;
-  padding: 2px;
-  border-radius: 5px;
-  margin-left: 8px;
+    .establishment-rank-view :deep(.reviews-count) {
+        display: flex;
+        /* padding: 8px; */
+        border-radius: 5px;
 
-}
+    }
 
-.establishment-rank-view :deep(.score) {
-    font-weight: bold;
-    margin-right: 1px;
-	margin-top: 0px;
-}
+    .establishment-rank-view :deep(.review-box) {
+        display: flex;
+        align-items: center;
+        background: #F5F5F5;
+        padding: 2px;
+        border-radius: 5px;
+        margin-right: 8px;
 
-.establishment-rank-view :deep(.fa-star) {
-	margin-top: 0px;
-}
+    }
 
-.establishment-rank-view :deep(.list__actions) {
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 0px;
-	margin-top: 18px;
-}
+    .establishment-rank-view :deep(.score) {
+        font-weight: bold;
+        margin-right: 1px;
+        margin-top: 0px;
+    }
+
+    .establishment-rank-view :deep(.fa-star) {
+        margin-top: 0px;
+    }
+
+    .establishment-rank-view :deep(.list__actions) {
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 0px;
+        /* margin-top: 18px; */
+    }
 }
 
 @media (min-width: 376px) and (max-width: 500px) {
-	.select_info {
-	display: flex;
-	align-items: center;
-	flex-grow: 1;
-	max-width: 318px;
-	margin-right: 10px;
-}
+    .select_info {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        max-width: 318px;
+        margin-right: 10px;
+    }
+
     .row {
         flex-direction: column;
     }
+
     .filters>* {
         flex-basis: 100%;
         margin-bottom: 10px;
         width: 500px;
         gap: 0.5rem;
-		margin-left: 200px;
+        margin-left: 200px;
     }
-	.establishment-rank-view :deep(.reviews-count) {
-  display: flex;
-  padding: 8px;
-  border-radius: 5px;
-  margin-top: 20px;
-  margin-right: 90px;
-  margin-left: -10px;
-  
-}
 
-.establishment-rank-view :deep(.review-box) {
-  display: flex;
-  align-items: center;
-  background: #F5F5F5;
-  padding: 0px;
-  border-radius: 5px;
-  margin-left: 3px;
-  width: 45px;
+    .establishment-rank-view :deep(.reviews-count) {
+        display: flex;
+        /* padding: 8px; */
+        border-radius: 5px;
 
-}
+    }
 
-.establishment-rank-view :deep(.score) {
-    font-weight: bold;
-    margin-right: 0px;
-	margin-top: 0px;
-}
+    .establishment-rank-view :deep(.review-box) {
+        display: flex;
+        align-items: center;
+        background: #F5F5F5;
+        padding: 0px;
+        border-radius: 5px;
+        margin-right: 3px;
+        width: 45px;
 
-.establishment-rank-view :deep(.fa-star) {
-	margin-top: 1px;
-}
+    }
 
-.establishment-rank-view :deep(.list__actions) {
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 0px;
-	margin-top: 18px;
-}
+    .establishment-rank-view :deep(.score) {
+        font-weight: bold;
+        margin-right: 0px;
+        margin-top: 0px;
+    }
+
+    .establishment-rank-view :deep(.fa-star) {
+        margin-top: 1px;
+    }
+
+    .establishment-rank-view :deep(.list__actions) {
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 0px;
+        /* margin-top: 18px; */
+    }
 }
 
 @media (max-width: 375px) {
-	.select_info {
-	display: flex;
-	align-items: center;
-	flex-grow: 1;
-	max-width: 318px;
-	margin-right: 10px;
-}
+    .select_info {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        max-width: 318px;
+        margin-right: 10px;
+    }
+
     .row {
         flex-direction: column;
     }
+
     .filters>* {
         flex-basis: 100%;
         margin-bottom: 10px;
         width: 500px;
         gap: 0.5rem;
-		margin-left: 200px;
+        margin-left: 200px;
     }
-	.establishment-rank-view :deep(.reviews-count) {
-  display: flex;
-  padding: 8px;
-  border-radius: 5px;
-  margin-top: 20px;
-  margin-right: 90px;
-  margin-left: -16px;
-  
-}
 
-.establishment-rank-view :deep(.review-box) {
-  display: flex;
-  align-items: center;
-  background: #F5F5F5;
-  padding: 0px;
-  border-radius: 5px;
-  margin-left: 3px;
-  width: 39px;
+    .establishment-rank-view :deep(.reviews-count) {
+        display: flex;
+        /* padding: 8px; */
+        border-radius: 5px;
 
-}
+    }
 
-.establishment-rank-view :deep(.score) {
-    font-weight: bold;
-    margin-right: 0px;
-	margin-top: 0px;
-}
+    .establishment-rank-view :deep(.review-box) {
+        display: flex;
+        align-items: center;
+        background: #F5F5F5;
+        padding: 0px;
+        border-radius: 5px;
+        margin-right: 3px;
+        width: 39px;
 
-.establishment-rank-view :deep(.fa-star) {
-	margin-top: 1px;
-}
+    }
 
-.establishment-rank-view :deep(.list__actions) {
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 0px;
-	margin-top: 18px;
-}
+    .establishment-rank-view :deep(.score) {
+        font-weight: bold;
+        margin-right: 0px;
+        margin-top: 0px;
+    }
+
+    .establishment-rank-view :deep(.fa-star) {
+        margin-top: 1px;
+    }
+
+    .establishment-rank-view :deep(.list__actions) {
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 0px;
+        /* margin-top: 18px; */
+    }
 }
 
 
 
 @media (max-width: 420px) {
-.establishment-rank-view :deep(.society__rating) {
+    .establishment-rank-view :deep(.society__rating) {
         display: flex;
         align-items: center;
         margin-top: -5px;
         margin-left: -90px;
         padding-right: 50px;
     }
-.establishment-rank-view :deep(.reviews) {
+
+    .establishment-rank-view :deep(.reviews) {
         font-size: 11px;
         margin-left: -20px;
-        
+
     }
-  }
- 
-  @media (min-width: 383px) and (max-width: 390px) {
-.establishment-rank-view :deep(.society__rating){
+}
+
+@media (min-width: 383px) and (max-width: 390px) {
+    .establishment-rank-view :deep(.society__rating) {
         display: flex;
         align-items: center;
         margin-top: -5px;
         margin-left: -120px;
         padding-right: 60px;
     }
-.establishment-rank-view :deep(.reviews){
+
+    .establishment-rank-view :deep(.reviews) {
         font-size: 11px;
         margin-left: 0px;
-        
-    }
-  }
 
-  @media (max-width: 375px) {
-.establishment-rank-view :deep(.society__rating){
+    }
+}
+
+@media (max-width: 375px) {
+    .establishment-rank-view :deep(.society__rating) {
         display: flex;
         align-items: center;
         margin-top: -5px;
         margin-left: -120px;
         padding-right: 60px;
     }
-.establishment-rank-view :deep(.reviews){
+
+    .establishment-rank-view :deep(.reviews) {
         font-size: 11px;
         margin-left: 5px;
-        
+
     }
+
     .establishment-rank-view :deep(.reviews-count) {
-  display: flex;
-  padding: 8px;
-  border-radius: 5px;
-  margin-top: 20px;
-  margin-right: 90px;
-  margin-left: -10px;
-  
-}
-.establishment-rank-view :deep(.review-box) {
-  display: flex;
-  align-items: center;
-  background: #F5F5F5;
-  padding: 0px;
-  border-radius: 5px;
-  margin-left: 4px;
-  width: 42px;
+        display: flex;
+        /* padding: 8px; */
+        border-radius: 5px;
 
-}
-  }
+    }
 
+    .establishment-rank-view :deep(.review-box) {
+        display: flex;
+        align-items: center;
+        background: #F5F5F5;
+        padding: 0px;
+        border-radius: 5px;
+        margin-right: 4px;
+        width: 42px;
+
+    }
+}
 </style>
