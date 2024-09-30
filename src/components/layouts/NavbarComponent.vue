@@ -127,7 +127,7 @@ const showMenu = computed(() => {
 })
 
 const showHomeName = computed(() => {
-  return Object.keys(homePageUrls).includes(route.name)
+  return Object.keys(homePageUrls).includes(route.name) && window.innerWidth > 720
 })
 
 const signOut = async () => {
