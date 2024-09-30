@@ -53,10 +53,10 @@
         <!-- <div v-if="company.categories" class="category_container_mobile"></div> -->
         <div v-if="company.categories" class="category_container_mobile">
             <div class="inline-flex category_mobile">
+                <span class="reviews-loader" v-if="loading"></span>
+                <div v-else v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category">
 
-                <div v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category">
-
-                    <div v-if="category != ''" class="review__category-container ml-1">
+                    <div class="review__category-container ml-1">
 
                         <span :style="{ backgroundColor: colorBetweenRedYellowGreen(cat) }" class="review__category"
                             @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
@@ -195,6 +195,10 @@ const props = defineProps({
         type: String,
         required: true
     },
+    loading: {
+        type: Boolean,
+        required: false,
+    }
 
 });
 
@@ -351,7 +355,7 @@ const capitalize = (str) => {
 .category_mobile {
     /* width:100%; */
     align-items: center;
-    overflow-x: auto;
+    /* overflow-x: auto; */
     margin-right: 12px;
 }
 
@@ -748,10 +752,10 @@ div.review-box {
 
 .reviews-loader {
     display: inline-block;
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     margin-left: 5px;
-    margin-top: 8px;
+    /* margin-top: 5px; */
     border: 4px solid rgba(0, 0, 0, .1);
     border-radius: 50%;
     border-top-color: var(--color-primary);
