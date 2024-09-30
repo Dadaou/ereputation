@@ -42,14 +42,26 @@
                                             <span class="score">{{ stars }}</span><i class="fa fa-star " aria-hidden="true"></i>: {{ count }} 
                                         </div>
                                     </div>
-                                    <div class="reviews-category">
-                                        <div class="reviews-boxs" v-if="company.categories">
-                                            <div class="reviews-box" v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category">
+
+                                
+                                    <!-- 
+                                      <div class="reviews-category">
+                                        <div class="reviews-boxes" v-if="company.categories">
+                                            <div style="border: 1px solid black;width: max-content;" class="reviews-boxe" v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category">
                                                 <span class="reviews-loader" v-if="category === ''"></span>
-                                                <span class="reviews-title" v-else :style="{ backgroundColor: colors[index % colors.length] }"  @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">{{ capitalize(category) }}:{{ cat }}</span>
+                                                <span class="reviews-title" v-else :style="{ backgroundColor: colors[index % colors.length] }"  @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">{{ capitalize(category) }} : {{ cat }}</span>
                                             </div>
                                         </div>
+
+                                        <div  class="h-2 rounded review-feedback__positive"
+                                            :style="{ 'width': 100 + '%', 'background': `linear-gradient(90deg,rgba( ${100},${200},0,1) 25%, rgba(255,255,0,1) 75%, red 100%)` }">
+                                        </div>                                      
                                     </div>
+                                    -->
+                                  
+
+                                  
+                                   
                                 </div>
                             </div>
                         </div>
@@ -58,9 +70,96 @@
                 </div>
                 <div class="list__actions">
                     <button class="btn" @click="goToCompany(company)">More details</button>
+              
                 </div>
+
+
+
+
             </div>
+
         </div>
+
+
+         <!-- category List -->
+
+
+         <div v-if="company.categories" class="category_container_mobile" >
+               <div class="inline-flex category_mobile">
+                            
+                            <div  v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category">
+
+                                <div v-if="category != ''" class="review__category-container ml-1"
+                                  >
+                                 
+
+                                  <span v-if="cat > 0.9" :style="{ backgroundColor: colors[1] }" class="review__category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
+                                        {{ capitalize(category) }} : 
+
+                                          <span  class="emoji ">
+                                            {{ cat }}
+                                          </span>
+                                          
+                                    </span>
+
+                                  <span v-if="cat > 0.5 && cat <= 0.9" :style="{ backgroundColor: colors[2] }" class="review__category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
+                                        {{ capitalize(category) }} : 
+
+                                          <span  class="emoji ">
+                                            {{ cat }}
+                                          </span>
+                                          
+                                    </span>
+
+                                    <span v-if="cat >= 0 && cat < 0.5" :style="{ backgroundColor: colors[3] }" class="review__category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
+                                        {{ capitalize(category) }} : 
+
+                                          <span  class="emoji ">
+                                            {{ cat }}
+                                          </span>
+                                          
+                                    </span>
+
+                                    <span v-if="cat >= -0.5 && cat < 0" :style="{ backgroundColor: colors[5] }" class="review__category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
+                                        {{ capitalize(category) }} : 
+
+                                          <span  class="emoji ">
+                                            {{ cat }}
+                                          </span>
+                                          
+                                    </span>
+
+                                    <span v-if="cat > -0.8 && cat < -0.5" :style="{ backgroundColor: colors[6] }" class="review__category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
+                                        {{ capitalize(category) }} : 
+
+                                          <span  class="emoji ">
+                                            {{ cat }}
+                                          </span>
+                                          
+                                    </span>
+
+                                    <span v-if="cat <= -0.8" :style="{ backgroundColor: colors[7] }" class="review__category" @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
+                                        {{ capitalize(category) }} : 
+
+                                          <span  class="emoji ">
+                                            {{ cat }}
+                                          </span>
+                                          
+                                    </span>
+
+                                </div>
+                            </div>
+
+
+                </div>
+
+            </div>
+            <div  class="h-2 rounded review-feedback__positive"
+                    :style="{ 'width': 100 + '%', 'background': `linear-gradient(90deg,rgba( ${100},${200},0,1) 25%, rgba(255,255,0,1) 75%, red 100%)` }">
+            </div>  
+            <!-- Fin category List -->
+
+
     </div>
     <QrCodeModalComponent v-if="establishment"
         :qrcodeValue="`${baseurl}/public/${tag}/establishment/${establishment.competitor_tag}/feedback`"
@@ -78,6 +177,7 @@ import { useAppStore } from "@Stores/app.js";
 import { useRouter,useRoute } from "vue-router";
 import 'swiper/css';
 import { useUserStore } from "@Stores/user.js";
+import { ElProgress, ElTooltip } from 'element-plus';
 
 const QrCodeModalComponent = defineAsyncComponent(() => import('@Components/utils/QrCodeModalComponent.vue'))
 
@@ -114,7 +214,9 @@ const props = defineProps({
 const establishment = ref(null);
 const showModal = ref(false);
 const baseurl = window.location.origin;
-const colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
+//const colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
+
+const colors = ['#008000','#009900','#66A300 ','#AABB00','#CCFF00', '#FFCC00', '#FF6600', '#FF0000']
 
 const goToCompany = (establishment) => {
     appStore.isLoading = true;
@@ -211,6 +313,55 @@ const capitalize = (str) => {
 };
 </script>
 <style scoped>
+
+
+
+.category_container_mobile{
+  
+    overflow-x:scroll ;
+    white-space:nowrap;
+    width: 70%;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    scrollbar-width: thin;
+    /* scrollbar-color: #008c #f1f1f1; */
+    
+}
+
+.category_container_mobile::-webkit-scrollbar{
+  
+  height: 8px;
+  width: 8px;
+  border-radius: 10px;
+  
+}
+
+.category_mobile{
+    /* width:100%; */
+    align-items:center
+}
+
+.review__category-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
+    gap: 2px;
+    cursor: pointer;
+}
+
+.review__category {
+    /* background: var(--color-danger); */
+    /* color: white; */
+    font-size: 13px;
+    border-radius: 8px;
+    padding: 0 8px;
+    font-weight: 400;
+}
+
+
+
 .reviews-count{
     margin: -19px;
 }
