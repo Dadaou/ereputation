@@ -29,7 +29,16 @@
                         <input type="text" id="company_name" name="name" v-model="data.name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                     </div>
-                    <div class="mb-6">
+
+                    <div  class="mb-6">
+                        <label for="language" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Language
+                            <span>*</span></label>
+                        <el-select v-model="data.language" placeholder="" size="large" filterable ref="selectLanguage">
+                            <el-option v-for="(language, index) in ['fr','en','es']" :key="index" :label="language"
+                                :value="language" />
+                        </el-select>
+                    </div>
+                    <div>
                         <label for="address1"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address 1
                             <span>*</span></label>
@@ -212,6 +221,7 @@ const resetForm = () => {
 }
 
 const selectCountry = ref(null)
+const selectLanguage = ref(null)
 
 watch(cleanEstablishmentForm, () => {
     resetForm();
@@ -253,6 +263,7 @@ const submit = async () => {
     if (establishmentData.universe_id
         && establishmentData.country
         && establishmentData.city
+        && establishmentData.language
         && establishmentData.zipcode
         && establishmentData.universe_id
         && establishmentData.name
@@ -261,6 +272,7 @@ const submit = async () => {
         // formData.append('category', establishmentData.category);
         formData.append('universe', establishmentData.universe_id);
         formData.append('country', establishmentData.country);
+        formData.append('language', establishmentData.language);
         formData.append('customer', `${userStore.user.customer.tag}`)
         showSpinner.value = true;
 
@@ -273,13 +285,12 @@ const submit = async () => {
         }
 
         formData.delete('media');
-
         const response = await new Promise((resolve, reject) => {
             services.postFormData('establishments/front_post', formData, (response) => {
                 resolve(response);
             });
         });
-
+       
         if (response && response.status == 201) {
             loadData(response.data, 'new')
             ElMessage({

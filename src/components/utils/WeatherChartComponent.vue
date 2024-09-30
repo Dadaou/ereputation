@@ -148,6 +148,8 @@ const newOptions = {
 const chartLoading = inject('chartLoading');
 const legendData = inject('legendData');
 const data = inject('data');
+const date = inject('date');
+const start_date = inject('start_date');
 const weatherChartValue = ref([]);
 const icons = inject('icons');
 const el = ref(null);
@@ -169,6 +171,10 @@ const containerStyles = computed(() => ({
   overflowX: 'auto',
 }));
 
+const getData=()=>{
+    console.log(data)
+}
+
 const getWidth = () => {
   const defaultWidth = 900;
   if (width.value >= 1500) {
@@ -182,6 +188,32 @@ const getWidth = () => {
 const deleteIcons = () => {
   const weathers = document.getElementById("weatherIcons");
   if(weathers) weathers.innerHTML = "";
+}
+
+const transformData=(_data)=>{
+    let plotData1 = {
+        labels: [],
+        datasets: []
+      }
+      let scores=[];
+        _data.value.forEach((_note)=>{
+        scores.push(_note.reviews);
+        plotData1.labels.push(_note.name)
+      });
+        scores.push(0);
+        scores.push(5);
+
+       plotData1.datasets.push({
+              label: 'Note',
+              backgroundColor: colors[2],
+              borderColor: colors[2],
+              data: scores,
+              // pointRadius: 0,
+              // fill: false,
+              tension: 0.1
+              })
+     console.log(data.value)
+     weatherChartValue.value=plotData1;
 }
 
 const positionIcons = () => {
@@ -218,6 +250,7 @@ const positionIcons = () => {
     textNode.setAttribute("title", icons.value[i]['title']);
     weathers.appendChild(textNode);
     weathers.appendChild(tempTextNode);
+   
   }
 }
 
@@ -227,31 +260,7 @@ useResizeObserver(el, (entries) => {
   chartWidth.value = Math.abs(width);
 });
 
-const transformData=(_data)=>{
-    let plotData1 = {
-        labels: [],
-        datasets: []
-      }
-      let scores=[];
-        _data.value.forEach((_note)=>{
-        scores.push(_note.reviews);
-        plotData1.labels.push(_note.name)
-      });
-        scores.push(0);
-        scores.push(5);
 
-       plotData1.datasets.push({
-              label: 'Note',
-              backgroundColor: colors[2],
-              borderColor: colors[2],
-              data: scores,
-              // pointRadius: 0,
-              // fill: false,
-              tension: 0.1
-              })
-     console.log(data.value)
-     weatherChartValue.value=plotData1;
-}
 
 onMounted(() => {
   deleteIcons();
@@ -271,12 +280,22 @@ onMounted(() => {
  
 });
 
-watch(data, () => {
+watch(start_date, () => {
   deleteIcons();
+   transformData(data)
+   console.log(start_date.value)
   setTimeout(() => positionIcons(), 2000)
     ;
 });
-watch(() => data.value , () => {
+
+watch(data, () => {
+  deleteIcons();
+   transformData(data)
+   console.log(start_date.value)
+  setTimeout(() => positionIcons(), 2000)
+    ;
+});
+watch( [data,start_date] , () => {
       transformData(data)
     nextTick(() => {
         const colLargeElement = document.getElementById("colLarge");
@@ -289,7 +308,7 @@ watch(() => data.value , () => {
         }
     });
 
-}, { immediate: true, deep: true });
+}, { immediate: true});
 </script>
 
 <style scoped>

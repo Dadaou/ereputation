@@ -67,7 +67,7 @@
 
                                           <span v-else class="emoji ">
                                                
-                                                <i class="uil uil-question-circle"
+                                                <i class="uil uil-plus-circle"
                                                 style="color: var(--color-warning); cursor: pointer" @mouseover="(e) => {
                                                     buttonRefCateg = e.currentTarget
                                                     visibleCateg = true
@@ -90,7 +90,7 @@
                                 </div>
                             </div>
 
-                            <i class="uil uil-question-circle"
+                            <i class="uil uil-plus-circle"
                                 style="color: var(--color-warning); font-size: 18px; cursor: pointer;margin: 1px;" @mouseover="(e) => {
                                     buttonRef = e.currentTarget
                                     visible = true
@@ -109,7 +109,7 @@
                         </div>
 
                         <div class="review__category-container" v-else>
-                            <i class="uil uil-question-circle"
+                            <i class="uil uil-plus-circle"
                                 style="color: var(--color-warning); font-size: 18px; cursor: pointer" @mouseover="(e) => {
                                     buttonRef = e.currentTarget
                                     visible = true
@@ -142,7 +142,7 @@
                           
                         </span>
                         <span class="emoji mx-1" v-else>
-                            <i class="uil uil-question-circle"
+                            <i class="uil-plus-circle"
                                 style="color: var(--color-warning); font-size: 18px; cursor: pointer" @mouseover="(e) => {
                                     buttonRef2 = e.currentTarget
                                     visible2 = true
@@ -196,7 +196,7 @@
 
                                           <span v-else class="emoji ">
                                                
-                                                <i class="uil uil-question-circle"
+                                                <i class="uil uil-plus-circle"
                                                 style="color: var(--color-warning); cursor: pointer" @mouseover="(e) => {
                                                     buttonRefCateg = e.currentTarget
                                                     visibleCateg = true
@@ -219,7 +219,7 @@
                                 </div>
                             </div>
 
-                            <i class="uil uil-question-circle"
+                            <i class="uil uil-plus-circle"
                                 style="color: var(--color-warning); font-size: 18px; cursor: pointer;margin: 1px;" @mouseover="(e) => {
                                     buttonRef = e.currentTarget
                                     visible = true
@@ -240,7 +240,7 @@
                 <!-- new category -->
 
                          <div class="review__category-container" v-else>
-                            <i class="uil uil-question-circle"
+                            <i class="uil uil-plus-circle"
                                 style="color: var(--color-warning); font-size: 18px; cursor: pointer" @mouseover="(e) => {
                                     buttonRef = e.currentTarget
                                     visible = true

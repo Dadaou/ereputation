@@ -283,10 +283,19 @@ const legendDataPublic = computed(() => {
   dates.forEach((date) => {
     date.events.forEach((event) => {
       if (!nameSet.has(event.name) && event.isPublic) {
-        data.push({
-          name: `${event.locality_name}: ${event.name} from ${event.datefrom} to ${event.dateto}`,
-          color: `${generateColor(event.name)}`
-        });
+        if (event.locality_name && event.locality_name != "" && event.locality_name != null) {
+           data.push({
+              name: `${event.locality_name}: ${event.name} from ${event.datefrom} to ${event.dateto}`,
+              color: `${generateColor(event.name)}`
+            });
+        } else {
+
+           data.push({
+              name: `${event.name} from ${event.datefrom} to ${event.dateto}`,
+              color: `${generateColor(event.name)}`
+            });
+
+        }
         nameSet.add(event.name);
       }
     });
@@ -359,7 +368,7 @@ const getPlotData = async (period, rangedate, next) => {
         plotData1.labels.push(_note.date)
       });
         scores.push(0);
-        scores.push(5);
+        // scores.push(5);
        plotData1.datasets.push({
               label: 'Note',
               backgroundColor: colors[2],
