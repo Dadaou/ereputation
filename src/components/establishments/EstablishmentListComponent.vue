@@ -112,10 +112,12 @@ const establishments = computed(() => {
     let filteredData = [];
     if (userStore.user && userStore.user.customer && userStore.user.customer.establishments) {
         data = userStore.user.customer.establishments;
+        console.log(data)
 
         data.forEach(establishment => {
             filteredData.push({
                 name: establishment.name,
+                language:establishment.language,
                 media: (establishment.url_source) ? establishment.url_source : '',
                 tag: establishment.competitor_tag,
                 uri: `/api/establishments/${establishment.id}`,

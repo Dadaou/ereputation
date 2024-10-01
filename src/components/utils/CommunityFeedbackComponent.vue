@@ -7,7 +7,7 @@
         <h2 v-if="reviewFeedbackData.score != 0 && reviewFeedbackData.feeling < 0">Mostly Negative </h2>
         <h2 v-if="reviewFeedbackData.score == 0">Mostly Neutral</h2>
         <div class="reviews__content1 my-4">
-            <div class="review h-2 bg-gray-200 rounded dark:bg-gray-700" style="position: relative">
+            <div v-if="reviewFeedbackData.score"  class="review h-2 bg-gray-200 rounded dark:bg-gray-700" style="position: relative">
 
                   <el-tooltip :content="`${reviewFeedbackData.score.toFixed(2)}`" placement="top">
                       

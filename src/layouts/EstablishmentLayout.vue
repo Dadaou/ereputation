@@ -233,7 +233,7 @@ const customerTag = inject('tag');
         width: 73.5%;
     }
     .right__side {
-        margin-top: 11px;
+        /* margin-top: 11px; */
     }
 }
 
