@@ -56,7 +56,7 @@
                 <span class="reviews-loader" v-if="loading"></span>
                 <div v-else v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category">
 
-                    <div class="review__category-container ml-1">
+                    <div v-if="cat" class="review__category-container ml-1">
 
                         <span :style="{ backgroundColor: colorBetweenRedYellowGreen(cat) }" class="review__category"
                             @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
