@@ -68,8 +68,8 @@ export const privateUrls = [
 
 export const homePageUrls = {
   Analytic: { label: 'Analytics', icon: 'uim:chart-pie' },
-  Categorization: { label: 'Category-based ranking', icon: 'carbon:category' },
-  EstablishmentRanking: { label: 'Score-based ranking', icon: 'solar:cup-first-bold' },
+  Categorization: { label: 'Category-based ranking', icon: 'solar:cup-first-bold' },
+  EstablishmentRanking: { label: 'Score-based ranking', icon: 'solar:cup-star-linear' },
   EstablishmentList: { label: 'Customer', icon: 'ion:list' },
   EstablishmentListByTrend: { label: 'Trends', icon: 'gg:trending' }
 }
