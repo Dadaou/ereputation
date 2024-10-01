@@ -134,42 +134,22 @@ const props = defineProps({
 
 const newOptions = {
     maintainAspectRatio: false,
-    // scales: {
-    // },
-    // plugins: {
-    //     legend: {
-    //         display: false,
-    //     }
-        // beforeDraw: function (chart) {
-        //     var ctx = chart.ctx;
-        //     chart.data.datasets.forEach(function (dataset, i) {
-        //         var meta = chart.getDatasetMeta(i);
-        //         if (!meta.hidden) {
-        //             meta.data.forEach(function (element, index) {
-        //                 // Dessiner le texte sous chaque barre en fonction de sa valeur
-        //                 var dataValue = dataset.data[index];
-        //                 var text = '';
-        //                 if (dataValue > 0.2) {
-        //                     text = 'Positif';
-        //                 } else if (dataValue < -0.2) {
-        //                     text = 'Négatif';
-        //                 } else {
-        //                     text = 'Neutre';
-        //                 }
-        //                 var fontSize = 12;
-        //                 var fontStyle = 'normal';
-        //                 var fontFamily = 'Arial';
-        //                 ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
-        //                 var textWidth = ctx.measureText(text).width;
-        //                 var elementX = element._model.x;
-        //                 var elementY = element._model.y + 20; // Ajuster la valeur pour positionner le texte sous les barres
-        //                 ctx.fillStyle = 'black';
-        //                 ctx.fillText(text, elementX - textWidth / 2, elementY);
-        //             });
-        //         }
-        //     });
-        // }
-    // }
+    scales: {
+        y: {
+          beginAtZero: true, // Commence à 0
+          min: 0,           // Limite minimale
+          max: 5,           // Limite maximale
+          ticks: {
+            stepSize: 1     // Incrémentation par pas de 1
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          display: false // Désactiver la légende
+        }
+      }
+   
 };
 
 const SpinnerComponent = defineAsyncComponent(() =>
@@ -367,7 +347,7 @@ const getPlotData = async (period, rangedate, next) => {
         scores.push(_note.note);
         plotData1.labels.push(_note.date)
       });
-        scores.push(0);
+        // scores.push(0);
         // scores.push(5);
        plotData1.datasets.push({
               label: 'Note',
@@ -408,8 +388,8 @@ onBeforeMount(async () => {
         scores.push(_note.note);
         plotData1.labels.push(_note.date)
       });
-         scores.push(0);
-        scores.push(5);
+        //  scores.push(0);
+        // scores.push(5);
      plotData1.datasets.push({
               label: 'Note',
               backgroundColor: colors[2],
