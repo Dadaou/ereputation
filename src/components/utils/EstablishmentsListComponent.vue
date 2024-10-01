@@ -51,7 +51,7 @@
             </div>
         </div>
         <!-- <div v-if="company.categories" class="category_container_mobile"></div> -->
-        <div class="category_container_mobile">
+        <div class="category_container_mobile" v-if="company.reviews_count || company.categories">
             <div class="inline-flex category_mobile">
                 <span class="reviews-loader" v-if="loading"></span>
                 <div v-else v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category" class="reviews_category">
@@ -61,11 +61,9 @@
                         <span :style="{ backgroundColor: colorBetweenRedYellowGreen(cat) }" class="review__category"
                             @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
                             {{ capitalize(category) }} :
-
                             <span class="emoji ">
                                 {{ cat }}
                             </span>
-
                         </span>
 
 
@@ -355,17 +353,17 @@ const capitalize = (str) => {
 .category_mobile {
     /* width:100%; */
     align-items: center;
-    /* overflow-x: auto; */
+    overflow-x: auto;
+    min-width: 30px;
+    min-height: 25px;
     margin-right: 12px;
 }
-.reviews_category {
-    /* overflow-x: scroll; */
-}
+
 .review__category-container {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: right;
+    /* justify-content: right; */
     gap: 2px;
     cursor: pointer;
 }
@@ -377,7 +375,7 @@ const capitalize = (str) => {
     border-radius: 5px;
     font-size: 12px;
     cursor: pointer;
-    margin-right:5px;
+    margin-right: 5px;
 }
 
 
@@ -754,6 +752,7 @@ div.review-box {
 }
 
 .reviews-loader {
+    overflow: hidden !important;
     display: inline-block;
     width: 15px;
     height: 15px;
