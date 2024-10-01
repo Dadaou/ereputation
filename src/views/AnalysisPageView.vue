@@ -180,6 +180,9 @@
                 <el-tab-pane label="Alerts" name="alerts">
                     <AnalysisAlert :from="start_date" :to="end_date" />
                 </el-tab-pane>
+                <el-tab-pane label="AI summary" name="ai_summary">
+                    <AiSummary />
+                </el-tab-pane>
             </el-tabs>
         </div>
     </div>
@@ -422,6 +425,9 @@ const AnalysisCompetitors = defineAsyncComponent(() =>
 )
 const AnalysisAlert = defineAsyncComponent(() =>
     import('@Views/AlertView.vue')
+)
+const AiSummary = defineAsyncComponent(() =>
+    import('@Views/AiSummaryView.vue')
 )
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
