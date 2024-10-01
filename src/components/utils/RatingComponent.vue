@@ -31,15 +31,15 @@
     <div class="reviews__value mb-2" v-if="company.isTrends">
       
       <div v-if="selectedDate">
-        <div>Selected Date: {{ selectedDate }} , Score: {{ company.previous.note }} 
+        <div>Selected Date: {{ selectedDate }} , Score: <b>{{ company.previous.note }}</b>
         </div>
-        <div >Current Date: {{ company.curent.to }} , Score: {{ company.curent.note }}</div>
+        <div >Current Date: {{ company.curent.to }} , Score: <b>{{ company.curent.note }}</b></div>
     </div>
       <div v-else>
         
-        <div>Previous: {{ company.previous.from }} / {{ company.previous.to }} , Score: {{ company.previous.note }}
+        <div>Previous: {{ company.previous.from }} / {{ company.previous.to }} , Score: <b>{{ company.previous.note }}</b>
         </div>
-        <div >Period: {{ company.curent.from }} / {{ company.curent.to }} , Score: {{ company.curent.note }}</div>
+        <div >Period: {{ company.curent.from }} / {{ company.curent.to }} , Score: <b>{{ company.curent.note }}</b></div>
       </div>
     </div>
  <!--  <div class="ratio">{{company.ratio?`Ratio ${Number(company.ratio).toFixed(1)}%`:''}}</div> -->
