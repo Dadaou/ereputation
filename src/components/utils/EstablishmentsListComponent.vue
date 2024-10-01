@@ -359,7 +359,7 @@ const capitalize = (str) => {
     margin-right: 12px;
 }
 .reviews_category {
-    overflow-x: scroll;
+    /* overflow-x: scroll; */
 }
 .review__category-container {
     display: flex;
@@ -373,7 +373,7 @@ const capitalize = (str) => {
 .review__category {
     /* background: var(--color-danger); */
     /* color: white; */
-    padding: 5px;
+    padding: 3px;
     border-radius: 5px;
     font-size: 12px;
     cursor: pointer;
