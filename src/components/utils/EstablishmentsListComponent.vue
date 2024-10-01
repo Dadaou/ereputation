@@ -51,10 +51,10 @@
             </div>
         </div>
         <!-- <div v-if="company.categories" class="category_container_mobile"></div> -->
-        <div v-if="company.categories" class="category_container_mobile">
+        <div class="category_container_mobile">
             <div class="inline-flex category_mobile">
                 <span class="reviews-loader" v-if="loading"></span>
-                <div v-else v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category">
+                <div v-else v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category" class="reviews_category">
 
                     <div v-if="cat" class="review__category-container ml-1">
 
@@ -358,7 +358,9 @@ const capitalize = (str) => {
     /* overflow-x: auto; */
     margin-right: 12px;
 }
-
+.reviews_category {
+    /* overflow-x: scroll; */
+}
 .review__category-container {
     display: flex;
     flex-direction: row;
@@ -371,10 +373,11 @@ const capitalize = (str) => {
 .review__category {
     /* background: var(--color-danger); */
     /* color: white; */
-    font-size: 13px;
-    border-radius: 8px;
-    padding: 0 8px;
-    font-weight: 400;
+    padding: 3px;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-right:5px;
 }
 
 
