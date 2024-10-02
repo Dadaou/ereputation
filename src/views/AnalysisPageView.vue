@@ -1429,7 +1429,7 @@ p {
 .largeClass {
     width: 100% !important;
     height: auto !important;
-    margin-top: 50px;
+    /* margin-top: 50px; */
     border-radius: 10px;
 }
 .mediumClass{
