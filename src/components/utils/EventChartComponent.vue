@@ -135,20 +135,31 @@ const props = defineProps({
 const newOptions = {
     maintainAspectRatio: false,
     scales: {
+
         y: {
-          beginAtZero: true, // Commence à 0
-          min: 0,           // Limite minimale
-          max: 5,           // Limite maximale
+          beginAtZero: true,
+          suggestedMin: 0, 
+          suggestedMax: 5,
           ticks: {
-            stepSize: 1     // Incrémentation par pas de 1
+            stepSize: 1 ,
+            padding: 10
+            
+          },
+          grid: {
+            
+            drawBorder: true,
+            drawOnChartArea: true
+          
           }
-        }
-      },
-      plugins: {
-        legend: {
-          display: false // Désactiver la légende
-        }
+
+        },
+   
+    },
+    plugins: {
+      legend: {
+        display: false
       }
+    }
    
 };
 

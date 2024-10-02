@@ -112,41 +112,33 @@ const icons = inject('icons');
   const colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
 const newOptions = {
     maintainAspectRatio: false,
-   scales: {
-      y: {
-        beginAtZero: true, 
-        min: 0,           
-        max: 5,          
-        ticks: {
-          stepSize: 1     
-        }
-      }
+    scales: {
+
+        y: {
+          beginAtZero: true,
+          suggestedMin: 0, 
+          suggestedMax: 5,
+          ticks: {
+            stepSize: 1 ,
+            padding: 10
+            
+          },
+          grid: {
+            
+            drawBorder: true,
+            drawOnChartArea: true
+          
+          }
+
+        },
+   
     },
     plugins: {
-        legend: {
-          display: false // Désactiver la légende
-        },
-        // afterDraw: (chart) => {
-        //     const ctx = chart.ctx;
-        //     const xAxis = chart.scales.x;
-        //     const yBase = chart.height - 10; // Position de base pour les icônes
-        //     icons.value.forEach((weather, index) => {
-
-        //       const x = xAxis.getPixelForTick(index);
-
-        //       // Dessiner l'icône météo (code Unicode)
-        //       ctx.font = '24px Arial';
-        //       ctx.fillStyle = '#000';
-        //       ctx.textAlign = 'center';
-        //       ctx.fillText(icons.value[index]['code'], x, yBase); // Positionner l'icône
-
-        //       // Dessiner la température et l'unité de mesure sous l'icône
-        //       ctx.font = '12px Arial';
-        //       ctx.fillText(`${icons.value[index]['temperature']}${icons.value[index]['unit']}`, x, yBase + 24); // Position du texte sous l'icône
-        //     });
-        // }
+      legend: {
+        display: false
+      }
     }
-    
+   
 };
 
 const chartLoading = inject('chartLoading');
