@@ -249,20 +249,6 @@ ChartJS.register(
     Legend
 )
 
-const StaffRanking = defineAsyncComponent(() =>
-    import('@Views/StaffRankingPageView.vue')
-)
-
-const AnalysisTrend = defineAsyncComponent(() =>
-    import('@Views/TrendsView.vue')
-)
-
-const AnalysisCompetitors = defineAsyncComponent(() =>
-    import('@Views/AnalysisCompetitors.vue')
-)
-const AnalysisAlert = defineAsyncComponent(() =>
-    import('@Views/AlertView.vue')
-)
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 
