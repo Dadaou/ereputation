@@ -955,7 +955,7 @@ const widthimage = (event) => {
     }
 
     .largeClass {
-        margin-top: 60px ! important;
+        margin-top: 20px ! important;
         margin-bottom: 10px;
     }
 }

@@ -266,6 +266,7 @@ const customerTag = inject('tag');
         width: 96% !important;
         justify-content: center;
         align-items: center;
+        min-height: auto;
     }
 
     .left__side {
