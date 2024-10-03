@@ -22,10 +22,7 @@
     </div>
     <div class="society__list mt-5" v-if="establishments.length > 0">
         <suspense>
-            <template v-if="dataLoading">
-                <establishment-list-loaded-component :nb="3" />
-            </template>
-            <div v-else class="establishment-rank-view">
+            <div class="establishment-rank-view">
                 <establishments-list-component :establishments="establishments" :tag="customerTag"
                     :start_date="start_date" :end_date="end_date" :loading="loading" />
             </div>
