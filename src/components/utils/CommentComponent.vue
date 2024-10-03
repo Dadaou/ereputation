@@ -224,7 +224,7 @@
                                     buttonRef = e.currentTarget
                                     visible = true
                                 }" @mouseleave="() => visible = false"
-                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null),addExisteCategorie='yes'">
+                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null),feeling_new_category=null,addExisteCategorie='yes'">
                             </i>
                             <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
                                 popper-class="singleton-tooltip" placement="top">
@@ -287,13 +287,9 @@
                     </div>
                 </div>
                 <div class="mb-6 feedback__rating">
-                    <FeelingFeedbackComponent v-if="modal.type == 'feeling'" @updateValue="(feeling) => {
-                        feel = feeling
-                    }" />
+                    <FeelingFeedbackComponent v-if="modal.type == 'feeling'" @updateValue="(feeling)=>{updateFeelingFeedback(feeling,'feeling')}" />
 
-                    <FeelingFeedbackComponent v-if="modal.type == 'feeling_review'" @updateValue="(feeling) => {
-                        feel_review = feeling
-                    }" />
+                    <FeelingFeedbackComponent v-if="modal.type == 'feeling_review'" @updateValue="(feeling)=>{updateFeelingFeedback(feeling,'feeling_review')}" />
 
                     <el-select v-if="modal.type == 'category' || modal.type == 'delete'" v-model="category" filterable placeholder="select categories" size="large">
                         <el-option key="0" label="" value="" />
@@ -315,7 +311,7 @@
                         </template>
                       </el-popconfirm>
 
-                    <button class="btn__light_secondary" @click="updateReview">
+                    <button v-if="modal.type == 'category'" class="btn__light_secondary" @click="updateReview">
                         <span ><i class="uil uil-save"></i> {{ modal.action == "edit" ? 'Save' : 'Add' }}</span>
                        
                     </button>
@@ -401,6 +397,9 @@ const visibleCateg = ref(false)
 const visible2 = ref(false);
 const feeling_new_category = ref(null);
  const baseURL = ref(import.meta.env.VITE_APP_API_URL);
+
+
+
 
 const getFeeling = (categ,feel)=>{
 
@@ -728,6 +727,20 @@ const updateReview = async () => {
         console.log(error);
     }
 };
+
+ const updateFeelingFeedback=((_feeling,_type) => {
+        if (_type == 'feeling_review') {
+            feel_review.value=_feeling;
+        } else {
+            feel.value = _feeling;
+        }
+        console.log(_feeling)
+          showModal.value = false
+          setTimeout(() => {
+            updateReview();
+          
+        }, 1000);
+    });
 
 const handleModal = (text, action, icon, type, review,category='') => {
     showModal.value = true
