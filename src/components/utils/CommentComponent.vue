@@ -72,7 +72,7 @@
                                                     buttonRefCateg = e.currentTarget
                                                     visibleCateg = true
                                                 }" @mouseleave="() => visibleCateg = false"
-                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review,categ,),feeling_new_category='yes',feel=review.classification_feeling[categ],old_item_category=categ,feeling_categorization='yes'">
+                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review,categ),feeling_new_category='yes',feel=review.classification_feeling[categ],old_item_category=categ,feeling_categorization='yes'">
                                                 </i>
                                                 <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg" :virtual-ref="buttonRefCateg" virtual-triggering
                                                     popper-class="singleton-tooltip" placement="top">
@@ -95,7 +95,7 @@
                                     buttonRef = e.currentTarget
                                     visible = true
                                 }" @mouseleave="() => visible = false"
-                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null),addExisteCategorie='yes'">
+                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null),feeling_new_category=null,addExisteCategorie='yes'">
                             </i>
                             <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
                                 popper-class="singleton-tooltip" placement="top">
