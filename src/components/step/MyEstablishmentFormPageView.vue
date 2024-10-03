@@ -104,7 +104,7 @@
                         <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span
                             v-if="showSpinner">Loading
                             ...</span>
-                        <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} establishment</span>
+                        <span v-show="!showSpinner"><i class="uil uil-save"></i> Add establishment</span>
                     </button>
                     <button @click="resetForm"
                         class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-gray-700 rounded-lg focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-900 hover:bg-gray-800">
@@ -115,8 +115,9 @@
         </div>
     </div>
 </template>
+
 <script setup>
-import { ref, inject, watch } from 'vue';
+import { ref, inject, watch, onMounted } from 'vue';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
@@ -124,7 +125,6 @@ import { ElMessage, ElOption, ElSelect } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
-import 'element-plus/es/components/date-picker/style/css'
 import { useRouter, useRoute } from 'vue-router';
 import { competitor_countries } from '@Services/input-list.js';
 
@@ -134,13 +134,10 @@ const previewImage = ref(null);
 const imageInputHover = ref(false);
 const data = ref({});
 const showSpinner = ref(false);
-const type = ref('Add');
 const userStore = useUserStore();
-const establishment_to_update = inject('establishment_to_update');
 const imgHasChanged = ref(false);
-const cleanEstablishmentForm = inject('clearEstablishmentForm');
-const categories = inject('allUniverses');
-
+const categories = ref([]);
+const currentStep = ref(1);
 
 const onDragOver = (event) => {
     imageInputHover.value = true;
@@ -161,11 +158,9 @@ const onDrop = (event) => {
     }
 };
 
-
 const isImageFile = (file) => {
     return ['image/png', 'image/jpeg', 'image/gif'].includes(file.type);
 };
-
 
 const updateImageFromFile = (file) => {
     if (isImageFile(file)) {
@@ -181,18 +176,10 @@ const updateImageFromFile = (file) => {
     }
 };
 
-
 const resetForm = () => {
     data.value = {};
     previewImage.value = null;
-    type.value = 'Add';
 }
-
-const selectCountry = ref(null)
-
-watch(cleanEstablishmentForm, () => {
-    resetForm();
-})
 
 const updateImage = (e) => {
     const image = e.target.files[0];
@@ -219,12 +206,31 @@ const selectImg = () => {
     document.getElementById('imgInput').click();
 }
 
+const loadUniverseList = async () => {
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`/customer/universe/list`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            categories.value = response.data;
+            console.log(categories.value)
+        } else {
+            console.error('Error fetching universe:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+onMounted(() => {
+    loadUniverseList();
+});
+
 const submit = async () => {
-
     const form = document.querySelector('#establishmentForm');
-
     const formData = new FormData(form);
-
     const establishmentData = { ...data.value, customer: `${userStore.user.customer.tag}` };
 
     if (establishmentData.universe_id
@@ -235,19 +241,12 @@ const submit = async () => {
         && establishmentData.name
         && establishmentData.address1) {
 
-        // formData.append('category', establishmentData.category);
         formData.append('universe', establishmentData.universe_id);
         formData.append('country', establishmentData.country);
         formData.append('customer', `${userStore.user.customer.tag}`)
         showSpinner.value = true;
 
         if (!imgHasChanged.value) formData.delete('file');
-
-        if (type.value === 'Edit') {
-            if (establishmentData.uri) {
-                formData.append('id', establishmentData.uri.split('/').pop());
-            }
-        }
 
         formData.delete('media');
 
@@ -265,21 +264,15 @@ const submit = async () => {
             });
             data.value = {}
             showSpinner.value = false;
-        }
-
-        if (response && response.status == 200) {
-            loadData(response.data, 'edit')
-            ElMessage({
-                message: `Establishment updated successfully.`,
-                type: 'success',
-            });
-            data.value = {}
-            showSpinner.value = false;
+            navigateToStep(2);
         }
     } else {
-        ElMessage.error(`Please, provide all required information to add / update an establishment`);
+        ElMessage.error(`Please, provide all required information to add an establishment`);
     }
+};
 
+const navigateToStep = (step) => {
+    currentStep.value = step;
 };
 
 const loadData = (establishment, type) => {
@@ -288,29 +281,7 @@ const loadData = (establishment, type) => {
     if (type == 'new') {
         userStore.user.customer.establishments.push(establishment);
     }
-    if (type == 'edit') {
-        userStore.user.customer.establishments = userStore.user.customer.establishments.map((x) => {
-            if (x.id == establishment.id) {
-                return establishment;
-            } else {
-                return x;
-            }
-        });
-    }
-    router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'establishments_list' } });
 }
-
-watch(establishment_to_update, () => {
-
-    if (establishment_to_update.value != null) {
-        data.value = establishment_to_update.value;
-        data.value['address1'] = establishment_to_update.value.address || "";
-        previewImage.value = establishment_to_update.value.media || "";
-        type.value = 'Edit';
-
-    }
-});
-
 </script>
 <style scoped>
 .title {
