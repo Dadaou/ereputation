@@ -524,7 +524,8 @@ const ratingChart = ref({
     labels: [],
     datasets: []
 })
-const colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
+// const colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
+const colors = ['#013B54', '#018BAD','#DA9A55','#4EA9CC', '#01DFFF', '#7FA8BB', '#B3DCE7',  '#01BDDE', '#573427', '#915138', '#E7CDB7', '#91CBDE','#FEFCF5', '#C7F5FA', '#01254F', '#014A93']
 
 const confidenceChart = ref({
     labels: [],
