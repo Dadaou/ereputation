@@ -12,7 +12,8 @@
       <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Source" prop="source" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Category" prop="category" style="width: 10%; min-width: 200px;" />
-      <el-table-column label="Url" prop="url" style="width: 25%; min-width: 200px;" />
+      <el-table-column label="Url" prop="url" style="width: 25%; min-width: 200px;"/>
+        }
       <el-table-column label="Gate" prop="section" style="width: 25%; min-width: 200px;" >
       
       </el-table-column>
@@ -66,7 +67,11 @@ const search = ref('')
 const linksLoading = ref(false);
 
 const filterTableData = computed (() => {
-  let filteredData = tableData.value;
+  let filteredData =[];
+   tableData.value.forEach((_val)=>{
+      _val.url=_val.url.length > 20 ? _val.url.substring(0, 20) + '...' : _val.url;
+      filteredData.push(_val);
+   })
   filteredData = filteredData.filter((data) => {
 
     if(data.section == 'INFOS' || data.section == 'OFFERS' || data.section == 'MENUS' || data.section == 'REVIEWS' || data.section == 'FOLLOW US' || data.section == '' || data.section == null){

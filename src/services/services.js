@@ -398,6 +398,13 @@ const hashString = (inputString) => {
   return hash
 }
 
+const truncateText=(text, length)=> {
+    if (text.length > length) {
+      return text.substring(0, length) + '...'; 
+    } 
+    return text;
+  }
+
 const generateColor = (text) => {
   const inputString = text
   const hash = hashString(inputString)
@@ -408,6 +415,8 @@ const generateColor = (text) => {
 
   return `rgb(${red}, ${green}, ${blue})`
 }
+
+
 
 export default {
   setToken,
