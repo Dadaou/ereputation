@@ -372,6 +372,10 @@ const props = defineProps({
     categories: {
         type: Array,
         default: []
+    },
+    via: {
+        type: String,
+        default:"review"
     }
 });
 
@@ -523,7 +527,7 @@ const calculFeelingScore = (_reviews,_selectedReview,_feeling,type) =>{
     let kFeeling=0;
 
 
-    console.log(_reviews)
+ 
     _reviews.forEach(_review =>{
 
         _review.classifications.forEach(_classification =>{
@@ -531,9 +535,13 @@ const calculFeelingScore = (_reviews,_selectedReview,_feeling,type) =>{
             if (_classification.feeling != '' && _classification.feeling != null && 
                 _classification.feeling != 'null' && _classification.classification_confidence_feeling) {
 
-                    if (_classification.id == _selectedReview.id && type == 'category') {
+                    if (_classification.id == _selectedReview.id && type == 'category' && old_item_category.value == _classification.category) {
                         _classification.feeling = _feeling;
                         _classification.classification_confidence_feeling = 1;
+                        console.log(_classification)
+                          console.log(_review.classification_feeling)
+                         
+
                     }
 
                     if (_classification.feeling == 'positive') {
@@ -558,6 +566,7 @@ const calculFeelingScore = (_reviews,_selectedReview,_feeling,type) =>{
     });
 
      if (props.via != 'analysis') {
+        console.log('compte review',props.via)
           _reviews.forEach(_review =>{
 
             if (_review.feeling != '' && _review.feeling != null && 
