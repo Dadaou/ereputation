@@ -13,7 +13,7 @@
     font-weight: 600;
 }
 .container {
-    margin-top: 2.5rem;
+    margin-top: 10rem;
 }
 .container h1 {
     margin-top: 0.8rem;

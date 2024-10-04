@@ -4,167 +4,168 @@
         <h1 class="title">My public platforms</h1>
         <h1>Let's start by setting up your first establishment </h1>
         <div class="table__container mt-4">
-            <form id="establishmentForm" @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4">
-                <div class="grid gap-6 mb-6 md:grid-cols-5">
-                    <div class="col-span-2">
-                        <label for="gps" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Google link
-                        </label>
-                        <input type="text" id="website" name="website" v-model="data.website"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+            <div>
+                <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
+                    <div class="grid gap-6 mb-6 md:grid-cols-2">
+                        <div>
+                            <label for="google"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Google</label>
+                            <input type="text" id="google" v-model="google"
+                                :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                        </div>
+                        <div>
+                            <label for="tripadvisor"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tripadvisor</label>
+                            <input type="text" id="tripadvisor" v-model="tripadvisor"
+                                :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                        </div>
+                        <div>
+                            <label for="providers"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Providers</label>
+                            <el-select id="providers" v-model="provider" placeholder="Choose provider" size="large"
+                                filterable clearable>
+                                <el-option v-for="item in dataPlatforms" :key="item.uri" :label="item.name"
+                                    :value="`${item.uri}${item.url}`" />
+                            </el-select>
+                        </div>
+                        <div>
+                            <label for="socials"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Social</label>
+                            <el-select id="socials" v-model="social" placeholder="Choose social" size="large" filterable
+                                clearable>
+                                <el-option v-for="item in dataSocials" :key="item.uri" :label="item.name"
+                                    :value="`${item.uri}${item.url}`" />
+                            </el-select>
+                        </div>
+
                     </div>
-                    <div class="col-span-2">
-                        <label for="gps" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tripadvisor link
-                        </label>
-                        <input type="text" id="website" name="website" v-model="data.website"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                    <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
+                        <button v-if="!isHashtag" type="submit" :disabled="!isValidLink"
+                            :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                            <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span
+                                v-if="showSpinner">Loading
+                                ...</span>
+                            <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
+                        </button>
+                        <button v-else type="submit" :disabled="!isValidHashtag"
+                            :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidHashtag ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                            <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span
+                                v-if="showSpinner">Loading
+                                ...</span>
+                            <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
+                        </button>
                     </div>
-                </div>
-                <div class="grid gap-6 mb-6 md:grid-cols-4"></div>
-                <div
-                    class="flex flex-wrap gap-3 items-center justify-between py-2 border-t border-b dark:border-gray-600">
-                    <button type="submit"
-                        class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
-                        <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span
-                            v-if="showSpinner">Loading
-                            ...</span>
-                        <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} establishment</span>
-                    </button>
-                    <button @click="resetForm"
-                        class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-gray-700 rounded-lg focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-900 hover:bg-gray-800">
-                        <span><i class="uil uil-times"></i> Clear </span>
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </template>
 <script setup>
-import { ref, inject, watch } from 'vue';
-import services from '@Services/services.js';
-import { useUserStore } from "@Stores/user.js";
+import { ref, onBeforeMount, watch } from 'vue'
+import { ElMessage, ElOption, ElSelect } from 'element-plus'
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
-import { ElMessage } from 'element-plus';
-import 'element-plus/es/components/message/style/css'
-import 'element-plus/es/components/option/style/css'
-import 'element-plus/es/components/select/style/css'
-import 'element-plus/es/components/date-picker/style/css'
-import { useRouter, useRoute } from 'vue-router';
+import services from '@Services/services.js';
+import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter();
 const route = useRoute();
-const previewImage = ref(null);
-const data = ref({});
+
+const emit = defineEmits(['reload']);
+const showModal = ref(false);
 const showSpinner = ref(false);
-const type = ref('Add');
-const userStore = useUserStore();
-const establishment_to_update = inject('establishment_to_update');
-const imgHasChanged = ref(false);
-const cleanEstablishmentForm = inject('clearEstablishmentForm');
-
-
-const category = ref('Platform')
-
-const resetForm = () => {
-    data.value = {};
-    previewImage.value = null;
-    type.value = 'Add';
-}
-
-watch(cleanEstablishmentForm, () => {
-    resetForm();
-})
+const provider = ref(null);
+const section = ref('');
+const caption = ref('');
+const link = ref('');
+const isValidLink = ref(true);
+const dataSocials = ref([]);
+const dataPlatforms = ref([]);
 
 const submit = async () => {
+    showSpinner.value = true;
 
-    const form = document.querySelector('#establishmentForm');
+    let urlObject = null;
+    if (provider.value) {
+        urlObject = splitUriAndUrl(provider.value);
+    }
 
-    const formData = new FormData(form);
+    const data = {
+        value1: urlObject ? getValueUrl(link.value, urlObject.url) : link.value,
+        provider: urlObject ? urlObject.uri : null,
+        enable: true,
+        section: section.value,
+        caption: caption.value,
+    };
 
-    const establishmentData = { ...data.value, customer: `${userStore.user.customer.tag}` };
-
-    if (establishmentData.universe_id
-        && establishmentData.country
-        && establishmentData.city
-        && establishmentData.zipcode
-        && establishmentData.universe_id
-        && establishmentData.name
-        && establishmentData.address1) {
-
-        formData.append('universe', establishmentData.universe_id);
-        formData.append('country', establishmentData.country);
-        formData.append('customer', `${userStore.user.customer.tag}`)
-        showSpinner.value = true;
-
-        if (!imgHasChanged.value) formData.delete('file');
-
-        if (type.value === 'Edit') {
-            if (establishmentData.uri) {
-                formData.append('id', establishmentData.uri.split('/').pop());
-            }
-        }
-
-        formData.delete('media');
-
-        const response = await new Promise((resolve, reject) => {
-            services.postFormData('establishments/front_post', formData, (response) => {
+    try {
+        const response = await new Promise((resolve) => {
+            services.createRecord('settings', data, (response) => {
                 resolve(response);
             });
         });
 
-        if (response && response.status == 201) {
-            loadData(response.data, 'new')
+        if (response.status == 201) {
             ElMessage({
-                message: `Establishment added successfully.`,
+                message: `provider URL added successfully`,
                 type: 'success',
             });
-            data.value = {}
             showSpinner.value = false;
+            resetValue();
+            emit('reload');
         }
-
-        if (response && response.status == 200) {
-            loadData(response.data, 'edit')
-            ElMessage({
-                message: `Establishment updated successfully.`,
-                type: 'success',
-            });
-            data.value = {}
-            showSpinner.value = false;
-        }
-    } else {
-        ElMessage.error(`Please, provide all required information to add / update an establishment`);
+    } catch (error) {
+        console.log(error);
     }
 
+    router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'urls_list' } });
 };
 
-const loadData = (establishment, type) => {
-    establishment.url_source = establishment.media
+watch([provider, link], () => {
+    let urlTemplate;
 
-    if (type == 'new') {
-        userStore.user.customer.establishments.push(establishment);
+    if (provider.value !== null && link.value !== '') {
+        urlTemplate = splitUriAndUrl(provider.value).url;
+        if (urlTemplate) isValidLink.value = isValidUrl(link.value, urlTemplate);
+    } else {
+        isValidLink.value = true;
     }
-    if (type == 'edit') {
-        userStore.user.customer.establishments = userStore.user.customer.establishments.map((x) => {
-            if (x.id == establishment.id) {
-                return establishment;
-            } else {
-                return x;
-            }
+});
+
+
+const resetValue = () => {
+    provider.value = null;
+    isValidLink.value = true;
+    link.value = '';
+    section.value = '';
+    caption.value = '';
+    showModal.value = false;
+};
+
+
+onBeforeMount(async () => {
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`providers`, (response) => {
+
+                resolve(response);
+            });
         });
-    }
-    router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'establishments_list' } });
-}
 
-watch(establishment_to_update, () => {
-    if (establishment_to_update.value != null) {
-        data.value = establishment_to_update.value;
-        data.value['address1'] = establishment_to_update.value.address || "";
-        previewImage.value = establishment_to_update.value.media || "";
-        type.value = 'Edit';
-
+        if (response.status === 200) {
+            const dataSocial = response.data['hydra:member'];
+            dataSocials.value = dataSocial.filter(item => item.category === 'Social');
+            const dataPlatform = response.data['hydra:member'];
+            dataPlatforms.value = dataPlatform.filter(item => item.category === 'Platform');
+        } else {
+            console.error('Error fetching providers:', response);
+        }
+    } catch (error) {
+        console.error('Error in onBeforeMount:', error);
     }
 });
 
 </script>
+
 <style scoped>
 .title {
     margin-bottom: 1.5rem;

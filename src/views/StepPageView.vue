@@ -1,6 +1,6 @@
 <template>
     <div class="main__container">
-        <div class="step-progress">
+        <div v-if="currentStep < steps.length" class="step-progress">
             <div v-for="(step, index) in steps" :key="index" class="step" @click="navigateToStep(index + 1)">
                 <div :class="['step-number', { 'active-step': index + 1 === currentStep }]">
                     {{ index + 1 }}
@@ -9,9 +9,11 @@
                     :class="{ 'completed': index + 1 < currentStep }"></div>
             </div>
         </div>
+
         <component :is="currentComponent"></component>
     </div>
 </template>
+
 
 <script setup>
 import { ref, computed } from 'vue';
@@ -19,7 +21,7 @@ import Myestablichment from '../components/step/MyEstablishmentFormPageView.vue'
 import Mypublicform from '../components/step/MyPublicFormPageView.vue';
 import Platformready from '../components/step/PlatformReadyPageView.vue';
 
-const steps = ref([1, 2]);
+const steps = ref([1, 2, 3]);
 const currentStep = ref(1);
 
 const navigateToStep = (step) => {
