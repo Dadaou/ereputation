@@ -1,7 +1,8 @@
 <template>
     <div v-if="summaries.length > 0">
         <div v-for="summary in summaries" :key="summary.id" class="summary-card">
-            <h2>{{ summary.category }} - {{ summary.establishment_name }}</h2>
+            <h2 v-if="summary.created_at">Summary on  {{ moment(summary.created_at).format('D MMMM YYYY') }} - {{ summary.establishment_name }}</h2>
+            <h2 v-else>Summary - {{ summary.establishment_name }}</h2>
             <p v-html="formatOverview(summary.overview)"></p>
         </div>
     </div>
@@ -14,10 +15,12 @@
 import { ref, onMounted } from 'vue';
 import services from '@Services/services.js';
 import { useRoute } from "vue-router";
+import moment from 'moment';
 
 const route = useRoute();
 const tag = route.params.id;
 const summaries = ref([]);
+
 
 
 const loadAisummary = async (tag) => {
