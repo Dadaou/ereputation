@@ -2,6 +2,9 @@
     <div class="left__side">
         <div id="ttv__container">
             <el-tabs v-model="activeName" type="card" class="demo-tabs">
+                <el-tab-pane label="AI summary" name="ai_summary">
+                    <AiSummary />
+                </el-tab-pane>
                 <el-tab-pane label="Categorization" name="categorization">
 
                     <AnalysisCategory text="Your customers appreciated your establishment for the following services"
@@ -179,9 +182,6 @@
                 </el-tab-pane>
                 <el-tab-pane label="Alerts" name="alerts">
                     <AnalysisAlert :from="start_date" :to="end_date" />
-                </el-tab-pane>
-                <el-tab-pane label="AI summary" name="ai_summary">
-                    <AiSummary />
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -576,7 +576,7 @@ const ratingsCondition4 = computed(() => {
 })
 const starParams = route.query.star;
 
-const activeName = ref('categorization');
+const activeName = ref('ai_summary');
 const newOptions = {
     maintainAspectRatio: false,
     scales: {
