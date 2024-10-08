@@ -187,11 +187,13 @@
                         :value="item.category" @click="handleCategoryDropdown('other')" />
                 </el-select>
             </div>
-
+              <div class="date__filter">
+                 <div class="text-sm title">Filter by plateform</div>
                <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform"
             placeholder="Select a website" :data="websites" @submit="(website) => {
                 selectedWebsites = website
             }" :default="websites[0]" />
+              </div>
 
             <div class="date__filter">
                 <div class="text-sm title">Select a date range</div>
