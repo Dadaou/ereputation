@@ -853,7 +853,7 @@ const transformData = (chartData) => {
     ratings.value = []
     let label_category=[];
      noScore.value=false;
-   
+ 
     
     datasets.forEach((category, index) => {
         const { avg_score, feeling, scores, data, label } = category
@@ -864,13 +864,17 @@ const transformData = (chartData) => {
       
        let categoryShow=false;
        let addInChart = false;
+       let reviewHaveSentiment = false;
+     
        categorizations.forEach((_categorization)=>{
 
-            if (_categorization.category == label) {
+            if (_categorization.category == label && _categorization.classification_feeling[_categorization.category] && _categorization.classification_feeling[_categorization.category] != null) {
                 categoryShow = true;
+               reviewHaveSentiment = true;
+
             }
 
-            if (_categorization.category == label && _categorization.feeling) {
+            if (_categorization.category == label && _categorization.classification_feeling[_categorization.category] && _categorization.classification_feeling[_categorization.category] != null && _categorization.feeling) {
                 addInChart = true;
              
             }
@@ -883,7 +887,7 @@ const transformData = (chartData) => {
         }
 
 
-        if (categoryShow == true) {
+        if (categoryShow == true && reviewHaveSentiment == true) {
              
             if (addInChart == true) {
                 plotData1.datasets.push({
