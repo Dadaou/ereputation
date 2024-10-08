@@ -117,7 +117,7 @@
 </template>
 
 <script setup>
-import { ref, inject, watch, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
@@ -125,11 +125,9 @@ import { ElMessage, ElOption, ElSelect } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
-import { useRouter, useRoute } from 'vue-router';
 import { competitor_countries } from '@Services/input-list.js';
 
-const router = useRouter();
-const route = useRoute();
+const emit = defineEmits(['changeStep']);
 const previewImage = ref(null);
 const imageInputHover = ref(false);
 const data = ref({});
@@ -137,7 +135,6 @@ const showSpinner = ref(false);
 const userStore = useUserStore();
 const imgHasChanged = ref(false);
 const categories = ref([]);
-const currentStep = ref(1);
 
 const onDragOver = (event) => {
     imageInputHover.value = true;
@@ -215,7 +212,6 @@ const loadUniverseList = async () => {
         });
         if (response.status === 200) {
             categories.value = response.data;
-            console.log(categories.value)
         } else {
             console.error('Error fetching universe:', response);
         }
@@ -227,6 +223,7 @@ const loadUniverseList = async () => {
 onMounted(() => {
     loadUniverseList();
 });
+
 
 const submit = async () => {
     const form = document.querySelector('#establishmentForm');
@@ -264,15 +261,18 @@ const submit = async () => {
             });
             data.value = {}
             showSpinner.value = false;
-            navigateToStep(2);
+            const establishmentName = response.data.name;
+            const competitorId = response.data.id;
+
+            goToNextStep(establishmentName, competitorId);
         }
     } else {
         ElMessage.error(`Please, provide all required information to add an establishment`);
     }
 };
 
-const navigateToStep = (step) => {
-    currentStep.value = step;
+const goToNextStep = (establishmentName, competitorId) => {
+    emit('changeStep', { step: 2, establishmentName, competitorId });
 };
 
 const loadData = (establishment, type) => {

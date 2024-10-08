@@ -1,7 +1,7 @@
 <template>
     <div class="main__container">
         <div v-if="currentStep < steps.length" class="step-progress">
-            <div v-for="(step, index) in steps" :key="index" class="step" @click="navigateToStep(index + 1)">
+            <div v-for="(step, index) in steps" :key="index" class="step">
                 <div :class="['step-number', { 'active-step': index + 1 === currentStep }]">
                     {{ index + 1 }}
                 </div>
@@ -10,10 +10,9 @@
             </div>
         </div>
 
-        <component :is="currentComponent"></component>
+        <component :is="currentComponent" @changeStep="navigateToStep" :establishmentName="establishmentName" :competitorId="competitorId"></component>
     </div>
 </template>
-
 
 <script setup>
 import { ref, computed } from 'vue';
@@ -24,8 +23,14 @@ import Platformready from '../components/step/PlatformReadyPageView.vue';
 const steps = ref([1, 2, 3]);
 const currentStep = ref(1);
 
-const navigateToStep = (step) => {
+
+const establishmentName = ref('');
+const competitorId = ref('');
+
+const navigateToStep = ({ step, establishmentName: name, competitorId: id }) => {
     currentStep.value = step;
+    establishmentName.value = name;
+    competitorId.value = id;
 };
 
 const currentComponent = computed(() => {
