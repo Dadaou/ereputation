@@ -89,6 +89,14 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                     </div>
                     <div>
+                        <label for="language" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Language
+                            <span>*</span></label>
+                        <el-select v-model="data.language" placeholder="" size="large" filterable ref="selectLanguage">
+                            <el-option v-for="(language, index) in ['fr','en','es']" :key="index" :label="language"
+                                :value="language" />
+                        </el-select>
+                    </div>
+                    <div>
                         <label for="positionning"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">positionning
                         </label>
@@ -135,6 +143,7 @@ const showSpinner = ref(false);
 const userStore = useUserStore();
 const imgHasChanged = ref(false);
 const categories = ref([]);
+const selectLanguage = ref(null);
 
 const onDragOver = (event) => {
     imageInputHover.value = true;
@@ -233,6 +242,7 @@ const submit = async () => {
     if (establishmentData.universe_id
         && establishmentData.country
         && establishmentData.city
+        && establishmentData.language
         && establishmentData.zipcode
         && establishmentData.universe_id
         && establishmentData.name
@@ -240,6 +250,7 @@ const submit = async () => {
 
         formData.append('universe', establishmentData.universe_id);
         formData.append('country', establishmentData.country);
+        formData.append('language', establishmentData.language);
         formData.append('customer', `${userStore.user.customer.tag}`)
         showSpinner.value = true;
 
