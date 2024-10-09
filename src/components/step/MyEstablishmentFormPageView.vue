@@ -114,10 +114,6 @@
                             ...</span>
                         <span v-show="!showSpinner"><i class="uil uil-save"></i> Add establishment</span>
                     </button>
-                    <button @click="resetForm"
-                        class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-gray-700 rounded-lg focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-900 hover:bg-gray-800">
-                        <span><i class="uil uil-times"></i> Clear </span>
-                    </button>
                 </div>
             </form>
         </div>
@@ -182,10 +178,6 @@ const updateImageFromFile = (file) => {
     }
 };
 
-const resetForm = () => {
-    data.value = {};
-    previewImage.value = null;
-}
 
 const updateImage = (e) => {
     const image = e.target.files[0];
