@@ -12,127 +12,129 @@
                         <div>
                             <label for="google"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Google
-                                <span>*</span></label>
+                            </label>
                             <p class="text-gray-900 text-sm">Url must start with
                                 https://www.google.com/search?q={value1}</p>
                             <p v-if="!isValidGoogle && urlGoogle !== ''" class="text-red-500 text-sm">Invalid Google URL
                                 format</p>
-                            <input type="text" id="urlGoogle" v-model="urlGoogle" required
+                            <input type="text" id="urlGoogle" v-model="urlGoogle"
                                 :class="['bg-gray-50 border text-sm w-full p-2', isValidGoogle ? 'border-gray-300' : 'border-red-500']">
                         </div>
 
                         <div>
                             <label for="tripadvisor"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tripadvisor
-                                <span>*</span></label>
+                            </label>
                             <p class="text-gray-900 text-sm">Url must start with https://www.tripadvisor.com/{value1}
                             </p>
                             <p v-if="!isValidTripadvisor && urlTripadvisor !== ''" class="text-red-500 text-sm">Invalid
                                 Tripadvisor URL format</p>
-                            <input type="text" id="urlTripadvisor" v-model="urlTripadvisor" required
+                            <input type="text" id="urlTripadvisor" v-model="urlTripadvisor"
                                 :class="['bg-gray-50 border text-sm w-full p-2', isValidTripadvisor ? 'border-gray-300' : 'border-red-500']">
                         </div>
                         <div>
                             <label for="facebook"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Facebook
-                                <span>*</span></label>
+                            </label>
                             <p class="text-gray-900 text-sm">Url must start with https://www.facebook.com/{value1}
                             </p>
                             <p v-if="!isValidFacebook && urlFacebook !== ''" class="text-red-500 text-sm">Invalid
                                 Facebook URL format</p>
-                            <input type="text" id="urlFacebook" v-model="urlFacebook" required
+                            <input type="text" id="urlFacebook" v-model="urlFacebook"
                                 :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
                         </div>
                         <div>
                             <label for="instagram"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Instagram
-                                <span>*</span></label>
+                            </label>
                             <p class="text-gray-900 text-sm">Url must start with https://www.instagram.com/{value1}
                             </p>
                             <p v-if="!isValidInstagram && urlInstagram !== ''" class="text-red-500 text-sm">Invalid
                                 Instagram URL format</p>
-                            <input type="text" id="urlInstagram" v-model="urlInstagram" required
+                            <input type="text" id="urlInstagram" v-model="urlInstagram"
                                 :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
                         </div>
                         <div>
                             <label for="twitter"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Twitter
-                                <span>*</span></label>
+                            </label>
                             <p class="text-gray-900 text-sm">Url must start with https://x.com/{value1}
                             </p>
                             <p v-if="!isValidTwitter && urlTwitter !== ''" class="text-red-500 text-sm">Invalid
                                 Twitter URL format</p>
-                            <input type="text" id="urlTwitter" v-model="urlTwitter" required
+                            <input type="text" id="urlTwitter" v-model="urlTwitter"
                                 :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
                         </div>
+
                         <div></div>
                         <div>
-                            <span @click="togglePlatformVisibility" class="button__plus">
+                            <span @click="addNewPlatform" class="button__plus">
                                 Platform +
                             </span>
-                            <span @click="toogleSocialVisible" class="button__plus">
+                            <span @click="addNewSocial" class="button__plus">
                                 Social +
                             </span>
                         </div>
                         <div></div>
-                        <div v-if="isPlatformVisible">
-                            <label for="platforms"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Platform</label>
-                            <el-select id="platforms" v-model="platform" placeholder="Choose platform" size="large"
-                                filterable clearable @change="handleChangePlatform">
-                                <el-option v-for="item in dataPlatforms" :key="item.uri" :label="item.name"
-                                    :value="`${item.id}`" />
-                            </el-select>
-                        </div>
+                        <div v-for="(entry, index) in platformEntries" :key="index">
+                            <div>
+                                <div class="content__label">
+                                    <label for="platforms"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Platform</label>
+                                    <p class="button__close" @click="removePlatform(index)">x</p>
+                                </div>
+                                <el-select id="platforms" v-model="entry.platform" placeholder="Choose platform"
+                                    size="large" filterable clearable
+                                    @change="value => handleChangePlatform(value, index)">
+                                    <el-option v-for="item in dataPlatforms" :key="item.uri" :label="item.name"
+                                        :value="`${item.id}`" />
+                                </el-select>
+                            </div>
 
-                        <div v-if="isSocialVisible">
-                            <label for="socials"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Social</label>
-                            <el-select id="socials" v-model="social" placeholder="Choose social" size="large" filterable
-                                clearable @change="handleChangeSocial">
-                                <el-option v-for="item in dataSocials" :key="item.uri" :label="item.name"
-                                    :value="`${item.id}`" />
-                            </el-select>
-                        </div>
+                            <label for="platformLink"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link platform
+                                <span>*</span></label>
 
-                        <div v-if="isPlatformVisible">
-                            <label for="platform"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link
-                                platform <span>*</span></label>
-                            <p v-if="platform" class="text-gray-900 text-sm">Url must start with {{
-                                selectedPlatform.url }}</p>
-                            <p v-if="!isValidPlatform" class="text-red-500 text-sm">Invalid URL format</p>
-                            <input type="text" id="platformLink" v-model="platformLink"
+                            <p v-if="entry.platform" class="text-gray-900 text-sm">Url must start with {{
+                                entry.selectedPlatform.url }}</p>
+                            <p v-if="entry.platformLink && !entry.isValidPlatform" class="text-red-500 text-sm">Invalid
+                                URL format</p>
+                            <input type="text" id="platformLink" v-model="entry.platformLink"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
 
-                        <div v-if="isSocialVisible">
+                        <div v-for="(entry, index) in socialEntries" :key="index">
+                            <div>
+                                <div class="content__label">
+                                    <label for="socials"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Social</label>
+                                    <p class="button__close" @click="removeSocial(index)">x</p>
+                                </div>
+                                <el-select id="socials" v-model="entry.social" placeholder="Choose social" size="large"
+                                    filterable clearable @change="value => handleChangeSocial(value, index)">
+                                    <el-option v-for="item in dataSocials" :key="item.uri" :label="item.name"
+                                        :value="`${item.id}`" />
+                                </el-select>
+                            </div>
                             <label for="socialLink"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link social
-                                <span>*</span></label>
-                            <p v-if="social" class="text-gray-900 text-sm">Url must start with {{
-                                selectedSocial.url }}</p>
-                            <p v-if="!isValidSocial" class="text-red-500 text-sm">Invalid URL format</p>
-                            <input type="text" id="socialLink" v-model="socialLink"
+                                <span>*</span>
+                            </label>
+                            <p v-if="entry.social" class="text-gray-900 text-sm">Url must start with {{
+                                entry.selectedSocial.url }}</p>
+                            <p v-if="entry.socialLink && !entry.isValidSocial" class="text-red-500 text-sm">Invalid
+                                URL format</p>
+                            <input type="text" id="socialLink" v-model="entry.socialLink"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
-
                     </div>
+
                     <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
-                        <button v-if="!isHashtag" type="submit"
-                            :disabled="!urlGoogle && !urlTripadvisor && !urlFacebook && !urlInstagram && !urlTwitter"
-                            :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidPlatform ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
-                            <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span
-                                v-if="showSpinner">Loading
-                                ...</span>
-                            <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
-                        </button>
-                        <button v-else type="submit" :disabled="!isValidHashtag"
-                            :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidHashtag ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
-                            <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span
-                                v-if="showSpinner">Loading
-                                ...</span>
-                            <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
+                        <button type="submit"
+                            :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800']">
+                            <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" />
+                            <span v-if="showSpinner">Loading...</span>
+                            <span v-show="!showSpinner"><i class="uil uil-save"></i> Submit</span>
                         </button>
                     </div>
                 </form>
@@ -152,19 +154,15 @@ const props = defineProps({
     competitorId: String
 });
 
+const emit = defineEmits(['changeStep']);
+
+const goToNextStep = (establishmentName, competitorId) => {
+    emit('changeStep', { step: 3, establishmentName, competitorId });
+};
+
 const showSpinner = ref(false);
 const dataSocials = ref([]);
 const dataPlatforms = ref([]);
-
-const platform = ref(null);
-const platformLink = ref('');
-const isValidPlatform = ref(true);
-const selectedPlatform = ref(null);
-
-const socialLink = ref('');
-const social = ref('');
-const isValidSocial = ref(true);
-const selectedSocial = ref(null);
 
 const urlGoogle = ref('');
 const urlTripadvisor = ref('');
@@ -178,21 +176,40 @@ const isValidFacebook = ref(true);
 const isValidInstagram = ref(true);
 const isValidTwitter = ref(true);
 
-const isPlatformVisible = ref(false);
-const isSocialVisible = ref(false);
+const platform = ref(null);
+const platformLink = ref('');
+const isValidPlatform = ref(true);
+const platformEntries = ref([]);
 
-const emit = defineEmits(['changeStep']);
+const socialLink = ref('');
+const social = ref('');
+const isValidSocial = ref(true);
+const socialEntries = ref([]);
 
-const goToNextStep = (establishmentName, competitorId) => {
-    emit('changeStep', { step: 3, establishmentName, competitorId });
-};
-
-function togglePlatformVisibility() {
-    isPlatformVisible.value = !isPlatformVisible.value;
+function addNewPlatform() {
+    platformEntries.value.push({
+        platform: null,
+        platformLink: '',
+        isValidPlatform: true,
+        selectedPlatform: null
+    });
 }
 
-function toogleSocialVisible() {
-    isSocialVisible.value = !isSocialVisible.value;
+function removePlatform(index) {
+    platformEntries.value.splice(index, 1);
+}
+
+function addNewSocial() {
+    socialEntries.value.push({
+        social: null,
+        socialLink: '',
+        isValidSocial: true,
+        selectedSocial: null
+    })
+}
+
+function removeSocial(index) {
+    socialEntries.value.splice(index, 1);
 }
 
 const validateGoogleUrl = () => {
@@ -228,69 +245,99 @@ watch(urlInstagram, validateInstagramUrl);
 watch(urlTwitter, validateTwitterUrl);
 
 
-const handleChangePlatform = (value) => {
-    const selected = dataPlatforms.value.filter(item => parseInt(item.id) === parseInt(value));
+const handleChangePlatform = (value, index) => {
+    const selected = dataPlatforms.value.find(item => item.id.toString() === value.toString());
+    console.log('Available Platforms:', dataPlatforms.value);
+    console.log('Selected ID:', value);
+    console.log('Selected Platform:', selected);
+
     if (selected) {
-        selectedPlatform.value = {
-            id: selected[0].id,
-            url: selected[0].url,
+        platformEntries.value[index].selectedPlatform = {
+            id: selected.id,
+            url: selected.url,
         };
     } else {
-        console.log('No matching platform found.');
+        platformEntries.value[index].selectedPlatform = { url: '' };
+        console.error('No matching platform found for ID:', value);
     }
+    validatePlatformUrl(index);
 }
 
-const handleChangeSocial = (value) => {
-    const selected = dataSocials.value.filter(item => parseInt(item.id) === parseInt(value));
+const handleChangeSocial = (value, index) => {
+    const selected = dataSocials.value.find(item => item.id.toString() === value.toString());
+    console.log('Available social:', dataSocials.value);
+    console.log('Selected ID:', value);
+    console.log('Selected social:', selected);
+
     if (selected) {
-        selectedSocial.value = {
-            id: selected[0].id,
-            url: selected[0].url,
+        socialEntries.value[index].selectedSocial = {
+            id: selected.id,
+            url: selected.url,
         };
     } else {
-        console.log('No matching platform found.');
+        socialEntries.value[index].selectedSocial = { url: '' };
+        console.error('No matching platform found for ID:', value);
+    }
+    validateSocialUrl(index);
+}
+
+// const isPlatformUrl = (url, urlTemplate) => {
+//     const langAccept = ['fr', 'mu']
+//     const splitLink = platformLink.value.split('/')
+//     const existsInB = langAccept.some(item => splitLink.includes(item));
+//     const pattern = urlPattern(urlTemplate);
+
+//     let isValid = false
+
+//     if (pattern.test(url)) {
+//         isValid = true;
+//     }
+
+//     if (existsInB) {
+//         isValid = true;
+//     }
+
+//     return isValid
+// }
+
+const validatePlatformUrl = (index) => {
+    const entry = platformEntries.value[index];
+    if (entry.platformLink && entry.selectedPlatform) {
+        const pattern = urlPattern(entry.selectedPlatform.url);
+        entry.isValidPlatform = pattern.test(entry.platformLink);
+    } else {
+        entry.isValidPlatform = false;
     }
 }
 
-
-const isPlatformUrl = (url, urlTemplate) => {
-    const langAccept = ['fr', 'mu']
-    const splitLink = platformLink.value.split('/')
-    const existsInB = langAccept.some(item => splitLink.includes(item));
-    const pattern = urlPattern(urlTemplate);
-
-    let isValid = false
-
-    if (pattern.test(url)) {
-        isValid = true;
+const validateSocialUrl = (index) => {
+    const entry = socialEntries.value[index];
+    if (entry.socialLink && entry.selectedSocial) {
+        const pattern = urlPattern(entry.selectedSocial.url);
+        entry.isValidSocial = pattern.test(entry.socialLink);
+    } else {
+        entry.isValidSocial = false;
     }
-
-    if (existsInB) {
-        isValid = true;
-    }
-
-    return isValid
 }
 
+// const isValidSocialUrl = (url, urlTemplate) => {
+//     const langAccept = ['fr', 'mu'];
+//     const splitLink = social.value.split('/');
+//     const existsInB = langAccept.some(item => splitLink.includes(item));
+//     const pattern = urlPattern(urlTemplate);
 
-const isValidSocialUrl = (url, urlTemplate) => {
-    const langAccept = ['fr', 'mu'];
-    const splitLink = social.value.split('/');
-    const existsInB = langAccept.some(item => splitLink.includes(item));
-    const pattern = urlPattern(urlTemplate);
+//     let isValid = false;
 
-    let isValid = false;
+//     if (pattern.test(url)) {
+//         isValid = true;
+//     }
 
-    if (pattern.test(url)) {
-        isValid = true;
-    }
+//     if (existsInB) {
+//         isValid = true;
+//     }
 
-    if (existsInB) {
-        isValid = true;
-    }
-
-    return isValid;
-};
+//     return isValid;
+// };
 
 
 const urlPattern = (urlTemplate, extensions = ['fr', 'es', 'com']) => {
@@ -319,19 +366,22 @@ const submit = async () => {
         { value1: urlFacebook.value, provider: providersMap.value.facebook, name: 'Facebook' },
         { value1: urlInstagram.value, provider: providersMap.value.instagram, name: 'Instagram' },
         { value1: urlTwitter.value, provider: providersMap.value.twitter, name: 'Twitter' },
-        {
-            value1: platformLink.value,
-            provider: `/api/providers/${selectedPlatform.value.id}`,
-            name: platform.value.name
-        },
-        {
-            value1: socialLink.value,
-            provider: `/api/providers/${selectedSocial.value.id}`,
-            name: social.value.name
-        },
     ];
 
-    const validProviders = providersData.filter(platform => platform.value1 !== '' && platform.provider);
+    const platformsData = platformEntries.value.map(entry => ({
+        value1: entry.platformLink,
+        provider: `/api/providers/${entry.selectedPlatform.id}`,
+        name: entry.selectedPlatform.name
+    }));
+
+    const socialsData = socialEntries.value.map(entry => ({
+        value1: entry.socialLink,
+        provider: `/api/providers/${entry.selectedSocial.id}`,
+        name: entry.selectedSocial.name
+    }));
+
+    const providersAllData = [...providersData, ...platformsData, ...socialsData];
+    const validProviders = providersAllData.filter(platform => platform.value1 !== '' && platform.provider);
 
     try {
 
@@ -345,7 +395,6 @@ const submit = async () => {
                 caption: null
             };
 
-           
             const response = await new Promise((resolve, reject) => {
                 services.createRecord('settings', data, (response) => {
                     if (response.status === 201) {
@@ -362,7 +411,7 @@ const submit = async () => {
         });
 
         goToNextStep(props.establishmentName, props.competitorId);
-        
+
     } catch (error) {
         console.error('Error submitting platform data:', error);
     } finally {
@@ -372,27 +421,17 @@ const submit = async () => {
 };
 
 
-watch([platform, platformLink], () => {
-    let urlTemplate;
-    if (platform.value !== null && platformLink.value !== '') {
-        urlTemplate = selectedPlatform.value.url;
-        if (urlTemplate) isValidPlatform.value = isPlatformUrl(platformLink.value, urlTemplate);
-    } else {
-        isValidPlatform.value = true;
-    }
-});
+watch(platformEntries.value, (newEntries) => {
+    newEntries.forEach((entry, index) => {
+        watch(() => entry.platformLink, () => validatePlatformUrl(index));
+    });
+}, { deep: true });
 
-watch([social, socialLink], () => {
-    let urlTemplate;
-
-    if (social.value !== null && socialLink.value !== '') {
-        urlTemplate = selectedSocial.value.url;
-        if (urlTemplate) isValidSocial.value = isValidSocialUrl(socialLink.value, urlTemplate);
-    } else {
-        isValidSocial.value = true;
-    }
-});
-
+watch(socialEntries.value, (newEntries) => {
+    newEntries.forEach((entry, index) => {
+        watch(() => entry.socialLink, () => validateSocialUrl(index));
+    });
+}, { deep: true });
 
 const resetValue = () => {
     platform.value = null;
@@ -435,7 +474,7 @@ onBeforeMount(async () => {
             dataSocials.value = dataSocial.filter(item => item.category === 'Social' && item.name !== 'Facebook' && item.name !== 'Instagram' && item.name !== 'Twitter (X)');
             const dataPlatform = response.data['hydra:member'];
             dataPlatforms.value = dataPlatform.filter(item => item.category === 'Platform' && item.name !== 'Google' && item.name !== 'Tripadvisor UK');
-           
+
             const providers = response.data['hydra:member'];
 
             if (Array.isArray(providers)) {
@@ -589,7 +628,18 @@ form button {
     border-radius: 5px;
 }
 
-.button__plus:hover {
+.button__plus:hover,
+.button__close:hover {
     cursor: pointer;
+}
+
+.content__label {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button__close {
+    font-weight: bold;
+    color: red;
 }
 </style>
