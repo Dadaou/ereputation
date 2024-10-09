@@ -1,13 +1,9 @@
 <template>
     <div v-if="item.label || item.logo || logoSrc" @click="handleClick">
-        <a
-            class="gate__link" 
-            :href="item.document || item.href" 
-            target="_blank" 
-            rel="noopener noreferrer"
-        >
+        <a class="gate__link" :href="item.document || item.href" target="_blank" rel="noopener noreferrer">
             <!-- <Icon v-if="!item.logo && icon" :icon="icon"  :alt="`${item.label} logo`" class="mb-2" width="24px" color="grey" /> -->
-            <img v-if="!item.logo && icon" :src="appStore.account.brand === 'LinkyStar' ? qrlinkystarLogo : appStore.account.logo" class="gate__logo">
+            <img v-if="!item.logo && icon" :src="appStore.account.brand === 'LinkyStar' ? qrlinkystarLogo : appStore.account.logo"
+                :class="appStore.account.brand === 'LinkyStar' ? 'gate__logo__linkystar' : 'gate__logo'">
             <img v-if="item.logo && item.logo.length > 0" :src="item.logo" class="gate__logo">
             <img v-if="logoSrc" :src="logoSrc" :alt="`${item.label} logo`" class="gate__logoSrc">
             <h4 v-else class="mb-1">{{ item.label }}</h4>
@@ -24,7 +20,7 @@ const appStore = useAppStore();
 
 const emits = defineEmits(['click']);
 
-const handleClick = () =>{
+const handleClick = () => {
     emits('click')
 };
 
@@ -116,14 +112,13 @@ const logoSrc = computed(() => {
 
 </script>
 <style scoped>
-
 .gate__link {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 170px;
-    height: 140px; 
+    height: 140px;
     aspect-ratio: 1/1;
     border-radius: 5px;
     /* box-shadow: rgba(149, 157, 165, 0.2) 0px 4px 12px; */
@@ -132,8 +127,9 @@ const logoSrc = computed(() => {
     padding: 8px;
     transition: all .5s linear;
     background: white;
-     
+
 }
+
 .gate__link:hover {
     transform: scale(1.12);
     border: 1px solid var(--color-primary);
@@ -159,7 +155,13 @@ const logoSrc = computed(() => {
     width: 160px;
     height: 80px;
 }
-
+.gate__logo__linkystar {
+    object-fit: cover;
+    margin-bottom: 5px;
+    border-radius: 6px;
+    width: 75%;
+    height: 75%;
+}
 .gate__logoSrc {
     width: 100px;
     /* height: 70%; */
@@ -169,7 +171,7 @@ const logoSrc = computed(() => {
 }
 
 @media screen and (max-width:600px) {
-    
+
     .gate__link h4 {
         font-size: .7rem !important;
         font-weight: 500;
