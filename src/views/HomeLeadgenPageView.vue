@@ -12,8 +12,8 @@
                     </div>
                 </div>
             </div>
+            <router-view></router-view>
         </div>
-        <router-view></router-view>
     </div>
 </template>
 
@@ -40,6 +40,7 @@ const handleToggleLeadgen = () => {
 .main__container {
     margin-top: 20px;
 }
+
 .client__container {
     position: relative;
     top: 5rem;
@@ -113,5 +114,14 @@ const handleToggleLeadgen = () => {
 
 .toggle-switch .toggle-option {
     background-color: #fff;
+}
+
+@media screen and (max-width: 568px) {
+    .toggle-switch {
+        width: 100px !important;
+    }
+    .toggle-option {
+        font-size: 8px;
+    }
 }
 </style>

@@ -22,7 +22,7 @@
                     </RouterLink>
 
                 </div>
-                
+
                 <div class="toggle-switch" :class="{ 'active': isActiveErep }">
                     <div class="toggle-option" :class="{ 'selected': isActiveErep }" @click="handleToggleErep">E-Rep</div>
                     <div class="toggle-line"></div>
@@ -365,5 +365,17 @@ h1 {
 
 .toggle-switch .toggle-option {
     background-color: #fff;
+}
+
+@media screen and (max-width: 568px) {
+    .header_navigation {
+        gap: 8px !important;
+    }
+    .toggle-switch {
+        width: 100px !important;
+    }
+    .toggle-option {
+        font-size: 9px;
+    }
 }
 </style>
