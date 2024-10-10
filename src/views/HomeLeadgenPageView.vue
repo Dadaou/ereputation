@@ -46,7 +46,7 @@ const handleToggleLeadgen = () => {
     top: 5rem;
     display: flex;
     gap: 1rem;
-    width: var(--container-width-lg);
+    width: 100%;
     flex-direction: column;
     margin-bottom: 20px;
 }
@@ -116,10 +116,29 @@ const handleToggleLeadgen = () => {
     background-color: #fff;
 }
 
+@media screen and (min-width: 1024px) {
+    .client__container {
+        width: 80% !important;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .client__container {
+        width: 90% !important;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .client__container {
+        width: 96% !important;
+    }
+}
+
 @media screen and (max-width: 568px) {
     .toggle-switch {
         width: 100px !important;
     }
+
     .toggle-option {
         font-size: 8px;
     }
