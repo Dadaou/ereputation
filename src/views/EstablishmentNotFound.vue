@@ -7,7 +7,7 @@
         <div class="error__message">
             <div class="error__title"><span>404</span> - Establishment Not Found</div>
             <p>Sorry, but the establishment with the provided Tag does not exist, has been removed, had its name changed, or is currently unavailable.</p>
-            <button class="btn" @click="$router.push('/home')">Go Back to the home page</button>
+            <button class="btn" @click="$router.push('/home/erep')">Go Back to the home page</button>
         </div>
     </div>    
 </div>

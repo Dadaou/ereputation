@@ -47,7 +47,7 @@ const currentComponent = computed(() => {
 });
 </script>
 
-<style>
+<style scoped>
 .main__container {
     margin-left: auto;
     margin-right: auto;

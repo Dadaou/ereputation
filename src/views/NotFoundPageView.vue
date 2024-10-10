@@ -7,7 +7,7 @@
         <div class="error__message">
             <div class="error__title"><span>404</span> - Page Not Found</div>
             <p>Sorry but the page you are looking for does not exist, has been removed, name changed or is temporarily unavailable.</p>
-            <button class="btn" @click="$router.push('/home')">Go Back</button>
+            <button class="btn" @click="$router.push('/home/erep')">Go Back</button>
         </div>
     </div>    
 </div>

@@ -359,7 +359,7 @@ const router = createRouter({
           component: () => import('@Views/AppsCustomisationView.vue')
         },
         {
-          path: '/home',
+          path: '/home/erep',
           name: 'Home',
           beforeEnter: [CheckAccess],
           component: () => import('@Views/HomePageView.vue'),
@@ -400,6 +400,19 @@ const router = createRouter({
               name: 'HomeViewForUserConnected',
               beforeEnter: [checkNavigation],
               component: () => import('@Views/HomeViewForUserConnected.vue')
+            },
+          ]
+        },
+        {
+          path: '/home/leadgen',
+          name: 'Leadgen',
+          beforeEnter: [CheckAccess],
+          component: () => import('@Views/HomeLeadgenPageView.vue'),
+          children: [
+            {
+              path: 'customer/:tag',
+              name: 'LeadgenView',
+              component: () => import('@Views/LeadgenPageView.vue')
             },
           ]
         },
