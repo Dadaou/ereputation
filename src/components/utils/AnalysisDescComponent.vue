@@ -21,7 +21,7 @@
 		    marginRight: '10px',
 			cursor: 'pointer'
 		}" @click="emitLabelChange(rating.label)">
-		    {{ rating.label }}
+		    {{ rating.label }} : {{rating.avg_rating}}
 		</span>
 
     </div>
