@@ -692,8 +692,12 @@ const syncScroll = (source, target) => {
 const calculateAvg = (data) => {
     let m = 0;
     data.forEach(value => {
-        m = (m + value) / 2
+        if (value != 0) {
+            m = (m + value) / 2
+
+        }
     })
+
     return Number(m.toFixed(1))
 }
 
