@@ -1,5 +1,9 @@
 <template>
     <div>
-        Lead-Gen my screen
+        <MyScreen />
     </div>
+
 </template>
+<script setup>
+import MyScreen from './MyScreen.vue';
+</script>

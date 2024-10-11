@@ -1,5 +1,9 @@
 <template>
     <div>
-        Lead gen Discount coupon
+        <DiscountCoupons />
     </div>
+
 </template>
+<script setup>
+import DiscountCoupons from './DiscountCouponsPageView.vue';
+</script>

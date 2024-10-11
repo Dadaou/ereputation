@@ -1,5 +1,9 @@
 <template>
     <div>
-        Lead-Gen contact
+        <ContactView />
     </div>
+
 </template>
+<script setup>
+import ContactView from '@Components/advantage/AdvantageContactComponent.vue';
+</script>

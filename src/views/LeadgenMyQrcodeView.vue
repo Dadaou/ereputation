@@ -1,5 +1,9 @@
 <template>
     <div>
-        Lead-Gen MyQrcode
+        <MyQrcode />
     </div>
+
 </template>
+<script setup>
+import MyQrcode from './MyQRCodesPageView.vue';
+</script>
