@@ -1,13 +1,7 @@
 <template>
-    <div class="admin__container">
-
-
-
+    <div>
         <div class="filtre_content p-4">
-
             <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-7 lg:grid-cols-7 gap-4">
-
-
                 <el-select v-model="establishment" multiple size="large" class="space" placeholder="All Etablishments">
                     <el-option label="All Etablishments" :value="'all'" @click="handleEstablishmentDropdown('all')"
                         :disabled="establishment.length > 1 && !establishment.includes('all')" />
@@ -15,31 +9,22 @@
                         :value="item.id" @click="handleEstablishmentDropdown('other')" />
                 </el-select>
 
-
-
                 <div class="date_picker">
                     <el-date-picker v-model="start_date" type="date" :size="'large'" class="space " />
                 </div>
-
-
 
                 <div class="date_picker">
                     <el-date-picker v-model="end_date" type="date" :size="'large'" class="space " />
                 </div>
 
-
-
                 <DropdownComponent :showTitle="false" class="dropdown " :data="timePeriods" @submit="(timePeriod) => {
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[0]" />
-
-
 
                 <el-select v-model="sourceFilter" size="large" class="space" placeholder="All Sources">
                     <el-option label="All Sources" value="" />
                     <el-option v-for="item in sources" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
-
 
 
                 <el-select v-model="staffFilter" multiple size="large" class="space" placeholder="All Staffs">
@@ -50,7 +35,6 @@
                 </el-select>
 
 
-
                 <el-select v-model="unitsFilter" multiple size="large" class="space" placeholder="All Units">
                     <el-option label="All Units" :value="''" @click="handleUnitDropdown('')"
                         :disabled="unitsFilter.length > 1 && !unitsFilter.includes('')" />
@@ -58,14 +42,8 @@
                         @click="handleUnitDropdown('other')" />
                 </el-select>
 
-
-
             </div>
         </div>
-
-
-
-
 
         <div class="number">
             <div class="square bordure-bleu">
@@ -356,33 +334,6 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod, start_date, 
 <style scoped>
 .filtre_content {
     width: 100% !important;
-
-}
-
-.admin__container {
-
-    gap: 2rem;
-
-    margin-right: auto;
-    margin-left: auto;
-    padding: 0;
-    margin-top: 120px !important;
-    overflow-x: hidden;
-    width: var(--container-width-lg);
-
-}
-
-
-@media screen and (max-width:1024px) {
-    .admin__container {
-        width: var(--container-width-md);
-    }
-}
-
-@media screen and (max-width:975px) {
-    .admin__container {
-        width: 96% !important;
-    }
 }
 
 .dropdown {

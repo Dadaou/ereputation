@@ -17,10 +17,6 @@
                     <RouterLink class="search__icon" :to="{ name: 'EstablishmentListByTrend', params: { tag: tag } }">
                         <Icon :icon="'gg:trending'" width="25"></Icon>
                     </RouterLink>
-                    <RouterLink class="search__icon" :to="{ name: 'Analytic', params: { tag: tag } }">
-                        <Icon :icon="'uim:chart-pie'" width="25"></Icon>
-                    </RouterLink>
-
                 </div>
 
                 <div class="toggle-switch" :class="{ 'active': isActiveErep }">
@@ -30,18 +26,15 @@
                     </div>
                 </div>
 
-                <!-- <h1 v-if="route.name == 'Analytic'">Analytics</h1> -->
                 <button
                     v-if="userStore.user.partner && userStore.user.roles.includes('ROLE_PARTNER') && route.name !== 'CustomersList'"
                     @click="backToCustomer">
                     <i class="uil uil-arrow-left"></i>Back</button>
 
             </div>
-            <RouterView v-if="route.name != 'Analytic'" />
+            <RouterView />
         </div>
-        <RouterView v-if="route.name == 'Analytic'" />
     </div>
-
 </template>
 
 <script setup>
@@ -72,7 +65,7 @@ const backToCustomer = () => {
 };
 
 const show = computed(() => {
-    let routeName = ['EstablishmentList', 'EstablishmentRanking', 'EstablishmentListByTrend', 'Analytic', 'Categorization', undefined];
+    let routeName = ['EstablishmentList', 'EstablishmentRanking', 'EstablishmentListByTrend', 'Categorization', undefined];
     return routeName.includes(route.name)
 });
 
@@ -93,7 +86,7 @@ const handleToggleErep = () => {
 }
 
 const handleToggleLeadgen = () => {
-    router.push({ name: 'LeadgenView', params: { tag: customerTag.value } })
+    router.push({ name: 'LeadgenAdvantage', params: { tag: customerTag.value } })
         .catch(err => console.error(err));
 }
 </script>
@@ -242,8 +235,6 @@ h1 {
 
 @media screen and (max-width: 600px) {
     .header_navigation {
-        flex-wrap: wrap;
-        justify-content: center;
         padding: 5px 10px;
     }
 
@@ -368,12 +359,27 @@ h1 {
 }
 
 @media screen and (max-width: 568px) {
+    .header {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .toggle-switch {
+        order: 1;
+        margin-left: 0;
+        align-self: flex-end; 
+    }
+
     .header_navigation {
+        order: 2;
+        margin-top: 20px;
         gap: 8px !important;
     }
+
     .toggle-switch {
         width: 100px !important;
     }
+
     .toggle-option {
         font-size: 9px;
     }

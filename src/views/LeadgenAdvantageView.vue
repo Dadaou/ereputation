@@ -1,5 +1,5 @@
 <template>
-    <div class="main__container">
+    <div>
         <div class="contain">Comming soon...</div>
     </div>
 </template>
