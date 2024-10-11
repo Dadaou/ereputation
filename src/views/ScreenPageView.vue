@@ -1,63 +1,123 @@
 <template>
-    <div v-if="Object.keys(screenDetails).length" class="screen__container">
+    <div class="screen__container">
+
         <div class="bg__circle"></div>
-        <div v-for="(screen, id) in screenDetails" :key="id"
-            class="container flex flex-col items-center justify-start screen__content">
+
+        <div
+            class="container items-center justify-start screen__content">
+
             <div class="inline-flex items-start justify-center w-full discount-container">
                 <div class="icon__container">
                     <img v-if="icon2Src" :src="icon2Src" :alt="`icon`">
                 </div>
-                <h1 class="boost__title"><strong>{{ screen.name }}</strong></h1>
+                <h1 v-if="advantage_name"  class="boost__title"><strong>{{ advantage_name }}</strong></h1>
                 <div class="icon__container">
                     <img v-if="iconSrc" :src="icon2Src" :alt="`icon`">
                 </div>
 
             </div>
-            <div v-html="screen.coreProcessed"></div>
+
+
+             <div style="margin-top: 10px;margin-left: 60px;margin-right: 10px;" v-html="core"></div>
+            <!-- <div v-html="screen.coreProcessed"></div> -->
         </div>
+
+  
     </div>
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref ,inject} from 'vue';
+import { useQrStore } from "@Stores/qrtemplate.js";
 import services from '@Services/services.js';
 import { useRoute } from 'vue-router';
+import QRCode from 'qrcode';
 
 const route = useRoute();
 const screenDetails = reactive({});
 const iconSrc = ref(new URL('@/assets/images/boostIcon.svg', import.meta.url).href)
 const icon2Src = ref(new URL('@/assets/images/discount.svg', import.meta.url).href)
+const qrStore = useQrStore();
+const app_url = inject('app_url')
+const core = ref('');
+const advantage_name = ref('');
+
 
 
 const loadScreenDetails = (id) => {
-    services.get_Record(`screentemplates/1`, (response) => {
+     services.get_Record(`customer/screens/templates?tag=${route.params.tag}&id=${route.params.screen}`, (response) => {
         if (response && response.status === 200) {
             const data = response.data;
-            screenDetails[id] = {
-                ...data,
-                coreProcessed: processCore(data.core, data)
-            };
+               
+                if (data['advantages'].length > 0) {
+                    advantage_name.value = data['advantages'][0].adv_name ;
+                }
+                generateCore(data['screentemplates'].core,data['screentemplates']);
+               
+            
+           
         } else {
             console.error('Error loading screen details:', response);
         }
     }, false, false);
+    // services.get_Record(`screentemplates/1`, (response) => {
+    //     if (response && response.status === 200) {
+    //         const data = response.data;
+    //         screenDetails[id] = {
+    //             ...data,
+    //             coreProcessed: processCore(data.core, data)
+    //         };
+    //     } else {
+    //         console.error('Error loading screen details:', response);
+    //     }
+    // }, false, false);
 };
 
 
 onMounted(() => {
     const screenId = route.params.screen;
+        console.log(route.params)
     if (screenId) {
         loadScreenDetails(screenId);
+        qrStore.setQrCodeValue(`${app_url.value}/public/${route.params.tag}/establishment/${route.params.screen}/feedback`)
     }
 });
 
 const processCore = (core, screen) => {
+    // generateCore(core,screen)
     return core
         .replace('{{textgreeting}}', screen.name)
         .replace('{{text1}}', screen.text1 || '')
         .replace('{{text2}}', screen.text2 || '')
         .replace('{{text3}}', screen.text3 || '');
 };
+
+const generateCore = async (_core,_screen) => {
+
+ 
+  let tmp = _core;
+  tmp = tmp.replace('{{textgreeting}}', "");
+  tmp = tmp.replace('{{text1}}', _screen.text1 || '');
+  tmp = tmp.replace('{{text2}}',  _screen.text2 || '');
+  tmp = tmp.replace('{{text3}}',  _screen.text3 || '');
+  tmp = tmp.replace('{{textclosing}}', "");
+  const qrData = qrStore.qrcodeValue; // Data you want to encode
+  const canvas = document.createElement('canvas');
+  canvas.width = 500;
+  canvas.height = 500;
+  const qrCanvas = await QRCode.toCanvas(canvas, qrData, { width: 500, errorCorrectionLevel: 'H' });
+  const qrCodeDataURL = qrCanvas.toDataURL('image/png', 1.0); // Convert to base64
+  tmp = tmp.replace('{{qrcodeimg}}', `<img src="${qrCodeDataURL}" style="width: 100%;">`)
+
+
+  tmp = tmp.replace('{{logo}}', `<img src="data:image/png;base64,${_screen.logo_base64}" >`);
+  core.value = tmp;
+}
+
+
+
+
+
 </script>
 
 <style>
