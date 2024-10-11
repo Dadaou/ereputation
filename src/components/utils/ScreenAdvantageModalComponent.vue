@@ -50,31 +50,15 @@
       <div class="grid gap-6 mb-6 md:grid-cols-2">
 
 
-
-            <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Date To
-                    <!-- <span>*</span> -->
-                    <!-- <Tooltip text="To use before the [date]" /> -->
-                </label>
-                <el-date-picker v-model="date_to" :size="'large'" />
-            </div>
-
-            <div>
+          <div>
               <label for="hour_from"
                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hour From
                   <span></span></label>
               <input type="number" id="hour_from" v-model="hour_from"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
-            </div>
+          </div>
 
- 
-      </div>
-
-      <div class="grid gap-6 mb-6 md:grid-cols-2">
-
-
-
+           
             <div>
                   <label for="minute_from"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Minute From
@@ -82,14 +66,30 @@
                   <input type="number" id="minute_from" v-model="minute_from"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
             </div>
+            
 
-          <div>
+ 
+      </div>
+
+      <div class="grid gap-6 mb-6 md:grid-cols-2">
+
+
+            <div>
                   <label for="seconde_from"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seconde From
                       <span></span></label>
                   <input type="number" id="seconde_from" v-model="seconde_from"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
           </div>
+
+           <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Date To
+                    <!-- <span>*</span> -->
+                    <!-- <Tooltip text="To use before the [date]" /> -->
+                </label>
+                <el-date-picker v-model="date_to" :size="'large'" />
+            </div>
 
 
  
@@ -125,6 +125,7 @@
 
           <div class="grid gap-6 mb-6 md:grid-cols-7 sm:grid-cols-3 justify-center">
 
+
               <div>
                <el-button 
                   :class="{'enabled-button': advantage_screen.d0}" 
@@ -133,9 +134,10 @@
                    <i 
                     :class="advantage_screen.d0 ? 'uil uil-check-square' : 'uil uil-square'" 
                     >
-                   </i> Monday
+                   </i> Sunday
                 </el-button>
               </div>
+
 
               <div>
                <el-button 
@@ -145,7 +147,7 @@
                    <i 
                     :class="advantage_screen.d1 ? 'uil uil-check-square' : 'uil uil-square'" 
                     >
-                   </i> Tuesday
+                   </i> Monday
                 </el-button>
               </div>
 
@@ -157,7 +159,7 @@
                    <i 
                     :class="advantage_screen.d2 ? 'uil uil-check-square' : 'uil uil-square'" 
                     >
-                   </i> Wednesday
+                   </i> Tuesday
                 </el-button>
               </div>
 
@@ -169,7 +171,7 @@
                    <i 
                     :class="advantage_screen.d3 ? 'uil uil-check-square' : 'uil uil-square'" 
                     >
-                   </i> Thursday
+                   </i> Wednesday
                 </el-button>
               </div>
 
@@ -181,7 +183,7 @@
                    <i 
                     :class="advantage_screen.d4 ? 'uil uil-check-square' : 'uil uil-square'" 
                     >
-                   </i> Friday
+                   </i> Thursday
                 </el-button>
               </div>
 
@@ -193,7 +195,7 @@
                    <i 
                     :class="advantage_screen.d5 ? 'uil uil-check-square' : 'uil uil-square'" 
                     >
-                   </i> Saturday
+                   </i> Friday
                 </el-button>
               </div>
 
@@ -205,7 +207,7 @@
                    <i 
                     :class="advantage_screen.d6 ? 'uil uil-check-square' : 'uil uil-square'" 
                     >
-                   </i> Sunday
+                   </i> Saturday
                 </el-button>
               </div>
  

@@ -346,8 +346,8 @@
         </el-tooltip>
         <div class="content_legend" v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' && legendData.length > 0">
             <div v-for="(item, index) in legendData" :key="index">
-                <div class="container_legend" @click="handleLegendChange(item.name)">
-                    <div class="card_legend" :style="{ backgroundColor: item.color}"></div> {{ item.name }}
+                <div class="container_legend society__location" @click="handleLegendChange(item.name)">
+                    <div class="card_legend society__location" :style="{ backgroundColor: item.color}"></div> {{ item.name }}
                 </div>
             </div>
         </div>
