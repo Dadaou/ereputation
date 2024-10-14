@@ -18,7 +18,7 @@
             </div>
 
 
-             <div style="margin-top: 10px;margin-left: 60px;margin-right: 10px;" v-html="core"></div>
+             <div style="margin-top: 22px;margin-left: 60px;margin-right: 10px;" v-html="core"></div>
             <!-- <div v-html="screen.coreProcessed"></div> -->
         </div>
 
@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref ,inject} from 'vue';
+import { onMounted, reactive, ref ,inject,computed} from 'vue';
 import { useQrStore } from "@Stores/qrtemplate.js";
 import services from '@Services/services.js';
 import { useRoute } from 'vue-router';
@@ -42,6 +42,21 @@ const app_url = inject('app_url')
 const core = ref('');
 const advantage_name = ref('');
 
+const qrSize = computed(() => {
+    let size = 610
+    if (window.innerWidth <= 780) {
+        size = 240
+    } else if (window.innerWidth <= 1024) {
+        size = 440
+    } else if (window.innerWidth <= 1440) {
+        size = 510
+    } else if (window.innerWidth <= 1980) {
+        size = 660
+    } else {
+        size = 610
+    }
+    return size
+})
 
 
 const loadScreenDetails = (id) => {
@@ -52,7 +67,7 @@ const loadScreenDetails = (id) => {
                 if (data['advantages'].length > 0) {
                     advantage_name.value = data['advantages'][0].adv_name ;
                 }
-                generateCore(data['screentemplates'].core,data['screentemplates']);
+                generateCore(data['screentemplates'].core,data['screentemplates'],data['advantages'][0].adv_id);
                
             
            
@@ -78,8 +93,9 @@ onMounted(() => {
     const screenId = route.params.screen;
         console.log(route.params)
     if (screenId) {
-        loadScreenDetails(screenId);
-        qrStore.setQrCodeValue(`${app_url.value}/public/${route.params.tag}/establishment/${route.params.screen}/feedback`)
+        loadScreenDetails(screenId); 
+       
+        //qrStore.setQrCodeValue(`${app_url.value}/public/${route.params.tag}/establishment/${route.params.id}/feedback?adv=${}`)
     }
 });
 
@@ -92,9 +108,9 @@ const processCore = (core, screen) => {
         .replace('{{text3}}', screen.text3 || '');
 };
 
-const generateCore = async (_core,_screen) => {
+const generateCore = async (_core,_screen,_adv_id) => {
 
- 
+ qrStore.setQrCodeValue(`${app_url.value}/public/${route.params.tag}/establishment/${route.params.id}/feedback?adv=${_adv_id}`)
   let tmp = _core;
   tmp = tmp.replace('{{textgreeting}}', "");
   tmp = tmp.replace('{{text1}}', _screen.text1 || '');
@@ -105,7 +121,7 @@ const generateCore = async (_core,_screen) => {
   const canvas = document.createElement('canvas');
   canvas.width = 500;
   canvas.height = 500;
-  const qrCanvas = await QRCode.toCanvas(canvas, qrData, { width: 500, errorCorrectionLevel: 'H' });
+  const qrCanvas = await QRCode.toCanvas(canvas, qrData, { width: qrSize.value, errorCorrectionLevel: 'H' });
   const qrCodeDataURL = qrCanvas.toDataURL('image/png', 1.0); // Convert to base64
   tmp = tmp.replace('{{qrcodeimg}}', `<img src="${qrCodeDataURL}" style="width: 100%;">`)
 

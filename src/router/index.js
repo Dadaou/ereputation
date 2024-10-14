@@ -135,7 +135,7 @@ const router = createRouter({
           component: () => import('@Views/BoostAdvantagePageView.vue')
         },
         {
-          path: '/customer/:tag/screens/:screen',
+          path: '/customer/:tag/establishment/:id/screens/:screen',
           name: 'ScreenPage',
           component: () => import('@Views/ScreenPageView.vue')
         }
