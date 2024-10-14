@@ -51,87 +51,29 @@
             </div>
         </div>
         <!-- <div v-if="company.categories" class="category_container_mobile"></div> -->
-        <div v-if="company.categories" class="category_container_mobile">
+        <div class="category_container_mobile" v-if="company.reviews_count || company.categories">
             <div class="inline-flex category_mobile">
                 <span class="reviews-loader" v-if="loading"></span>
-                <div v-else v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category">
+                <div v-else v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category" class="reviews_category">
 
-                    <div class="review__category-container ml-1">
+                    <div v-if="cat" class="review__category-container ml-1 cat_desc">
 
-                        <span :style="{ backgroundColor: colorBetweenRedYellowGreen(cat) }" class="review__category"
-                            @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
-                            {{ capitalize(category) }} :
-
-                            <span class="emoji ">
-                                {{ cat }}
-                            </span>
-
+                        <span :style="
+                        { backgroundColor: colorBetweenRedYellowGreen(cat) ,
+                            padding: '5px',
+                            borderRadius: '5px',
+                            marginRight: '10px'
+                        }"
+             class="review__category emoji"
+                            @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)" >
+                            {{ capitalize(category) }} :  {{ cat }}
+                           <!--  <span class="emoji ">
+                               
+                            </span> -->
                         </span>
 
 
-                        <!-- <span v-if="cat > 0.9" :style="{ backgroundColor: colors[1] }" class="review__category"
-                            @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
-                            {{ capitalize(category) }} :
-
-                            <span class="emoji ">
-                                {{ cat }}
-                            </span>
-
-                        </span>
-
-                        <span v-if="cat > 0.5 && cat <= 0.9" :style="{ backgroundColor: colors[2] }"
-                            class="review__category"
-                            @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
-                            {{ capitalize(category) }} :
-
-                            <span class="emoji ">
-                                {{ cat }}
-                            </span>
-
-                        </span>
-
-                        <span v-if="cat >= 0 && cat < 0.5" :style="{ backgroundColor: colors[3] }"
-                            class="review__category"
-                            @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
-                            {{ capitalize(category) }} :
-
-                            <span class="emoji ">
-                                {{ cat }}
-                            </span>
-
-                        </span>
-
-                        <span v-if="cat >= -0.5 && cat < 0" :style="{ backgroundColor: colors[5] }"
-                            class="review__category"
-                            @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
-                            {{ capitalize(category) }} :
-
-                            <span class="emoji ">
-                                {{ cat }}
-                            </span>
-
-                        </span>
-
-                        <span v-if="cat > -0.8 && cat < -0.5" :style="{ backgroundColor: colors[6] }"
-                            class="review__category"
-                            @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
-                            {{ capitalize(category) }} :
-
-                            <span class="emoji ">
-                                {{ cat }}
-                            </span>
-
-                        </span>
-
-                        <span v-if="cat <= -0.8" :style="{ backgroundColor: colors[7] }" class="review__category"
-                            @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
-                            {{ capitalize(category) }} :
-
-                            <span class="emoji ">
-                                {{ cat }}
-                            </span>
-
-                        </span> -->
+               
 
                     </div>
                 </div>
@@ -327,6 +269,24 @@ const capitalize = (str) => {
 };
 </script>
 <style scoped>
+
+    .cat_desc{
+        font-weight: 450;
+    }
+
+    .cat_desc span{
+        font-size: 12px;
+    }
+
+    .cat_desc span:nth-child(2) {
+        margin-left: 1rem;
+    }
+
+    .cat_desc p span{
+        font-size: 18px;
+    }
+
+
 .category_container_mobile {
     /* overflow-x: auto; */
     white-space: nowrap;
@@ -355,7 +315,9 @@ const capitalize = (str) => {
 .category_mobile {
     /* width:100%; */
     align-items: center;
-    /* overflow-x: auto; */
+    overflow-x: auto;
+    min-width: 30px;
+    min-height: 25px;
     margin-right: 12px;
 }
 
@@ -363,7 +325,7 @@ const capitalize = (str) => {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: right;
+    /* justify-content: right; */
     gap: 2px;
     cursor: pointer;
 }
@@ -371,10 +333,11 @@ const capitalize = (str) => {
 .review__category {
     /* background: var(--color-danger); */
     /* color: white; */
-    font-size: 13px;
-    border-radius: 8px;
-    padding: 0 8px;
-    font-weight: 400;
+    padding: 3px;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-right: 5px;
 }
 
 
@@ -751,6 +714,7 @@ div.review-box {
 }
 
 .reviews-loader {
+    overflow: hidden !important;
     display: inline-block;
     width: 15px;
     height: 15px;

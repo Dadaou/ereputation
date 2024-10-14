@@ -741,8 +741,9 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         reviewsLoading.value = false;
         visibleData.value = response.data['data'];
 
-        if (response.data['count'] <= 100) options.value.max = response.data['count'];
-        else options.value.max = 100;
+        // if (response.data['count'] <= 100) options.value.max = response.data['count'];
+        // else options.value.max = 100;
+        options.value.max = response.data['count'];
         all_items.value.reviews.value = response.data['count'];
         all_items.value.rating.value = response.data['rating'];
         all_items.value.global.value = response.data['global'];

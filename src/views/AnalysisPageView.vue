@@ -2,6 +2,9 @@
     <div class="left__side">
         <div id="ttv__container">
             <el-tabs v-model="activeName" type="card" class="demo-tabs">
+                <el-tab-pane label="AI summary" name="ai_summary">
+                    <AiSummary />
+                </el-tab-pane>
                 <el-tab-pane label="Categorization" name="categorization">
 
                     <AnalysisCategory text="Your customers appreciated your establishment for the following services"
@@ -343,8 +346,8 @@
         </el-tooltip>
         <div class="content_legend" v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' && legendData.length > 0">
             <div v-for="(item, index) in legendData" :key="index">
-                <div class="container_legend" @click="handleLegendChange(item.name)">
-                    <div class="card_legend" :style="{ backgroundColor: item.color}"></div> {{ item.name }}
+                <div class="container_legend society__location" @click="handleLegendChange(item.name)">
+                    <div class="card_legend society__location" :style="{ backgroundColor: item.color}"></div> {{ item.name }}
                 </div>
             </div>
         </div>
@@ -422,6 +425,9 @@ const AnalysisCompetitors = defineAsyncComponent(() =>
 )
 const AnalysisAlert = defineAsyncComponent(() =>
     import('@Views/AlertView.vue')
+)
+const AiSummary = defineAsyncComponent(() =>
+    import('@Views/AiSummaryView.vue')
 )
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
@@ -518,7 +524,8 @@ const ratingChart = ref({
     labels: [],
     datasets: []
 })
-const colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
+// const colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
+const colors = ['#013B54', '#018BAD','#DA9A55','#4EA9CC', '#01DFFF', '#7FA8BB', '#B3DCE7',  '#01BDDE', '#573427', '#915138', '#E7CDB7', '#91CBDE','#FEFCF5', '#C7F5FA', '#01254F', '#014A93']
 
 const confidenceChart = ref({
     labels: [],
@@ -569,7 +576,7 @@ const ratingsCondition4 = computed(() => {
 })
 const starParams = route.query.star;
 
-const activeName = ref('categorization');
+const activeName = ref('ai_summary');
 const newOptions = {
     maintainAspectRatio: false,
     scales: {
@@ -685,8 +692,12 @@ const syncScroll = (source, target) => {
 const calculateAvg = (data) => {
     let m = 0;
     data.forEach(value => {
-        m = (m + value) / 2
+        if (value != 0) {
+            m = (m + value) / 2
+
+        }
     })
+
     return Number(m.toFixed(1))
 }
 
@@ -846,7 +857,7 @@ const transformData = (chartData) => {
     ratings.value = []
     let label_category=[];
      noScore.value=false;
-   
+ 
     
     datasets.forEach((category, index) => {
         const { avg_score, feeling, scores, data, label } = category
@@ -857,13 +868,17 @@ const transformData = (chartData) => {
       
        let categoryShow=false;
        let addInChart = false;
+       let reviewHaveSentiment = false;
+     
        categorizations.forEach((_categorization)=>{
 
-            if (_categorization.category == label) {
+            if (_categorization.category == label && _categorization.classification_feeling[_categorization.category] && _categorization.classification_feeling[_categorization.category] != null) {
                 categoryShow = true;
+               reviewHaveSentiment = true;
+
             }
 
-            if (_categorization.category == label && _categorization.feeling) {
+            if (_categorization.category == label && _categorization.classification_feeling[_categorization.category] && _categorization.classification_feeling[_categorization.category] != null && _categorization.feeling) {
                 addInChart = true;
              
             }
@@ -876,7 +891,7 @@ const transformData = (chartData) => {
         }
 
 
-        if (categoryShow == true) {
+        if (categoryShow == true && reviewHaveSentiment == true) {
              
             if (addInChart == true) {
                 plotData1.datasets.push({
@@ -1322,7 +1337,7 @@ const widthimage = (event) => {
     }
     
     .largeClass {
-        margin-top: 60px ! important;
+        margin-top: 20px ! important;
         margin-bottom: 10px;
     }
 }
@@ -1423,7 +1438,7 @@ p {
 .largeClass {
     width: 100% !important;
     height: auto !important;
-    margin-top: 50px;
+    /* margin-top: 50px; */
     border-radius: 10px;
 }
 .mediumClass{

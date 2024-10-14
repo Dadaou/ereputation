@@ -58,10 +58,15 @@
         <CommunityFeedbackComponent :reviewFeedbackData="reviewFeedbackData" />
     </div>
     <div class="tablet_mobile__filter" v-if="currentFilter == 'filter'">
-        <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform"
+       <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform"
             placeholder="Select a website" :data="websites" @submit="(website) => {
                 selectedWebsites = website
             }" :default="websites[0]" />
+
+          <!--     <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform"
+            placeholder="Select a website" :data="formattedWebsites" @submit="(website) => {
+                selectedWebsites = website
+            }" :default="formattedWebsites[0]" /> -->
 
         <div class="date__picker px-2">
             <el-date-picker v-model="start_date" placeholder="Start date" :size="'large'" />
@@ -182,6 +187,13 @@
                         :value="item.category" @click="handleCategoryDropdown('other')" />
                 </el-select>
             </div>
+              <div class="date__filter">
+                 <div class="text-sm title">Filter by plateform</div>
+               <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform"
+            placeholder="Select a website" :data="websites" @submit="(website) => {
+                selectedWebsites = website
+            }" :default="websites[0]" />
+              </div>
 
             <div class="date__filter">
                 <div class="text-sm title">Select a date range</div>
@@ -237,6 +249,10 @@ appStore.setCurrentPage({
 appStore.setIsExist(true)
 const customerTag = inject('tag')
 
+
+
+
+
 const route = useRoute();
 const starParams = route.query.star;
 appStore.setBreadcrumbs([
@@ -274,6 +290,10 @@ let feelings = ref(['All', 'Positive', 'Neutral', 'Negative']);
 let selectedFeeling = ref(null);
 let selectedWebsites = ref('Global');
 let websites = ref(['Global']);
+
+const formattedWebsites = computed(() => {
+    return websites.value.map(website => formatString(website));
+});
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
     { title: "Reviews", value: 0, icon: "uil-comment" },
@@ -404,8 +424,18 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
 
     if (route.params.type === 'intern') {
         source = 'App (Private)';
+        selectedWebsites.value='App (Private)';
     } else {
-        source = IsValueOkay(platform.value) ? platform.value : 'all';
+
+
+         if (IsValueOkay(source)) {
+            source = (source == 'App (Private)') ? 'App (Private)' : source.toLowerCase();
+            // apiParams += `&platform=${source}`
+        }else{
+            source = IsValueOkay(platform.value) ? platform.value : 'all';
+        }
+
+        
     }
 
     if (source !== 'App (Private)') {
@@ -413,11 +443,6 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     }
 
     apiParams += `&platform=${source}`;
-
-    if (IsValueOkay(source)) {
-        source = (source == 'App (Private)') ? 'App (Private)' : source.toLowerCase();
-        // apiParams += `&platform=${source}`
-    }
 
     
     const isValueOkay = (value) => (value !== '' && value !== null && value !== undefined && value !== 'Global' && value !== 0);

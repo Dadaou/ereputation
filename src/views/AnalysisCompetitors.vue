@@ -359,7 +359,7 @@ const formatStarsData = (data) => {
 }
 
 const globalComparison = async (establishment, establishmentTag, dateStart, dateEnd, website, stars, language, competitors, timePeriods) => {
-    await  viewData(establishment, establishmentTag, dateStart, dateEnd, website, competitors, timePeriods);
+    await viewData(establishment, establishmentTag, dateStart, dateEnd, website, competitors, timePeriods);
     // loadReviews(establishmentTag, 1, 20, 1, dateStart, dateEnd, website, stars, language);
 };
 
@@ -608,8 +608,8 @@ onMounted(async () => {
         appStore.setBreadcrumbs([
             {
                 title: establishment.value.name,
-                path: `${route.path}`,
-                isCurrent: true,
+                path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+                isCurrent: false,
             },
             {
                 title: "Analysis",
@@ -946,6 +946,4 @@ img {
         font-size: 14px;
     }
 }
-
-
 </style>

@@ -104,45 +104,41 @@ ChartJS.register(
     Tooltip,
     Legend
 )
+
+
+const icons = inject('icons');
+
+
   const colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
 const newOptions = {
     maintainAspectRatio: false,
-    // scales: {
-    // },
-    // plugins: {
-    //     legend: {
-    //         display: false,
-    //     }
-        // beforeDraw: function (chart) {
-        //     var ctx = chart.ctx;
-        //     chart.data.datasets.forEach(function (dataset, i) {
-        //         var meta = chart.getDatasetMeta(i);
-        //         if (!meta.hidden) {
-        //             meta.data.forEach(function (element, index) {
-        //                 // Dessiner le texte sous chaque barre en fonction de sa valeur
-        //                 var dataValue = dataset.data[index];
-        //                 var text = '';
-        //                 if (dataValue > 0.2) {
-        //                     text = 'Positif';
-        //                 } else if (dataValue < -0.2) {
-        //                     text = 'Négatif';
-        //                 } else {
-        //                     text = 'Neutre';
-        //                 }
-        //                 var fontSize = 12;
-        //                 var fontStyle = 'normal';
-        //                 var fontFamily = 'Arial';
-        //                 ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
-        //                 var textWidth = ctx.measureText(text).width;
-        //                 var elementX = element._model.x;
-        //                 var elementY = element._model.y + 20; // Ajuster la valeur pour positionner le texte sous les barres
-        //                 ctx.fillStyle = 'black';
-        //                 ctx.fillText(text, elementX - textWidth / 2, elementY);
-        //             });
-        //         }
-        //     });
-        // }
-    // }
+    scales: {
+
+        y: {
+          beginAtZero: true,
+          suggestedMin: 0, 
+          suggestedMax: 5,
+          ticks: {
+            stepSize: 1 ,
+            padding: 10
+            
+          },
+          grid: {
+            
+            drawBorder: true,
+            drawOnChartArea: true
+          
+          }
+
+        },
+   
+    },
+    plugins: {
+      legend: {
+        display: false
+      }
+    }
+   
 };
 
 const chartLoading = inject('chartLoading');
@@ -151,7 +147,7 @@ const data = inject('data');
 const date = inject('date');
 const start_date = inject('start_date');
 const weatherChartValue = ref([]);
-const icons = inject('icons');
+
 const el = ref(null);
 const chartWidth = inject('chartWidth');
 const { width, height } = useWindowSize();
@@ -200,8 +196,8 @@ const transformData=(_data)=>{
         scores.push(_note.reviews);
         plotData1.labels.push(_note.name)
       });
-        scores.push(0);
-        scores.push(5);
+        // scores.push(0);
+        // scores.push(5);
 
        plotData1.datasets.push({
               label: 'Note',
@@ -212,7 +208,7 @@ const transformData=(_data)=>{
               // fill: false,
               tension: 0.1
               })
-     console.log(data.value)
+     console.log(_data.value)
      weatherChartValue.value=plotData1;
 }
 

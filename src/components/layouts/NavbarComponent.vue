@@ -34,6 +34,14 @@
             homePageUrls[route.name].label : userStore.customer.name }}</span>
       </div>
 
+      <div v-if="showLeadgenName" class="inline-flex justify-center items-center gap-2">
+        <Icon v-if="homeLeadgenUrls[route.name].label != 'Customer'" :icon="homeLeadgenUrls[route.name].icon"
+          width="26">
+        </Icon> <span class="home-name">{{
+          homeLeadgenUrls[route.name].label != 'Customer' ?
+            homeLeadgenUrls[route.name].label : userStore.customer.name }}</span>
+      </div>
+
       <div class="nav-dropdown">
         <div v-if="isFeedback" class="feedback__option">
           <a v-if="establishement?.whatsapp == null" href="https://wa.me/message/IZFK26272CXFB1" target="_blank">
@@ -84,7 +92,7 @@ import { useI18n } from "vue-i18n";
 import { i18n } from '@/i18n';
 import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import { languages, current } from '@Services/languages.js';
-import { mainMenu, publicUrls, privateUrls, homePageUrls } from '@Services/routes.js';
+import { mainMenu, publicUrls, privateUrls, homePageUrls, homeLeadgenUrls } from '@Services/routes.js';
 import services from '@Services/services.js'
 import { Icon } from '@iconify/vue';
 
@@ -128,6 +136,10 @@ const showMenu = computed(() => {
 
 const showHomeName = computed(() => {
   return Object.keys(homePageUrls).includes(route.name) && width.value > 720
+})
+
+const showLeadgenName = computed(() => {
+  return Object.keys(homeLeadgenUrls).includes(route.name) && window.innerWidth > 720
 })
 
 const signOut = async () => {

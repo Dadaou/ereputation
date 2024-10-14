@@ -135,7 +135,7 @@ const router = createRouter({
           component: () => import('@Views/BoostAdvantagePageView.vue')
         },
         {
-          path: '/customer/:tag/screens/:screen',
+          path: '/customer/:tag/establishment/:id/screens/:screen',
           name: 'ScreenPage',
           component: () => import('@Views/ScreenPageView.vue')
         }
@@ -359,7 +359,7 @@ const router = createRouter({
           component: () => import('@Views/AppsCustomisationView.vue')
         },
         {
-          path: '/home',
+          path: '/home/erep',
           name: 'Home',
           beforeEnter: [CheckAccess],
           component: () => import('@Views/HomePageView.vue'),
@@ -381,11 +381,6 @@ const router = createRouter({
               component: () => import('@Views/EstablishmentListByTrendView.vue')
             },
             {
-              path: 'customer/:tag/establishment/analytic',
-              name: 'Analytic',
-              component: () => import('@Views/StatistiquePageView.vue')
-            },
-            {
               path: 'customer/:tag/establishment/categorization',
               name: 'Categorization',
               component: () => import('@Views/CategorizationPageView.vue')
@@ -400,6 +395,49 @@ const router = createRouter({
               name: 'HomeViewForUserConnected',
               beforeEnter: [checkNavigation],
               component: () => import('@Views/HomeViewForUserConnected.vue')
+            },
+          ]
+        },
+        {
+          path: '/home/leadgen',
+          name: 'Leadgen',
+          beforeEnter: [CheckAccess],
+          component: () => import('@Views/HomeLeadgenPageView.vue'),
+          children: [
+            {
+              path: 'customer/:tag',
+              name: 'LeadgenAdvantage',
+              component: () => import('@Views/LeadgenAdvantageView.vue')
+            },
+            {
+              path: 'customer/:tag/partnership',
+              name: 'LeadgenPartnership',
+              component: () => import('@Views/LeadgenPartnershipView.vue')
+            },
+            {
+              path: 'customer/:tag/discount-coupon',
+              name: 'LeadgenDiscountCoupon',
+              component: () => import('@Views/LeadgenDiscountCouponView.vue')
+            },
+            {
+              path: 'customer/:tag/contact',
+              name: 'LeadgenContact',
+              component: () => import('@Views/LeadgenContactView.vue')
+            },
+            {
+              path: 'customer/:tag/my-qrcode',
+              name: 'LeadgenMyQrcode',
+              component: () => import('@Views/LeadgenMyQrcodeView.vue')
+            },
+            {
+              path: 'customer/:tag/my-screen',
+              name: 'LeadgenMyScreen',
+              component: () => import('@Views/LeadgenMyScreenView.vue')
+            },
+            {
+              path: 'customer/:tag/establishment/analytic',
+              name: 'Analytic',
+              component: () => import('@Views/StatistiquePageView.vue')
             },
           ]
         },

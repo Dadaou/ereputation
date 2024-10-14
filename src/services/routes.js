@@ -67,9 +67,18 @@ export const privateUrls = [
 ]
 
 export const homePageUrls = {
-  Analytic: { label: 'Analytics', icon: 'uim:chart-pie' },
-  Categorization: { label: 'Category-based ranking', icon: 'carbon:category' },
-  EstablishmentRanking: { label: 'Score-based ranking', icon: 'solar:cup-first-bold' },
+  Categorization: { label: 'Category-based ranking', icon: 'solar:cup-first-bold' },
+  EstablishmentRanking: { label: 'Score-based ranking', icon: 'solar:cup-star-linear' },
   EstablishmentList: { label: 'Customer', icon: 'ion:list' },
-  EstablishmentListByTrend: { label: 'Trends', icon: 'gg:trending' }
+  EstablishmentListByTrend: { label: 'Trends', icon: 'gg:trending' },
+}
+
+export const homeLeadgenUrls = {
+  LeadgenAdvantage : { label: 'Advantage', icon: 'uil:bill' },
+  LeadgenPartnership : { label: 'Partnership', icon: 'uil:users-alt' },
+  LeadgenDiscountCoupon : { label: 'Discount coupon', icon: 'uil:bill' },
+  LeadgenContact : { label: 'Contact', icon: 'uil:envelope' },
+  LeadgenMyQrcode : { label: 'My Qrcode', icon: 'uil:qrcode-scan' },
+  LeadgenMyScreen : { label: 'My Screen', icon: 'uil:presentation' },
+  Analytic: { label: 'Analytics', icon: 'uim:chart-pie' },
 }

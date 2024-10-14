@@ -12,7 +12,7 @@
                     </div>
                     <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
                         @reloadData="(review) => reloadData(review)" :categories="categories"
-                        @update-feeling="updateFeeling" via='analysis' />
+                        @update-feeling="updateFeeling" via="analysis" />
                     <div v-else role="status"
                         class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
                         v-for="index in 5" :key="index">
@@ -249,20 +249,6 @@ ChartJS.register(
     Legend
 )
 
-const StaffRanking = defineAsyncComponent(() =>
-    import('@Views/StaffRankingPageView.vue')
-)
-
-const AnalysisTrend = defineAsyncComponent(() =>
-    import('@Views/TrendsView.vue')
-)
-
-const AnalysisCompetitors = defineAsyncComponent(() =>
-    import('@Views/AnalysisCompetitors.vue')
-)
-const AnalysisAlert = defineAsyncComponent(() =>
-    import('@Views/AlertView.vue')
-)
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 
@@ -286,7 +272,8 @@ let reviewFeedbackData = ref({
     width: 0,
     red: 0,
     green: 0,
-    feeling: 0
+    feeling: 0,
+    score: 0
 });
 
 
@@ -528,6 +515,52 @@ watch([categoryFilters, end_date, start_date], async () => {
     await loadSalesAnalysisData(companyId, start_date.value, end_date.value)
 })
 
+// calcul score de feeling
+const calculFeelingScore = (_reviews) =>{
+
+    let sommeFeeling=0;
+    let kFeeling=0;
+
+    _reviews.forEach(_review =>{
+
+        _review.classifications.forEach(_classification =>{
+
+            if (_classification.feeling != '' && _classification.feeling != null && 
+                _classification.feeling != 'null' && _classification.classification_confidence_feeling) {
+
+                    if (_classification.feeling == 'positive') {
+                       sommeFeeling = sommeFeeling + (_classification.classification_confidence_feeling * 1);
+                       kFeeling++;
+
+                    } else {
+
+                        if (_classification.feeling == 'negative') {
+
+                           sommeFeeling = sommeFeeling + (_classification.classification_confidence_feeling * -1);
+                            kFeeling++;
+
+                        } else {
+                           sommeFeeling = sommeFeeling + (_classification.classification_confidence_feeling * 0);
+                            kFeeling++;
+                        }
+
+                    }
+            }
+        })
+    });
+
+
+
+    if (kFeeling > 0) {
+        console.log(sommeFeeling/kFeeling);
+        return sommeFeeling/kFeeling;
+    }else{
+        console.log("zero ",0);
+        return 0;
+    }
+
+}
+
 const transformData = (chartData) => {
     const { labels, datasets, categorizations } = chartData;
     let plotData1 = {
@@ -672,8 +705,7 @@ const transformData = (chartData) => {
             avgScore.value = 0;
         }
 
-        let feeling_score = calculSentimentAnalysis(avgScore.value);
-        reviewFeedbackData.value = feeling_score;
+     
         showConfidenceChart.value = true;
 
     }
@@ -742,7 +774,7 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
     reviews_loader.value = true;
 
     let apiBase = '/review/categorizations/all';
-    let apiParams = `tag=${tag}&page=${page}&limit=${limit}&platform=${'all'}`;
+    let apiParams = `tag=${companyId}&page=${page}&limit=${limit}&platform=${'all'}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
@@ -767,12 +799,18 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
         reviews_loader.value = false;
         optionsReview.value.max = response.data['count'];
         visibleData.value = response.data['data'];
+
+        let feeling_score = calculSentimentAnalysis(calculFeelingScore(response.data['data']));
+        reviewFeedbackData.value = feeling_score;
+        console.log(calculFeelingScore(response.data['data']))
     }
 }
 const reloadData = (reviewUpdated) => {
     visibleData.value.forEach((review, index) => {
         if (review.id == reviewUpdated.id) {
             visibleData.value[index].feeling = reviewUpdated.feeling;
+            // let feeling_score = calculSentimentAnalysis(calculFeelingScore(visibleData.value));
+            // reviewFeedbackData.value = feeling_score;
         }
     })
 }
@@ -955,7 +993,7 @@ const widthimage = (event) => {
     }
 
     .largeClass {
-        margin-top: 60px ! important;
+        margin-top: 20px ! important;
         margin-bottom: 10px;
     }
 }
@@ -1057,7 +1095,7 @@ p {
 .largeClass {
     width: 100% !important;
     height: auto !important;
-    margin-top: 50px;
+    /* margin-top: 50px; */
     border-radius: 10px;
 }
 

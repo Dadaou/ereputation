@@ -72,7 +72,7 @@
                                                     buttonRefCateg = e.currentTarget
                                                     visibleCateg = true
                                                 }" @mouseleave="() => visibleCateg = false"
-                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review,categ,),feeling_new_category='yes',feel=review.classification_feeling[categ],old_item_category=categ,feeling_categorization='yes'">
+                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review,categ),feeling_new_category='yes',feel=review.classification_feeling[categ],old_item_category=categ,feeling_categorization='yes'">
                                                 </i>
                                                 <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg" :virtual-ref="buttonRefCateg" virtual-triggering
                                                     popper-class="singleton-tooltip" placement="top">
@@ -95,7 +95,7 @@
                                     buttonRef = e.currentTarget
                                     visible = true
                                 }" @mouseleave="() => visible = false"
-                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null),addExisteCategorie='yes'">
+                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null),feeling_new_category=null,addExisteCategorie='yes'">
                             </i>
                             <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
                                 popper-class="singleton-tooltip" placement="top">
@@ -224,7 +224,7 @@
                                     buttonRef = e.currentTarget
                                     visible = true
                                 }" @mouseleave="() => visible = false"
-                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null),addExisteCategorie='yes'">
+                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null),feeling_new_category=null,addExisteCategorie='yes'">
                             </i>
                             <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
                                 popper-class="singleton-tooltip" placement="top">
@@ -287,13 +287,9 @@
                     </div>
                 </div>
                 <div class="mb-6 feedback__rating">
-                    <FeelingFeedbackComponent v-if="modal.type == 'feeling'" @updateValue="(feeling) => {
-                        feel = feeling
-                    }" />
+                    <FeelingFeedbackComponent v-if="modal.type == 'feeling'" @updateValue="(feeling)=>{updateFeelingFeedback(feeling,'feeling')}" />
 
-                    <FeelingFeedbackComponent v-if="modal.type == 'feeling_review'" @updateValue="(feeling) => {
-                        feel_review = feeling
-                    }" />
+                    <FeelingFeedbackComponent v-if="modal.type == 'feeling_review'" @updateValue="(feeling)=>{updateFeelingFeedback(feeling,'feeling_review')}" />
 
                     <el-select v-if="modal.type == 'category' || modal.type == 'delete'" v-model="category" filterable placeholder="select categories" size="large">
                         <el-option key="0" label="" value="" />
@@ -315,7 +311,7 @@
                         </template>
                       </el-popconfirm>
 
-                    <button class="btn__light_secondary" @click="updateReview">
+                    <button v-if="modal.type == 'category'" class="btn__light_secondary" @click="updateReview">
                         <span ><i class="uil uil-save"></i> {{ modal.action == "edit" ? 'Save' : 'Add' }}</span>
                        
                     </button>
@@ -376,6 +372,10 @@ const props = defineProps({
     categories: {
         type: Array,
         default: []
+    },
+    via: {
+        type: String,
+        default:"review"
     }
 });
 
@@ -401,6 +401,9 @@ const visibleCateg = ref(false)
 const visible2 = ref(false);
 const feeling_new_category = ref(null);
  const baseURL = ref(import.meta.env.VITE_APP_API_URL);
+
+
+
 
 const getFeeling = (categ,feel)=>{
 
@@ -524,7 +527,7 @@ const calculFeelingScore = (_reviews,_selectedReview,_feeling,type) =>{
     let kFeeling=0;
 
 
-    console.log(_reviews)
+ 
     _reviews.forEach(_review =>{
 
         _review.classifications.forEach(_classification =>{
@@ -532,9 +535,13 @@ const calculFeelingScore = (_reviews,_selectedReview,_feeling,type) =>{
             if (_classification.feeling != '' && _classification.feeling != null && 
                 _classification.feeling != 'null' && _classification.classification_confidence_feeling) {
 
-                    if (_classification.id == _selectedReview.id && type == 'category') {
+                    if (_classification.id == _selectedReview.id && type == 'category' && old_item_category.value == _classification.category) {
                         _classification.feeling = _feeling;
                         _classification.classification_confidence_feeling = 1;
+                        console.log(_classification)
+                          console.log(_review.classification_feeling)
+                         
+
                     }
 
                     if (_classification.feeling == 'positive') {
@@ -559,6 +566,7 @@ const calculFeelingScore = (_reviews,_selectedReview,_feeling,type) =>{
     });
 
      if (props.via != 'analysis') {
+        console.log('compte review',props.via)
           _reviews.forEach(_review =>{
 
             if (_review.feeling != '' && _review.feeling != null && 
@@ -728,6 +736,20 @@ const updateReview = async () => {
         console.log(error);
     }
 };
+
+ const updateFeelingFeedback=((_feeling,_type) => {
+        if (_type == 'feeling_review') {
+            feel_review.value=_feeling;
+        } else {
+            feel.value = _feeling;
+        }
+        console.log(_feeling)
+          showModal.value = false
+          setTimeout(() => {
+            updateReview();
+          
+        }, 1000);
+    });
 
 const handleModal = (text, action, icon, type, review,category='') => {
     showModal.value = true

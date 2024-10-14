@@ -1,43 +1,44 @@
 <template>
     <div class="main__container">
         <div class=" container client__container ">
-            <div v-if="!dataLoading" class="header">
+            <div class="header">
                 <div class="header_navigation">
                     <RouterLink class="search__icon" :to="{ name: 'EstablishmentList', params: { tag: tag } }">
                         <Icon :icon="'ion:list'" width="26"></Icon>
                     </RouterLink>
-                    <RouterLink v-if="show && establishments.length > 1" class="search__icon"
+                    <RouterLink class="search__icon"
                         :to="{ name: 'EstablishmentRanking', params: { tag: tag } }">
-                        <Icon :icon="'solar:cup-first-bold'" width="25"></Icon>
+                        <Icon :icon="'solar:cup-star-linear'" width="25"></Icon>
                     </RouterLink>
-                    <RouterLink v-if="establishments.length > 1" class="search__icon"
+                    <RouterLink class="search__icon"
                         :to="{ name: 'Categorization', params: { tag: tag } }">
-                        <Icon :icon="'carbon:category'" width="25"></Icon>
+                        <Icon :icon="'solar:cup-first-bold'" width="25"></Icon>
                     </RouterLink>
                     <RouterLink class="search__icon" :to="{ name: 'EstablishmentListByTrend', params: { tag: tag } }">
                         <Icon :icon="'gg:trending'" width="25"></Icon>
                     </RouterLink>
-                    <RouterLink class="search__icon" :to="{ name: 'Analytic', params: { tag: tag } }">
-                        <Icon :icon="'uim:chart-pie'" width="25"></Icon>
-                    </RouterLink>
-
                 </div>
-                <!-- <h1 v-if="route.name == 'Analytic'">Analytics</h1> -->
+
+                <div class="toggle-switch" :class="{ 'active': isActiveErep }">
+                    <div class="toggle-option" :class="{ 'selected': isActiveErep }" @click="handleToggleErep">E-Rep</div>
+                    <div class="toggle-line"></div>
+                    <div class="toggle-option" @click="handleToggleLeadgen">Lead-Gen
+                    </div>
+                </div>
+
                 <button
                     v-if="userStore.user.partner && userStore.user.roles.includes('ROLE_PARTNER') && route.name !== 'CustomersList'"
                     @click="backToCustomer">
                     <i class="uil uil-arrow-left"></i>Back</button>
 
             </div>
-            <RouterView v-if="route.name != 'Analytic'" />
+            <RouterView />
         </div>
-        <RouterView v-if="route.name == 'Analytic'" />
     </div>
-
 </template>
 
 <script setup>
-import { ref, inject, computed, onMounted } from 'vue';
+import { ref, inject, computed, onMounted, watch } from 'vue';
 import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from "@Stores/app.js"
 import { useRouter, useRoute } from "vue-router";
@@ -64,7 +65,7 @@ const backToCustomer = () => {
 };
 
 const show = computed(() => {
-    let routeName = ['EstablishmentList', 'EstablishmentRanking', 'EstablishmentListByTrend', 'Analytic', 'Categorization', undefined];
+    let routeName = ['EstablishmentList', 'EstablishmentRanking', 'EstablishmentListByTrend', 'Categorization', undefined];
     return routeName.includes(route.name)
 });
 
@@ -76,9 +77,18 @@ onMounted(async () => {
             dataLoading.value = false;
         })
     }
-
-
 });
+
+const isActiveErep = ref(true);
+const handleToggleErep = () => {
+    router.push({ name: 'EstablishmentList', params: { tag: customerTag.value } })
+        .catch(err => console.error(err));
+}
+
+const handleToggleLeadgen = () => {
+    router.push({ name: 'LeadgenAdvantage', params: { tag: customerTag.value } })
+        .catch(err => console.error(err));
+}
 </script>
 
 <style scoped>
@@ -225,8 +235,6 @@ h1 {
 
 @media screen and (max-width: 600px) {
     .header_navigation {
-        flex-wrap: wrap;
-        justify-content: center;
         padding: 5px 10px;
     }
 
@@ -295,6 +303,85 @@ h1 {
 @media screen and (max-width:600px) {
     .client__container__head {
         font-size: 15px;
+    }
+}
+
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-switch {
+    display: flex;
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    overflow: hidden;
+    width: 130px;
+    height: 40px;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.3s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.382);
+    border: solid 1px var(--light-color-bg2);
+}
+
+.toggle-option {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #888;
+    transition: color 0.3s;
+}
+
+.toggle-line {
+    background-color: rgba(128, 128, 128, 0.049);
+    width: 1px;
+    height: 40px;
+}
+
+.toggle-option.selected {
+    color: #fff;
+}
+
+.toggle-switch.active .toggle-option.selected {
+    color: white;
+    font-weight: bold;
+    background-color: var(--light-color-bg2);
+}
+
+.toggle-switch .toggle-option {
+    background-color: #fff;
+}
+
+@media screen and (max-width: 568px) {
+    .header {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .toggle-switch {
+        order: 1;
+        margin-left: 0;
+        align-self: flex-end; 
+    }
+
+    .header_navigation {
+        order: 2;
+        margin-top: 20px;
+        gap: 8px !important;
+    }
+
+    .toggle-switch {
+        width: 100px !important;
+    }
+
+    .toggle-option {
+        font-size: 9px;
     }
 }
 </style>

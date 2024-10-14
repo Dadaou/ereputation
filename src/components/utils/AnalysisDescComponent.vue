@@ -21,7 +21,7 @@
 		    marginRight: '10px',
 			cursor: 'pointer'
 		}" @click="emitLabelChange(rating.label)">
-		    {{ rating.label }}
+		    {{ rating.label }} : {{rating.avg_rating}}
 		</span>
 
     </div>
@@ -65,7 +65,7 @@ const emitLabelChange = (label) => {
     }
 
     .cat_desc span:nth-child(2) {
-	    margin-left: 1rem;
+	    margin-left: .2rem;
 	}
 
     .cat_desc p span{

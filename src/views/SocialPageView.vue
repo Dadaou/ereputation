@@ -1025,7 +1025,7 @@ const  widthimage = (event) => {
     }
   
     .largeClass{
-        margin-top:0px! important;
+        margin-top:20px! important;
         margin-bottom:0px;
     }
 }
@@ -1043,7 +1043,7 @@ const  widthimage = (event) => {
 .largeClass {
     width: 100% !important;
     height: auto !important;
-    margin-top: 50px;
+    /* margin-top: 50px; */
     border-radius: 10px;
 }
 .mediumClass{

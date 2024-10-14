@@ -2,169 +2,508 @@
     <div>
         <div class="security__header border__bottom mt-10"></div>
         <h1 class="title">My public platforms</h1>
-        <h1>Let's start by setting up your first establishment </h1>
+        <h1>
+            Let's start by setting up your first establishment <b v-if="establishmentName">{{ establishmentName }} </b>
+        </h1>
         <div class="table__container mt-4">
-            <form id="establishmentForm" @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4">
-                <div class="grid gap-6 mb-6 md:grid-cols-5">
-                    <div class="col-span-2">
-                        <label for="gps" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Google link
-                        </label>
-                        <input type="text" id="website" name="website" v-model="data.website"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+            <div>
+                <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
+                    <div class="grid gap-6 mb-6 md:grid-cols-2">
+                        <div>
+                            <label for="google"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Google
+                            </label>
+                            <p class="text-gray-900 text-sm">Url must start with
+                                https://www.google.com/search?q={value1}</p>
+                            <p v-if="!isValidGoogle && urlGoogle !== ''" class="text-red-500 text-sm">Invalid Google URL
+                                format</p>
+                            <input type="text" id="urlGoogle" v-model="urlGoogle"
+                                :class="['bg-gray-50 border text-sm w-full p-2', isValidGoogle ? 'border-gray-300' : 'border-red-500']">
+                        </div>
+
+                        <div>
+                            <label for="tripadvisor"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tripadvisor
+                            </label>
+                            <p class="text-gray-900 text-sm">Url must start with https://www.tripadvisor.com/{value1}
+                            </p>
+                            <p v-if="!isValidTripadvisor && urlTripadvisor !== ''" class="text-red-500 text-sm">Invalid
+                                Tripadvisor URL format</p>
+                            <input type="text" id="urlTripadvisor" v-model="urlTripadvisor"
+                                :class="['bg-gray-50 border text-sm w-full p-2', isValidTripadvisor ? 'border-gray-300' : 'border-red-500']">
+                        </div>
+                        <div>
+                            <label for="facebook"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Facebook
+                            </label>
+                            <p class="text-gray-900 text-sm">Url must start with https://www.facebook.com/{value1}
+                            </p>
+                            <p v-if="!isValidFacebook && urlFacebook !== ''" class="text-red-500 text-sm">Invalid
+                                Facebook URL format</p>
+                            <input type="text" id="urlFacebook" v-model="urlFacebook"
+                                :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                        </div>
+                        <div>
+                            <label for="instagram"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Instagram
+                            </label>
+                            <p class="text-gray-900 text-sm">Url must start with https://www.instagram.com/{value1}
+                            </p>
+                            <p v-if="!isValidInstagram && urlInstagram !== ''" class="text-red-500 text-sm">Invalid
+                                Instagram URL format</p>
+                            <input type="text" id="urlInstagram" v-model="urlInstagram"
+                                :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                        </div>
+                        <div>
+                            <label for="twitter"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Twitter
+                            </label>
+                            <p class="text-gray-900 text-sm">Url must start with https://x.com/{value1}
+                            </p>
+                            <p v-if="!isValidTwitter && urlTwitter !== ''" class="text-red-500 text-sm">Invalid
+                                Twitter URL format</p>
+                            <input type="text" id="urlTwitter" v-model="urlTwitter"
+                                :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                        </div>
+
+                        <div></div>
+                        <div>
+                            <span @click="addNewPlatform" class="button__plus">
+                                Platform +
+                            </span>
+                            <span @click="addNewSocial" class="button__plus">
+                                Social +
+                            </span>
+                        </div>
+                        <div></div>
+                        <div v-for="(entry, index) in platformEntries" :key="index">
+                            <div>
+                                <div class="content__label">
+                                    <label for="platforms"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Platform</label>
+                                    <p class="button__close" @click="removePlatform(index)">x</p>
+                                </div>
+                                <el-select id="platforms" v-model="entry.platform" placeholder="Choose platform"
+                                    size="large" filterable clearable
+                                    @change="value => handleChangePlatform(value, index)">
+                                    <el-option v-for="item in dataPlatforms" :key="item.uri" :label="item.name"
+                                        :value="`${item.id}`" />
+                                </el-select>
+                            </div>
+
+                            <label for="platformLink"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link platform
+                                <span>*</span></label>
+
+                            <p v-if="entry.platform" class="text-gray-900 text-sm">Url must start with {{
+                                entry.selectedPlatform.url }}</p>
+                            <p v-if="entry.platformLink && !entry.isValidPlatform" class="text-red-500 text-sm">Invalid
+                                URL format</p>
+                            <input type="text" id="platformLink" v-model="entry.platformLink"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                        </div>
+
+                        <div v-for="(entry, index) in socialEntries" :key="index">
+                            <div>
+                                <div class="content__label">
+                                    <label for="socials"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Social</label>
+                                    <p class="button__close" @click="removeSocial(index)">x</p>
+                                </div>
+                                <el-select id="socials" v-model="entry.social" placeholder="Choose social" size="large"
+                                    filterable clearable @change="value => handleChangeSocial(value, index)">
+                                    <el-option v-for="item in dataSocials" :key="item.uri" :label="item.name"
+                                        :value="`${item.id}`" />
+                                </el-select>
+                            </div>
+                            <label for="socialLink"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link social
+                                <span>*</span>
+                            </label>
+                            <p v-if="entry.social" class="text-gray-900 text-sm">Url must start with {{
+                                entry.selectedSocial.url }}</p>
+                            <p v-if="entry.socialLink && !entry.isValidSocial" class="text-red-500 text-sm">Invalid
+                                URL format</p>
+                            <input type="text" id="socialLink" v-model="entry.socialLink"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                        </div>
                     </div>
-                    <div class="col-span-2">
-                        <label for="gps" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tripadvisor link
-                        </label>
-                        <input type="text" id="website" name="website" v-model="data.website"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+
+                    <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
+                        <button type="submit"
+                            :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800']">
+                            <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" />
+                            <span v-if="showSpinner">Loading...</span>
+                            <span v-show="!showSpinner"><i class="uil uil-save"></i> Submit</span>
+                        </button>
                     </div>
-                </div>
-                <div class="grid gap-6 mb-6 md:grid-cols-4"></div>
-                <div
-                    class="flex flex-wrap gap-3 items-center justify-between py-2 border-t border-b dark:border-gray-600">
-                    <button type="submit"
-                        class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
-                        <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span
-                            v-if="showSpinner">Loading
-                            ...</span>
-                        <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} establishment</span>
-                    </button>
-                    <button @click="resetForm"
-                        class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-gray-700 rounded-lg focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-900 hover:bg-gray-800">
-                        <span><i class="uil uil-times"></i> Clear </span>
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
+
         </div>
     </div>
 </template>
 <script setup>
-import { ref, inject, watch } from 'vue';
-import services from '@Services/services.js';
-import { useUserStore } from "@Stores/user.js";
+import { ref, onBeforeMount, watch } from 'vue'
+import { ElMessage, ElOption, ElSelect } from 'element-plus'
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
-import { ElMessage } from 'element-plus';
-import 'element-plus/es/components/message/style/css'
-import 'element-plus/es/components/option/style/css'
-import 'element-plus/es/components/select/style/css'
-import 'element-plus/es/components/date-picker/style/css'
-import { useRouter, useRoute } from 'vue-router';
+import services from '@Services/services.js';
 
-const router = useRouter();
-const route = useRoute();
-const previewImage = ref(null);
-const data = ref({});
+const props = defineProps({
+    establishmentName: String,
+    competitorId: String
+});
+
+const emit = defineEmits(['changeStep']);
+
+const goToNextStep = (establishmentName, competitorId) => {
+    emit('changeStep', { step: 3, establishmentName, competitorId });
+};
+
 const showSpinner = ref(false);
-const type = ref('Add');
-const userStore = useUserStore();
-const establishment_to_update = inject('establishment_to_update');
-const imgHasChanged = ref(false);
-const cleanEstablishmentForm = inject('clearEstablishmentForm');
+const dataSocials = ref([]);
+const dataPlatforms = ref([]);
 
+const urlGoogle = ref('');
+const urlTripadvisor = ref('');
+const urlFacebook = ref('');
+const urlInstagram = ref('');
+const urlTwitter = ref('');
 
-const category = ref('Platform')
+const isValidGoogle = ref(true);
+const isValidTripadvisor = ref(true);
+const isValidFacebook = ref(true);
+const isValidInstagram = ref(true);
+const isValidTwitter = ref(true);
 
-const resetForm = () => {
-    data.value = {};
-    previewImage.value = null;
-    type.value = 'Add';
+const platform = ref(null);
+const platformLink = ref('');
+const isValidPlatform = ref(true);
+const platformEntries = ref([]);
+
+const socialLink = ref('');
+const social = ref('');
+const isValidSocial = ref(true);
+const socialEntries = ref([]);
+
+function addNewPlatform() {
+    platformEntries.value.push({
+        platform: null,
+        platformLink: '',
+        isValidPlatform: true,
+        selectedPlatform: null
+    });
 }
 
-watch(cleanEstablishmentForm, () => {
-    resetForm();
-})
+function removePlatform(index) {
+    platformEntries.value.splice(index, 1);
+}
+
+function addNewSocial() {
+    socialEntries.value.push({
+        social: null,
+        socialLink: '',
+        isValidSocial: true,
+        selectedSocial: null
+    })
+}
+
+function removeSocial(index) {
+    socialEntries.value.splice(index, 1);
+}
+
+const validateGoogleUrl = () => {
+    const googlePattern = /^https:\/\/www\.google\.com\/search\?q=.+/;
+    isValidGoogle.value = googlePattern.test(urlGoogle.value);
+};
+
+
+const validateTripadvisorUrl = () => {
+    const tripadvisorPattern = /^https:\/\/www\.tripadvisor\.com\/.+/;
+    isValidTripadvisor.value = tripadvisorPattern.test(urlTripadvisor.value);
+};
+
+const validateFacebookUrl = () => {
+    const facebookPattern = /^https:\/\/www\.facebook\.com\/.+/;
+    isValidFacebook.value = facebookPattern.test(urlFacebook.value);
+};
+
+const validateInstagramUrl = () => {
+    const instagramPattern = /^https:\/\/www\.instagram\.com\/.+/;
+    isValidInstagram.value = instagramPattern.test(urlInstagram.value);
+};
+
+const validateTwitterUrl = () => {
+    const twitterPattern = /^https:\/\/x\.com\/.+/;
+    isValidTwitter.value = twitterPattern.test(urlTwitter.value);
+};
+
+watch(urlGoogle, validateGoogleUrl);
+watch(urlTripadvisor, validateTripadvisorUrl);
+watch(urlFacebook, validateFacebookUrl);
+watch(urlInstagram, validateInstagramUrl);
+watch(urlTwitter, validateTwitterUrl);
+
+
+const handleChangePlatform = (value, index) => {
+    const selected = dataPlatforms.value.find(item => item.id.toString() === value.toString());
+    console.log('Available Platforms:', dataPlatforms.value);
+    console.log('Selected ID:', value);
+    console.log('Selected Platform:', selected);
+
+    if (selected) {
+        platformEntries.value[index].selectedPlatform = {
+            id: selected.id,
+            url: selected.url,
+        };
+    } else {
+        platformEntries.value[index].selectedPlatform = { url: '' };
+        console.error('No matching platform found for ID:', value);
+    }
+    validatePlatformUrl(index);
+}
+
+const handleChangeSocial = (value, index) => {
+    const selected = dataSocials.value.find(item => item.id.toString() === value.toString());
+    console.log('Available social:', dataSocials.value);
+    console.log('Selected ID:', value);
+    console.log('Selected social:', selected);
+
+    if (selected) {
+        socialEntries.value[index].selectedSocial = {
+            id: selected.id,
+            url: selected.url,
+        };
+    } else {
+        socialEntries.value[index].selectedSocial = { url: '' };
+        console.error('No matching platform found for ID:', value);
+    }
+    validateSocialUrl(index);
+}
+
+// const isPlatformUrl = (url, urlTemplate) => {
+//     const langAccept = ['fr', 'mu']
+//     const splitLink = platformLink.value.split('/')
+//     const existsInB = langAccept.some(item => splitLink.includes(item));
+//     const pattern = urlPattern(urlTemplate);
+
+//     let isValid = false
+
+//     if (pattern.test(url)) {
+//         isValid = true;
+//     }
+
+//     if (existsInB) {
+//         isValid = true;
+//     }
+
+//     return isValid
+// }
+
+const validatePlatformUrl = (index) => {
+    const entry = platformEntries.value[index];
+    if (entry.platformLink && entry.selectedPlatform) {
+        const pattern = urlPattern(entry.selectedPlatform.url);
+        entry.isValidPlatform = pattern.test(entry.platformLink);
+    } else {
+        entry.isValidPlatform = false;
+    }
+}
+
+const validateSocialUrl = (index) => {
+    const entry = socialEntries.value[index];
+    if (entry.socialLink && entry.selectedSocial) {
+        const pattern = urlPattern(entry.selectedSocial.url);
+        entry.isValidSocial = pattern.test(entry.socialLink);
+    } else {
+        entry.isValidSocial = false;
+    }
+}
+
+// const isValidSocialUrl = (url, urlTemplate) => {
+//     const langAccept = ['fr', 'mu'];
+//     const splitLink = social.value.split('/');
+//     const existsInB = langAccept.some(item => splitLink.includes(item));
+//     const pattern = urlPattern(urlTemplate);
+
+//     let isValid = false;
+
+//     if (pattern.test(url)) {
+//         isValid = true;
+//     }
+
+//     if (existsInB) {
+//         isValid = true;
+//     }
+
+//     return isValid;
+// };
+
+
+const urlPattern = (urlTemplate, extensions = ['fr', 'es', 'com']) => {
+    const url = new URL(urlTemplate);
+
+    const domainParts = url.hostname.split('.');
+
+    let regexPattern = urlTemplate.replace(/[\-\[\]\/\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+
+    regexPattern = regexPattern.replace(/{value1}/g, '(.+)');
+    regexPattern = regexPattern.replace(/q=/g, '');
+
+    const extensionPattern = extensions.join('|');
+    regexPattern = regexPattern.replace(new RegExp(`\\.${domainParts[domainParts.length - 1]}`), `.(?:${extensionPattern})`);
+
+    return new RegExp('^' + regexPattern);
+};
+
 
 const submit = async () => {
+    showSpinner.value = true;
 
-    const form = document.querySelector('#establishmentForm');
+    const providersData = [
+        { value1: urlGoogle.value, provider: providersMap.value.google, name: 'Google' },
+        { value1: urlTripadvisor.value, provider: providersMap.value.tripadvisor, name: 'Tripadvisor UK' },
+        { value1: urlFacebook.value, provider: providersMap.value.facebook, name: 'Facebook' },
+        { value1: urlInstagram.value, provider: providersMap.value.instagram, name: 'Instagram' },
+        { value1: urlTwitter.value, provider: providersMap.value.twitter, name: 'Twitter' },
+    ];
 
-    const formData = new FormData(form);
+    const platformsData = platformEntries.value.map(entry => ({
+        value1: entry.platformLink,
+        provider: `/api/providers/${entry.selectedPlatform.id}`,
+        name: entry.selectedPlatform.name
+    }));
 
-    const establishmentData = { ...data.value, customer: `${userStore.user.customer.tag}` };
+    const socialsData = socialEntries.value.map(entry => ({
+        value1: entry.socialLink,
+        provider: `/api/providers/${entry.selectedSocial.id}`,
+        name: entry.selectedSocial.name
+    }));
 
-    if (establishmentData.universe_id
-        && establishmentData.country
-        && establishmentData.city
-        && establishmentData.zipcode
-        && establishmentData.universe_id
-        && establishmentData.name
-        && establishmentData.address1) {
+    const providersAllData = [...providersData, ...platformsData, ...socialsData];
+    const validProviders = providersAllData.filter(platform => platform.value1 !== '' && platform.provider);
 
-        formData.append('universe', establishmentData.universe_id);
-        formData.append('country', establishmentData.country);
-        formData.append('customer', `${userStore.user.customer.tag}`)
-        showSpinner.value = true;
+    try {
 
-        if (!imgHasChanged.value) formData.delete('file');
+        for (const platform of validProviders) {
+            const data = {
+                value1: platform.value1 || ' ',
+                provider: platform.provider,
+                enable: true,
+                establishment: `/api/establishments/${props.competitorId}`,
+                section: '',
+                caption: null
+            };
 
-        if (type.value === 'Edit') {
-            if (establishmentData.uri) {
-                formData.append('id', establishmentData.uri.split('/').pop());
-            }
+            const response = await new Promise((resolve, reject) => {
+                services.createRecord('settings', data, (response) => {
+                    if (response.status === 201) {
+                        resolve(response);
+                    } else {
+                        reject(response);
+                    }
+                });
+            });
         }
+        ElMessage({
+            message: `URL added successfully`,
+            type: 'success',
+        });
 
-        formData.delete('media');
+        goToNextStep(props.establishmentName, props.competitorId);
 
-        const response = await new Promise((resolve, reject) => {
-            services.postFormData('establishments/front_post', formData, (response) => {
+    } catch (error) {
+        console.error('Error submitting platform data:', error);
+    } finally {
+        showSpinner.value = false;
+        resetValue();
+    }
+};
+
+
+watch(platformEntries.value, (newEntries) => {
+    newEntries.forEach((entry, index) => {
+        watch(() => entry.platformLink, () => validatePlatformUrl(index));
+    });
+}, { deep: true });
+
+watch(socialEntries.value, (newEntries) => {
+    newEntries.forEach((entry, index) => {
+        watch(() => entry.socialLink, () => validateSocialUrl(index));
+    });
+}, { deep: true });
+
+const resetValue = () => {
+    platform.value = null;
+    social.value = null;
+    platformLink.value = '';
+    socialLink.value = '';
+    urlGoogle.value = '';
+    urlTripadvisor.value = '';
+    urlFacebook.value = '';
+    urlInstagram.value = '';
+    urlTwitter.value = '';
+    isValidPlatform.value = true;
+    isValidSocial.value = true;
+    isValidGoogle.value = true;
+    isValidTripadvisor.value = true;
+    isValidFacebook.value = true;
+    isValidInstagram.value = true;
+    isValidTwitter.value = true;
+};
+
+const providersMap = ref({
+    google: null,
+    tripadvisor: null,
+    facebook: null,
+    instagram: null,
+    twitter: null,
+});
+
+
+onBeforeMount(async () => {
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`providers`, (response) => {
                 resolve(response);
             });
         });
 
-        if (response && response.status == 201) {
-            loadData(response.data, 'new')
-            ElMessage({
-                message: `Establishment added successfully.`,
-                type: 'success',
-            });
-            data.value = {}
-            showSpinner.value = false;
-        }
+        if (response.status === 200) {
+            const dataSocial = response.data['hydra:member'];
+            dataSocials.value = dataSocial.filter(item => item.category === 'Social' && item.name !== 'Facebook' && item.name !== 'Instagram' && item.name !== 'Twitter (X)');
+            const dataPlatform = response.data['hydra:member'];
+            dataPlatforms.value = dataPlatform.filter(item => item.category === 'Platform' && item.name !== 'Google' && item.name !== 'Tripadvisor UK');
 
-        if (response && response.status == 200) {
-            loadData(response.data, 'edit')
-            ElMessage({
-                message: `Establishment updated successfully.`,
-                type: 'success',
-            });
-            data.value = {}
-            showSpinner.value = false;
-        }
-    } else {
-        ElMessage.error(`Please, provide all required information to add / update an establishment`);
-    }
+            const providers = response.data['hydra:member'];
 
-};
+            if (Array.isArray(providers)) {
+                const googleProvider = providers.find(provider => provider.name === 'Google');
+                const tripadvisorProvider = providers.find(provider => provider.name === 'Tripadvisor UK');
+                const facebookProvider = providers.find(provider => provider.name === 'Facebook');
+                const instagramProvider = providers.find(provider => provider.name === 'Instagram');
+                const twitterProvider = providers.find(provider => provider.name === 'Twitter (X)');
 
-const loadData = (establishment, type) => {
-    establishment.url_source = establishment.media
 
-    if (type == 'new') {
-        userStore.user.customer.establishments.push(establishment);
-    }
-    if (type == 'edit') {
-        userStore.user.customer.establishments = userStore.user.customer.establishments.map((x) => {
-            if (x.id == establishment.id) {
-                return establishment;
+                providersMap.value.google = googleProvider ? googleProvider["@id"] : null;
+                providersMap.value.tripadvisor = tripadvisorProvider ? tripadvisorProvider["@id"] : null;
+                providersMap.value.facebook = facebookProvider ? facebookProvider["@id"] : null;
+                providersMap.value.instagram = instagramProvider ? instagramProvider["@id"] : null;
+                providersMap.value.twitter = twitterProvider ? twitterProvider["@id"] : null;
+
             } else {
-                return x;
+                console.error('Providers data is not an array');
             }
-        });
-    }
-    router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'establishments_list' } });
-}
-
-watch(establishment_to_update, () => {
-    if (establishment_to_update.value != null) {
-        data.value = establishment_to_update.value;
-        data.value['address1'] = establishment_to_update.value.address || "";
-        previewImage.value = establishment_to_update.value.media || "";
-        type.value = 'Edit';
-
+        } else {
+            console.error('Error fetching providers:', response);
+        }
+    } catch (error) {
+        console.error('Error in onBeforeMount:', error);
     }
 });
 
 </script>
+
 <style scoped>
 .title {
     margin-bottom: 1.5rem;
@@ -278,5 +617,29 @@ form button {
     .security__header {
         width: 100%;
     }
+}
+
+.button__plus {
+    background-color: var(--light-color-bg2);
+    margin-right: 15px;
+    padding: 8px;
+    color: white;
+    font-size: 12px;
+    border-radius: 5px;
+}
+
+.button__plus:hover,
+.button__close:hover {
+    cursor: pointer;
+}
+
+.content__label {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button__close {
+    font-weight: bold;
+    color: red;
 }
 </style>
