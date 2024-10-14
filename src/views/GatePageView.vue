@@ -2,48 +2,49 @@
     <div v-if="exist" class="feedback__form">
         <div class="feedback">
             <div v-for="(item, index) in useCategories" :key="index">
-                <button 
-                v-if="item.label != 'Menus' || (item.label == 'Menus' && (establishment.universe_name == 'Hotel' || establishment.universe_name == 'hotel' || establishment.universe_name == 'restaurant' || establishment.universe_name == 'Restaurant'))" class="accordion gate__menu" :class="[item.active ? 'clicked' : '']" @click="toggleMenu(item)">
+                <button
+                    v-if="item.label != 'Menus' || (item.label == 'Menus' && (establishment.universe_name == 'Hotel' || establishment.universe_name == 'hotel' || establishment.universe_name == 'restaurant' || establishment.universe_name == 'Restaurant' || establishment.universe_name == 'Event' || establishment.universe_name == 'event'))"
+                    class="accordion gate__menu" :class="[item.active ? 'clicked' : '']" @click="toggleMenu(item)">
                     <span class="icon-container">
                         <Icon :icon="item.icon" width="25px" />
                     </span>
                     <span>{{ item.label }}</span>
                 </button>
                 <div class="panel" v-if="item.active">
-                    <div v-if="category == 'reviews'"
-                        class="list__container">
+                    <div v-if="category == 'reviews'" class="list__container">
                         <div v-if="category == 'reviews' && establishment.whatsapp" class="whatsapplink">
                             <a :href="`${establishment.whatsapp}`" target="_blank">
                                 <i class="fa fa-whatsapp"></i>
                             </a>
                         </div>
-                        <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in establishmentLink"
-                            :item="element" type="Establishment" :key="index" />
-                        <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in staffLinks"
+                        <GateLinkComponent @click="handleClick(element, category)"
+                            v-for="(element, index) in establishmentLink" :item="element" type="Establishment"
+                            :key="index" />
+                        <GateLinkComponent @click="handleClick(element, category)" v-for="(element, index) in staffLinks"
                             :item="element" type="staff" :key="index" />
-                        <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in unitLinks"
+                        <GateLinkComponent @click="handleClick(element, category)" v-for="(element, index) in unitLinks"
                             :item="element" type="Unit" :key="index" />
-                        <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in platformLinks"
-                            :item="element" type="Platform" :key="index" />
+                        <GateLinkComponent @click="handleClick(element, category)"
+                            v-for="(element, index) in platformLinks" :item="element" type="Platform" :key="index" />
                     </div>
                     <div v-if="category == 'follow'"
                         class="list__container grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-12">
-                        <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in followLinks"
-                            :item="element" type="Social" :key="index" />
+                        <GateLinkComponent @click="handleClick(element, category)"
+                            v-for="(element, index) in followLinks" :item="element" type="Social" :key="index" />
                     </div>
                     <div v-if="category == 'offers'"
                         class="list__container grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-12">
-                        <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in offerLinks"
+                        <GateLinkComponent @click="handleClick(element, category)" v-for="(element, index) in offerLinks"
                             :item="element" type="Offer" :key="index" />
                     </div>
                     <div v-if="category == 'infos'"
                         class="list__container grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-12">
-                        <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in infoLinks"
+                        <GateLinkComponent @click="handleClick(element, category)" v-for="(element, index) in infoLinks"
                             :item="element" type="Info" :key="index" />
                     </div>
                     <div v-if="category == 'menus'"
                         class="list__container grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-12">
-                        <GateLinkComponent @click="handleClick(element,category)" v-for="(element, index) in menuLinks"
+                        <GateLinkComponent @click="handleClick(element, category)" v-for="(element, index) in menuLinks"
                             :item="element" type="Menu" :key="index" />
                     </div>
                 </div>
@@ -96,7 +97,7 @@ const useCategories = computed(() => {
 
 
 
-const handleClick = async  (element,category) => {
+const handleClick = async (element, category) => {
     const visitorId = localStorage.getItem('visitId');
     const vistorData = {
         "visitor_id": visitorId,
@@ -238,30 +239,31 @@ onBeforeMount(async () => {
 });
 
 onMounted(() => {
-   if (!route.query.preview) {
-         try {
+    if (!route.query.preview) {
+        try {
             if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
                 window.FingerprintApp.default.main();
             }
         } catch (error) {
             console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
         }
-   }
+    }
 })
 
 </script>
 <style scoped>
 .whatsapplink {
-  position: relative; /* Centre verticalement */
-  width: 170px;
-  height: 140px;
-  aspect-ratio: 1/1;
-  border-radius: 5px;
-  border: 1px solid rgba(220, 220, 220, .4);
-  cursor: pointer;
-  padding: 8px;
-  transition: all .5s linear;
-  background: white;
+    position: relative;
+    /* Centre verticalement */
+    width: 170px;
+    height: 140px;
+    aspect-ratio: 1/1;
+    border-radius: 5px;
+    border: 1px solid rgba(220, 220, 220, .4);
+    cursor: pointer;
+    padding: 8px;
+    transition: all .5s linear;
+    background: white;
 }
 
 .whatsapplink:hover {
@@ -272,12 +274,16 @@ onMounted(() => {
 }
 
 .fa-whatsapp {
-  position: absolute;
-  top: 50%; /* Positionne l'image au milieu verticalement */
-  left: 50%;
-  color: #25D366; /* Couleur verte pour l'icône WhatsApp */
-  font-size: 4.5rem; /* Ajustez la taille de l'icône selon vos besoins */
-  transform: translate(-50%, -50%); /* Centre l'image exactement */
+    position: absolute;
+    top: 50%;
+    /* Positionne l'image au milieu verticalement */
+    left: 50%;
+    color: #25D366;
+    /* Couleur verte pour l'icône WhatsApp */
+    font-size: 4.5rem;
+    /* Ajustez la taille de l'icône selon vos besoins */
+    transform: translate(-50%, -50%);
+    /* Centre l'image exactement */
 }
 
 .feedback__form {
@@ -434,7 +440,8 @@ img {
     margin-block: 16px;
     display: flex;
     gap: 12px;
-    overflow-x: auto; /* Permet le défilement horizontal */
+    overflow-x: auto;
+    /* Permet le défilement horizontal */
     /* Empêche les éléments de s'enrouler */
     padding-bottom: 8px;
 }
@@ -476,6 +483,7 @@ img {
     background-color: #f9f9f9;
     overflow: hidden;
 }
+
 .gate__menu {
     display: flex;
     flex-direction: row;
@@ -515,15 +523,16 @@ img {
     justify-content: center;
     color: #333;
 }
-@media (max-width: 640px) { 
-  .list__container {
-    margin-block: 16px;
-    display: flex;
-    gap: 50px;
-    /* Empêche les éléments de s'enrouler */
-    padding-bottom: 15px;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Adapte le nombre de colonnes en fonction de l'écran */
-}
-}
 
+@media (max-width: 640px) {
+    .list__container {
+        margin-block: 16px;
+        display: flex;
+        gap: 50px;
+        /* Empêche les éléments de s'enrouler */
+        padding-bottom: 15px;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        /* Adapte le nombre de colonnes en fonction de l'écran */
+    }
+}
 </style>

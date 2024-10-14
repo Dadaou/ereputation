@@ -6,7 +6,7 @@
                 :class="appStore.account.brand === 'LinkyStar' ? 'gate__logo__linkystar' : 'gate__logo'">
             <img v-if="item.logo && item.logo.length > 0" :src="item.logo" class="gate__logo">
             <img v-if="logoSrc" :src="logoSrc" :alt="`${item.label} logo`" class="gate__logoSrc">
-            <h4 v-if="item.label" class="mb-1">{{ item.label }}</h4>
+            <h4 v-if="item.label && type !== 'Social'" class="mb-1">{{ item.label }}</h4>
         </a>
     </div>
 </template>
