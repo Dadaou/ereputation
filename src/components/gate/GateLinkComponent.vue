@@ -132,7 +132,7 @@ const logoSrc = computed(() => {
 
 .gate__link:hover {
     transform: scale(1.12);
-    border: none;
+    border: transparent;
     transition: all .5s ease-out;
 }
 
