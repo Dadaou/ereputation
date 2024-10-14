@@ -143,7 +143,7 @@ const route = useRoute();
 const router = useRouter();
 const handleSee = (screenId, row) => {
   const tag = route.params.tag;
-  const link = router.resolve({ name: 'ScreenPage', params: { tag: tag, screen: screenId ,templates: row} });
+  const link = router.resolve({ name: 'ScreenPage', params: { tag: tag, screen: screenId ,id: row.establishment_tag} });
   window.open(link.href, '_blank');
 };
 
