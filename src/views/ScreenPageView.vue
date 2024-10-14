@@ -1,12 +1,11 @@
 <template>
     <div class="screen__container">
 
-        <div class="bg__circle"></div>
+        <!-- <div class="bg__circle"></div> -->
 
-        <div
-            class="container items-center justify-start screen__content">
+     
 
-            <div class="inline-flex items-start justify-center w-full discount-container">
+           <!--  <div class="inline-flex items-start justify-center w-full discount-container">
                 <div class="icon__container">
                     <img v-if="icon2Src" :src="icon2Src" :alt="`icon`">
                 </div>
@@ -15,13 +14,11 @@
                     <img v-if="iconSrc" :src="icon2Src" :alt="`icon`">
                 </div>
 
-            </div>
+            </div> -->
 
 
-             <div style="margin-top: 22px;margin-left: 60px;margin-right: 10px;" v-html="core"></div>
+             <div style="margin-top: 22px;margin-left: 60px;margin-right: 10px;background: white;" v-html="core"></div>
             <!-- <div v-html="screen.coreProcessed"></div> -->
-        </div>
-
   
     </div>
 </template>
@@ -67,7 +64,7 @@ const loadScreenDetails = (id) => {
                 if (data['advantages'].length > 0) {
                     advantage_name.value = data['advantages'][0].adv_name ;
                 }
-                generateCore(data['screentemplates'].core,data['screentemplates'],data['advantages'][0].adv_id);
+                generateCore(data['screentemplates'].core,data['screentemplates'],data['advantages'][0]);
                
             
            
@@ -108,12 +105,26 @@ const processCore = (core, screen) => {
         .replace('{{text3}}', screen.text3 || '');
 };
 
-const generateCore = async (_core,_screen,_adv_id) => {
+const generateCore = async (_core,_screen,_adv) => {
 
- qrStore.setQrCodeValue(`${app_url.value}/public/${route.params.tag}/establishment/${route.params.id}/feedback?adv=${_adv_id}`)
+ qrStore.setQrCodeValue(`${app_url.value}/public/${route.params.tag}/establishment/${route.params.id}/feedback?adv=${_adv.adv_id}`)
   let tmp = _core;
   tmp = tmp.replace('{{textgreeting}}', "");
-  tmp = tmp.replace('{{text1}}', _screen.text1 || '');
+    tmp = tmp.replace('{{advantage_name}}', _adv.adv_name || '');
+  // tmp = tmp.replace('{{text1}}', _screen.text1 || '');
+  if (_adv.available == 'available') {
+     tmp = tmp.replace('{{text1}}', _screen.text1 || '');
+     tmp = tmp.replace('{{advantage_limit}}', _adv.adv_advantage_limit || '');
+  }else if(_adv.available == 'infinity'){
+    tmp = tmp.replace('{{text1}}', _screen.text1 || '');
+       tmp = tmp.replace('Limited Quantity :', '');
+    tmp = tmp.replace('{{advantage_limit}}', '');
+  }else{
+    tmp = tmp.replace('{{text1}}', "<p style=\"text-align:center;font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;font-size: 3rem;\">This benefit is sold out</p>");
+    tmp = tmp.replace('Limited Quantity :', '');
+    tmp = tmp.replace('{{advantage_limit}}', '');
+  }
+
   tmp = tmp.replace('{{text2}}',  _screen.text2 || '');
   tmp = tmp.replace('{{text3}}',  _screen.text3 || '');
   tmp = tmp.replace('{{textclosing}}', "");
@@ -138,17 +149,16 @@ const generateCore = async (_core,_screen,_adv_id) => {
 
 <style>
 .screen__container {
-    width: 100vw;
+    width: 100%;
+
     /* height: 100vh; */
     /* height: 100vh; */
     /* width: 1920px;
     height: 1080px; */
-    justify-content: center;
-    align-items: flex-start;
-    background: linear-gradient(180deg, rgba(216, 217, 226, 1) 0%, white 40%);
-    overflow: hidden;
-    position: relative;
-    display: flex;
+  
+   /* background: linear-gradient(180deg, rgba(216, 217, 226, 1) 0%, white 40%);*/
+
+  
 
 }
 
