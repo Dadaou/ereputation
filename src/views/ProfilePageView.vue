@@ -37,7 +37,7 @@
           </li>
           <li>
             <router-link :to="{ name: 'Partnership' }"  @click.native="selectMenu('Partnership')">
-              <Icon icon="lucide:handshake" /><span>Partnership</span>
+              <Icon icon="lucide:handshake" /><span>Partnerships</span>
             </router-link>
           </li>
           <li>
