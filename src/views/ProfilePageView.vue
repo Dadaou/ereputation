@@ -37,7 +37,7 @@
           </li>
           <li>
             <router-link :to="{ name: 'Partnership' }"  @click.native="selectMenu('Partnership')">
-              <i class="uil uil-users-alt"></i> <span>Partnership</span>
+              <Icon icon="lucide:handshake" /><span>Partnerships</span>
             </router-link>
           </li>
           <li>
@@ -68,6 +68,7 @@
 import { ref, computed, provide, watch } from 'vue';
 import { RouterView, useRoute, useRouter} from 'vue-router';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
+import { Icon } from '@iconify/vue';
 
 const isMenuOpen = ref(true);
 const selectedMenu = ref('');

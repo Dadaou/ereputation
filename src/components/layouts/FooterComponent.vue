@@ -8,7 +8,7 @@
               :title="appStore.account.brand || ''">
               <img :src="appStore.account.logo">
             </div>
-            <div v-if="logo && logo.logo && isFeedback" class="footer-logo">
+            <div v-if="logo && logo.logo && isFeedback" class="footer-logo public">
               <img :src="logo.logo">
             </div>
           </li>
@@ -118,6 +118,11 @@ footer {
   cursor: pointer;
   display: flex;
   justify-content: center;
+}
+
+.footer-logo.public {
+  padding: 0 !important;
+  background: none !important;
 }
 
 .footer-logo img {

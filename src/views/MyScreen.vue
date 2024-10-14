@@ -7,7 +7,7 @@
                             @edit="(screen) => handleEdit(screen, 'screens')" />
                     </el-tab-pane>
                     <el-tab-pane label="Add a new screen" name="screens_form">
-                        <ScreenFormComponent />
+                        <ScreenFormComponent @show-screen-list = "showScreenList"/>
                     </el-tab-pane>
                 </el-tabs>
   
@@ -68,6 +68,10 @@ provide('cleanScreenForm', cleanScreenForm);
 const clearScreenForm = () => {
     cleanScreenForm.value = cleanScreenForm.value + 1;
     
+}
+
+const showScreenList = (payload) => {
+    myscreensUrlsConf.screens = payload.elTabPaneName
 }
 
 

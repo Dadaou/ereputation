@@ -74,29 +74,16 @@ const compareDatesDesc = (a, b) => {
   return 0;
 };
 const filteredData = computed (() => {
-  let filteredData = discountData.value;
-  filteredData.filter((data) => {
+  let filtered = discountData.value.filter((data) => {
     return !search.value ||
       (data.adv_name && data.adv_name.toLowerCase().includes(search.value.toLowerCase())) ||
       (data.code && data.code.toLowerCase().includes(search.value.toLowerCase())) ||
       (data.adv_code && data.adv_code.toLowerCase().includes(search.value.toLowerCase())) ||
       (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase())) ||
-      (data.contact_email && data.contact_email.toLowerCase().includes(search.value.toLowerCase()))
-      
-      
+      (data.contact_email && data.contact_email.toLowerCase().includes(search.value.toLowerCase()));
   });
 
-   return filteredData.sort(compareDatesDesc);
-
-  if (discountData.value.length > 0 ) {
-     // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      discountLoading.value = false;
-  }
-  else {
-    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-    discountLoading.value = true;
-  }
-  filterTableData = filteredData
+  return filtered.sort(compareDatesDesc);
 });
 
 const handleConfirm = async (value) => {

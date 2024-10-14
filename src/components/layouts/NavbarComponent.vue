@@ -20,7 +20,7 @@
             appStore.account.brand }}</span>
       </a>
       <div v-else class="flex items-center space-x-3 rtl:space-x-reverse">
-        <div v-if="isPublic && logo && logo.logo" class="nav-logo">
+        <div v-if="isPublic && logo && logo.logo" class="nav-logo public">
           <img :src="logo.logo">
         </div>
         <span v-else-if="logo && logo.name" class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
@@ -423,6 +423,14 @@ ul.menu .router-link-exact-active {
   .nav__onScroll a.router-link-exact-active span {
     color: white;
   }
+}
+
+.nav-logo.public {
+  height: 48px;
+  margin-right: 0px !important;
+  padding: 0 !important;
+  background: none;
+  border-radius: 24px;
 }
 
 @media screen and (max-width:765px) {

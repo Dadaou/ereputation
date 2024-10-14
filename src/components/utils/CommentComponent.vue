@@ -302,14 +302,14 @@
                 </div>
                 <div class="mt-5 download__qr_btn ">
 
-                      <el-popconfirm v-if="(modal.type == 'category' || modal.type == 'delete') && (modal.action != 'add')" title="Are you sure to delete this?" @confirm="updateReview" placement="top">
-                        <template #reference>
-                              <button style="background-color: indianred !important;color: white;margin-inline: 5px;" class="btn__light_secondary" @click="modal.type = 'delete'">
+                     <!--  <el-popconfirm v-if="(modal.type == 'category' || modal.type == 'delete') && (modal.action != 'add')" title="Are you sure to delete this?" @confirm="updateReview" placement="top">
+                        <template #reference> -->
+                              <button  v-if="(modal.type == 'category' || modal.type == 'delete') && (modal.action != 'add')" style="background-color: indianred !important;color: white;margin-inline: 5px;" class="btn__light_secondary" @click="modal.type = 'delete',updateReview()">
                                 <span ><i class="uil uil-trash"></i> Delete</span>
                            
                               </button>
-                        </template>
-                      </el-popconfirm>
+                      <!--   </template>
+                      </el-popconfirm> -->
 
                     <button v-if="modal.type == 'category'" class="btn__light_secondary" @click="updateReview">
                         <span ><i class="uil uil-save"></i> {{ modal.action == "edit" ? 'Save' : 'Add' }}</span>
@@ -654,6 +654,7 @@ const updateReview = async () => {
         
         } else {
            
+           console.log(modal.value.type)
             var cur_cat = modal.value.type == 'delete' ? null : category.value;
             var old_cat = modal.value.type == 'delete' ? category.value : old_item_category.value;
 

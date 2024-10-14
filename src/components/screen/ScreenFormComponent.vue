@@ -54,7 +54,7 @@
 </template>
 <script setup>
 
-import { ref, inject, watch, onBeforeMount } from 'vue';
+import { ref, inject, watch, onBeforeMount, defineEmits } from 'vue';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import { useRouter, useRoute } from 'vue-router';
@@ -78,6 +78,7 @@ const screen_to_update = inject('screen_to_update');
 const screens = inject('screens');
 const advantages = inject('advantages');
 const cleanScreenForm = inject('cleanScreenForm');
+const emit = defineEmits(['show-screen-list']);
 
 watch([screen_to_update,cleanScreenForm], () => {
   if (screen_to_update.value != null) {
@@ -301,6 +302,12 @@ const submit = async () => {
     }
   } catch (error) {
     console.log(error);
+  }
+
+  finally {
+    emit('show-screen-list', {
+        elTabPaneName: 'screens_list'
+    });
   }
 };
 
