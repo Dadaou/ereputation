@@ -1,6 +1,6 @@
 <template>
     <div class="filters">
-        <div class="top-row">
+        <div class="row">
             <div class="select_info">
                 <el-select v-model="type" size="large">
                     <el-option v-for="(item, index) in types" :key="index" :label="item.label" :value="item.value" />
@@ -9,22 +9,19 @@
             </div>
             <div class="catfiltre">
                 <el-select v-model="categoryFilters" size="large" class="custom-width">
-                    <el-option v-for="(item, index) in categories" :key="index" :label="item.label"
-                        :value="item.value" />
+                    <el-option v-for="(item, index) in categories" :key="index" :label="item.label" :value="item.value" />
                 </el-select>
             </div>
-        </div>
-        <div class="bottom-row">
-            <div class="date_pick">
+            <div class="date_picker">
                 <el-date-picker v-model="selectedDate" type="date" format="YYYY-MM-DD" value-format="YYYY-MM-DD"
                     placeholder="Select Date" size="large" @change="handleDateChange" class="custom-width" />
                 <Tooltip :text="info_bulle_text1" />
             </div>
             <div class="or-text">
-                OR
+                <p>OR</p>
             </div>
-            <div class="number_days">
-                <el-input-number v-model="days" :min="1" size="large" class="custom-width" />
+            <div>
+                <el-input-number v-model="days" :min="1" size="large" class="number_days"/>
                 <Tooltip :text="info_bulle_text2" />
             </div>
         </div>
@@ -169,6 +166,7 @@ onMounted(async () => {
     dataLoading.value = false;
 });
 </script>
+
 <style scoped>
 .establishment-rank-view :deep(.reviews-count) {
     display: flex;
@@ -187,389 +185,313 @@ onMounted(async () => {
     cursor: pointer;
 }
 
-@media (min-width: 100px) and (max-width: 600px) {
-    .establishment-rank-view :deep(.review-box) {
-        justify-content: center;
-        margin-left: 0%;
-    }
-
-    .establishment-rank-view :deep(.reviews-count) {
-        justify-content: center;
-        margin-left: 0%;
-
-    }
+.establishment-rank-view :deep(.list__actions) {
+    display: flex;
+    justify-content: flex-end;
+    /* margin-right: 10px; */
+    /* margin-top: -8px; */
 }
-
-@media (min-width: 336px) and (max-width: 389px) {
-    .establishment-rank-view :deep(.review-box) {
-        justify-content: center;
-        margin-left: 0%;
-        /* margin-top: 50px; */
-    }
-
-    .establishment-rank-view :deep(.reviews-count) {
-        justify-content: center;
-        margin-left: 0%;
-    }
-}
-
-@media (min-width: 100px) and (max-width: 335px) {
-    .establishment-rank-view :deep(.review-box) {
-        justify-content: center;
-        margin-right: 1%;
-        /* margin-top: 80px; */
-        z-index: 999;
-    }
-
-    .establishment-rank-view :deep(.reviews-count) {
-        justify-content: center;
-
-    }
-}
-
-
-
-
-
-
 
 .filters {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    align-items: center;
     padding: 10px;
     background-color: #f5f5f5;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.top-row {
+.row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    gap: 5rem;
-}
-
-.bottom-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-}
-
-.select_info,
-.date_pick,
-.number_days {
-    display: flex;
-    align-items: center;
-    flex: 1;
-}
-
-.catfiltre {
-    display: flex;
-    align-items: center;
-    flex: 0 1 44%;
-    /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
-    max-width: 300px;
-    /* Vous pouvez ajuster cette valeur selon vos besoins */
-    padding-right: 17px;
-}
-
-.or-text {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 1rem;
-    font-weight: bold;
-    font-size: 10px;
-}
-
-.custom-width {
     width: 100%;
 }
 
-@media (min-width: 1920px) {
+.select_info,
+.catfiltre,
+.date_picker {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    max-width: 300px;
+    margin-right: 10px;
+}
+
+.or-text{
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.number_days {
+    width: 90%;
+}
+
+@media (min-width: 1500px) {
     .filters {
         display: flex;
-        flex-direction: column;
-        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
         padding: 10px;
         background-color: #f5f5f5;
         border-radius: 5px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .top-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 5rem;
-    }
-
-    .bottom-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .select_info,
-    .date_pick,
-    .number_days {
-        display: flex;
-        align-items: center;
-        flex: 1;
-    }
-
-    .catfiltre {
-        display: flex;
-        align-items: center;
-        flex: 0 1 46%;
-        /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
-        max-width: 600px;
-        /* Vous pouvez ajuster cette valeur selon vos besoins */
-        padding-right: 17px;
-    }
-
-    .or-text {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 1rem;
-        font-weight: bold;
-        font-size: 10px;
-    }
-
-    .custom-width {
-        width: 100%;
+    .filters>* {
+        flex-basis: 100%;
+        margin-bottom: 10px;
+        max-width: 100%;
+        gap: 0.1rem;
     }
 }
 
-@media (min-width: 501) and (max-width: 768px) {
-    .filters {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        padding: 10px;
-        background-color: #f5f5f5;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .top-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 5rem;
-    }
-
-    .bottom-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
-    }
+@media (max-width: 768px) {
 
     .select_info,
-    .date_pick,
-    .number_days {
+    .catfiltre,
+    .date_picker {
         display: flex;
         align-items: center;
-        flex: 1;
+        flex-grow: 1;
+        max-width: calc(100% - 8px);
+        /* margin-right: 10px; */
     }
 
-    .catfiltre {
-        display: flex;
-        align-items: center;
-        flex: 0 1 41%;
-        /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
-        max-width: 300px;
-        /* Vous pouvez ajuster cette valeur selon vos besoins */
-        padding-right: 17px;
+    .row {
+        flex-direction: column;
     }
 
-    .or-text {
+    .filters>* {
+        flex-basis: 100%;
+        margin-bottom: 10px;
+        /* width: 500px; */
+        gap: 0.5rem;
+        /* margin-left: 200px; */
+        margin-inline: 8px;
+    }
+
+    .establishment-rank-view :deep(.reviews-count) {
+        display: flex;
+        /* padding: 8px; */
+        border-radius: 5px;
+
+    }
+
+    .establishment-rank-view :deep(.review-box) {
         display: flex;
         align-items: center;
-        justify-content: center;
-        padding: 0 1rem;
+        background: #F5F5F5;
+        padding: 2px;
+        border-radius: 5px;
+        margin-right: 8px;
+
+    }
+
+    .establishment-rank-view :deep(.score) {
         font-weight: bold;
-        font-size: 10px;
+        margin-right: 1px;
+        margin-top: 0px;
     }
 
-    .custom-width {
-        width: 100%;
+    .establishment-rank-view :deep(.fa-star) {
+        margin-top: 0px;
+    }
+
+    .establishment-rank-view :deep(.list__actions) {
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 0px;
+        /* margin-top: 18px; */
+    }
+
+    .number_days {
+        width: auto;
+    }
+
+}
+
+@media (min-width: 376px) and (max-width: 500px) {
+    .select_info {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        /* max-width: 318px; */
+        /* margin-right: 10px; */
+    }
+
+    .row {
+        flex-direction: column;
+    }
+
+    .filters>* {
+        flex-basis: 100%;
+        margin-bottom: 10px;
+        /* width: 500px; */
+        gap: 0.5rem;
+        /* margin-left: 200px; */
+    }
+
+    .establishment-rank-view :deep(.reviews-count) {
+        display: flex;
+        /* padding: 8px; */
+        border-radius: 5px;
+
+    }
+
+    .establishment-rank-view :deep(.review-box) {
+        display: flex;
+        align-items: center;
+        background: #F5F5F5;
+        padding: 0px;
+        border-radius: 5px;
+        margin-right: 3px;
+        width: 45px;
+
+    }
+
+    .establishment-rank-view :deep(.score) {
+        font-weight: bold;
+        margin-right: 0px;
+        margin-top: 0px;
+    }
+
+    .establishment-rank-view :deep(.fa-star) {
+        margin-top: 1px;
+    }
+
+    .establishment-rank-view :deep(.list__actions) {
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 0px;
+        /* margin-top: 18px; */
     }
 }
 
-@media (max-width: 500px) {
-    .filters {
+@media (max-width: 375px) {
+    .select_info {
         display: flex;
+        align-items: center;
+        flex-grow: 1;
+        /* max-width: 318px; */
+        /* margin-right: 10px; */
+    }
+
+    .row {
         flex-direction: column;
-        gap: 1rem;
-        padding: 10px;
-        background-color: #f5f5f5;
+    }
+
+    .filters>* {
+        flex-basis: 100%;
+        margin-bottom: 10px;
+        width: 500px;
+        gap: 0.5rem;
+        /* margin-left: 200px; */
+    }
+
+    .establishment-rank-view :deep(.reviews-count) {
+        display: flex;
+        /* padding: 8px; */
         border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
     }
 
-    .top-row {
+    .establishment-rank-view :deep(.review-box) {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        gap: 5rem;
+        background: #F5F5F5;
+        padding: 0px;
+        border-radius: 5px;
+        margin-right: 3px;
+        width: 39px;
+
     }
 
-    .bottom-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .select_info,
-    .date_pick,
-    .number_days {
-        display: flex;
-        align-items: center;
-        flex: 1;
-    }
-
-    .catfiltre {
-        display: flex;
-        align-items: center;
-        flex: 0 1 39.5%;
-        /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
-        max-width: 300px;
-        /* Vous pouvez ajuster cette valeur selon vos besoins */
-        padding-right: 17px;
-    }
-
-    .or-text {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 1rem;
+    .establishment-rank-view :deep(.score) {
         font-weight: bold;
-        font-size: 10px;
+        margin-right: 0px;
+        margin-top: 0px;
     }
 
-    .custom-width {
-        width: 100%;
+    .establishment-rank-view :deep(.fa-star) {
+        margin-top: 1px;
+    }
+
+    .establishment-rank-view :deep(.list__actions) {
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 0px;
+        /* margin-top: 18px; */
     }
 }
 
-@media (min-width: 400px) and (max-width: 415px) {
-    .filters {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        padding: 10px;
-        background-color: #f5f5f5;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
 
-    .top-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 5rem;
-    }
 
-    .bottom-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .select_info,
-    .date_pick,
-    .number_days {
+@media (max-width: 420px) {
+    .establishment-rank-view :deep(.society__rating) {
         display: flex;
         align-items: center;
-        flex: 1;
+        margin-top: -5px;
+        margin-left: -90px;
+        padding-right: 50px;
     }
 
-    .catfiltre {
-        display: flex;
-        align-items: center;
-        flex: 0 1 38.5%;
-        /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
-        max-width: 300px;
-        /* Vous pouvez ajuster cette valeur selon vos besoins */
-        padding-right: 17px;
-    }
+    .establishment-rank-view :deep(.reviews) {
+        font-size: 11px;
+        margin-left: -20px;
 
-    .or-text {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 1rem;
-        font-weight: bold;
-        font-size: 10px;
-    }
-
-    .custom-width {
-        width: 100%;
     }
 }
 
-@media (max-width: 390px) {
-    .filters {
+@media (min-width: 383px) and (max-width: 390px) {
+    .establishment-rank-view :deep(.society__rating) {
         display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        padding: 10px;
-        background-color: #f5f5f5;
+        align-items: center;
+        margin-top: -5px;
+        margin-left: -10px;
+        padding-right: 60px;
+    }
+
+    .establishment-rank-view :deep(.reviews) {
+        font-size: 11px;
+        margin-left: 0px;
+
+    }
+}
+
+@media (max-width: 375px) {
+    .establishment-rank-view :deep(.society__rating) {
+        display: flex;
+        align-items: center;
+        margin-top: -5px;
+        margin-left: -10px;
+        padding-right: 60px;
+    }
+
+    .establishment-rank-view :deep(.reviews) {
+        font-size: 11px;
+        margin-left: 5px;
+
+    }
+
+    .establishment-rank-view :deep(.reviews-count) {
+        display: flex;
+        /* padding: 8px; */
         border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
     }
 
-    .top-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 3rem;
-    }
-
-    .bottom-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 0rem;
-    }
-
-    .select_info,
-    .date_pick,
-    .number_days {
+    .establishment-rank-view :deep(.review-box) {
         display: flex;
         align-items: center;
-        flex: 1;
-    }
+        background: #F5F5F5;
+        padding: 0px;
+        border-radius: 5px;
+        margin-right: 4px;
+        width: 42px;
 
-    .catfiltre {
-        display: flex;
-        align-items: center;
-        flex: 0 1 43%;
-        /* Ajustez ce pourcentage pour changer la largeur de catfiltre */
-        max-width: 300px;
-        /* Vous pouvez ajuster cette valeur selon vos besoins */
-        padding-right: 17px;
-    }
-
-    .or-text {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 1rem;
-        font-weight: bold;
-        font-size: 10px;
-    }
-
-    .custom-width {
-        width: 100%;
     }
 }
 </style>
