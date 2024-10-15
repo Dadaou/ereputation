@@ -74,11 +74,11 @@ export const homePageUrls = {
 }
 
 export const homeLeadgenUrls = {
-  LeadgenAdvantage : { label: 'Advantage', icon: 'uil:bill' },
+  LeadgenAdvantage : { label: 'Advantages', icon: 'uil:bill' },
   LeadgenPartnership : { label: 'Partnerships', icon: 'lucide:handshake' },
-  LeadgenDiscountCoupon : { label: 'Discount coupon', icon: 'uil:bill' },
-  LeadgenContact : { label: 'Contact', icon: 'uil:envelope' },
-  LeadgenMyQrcode : { label: 'My Qrcode', icon: 'uil:qrcode-scan' },
-  LeadgenMyScreen : { label: 'My Screen', icon: 'uil:presentation' },
+  LeadgenDiscountCoupon : { label: 'Discount coupons', icon: 'uil:bill' },
+  LeadgenContact : { label: 'Contacts', icon: 'uil:envelope' },
+  LeadgenMyQrcode : { label: 'My Qrcodes', icon: 'uil:qrcode-scan' },
+  LeadgenMyScreen : { label: 'My Screens', icon: 'uil:presentation' },
   Analytic: { label: 'Analytics', icon: 'uim:chart-pie' },
 }
