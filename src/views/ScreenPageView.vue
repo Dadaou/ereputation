@@ -142,9 +142,11 @@ onMounted(() => {
         loadScreenDetails(screenId);
     }
 
+    setCurrentAdvantage()
+
     interval.value = setInterval(() => {
         setCurrentAdvantage()
-    }, 2000); // Intervalle de 1000 ms (1 seconde)
+    }, 5000); // Intervalle de 1000 ms (1 seconde)
 });
 
 onBeforeUnmount(() => {
