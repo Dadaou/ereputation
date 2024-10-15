@@ -135,7 +135,7 @@ const showMenu = computed(() => {
 })
 
 const showHomeName = computed(() => {
-  return Object.keys(homePageUrls).includes(route.name) && width.value > 720
+  return Object.keys(homePageUrls).includes(route.name) && window.innerWidth > 720
 })
 
 const showLeadgenName = computed(() => {
@@ -427,9 +427,7 @@ ul.menu .router-link-exact-active {
 
 .nav-logo .public {
   height: 48px;
-  margin-right: 0px !important;
-  padding: 0 !important;
-  background: none;
+  background: none !important;
   border-radius: 24px;
 }
 
