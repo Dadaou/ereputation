@@ -1,12 +1,11 @@
 <template>
     <div class="screen__container">
 
-        <div class="bg__circle"></div>
+        <!-- <div class="bg__circle"></div> -->
 
-        <div
-            class="container items-center justify-start screen__content">
 
-            <div class="inline-flex items-start justify-center w-full discount-container">
+
+        <!--  <div class="inline-flex items-start justify-center w-full discount-container">
                 <div class="icon__container">
                     <img v-if="icon2Src" :src="icon2Src" :alt="`icon`">
                 </div>
@@ -15,32 +14,28 @@
                     <img v-if="iconSrc" :src="icon2Src" :alt="`icon`">
                 </div>
 
-            </div>
+            </div> -->
 
 
-             <div style="margin-top: 22px;margin-left: 60px;margin-right: 10px;" v-html="core"></div>
-            <!-- <div v-html="screen.coreProcessed"></div> -->
-        </div>
+        <div style="margin-top: 22px;margin-left: 60px;margin-right: 10px;background: white;" v-html="core"></div>
+        <!-- <div v-html="screen.coreProcessed"></div> -->
 
-  
     </div>
 </template>
 
 <script setup>
-import { onMounted, reactive, ref ,inject,computed} from 'vue';
+import { onMounted, ref, inject, computed, onBeforeUnmount } from 'vue';
 import { useQrStore } from "@Stores/qrtemplate.js";
 import services from '@Services/services.js';
 import { useRoute } from 'vue-router';
 import QRCode from 'qrcode';
 
 const route = useRoute();
-const screenDetails = reactive({});
-const iconSrc = ref(new URL('@/assets/images/boostIcon.svg', import.meta.url).href)
-const icon2Src = ref(new URL('@/assets/images/discount.svg', import.meta.url).href)
 const qrStore = useQrStore();
 const app_url = inject('app_url')
 const core = ref('');
-const advantage_name = ref('');
+const interval = ref(null);
+const screen = ref(null);
 
 const qrSize = computed(() => {
     let size = 610
@@ -58,76 +53,142 @@ const qrSize = computed(() => {
     return size
 })
 
-
-const loadScreenDetails = (id) => {
-     services.get_Record(`customer/screens/templates?tag=${route.params.tag}&id=${route.params.screen}`, (response) => {
+const loadScreenDetails = () => {
+    services.get_Record(`customer/screens/templates?tag=${route.params.tag}&id=${route.params.screen}`, (response) => {
         if (response && response.status === 200) {
-            const data = response.data;
-               
-                if (data['advantages'].length > 0) {
-                    advantage_name.value = data['advantages'][0].adv_name ;
-                }
-                generateCore(data['screentemplates'].core,data['screentemplates'],data['advantages'][0].adv_id);
-               
-            
-           
+            screen.value = response.data;
+            console.log("ici")
+
         } else {
             console.error('Error loading screen details:', response);
         }
     }, false, false);
-    // services.get_Record(`screentemplates/1`, (response) => {
-    //     if (response && response.status === 200) {
-    //         const data = response.data;
-    //         screenDetails[id] = {
-    //             ...data,
-    //             coreProcessed: processCore(data.core, data)
-    //         };
-    //     } else {
-    //         console.error('Error loading screen details:', response);
-    //     }
-    // }, false, false);
 };
 
+const isCurrentAdvantage = (obj) => {
+
+    // Obtenir le jour actuel (0 pour dimanche, 6 pour samedi)
+    const today = new Date().getDay();
+
+    // Créer un tableau qui mappe les jours de la semaine aux attributs d0 à d6
+    const daysAllowed = [
+        obj.d0, // Dimanche
+        obj.d1, // Lundi
+        obj.d2, // Mardi
+        obj.d3, // Mercredi
+        obj.d4, // Jeudi
+        obj.d5, // Vendredi
+        obj.d6  // Samedi
+    ];
+
+    // Vérifier si le jour actuel est activé (true) dans l'objet
+    if (!daysAllowed[today]) {
+        return false;
+    }
+
+    // Obtenir la date actuelle
+    const dateNow = new Date();
+
+    // Convertir les chaînes de dates de l'objet en objets Date
+    const dateFrom = new Date(obj.date_from);
+    const dateTo = new Date(obj.date_to);
+
+    // Vérifier si la date actuelle est dans l'intervalle [date_from, date_to]
+    if (dateNow < dateFrom && dateNow > dateTo) {
+        return false;
+    }
+
+    // Obtenir l'heure actuelle
+    const timeNow = new Date();
+    const currentHour = timeNow.getHours();
+    const currentMinute = timeNow.getMinutes();
+    const currentSecond = timeNow.getSeconds();
+
+    // Extraire les valeurs de l'objet
+    const hourFrom = obj.hour_from;
+    const minuteFrom = obj.minute_from;
+    const secondFrom = obj.seconde_from;
+    const hourTo = obj.hour_to;
+    const minuteTo = obj.minute_to;
+    const secondTo = obj.seconde_to;
+
+    // Fonction pour convertir l'heure en secondes pour une comparaison facile
+    const timeInSeconds = (hour, minute, second) => {
+        return hour * 3600 + minute * 60 + second;
+    }
+
+    // Convertir les heures en secondes
+    const currentTimeInSeconds = timeInSeconds(currentHour, currentMinute, currentSecond);
+    const fromTimeInSeconds = timeInSeconds(hourFrom, minuteFrom, secondFrom);
+    const toTimeInSeconds = timeInSeconds(hourTo, minuteTo, secondTo);
+
+    // Vérifier si l'heure actuelle est dans l'intervalle
+    return currentTimeInSeconds >= fromTimeInSeconds && currentTimeInSeconds <= toTimeInSeconds;
+    // return true
+}
+
+const setCurrentAdvantage = () => {
+    if (screen.value && screen.value.advantages.length > 0) {
+        const currentAdvantages = screen.value.advantages.filter(adv => isCurrentAdvantage(adv))
+        if (currentAdvantages.length > 0) {
+            generateCore(screen.value.screentemplates.core, screen.value.screentemplates, currentAdvantages[0]);
+        }
+    }
+}
 
 onMounted(() => {
     const screenId = route.params.screen;
-        console.log(route.params)
     if (screenId) {
-        loadScreenDetails(screenId); 
-       
-        //qrStore.setQrCodeValue(`${app_url.value}/public/${route.params.tag}/establishment/${route.params.id}/feedback?adv=${}`)
+        loadScreenDetails(screenId);
     }
+
+    interval.value = setInterval(() => {
+        setCurrentAdvantage()
+    }, 2000); // Intervalle de 1000 ms (1 seconde)
 });
 
-const processCore = (core, screen) => {
-    // generateCore(core,screen)
-    return core
-        .replace('{{textgreeting}}', screen.name)
-        .replace('{{text1}}', screen.text1 || '')
-        .replace('{{text2}}', screen.text2 || '')
-        .replace('{{text3}}', screen.text3 || '');
-};
+onBeforeUnmount(() => {
+    if (interval.value) {
+        clearInterval(interval.value);
+    }
+})
 
-const generateCore = async (_core,_screen,_adv_id) => {
+const generateCore = async (_core, _screen, _adv) => {
 
- qrStore.setQrCodeValue(`${app_url.value}/public/${route.params.tag}/establishment/${route.params.id}/feedback?adv=${_adv_id}`)
-  let tmp = _core;
-  tmp = tmp.replace('{{textgreeting}}', "");
-  tmp = tmp.replace('{{text1}}', _screen.text1 || '');
-  tmp = tmp.replace('{{text2}}',  _screen.text2 || '');
-  tmp = tmp.replace('{{text3}}',  _screen.text3 || '');
-  tmp = tmp.replace('{{textclosing}}', "");
-  const qrData = qrStore.qrcodeValue; // Data you want to encode
-  const canvas = document.createElement('canvas');
-  canvas.width = 500;
-  canvas.height = 500;
-  const qrCanvas = await QRCode.toCanvas(canvas, qrData, { width: qrSize.value, errorCorrectionLevel: 'H' });
-  const qrCodeDataURL = qrCanvas.toDataURL('image/png', 1.0); // Convert to base64
-  tmp = tmp.replace('{{qrcodeimg}}', `<img src="${qrCodeDataURL}" style="width: 100%;">`)
+    console.log("Traitement ...")
+
+    qrStore.setQrCodeValue(`${app_url.value}/public/${route.params.tag}/establishment/${route.params.id}/feedback?adv=${_adv.adv_id}`)
+    let tmp = _core;
+    tmp = tmp.replace('{{textgreeting}}', "");
+    tmp = tmp.replace('{{advantage_name}}', _adv.adv_name || '');
+    // tmp = tmp.replace('{{text1}}', _screen.text1 || '');
+    if (_adv.available == 'available') {
+        tmp = tmp.replace('{{text1}}', _screen.text1 || '');
+        tmp = tmp.replace('{{advantage_limit}}', _adv.adv_advantage_limit || '');
+    } else if (_adv.available == 'infinity') {
+        tmp = tmp.replace('{{text1}}', _screen.text1 || '');
+        tmp = tmp.replace('Limited Quantity :', '');
+        tmp = tmp.replace('{{advantage_limit}}', '');
+    } else {
+        tmp = tmp.replace('{{text1}}', "<p style=\"text-align:center;font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;font-size: 3rem;\">This benefit is sold out</p>");
+        tmp = tmp.replace('Limited Quantity :', '');
+        tmp = tmp.replace('{{advantage_limit}}', '');
+    }
+
+    tmp = tmp.replace('{{text2}}', _screen.text2 || '');
+    tmp = tmp.replace('{{text3}}', _screen.text3 || '');
+    tmp = tmp.replace('{{textclosing}}', "");
+    const qrData = qrStore.qrcodeValue; // Data you want to encode
+    const canvas = document.createElement('canvas');
+    canvas.width = 500;
+    canvas.height = 500;
+    const qrCanvas = await QRCode.toCanvas(canvas, qrData, { width: qrSize.value, errorCorrectionLevel: 'H' });
+    const qrCodeDataURL = qrCanvas.toDataURL('image/png', 1.0); // Convert to base64
+    tmp = tmp.replace('{{qrcodeimg}}', `<img src="${qrCodeDataURL}" style="width: 100%;">`)
 
 
-  tmp = tmp.replace('{{logo}}', `<img src="data:image/png;base64,${_screen.logo_base64}" >`);
-  core.value = tmp;
+    tmp = tmp.replace('{{logo}}', `<img src="data:image/png;base64,${_screen.logo_base64}" >`);
+    core.value = tmp;
 }
 
 
@@ -138,17 +199,16 @@ const generateCore = async (_core,_screen,_adv_id) => {
 
 <style>
 .screen__container {
-    width: 100vw;
+    width: 100%;
+
     /* height: 100vh; */
     /* height: 100vh; */
     /* width: 1920px;
     height: 1080px; */
-    justify-content: center;
-    align-items: flex-start;
-    background: linear-gradient(180deg, rgba(216, 217, 226, 1) 0%, white 40%);
-    overflow: hidden;
-    position: relative;
-    display: flex;
+
+    /* background: linear-gradient(180deg, rgba(216, 217, 226, 1) 0%, white 40%);*/
+
+
 
 }
 
