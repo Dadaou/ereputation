@@ -29,6 +29,7 @@ import { useQrStore } from "@Stores/qrtemplate.js";
 import services from '@Services/services.js';
 import { useRoute } from 'vue-router';
 import QRCode from 'qrcode';
+import moment from 'moment';
 
 const route = useRoute();
 const qrStore = useQrStore();
@@ -89,44 +90,21 @@ const isCurrentAdvantage = (obj) => {
     }
 
     // Obtenir la date actuelle
-    const dateNow = new Date();
+    const dateNow = moment();
 
     // Convertir les chaînes de dates de l'objet en objets Date
-    const dateFrom = new Date(obj.date_from);
-    const dateTo = new Date(obj.date_to);
+    let dateFrom = moment(new Date(obj.date_from).toDateString());
+    let dateTo = moment(new Date(obj.date_to).toDateString());
 
-    // Vérifier si la date actuelle est dans l'intervalle [date_from, date_to]
-    if (dateNow < dateFrom && dateNow > dateTo) {
+    if (!dateNow.isBetween(dateFrom, dateTo)) {
         return false;
     }
 
-    // Obtenir l'heure actuelle
-    const timeNow = new Date();
-    const currentHour = timeNow.getHours();
-    const currentMinute = timeNow.getMinutes();
-    const currentSecond = timeNow.getSeconds();
+    dateFrom = moment(new Date(obj.date_from).toDateString() + " " + obj.hour_from || 0 + ":" + obj.minute_from || 0 + ":" + obj.seconde_from || 0)
+    dateTo = moment(new Date(obj.date_to).toDateString() + " " + obj.hour_to || 0 + ":" + obj.minute_to || 0 + ":" + obj.seconde_to || 0)
 
-    // Extraire les valeurs de l'objet
-    const hourFrom = obj.hour_from;
-    const minuteFrom = obj.minute_from;
-    const secondFrom = obj.seconde_from;
-    const hourTo = obj.hour_to;
-    const minuteTo = obj.minute_to;
-    const secondTo = obj.seconde_to;
-
-    // Fonction pour convertir l'heure en secondes pour une comparaison facile
-    const timeInSeconds = (hour, minute, second) => {
-        return hour * 3600 + minute * 60 + second;
-    }
-
-    // Convertir les heures en secondes
-    const currentTimeInSeconds = timeInSeconds(currentHour, currentMinute, currentSecond);
-    const fromTimeInSeconds = timeInSeconds(hourFrom, minuteFrom, secondFrom);
-    const toTimeInSeconds = timeInSeconds(hourTo, minuteTo, secondTo);
-
-    // Vérifier si l'heure actuelle est dans l'intervalle
-    return currentTimeInSeconds >= fromTimeInSeconds && currentTimeInSeconds <= toTimeInSeconds;
-    // return true
+    // // Vérifier si l'heure actuelle est dans l'intervalle
+    return dateNow.isBetween(dateFrom, dateTo)
 }
 
 const setCurrentAdvantage = () => {
