@@ -15,7 +15,7 @@
     
     <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2 h-full">
 
-      <div class="grid gap-6 mb-6 md:grid-cols-2">
+      <div class="grid gap-6 mb-6 md:grid-cols-3 lg:grid-cols-3">
 
  
         <div>
@@ -28,14 +28,7 @@
           </el-select>
         </div>
 
-          <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Date from
-                <!-- <span>*</span> -->
-                <!-- <Tooltip text="To use before the [date]" /> -->
-            </label>
-            <el-date-picker v-model="date_from" :size="'large'" />
-          </div>
+        
 
 <!--         <div>
           <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
@@ -47,8 +40,17 @@
 
       </div>
 
-      <div class="grid gap-6 mb-6 md:grid-cols-2">
+      <div class="grid gap-6 mb-6 md:grid-cols-4 lg:grid-cols-4">
 
+
+          <div>
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                Date from
+                <!-- <span>*</span> -->
+                <!-- <Tooltip text="To use before the [date]" /> -->
+            </label>
+            <el-date-picker v-model="date_from" :size="'large'" />
+          </div>
 
           <div>
               <label for="hour_from"
@@ -66,13 +68,6 @@
                   <input type="number" id="minute_from" v-model="minute_from"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
             </div>
-            
-
- 
-      </div>
-
-      <div class="grid gap-6 mb-6 md:grid-cols-2">
-
 
             <div>
                   <label for="seconde_from"
@@ -80,7 +75,16 @@
                       <span></span></label>
                   <input type="number" id="seconde_from" v-model="seconde_from"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
-          </div>
+            </div>
+            
+
+ 
+      </div>
+
+      <div class="grid gap-6 mb-6 md:grid-cols-4 lg:grid-cols-4">
+
+
+         
 
            <div>
                 <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -90,12 +94,6 @@
                 </label>
                 <el-date-picker v-model="date_to" :size="'large'" />
             </div>
-
-
- 
-      </div>
-
-      <div class="grid gap-6 mb-6 md:grid-cols-3">
 
               <div>
                   <label for="hour_to"
@@ -120,8 +118,12 @@
                   <input type="number" id="seconde_to" v-model="seconde_to"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
               </div>
+
+
  
       </div>
+
+
 
           <div class="grid gap-6 mb-6 md:grid-cols-7 sm:grid-cols-3 justify-center">
 
