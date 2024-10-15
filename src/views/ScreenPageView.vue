@@ -17,14 +17,14 @@
             </div> -->
 
 
-        <div style="margin-top: 22px;margin-left: 60px;margin-right: 10px;background: white;" v-html="core"></div>
+        <div style="background: white;" v-html="core"></div>
         <!-- <div v-html="screen.coreProcessed"></div> -->
 
     </div>
 </template>
 
 <script setup>
-import { onMounted, ref, inject, computed, onBeforeUnmount } from 'vue';
+import { onMounted, ref, inject, computed, onBeforeUnmount, nextTick } from 'vue';
 import { useQrStore } from "@Stores/qrtemplate.js";
 import services from '@Services/services.js';
 import { useRoute } from 'vue-router';
@@ -35,7 +35,9 @@ const qrStore = useQrStore();
 const app_url = inject('app_url')
 const core = ref('');
 const interval = ref(null);
+const slideInterval = ref(null);
 const screen = ref(null);
+const currentSlide = ref(0);
 
 const qrSize = computed(() => {
     let size = 610
@@ -132,9 +134,11 @@ const setCurrentAdvantage = () => {
         const currentAdvantages = screen.value.advantages.filter(adv => isCurrentAdvantage(adv))
         if (currentAdvantages.length > 0) {
             generateCore(screen.value.screentemplates.core, screen.value.screentemplates, currentAdvantages[0]);
+            // executeScripts(screen.value.screentemplates.core);
         }
     }
 }
+
 
 onMounted(() => {
     const screenId = route.params.screen;
@@ -142,16 +146,20 @@ onMounted(() => {
         loadScreenDetails(screenId);
     }
 
-    setCurrentAdvantage()
+    setCurrentAdvantage();
 
     interval.value = setInterval(() => {
         setCurrentAdvantage()
-    }, 5000); // Intervalle de 1000 ms (1 seconde)
+    }, 2000); // Intervalle de 1000 ms (1 seconde)
+
 });
 
 onBeforeUnmount(() => {
     if (interval.value) {
         clearInterval(interval.value);
+    }
+    if (slideInterval.value) {
+        clearInterval(slideInterval.value);
     }
 })
 
