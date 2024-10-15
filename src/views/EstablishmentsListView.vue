@@ -1,7 +1,7 @@
 <template>
     <div v-if="userStore.customer">
         <div v-if="!dataLoading">
-            <div class="client__container__head" v-if="establishments.length > 0">
+            <div class="client__container__head" v-if="establishments.length >= 0">
                 Welcome <b>{{ userStore.customer.name }}</b>! Your establishments are listed below. <span>({{
                     establishments.length }} found)</span>
             </div>
@@ -11,8 +11,8 @@
         </div>
         <div v-else>
             <div class="client__container__head">
-                Welcome <b>{{ userStore.customer.name }}</b>! Your establishments are listed below. <span>({{
-                    establishments.length }} found)</span>
+                <!-- Welcome <b>{{ userStore.customer.name }}</b>! Your establishments are listed below. <span>({{
+                    establishments.length }} found)</span> -->
             </div>
         </div>
         <div class="society__list mt-3" v-if="establishments.length > 0">
