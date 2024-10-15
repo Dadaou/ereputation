@@ -130,19 +130,6 @@
 
               <div>
                <el-button 
-                  :class="{'enabled-button': advantage_screen.d0}" 
-                  size="small" 
-                  @click="advantage_screen.d0 ? handleDisable('d0', advantage_screen) : handleEnable('d0', advantage_screen)">
-                   <i 
-                    :class="advantage_screen.d0 ? 'uil uil-check-square' : 'uil uil-square'" 
-                    >
-                   </i> Sunday
-                </el-button>
-              </div>
-
-
-              <div>
-               <el-button 
                   :class="{'enabled-button': advantage_screen.d1}" 
                   size="small" 
                   @click="advantage_screen.d1 ? handleDisable('d1', advantage_screen) : handleEnable('d1', advantage_screen)">
@@ -210,6 +197,18 @@
                     :class="advantage_screen.d6 ? 'uil uil-check-square' : 'uil uil-square'" 
                     >
                    </i> Saturday
+                </el-button>
+              </div>
+
+              <div>
+               <el-button 
+                  :class="{'enabled-button': advantage_screen.d0}" 
+                  size="small" 
+                  @click="advantage_screen.d0 ? handleDisable('d0', advantage_screen) : handleEnable('d0', advantage_screen)">
+                   <i 
+                    :class="advantage_screen.d0 ? 'uil uil-check-square' : 'uil uil-square'" 
+                    >
+                   </i> Sunday
                 </el-button>
               </div>
  
@@ -470,8 +469,9 @@ const submit = async () => {
 
   try {
 
-    if ( date_from.value != '' && date_to.value != '' && props.screen.value != ''
-      && advantage.value != '' && hour_from.value && hour_to.value) {
+    // if ( date_from.value != '' && date_to.value != '' && props.screen.value != ''
+    //   && advantage.value != '' && hour_from.value && hour_to.value) {
+    if (props.screen.value != '' && advantage.value != '') {
 
       showSpinner.value = true;
 

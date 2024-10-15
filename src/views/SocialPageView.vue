@@ -675,8 +675,8 @@ const loadHashtags = async (tag, source) => {
     }
 }
 
-const loadCategories = async (tag) => {
-    const api = `establishment/${tag}/categories`
+const loadCategories = async (tag) => { 
+    const api = `customer/establishment/categorizations?tag=${tag}`
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
@@ -684,8 +684,14 @@ const loadCategories = async (tag) => {
     });
 
     if (response.status == 200) {
-        if (response.data && response.data.data) {
-            categories.value = response.data.data
+        if (response.data) {
+              let cats=[];
+            response.data.forEach((_cat,_index)=>{
+                cats.push({id:_index,category:_cat});
+            });
+
+            categories.value = cats;
+            // categories.value = response.data.data
         }
     }
 }
