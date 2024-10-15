@@ -109,7 +109,9 @@ const loadData = (_screen) => {
     establishment_name: _screen.establishment_name,
     screentemplate_name: _screen.screentemplate_name,
     screentemplate_id: _screen.screentemplate_id,
-    establishment_id: _screen.establishment_id
+    establishment_id: _screen.establishment_id,
+    establishment_tag: _screen.tag
+
   }
 
   screens.value.push(new_screen);
