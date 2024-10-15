@@ -261,6 +261,11 @@ onMounted(async () => {
 
     .row {
         flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .or-text {
+        justify-content: center;
     }
 
     .filters>* {
