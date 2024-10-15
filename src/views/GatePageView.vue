@@ -1,5 +1,6 @@
 <template>
-    <div v-if="exist" class="feedback__form">
+    <div v-if="exist" class="feedback__form"
+        :style="{ backgroundImage: `url(${establishment.url_source})`, backgroundSize: 'cover' }">
         <div class="feedback">
             <div v-for="(item, index) in useCategories" :key="index">
                 <button
@@ -20,8 +21,8 @@
                         <GateLinkComponent @click="handleClick(element, category)"
                             v-for="(element, index) in establishmentLink" :item="element" type="Establishment"
                             :key="index" />
-                        <GateLinkComponent @click="handleClick(element, category)" v-for="(element, index) in staffLinks"
-                            :item="element" type="staff" :key="index" />
+                        <GateLinkComponent @click="handleClick(element, category)"
+                            v-for="(element, index) in staffLinks" :item="element" type="staff" :key="index" />
                         <GateLinkComponent @click="handleClick(element, category)" v-for="(element, index) in unitLinks"
                             :item="element" type="Unit" :key="index" />
                         <GateLinkComponent @click="handleClick(element, category)"
@@ -34,8 +35,8 @@
                     </div>
                     <div v-if="category == 'offers'"
                         class="list__container grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-12">
-                        <GateLinkComponent @click="handleClick(element, category)" v-for="(element, index) in offerLinks"
-                            :item="element" type="Offer" :key="index" />
+                        <GateLinkComponent @click="handleClick(element, category)"
+                            v-for="(element, index) in offerLinks" :item="element" type="Offer" :key="index" />
                     </div>
                     <div v-if="category == 'infos'"
                         class="list__container grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-12">
@@ -291,10 +292,24 @@ onMounted(() => {
     margin: 3rem auto;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     border: 1px solid var(--light-color-bg2);
-    border-radius: 5px;
     padding: 15px;
     padding-top: 2rem;
+    position: relative;
+    z-index: 2;
 }
+
+.feedback__form::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    pointer-events: none;
+}
+
 
 .gate__body {
     border-radius: 0 0 5px 5px;
@@ -444,6 +459,8 @@ img {
     /* Permet le défilement horizontal */
     /* Empêche les éléments de s'enrouler */
     padding-bottom: 8px;
+    position: relative;
+    z-index: 2;
 }
 
 .list__container.hide-scroll {
@@ -474,13 +491,13 @@ img {
 
 .panel {
     padding: 0 18px;
-    background-color: #f9f9f9;
+    /* background-color: #f9f9f9; */
     overflow: hidden;
 }
 
 .panel a {
     width: 10px;
-    background-color: #f9f9f9;
+    /* background-color: #f9f9f9; */
     overflow: hidden;
 }
 
@@ -492,7 +509,7 @@ img {
     width: 100%;
     /* height: 60px; */
     border-radius: 5px 5px 0 0;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 4px 12px;
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.2);
     cursor: pointer;
     padding: 24px;
     gap: 24px;
@@ -500,28 +517,33 @@ img {
 
 .gate__menu span {
     font-size: 1rem;
-    color: #333;
+    color: #fff;
     font-weight: 600;
+    z-index: 1;
 }
 
 .gate__menu .clicked {
     border-left: 1px solid var(--color-primary);
 }
 
+.gate__menu.clicked .icon-container {
+    background-color: var(--color-primary) !important;
+}
+
 .clicked span {
-    color: var(--color-danger) !important;
+    color: #fff !important;
 }
 
 .gate__menu .icon-container {
     padding: auto;
-    border: var(--color-primary) solid 1px;
+    border: #fff solid 1px;
     border-radius: 50%;
     width: 48px;
     height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #333;
+    color: #fff;
 }
 
 @media (max-width: 640px) {
