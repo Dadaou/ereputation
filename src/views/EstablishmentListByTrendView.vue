@@ -2,25 +2,25 @@
     <div class="filters">
         <div class="row">
             <div class="select_info">
-                <el-select v-model="type" size="large">
+                <el-select v-model="type" size="large" >
                     <el-option v-for="(item, index) in types" :key="index" :label="item.label" :value="item.value" />
                 </el-select>
                 <Tooltip :text="info_bulle_text" />
             </div>
             <div class="catfiltre">
-                <el-select v-model="categoryFilters" size="large" class="custom-width">
+                <el-select v-model="categoryFilters" size="large" >
                     <el-option v-for="(item, index) in categories" :key="index" :label="item.label" :value="item.value" />
                 </el-select>
             </div>
             <div class="date_picker">
                 <el-date-picker v-model="selectedDate" type="date" format="YYYY-MM-DD" value-format="YYYY-MM-DD"
-                    placeholder="Select Date" size="large" @change="handleDateChange" class="custom-width" />
+                    placeholder="Select Date" size="large" @change="handleDateChange" />
                 <Tooltip :text="info_bulle_text1" />
             </div>
             <div class="or-text">
                 <p>OR</p>
             </div>
-            <div>
+            <div class="section_number">
                 <el-input-number v-model="days" :min="1" size="large" class="number_days"/>
                 <Tooltip :text="info_bulle_text2" />
             </div>
@@ -257,7 +257,6 @@ onMounted(async () => {
         align-items: center;
         flex-grow: 1;
         max-width: calc(100% - 8px);
-        /* margin-right: 10px; */
     }
 
     .row {
@@ -307,8 +306,14 @@ onMounted(async () => {
         /* margin-top: 18px; */
     }
 
+    .section_number {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+    }
     .number_days {
-        width: auto;
+        width: 100%;
     }
 
 }
