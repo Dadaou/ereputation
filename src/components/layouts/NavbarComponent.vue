@@ -425,9 +425,11 @@ ul.menu .router-link-exact-active {
   }
 }
 
-.nav-logo .public {
+.nav-logo.public {
   height: 48px;
-  background: none !important;
+  margin-right: 0px !important;
+  padding: 0 !important;
+  background: none;
   border-radius: 24px;
 }
 
