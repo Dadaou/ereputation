@@ -110,11 +110,9 @@ footer {
 }
 
 .footer-logo {
-  height: 59px;
+  height: 48px;
   width: auto;
   padding: 12px;
-  background-color: var(--color-white);
-  border-radius: 16px;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -128,6 +126,7 @@ footer {
 .footer-logo img {
   height: 100%;
   width: auto;
+  border-radius: 24px;
 }
 
 .footer__container {
