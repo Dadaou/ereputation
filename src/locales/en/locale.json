@@ -70,5 +70,12 @@
         "dont_miss": "Don't miss out on this exclusive offer!",
         "boost_stay": "Stay tuned, new benefits are coming soon!",
         "sold_out": "This benefit is sold out"
+    },
+    "gate":{
+        "menus":"Menus",
+        "reviews_feedback":"Reviews & Feedbacks",
+        "offers":"Offers",
+        "infos":"Infos",
+        "follow_us":"Follow us"
     }
 }

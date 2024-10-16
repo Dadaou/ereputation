@@ -63,7 +63,8 @@ import { useRoute } from "vue-router";
 import { useAppStore } from "@Stores/app.js"
 import GateLinkComponent from '@Components/gate/GateLinkComponent.vue';
 import { Icon } from '@iconify/vue';
-
+import { useI18n } from "vue-i18n";
+import  {eventBus}  from '@Services/eventBus.js';
 
 const EstablishmentNotFound = defineAsyncComponent(() =>
     import("@Views/EstablishmentNotFound.vue")
@@ -71,22 +72,24 @@ const EstablishmentNotFound = defineAsyncComponent(() =>
 
 let exist = ref(true);
 const route = useRoute();
+const { t,locale } = useI18n();
 const establishmentTag = route.params.id;
 const establishment = ref({});
 const appStore = useAppStore();
 const category = ref('reviews');
 let media = [];
 const baseurl = window.location.origin;
-const establishement = ref(null)
+//const establishement = ref(null)
 const links = ref(null);
 
 const categories = ref([
-    { value: "menus", label: "Menus", active: false, icon: "uim:th-large" },
-    { value: "reviews", label: "Reviews & Feedbacks", active: false, icon: "uil:star" },
-    { value: "offers", label: "Offers", active: false, icon: "bi:tags" },
-    { value: "infos", label: "Infos", active: false, icon: "uil:info-circle" },
-    { value: "follow", label: "Follow us", active: false, icon: "uil:heart-alt" }
+    { value: "menus", label: t("gate.menus"), active: false, icon: "uim:th-large" },
+    { value: "reviews", label: t("gate.reviews_feedback"), active: false, icon: "uil:star" },
+    { value: "offers", label: t("gate.offers"), active: false, icon: "bi:tags" },
+    { value: "infos", label: t("gate.infos"), active: false, icon: "uil:info-circle" },
+    { value: "follow", label: t("gate.follow_us"), active: false, icon: "uil:heart-alt" }
 ]);
+
 
 const useCategories = computed(() => {
     /*if (links.value && links.value['category'] && links.value['category'] != 'Restaurant') {
@@ -94,9 +97,6 @@ const useCategories = computed(() => {
     }*/
     return categories.value
 })
-
-
-
 
 const handleClick = async (element, category) => {
     const visitorId = localStorage.getItem('visitId');
@@ -249,6 +249,17 @@ onMounted(() => {
             console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
         }
     }
+
+    eventBus.on('selectLanguage',(msg)=>{
+        locale.value = msg.bb
+        categories.value = [
+            { value: "menus", label: t("gate.menus"), active: false, icon: "uim:th-large" },
+            { value: "reviews", label: t("gate.reviews_feedback"), active: false, icon: "uil:star" },
+            { value: "offers", label: t("gate.offers"), active: false, icon: "bi:tags" },
+            { value: "infos", label: t("gate.infos"), active: false, icon: "uil:info-circle" },
+            { value: "follow", label: t("gate.follow_us"), active: false, icon: "uil:heart-alt" }
+        ];
+    })
 })
 
 </script>

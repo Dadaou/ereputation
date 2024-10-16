@@ -90,6 +90,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from "@Stores/user.js";
 import { useI18n } from "vue-i18n";
 import { i18n } from '@/i18n';
+import { eventBus } from '@Services/eventBus.js';
 import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import { languages, current } from '@Services/languages.js';
 import { mainMenu, publicUrls, privateUrls, homePageUrls, homeLeadgenUrls } from '@Services/routes.js';
@@ -167,6 +168,7 @@ const selectCurrentLanguage = (language) => {
   localStorage.setItem("langue", language.code)
 
   locale.value = language.bb;
+  eventBus.emit('selectLanguage', language)
 };
 
 const toggleMobileMenu = () => {
@@ -243,6 +245,7 @@ onMounted(async () => {
       selectCurrentLanguage(lg)
       i18n.locale = lg.bb
       locale.value = lg.bb
+      
     } else {
       setCustomerLanguage()
     }

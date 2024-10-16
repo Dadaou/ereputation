@@ -75,5 +75,12 @@
         "dont_miss": "¡No te pierdas esta oferta exclusiva!",
         "boost_stay": "¡Nuevas ofertas estarán disponibles pronto!",
         "sold_out": "Esta oferta está agotada"
+    },
+    "gate":{
+        "menus":"Menús",
+        "reviews_feedback":"Comentarios",
+        "offers":"Ofertas y promociones",
+        "infos":"Información",
+        "follow_us":"Síguenos"
     }
 }
