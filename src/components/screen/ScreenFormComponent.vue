@@ -288,7 +288,7 @@ const submit = async () => {
           
           updateData(response.data);
           ElMessage({
-            message: `Event updated successfully.`,
+            message: `Screen updated successfully.`,
             type: 'success',
           });
           type.value = 'add'
