@@ -1,6 +1,5 @@
 <template>
-    <div v-if="exist" class="feedback__form"
-        :style="{ backgroundImage: `url(${establishment.url_source})`, backgroundSize: 'cover' }">
+    <div v-if="exist" class="feedback__form">
         <div class="feedback">
             <div v-for="(item, index) in useCategories" :key="index">
                 <button
@@ -303,24 +302,10 @@ onMounted(() => {
     margin: 3rem auto;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     border: 1px solid var(--light-color-bg2);
+    border-radius: 5px;
     padding: 15px;
     padding-top: 2rem;
-    position: relative;
-    z-index: 2;
 }
-
-.feedback__form::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    pointer-events: none;
-}
-
 
 .gate__body {
     border-radius: 0 0 5px 5px;
@@ -470,8 +455,6 @@ img {
     /* Permet le défilement horizontal */
     /* Empêche les éléments de s'enrouler */
     padding-bottom: 8px;
-    position: relative;
-    z-index: 2;
 }
 
 .list__container.hide-scroll {
@@ -502,13 +485,13 @@ img {
 
 .panel {
     padding: 0 18px;
-    /* background-color: #f9f9f9; */
+    background-color: #f9f9f9;
     overflow: hidden;
 }
 
 .panel a {
     width: 10px;
-    /* background-color: #f9f9f9; */
+    background-color: #f9f9f9;
     overflow: hidden;
 }
 
@@ -520,7 +503,7 @@ img {
     width: 100%;
     /* height: 60px; */
     border-radius: 5px 5px 0 0;
-    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 4px 12px;
     cursor: pointer;
     padding: 24px;
     gap: 24px;
@@ -528,33 +511,28 @@ img {
 
 .gate__menu span {
     font-size: 1rem;
-    color: #fff;
+    color: #333;
     font-weight: 600;
-    z-index: 1;
 }
 
 .gate__menu .clicked {
     border-left: 1px solid var(--color-primary);
 }
 
-.gate__menu.clicked .icon-container {
-    background-color: var(--color-primary) !important;
-}
-
 .clicked span {
-    color: #fff !important;
+    color: var(--color-danger) !important;
 }
 
 .gate__menu .icon-container {
     padding: auto;
-    border: #fff solid 1px;
+    border: var(--color-primary) solid 1px;
     border-radius: 50%;
     width: 48px;
     height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: #333;
 }
 
 @media (max-width: 640px) {
