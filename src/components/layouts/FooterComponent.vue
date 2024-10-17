@@ -8,7 +8,7 @@
               :title="appStore.account.brand || ''">
               <img :src="appStore.account.logo">
             </div>
-            <div v-if="logo && logo.logo && isFeedback" class="footer-logo public">
+            <div v-if="logo && logo.logo && isFeedback" :class="footerLogoClassObject">
               <img :src="logo.logo">
             </div>
           </li>
@@ -75,6 +75,12 @@ const isFeedback = computed(() => {
   return publicUrls.includes(route.name)
 });
 
+
+const footerLogoClassObject = computed(() => ({
+  'footer-logo': !(logo.value && logo.value.logo && isFeedback.value),
+  'footer-logo-public' : logo.value && logo.value.logo && isFeedback.value
+}))
+
 onBeforeMount(async () => {
   if (route.params.tag) {
     logo.value = await appStore.getCustomerLogo(route.params.tag)
@@ -110,20 +116,31 @@ footer {
 }
 
 .footer-logo {
-  height: 48px;
+  height: 59px;
   width: auto;
   padding: 12px;
+  background-color: var(--color-white);
+  border-radius: 16px;
   cursor: pointer;
   display: flex;
   justify-content: center;
 }
 
-.footer-logo.public {
-  padding: 0 !important;
-  background: none !important;
+.footer-logo img {
+  height: 100%;
+  width: auto;
 }
 
-.footer-logo img {
+.footer-logo-public {
+  height: 75px;
+  width: auto;
+  padding: 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content : center;
+}
+
+.footer-logo-public img {
   height: 100%;
   width: auto;
   border-radius: 24px;
