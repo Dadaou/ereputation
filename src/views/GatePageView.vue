@@ -1,6 +1,5 @@
 <template>
-    <div v-if="exist" class="feedback__form"
-        :style="{ backgroundImage: `url(${establishment.url_source})`, backgroundSize: 'cover' }">
+    <div v-if="exist" class="feedback__form">
         <div class="feedback">
             <div v-for="(item, index) in useCategories" :key="index">
                 <button
@@ -63,7 +62,8 @@ import { useRoute } from "vue-router";
 import { useAppStore } from "@Stores/app.js"
 import GateLinkComponent from '@Components/gate/GateLinkComponent.vue';
 import { Icon } from '@iconify/vue';
-
+import { useI18n } from "vue-i18n";
+import  {eventBus}  from '@Services/eventBus.js';
 
 const EstablishmentNotFound = defineAsyncComponent(() =>
     import("@Views/EstablishmentNotFound.vue")
@@ -71,22 +71,24 @@ const EstablishmentNotFound = defineAsyncComponent(() =>
 
 let exist = ref(true);
 const route = useRoute();
+const { t,locale } = useI18n();
 const establishmentTag = route.params.id;
 const establishment = ref({});
 const appStore = useAppStore();
 const category = ref('reviews');
 let media = [];
 const baseurl = window.location.origin;
-const establishement = ref(null)
+//const establishement = ref(null)
 const links = ref(null);
 
 const categories = ref([
-    { value: "menus", label: "Menus", active: false, icon: "uim:th-large" },
-    { value: "reviews", label: "Reviews & Feedbacks", active: false, icon: "uil:star" },
-    { value: "offers", label: "Offers", active: false, icon: "bi:tags" },
-    { value: "infos", label: "Infos", active: false, icon: "uil:info-circle" },
-    { value: "follow", label: "Follow us", active: false, icon: "uil:heart-alt" }
+    { value: "menus", label: t("gate.menus"), active: false, icon: "uim:th-large" },
+    { value: "reviews", label: t("gate.reviews_feedback"), active: false, icon: "uil:star" },
+    { value: "offers", label: t("gate.offers"), active: false, icon: "bi:tags" },
+    { value: "infos", label: t("gate.infos"), active: false, icon: "uil:info-circle" },
+    { value: "follow", label: t("gate.follow_us"), active: false, icon: "uil:heart-alt" }
 ]);
+
 
 const useCategories = computed(() => {
     /*if (links.value && links.value['category'] && links.value['category'] != 'Restaurant') {
@@ -94,9 +96,6 @@ const useCategories = computed(() => {
     }*/
     return categories.value
 })
-
-
-
 
 const handleClick = async (element, category) => {
     const visitorId = localStorage.getItem('visitId');
@@ -249,6 +248,17 @@ onMounted(() => {
             console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
         }
     }
+
+    eventBus.on('selectLanguage',(msg)=>{
+        locale.value = msg.bb
+        categories.value = [
+            { value: "menus", label: t("gate.menus"), active: false, icon: "uim:th-large" },
+            { value: "reviews", label: t("gate.reviews_feedback"), active: false, icon: "uil:star" },
+            { value: "offers", label: t("gate.offers"), active: false, icon: "bi:tags" },
+            { value: "infos", label: t("gate.infos"), active: false, icon: "uil:info-circle" },
+            { value: "follow", label: t("gate.follow_us"), active: false, icon: "uil:heart-alt" }
+        ];
+    })
 })
 
 </script>
@@ -292,24 +302,10 @@ onMounted(() => {
     margin: 3rem auto;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     border: 1px solid var(--light-color-bg2);
+    border-radius: 5px;
     padding: 15px;
     padding-top: 2rem;
-    position: relative;
-    z-index: 2;
 }
-
-.feedback__form::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    pointer-events: none;
-}
-
 
 .gate__body {
     border-radius: 0 0 5px 5px;
@@ -459,8 +455,6 @@ img {
     /* Permet le défilement horizontal */
     /* Empêche les éléments de s'enrouler */
     padding-bottom: 8px;
-    position: relative;
-    z-index: 2;
 }
 
 .list__container.hide-scroll {
@@ -491,13 +485,13 @@ img {
 
 .panel {
     padding: 0 18px;
-    /* background-color: #f9f9f9; */
+    background-color: #f9f9f9;
     overflow: hidden;
 }
 
 .panel a {
     width: 10px;
-    /* background-color: #f9f9f9; */
+    background-color: #f9f9f9;
     overflow: hidden;
 }
 
@@ -509,7 +503,7 @@ img {
     width: 100%;
     /* height: 60px; */
     border-radius: 5px 5px 0 0;
-    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 4px 12px;
     cursor: pointer;
     padding: 24px;
     gap: 24px;
@@ -517,33 +511,28 @@ img {
 
 .gate__menu span {
     font-size: 1rem;
-    color: #fff;
+    color: #333;
     font-weight: 600;
-    z-index: 1;
 }
 
 .gate__menu .clicked {
     border-left: 1px solid var(--color-primary);
 }
 
-.gate__menu.clicked .icon-container {
-    background-color: var(--color-primary) !important;
-}
-
 .clicked span {
-    color: #fff !important;
+    color: var(--color-danger) !important;
 }
 
 .gate__menu .icon-container {
     padding: auto;
-    border: #fff solid 1px;
+    border: var(--color-primary) solid 1px;
     border-radius: 50%;
     width: 48px;
     height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: #333;
 }
 
 @media (max-width: 640px) {

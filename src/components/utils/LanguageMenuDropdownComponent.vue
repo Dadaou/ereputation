@@ -27,6 +27,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { languages } from '@Services/languages.js';
+import { eventBus } from '@Services/eventBus.js';
 
 const props = defineProps({
 	current: {
@@ -48,6 +49,7 @@ const selectedLanguage = computed(() => props.current)
 const chooseLanguage = (language) => {
 	show.value = false;
 	emits('select', language)
+	eventBus.emit('selectLanguage', language)
 };
 
 </script>
