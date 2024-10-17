@@ -120,7 +120,7 @@ footer {
   width: auto;
   padding: 12px;
   background-color: var(--color-white);
-  border-radius: 16px;
+  border-radius: 48px;
   cursor: pointer;
   display: flex;
   justify-content: center;

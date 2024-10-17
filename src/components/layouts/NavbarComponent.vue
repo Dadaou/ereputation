@@ -20,7 +20,7 @@
             appStore.account.brand }}</span>
       </a>
       <div v-else class="flex items-center space-x-3 rtl:space-x-reverse">
-        <div v-if="isPublic && logo && logo.logo" class="nav-logo public">
+        <div v-if="isPublic && logo && logo.logo" :class="footerLogoClassObject">
           <img :src="logo.logo">
         </div>
         <span v-else-if="logo && logo.name" class="self-center text-xl font-bold whitespace-nowrap dark:text-white">{{
@@ -264,6 +264,11 @@ onBeforeMount(async () => {
     })
   }
 });
+
+const footerLogoClassObject = computed(() => ({
+  'nav-logo': !(logo.value && logo.value.logo && props.isPublic),
+  'nav-logo-public' : logo.value && logo.value.logo && props.isPublic
+}))
 </script>
 
 <style scoped>
@@ -425,17 +430,21 @@ ul.menu .router-link-exact-active {
   }
 }
 
-.nav-logo.public {
+.nav-logo-public {
   height: 48px;
-  margin-right: 0px !important;
-  padding: 0 !important;
-  background: none;
+  margin-right: 24px;
+}
+
+.nav-logo-public img {
+  width: auto;
+  height: 100%;
   border-radius: 24px;
 }
 
 @media screen and (max-width:765px) {
 
-  .nav-logo {
+  .nav-logo,
+  .nav-logo-public {
     margin-right: 0px;
   }
 

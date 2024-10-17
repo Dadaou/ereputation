@@ -750,12 +750,14 @@ onMounted(async () => {
 .nav-logo {
   height: 48px;
   margin-right: 24px;
+  padding: 8px 16px;
+  background-color: var(--color-white);
+  border-radius: 24px;
 }
 
 .nav-logo img {
   width: auto;
   height: 100%;
-  border-radius: 24px;
 }
 
 .register-link {
