@@ -23,10 +23,15 @@
                         :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
                 </div>
                 <div>
-                    <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link</label>
-                    <input type="text" id="link" v-model="link"
+                    <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ !isHashtag
+                        ? 'Link' : 'Hashtag' }} </label>
+                    <p v-if="!isValidLink && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
+                    <p v-if="!isValidHashtag && isHashtag" class="text-red-500 text-sm">Invalid hashtag format</p>
+                    <input v-if="isHashtag" type="text" id="link" v-model="link"
                         :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']"
                         placeholder="#hashtag">
+                    <input v-else type="text" id="link" v-model="link"
+                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']">
                 </div>
             </div>
             <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">

@@ -55,42 +55,42 @@ import { useRoute, useRouter } from 'vue-router'
 const router = useRouter();
 const route = useRoute();
 const emit = defineEmits(['reload', 'edit']);
-const tableData = inject('urls');
-const search = ref('')
+const allLinks = inject('links', ref([]));
+const search = ref('');
 const linksLoading = ref(false);
+const tableData = ref(allLinks.value);
 
 const filterTableData = computed(() => {
-  let filteredData = tableData.value;
-  filteredData = filteredData.filter((data) => {
+  if (!allLinks.value) return [];
+  return allLinks.value.filter((data) => {
+    if (data.external_url !== true) {
+      return false;
+    }
 
-    if (data.section == 'REVIEWS' || data.section == 'FOLLOW US' || data.section == '' || data.section == null) {
-      return (
+    return (
+      ['INFOS', 'OFFERS', 'MENUS', 'REVIEWS', 'FOLLOW US', '', null].includes(data.section) &&
+      (
         !search.value ||
         (data.source && data.source.toLowerCase().includes(search.value.toLowerCase())) ||
         (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
         (data.section && data.section.toLowerCase().includes(search.value.toLowerCase())) ||
         (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase()))
-      );
-    }
+      )
+    );
   });
-  return filteredData;
 });
 
 const providers = inject('providers');
-
 const getURIbyName = (id) => {
   let data = providers.value
   data = data.filter(item => item.id == id)
   if (data.length > 0) return `${data[0].uri}${data[0].url}`
   return ''
 }
-
 const reloadData = (id) => {
-  tableData.value = tableData.value.filter((data) => {
-    return data.id != id;
-  })
-}
-
+  allLinks.value = allLinks.value.filter((data) => data.id !== id);
+  tableData.value = allLinks.value;
+};
 const urlPattern = (urlTemplate) => {
   let regexPattern = urlTemplate.replace(/[\-\[\]\/\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
   regexPattern = regexPattern.replace(/{value1}/g, '(.+)');

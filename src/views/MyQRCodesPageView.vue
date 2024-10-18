@@ -15,7 +15,7 @@
         <ShortUnitListComponent />
       </el-tab-pane>
       <el-tab-pane label="External URL" name="external_url">
-        <ShortUrlExternalListComponent />
+        <ShortUrlExternalListComponent @reload="reloadLink()" @edit="(url) => handleEdit(url, 'links')" />
       </el-tab-pane>
     </el-tabs>
 
@@ -67,7 +67,7 @@ watch(width, () => {
 });
 
 const userStore = useUserStore()
-const activeName = ref('gates')
+const activeName = ref('external_url')
 const activeStaffTab = ref('staff_list')
 
 const establishment_to_update = ref(null)
@@ -89,12 +89,14 @@ const allStaffs = ref([])
 const allAdvantages = ref([])
 const allCategories = ref([])
 const allUnits = ref([])
+const allLinks = ref([])
 
 provide('staffs', allStaffs)
 provide('events', allEvents)
 provide('advantages', allAdvantages)
 provide('categories', allCategories)
 provide('units', allUnits)
+provide('links', allLinks)
 
 const activeEventTab = ref('event_list')
 provide('event_activeTab', activeEventTab)
@@ -125,8 +127,12 @@ provide('unit_to_update', unit_to_update)
 
 const reloadCompetitor = ref(false)
 provide('reloadCompetitor', reloadCompetitor)
+
 const competitorsData = ref([])
 provide('competitorsData', competitorsData)
+
+const link_to_update = ref(null)
+provide('link_to_update', link_to_update)
 
 const appStore = useAppStore();
 
@@ -165,6 +171,10 @@ const handleEdit = (value, type) => {
   if (type == 'service') {
     activeUnitTab.value = 'unit_form'
     unit_to_update.value = value;
+  }
+
+  if (type == 'links') {
+    link_to_update.value = value;
   }
 };
 
@@ -370,6 +380,24 @@ const loadUnits = async () => {
   }
 }
 
+const reloadLink = async () => {
+  try {
+    const response = await new Promise((resolve) => {
+      services.get_Record(`customer/setting/list?tag=${route.params.tag}&categ=all`, (response) => {
+        resolve(response);
+      });
+    });
+    if (response.status === 200) {
+      allLinks.value = response.data
+        console.log(allLinks.value)
+
+    } else {
+      console.error('Error fetching links:', response);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
 const filterCategory = (data) => {
   const establishments = userStore.user.customer.establishments;
   let categories = []
@@ -407,6 +435,7 @@ onBeforeMount(async () => {
   await reloadCompetitorList();
   await reloadStaffsList();
   await reloadEventsList();
+  await reloadLink();
   await loadAdvantage();
   await loadCategories();
   await loadUnits();
