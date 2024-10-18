@@ -14,6 +14,9 @@
       <el-tab-pane label="Services" name="service">
         <ShortUnitListComponent />
       </el-tab-pane>
+      <el-tab-pane label="External URL" name="external_url">
+        <ShortUrlExternalListComponent />
+      </el-tab-pane>
     </el-tabs>
 
   </div>
@@ -48,6 +51,10 @@ const ShortUnitListComponent = defineAsyncComponent(() =>
 
 const ShortGateListComponent = defineAsyncComponent(() =>
   import("@Components/gate/ShortGateListComponent.vue")
+)
+
+const ShortUrlExternalListComponent = defineAsyncComponent(() =>
+  import("@Components/url/ShortUrlExternalListComponent.vue")
 )
 
 const position = ref('top')

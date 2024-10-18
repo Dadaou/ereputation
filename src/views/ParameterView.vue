@@ -35,6 +35,9 @@
                     <el-tab-pane label="Add URL to Gate" name="urls_gate_form">
                         <UrlGateFormComponent @reload="reloadLink()" />
                     </el-tab-pane>
+                    <el-tab-pane label="Add External URL" name="urls_external_form">
+                        <UrlExternalFormComponent @reload="reloadLink()" />
+                    </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
             <el-tab-pane label="Competitors" name="competitors">
@@ -182,6 +185,10 @@ const UrlProviderFormComponent = defineAsyncComponent(() =>
 
 const UrlGateFormComponent = defineAsyncComponent(() =>
     import("@Components/url/UrlGateFormComponent.vue")
+)
+
+const UrlExternalFormComponent = defineAsyncComponent(() =>
+    import("@Components/url/UrlExternalFormComponent.vue")
 )
 
 const EstablishmentListComponent = defineAsyncComponent(() =>

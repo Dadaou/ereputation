@@ -1,7 +1,6 @@
 <template>
     <div class="security__header border__bottom mt-10">
         <div class="security__edit">
-            <!-- <h4><i class="uil uil-company"></i> Establishment</h4> -->
             <p>Add the URLs pointing to your internal resources (menus, promotional offers, websites…) so that they are
                 displayed in your Gate.</p>
         </div>
@@ -41,47 +40,51 @@
                     <p v-if="!isValidHashtag && isHashtag" class="text-red-500 text-sm">Invalid hashtag format</p>
                     <input v-if="isHashtag" type="text" id="link" v-model="link"
                         :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']"
-                        placeholder="#hashtag" >
+                        placeholder="#hashtag">
                     <input v-else type="text" id="link" v-model="link"
-                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']"
-                        >
+                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']">
                 </div>
                 <div>
-                    <label for="logoFile" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Logo</label>
+                    <label for="logoFile"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Logo</label>
                     <div class="drop-area" @dragover.prevent @drop="onLogoDrop">
-                        <div class="image-selector border-gray-300" :class="!previewImage && 'hover'" @click="selectLogo"
-                            @mouseover="imageInputHover = true" @mouseleave="imageInputHover = false">
-                                <draggable v-model="logoFiles" @end="onEnd" @change="onChange">
-                                    <template #item="{ element }">
-                                        <div class="file-item">
-                                            <img v-if="previewImage" :src="previewImage" class="uploading-image" />
-                                            <i v-if="imageInputHover" class="uil uil-image-edit img-hover"></i>
-                                        </div>
-                                    </template>
-                                </draggable>
-                                <i v-if="!logoFiles.length" class="uil uil-image-plus"></i>
-                            </div>
-                            <input type="file" id="logoFile" ref="logoInput" @change="handleFileChange('logo', $event)"
-                                accept="image/png, image/jpeg, image/gif" style="display:none">
+                        <div class="image-selector border-gray-300" :class="!previewImage && 'hover'"
+                            @click="selectLogo" @mouseover="imageInputHover = true"
+                            @mouseleave="imageInputHover = false">
+                            <draggable v-model="logoFiles" @end="onEnd" @change="onChange">
+                                <template #item="{ element }">
+                                    <div class="file-item">
+                                        <img v-if="previewImage" :src="previewImage" class="uploading-image" />
+                                        <i v-if="imageInputHover" class="uil uil-image-edit img-hover"></i>
+                                    </div>
+                                </template>
+                            </draggable>
+                            <i v-if="!logoFiles.length" class="uil uil-image-plus"></i>
                         </div>
+                        <input type="file" id="logoFile" ref="logoInput" @change="handleFileChange('logo', $event)"
+                            accept="image/png, image/jpeg, image/gif" style="display:none">
                     </div>
+                </div>
                 <div>
-                    <label for="documentFile" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Document</label>
+                    <label for="documentFile"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Document</label>
                     <div class="drop-area" @dragover.prevent @drop="onDocumentDrop">
                         <div class="image-selector border-gray-300" @click="selectDocument"
-                            @mouseover="documentInputHover = true" 
-                            @mouseleave="documentInputHover = false">
+                            @mouseover="documentInputHover = true" @mouseleave="documentInputHover = false">
                             <draggable v-model="documentFiles" @end="onEnd" @change="onChange">
                                 <template #item="{ element }">
                                     <div class="file-item" style="font-size: 16px">
                                         {{ element.name }}
-                                        <i v-if="documentInputHover && documentFiles.length" class="uil uil-file-edit-alt img-hover"></i>
+                                        <i v-if="documentInputHover && documentFiles.length"
+                                            class="uil uil-file-edit-alt img-hover"></i>
                                     </div>
                                 </template>
                             </draggable>
                             <i v-if="!documentFiles.length" class="uil uil-file-plus"></i>
                         </div>
-                        <input type="file" id="documentFile" ref="documentInput" @change="handleFileChange('document', $event)" accept="application/pdf" style="display:none">
+                        <input type="file" id="documentFile" ref="documentInput"
+                            @change="handleFileChange('document', $event)" accept="application/pdf"
+                            style="display:none">
                     </div>
                 </div>
             </div>
@@ -104,10 +107,10 @@
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent, ref, onBeforeMount, watch, inject } from 'vue'
+import { computed, ref, onBeforeMount, watch, inject } from 'vue'
 import { useUserStore } from "@Stores/user.js"
-import { ElMessage, ElTable, ElTableColumn, ElButton, ElInput, ElOption, ElSelect, ElPopconfirm } from 'element-plus'
-import { formatDate, useWindowSize } from '@vueuse/core';
+import { ElMessage, ElOption, ElSelect } from 'element-plus'
+import { useWindowSize } from '@vueuse/core';
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import services from '@Services/services.js';
 import 'element-plus/es/components/popconfirm/style/css'
@@ -121,10 +124,6 @@ import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import { useRoute, useRouter } from 'vue-router';
 import draggable from 'vuedraggable';
-
-const ModalComponent = defineAsyncComponent(() =>
-    import('@Components/utils/ModalComponent.vue')
-)
 
 const router = useRouter();
 const route = useRoute();
@@ -141,97 +140,97 @@ const selectedLogo = ref(null);
 const selectedDocument = ref(null);
 const previewImage = ref(null);
 const imageInputHover = ref(false);
-const documentInputHover = ref(false); 
+const documentInputHover = ref(false);
 const imgHasChanged = ref(false);
 const fileName = ref('');
 const logoFiles = ref([]);
 const documentFiles = ref([]);
 
 const onLogoDrop = (event) => {
-  event.preventDefault();
-  const droppedFiles = event.dataTransfer.files;
-  if (droppedFiles.length > 0) {
-    if (isImageFile(droppedFiles[0])) {
-      handleFiles(droppedFiles[0], 'logo');
-    } else {
-      showErrorMessage('Please upload a valid image file for the logo.');
+    event.preventDefault();
+    const droppedFiles = event.dataTransfer.files;
+    if (droppedFiles.length > 0) {
+        if (isImageFile(droppedFiles[0])) {
+            handleFiles(droppedFiles[0], 'logo');
+        } else {
+            showErrorMessage('Please upload a valid image file for the logo.');
+        }
     }
-  }
 };
 
 const onDocumentDrop = (event) => {
-  event.preventDefault();
-  const droppedFiles = event.dataTransfer.files;
-  if (droppedFiles.length > 0) {
-    if (isPdfFile(droppedFiles[0])) {
-      handleFiles(droppedFiles[0], 'document');
-    } else {
-      showErrorMessage('Please upload a valid PDF file for the document.');
+    event.preventDefault();
+    const droppedFiles = event.dataTransfer.files;
+    if (droppedFiles.length > 0) {
+        if (isPdfFile(droppedFiles[0])) {
+            handleFiles(droppedFiles[0], 'document');
+        } else {
+            showErrorMessage('Please upload a valid PDF file for the document.');
+        }
     }
-  }
 };
 
 const handleFiles = (file, type) => {
-  if (type === 'logo') {
-    const reader = new FileReader();
-    selectedLogo.value = file;
-    reader.readAsDataURL(file);
-    reader.onload = (e) => {
-      logoFiles.value = [{
-        file: file,
-        previewImage: e.target.result
-      }];
-      previewImage.value = e.target.result;
-    };
-  } else if (type === 'document') {
-    selectedDocument.value = file;
-    documentFiles.value = [{
-      file: file,
-      name: file.name
-    }];
-  }
+    if (type === 'logo') {
+        const reader = new FileReader();
+        selectedLogo.value = file;
+        reader.readAsDataURL(file);
+        reader.onload = (e) => {
+            logoFiles.value = [{
+                file: file,
+                previewImage: e.target.result
+            }];
+            previewImage.value = e.target.result;
+        };
+    } else if (type === 'document') {
+        selectedDocument.value = file;
+        documentFiles.value = [{
+            file: file,
+            name: file.name
+        }];
+    }
 };
 
 const isImageFile = (file) => {
-  return ['image/png', 'image/jpeg', 'image/gif'].includes(file.type);
+    return ['image/png', 'image/jpeg', 'image/gif'].includes(file.type);
 };
 
 const isPdfFile = (file) => {
-  return file.type === 'application/pdf';
+    return file.type === 'application/pdf';
 };
 
 const selectFiles = () => {
-  document.querySelector('input[type="file"]').click();
+    document.querySelector('input[type="file"]').click();
 };
 
 const onEnd = (event) => {
-  console.log('Drag ended', event);
+    console.log('Drag ended', event);
 };
 
 const onChange = (event) => {
-  console.log('Order changed', event);
+    console.log('Order changed', event);
 };
 
 const handleFileChange = (type, e) => {
-  const file = e.target.files[0];
-  if (file) {
-    if (type === 'document') {
-      if (isPdfFile(file)) {
-        selectedDocument.value = file;
-        documentFiles.value = [{ file: file, name: file.name }];
-      } else {
-        showErrorMessage('Please upload a valid PDF file for the document.');
-      }
-    } else if (type === 'logo') {
-      if (isImageFile(file)) {
-        handleFiles(file, 'logo');
-      } else {
-        showErrorMessage('Please upload a valid image file for the logo.');
-      }
+    const file = e.target.files[0];
+    if (file) {
+        if (type === 'document') {
+            if (isPdfFile(file)) {
+                selectedDocument.value = file;
+                documentFiles.value = [{ file: file, name: file.name }];
+            } else {
+                showErrorMessage('Please upload a valid PDF file for the document.');
+            }
+        } else if (type === 'logo') {
+            if (isImageFile(file)) {
+                handleFiles(file, 'logo');
+            } else {
+                showErrorMessage('Please upload a valid image file for the logo.');
+            }
+        }
+        // Reset the input value
+        e.target.value = '';
     }
-    // Reset the input value
-    e.target.value = '';
-  }
 };
 const selectLogo = () => {
     document.getElementById('logoFile').click();
@@ -240,10 +239,10 @@ const selectDocument = () => {
     document.getElementById('documentFile').click();
 }
 const showErrorMessage = (message) => {
-  ElMessage({
-    message: message,
-    type: 'error',
-  });
+    ElMessage({
+        message: message,
+        type: 'error',
+    });
 };
 const link_to_update = inject('link_to_update');
 const showModal = ref(false);
@@ -308,7 +307,7 @@ const establishments = computed(() => {
 });
 
 onBeforeMount(() => {
-   
+
     if (establishments.value.length > 0) {
         establishment.value = establishments.value[0].uri; // Ou équivalent en fonction de la structure de vos données
     }
@@ -651,6 +650,28 @@ const handleEdit = async (data) => {
         section.value = data.section;
         caption.value = data.caption;
         id.value = data.id;
+
+        if (data.logo) {
+            previewImage.value = data.logo;
+            logoFiles.value = [{
+                file: null,
+                previewImage: data.logo
+            }];
+        } else {
+            previewImage.value = null;
+            logoFiles.value = [];
+        }
+
+        if (data.document_url) {
+            selectedDocument.value = { name: data.document_url.split('/').pop() };
+            documentFiles.value = [{
+                file: null,
+                name: data.document_url.split('/').pop()
+            }];
+        } else {
+            selectedDocument.value = null;
+            documentFiles.value = [];
+        }
     }, 250);
 
     isEdit.value = true;
