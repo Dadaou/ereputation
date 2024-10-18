@@ -529,10 +529,10 @@ const submit = async () => {
                                 }, false);
                             });
                             if (response.status !== 200 && response.status !== 201) {
-                                uploadErrors.push('An error occurred while uploading the document.');
+                                // uploadErrors.push('An error occurred while uploading the document.');
                             }
                         } catch (error) {
-                            uploadErrors.push('An error occurred while uploading the document.');
+                            // uploadErrors.push('An error occurred while uploading the document.');
                         }
                     }
 
