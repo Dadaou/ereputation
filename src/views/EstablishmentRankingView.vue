@@ -203,12 +203,14 @@ onMounted(async () => {
 }
 
 @media (max-width: 768px) {
-    .select_info {
+    .select_info,
+    .catfiltre,
+    .date_picker {
         display: flex;
         align-items: center;
         flex-grow: 1;
-        /* max-width: 318px; */
-        /* margin-right: 10px; */
+        max-width: 100%;
+        margin-right: 0;
     }
 
     .row {

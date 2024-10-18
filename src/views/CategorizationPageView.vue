@@ -257,7 +257,8 @@ onMounted(async () => {
         display: flex;
         align-items: center;
         flex-grow: 1;
-        max-width: calc(100% - 8px);
+        max-width: 100%;
+        margin-right: 0;
         /* margin-right: 10px; */
     }
 

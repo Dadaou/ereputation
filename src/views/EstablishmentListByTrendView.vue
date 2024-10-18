@@ -222,10 +222,18 @@ onMounted(async () => {
     display: flex;
     align-items: center;
     margin-right: 10px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.section_number {
+    display: flex;
+    justify-content: center;
+    align-items: center;  
 }
 
 .number_days {
-    width: 90%;
+    width: 100%;
 }
 
 @media (min-width: 1500px) {
@@ -256,7 +264,8 @@ onMounted(async () => {
         display: flex;
         align-items: center;
         flex-grow: 1;
-        max-width: calc(100% - 8px);
+        max-width: 100%;
+        margin-right: 0;
     }
 
     .row {
@@ -311,14 +320,8 @@ onMounted(async () => {
         /* margin-top: 18px; */
     }
 
-    .section_number {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        
-    }
-    .number_days {
-        width: 100%;
+    .catfiltre {
+        padding-right: 18px;
     }
 
 }
@@ -380,7 +383,7 @@ onMounted(async () => {
     }
 }
 
-@media (max-width: 375px) {
+@media (max-width: 375px) { 
     .select_info {
         display: flex;
         align-items: center;
