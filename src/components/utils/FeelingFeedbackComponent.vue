@@ -39,7 +39,7 @@ const selectFeeling = (feel)=>{
 
 .rating__feedback{
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     width: 80%;
     margin: auto;
     margin-top: 1rem;
@@ -77,6 +77,7 @@ const selectFeeling = (feel)=>{
 @media screen and (max-width:1400px) {
     .rating__feedback{
         width: 90% !important;
+        justify-content: space-between;
 
     }
 }
@@ -84,6 +85,7 @@ const selectFeeling = (feel)=>{
 @media screen and (max-width:670px) {
     .rating__feedback{
         width: 100% !important;
+        justify-content: space-between;
 
     }
 }
