@@ -15,7 +15,7 @@
         </template>
         <template #default="scope">
           <a :href="scope.row.url" target="_blank"><i class="uil uil-external-link-alt"></i></a>
-          <el-button size="small" @click="showModal = true, scanUrl = scope.row.url"><i
+          <el-button size="small" @click="handleClickExternalUrl(scope.row.url, scope.row.id)"><i
               class="uil uil-qrcode-scan"></i></el-button>
           <el-button size="small" @click="handleEdit(scope.$index, scope.row.id)"><i
               class="uil uil-edit"></i></el-button>
@@ -64,6 +64,13 @@ const search = ref('');
 const linksLoading = ref(false);
 const tableData = ref(allLinks.value);
 const showModal = ref(false);
+const scanUrl = ref('');
+const baseurl = window.location.origin;
+
+function handleClickExternalUrl(url, establishment_id) {
+  scanUrl.value = `${baseurl}/external-url/${establishment_id}?url=${url}`;
+  showModal.value = true;
+}
 
 
 const filterTableData = computed(() => {
