@@ -12,7 +12,7 @@ onMounted(() => {
     const url = new URL(window.location.href);
     const urlParams = new URLSearchParams(url.search);
     const extractedUrl = urlParams.get('url');
-    
+
     if (extractedUrl) {
         externalUrl.value = extractedUrl;
     } else {
@@ -21,6 +21,15 @@ onMounted(() => {
 
     const pathParts = url.pathname.split('/');
     id.value = pathParts[pathParts.indexOf('external-url') + 1];
+
+    // try {
+    //     if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
+    //         window.FingerprintApp.default.main();
+    //         console.log("poster beuu")
+    //     }
+    // } catch (error) {
+    //     console.error("Une erreur s'est produite lors de l'exécution de FingerprintG2A :", error);
+    // }
 
     if (externalUrl.value) {
         window.location.href = externalUrl.value;

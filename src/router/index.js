@@ -140,7 +140,7 @@ const router = createRouter({
           component: () => import('@Views/ScreenPageView.vue')
         },
         {
-          path: '/external-url/:tag',
+          path: '/public/:tag/establishment/:id/external',
           name: 'externalUrl',
           component: () => import('@Views/ExternalUrlPageView.vue')
         }
