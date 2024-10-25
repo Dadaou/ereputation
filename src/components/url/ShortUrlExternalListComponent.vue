@@ -7,20 +7,18 @@
   <div class="mt-5 erep_table table__container">
     <el-table v-if="linksLoading == false" :data="filterTableData">
       <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" />
-      <el-table-column label="Source" prop="source" style="width: 25%; min-width: 200px;" />
-      <el-table-column label="Category" prop="category" style="width: 10%; min-width: 200px;" />
+      <el-table-column label="Caption" prop="caption" style="width: 10%; min-width: 200px;" />
       <el-table-column label="Url" prop="url" style="width: 25%; min-width: 200px;" />
-      <el-table-column label="Gate" prop="section" style="width: 25%; min-width: 200px;">
-
-      </el-table-column>
       <el-table-column label="Operations" style="width: 25%; min-width: 200px;" align="right">
         <template #header>
           <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
         </template>
         <template #default="scope">
           <a :href="scope.row.url" target="_blank"><i class="uil uil-external-link-alt"></i></a>
-          <el-button size="small"><i class="uil uil-qrcode-scan"></i></el-button>
-          <el-button size="small" @click="handleEdit(scope.row)"><i class="uil uil-edit"></i></el-button>
+          <el-button size="small" @click="handleClickExternalUrl(scope.row.url, scope.row.id)"><i
+              class="uil uil-qrcode-scan"></i></el-button>
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row.id)"><i
+              class="uil uil-edit"></i></el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
             <template #reference>
               <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
@@ -39,9 +37,11 @@
       <span class="sr-only">Loading...</span>
     </div>
   </div>
+  <QrCodeModalComponent :qrcodeValue="scanUrl" :showModal="showModal" @close="showModal = false" />
+
 </template>
 <script setup>
-import { computed, ref, inject } from 'vue';
+import { computed, ref, inject, defineAsyncComponent } from 'vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 import services from '@Services/services.js';
 import 'element-plus/es/components/message/style/css'
@@ -52,6 +52,10 @@ import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
 import { useRoute, useRouter } from 'vue-router'
 
+const QrCodeModalComponent = defineAsyncComponent(() =>
+  import('@Components/utils/QrCodeModalComponent.vue')
+)
+
 const router = useRouter();
 const route = useRoute();
 const emit = defineEmits(['reload', 'edit']);
@@ -59,6 +63,15 @@ const allLinks = inject('links', ref([]));
 const search = ref('');
 const linksLoading = ref(false);
 const tableData = ref(allLinks.value);
+const showModal = ref(false);
+const scanUrl = ref('');
+const baseurl = window.location.origin;
+
+function handleClickExternalUrl(url, establishment_id) {
+  scanUrl.value = `${baseurl}/external-url/${establishment_id}?url=${url}`;
+  showModal.value = true;
+}
+
 
 const filterTableData = computed(() => {
   if (!allLinks.value) return [];
@@ -71,9 +84,7 @@ const filterTableData = computed(() => {
       ['INFOS', 'OFFERS', 'MENUS', 'REVIEWS', 'FOLLOW US', '', null].includes(data.section) &&
       (
         !search.value ||
-        (data.source && data.source.toLowerCase().includes(search.value.toLowerCase())) ||
-        (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
-        (data.section && data.section.toLowerCase().includes(search.value.toLowerCase())) ||
+        (data.caption && data.caption.toLowerCase().includes(search.value.toLowerCase())) ||
         (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase()))
       )
     );
@@ -126,32 +137,15 @@ const handleDelete = async (index, link) => {
   }
 };
 
-const handleEdit = async (data) => {
-  let provider = providers.value.filter(item => item.id == data.idprovider)[0];
-  const payload = {
-    category: data.category,
-    link: (data.category == 'Hashtag') ? getValueUrl(data.url, provider.url) : data.url,
-    provider: getURIbyName(data.idprovider),
-    id: data.id,
-    establishment: `/api/establishments/${data.establishment_id}`,
-    section: data.section,
-    caption: data.caption
-  }
 
-  const sub_tab = payload.category && payload.category.trim() !== '' ? 'urls_form' : 'urls_gate_form';
-
+const handleEdit = async (index, external_url) => {
+  const externalId = external_url;
+  console.log(externalId)
   router.push({
-    name: route.name,
-    params: {
-      ...route.params,
-      tab: 'urls',
-      sub_tab: sub_tab
-    }
+    name: 'Parameters', params: { tab: 'urls', sub_tab: 'urls_external_form', externalId: externalId }, query: {
+      externalId: externalId,
+    },
   });
-
-  setTimeout(function () {
-    emit('edit', payload)
-  }, 250);
 };
 
 </script>
