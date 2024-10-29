@@ -14,7 +14,9 @@
           <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
         </template>
         <template #default="scope">
-          <a :href="scope.row.url" target="_blank"><i class="uil uil-external-link-alt"></i></a>
+          <a :href="scope.row.url + '?preview=true'" target="_blank">
+            <i class="uil uil-external-link-alt"></i>
+          </a>
           <el-button size="small" @click="handleClickExternalUrl(scope.row.url, scope.row.establishment_tag)"><i
               class="uil uil-qrcode-scan"></i></el-button>
           <el-button size="small" @click="handleEdit(scope.$index, scope.row.id)"><i
