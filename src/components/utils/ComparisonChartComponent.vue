@@ -172,7 +172,7 @@ const viewData = async () => {
         }
     } else {
         const tags = [props.establishment.tag, ...props.establishment.competitors.map(c => c.tag)]
-        plotData.value = await chartsStore.loadData(tags, selectedTimePeriod.value, sDate, eDate, selectedCompany.value.name)
+        plotData.value = await chartsStore.loadData(tags, selectedTimePeriod.value, sDate, eDate, selectedCompany.value.name, 'source')
         legendData.value = companiesStore.generateLegend(plotData.value, props.colors);
     }
 
