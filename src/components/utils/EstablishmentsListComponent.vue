@@ -1,5 +1,5 @@
 <template>
-    <div class="list__item" v-for="company in establishments" :key="company.id">
+    <div class="list__item" v-for="(company, i) in establishments" :key="company.id">
         <div class="society__info__container">
             <swiper v-if="company.url_source !== null" @click="goToCompany(company)" class="society__logo"
                 :modules="[Virtual]" :slides-per-view="1" :space-between="10" :virtual="true">
@@ -51,9 +51,11 @@
             </div>
         </div>
         <!-- <div v-if="company.categories" class="category_container_mobile"></div> -->
-        <div class="category_container_mobile" v-if="company.reviews_count || company.categories">
+        <div class="category_container_mobile">
             <div class="inline-flex category_mobile">
-                <span class="reviews-loader" v-if="loading"></span>
+
+                <span class="reviews-loader" v-if="dataCategoriesLoading[i]"></span>
+                
                 <div v-else v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category" class="reviews_category">
 
                     <div v-if="cat" class="review__category-container ml-1 cat_desc">
@@ -97,7 +99,7 @@
 </template>
 
 <script setup>
-import { ref, defineAsyncComponent, defineEmits, inject, onMounted } from 'vue';
+import { ref, defineAsyncComponent, defineEmits, inject, onMounted, watch } from 'vue';
 import RatingComponent from '@Components/utils/RatingComponent.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Virtual } from 'swiper/modules';
@@ -140,6 +142,10 @@ const props = defineProps({
     loading: {
         type: Boolean,
         required: false,
+    },
+    dataCategoriesLoading : {
+        type : Array,
+        default : []
     }
 
 });
@@ -267,6 +273,7 @@ const capitalize = (str) => {
     if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1);
 };
+
 </script>
 <style scoped>
 
