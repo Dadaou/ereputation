@@ -12,7 +12,7 @@
                     <SpinnerComponent v-if="showSpinner == true" :color="'red'" />
                     <span v-else>Submit</span>
                 </button>
-                <p><a href="/sign-up" class="register-link">Don't have an account?</a></p>
+                <p><a href="https://linkystar.com/pricing" class="register-link">Don't have an account?</a></p>
 
             </form>
         </div>
