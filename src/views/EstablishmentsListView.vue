@@ -9,7 +9,7 @@
         <div class="mt-3 society__list" v-if="establishments.length > 0">
             <suspense>
                 <div class="establishment-home">
-                    <establishments-list-component :establishments="establishments" :tag='customerTag' />
+                    <establishments-list-component :establishments="establishments" :tag='customerTag' :showMoreInformation="false"/>
                 </div>
                 <template #fallback>
                     <establishment-list-loaded-component :nb="3" />
