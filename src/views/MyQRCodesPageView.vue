@@ -15,7 +15,7 @@
         <ShortUnitListComponent />
       </el-tab-pane>
       <el-tab-pane label="External URL" name="external_url">
-        <ShortUrlExternalListComponent @reload="reloadLink()"/>
+        <ShortUrlExternalListComponent/>
       </el-tab-pane>
     </el-tabs>
 

@@ -8,6 +8,7 @@
     <el-table v-if="linksLoading == false" :data="filterTableData">
       <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Caption" prop="caption" style="width: 10%; min-width: 200px;" />
+      <el-table-column label="QR code scans" prop="" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Url" prop="url" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Operations" style="width: 25%; min-width: 200px;" align="right">
         <template #header>
