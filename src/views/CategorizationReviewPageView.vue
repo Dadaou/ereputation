@@ -1122,7 +1122,8 @@ p {
 }
 
 .container_legend {
-    font-size: 14px !important;
+    font-size: 13px !important;
+    font-weight: 500;
     gap: 3px;
     align-items: center;
     display: flex;
