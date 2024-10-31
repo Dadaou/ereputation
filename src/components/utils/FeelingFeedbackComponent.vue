@@ -78,7 +78,6 @@ const selectFeeling = (feel)=>{
     .rating__feedback{
         width: 90% !important;
         justify-content: space-between;
-
     }
 }
 
@@ -86,7 +85,6 @@ const selectFeeling = (feel)=>{
     .rating__feedback{
         width: 100% !important;
         justify-content: space-between;
-
     }
 }
 
