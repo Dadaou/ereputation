@@ -57,7 +57,7 @@ const emit = defineEmits(['reload', 'edit']);
 const tableData = inject('links');
 const search = ref('')
 const linksLoading = ref(false);
-console.log("tableData", tableData)
+
 const filterTableData = computed(() => {
   let filteredData = [];
   tableData.value.forEach((_val) => {

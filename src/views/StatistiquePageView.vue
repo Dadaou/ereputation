@@ -80,6 +80,9 @@
                 <ChartGateAndFeedbackVisit />
             </div>
             <div class="statistique">
+                <ChartExternalUrl />
+            </div>
+            <div class="statistique">
                 <PieChartService />
             </div>
             <div class="statistique">
@@ -121,6 +124,10 @@ const ChartFeedbackSubmissions = defineAsyncComponent(() =>
 
 const ChartAboutGate = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/ChartAboutGate.vue")
+)
+
+const ChartExternalUrl = defineAsyncComponent(() =>
+    import("@Components/ChartStatistique/ChartExternalUrl.vue")
 )
 
 const ChartGateAndFeedbackVisit = defineAsyncComponent(() =>

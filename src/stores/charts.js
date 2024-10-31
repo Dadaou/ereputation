@@ -12,7 +12,7 @@ export const useChartsStore = defineStore(
     const byQuarters = ref({})
     const bySemesters = ref({})
 
-    const fetchData = async (tags, type, from, to, platform, next) => {
+    const fetchData = async (tags, type, from, to, platform, key = null, next) => {
       let apiBase = `/charts/comparaison`
       let apiParams = `tags=${tags}&type=${type}`
       if (from !== 'Invalid Date' && to !== 'Invalid Date') {
@@ -23,6 +23,8 @@ export const useChartsStore = defineStore(
         apiParams += `&platform=${platform}`
       }
 
+      if(key !== null) apiParams += `&key=${key}`
+
       const api = apiBase + '?' + apiParams
       await services.get_Record(api, (response) => {
         if (response && response.status == 200) {
@@ -31,7 +33,7 @@ export const useChartsStore = defineStore(
       })
     }
 
-    const loadData = async (tag, type, from, to, platform, formatedDates = true) => {
+    const loadData = async (tag, type, from, to, platform, key = null, formatedDates = true) => {
       let fFrom = from
       let fTo = to
 
@@ -40,11 +42,11 @@ export const useChartsStore = defineStore(
         const tTo = to.split('/')
         fFrom = `${tFrom[2]}-${tFrom[1]}-${tFrom[0]}`
         fTo = `${tTo[2]}-${tTo[1]}-${tTo[0]}`
-      }
+      } 
 
       let result = []
 
-      await fetchData(tag.join(','), type.toLowerCase(), fFrom, fTo, platform, (response) => {
+      await fetchData(tag.join(','), type.toLowerCase(), fFrom, fTo, platform, key, (response) => {
         let data = response.data.data
         if (data.length) {
           let items = data.length

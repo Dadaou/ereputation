@@ -138,6 +138,11 @@ const router = createRouter({
           path: '/customer/:tag/establishment/:id/screens/:screen',
           name: 'ScreenPage',
           component: () => import('@Views/ScreenPageView.vue')
+        },
+        {
+          path: '/public/:tag/establishment/:id/external',
+          name: 'externalUrl',
+          component: () => import('@Views/ExternalUrlPageView.vue')
         }
       ]
     },
@@ -526,7 +531,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.name != 'Login' && to.name != 'Signup' && session.getItemWithTTL('verification_session') == null) {
+    if (to.name != 'Login' && to.name != 'Signup' && to.name != 'externalUrl' && session.getItemWithTTL('verification_session') == null) {
       console.log('session expired');
       useUserStore().signOut();
     useUserStore().authenticated = false;

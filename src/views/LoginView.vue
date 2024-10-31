@@ -12,7 +12,7 @@
                     <SpinnerComponent v-if="showSpinner == true" :color="'red'" />
                     <span v-else>Submit</span>
                 </button>
-                <p><a href="/sign-up" class="register-link">Don't have an account?</a></p>
+                <p><a :href="linkystarURL" class="register-link">Don't have an account?</a></p>
 
             </form>
         </div>
@@ -44,6 +44,7 @@ const userStore = useUserStore();
 const appStore = useAppStore();
 const companiesStore = useCompanyStore();
 const chatID = ref(import.meta.env.VITE_3CX_CHAT_ID);
+const linkystarURL = ref(import.meta.env.VITE_LINKYSTAR_URL);
 
 const page = ref({
     title1: "Sign in to",

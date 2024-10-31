@@ -1,24 +1,15 @@
 <template>
-    <div v-if="userStore.customer">
-        <div v-if="!dataLoading">
-            <div class="client__container__head" v-if="establishments.length >= 0">
+    <div v-if="userStore.customer && !dataLoading">
+        <div v-if="establishments.length >= 0">
+            <div class="client__container__head">
                 Welcome <b>{{ userStore.customer.name }}</b>! Your establishments are listed below. <span>({{
                     establishments.length }} found)</span>
             </div>
-            <div class="client__container__head" v-else>
-                Welcome <b>{{ userStore.customer.name }}</b>! No companies found yet.
-            </div>
         </div>
-        <div v-else>
-            <div class="client__container__head">
-                <!-- Welcome <b>{{ userStore.customer.name }}</b>! Your establishments are listed below. <span>({{
-                    establishments.length }} found)</span> -->
-            </div>
-        </div>
-        <div class="society__list mt-3" v-if="establishments.length > 0">
+        <div class="mt-3 society__list" v-if="establishments.length > 0">
             <suspense>
                 <div class="establishment-home">
-                    <establishments-list-component :establishments="establishments" :tag='customerTag' />
+                    <establishments-list-component :establishments="establishments" :tag='customerTag' :showMoreInformation="false"/>
                 </div>
                 <template #fallback>
                     <establishment-list-loaded-component :nb="3" />
@@ -26,21 +17,21 @@
             </suspense>
         </div>
     </div>
-    <div v-else>
+    <div v-else-if="!dataLoading && !userStore.customer">
         We're sorry, but we couldn't find the customer associated with the provided tag. Please double-check the tag and
         try
         again. If you continue to experience issues, please contact our support team for assistance.
     </div>
 </template>
+
 <script setup>
-import { ref, onBeforeMount, onMounted, defineAsyncComponent, inject, computed } from 'vue';
+import { ref, onBeforeMount, onMounted, defineAsyncComponent, inject } from 'vue';
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
 import { useCompanyStore } from "@Stores/company.js";
 import EstablishmentListLoadedComponent from '@Components/utils/EstablishmentListLoadedComponent.vue';
-import { useRouter, useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 import services from '@Services/services.js';
-
 
 const EstablishmentsListComponent = defineAsyncComponent(() =>
     import('@Components/utils/EstablishmentsListComponent.vue')
@@ -56,7 +47,6 @@ const customerTag = inject('tag');
 const customer = ref(null)
 
 const loadCustomer = async (partner) => {
-    // appStore.isLoading = true
     const response = await new Promise((resolve) => {
         services.get_Record(`partner/customer?id=${partner}`, (response) => {
             resolve(response)
@@ -74,12 +64,10 @@ const loadCustomer = async (partner) => {
                 }
             }
         })
-        // appStore.isLoading = false
     }
 };
 
 onBeforeMount(async () => {
-    // appStore.isLoading = true;
     dataLoading.value = true;
 
     if (userStore.user.roles.includes("ROLE_PARTNER") && userStore.user.partner && userStore.customer.tag !== customerTag.value) {
@@ -94,13 +82,14 @@ onMounted(async () => {
             establishments.value = data;
             if (userStore.user.customer) {
                 userStore.user.customer['establishments'] = establishments.value;
-                userStore.customer = userStore.user.customer
+                userStore.customer = userStore.user.customer;
             }
             dataLoading.value = false
         })
     }
 });
 </script>
+
 <style scoped>
 /* .establishment-home :deep(.list__actions) {
     margin-top: 15px;

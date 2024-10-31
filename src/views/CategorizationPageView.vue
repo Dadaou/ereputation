@@ -20,11 +20,14 @@
             </div>
         </div>
     </div>
+
+    <span v-if="dataLoading">Loading...</span>
+
     <div class="society__list mt-5" v-if="establishments.length > 0">
         <suspense>
             <div class="establishment-rank-view">
                 <establishments-list-component :establishments="establishments" :tag="customerTag"
-                    :start_date="start_date" :end_date="end_date" :loading="loading" />
+                    :start_date="start_date" :end_date="end_date" :dataCategoriesLoading = "dataCategoriesLoading"/>
             </div>
             <template #fallback>
                 <establishment-list-loaded-component :nb="3" />
@@ -72,24 +75,16 @@ provide('categoriesall', categoriesall)
 const categoryFilters = ref('all');
 const start_date = inject('start_date');
 const end_date = inject('end_date');
-const loading = ref(true);
+const dataCategoriesLoading = ref([]);
 
 watch([review_category, categoryFilters, start_date, end_date, categoriesall], async () => {
-    if (start_date.value && end_date.value) {
-        loading.value = true;
-        try {
-            await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, review_category.value, categoriesall.value);
-        } finally {
-            // loading.value = false;
-        }
-    }
+    await loadEstablishmentCategories(categoryFilters.value, start_date.value, end_date.value);
 });
 
 const IsValueOkay = (value) => (value !== '' && value !== 0 && value !== null && value !== undefined);
 
 const loadEstablishment = async (tag, category, dateStart, dateEnd, review_category, categoriesall) => {
-    dataLoading.value = true;
-    loading.value = true;
+    dataLoading.value = true
     let uri = 'get/establishment/categorization/classement';
     let params = `tag=${tag}&category=${category}&user_id=${userId}`;
 
@@ -112,27 +107,81 @@ const loadEstablishment = async (tag, category, dateStart, dateEnd, review_categ
     try {
         const response = await new Promise((resolve) => {
             services.get_Record(uri, (response) => {
-                resolve(response);
-            });
-        });
+                resolve(response)
+            })
+        })
 
         if (response.status === 200) {
-            establishments.value = response.data.map(objet => {
-                return { ...objet };
-            });
+
+            const establishementArrayTemp = response.data.map(item => {
+                const { categories, ...data } = item
+                return { ...data }
+            })
+            establishments.value = establishementArrayTemp
         }
     } catch (error) {
         console.error("Error loading establishments:", error);
-    } finally {
-        dataLoading.value = false;
+    } 
+
+    finally {
+        dataLoading.value = false 
     }
-    if (dataLoading.value === false) {
-        setTimeout(() => {
-            loading.value = false;
-        }, 3000);
+};
+
+const loadEstablishmentCategories = async (category, dateStart, dateEnd) => {
+
+    dataCategoriesLoading.value = Array(establishments.value.length).fill(true);
+
+    let uri = 'customer/establishment/categories/sentiment';
+    let params = `category=${category}`;
+
+
+    if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
+        dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
+        dateEnd = moment(new Date(dateEnd)).format('YYYY-MM-DD');
+        params += `&from=${dateStart}&to=${dateEnd}`;
     }
 
-};
+
+    if(establishments.value.length !== 0) {
+
+        const establishementArrayTemp = establishments.value.map(item => {
+
+            const { categories, ...data } = item
+            return { ...data }
+        })
+
+        establishments.value = establishementArrayTemp
+
+        
+        for (const [index, establishment] of establishments.value.entries()) {
+
+            params += `&tag=${establishment.competitor_tag}`;
+
+            uri = `${uri}?${params}`
+
+            const response = await new Promise((resolve) => {
+                services.get_Record(uri, (response) => {
+                    resolve(response)
+                })
+            })
+
+            if (response.status === 200) {
+
+                //await new Promise((resolve) => setTimeout(resolve, 5000));
+
+                if(response.data.length === 0) {
+                    establishment.categories = {}
+                }
+
+                else establishment.categories = response.data 
+                dataCategoriesLoading.value[index] = false
+
+            }
+        }
+    }
+
+}
 
 const loadCategories = async (tag) => {
     const api = `customer/establishments/categorizations?tag=${tag}`;
@@ -141,7 +190,7 @@ const loadCategories = async (tag) => {
             resolve(response);
         });
     });
-    // loading.value = false;
+
     if (response.status == 200) {
         if (response.data) {
             categoriesall.value = response.data;
@@ -163,16 +212,19 @@ watch(review_category, () => {
 const reorderCategories = () => {
     const selectedCategory = categoriesall.value.find(c => c === review_category.value);
     if (selectedCategory) {
-        console.log(loading.value)
         categoriesall.value = [selectedCategory].concat(categoriesall.value.filter(c => c !== selectedCategory));
     }
 };
 
 onMounted(async () => {
+
     if (start_date.value && end_date.value) {
-        loading.value = true;
-        await loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, review_category.value);
-        await loadCategories(customerTag.value);
+        await Promise.all([
+            loadCategories(customerTag.value),
+            loadEstablishment(customerTag.value, categoryFilters.value, start_date.value, end_date.value, review_category.value)
+        ])
+
+        await loadEstablishmentCategories(categoryFilters.value, start_date.value, end_date.value)
     }
 });
 
