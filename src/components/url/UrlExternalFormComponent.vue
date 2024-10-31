@@ -52,7 +52,7 @@
     </div>
 </template>
 <script setup>
-import { computed, ref, onBeforeMount, watch, inject } from 'vue'
+import { computed, ref, onBeforeMount, watch, inject, onMounted } from 'vue'
 import { useUserStore } from "@Stores/user.js"
 import { ElMessage, ElOption, ElSelect } from 'element-plus'
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
@@ -67,6 +67,7 @@ import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import { useRoute, useRouter } from 'vue-router';
+import { useLinkStore } from '../../stores/link';
 
 
 const router = useRouter();
@@ -78,7 +79,7 @@ const selectedDocument = ref(null);
 const previewImage = ref(null);
 const fileName = ref('');
 const documentFiles = ref([]);
-
+const linkStore = useLinkStore();
 const link_to_update = inject('link_to_update');
 const showModal = ref(false);
 
@@ -128,7 +129,6 @@ const establishments = computed(() => {
     filteredData = filteredData.filter((data) => {
         return !search.value || data.name.toLowerCase().includes(search.value.toLowerCase())
     })
-
     return filteredData;
 });
 
@@ -177,7 +177,8 @@ const submit = async () => {
                 emit('reload');
             }
         } catch (error) {
-            console.log(error)
+            console.error("Error details:", error.response ? error.response.data : error);
+            ElMessage.error("An error occurred while updating the link.");
         }
     } else {
         try {
@@ -220,10 +221,13 @@ const resetValue = () => {
 const handleEdit = async (data) => {
     category.value = data.category
     establishment.value = data.establishment;
+
     setTimeout(function () {
-        category.value = data.category;
-        link.value = data.link;
-        section.value = data.section;
+        link.value = data.url;
+        if (establishments.value.length > 0) {
+            const estab = establishments.value.find(item => item.name === data.establishment_name);
+            establishment.value = estab ? estab.uri : null;
+        }
         caption.value = data.caption;
         id.value = data.id;
     }, 250);
@@ -236,32 +240,18 @@ watch(category, () => {
     link.value = ''
 })
 
-onBeforeMount(async () => {
-    try {
-        const response = await new Promise((resolve) => {
-            services.get_Record(`customer/setting/list?tag=${route.params.tag}&categ=all`, (response) => {
-                resolve(response);
-            });
-        });
 
-        if (response.status === 200) {
-            const data = response.data;
+onMounted(async () => {
+    const data = linkStore.getLink();
 
-            data.forEach(item => {
-                links.value.push({
-                    category: item.category,
-                    source: item.source,
-                    url: item.url,
-                    establishment: `/api/establishments/${item.establishment_id}`,
-                    id: item.id
-                })
-            })
+    if (data) {
+        link_to_update.value = data;
+        linkStore.resetLink();
+    } else {
 
-        } else {
-            console.error('Error fetching advantages:', response);
+        if (!userStore.user.customer.establishments || userStore.user.customer.establishments.length === 0) {
+            await userStore.fetchCustomerEstablishments();
         }
-    } catch (error) {
-        console.error('Error in onBeforeMount:', error);
     }
 });
 </script>
