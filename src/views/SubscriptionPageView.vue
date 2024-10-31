@@ -274,7 +274,7 @@ import 'element-plus/es/components/tab-pane/style/css';
 import moment from 'moment';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
-import { loadStripe } from '@stripe/stripe-js';
+import { loadStripe } from '@stripe/stripe-js/pure';
 import { Stripe } from 'stripe';
 import { useRouter, useRoute } from 'vue-router';
 import { h } from 'vue'
