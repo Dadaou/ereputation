@@ -3,7 +3,7 @@
         <article v-for="review in reviews" :class="[review.source == 'App (Private)' ? 'intern__comment' : '']">
             <div class="flex items-start review__item">
                 <div class="flex items-center mb-1 space-x-4">
-                    <div class="space-y-1 review__info dark:text-white info__reviews">
+                    <div class="review__info space-y-1 dark:text-white info__reviews">
                         <div class="flex items-center mb-2 space-x-4">
                             <img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full"
                                 :src="review.profile_photo" alt="">
@@ -44,24 +44,25 @@
                         </ul>
                     </div>
                 </div>
-                <div class="mt-2 review__right">
+                <div class="review__right mt-2">
                     <div style="height: 20px;" v-if="showCategory" class="category_desktop">
-                        <div v-if="review.classifications && review.classifications.length > 0" class="inline-flex">
+                        <div v-if="review.category && review.category.split(';').length > 0" class="inline-flex">
 
                              
                             <!-- category -->
-                            <div v-for="categ in review.classifications" :key="categ.id" class="inline-flex">
+                            <div v-for="(categ, index) in review.category.split(';')" :key="categ" class="inline-flex">
 
-                                <div v-if="categ.category != ''" class="ml-1 review__category-container">
+                                <div v-if="categ != ''" class="review__category-container ml-1"
+                                  >
                                  
-                                    <span   @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review,categ.category),category=categ.category,old_item_category=categ.category" class="review__category">{{
-                                        categ.category }}
+                                    <span   @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review,categ),category=categ,old_item_category=categ" class="review__category">{{
+                                        categ }}
 
-                                          <span v-if="categ.feeling && (categ.feeling == 'positive' || categ.feeling == 'negative' || categ.feeling == 'neutral' || categ.feeling == 'neutre')" class="emoji "
-                                                @click.stop="handleModal('Category feeling', 'edit', 'uil-edit', 'feeling', review, categ.category, categ.section),feel=categ.feeling,old_item_category=categ.category,feeling_categorization='yes'">
-                                                <span v-if="categ.feeling == 'positive'">😀</span>
-                                                <span v-if="categ.feeling == 'neutre' || categ.feeling == 'neutral'">😐</span>
-                                                <span v-if="categ.feeling == 'negative'">😕</span>
+                                          <span v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')" class="emoji "
+                                                @click.stop="handleModal('Review feeling', 'edit', 'uil-edit', 'feeling', review,categ,review?.classifications[index]?.section),feel=review.classification_feeling[categ],old_item_category=categ,feeling_categorization='yes'">
+                                                <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
+                                                <span v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
+                                                <span v-if="review.classification_feeling[categ] == 'negative'">😕</span>
                                           </span>
 
                                           <span v-else class="emoji ">
@@ -71,7 +72,7 @@
                                                     buttonRefCateg = e.currentTarget
                                                     visibleCateg = true
                                                 }" @mouseleave="() => visibleCateg = false"
-                                                @click.stop="handleModal('Category feeling', 'add', 'uil-add', 'feeling', review,categ.category),feeling_new_category='yes',feel=categ.feeling,old_item_category=categ.category,feeling_categorization='yes'">
+                                                @click.stop="handleModal('Review feeling', 'add', 'uil-add', 'feeling', review,categ, review?.classifications[index]?.section),feeling_new_category='yes',feel=review.classification_feeling[categ],old_item_category=categ,feeling_categorization='yes'">
                                                 </i>
                                                 <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg" :virtual-ref="buttonRefCateg" virtual-triggering
                                                     popper-class="singleton-tooltip" placement="top">
@@ -124,29 +125,29 @@
                         </div>
                     </div>
                     <div v-if="showEmoji">
-                        <span v-if="review.feeling" class="mx-1 emoji"
+                        <span v-if="review.feeling" class="emoji mx-1"
                             @click="handleModal('Review feeling', 'edit', 'uil-edit', 'feeling_review', review,null),feel_review=review.feeling,feeling_categorization=null">
                             <!-- have classification -->
-                           <!--    <span v-if="review.category && review.category.split(';').length > 0" class="mx-1 emoji">
+                           <!--    <span v-if="review.category && review.category.split(';').length > 0" class="emoji mx-1">
                                     <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'positive'">😀</span>
                                     <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'neutre'">😐</span>
                                     <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'negative'">😕</span>
                                 </span> -->
                             <!-- not have classification -->
-                            <span class="mx-1 emoji">
+                            <span class="emoji mx-1">
                                 <span v-if="review.feeling == 'positive'">😀</span>
                                 <span v-if="review.feeling == 'neutre' || review.feeling == 'neutral'">😐</span>
                                 <span v-if="review.feeling == 'negative'">😕</span>
                             </span>
                           
                         </span>
-                        <span class="mx-1 emoji" v-else>
+                        <span class="emoji mx-1" v-else>
                             <i class="uil-question-circle"
                                 style="color: var(--color-warning); font-size: 18px; cursor: pointer" @mouseover="(e) => {
                                     buttonRef2 = e.currentTarget
                                     visible2 = true
                                 }" @mouseleave="() => visible2 = false"
-                                @click="handleModal('Add review feeling', 'add', 'uil-add', 'feeling_review', review,null)">
+                                @click="handleModal('Review feeling', 'add', 'uil-add', 'feeling_review', review,null)">
                             </i>
                             <el-tooltip ref="tooltipRef2" :visible="visible2" :virtual-ref="buttonRef2"
                                 virtual-triggering popper-class="singleton-tooltip" placement="top">
@@ -157,13 +158,13 @@
                         </span>
 
                         <p
-                            class="inline-flex items-center px-3 py-1 text-sm font-semibold text-yellow-800 bg-yellow-100 rounded dark:bg-yellow-200 dark:text-yellow-800">
+                            class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center px-3 py-1 rounded dark:bg-yellow-200 dark:text-yellow-800">
                             {{ review.star | review.rating }}</p>
                     </div>
                 </div>
             </div>
             <div class="col-span-2">
-                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400 comment">{{ review.comment }}</p>
+                <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 comment">{{ review.comment }}</p>
             </div>
 
            
@@ -172,25 +173,25 @@
             
               <!-- category on small screen -->
 
-        <div class="mt-2 review__right_mobile">
+        <div class="review__right_mobile mt-2">
             <div v-if="showCategory" class="category_container_mobile" >
-               <div  v-if="review.classifications && review.classifications.length > 0" class="inline-flex category_mobile">
+               <div  v-if="review.category && review.category.split(';').length > 0" class="inline-flex category_mobile">
 
                              
                             <!-- category -->
-                            <div v-for="categ in review.classifications" :key="categ.id" >
+                            <div v-for="categ in review.category.split(';')" :key="categ">
 
-                                <div v-if="categ.category != ''" class="ml-1 review__category-container"
+                                <div v-if="categ != ''" class="review__category-container ml-1"
                                   >
                                  
-                                    <span   @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review,categ.category),category=categ.category,old_item_category=categ.category" class="review__category">{{
-                                        categ.category }}
+                                    <span   @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review,categ),category=categ,old_item_category=categ" class="review__category">{{
+                                        categ }}
 
-                                          <span v-if="categ.feeling && (categ.feeling == 'positive' || categ.feeling == 'negative' || categ.feeling == 'neutral' || categ.feeling == 'neutre')" class="emoji "
-                                                @click.stop="handleModal('Category feeling', 'edit', 'uil-edit', 'feeling', review,categ.category),feel=categ.feeling ,old_item_category=categ.category,feeling_categorization='yes'">
-                                                <span v-if="categ.feeling == 'positive'">😀</span>
-                                                <span v-if="categ.feeling == 'neutre' || categ.feeling == 'neutral'">😐</span>
-                                                <span v-if="categ.feeling == 'negative'">😕</span>
+                                          <span v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')" class="emoji "
+                                                @click.stop="handleModal('Review feeling', 'edit', 'uil-edit', 'feeling', review,categ, review?.classifications[index]?.section),feel=review.classification_feeling[categ],old_item_category=categ,feeling_categorization='yes'">
+                                                <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
+                                                <span v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
+                                                <span v-if="review.classification_feeling[categ] == 'negative'">😕</span>
                                           </span>
 
                                           <span v-else class="emoji ">
@@ -200,7 +201,7 @@
                                                     buttonRefCateg = e.currentTarget
                                                     visibleCateg = true
                                                 }" @mouseleave="() => visibleCateg = false"
-                                                @click.stop="handleModal('Category feeling', 'add', 'uil-add', 'feeling', review,categ.category),feeling_new_category='yes',feel=categ.feeling,old_item_category=categ.category,feeling_categorization='yes'">
+                                                @click.stop="handleModal('Review feeling', 'add', 'uil-add', 'feeling', review,categ, review?.classifications[index]?.section),feeling_new_category='yes',feel=review.classification_feeling[categ],old_item_category=categ,feeling_categorization='yes'">
                                                 </i>
                                                 <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg" :virtual-ref="buttonRefCateg" virtual-triggering
                                                     popper-class="singleton-tooltip" placement="top">
@@ -382,9 +383,6 @@ const props = defineProps({
     }
 });
 
-
-
-
 const emits = defineEmits(['reloadData','update-feeling']);
 
 const { width, height } = useWindowSize();
@@ -407,8 +405,6 @@ const visibleCateg = ref(false)
 const visible2 = ref(false);
 const feeling_new_category = ref(null);
  const baseURL = ref(import.meta.env.VITE_APP_API_URL);
-
-
 
 
 const getFeeling = (categ,feel)=>{
@@ -765,7 +761,7 @@ const handleModal = (text, action, icon, type, review,category='', section = nul
         action: action,
         icon: icon,
         type: type,
-        section: section
+        section : section
     }
 
   
@@ -797,7 +793,7 @@ const handleModal = (text, action, icon, type, review,category='', section = nul
 }
 
 h5 {
-    padding: 20px 100px 0 100px;
+    padding: 20px 0 0 0;
 }
 
 h5 p {
