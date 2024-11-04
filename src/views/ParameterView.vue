@@ -292,6 +292,9 @@ provide('providers', providers)
 const establishment_to_update = ref(null)
 provide('establishment_to_update', establishment_to_update)
 
+const competitor_to_update = ref({})
+provide('competitor_to_update', competitor_to_update)
+
 const staff_to_update = ref(null);
 provide('staff_to_update', staff_to_update)
 
@@ -331,7 +334,7 @@ const handleEdit = (value, type) => {
     }
 
     if (type == 'competitors') {
-        establishment_to_update.value = value;
+       competitor_to_update.value = value;
     }
 
     if (type == 'events') {

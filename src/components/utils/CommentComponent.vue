@@ -50,43 +50,48 @@
 
 
                             <!-- category -->
-                            <div v-for="categ in review.category.split(';')" :key="categ" class="inline-flex">
+                            <div v-for="(categ, index) in review.category.split(';')" :key="categ" class="inline-flex">
 
                                 <div v-if="categ != ''" class="review__category-container ml-1">
 
                                     <span
-                                        @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review, categ), category = categ, old_item_category = categ"
-                                        class="review__category">{{
-                                            categ }}
-
+                                        v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')"
+                                        class="emoji "
+                                        @click.stop="handleModal('Category feeling', 'edit', 'uil-edit', 'feeling', review, categ, review?.classifications[index]?.section), feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
+                                        <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
                                         <span
-                                            v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')"
-                                            class="emoji "
-                                            @click.stop="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review, categ,), feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
-                                            <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
-                                            <span
-                                                v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
-                                            <span v-if="review.classification_feeling[categ] == 'negative'">😕</span>
-                                        </span>
+                                            v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
+                                        <span v-if="review.classification_feeling[categ] == 'negative'">😕</span>
+                                    </span>
 
-                                        <span v-else class="emoji ">
+                                    <span
+                                        v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')"
+                                        class="emoji "
+                                        @click.stop="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review, categ,), feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
+                                        <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
+                                        <span
+                                            v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
+                                        <span v-if="review.classification_feeling[categ] == 'negative'">😕</span>
+                                    </span>
 
-                                            <i class="uil uil-plus-circle"
-                                                style="color: var(--color-warning); cursor: pointer" @mouseover="(e) => {
-                                                    buttonRefCateg = e.currentTarget
-                                                    visibleCateg = true
-                                                }" @mouseleave="() => visibleCateg = false"
-                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review, categ), feeling_new_category = 'yes', feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
-                                            </i>
-                                            <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg"
-                                                :virtual-ref="buttonRefCateg" virtual-triggering
-                                                popper-class="singleton-tooltip" placement="top">
-                                                <template #content>
-                                                    <span>Click to add category feeling</span>
-                                                </template>
-                                            </el-tooltip>
+                                    <span v-else class="emoji ">
 
-                                        </span>
+                                        <i class="uil uil-plus-circle"
+                                            style="color: var(--color-warning); cursor: pointer" @mouseover="(e) => {
+                                                buttonRefCateg = e.currentTarget
+                                                visibleCateg = true
+                                            }" @mouseleave="() => visibleCateg = false"
+                                            @click.stop="handleModal('Category feeling', 'add', 'uil-add', 'feeling', review, categ, review?.classifications[index]?.section), feeling_new_category = 'yes', feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
+                                        </i>
+                                        <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg"
+                                            :virtual-ref="buttonRefCateg" virtual-triggering
+                                            popper-class="singleton-tooltip" placement="top">
+                                            <template #content>
+                                                <span>Click to add category feeling</span>
+                                            </template>
+                                        </el-tooltip>
+
+                                    </span>
 
 
 
@@ -132,7 +137,7 @@
                     </div>
                     <div v-if="showEmoji">
                         <span v-if="review.feeling" class="emoji mx-1"
-                            @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling_review', review, null), feel_review = review.feeling, feeling_categorization = null">
+                            @click="handleModal('Review feeling', 'edit', 'uil-edit', 'feeling_review', review, null), feel_review = review.feeling, feeling_categorization = null">
                             <!-- have classification -->
                             <!--    <span v-if="review.category && review.category.split(';').length > 0" class="emoji mx-1">
                                     <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'positive'">😀</span>
@@ -153,7 +158,7 @@
                                     buttonRef2 = e.currentTarget
                                     visible2 = true
                                 }" @mouseleave="() => visible2 = false"
-                                @click="handleModal('Add review feeling', 'add', 'uil-add', 'feeling_review', review, null)">
+                                @click="handleModal('Review feeling', 'add', 'uil-add', 'feeling_review', review, null)">
                             </i>
                             <el-tooltip ref="tooltipRef2" :visible="visible2" :virtual-ref="buttonRef2"
                                 virtual-triggering popper-class="singleton-tooltip" placement="top">
@@ -205,7 +210,7 @@
                                     <span
                                         v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')"
                                         class="emoji "
-                                        @click.stop="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review, categ), feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
+                                        @click.stop="handleModal('Category feeling', 'edit', 'uil-edit', 'feeling', review, categ, review?.classifications[index]?.section), feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
                                         <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
                                         <span
                                             v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
@@ -219,7 +224,7 @@
                                                 buttonRefCateg = e.currentTarget
                                                 visibleCateg = true
                                             }" @mouseleave="() => visibleCateg = false"
-                                            @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review, categ,), feeling_new_category = 'yes', feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
+                                            @click.stop="handleModal('Category feeling', 'add', 'uil-add', 'feeling', review, categ, review?.classifications[index]?.section), feeling_new_category = 'yes', feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
                                         </i>
                                         <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg"
                                             :virtual-ref="buttonRefCateg" virtual-triggering
@@ -230,6 +235,24 @@
                                         </el-tooltip>
 
                                     </span>
+
+
+                                    <i class="uil uil-plus-circle" style="color: var(--color-warning); cursor: pointer"
+                                        @mouseover="(e) => {
+                                            buttonRefCateg = e.currentTarget
+                                            visibleCateg = true
+                                        }" @mouseleave="() => visibleCateg = false"
+                                        @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review, categ,), feeling_new_category = 'yes', feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
+                                    </i>
+                                    <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg"
+                                        :virtual-ref="buttonRefCateg" virtual-triggering
+                                        popper-class="singleton-tooltip" placement="top">
+                                        <template #content>
+                                            <span>Click to add review feeling</span>
+                                        </template>
+                                    </el-tooltip>
+
+                                </span>
 
 
 
@@ -313,6 +336,10 @@
                     <FeelingFeedbackComponent v-if="modal.type == 'feeling_review'"
                         @updateValue="(feeling) => { updateFeelingFeedback(feeling, 'feeling_review') }" />
 
+                    <h5 v-if="modal.section !== null">
+                        <p>{{ modal.section }}</p>
+                    </h5>
+
                     <el-select v-if="modal.type == 'category' || modal.type == 'delete'" v-model="category" filterable
                         placeholder="select categories" size="large">
                         <el-option key="0" label="" value="" />
@@ -360,7 +387,7 @@
 
 </template>
 <script setup>
-import { ref, provide, computed, inject } from 'vue';
+import { ref, provide, computed, inject, onMounted } from 'vue';
 import moment from 'moment';
 import { useUserStore } from "@Stores/user.js";
 import ModalComponent from '@Components/utils/ModalComponent.vue';
@@ -426,8 +453,6 @@ const visibleCateg = ref(false)
 const visible2 = ref(false);
 const feeling_new_category = ref(null);
 const baseURL = ref(import.meta.env.VITE_APP_API_URL);
-
-
 
 
 const getFeeling = (categ, feel) => {
@@ -774,22 +799,20 @@ const updateFeelingFeedback = ((_feeling, _type) => {
     setTimeout(() => {
         updateReview();
 
-    }, 1000);
-});
-
-const handleModal = (text, action, icon, type, review, category = '') => {
-    showModal.value = true
-    modal.value = {
-        text: text,
-        action: action,
-        icon: icon,
-        type: type
-    }
+        const handleModal = (text, action, icon, type, review, category = '', section = null) => {
+            showModal.value = true
+            modal.value = {
+                text: text,
+                action: action,
+                icon: icon,
+                type: type,
+                section: section
+            }
 
 
-    editReview(review, category)
+            editReview(review, category)
 
-};
+        };
 
 </script>
 <style scoped>
@@ -812,6 +835,15 @@ const handleModal = (text, action, icon, type, review, category = '') => {
 .category_mobile {
     width: 100%;
     align-items: center
+}
+
+h5 {
+    padding: 20px 0 0 0;
+}
+
+h5 p {
+    word-wrap: break-word;
+    text-align: center;
 }
 
 @media screen and (max-width: 975px) {
