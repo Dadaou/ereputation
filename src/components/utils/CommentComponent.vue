@@ -48,41 +48,46 @@
                     <div style="height: 20px;" v-if="showCategory" class="category_desktop">
                         <div v-if="review.category && review.category.split(';').length > 0" class="inline-flex">
 
-                             
+
                             <!-- category -->
                             <div v-for="categ in review.category.split(';')" :key="categ" class="inline-flex">
 
-                                <div v-if="categ != ''" class="review__category-container ml-1"
-                                  >
-                                 
-                                    <span   @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review,categ),category=categ,old_item_category=categ" class="review__category">{{
-                                        categ }}
+                                <div v-if="categ != ''" class="review__category-container ml-1">
 
-                                          <span v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')" class="emoji "
-                                                @click.stop="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review,categ,),feel=review.classification_feeling[categ],old_item_category=categ,feeling_categorization='yes'">
-                                                <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
-                                                <span v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
-                                                <span v-if="review.classification_feeling[categ] == 'negative'">😕</span>
-                                          </span>
+                                    <span
+                                        @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review, categ), category = categ, old_item_category = categ"
+                                        class="review__category">{{
+                                            categ }}
 
-                                          <span v-else class="emoji ">
-                                               
-                                                <i class="uil uil-plus-circle"
+                                        <span
+                                            v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')"
+                                            class="emoji "
+                                            @click.stop="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review, categ,), feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
+                                            <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
+                                            <span
+                                                v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
+                                            <span v-if="review.classification_feeling[categ] == 'negative'">😕</span>
+                                        </span>
+
+                                        <span v-else class="emoji ">
+
+                                            <i class="uil uil-plus-circle"
                                                 style="color: var(--color-warning); cursor: pointer" @mouseover="(e) => {
                                                     buttonRefCateg = e.currentTarget
                                                     visibleCateg = true
                                                 }" @mouseleave="() => visibleCateg = false"
-                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review,categ),feeling_new_category='yes',feel=review.classification_feeling[categ],old_item_category=categ,feeling_categorization='yes'">
-                                                </i>
-                                                <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg" :virtual-ref="buttonRefCateg" virtual-triggering
-                                                    popper-class="singleton-tooltip" placement="top">
-                                                    <template #content>
-                                                        <span>Click to add category feeling</span>
-                                                    </template>
-                                                </el-tooltip>
-                                               
-                                          </span>
-                                          
+                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review, categ), feeling_new_category = 'yes', feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
+                                            </i>
+                                            <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg"
+                                                :virtual-ref="buttonRefCateg" virtual-triggering
+                                                popper-class="singleton-tooltip" placement="top">
+                                                <template #content>
+                                                    <span>Click to add category feeling</span>
+                                                </template>
+                                            </el-tooltip>
+
+                                        </span>
+
 
 
                                     </span>
@@ -91,11 +96,12 @@
                             </div>
 
                             <i class="uil uil-plus-circle"
-                                style="color: var(--color-warning); font-size: 18px; cursor: pointer;margin: 1px;" @mouseover="(e) => {
+                                style="color: var(--color-warning); font-size: 18px; cursor: pointer;margin: 1px;"
+                                @mouseover="(e) => {
                                     buttonRef = e.currentTarget
                                     visible = true
                                 }" @mouseleave="() => visible = false"
-                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null),feeling_new_category=null,addExisteCategorie='yes'">
+                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review, null), feeling_new_category = null, addExisteCategorie = 'yes'">
                             </i>
                             <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
                                 popper-class="singleton-tooltip" placement="top">
@@ -104,7 +110,7 @@
                                 </template>
                             </el-tooltip>
 
-                         
+
 
                         </div>
 
@@ -114,7 +120,7 @@
                                     buttonRef = e.currentTarget
                                     visible = true
                                 }" @mouseleave="() => visible = false"
-                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null)">
+                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review, null)">
                             </i>
                             <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
                                 popper-class="singleton-tooltip" placement="top">
@@ -126,9 +132,9 @@
                     </div>
                     <div v-if="showEmoji">
                         <span v-if="review.feeling" class="emoji mx-1"
-                            @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling_review', review,null),feel_review=review.feeling,feeling_categorization=null">
+                            @click="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling_review', review, null), feel_review = review.feeling, feeling_categorization = null">
                             <!-- have classification -->
-                           <!--    <span v-if="review.category && review.category.split(';').length > 0" class="emoji mx-1">
+                            <!--    <span v-if="review.category && review.category.split(';').length > 0" class="emoji mx-1">
                                     <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'positive'">😀</span>
                                     <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'neutre'">😐</span>
                                     <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'negative'">😕</span>
@@ -139,7 +145,7 @@
                                 <span v-if="review.feeling == 'neutre' || review.feeling == 'neutral'">😐</span>
                                 <span v-if="review.feeling == 'negative'">😕</span>
                             </span>
-                          
+
                         </span>
                         <span class="emoji mx-1" v-else>
                             <i class="uil-question-circle"
@@ -147,7 +153,7 @@
                                     buttonRef2 = e.currentTarget
                                     visible2 = true
                                 }" @mouseleave="() => visible2 = false"
-                                @click="handleModal('Add review feeling', 'add', 'uil-add', 'feeling_review', review,null)">
+                                @click="handleModal('Add review feeling', 'add', 'uil-add', 'feeling_review', review, null)">
                             </i>
                             <el-tooltip ref="tooltipRef2" :visible="visible2" :virtual-ref="buttonRef2"
                                 virtual-triggering popper-class="singleton-tooltip" placement="top">
@@ -163,103 +169,117 @@
                     </div>
                 </div>
             </div>
+            <!-- <button v-if="review.summary && review.summary.length > 0" class="btn__light_secondary"
+                @click="showSummary()">
+                <span>AI Summarize <i class="uil uil-angle-double-down"></i></span>
+            </button> -->
+            <ExpansionPanel v-if="review.summary && review.summary.length > 0" title="AI Summarize">
+                {{ review.summary[0].overview }}
+            </ExpansionPanel>
             <div class="col-span-2">
                 <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 comment">{{ review.comment }}</p>
             </div>
 
-           
 
 
-            
-              <!-- category on small screen -->
 
-        <div class="review__right_mobile mt-2">
-            <div v-if="showCategory" class="category_container_mobile" >
-               <div  v-if="review.category && review.category.split(';').length > 0" class="inline-flex category_mobile">
 
-                             
-                            <!-- category -->
-                            <div v-for="categ in review.category.split(';')" :key="categ">
+            <!-- category on small screen -->
 
-                                <div v-if="categ != ''" class="review__category-container ml-1"
-                                  >
-                                 
-                                    <span   @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review,categ),category=categ,old_item_category=categ" class="review__category">{{
+            <div class="review__right_mobile mt-2">
+                <div v-if="showCategory" class="category_container_mobile">
+                    <div v-if="review.category && review.category.split(';').length > 0"
+                        class="inline-flex category_mobile">
+
+
+                        <!-- category -->
+                        <div v-for="categ in review.category.split(';')" :key="categ">
+
+                            <div v-if="categ != ''" class="review__category-container ml-1">
+
+                                <span
+                                    @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review, categ), category = categ, old_item_category = categ"
+                                    class="review__category">{{
                                         categ }}
 
-                                          <span v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')" class="emoji "
-                                                @click.stop="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review,categ),feel=review.classification_feeling[categ],old_item_category=categ,feeling_categorization='yes'">
-                                                <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
-                                                <span v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
-                                                <span v-if="review.classification_feeling[categ] == 'negative'">😕</span>
-                                          </span>
+                                    <span
+                                        v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')"
+                                        class="emoji "
+                                        @click.stop="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review, categ), feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
+                                        <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
+                                        <span
+                                            v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
+                                        <span v-if="review.classification_feeling[categ] == 'negative'">😕</span>
+                                    </span>
 
-                                          <span v-else class="emoji ">
-                                               
-                                                <i class="uil uil-plus-circle"
-                                                style="color: var(--color-warning); cursor: pointer" @mouseover="(e) => {
-                                                    buttonRefCateg = e.currentTarget
-                                                    visibleCateg = true
-                                                }" @mouseleave="() => visibleCateg = false"
-                                                @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review,categ,),feeling_new_category='yes',feel=review.classification_feeling[categ],old_item_category=categ,feeling_categorization='yes'">
-                                                </i>
-                                                <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg" :virtual-ref="buttonRefCateg" virtual-triggering
-                                                    popper-class="singleton-tooltip" placement="top">
-                                                    <template #content>
-                                                        <span>Click to add review feeling</span>
-                                                    </template>
-                                                </el-tooltip>
-                                               
-                                          </span>
-                                          
+                                    <span v-else class="emoji ">
 
+                                        <i class="uil uil-plus-circle"
+                                            style="color: var(--color-warning); cursor: pointer" @mouseover="(e) => {
+                                                buttonRefCateg = e.currentTarget
+                                                visibleCateg = true
+                                            }" @mouseleave="() => visibleCateg = false"
+                                            @click.stop="handleModal('Add review feeling', 'add', 'uil-add', 'feeling', review, categ,), feeling_new_category = 'yes', feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
+                                        </i>
+                                        <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg"
+                                            :virtual-ref="buttonRefCateg" virtual-triggering
+                                            popper-class="singleton-tooltip" placement="top">
+                                            <template #content>
+                                                <span>Click to add review feeling</span>
+                                            </template>
+                                        </el-tooltip>
 
                                     </span>
 
-                                </div>
+
+
+                                </span>
+
                             </div>
-
-                            <i class="uil uil-plus-circle"
-                                style="color: var(--color-warning); font-size: 18px; cursor: pointer;margin: 1px;" @mouseover="(e) => {
-                                    buttonRef = e.currentTarget
-                                    visible = true
-                                }" @mouseleave="() => visible = false"
-                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null),feeling_new_category=null,addExisteCategorie='yes'">
-                            </i>
-                            <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
-                                popper-class="singleton-tooltip" placement="top">
-                                <template #content>
-                                    <span>Click to add category</span>
-                                </template>
-                            </el-tooltip>
-
-                         
-
-                </div>
-
-                <!-- new category -->
-
-                         <div class="review__category-container" v-else>
-                            <i class="uil uil-plus-circle"
-                                style="color: var(--color-warning); font-size: 18px; cursor: pointer" @mouseover="(e) => {
-                                    buttonRef = e.currentTarget
-                                    visible = true
-                                }" @mouseleave="() => visible = false"
-                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review,null)">
-                            </i>
-                            <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
-                                popper-class="singleton-tooltip" placement="top">
-                                <template #content>
-                                    <span>Click to add category</span>
-                                </template>
-                            </el-tooltip>
                         </div>
 
-                <!-- end new category -->
+                        <i class="uil uil-plus-circle"
+                            style="color: var(--color-warning); font-size: 18px; cursor: pointer;margin: 1px;"
+                            @mouseover="(e) => {
+                                buttonRef = e.currentTarget
+                                visible = true
+                            }" @mouseleave="() => visible = false"
+                            @click="handleModal('Add review category', 'add', 'uil-add', 'category', review, null), feeling_new_category = null, addExisteCategorie = 'yes'">
+                        </i>
+                        <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
+                            popper-class="singleton-tooltip" placement="top">
+                            <template #content>
+                                <span>Click to add category</span>
+                            </template>
+                        </el-tooltip>
 
 
+
+                    </div>
+
+                    <!-- new category -->
+
+                    <div class="review__category-container" v-else>
+                        <i class="uil uil-plus-circle"
+                            style="color: var(--color-warning); font-size: 18px; cursor: pointer" @mouseover="(e) => {
+                                buttonRef = e.currentTarget
+                                visible = true
+                            }" @mouseleave="() => visible = false"
+                            @click="handleModal('Add review category', 'add', 'uil-add', 'category', review, null)">
+                        </i>
+                        <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
+                            popper-class="singleton-tooltip" placement="top">
+                            <template #content>
+                                <span>Click to add category</span>
+                            </template>
+                        </el-tooltip>
+                    </div>
+
+                    <!-- end new category -->
+
+
+                </div>
             </div>
-        </div>
             <!-- Fin category on small screen -->
 
 
@@ -287,36 +307,40 @@
                     </div>
                 </div>
                 <div class="mb-6 feedback__rating">
-                    <FeelingFeedbackComponent v-if="modal.type == 'feeling'" @updateValue="(feeling)=>{updateFeelingFeedback(feeling,'feeling')}" />
+                    <FeelingFeedbackComponent v-if="modal.type == 'feeling'"
+                        @updateValue="(feeling) => { updateFeelingFeedback(feeling, 'feeling') }" />
 
-                    <FeelingFeedbackComponent v-if="modal.type == 'feeling_review'" @updateValue="(feeling)=>{updateFeelingFeedback(feeling,'feeling_review')}" />
+                    <FeelingFeedbackComponent v-if="modal.type == 'feeling_review'"
+                        @updateValue="(feeling) => { updateFeelingFeedback(feeling, 'feeling_review') }" />
 
-                    <el-select v-if="modal.type == 'category' || modal.type == 'delete'" v-model="category" filterable placeholder="select categories" size="large">
+                    <el-select v-if="modal.type == 'category' || modal.type == 'delete'" v-model="category" filterable
+                        placeholder="select categories" size="large">
                         <el-option key="0" label="" value="" />
                         <el-option v-for="(item, index) in categories" :key="index + 1" :label="item.category"
                             :value="item.category" />
                     </el-select>
                     <!-- <div v-else style="color: orangered;">Delete this category ?</div> -->
-                  
+
 
                 </div>
                 <div class="mt-5 download__qr_btn ">
 
-                     <!--  <el-popconfirm v-if="(modal.type == 'category' || modal.type == 'delete') && (modal.action != 'add')" title="Are you sure to delete this?" @confirm="updateReview" placement="top">
+                    <!--  <el-popconfirm v-if="(modal.type == 'category' || modal.type == 'delete') && (modal.action != 'add')" title="Are you sure to delete this?" @confirm="updateReview" placement="top">
                         <template #reference> -->
-                              <button  v-if="(modal.type == 'category' || modal.type == 'delete') && (modal.action != 'add')" style="background-color: indianred !important;color: white;margin-inline: 5px;" class="btn__light_secondary" @click="modal.type = 'delete',updateReview()">
-                                <span ><i class="uil uil-trash"></i> Delete</span>
-                           
-                              </button>
-                      <!--   </template>
-                      </el-popconfirm> -->
+                    <button v-if="(modal.type == 'category' || modal.type == 'delete') && (modal.action != 'add')"
+                        style="background-color: indianred !important;color: white;margin-inline: 5px;"
+                        class="btn__light_secondary" @click="modal.type = 'delete', updateReview()">
+                        <span><i class="uil uil-trash"></i> Delete</span>
+
+                    </button>
+                    <!--   </template>
+    </el-popconfirm> -->
 
                     <button v-if="modal.type == 'category'" class="btn__light_secondary" @click="updateReview">
-                        <span ><i class="uil uil-save"></i> {{ modal.action == "edit" ? 'Save' : 'Add' }}</span>
-                       
+                        <span><i class="uil uil-save"></i> {{ modal.action == "edit" ? 'Save' : 'Add' }}</span>
                     </button>
-                     
-                   
+
+
                 </div>
             </template>
         </ModalComponent>
@@ -336,15 +360,16 @@
 
 </template>
 <script setup>
-import { ref, provide, computed,inject } from 'vue';
+import { ref, provide, computed, inject } from 'vue';
 import moment from 'moment';
 import { useUserStore } from "@Stores/user.js";
 import ModalComponent from '@Components/utils/ModalComponent.vue';
 import FeelingFeedbackComponent from '@Components/utils/FeelingFeedbackComponent.vue';
+import ExpansionPanel from '@Components/utils/ExpansionPanel.vue'
 import { useFeedbackStore } from '@Stores/feedback.js';
 import { useCompanyStore } from "@Stores/company.js";
 import { useWindowSize } from '@vueuse/core';
-import { ElDatePicker, ElOption, ElSelect, ElTooltip,ElPopconfirm } from 'element-plus';
+import { ElDatePicker, ElOption, ElSelect, ElTooltip, ElPopconfirm } from 'element-plus';
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import { Icon } from '@iconify/vue';
@@ -375,11 +400,11 @@ const props = defineProps({
     },
     via: {
         type: String,
-        default:"review"
+        default: "review"
     }
 });
 
-const emits = defineEmits(['reloadData','update-feeling']);
+const emits = defineEmits(['reloadData', 'update-feeling']);
 
 const { width, height } = useWindowSize();
 const userStore = useUserStore();
@@ -400,56 +425,56 @@ const visible = ref(false)
 const visibleCateg = ref(false)
 const visible2 = ref(false);
 const feeling_new_category = ref(null);
- const baseURL = ref(import.meta.env.VITE_APP_API_URL);
+const baseURL = ref(import.meta.env.VITE_APP_API_URL);
 
 
 
 
-const getFeeling = (categ,feel)=>{
+const getFeeling = (categ, feel) => {
 
-      var result=[];
+    var result = [];
 
-        result['negative']=0;
-        result['neutre']=0;
-        result['positive']=0;
-        var maxKey = '';
+    result['negative'] = 0;
+    result['neutre'] = 0;
+    result['positive'] = 0;
+    var maxKey = '';
     for (var i = 0; i < categ.length; i++) {
 
-       if (feel[categ[i]] == "negative") {
-        result['negative']++;
+        if (feel[categ[i]] == "negative") {
+            result['negative']++;
 
-       } else if(feel[categ[i]] == "neutre" || feel[categ[i]] == "neutral"){
-        result['neutre']++;
-       }else{
-        result['positive']++;
-       }
+        } else if (feel[categ[i]] == "neutre" || feel[categ[i]] == "neutral") {
+            result['neutre']++;
+        } else {
+            result['positive']++;
+        }
 
     }
 
 
-        const feels=[result['negative'],result['neutre'],result['positive']];
-        const maxValue = Math.max(...feels);
-    
-        if (result['positive'] == maxValue) {
-          
-                maxKey = 'positive';
-        
-        }else{
-            if (result['neutre'] == maxValue && result['negative'] == result['neutre']) {
+    const feels = [result['negative'], result['neutre'], result['positive']];
+    const maxValue = Math.max(...feels);
+
+    if (result['positive'] == maxValue) {
+
+        maxKey = 'positive';
+
+    } else {
+        if (result['neutre'] == maxValue && result['negative'] == result['neutre']) {
+            maxKey = 'neutre';
+        } else {
+
+            if (result['neutre'] == maxValue) {
                 maxKey = 'neutre';
             } else {
-
-                if (result['neutre'] == maxValue) {
-                    maxKey = 'neutre';
-                } else {
-                    maxKey = 'negative';
-                }
-                 
+                maxKey = 'negative';
             }
-        }
-       
 
-     return maxKey;
+        }
+    }
+
+
+    return maxKey;
 }
 const formatRating = (rating, source) => {
     if (source == 'tripadvisor' && rating * 5 <= 5) {
@@ -486,12 +511,12 @@ const category = ref('');
 const reviewFeedbackData = inject('reviewFeedbackData');
 const calculSentimentAnalysis = inject('calculSentimentAnalysis');
 
-const editReview = (review,_category='') => {
-    
+const editReview = (review, _category = '') => {
+
     if (_category != '' && _category != 'null' && _category != null) {
 
         old_item_feeling.value = review.classification_feeling[_category];
-        feel.value=review.classification_feeling[_category];
+        feel.value = review.classification_feeling[_category];
         feelingCustomer.value = feel.value;
         id.value = review.id;
         if (feel.value == 'neutre') feel.value = 'neutral';
@@ -499,21 +524,21 @@ const editReview = (review,_category='') => {
         selectedReview.value = review;
         category.value = review.category
         console.log(selectedReview)
-          console.log(feel.value)
- 
+        console.log(feel.value)
+
         showModal.value = true;
 
     } else {
 
-    feel_review.value = review.feeling;
-  
-    feelingCustomer.value = feel_review.value;
-    id.value = review.id;
-    selectedReview.value = review;
-    showModal.value = true;
+        feel_review.value = review.feeling;
+
+        feelingCustomer.value = feel_review.value;
+        id.value = review.id;
+        selectedReview.value = review;
+        showModal.value = true;
 
     }
-   
+
 }
 
 const reloadData = (reviewUpdated, feeling) => {
@@ -521,89 +546,89 @@ const reloadData = (reviewUpdated, feeling) => {
 }
 
 // calcul score de feeling
-const calculFeelingScore = (_reviews,_selectedReview,_feeling,type) =>{
+const calculFeelingScore = (_reviews, _selectedReview, _feeling, type) => {
 
-    let sommeFeeling=0;
-    let kFeeling=0;
+    let sommeFeeling = 0;
+    let kFeeling = 0;
 
 
- 
-    _reviews.forEach(_review =>{
 
-        _review.classifications.forEach(_classification =>{
+    _reviews.forEach(_review => {
 
-            if (_classification.feeling != '' && _classification.feeling != null && 
+        _review.classifications.forEach(_classification => {
+
+            if (_classification.feeling != '' && _classification.feeling != null &&
                 _classification.feeling != 'null' && _classification.classification_confidence_feeling) {
 
-                    if (_classification.id == _selectedReview.id && type == 'category' && old_item_category.value == _classification.category) {
-                        _classification.feeling = _feeling;
-                        _classification.classification_confidence_feeling = 1;
-                        console.log(_classification)
-                          console.log(_review.classification_feeling)
-                         
+                if (_classification.id == _selectedReview.id && type == 'category' && old_item_category.value == _classification.category) {
+                    _classification.feeling = _feeling;
+                    _classification.classification_confidence_feeling = 1;
+                    console.log(_classification)
+                    console.log(_review.classification_feeling)
 
-                    }
 
-                    if (_classification.feeling == 'positive') {
-                       sommeFeeling = sommeFeeling + (_classification.classification_confidence_feeling * 1);
-                       kFeeling++;
+                }
+
+                if (_classification.feeling == 'positive') {
+                    sommeFeeling = sommeFeeling + (_classification.classification_confidence_feeling * 1);
+                    kFeeling++;
+
+                } else {
+
+                    if (_classification.feeling == 'negative') {
+
+                        sommeFeeling = sommeFeeling + (_classification.classification_confidence_feeling * -1);
+                        kFeeling++;
 
                     } else {
-
-                        if (_classification.feeling == 'negative') {
-
-                           sommeFeeling = sommeFeeling + (_classification.classification_confidence_feeling * -1);
-                            kFeeling++;
-
-                        } else {
-                           sommeFeeling = sommeFeeling + (_classification.classification_confidence_feeling * 0);
-                            kFeeling++;
-                        }
-
+                        sommeFeeling = sommeFeeling + (_classification.classification_confidence_feeling * 0);
+                        kFeeling++;
                     }
+
+                }
             }
         })
     });
 
-     if (props.via != 'analysis') {
-        console.log('compte review',props.via)
-          _reviews.forEach(_review =>{
+    if (props.via != 'analysis') {
+        console.log('compte review', props.via)
+        _reviews.forEach(_review => {
 
-            if (_review.feeling != '' && _review.feeling != null && 
+            if (_review.feeling != '' && _review.feeling != null &&
                 _review.feeling != 'null' && _review.confidence) {
 
-                    if (_review.id == _selectedReview.id && type == 'review') {
-                        _review.feeling = _feeling;
-                        _review.confidence = 1;
-                    }
+                if (_review.id == _selectedReview.id && type == 'review') {
+                    _review.feeling = _feeling;
+                    _review.confidence = 1;
+                }
 
-                    if (_review.feeling == 'positive') {
-                       sommeFeeling = sommeFeeling + (_review.confidence * 1);
-                       kFeeling++;
+                if (_review.feeling == 'positive') {
+                    sommeFeeling = sommeFeeling + (_review.confidence * 1);
+                    kFeeling++;
+
+                } else {
+
+                    if (_review.feeling == 'negative') {
+
+                        sommeFeeling = sommeFeeling + (_review.confidence * -1);
+                        kFeeling++;
 
                     } else {
-
-                        if (_review.feeling == 'negative') {
-
-                           sommeFeeling = sommeFeeling + (_review.confidence * -1);
-                            kFeeling++;
-
-                        } else {
-                           sommeFeeling = sommeFeeling + (_review.confidence * 0);
-                            kFeeling++;
-                        }
-
+                        sommeFeeling = sommeFeeling + (_review.confidence * 0);
+                        kFeeling++;
                     }
+
+                }
             }
-        
+
         });
-     }
+    }
 
     if (kFeeling > 0) {
-        console.log(sommeFeeling/kFeeling);
-        return sommeFeeling/kFeeling;
-    }else{
-        console.log("zero ",0);
+        console.log(sommeFeeling / kFeeling);
+        return sommeFeeling / kFeeling;
+    } else {
+        console.log("zero ", 0);
         return 0;
     }
 
@@ -615,122 +640,122 @@ const updateReview = async () => {
     let updatedValue = {
         feeling: modal.value.type == 'feeling' ? feel.value : feel_review.value,
         confidence: 1,
-        review:id.value,
+        review: id.value,
         feeling_categorization: feeling_categorization.value ? 'yes' : null,
-        category:old_item_category.value
+        category: old_item_category.value
     }
-   
+
 
     try {
         showModal.value = false;
         if (modal.value.type == 'feeling' || modal.value.type == 'feeling_review') {
 
             await services.post_Record(
-        "/review/feeling/update",
-        updatedValue,
-        (response) => {
-       
-        });
+                "/review/feeling/update",
+                updatedValue,
+                (response) => {
 
-     
-            
+                });
+
+
+
             let feelingScore = 0;
             if (modal.value.type == 'feeling') {
-                 feelingScore = calculFeelingScore(props.reviews,selectedReview.value,feel.value,'category');
+                feelingScore = calculFeelingScore(props.reviews, selectedReview.value, feel.value, 'category');
             } else {
-                 feelingScore = calculFeelingScore(props.reviews,selectedReview.value,feel_review.value,'review');
+                feelingScore = calculFeelingScore(props.reviews, selectedReview.value, feel_review.value, 'review');
             }
-            let newFeedbackData=calculSentimentAnalysis(feelingScore);
+            let newFeedbackData = calculSentimentAnalysis(feelingScore);
             emits('update-feeling', newFeedbackData);
-          
+
 
             if (feeling_categorization.value) {
                 selectedReview.value.classification_feeling[old_item_category.value] = feel.value;
             } else {
                 selectedReview.value.feeling = feel_review.value;
             }
-             
-           
-        
+
+
+
         } else {
-           
-           console.log(modal.value.type)
+
+            console.log(modal.value.type)
             var cur_cat = modal.value.type == 'delete' ? null : category.value;
             var old_cat = modal.value.type == 'delete' ? category.value : old_item_category.value;
 
-           
+
             await feedbackStore.updateReviewCategory(id.value, modal.value.action, old_cat, cur_cat, false, response => {
                 // Do nothing
             })
-          
+
 
             if (modal.value.action == 'add' && !selectedReview.value.category) {
                 selectedReview.value.category = cur_cat;
-                selectedReview.value.classification_feeling=[];
-                selectedReview.value.classification_feeling[old_item_category.value]=null;
+                selectedReview.value.classification_feeling = [];
+                selectedReview.value.classification_feeling[old_item_category.value] = null;
             }
 
-                if (selectedReview.value.category.split(';').length > 0) {
-                      var new_cat='';
-                      for (var i = 0; i < selectedReview.value.category.split(';').length; i++) {
-                    
-                           if (modal.value.type == 'delete') {
+            if (selectedReview.value.category.split(';').length > 0) {
+                var new_cat = '';
+                for (var i = 0; i < selectedReview.value.category.split(';').length; i++) {
 
-                                 if (selectedReview.value.category.split(';')[i] != category.value) {
-                                    if (new_cat != '') {
+                    if (modal.value.type == 'delete') {
 
-                                        new_cat = new_cat+';'+selectedReview.value.category.split(';')[i];
-                                
-                                    } else {
-                                        new_cat = selectedReview.value.category.split(';')[i];
-                                       
-                                    }
-                                    
+                        if (selectedReview.value.category.split(';')[i] != category.value) {
+                            if (new_cat != '') {
+
+                                new_cat = new_cat + ';' + selectedReview.value.category.split(';')[i];
+
+                            } else {
+                                new_cat = selectedReview.value.category.split(';')[i];
+
+                            }
+
+                        }
+
+                    } else {
+
+
+                        if (addExisteCategorie.value) {
+
+                            new_cat = selectedReview.value.category + ';' + category.value;
+
+                        } else {
+
+                            if (new_cat != '') {
+
+                                if (selectedReview.value.category.split(';')[i] == old_item_category.value) {
+                                    new_cat = new_cat + ';' + category.value;
+                                } else {
+                                    new_cat = new_cat + ';' + selectedReview.value.category.split(';')[i];
                                 }
 
-                           } else {
+                            } else {
 
-                           
-                                   if (addExisteCategorie.value) {
+                                if (selectedReview.value.category.split(';')[i] == old_item_category.value) {
+                                    new_cat = category.value;
+                                } else {
+                                    new_cat = selectedReview.value.category.split(';')[i];
+                                }
 
-                                    new_cat = selectedReview.value.category+';'+category.value;
-
-                                   } else {
-
-                                         if (new_cat != '') {
-
-                                            if (selectedReview.value.category.split(';')[i] == old_item_category.value) {
-                                                new_cat = new_cat+';'+category.value;
-                                            } else {
-                                                new_cat = new_cat+';'+selectedReview.value.category.split(';')[i];
-                                            }
-                                    
-                                        } else {
-                                            
-                                            if (selectedReview.value.category.split(';')[i] == old_item_category.value) {
-                                                 new_cat = category.value;
-                                            } else {
-                                                new_cat = selectedReview.value.category.split(';')[i];
-                                            }
-                                           
-                                        }
-                                   }
-                                   
-                       
-                           }
+                            }
                         }
 
-                        if (feeling_new_category.value) {
-                            selectedReview.value.classification_feeling[category.value]=selectedReview.value.classification_feeling[old_item_category.value]
-                        }
-                    
-                        selectedReview.value.category = new_cat;
 
-                } else {
-                   
-                    selectedReview.value.category = null;
+                    }
                 }
-              
+
+                if (feeling_new_category.value) {
+                    selectedReview.value.classification_feeling[category.value] = selectedReview.value.classification_feeling[old_item_category.value]
+                }
+
+                selectedReview.value.category = new_cat;
+
+            } else {
+
+                selectedReview.value.category = null;
+            }
+
 
         }
     } catch (error) {
@@ -738,21 +763,21 @@ const updateReview = async () => {
     }
 };
 
- const updateFeelingFeedback=((_feeling,_type) => {
-        if (_type == 'feeling_review') {
-            feel_review.value=_feeling;
-        } else {
-            feel.value = _feeling;
-        }
-        console.log(_feeling)
-          showModal.value = false
-          setTimeout(() => {
-            updateReview();
-          
-        }, 1000);
-    });
+const updateFeelingFeedback = ((_feeling, _type) => {
+    if (_type == 'feeling_review') {
+        feel_review.value = _feeling;
+    } else {
+        feel.value = _feeling;
+    }
+    console.log(_feeling)
+    showModal.value = false
+    setTimeout(() => {
+        updateReview();
 
-const handleModal = (text, action, icon, type, review,category='') => {
+    }, 1000);
+});
+
+const handleModal = (text, action, icon, type, review, category = '') => {
     showModal.value = true
     modal.value = {
         text: text,
@@ -761,49 +786,52 @@ const handleModal = (text, action, icon, type, review,category='') => {
         type: type
     }
 
-  
-    editReview(review,category)
+
+    editReview(review, category)
 
 };
 
 </script>
 <style scoped>
-
-.review_right_mobile{
-        width:97%;
-    overflow-x:scroll ;
-    white-space:nowrap;
+.review_right_mobile {
+    width: 97%;
+    overflow-x: scroll;
+    white-space: nowrap;
     justify-content: right;
 }
-.category_container_mobile{
-    width:98%;
-    overflow:scroll ;
-    white-space:nowrap;
+
+.category_container_mobile {
+    width: 98%;
+    overflow: scroll;
+    white-space: nowrap;
     overflow-wrap: scroll;
     word-wrap: scroll;
     display: none;
 }
 
-.category_mobile{
-    width:100%;
-    align-items:center
+.category_mobile {
+    width: 100%;
+    align-items: center
 }
+
 @media screen and (max-width: 975px) {
-    .category_container_mobile{
+    .category_container_mobile {
 
         display: block;
 
     }
 
-    .category_desktop{
+    .category_desktop {
         display: none;
     }
-    .category_mobile{
-/*        justify-content: right;*/
+
+    .category_mobile {
+        /*        justify-content: right;*/
         margin-bottom: 10px;
     }
 
 }
+
 .reviews__content a {
     text-decoration: none;
     border-bottom: none;
