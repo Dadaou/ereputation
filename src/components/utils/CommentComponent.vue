@@ -93,10 +93,6 @@
 
                                     </span>
 
-
-
-                                    </span>
-
                                 </div>
                             </div>
 
@@ -170,7 +166,7 @@
 
                         <p
                             class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center px-3 py-1 rounded dark:bg-yellow-200 dark:text-yellow-800">
-                            {{ review.star | review.rating }}</p>
+                            {{ review.star || review.rating }}</p>
                     </div>
                 </div>
             </div>
@@ -251,10 +247,6 @@
                                             <span>Click to add review feeling</span>
                                         </template>
                                     </el-tooltip>
-
-                                </span>
-
-
 
                                 </span>
 
@@ -679,7 +671,7 @@ const updateReview = async () => {
                 "/review/feeling/update",
                 updatedValue,
                 (response) => {
-
+                    //
                 });
 
 
@@ -813,6 +805,8 @@ const updateFeelingFeedback = ((_feeling, _type) => {
             editReview(review, category)
 
         };
+    });
+})
 
 </script>
 <style scoped>
