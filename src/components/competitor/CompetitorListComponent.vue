@@ -332,7 +332,7 @@ const loadLinksByEstablishment = async (company) => {
 
     try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`/api/customer/establishment/url?tag=${tag}`, (response) => {
+            services.get_Record(`/customer/establishment/url?tag=${tag}`, (response) => {
                 resolve(response);
             });
         });
