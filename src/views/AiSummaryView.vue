@@ -8,17 +8,17 @@
         </div>
         <div v-if="loading">Loading summary...</div>
         <div v-else-if="summaries.length > 0">
-            <div v-if="summaries[0]" class="summary-card">
-                <h2 v-if="summaries[0].datefrom && summaries[0].dateto">Summary reviews between {{
-                    moment(summaries[0].datefrom).format('D MMMM YYYY') }} and
+            <div v-if="summaries[0] && summaries[0].overview" class="summary-card">
+                <h2 v-if="summaries[0].datefrom && summaries[0].dateto && summaries[0].overview">
+                    Summary reviews between {{ moment(summaries[0].datefrom).format('D MMMM YYYY') }} and
                     {{ moment(summaries[0].dateto).format('D MMMM YYYY') }} - {{
                         summaries[0].establishment_name }}</h2>
                 <h2 v-else>Summary - {{ summaries[0].establishment_name }}</h2>
                 <p v-html="formatOverview(summaries[0].overview)"></p>
             </div>
-            <ExpansionPanel title="AI History">
+            <ExpansionPanel v-if="summaries.length > 0" title="AI History">
                 <div v-for="summary in summaries" :key="summary.id" class="summary-card">
-                    <h2 v-if="summary.datefrom && summary.dateto">Summary reviews between {{
+                    <h2 v-if="summary.datefrom && summary.dateto && summary.overview">Summary reviews between {{
                         moment(summary.datefrom).format('D MMMM YYYY') }} and
                         {{ moment(summary.dateto).format('D MMMM YYYY') }} - {{
                             summary.establishment_name }}</h2>
