@@ -282,7 +282,7 @@ const loadData = (establishment, type) => {
     establishment.url_source = establishment.media
 
     if (type == 'new') {
-        userStore.user.customer.establishments.push(establishment);
+        userStore.user.customer.establishments?.push(establishment);
     }
 }
 </script>
