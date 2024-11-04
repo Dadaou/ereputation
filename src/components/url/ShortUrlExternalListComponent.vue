@@ -8,7 +8,7 @@
     <el-table v-if="linksLoading == false" :data="filterTableData">
       <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Caption" prop="caption" style="width: 10%; min-width: 200px;" />
-      <el-table-column label="QR code scans" prop="" style="width: 25%; min-width: 200px;" />
+      <el-table-column label="QR code scans" prop="qr_code_count" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Url" prop="url" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Operations" style="width: 25%; min-width: 200px;" align="right">
         <template #header>
@@ -20,7 +20,7 @@
           </a>
           <el-button size="small" @click="handleClickExternalUrl(scope.row.url, scope.row.establishment_tag)"><i
               class="uil uil-qrcode-scan"></i></el-button>
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row.id)"><i
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
               class="uil uil-edit"></i></el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
             <template #reference>
@@ -54,6 +54,8 @@ import 'element-plus/es/components/popconfirm/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
 import { useRoute, useRouter } from 'vue-router'
+import { useLinkStore } from "@Stores/link.js";
+
 
 const QrCodeModalComponent = defineAsyncComponent(() =>
   import('@Components/utils/QrCodeModalComponent.vue')
@@ -69,7 +71,7 @@ const tableData = ref(allLinks.value);
 const showModal = ref(false);
 const scanUrl = ref('');
 const baseurl = window.location.origin;
-
+const linkStore = useLinkStore();
 
 function handleClickExternalUrl(url, establishment_tag) {
   scanUrl.value = `${baseurl}/public/${route.params.tag}/establishment/${establishment_tag}/external?url=${url}`;
@@ -141,14 +143,11 @@ const handleDelete = async (index, link) => {
 };
 
 
-const handleEdit = async (index, external_url) => {
-  const externalId = external_url;
-  console.log(externalId)
+const handleEdit = async (index, link) => {
+  linkStore.setLink(link)
+  console.log(linkStore.link)
   router.push({
-    name: 'Parameters', params: { tab: 'urls', sub_tab: 'urls_external_form', externalId: externalId }, query: {
-      externalId: externalId,
-    },
-  });
+    name: 'Parameters', params: { tab: 'urls', sub_tab: 'urls_external_form'}});
 };
 
 </script>

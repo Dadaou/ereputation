@@ -389,8 +389,6 @@ const reloadLink = async () => {
     });
     if (response.status === 200) {
       allLinks.value = response.data
-        console.log(allLinks.value)
-
     } else {
       console.error('Error fetching links:', response);
     }
