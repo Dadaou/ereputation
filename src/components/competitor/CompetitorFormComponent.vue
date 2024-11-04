@@ -167,7 +167,7 @@ const data = ref({});
 const showSpinner = ref(false);
 const type = ref('Add');
 const userStore = useUserStore();
-const establishment_to_update = inject('establishment_to_update');
+const competitor_to_update = inject('competitor_to_update');
 const imgHasChanged = ref(false);
 const cleanEstablishmentForm = inject('clearEstablishmentForm');
 const showSecondStep = ref(false)
@@ -392,16 +392,15 @@ const submitCompetitor = () => {
     })
 }
 
-watch(establishment_to_update, () => {
-    if (establishment_to_update.value != null) {
-        data.value = establishment_to_update.value;
-        data.value['address1'] = establishment_to_update.value.address || "";
-        previewImage.value = establishment_to_update.value.media || "";
+watch(competitor_to_update, () => {
+
+    if (competitor_to_update.value != null) {
+        data.value = competitor_to_update.value;
+       // data.value['address1'] = competitor_to_update.value.address || "";
+        previewImage.value = competitor_to_update.value.media || "";
         type.value = 'Edit';
-        console.log(data.value)
     }
 });
-
 
 </script>
 <style scoped>

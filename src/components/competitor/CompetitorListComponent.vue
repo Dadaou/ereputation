@@ -28,7 +28,7 @@
 
                     <el-button size="small" @click="loadLinksByEstablishment(scope.row)"><i
                             class="uil uil-file-alt"></i></el-button>
-                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
+                    <el-button size="small" @click="handleEdit(scope.row)"><i
                             class="uil uil-edit"></i></el-button>
                     <el-popconfirm title="Are you sure to delete this?"
                         @confirm="handleDelete(scope.$index, scope.row)">
@@ -244,7 +244,7 @@ const showCompetitor = ref(false)
 const establishments = ref([])
 const isEdit = ref(false)
 const id = ref('')
-const handleEdit = (index, establishment) => {
+const handleEdit = (establishment) => {
     emit('edit', establishment);
 }
 
