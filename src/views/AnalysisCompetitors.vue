@@ -559,9 +559,9 @@ const sortedData = computed(() => {
         const avgA = a.data.reduce((sum, val) => sum + val, 0) / a.data.length;
         const avgB = b.data.reduce((sum, val) => sum + val, 0) / b.data.length;
         if (sortAsc.value) {
-            return avgA - avgB;
-        } else {
             return avgB - avgA;
+        } else {
+            return avgA - avgB;
         }
     });
 });
