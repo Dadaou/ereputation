@@ -531,7 +531,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.name != 'Login' && to.name != 'Signup' && to.name != 'externalUrl' && session.getItemWithTTL('verification_session') == null) {
+    if (to.name != 'Login' && to.name != 'Signup' && to.name != 'externalUrl'  && !to.path.startsWith('/public') && session.getItemWithTTL('verification_session') == null) {
       console.log('session expired');
       useUserStore().signOut();
     useUserStore().authenticated = false;
