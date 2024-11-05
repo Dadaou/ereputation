@@ -52,22 +52,14 @@
                             <!-- category -->
                             <div v-for="(categ, index) in review.category.split(';')" :key="categ" class="inline-flex">
 
-                                <div v-if="categ != ''" class="review__category-container ml-1">
+                                <div v-if="categ != ' ' " class="review__category-container ml-1"> 
 
+                                    <span   @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review,categ),category=categ,old_item_category=categ" class="review__category">{{
+                                        categ }}
                                     <span
                                         v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')"
                                         class="emoji "
                                         @click.stop="handleModal('Category feeling', 'edit', 'uil-edit', 'feeling', review, categ, review?.classifications[index]?.section), feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
-                                        <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
-                                        <span
-                                            v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
-                                        <span v-if="review.classification_feeling[categ] == 'negative'">😕</span>
-                                    </span>
-
-                                    <span
-                                        v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')"
-                                        class="emoji "
-                                        @click.stop="handleModal('Edit review feeling', 'edit', 'uil-edit', 'feeling', review, categ,), feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
                                         <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
                                         <span
                                             v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
@@ -92,6 +84,9 @@
                                         </el-tooltip>
 
                                     </span>
+
+
+                                </span>
 
                                 </div>
                             </div>
@@ -790,8 +785,10 @@ const updateFeelingFeedback = ((_feeling, _type) => {
     showModal.value = false
     setTimeout(() => {
         updateReview();
+    });
+})
 
-        const handleModal = (text, action, icon, type, review, category = '', section = null) => {
+const handleModal = (text, action, icon, type, review, category = '', section = null) => {
             showModal.value = true
             modal.value = {
                 text: text,
@@ -804,8 +801,10 @@ const updateFeelingFeedback = ((_feeling, _type) => {
 
             editReview(review, category)
 
-        };
-    });
+};
+
+onMounted(() => {
+    console.log("********", props.reviews)
 })
 
 </script>
