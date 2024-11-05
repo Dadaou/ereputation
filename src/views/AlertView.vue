@@ -58,8 +58,11 @@ const logoMap = {
   'Opentable': new URL('@/assets/images/logo/Opentable.svg', import.meta.url).href,
   'Thefork': new URL('@/assets/images/logo/Thefork.svg', import.meta.url).href,
   'Tripadvisor': new URL('@/assets/images/logo/Tripadvisor.svg', import.meta.url).href,
+  'Tripadvisor ES': new URL('@/assets/images/logo/Tripadvisor.svg', import.meta.url).href,
+  'Tripadvisor FR': new URL('@/assets/images/logo/Tripadvisor.svg', import.meta.url).href, 
   'Trustpilot': new URL('@/assets/images/logo/Trustpilot.svg', import.meta.url).href,
-  'Yelp': new URL('@/assets/images/logo/Yelp.svg', import.meta.url).href
+  'Yelp': new URL('@/assets/images/logo/Yelp.svg', import.meta.url).href,
+  'Hotels.com': new URL('@/assets/images/logo/Hotel.svg', import.meta.url).href,
 };
 
 const handleClick = (noteKey, platform) => {
