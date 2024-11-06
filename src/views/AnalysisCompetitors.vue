@@ -156,10 +156,23 @@ const colors = ref(['#f75842', '#337ecc', '#4682B4', '#6495ED', '#1E90FF', '#00B
 let chartConfig = {
     maintainAspectRatio: false,
     scales: {
-        y: {
-            min: 0,
-            max: 5
-        }
+          y: {
+          beginAtZero: true,
+          suggestedMin: 0, 
+          suggestedMax: 5,
+          ticks: {
+            stepSize: 1 ,
+            padding: 10
+            
+          },
+          grid: {
+            
+            drawBorder: true,
+            drawOnChartArea: true
+          
+          }
+
+        },
     },
     plugins: {
         legend: {
