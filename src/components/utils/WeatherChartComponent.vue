@@ -44,7 +44,14 @@
                 <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" /> 
             </div>
 
-            <div id="weatherIcons" style="height: 58px; width: 100%; position: relative;">
+            <div style="border: 1px solid #ddd; margin-top:  30px;"></div>
+
+            <div id="weatherTable" style="width: 97%; margin: 20px 0px 15px 15px;">
+                <table id="weatherIconsTable" style="width: 100%; border-collapse: collapse;">
+                    <tbody id="weatherTableBody">
+
+                    </tbody>
+                </table>
             </div>
 
          <!--    <LineChart class="chart" :plot-data="data"
@@ -131,14 +138,13 @@ const newOptions = {
           }
 
         },
-   
     },
     plugins: {
       legend: {
         display: false
       }
     }
-   
+  
 };
 
 const chartLoading = inject('chartLoading');
@@ -182,7 +188,7 @@ const getWidth = () => {
 };
 
 const deleteIcons = () => {
-  const weathers = document.getElementById("weatherIcons");
+  const weathers = document.getElementById("weatherTable");
   if(weathers) weathers.innerHTML = "";
 }
 
@@ -213,50 +219,59 @@ const transformData=(_data)=>{
 }
 
 const positionIcons = () => {
-  let positions = [];
 
-  const elements = document.querySelectorAll(".weather__chart .boxLarge .xaxis g.tick");
-
-  let intervale=38;
-  let count = 0;
-  data.value.forEach(e => {
-    // if (intervale > 38) {
-    //      // positions.push((e.getAttribute("transform").split(',')[0]).split('(')[1] -intervale);
-
-    // } else {
-    //      positions.push((e.getAttribute("transform").split(',')[0]).split('(')[1]);
-    // }
-    // console.log((e.getAttribute("transform").split(',')[0]).split('(')[1])
-         positions.push(intervale);
-          intervale+=88
-    
-
-  })
-
-  const weathers = document.getElementById("weatherIcons");
+ const tableBody = document.getElementById("weatherTableBody");
+ if (!tableBody) return; 
 
 
-  for (let i = 0; i < positions.length; i++) {
-    let textNode = document.createElement("span");
-    let tempTextNode = document.createElement("span");
-    textNode.innerHTML = icons.value[i]['code'];
-    tempTextNode.innerHTML = `${icons.value[i]['temperature'].toFixed(0)} ${icons.value[i]['unit']}`;
-    textNode.setAttribute("style", `left: calc(${positions[i]}px - 12px); opacity: 1; top: -4px; position: absolute; font-size: 28px; cursor: pointer;width: 40px;`);
-    tempTextNode.setAttribute("style", `left: calc(${positions[i]}px - 12px); opacity: 1; top: 28px; position: absolute; font-size: 14px;  cursor: pointer; width: 40px;`);
-    textNode.setAttribute("title", icons.value[i]['title']);
-    weathers.appendChild(textNode);
-    weathers.appendChild(tempTextNode);
-   
+  const indexRow = document.createElement("tr");
+  const iconRow = document.createElement("tr");
+
+  for (let i = 0; i < icons.value.length; i++) {
+
+   const dateCell = document.createElement("td");
+   //dateCell.style.border = "1px solid #ddd";
+   dateCell.style.padding = "5px";
+   dateCell.style.textAlign = "center";
+   dateCell.style.color = "	#5D6166"; 
+   dateCell.style.fontSize = "12px";
+   dateCell.innerText = data.value[i].name;
+
+    // Cellule pour l'icône et la température
+    const iconCell = document.createElement("td");
+    //iconCell.style.border = "1px solid #ddd";
+    iconCell.style.padding = "2px";
+    iconCell.style.textAlign = "center";
+
+    const iconSpan = document.createElement("span");
+    iconSpan.innerHTML = icons.value[i]['code'];
+    iconSpan.style.fontSize = "28px";
+    iconSpan.style.display = "block";
+    iconSpan.style.color = "#5D6166";
+
+    const tempSpan = document.createElement("span");
+    tempSpan.innerHTML = `${icons.value[i]['temperature'].toFixed(0)} ${icons.value[i]['unit']}`;
+    tempSpan.style.fontSize = "14px";
+    tempSpan.style.display = "block";
+    tempSpan.style.color = "	#5D6166";
+
+    iconCell.appendChild(iconSpan);
+    iconCell.appendChild(tempSpan);
+
+    indexRow.appendChild(dateCell);
+    iconRow.appendChild(iconCell);
   }
-}
+
+  tableBody.appendChild(indexRow);
+  tableBody.appendChild(iconRow);
+};
+
 
 useResizeObserver(el, (entries) => {
   const entry = entries[0];
   const { width } = entry.contentRect;
   chartWidth.value = Math.abs(width);
 });
-
-
 
 onMounted(() => {
   deleteIcons();
