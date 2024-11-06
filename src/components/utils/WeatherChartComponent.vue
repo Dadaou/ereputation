@@ -44,7 +44,7 @@
                 <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" /> 
             </div>
 
-            <div style="border: 1px solid #ddd; margin-top:  30px;"></div>
+            <div v-if="weatherChartValue.labels.length !== 0" style="border: 1px solid #ddd; margin-top:  30px;"></div>
 
             <div id="weatherTable" style="width: 97%; margin: 20px 0px 15px 15px;">
                 <table id="weatherIconsTable" style="width: 100%; border-collapse: collapse;">
@@ -214,7 +214,7 @@ const transformData=(_data)=>{
               // fill: false,
               tension: 0.1
               })
-     console.log(_data.value)
+
      weatherChartValue.value=plotData1;
 }
 
@@ -291,35 +291,31 @@ onMounted(() => {
  
 });
 
-watch(start_date, () => {
+// Combine les watchers pour data et start_date en un seul
+watch([data, start_date], () => {
   deleteIcons();
-   transformData(data)
-   console.log(start_date.value)
-  setTimeout(() => positionIcons(), 2000)
-    ;
-});
+  
+  transformData(data);
+  
+  nextTick(() => {
+    const colLargeElement = document.getElementById("colLarge");
+    if (colLargeElement) {
+      const chartDiv = document.getElementsByClassName("chart")[0]?.children[0];
+      if (chartDiv) {
+        const widthp = parseInt(chartDiv.getAttribute("width"));
+        const longueur = widthp * data.value.length;
+        colLargeElement.scrollLeft = longueur;
+      }
+    }
 
-watch(data, () => {
-  deleteIcons();
-   transformData(data)
-   console.log(start_date.value)
-  setTimeout(() => positionIcons(), 2000)
-    ;
-});
-watch( [data,start_date] , () => {
-      transformData(data)
     nextTick(() => {
-        const colLargeElement = document.getElementById("colLarge");
-        if (colLargeElement) {
-            const div = document.getElementsByClassName("chart")[0].children;
-            const widthp = parseInt(div[0].getAttribute("width"));
-            const longueur = widthp * data.value.length;
-            colLargeElement.scrollLeft += longueur;
-            colLargeElement.scrollLeft = longueur;
-        }
+      positionIcons();
     });
-
-}, { immediate: true});
+  });
+}, { 
+  immediate: true,
+  deep: true
+});
 </script>
 
 <style scoped>
