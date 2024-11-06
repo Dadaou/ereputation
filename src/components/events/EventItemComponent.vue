@@ -42,7 +42,7 @@
             </div> -->
         </div>
     </div>
-    <div v-if="events.length==0">No Event</div>
+    <div class="no__data" v-if="events.length==0">No Event</div>
 </template>
 <script setup>
 import {ref, inject, onBeforeMount, computed, defineAsyncComponent} from 'vue';
@@ -271,6 +271,11 @@ span.label{
 
 .list__actions button:hover{
     transform: scale(0.95);
+}
+
+.no__data {
+    font-size: 14px;
+    color: #6B7280;
 }
 
 </style>

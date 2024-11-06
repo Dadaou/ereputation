@@ -64,7 +64,7 @@
             </div>
         </div>
     </div>
-    <div v-if="staffs.length == 0">No staff</div>
+    <div class="no__data" v-if="staffs.length == 0">No staff</div>
     <QrCodeModalComponent v-if="staf"
         :qrcodeValue="`${baseurl}/public/${tag}/establishment/${staf.establishment_tag}/staffs/${staf.tag}/feedback`"
         :showModal="showModal" :filename="`${staf.firstname} ${staf.lastname}-feedback-link`" @close="showModal = false"
@@ -323,4 +323,10 @@ span.label {
     }
 
 }
+
+.no__data {
+    font-size: 14px;
+    color: #6B7280;
+}
+
 </style>

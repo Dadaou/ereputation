@@ -54,7 +54,7 @@
                 <tr class="no__staff">
                     <td colspan="4">
                         <div style="text-align: center;">
-                            <span>no staff</span>
+                            <span>No staff</span>
                         </div>
                     </td>
                 </tr>

@@ -1,6 +1,6 @@
 <template>
   <div class="alert__content">
-    <div v-if="Object.keys(reviewsData).length === 0">
+    <div class="no__data" v-if="Object.keys(reviewsData).length === 0">
       No alerts for this period at the moment
     </div>
     <div v-else class="cards-container">
@@ -230,5 +230,10 @@ onMounted(() => {
 .percentage-line {
   height: 100%;
   background-color: var(--light-color-bg2);
+}
+
+.no__data {
+    font-size: 14px;
+    color: #6B7280;
 }
 </style>
