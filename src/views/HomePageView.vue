@@ -316,7 +316,7 @@ h1 {
 .toggle-switch {
     display: flex;
     background-color: #f0f0f0;
-    border-radius: 20px;
+    border-radius: 15px;
     overflow: hidden;
     width: 130px;
     height: 40px;

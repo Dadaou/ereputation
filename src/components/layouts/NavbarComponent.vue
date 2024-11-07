@@ -270,7 +270,7 @@ onBeforeMount(async () => {
 
 const footerLogoClassObject = computed(() => ({
   'nav-logo': !(logo.value && logo.value.logo && props.isPublic),
-  'nav-logo-public' : logo.value && logo.value.logo && props.isPublic
+  'nav-logo-public': logo.value && logo.value.logo && props.isPublic
 }))
 </script>
 
@@ -441,7 +441,7 @@ ul.menu .router-link-exact-active {
 .nav-logo-public img {
   width: auto;
   height: 100%;
-  border-radius: 24px;
+  border-radius: 15px;
 }
 
 @media screen and (max-width:765px) {

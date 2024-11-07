@@ -120,7 +120,7 @@ footer {
   width: auto;
   padding: 12px;
   background-color: var(--color-white);
-  border-radius: 48px;
+  border-radius: 15px;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -143,7 +143,7 @@ footer {
 .footer-logo-public img {
   height: 100%;
   width: auto;
-  border-radius: 24px;
+  border-radius: 15px;
 }
 
 .footer__container {
