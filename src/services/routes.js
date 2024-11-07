@@ -76,7 +76,7 @@ export const homePageUrls = {
 export const homeLeadgenUrls = {
   LeadgenAdvantage : { label: 'Advantages', icon: 'uil:bill' },
   LeadgenPartnership : { label: 'Partnerships', icon: 'lucide:handshake' },
-  LeadgenDiscountCoupon : { label: 'Discount coupons', icon: 'uil:bill' },
+  LeadgenDiscountCoupon : { label: 'Discount coupons', icon: 'ic:outline-discount' },
   LeadgenContact : { label: 'Contacts', icon: 'uil:envelope' },
   LeadgenMyQrcode : { label: 'My Qrcodes', icon: 'uil:qrcode-scan' },
   LeadgenMyScreen : { label: 'My Screens', icon: 'uil:presentation' },

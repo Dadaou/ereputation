@@ -37,7 +37,7 @@
           </li>
           <li>
             <router-link :to="{ name: 'Partnership' }"  @click.native="selectMenu('Partnership')">
-              <Icon icon="lucide:handshake" /><span>Partnerships</span>
+              <Icon icon="lucide:handshake" style="margin-top: 3px;"/><span>Partnerships</span>
             </router-link>
           </li>
           <li>
@@ -47,7 +47,7 @@
           </li>
           <li>
             <router-link :to="{ name: 'Discount_coupons' }"  @click.native="selectMenu('Discount coupons')">
-              <i class="uil uil-bill"></i> <span>Discount coupons</span>
+              <Icon icon="ic:outline-discount" style="margin-top: 3px;"/> <span>Discount coupons</span>
             </router-link>
           </li>
           <li>
@@ -138,7 +138,7 @@ const page = computed(() => {
     "Discount_coupons": {
       title1: "",
       title2: "Discount",
-      icon: "uil-bill",
+      icon: "ic:outline-discount",
     },
     "Parameters": {
       title1: "",

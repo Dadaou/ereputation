@@ -10,7 +10,7 @@
                         <Icon :icon="'lucide:handshake'" width="25"></Icon>
                     </RouterLink>
                     <RouterLink class="search__icon" :to="{ name: 'LeadgenDiscountCoupon', params: { tag: tag } }">
-                        <Icon :icon="'uil:bill'" width="25"></Icon>
+                        <Icon :icon="'ic:outline-discount'" width="25"></Icon>
                     </RouterLink>
                     <RouterLink class="search__icon" :to="{ name: 'LeadgenContact', params: { tag: tag } }">
                         <Icon :icon="'uil:envelope'" width="25"></Icon>
