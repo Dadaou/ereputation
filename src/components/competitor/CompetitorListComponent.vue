@@ -346,7 +346,7 @@ const loadLinksByEstablishment = async (company) => {
 const handleDeleteLink = async (index, link) => {
     try {
         const response = await new Promise((resolve, reject) => {
-            services.patchRecord('settings', link.id, { enable: false }, (response) => {
+            services.patchRecord('settings', link.settings_id, { enable: false }, (response) => {
                 resolve(response);
             });
         });
@@ -573,7 +573,7 @@ const handleEditLink = (data) => {
         link.value = data.category == 'Hashtag' ? `#${data.settings_value1}` : data.url
     }, 250);
 
-    id.value = data.id
+    id.value = data.settings_id
 
     isEdit.value = true
     provider.value = getURIbyName(data.name)
