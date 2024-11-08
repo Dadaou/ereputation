@@ -62,6 +62,7 @@ const logoMap = {
   'Tripadvisor FR': new URL('@/assets/images/logo/Tripadvisor.svg', import.meta.url).href, 
   'Trustpilot': new URL('@/assets/images/logo/Trustpilot.svg', import.meta.url).href,
   'Yelp': new URL('@/assets/images/logo/Yelp.svg', import.meta.url).href,
+  'Hotels': new URL('@/assets/images/logo/Hotel.svg', import.meta.url).href,
   'Hotels.com': new URL('@/assets/images/logo/Hotel.svg', import.meta.url).href,
 };
 
