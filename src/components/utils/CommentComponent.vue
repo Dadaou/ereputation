@@ -46,7 +46,7 @@
                 </div>
                 <div class="review__right mt-2">
                     <div style="height: 20px;" v-if="showCategory" class="category_desktop">
-                        <div v-if="review.category && review.category.split(';').length > 0" class="inline-flex" style=" max-width:  500px; white-space: nowrap;  overflow-x: scroll;">
+                        <div v-if="review.category && review.category.split(';').length > 0" class="inline-flex" style="max-width: 500px; white-space: nowrap; overflow-x: auto;">
 
 
                             <!-- category -->
@@ -801,7 +801,7 @@ onMounted(() => {
 
 .category_container_mobile {
     width: 98%;
-    overflow: scroll;
+    overflow: auto;
     white-space: nowrap;
     overflow-wrap: scroll;
     word-wrap: scroll;
