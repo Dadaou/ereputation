@@ -19,10 +19,13 @@
             <div class="catfiltre">
                 <el-input v-model="terms" size="large" />
             </div>
+             <div class="catfiltre">
+                <el-button @click="  loadReviews(route.params.tag,optionsReview.page,optionsReview.rowLimit,optionsReview.current, start_date, end_date,terms,establishments)" type="primary" class="search_button" :icon="Search">Search</el-button>
+            </div>
         </div>
     </div>
 
-    <span v-if=" 0 >= visibleData.length">Loading...</span>
+    <!-- <span v-if=" 0 >= visibleData.length">Loading...</span> -->
 
     <div class="society__list mt-5" v-if="visibleData.length > 0">
         <suspense>
@@ -76,7 +79,7 @@
 <script setup>
 import { ref, onMounted, defineAsyncComponent, inject, watch, provide } from 'vue';
 import EstablishmentListLoadedComponent from '@Components/utils/EstablishmentListLoadedComponent.vue';
-import { ElOption, ElSelect, ElDatePicker,ElInput } from 'element-plus';
+import { ElOption, ElSelect, ElDatePicker,ElInput,ElButton } from 'element-plus';
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
@@ -84,7 +87,7 @@ import services from '@Services/services.js';
 import moment from 'moment';
 import { useUserStore } from '@Stores/user.js';
 import { useRoute } from "vue-router";
-
+import { Search } from '@element-plus/icons-vue'
 import CommentComponent from '@Components/utils/CommentComponent.vue';
 import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 
@@ -195,9 +198,9 @@ const loadCategories = async (tag) => {
 }
 
 
-watch([terms, establishments, optionsReview,start_date, end_date], async () => {
-    await loadReviews(route.params.tag,optionsReview.value.page,optionsReview.value.rowLimit,optionsReview.value.current, start_date.value, end_date.value,terms.value,establishments.value);
-});
+// watch([terms, establishments, optionsReview,start_date, end_date], async () => {
+//     await loadReviews(route.params.tag,optionsReview.value.page,optionsReview.value.rowLimit,optionsReview.value.current, start_date.value, end_date.value,terms.value,establishments.value);
+// });
 
 const IsValueOkay = (value) => (value !== '' && value !== 0 && value !== null && value !== undefined);
 
@@ -206,8 +209,8 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, terms,
     optionsReview.value.page = page;
     reviews_loader.value = true;
 
-    let apiBase = '/review/search/foselastica';
-    let apiParams = `tag=${tag}&page=${page}&limit=${limit}&terms=${'exceptionnel'}`;
+    let apiBase = '/review/search';
+    let apiParams = `tag=${tag}&page=${page}&limit=${limit}&terms=${terms}`;
 
     if (IsValueOkay(dateStart) && IsValueOkay(dateEnd)) {
         dateStart = moment(new Date(dateStart)).format('YYYY-MM-DD');
@@ -588,8 +591,8 @@ onMounted(async () => {
   
         await Promise.all([
             loadCategories(route.params.tag),
-           loadReviews(route.params.tag,optionsReview.value.page,optionsReview.value.rowLimit,optionsReview.value.current,
-            start_date.value,end_date.value,terms.value,establishments.value)
+           // loadReviews(route.params.tag,optionsReview.value.page,optionsReview.value.rowLimit,optionsReview.value.current,
+           //  start_date.value,end_date.value,terms.value,establishments.value)
         ])
 
     
@@ -599,6 +602,10 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+
+.search_button{
+   background-color: var(--color-danger);
+}
 .establishment-rank-view :deep(.reviews-count) {
     display: flex;
     /* padding: 5px; */
