@@ -42,8 +42,8 @@
     </div>
     <div class="mt-5 table__container" v-else>
         <el-table :data="filteredLinks">
-            <el-table-column label="Establishment" prop="establishment" style="width: 50%; min-width: 200px;" />
-            <el-table-column label="Provider" prop="name" style="width: 50%; min-width: 200px;" />
+            <el-table-column label="Competitors" prop="establishment_name" style="width: 50%; min-width: 200px;" />
+            <el-table-column label="Provider" prop="provider_name" style="width: 50%; min-width: 200px;" />
             <el-table-column label="Value" prop="settings_value1" style="width: 50%; min-width: 200px;" />
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
                 <template #header>
@@ -268,12 +268,11 @@ const filteredCompetitor = computed(() => {
 
 const filteredLinks = computed(() => {
     let filteredData = allLinks.value;
-
     filteredData = filteredData.filter((data) => {
         return !searchLink.value ||
-            data.name.toLowerCase().includes(searchLink.value.toLowerCase()) ||
-            (data.category && data.category.toLowerCase().includes(searchLink.value.toLowerCase())) ||
-            (data.establishment && data.establishment.toLowerCase().includes(searchLink.value.toLowerCase()))
+            data.establishment_name.toLowerCase().includes(searchLink.value.toLowerCase()) ||
+            (data.provider_name && data.provider_name.toLowerCase().includes(searchLink.value.toLowerCase())) ||
+            (data.settings_value1 && data.settings_value1.toLowerCase().includes(searchLink.value.toLowerCase()))
     })
     return filteredData
 })
@@ -332,12 +331,12 @@ const loadLinksByEstablishment = async (company) => {
 
     try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`/customer/establishment/url?tag=${tag}`, (response) => {
+            services.get_Record(`/customer/establishment/competitor/url?tag=${tag}`, (response) => {
                 resolve(response);
             });
         });
-        if (response.status == 200) {
-            allLinks.value = transformLinksData(response.data.data)
+        if (response.status === 200) {
+            allLinks.value = (response.data)
         }
     } catch (error) {
         console.log(error)
@@ -347,7 +346,7 @@ const loadLinksByEstablishment = async (company) => {
 const handleDeleteLink = async (index, link) => {
     try {
         const response = await new Promise((resolve, reject) => {
-            services.patchRecord('settings', link.id, { enable: false }, (response) => {
+            services.patchRecord('settings', link.settings_id, { enable: false }, (response) => {
                 resolve(response);
             });
         });
@@ -574,7 +573,7 @@ const handleEditLink = (data) => {
         link.value = data.category == 'Hashtag' ? `#${data.settings_value1}` : data.url
     }, 250);
 
-    id.value = data.id
+    id.value = data.settings_id
 
     isEdit.value = true
     provider.value = getURIbyName(data.name)
@@ -613,7 +612,6 @@ onBeforeMount(async () => {
         const response = await new Promise((resolve, reject) => {
             services.get_Record(`providers`, (response) => {
                 resolve(response);
-                console.log(response);
             });
         });
 

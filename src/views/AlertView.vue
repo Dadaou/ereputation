@@ -10,13 +10,16 @@
         </div>
         <div class="card__details">
           <ul class="alert__review">
-            <li v-for="(noteKey, index) in Object.keys(review).filter(key => key !== 'url_source').slice(4, 7).reverse()" :key="noteKey" @click="handleClick(noteKey, key)">
-                <div class="review-content">
+            <li
+              v-for="(noteKey, index) in Object.keys(review).filter(key => key !== 'url_source').slice(4, 7).reverse()"
+              :key="noteKey" @click="handleClick(noteKey, key)">
+              <div class="review-content">
                 <span>{{ noteKey.replace('note ', '') }} <i class="fa fa-star " aria-hidden="true"></i></span>
                 <div class="percentage-bar">
-                  <div class="percentage-line" :style="{ width: calculatePercentage(review[noteKey], review.total) + '%' }"></div>
+                  <div class="percentage-line"
+                    :style="{ width: calculatePercentage(review[noteKey], review.total) + '%' }"></div>
                 </div>
-                 <span>{{ review[noteKey] }}</span>
+                <span>{{ review[noteKey] }}</span>
               </div>
             </li>
           </ul>
@@ -59,9 +62,10 @@ const logoMap = {
   'Thefork': new URL('@/assets/images/logo/Thefork.svg', import.meta.url).href,
   'Tripadvisor': new URL('@/assets/images/logo/Tripadvisor.svg', import.meta.url).href,
   'Tripadvisor ES': new URL('@/assets/images/logo/Tripadvisor.svg', import.meta.url).href,
-  'Tripadvisor FR': new URL('@/assets/images/logo/Tripadvisor.svg', import.meta.url).href, 
+  'Tripadvisor FR': new URL('@/assets/images/logo/Tripadvisor.svg', import.meta.url).href,
   'Trustpilot': new URL('@/assets/images/logo/Trustpilot.svg', import.meta.url).href,
   'Yelp': new URL('@/assets/images/logo/Yelp.svg', import.meta.url).href,
+  'Hotels': new URL('@/assets/images/logo/Hotel.svg', import.meta.url).href,
   'Hotels.com': new URL('@/assets/images/logo/Hotel.svg', import.meta.url).href,
 };
 
@@ -103,12 +107,13 @@ const calculatePercentage = (count, total) => {
 const redirectToReviews = (customer, tag, from, to, star, platform) => {
   start_date.value = from;
   end_date.value = to;
+  const platformvalue = (platform === "Hotel" || platform === "Hotels") ? "hotels.com" : platform;
 
   router.push({
     path: `/customer/${customer}/establishment/${tag}/reviews/alert`,
     query: {
       star: star,
-      platform: platform 
+      platform: platformvalue
     }
   });
 };
@@ -177,7 +182,7 @@ onMounted(() => {
 }
 
 .alert__logo {
-  width: 80px; 
+  width: 80px;
   height: 80px;
   object-fit: contain;
   margin-bottom: 10px;
@@ -194,14 +199,14 @@ onMounted(() => {
 
 .alert__review li {
   margin: 5px 0;
-  font-size: 0.8rem;  
+  font-size: 0.8rem;
   border-radius: 5px;
   padding: 3px;
   color: rgba(0, 0, 0, 0.73);
 }
 
 .alert__review li:hover {
-  font-size: 0.75rem;  
+  font-size: 0.75rem;
   cursor: pointer;
   color: var(--light-color-bg2);
   font-weight: bold;
@@ -233,7 +238,7 @@ onMounted(() => {
 }
 
 .no__data {
-    font-size: 14px;
-    color: #6B7280;
+  font-size: 14px;
+  color: #6B7280;
 }
 </style>
