@@ -178,7 +178,7 @@
               </div>
               <div class="w-full inline-flex items-center gap-2 mt-5">
                 <input v-model="planInfo.acceptConditions" type="checkbox" id="coding" name="interest" value="coding"
-                  required />
+                   required />
                 <label for="coding">I read and accept <a href="" class="terms-conditions-link">Terms and
                     Conditions</a>
                   of
@@ -266,7 +266,7 @@
 </template>
 
 <script setup>
-import { ref, provide, onBeforeMount, defineAsyncComponent, inject, onMounted } from 'vue';
+import { ref, provide, onBeforeMount, defineAsyncComponent, inject, onMounted, onBeforeUnmount } from 'vue';
 import { ElTabs, ElTabPane } from 'element-plus';
 import SubscriptionSummary from '@Components/subscription/SubscriptionSummary.vue';
 import 'element-plus/es/components/tabs/style/css';
@@ -284,7 +284,8 @@ import linkystar from '@/assets/images/logo/LinkyStar.png'
 import { current } from '@Services/languages.js';
 import { useI18n } from "vue-i18n";
 import { tsvFormatBody } from 'd3';
-// import { i18n } from '@/i18n';
+import prices from '@/prices.json';
+
 
 const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
@@ -307,17 +308,20 @@ const { locale } = useI18n();
 
 const submitForm = async () => {
   await submitUserForm()
-  await submitCompanyForm()
-  // await subscribe()
 }
 
 const submitUserForm = async () => {
+
   showSpinner.value = true;
-  if (planInfo.value.uPassword && planInfo.value.uCPassword && planInfo.value.uPassword != planInfo.value.uCPassword) {
+  if (planInfo.value.uPassword !== planInfo.value.uCPassword) {
     postErrorMsg.value = "Passwords don't match!";
     showPostErrorMsg();
+    setTimeout(() => {
+      showSpinner.value = false;
+    }, 500);
   }
-  showSpinner.value = false;
+
+  else await submitCompanyForm()
 
 }
 
@@ -340,13 +344,13 @@ const selectCurrentLanguage = (language) => {
 
 const submitCompanyForm = async () => {
   showSpinner.value = true;
-  createAccount().then((response) => {
+  createAccount().then(async (response) => {
     if (response.status == 200) {
       console.log(response.data)
       planInfo.value.customer = response.data.customer.tag;
-      showSpinner.value = false;
-      // activeName.value = 'checkout';
       userCreated.value = true
+      await subscribe()
+      // activeName.value = 'checkout';
     } else {
       showSpinner.value = false;
       postErrorMsg.value = response.data;
@@ -433,168 +437,13 @@ const createAccount = async () => {
   });
 
   if (response && response.data) {
-    console.log(response)
-    await createSubscription(app_url.value, response.data.customer);
+    localStorage.setItem('uId', response.data.user.id)
+    await createSubscription(app_url.value, response.data.customer)
     return response;
   }
 }
 
 const selectedPrice = (code, quantity, unit) => {
-  const prices = [
-    {
-      "id": "price_1PyEamFQpK06t3MIDIekuHxa",
-      "product_id": "prod_QpuPbDZErHmA7F",
-      "name": "Additionnal Pack Review Analysis",
-      "code": "",
-      "quantity": "",
-      "unit": ""
-    },
-    {
-      "id": "price_1PyELLFQpK06t3MIjxc86LTJ",
-      "product_id": "prod_Qpu9yYXS7pGQGU",
-      "name": "Lead Gen up 150 Year",
-      "code": "657b0fbfdca0b",
-      "quantity": "h",
-      "unit": "y"
-    },
-    {
-      "id": "price_1PyEKmFQpK06t3MI267aXKzz",
-      "product_id": "prod_Qpu9QEHU4qWVbN",
-      "name": "Lead Gen up 150 Semester",
-      "code": "657b0fbfdca0b",
-      "quantity": "h",
-      "unit": "s"
-    },
-    {
-      "id": "price_1PyEK3FQpK06t3MIRGxCh0oz",
-      "product_id": "prod_Qpu80zCKTQ06UI",
-      "name": "Lead Gen up 150 Month",
-      "code": "657b0fbfdca0b",
-      "quantity": "h",
-      "unit": "m"
-    },
-    {
-      "id": "price_1PyE4pFQpK06t3MIfmhR4Epj",
-      "product_id": "prod_QptshBD8AWfFQ5",
-      "name": "Lead Gen 21-150 Year",
-      "code": "657b0fbfdca0b",
-      "quantity": "m",
-      "unit": "y"
-    },
-    {
-      "id": "price_1PyE4AFQpK06t3MIzQ3GcMSv",
-      "product_id": "prod_QptrDbWl1VNa2f",
-      "name": "Lead Gen 21-150 Semester",
-      "code": "657b0fbfdca0b",
-      "quantity": "m",
-      "unit": "s"
-    },
-    {
-      "id": "price_1PyDjOFQpK06t3MIka2ruipE",
-      "product_id": "prod_QptWZRuMtApZJx",
-      "name": "Lead Gen 21-150 Month",
-      "code": "657b0fbfdca0b",
-      "quantity": "m",
-      "unit": "m"
-    },
-    {
-      "id": "price_1PyDhmFQpK06t3MIATW1pQmz",
-      "product_id": "prod_QptU3KVaMnWVc1",
-      "name": "Lead Gen 1-20 Year",
-      "code": "657b0fbfdca0b",
-      "quantity": "l",
-      "unit": "y"
-    },
-    {
-      "id": "price_1PyDbMFQpK06t3MIxYU2C6gI",
-      "product_id": "prod_QptOvMtC5zDbis",
-      "name": "Lead Gen 1-20 Semester",
-      "code": "657b0fbfdca0b",
-      "quantity": "l",
-      "unit": "s"
-    },
-    {
-      "id": "price_1PyDC5FQpK06t3MI8vK8vq6f",
-      "product_id": "prod_QpsyYZ0I7IceDN",
-      "name": "Lead Gen 1-20 Month",
-      "code": "657b0fbfdca0b",
-      "quantity": "l",
-      "unit": "m"
-    },
-    ////////////////////////////////////
-    {
-      "id": "price_1Q2wFaFQpK06t3MIlTMTqPNq",
-      "product_id": "prod_QulnUT5cHjET69",
-      "name": "All Inclusive up 150 Year",
-      "code": "657b0feaa0258",
-      "quantity": "h",
-      "unit": "y"
-    },
-    {
-      "id": "price_1Q2wF2FQpK06t3MIygGEeMSP",
-      "product_id": "prod_QulmQakSouDb2R",
-      "name": "All Inclusive 21-150 Year",
-      "code": "657b0feaa0258",
-      "quantity": "m",
-      "unit": "y"
-    },
-    {
-      "id": "price_1Q2wEIFQpK06t3MI5DiQnr27",
-      "product_id": "prod_QullXn1qtJbqu5",
-      "name": "All Inclusive 1-20 Year",
-      "code": "657b0feaa0258",
-      "quantity": "l",
-      "unit": "y"
-    },
-    {
-      "id": "price_1Q2wDKFQpK06t3MIljgjl8CJ",
-      "product_id": "prod_QulkQj3Y3yQ5xH",
-      "name": "All Inclusive up 150 Semester",
-      "code": "657b0feaa0258",
-      "quantity": "h",
-      "unit": "s"
-    },
-    {
-      "id": "price_1Q2wCbFQpK06t3MILCb3F7yG",
-      "product_id": "prod_Qulk7hmzESHrh4",
-      "name": "All Inclusive 21-150 Semester",
-      "code": "657b0feaa0258",
-      "quantity": "m",
-      "unit": "s"
-    },
-    {
-      "id": "price_1Q2wBjFQpK06t3MIOOdCO1SN",
-      "product_id": "prod_QuljnsMUr3lMTY",
-      "name": "All Inclusive 1-20 Semester",
-      "code": "657b0feaa0258",
-      "quantity": "l",
-      "unit": "s"
-    },
-    {
-      "id": "price_1Q2wAAFQpK06t3MImDX8lOke",
-      "product_id": "prod_QulhCQr8QYRied",
-      "name": "All Inclusive up 150 Month",
-      "code": "657b0feaa0258",
-      "quantity": "h",
-      "unit": "m"
-    },
-    {
-      "id": "price_1Q2w9nFQpK06t3MIDyPfFrAo",
-      "product_id": "prod_QulhgyS9fMBoQj",
-      "name": "All Inclusive 21-150 Month",
-      "code": "657b0feaa0258",
-      "quantity": "m",
-      "unit": "m"
-    },
-    {
-      "id": "price_1Q2w8YFQpK06t3MIKPktWxNf",
-      "product_id": "prod_QulfSjY5Ms8Oeu",
-      "name": "All Inclusive 1-20 Month",
-      "code": "657b0feaa0258",
-      "quantity": "l",
-      "unit": "m"
-    }
-  ]
   return prices.find(price => price.code === code && price.quantity === quantity && price.unit === unit) || null;
 }
 
@@ -617,13 +466,13 @@ const subscribe = async () => {
           },
         ],
         mode: 'subscription',
-        success_url: `${app_url.value}/sign-up/subscription?session_id={CHECKOUT_SESSION_ID}&c=${planInfo.value.customer}`, // URL de succès après paiement
+        success_url: `${app_url.value}/payment/process?session_id={CHECKOUT_SESSION_ID}`, // URL de succès après paiement
         cancel_url: `${app_url.value}/sign-in`,   // URL en cas d'annulation du paiement
       });
 
       const sessionId = session.id;
 
-      const stripe = await loadStripe(import.meta.env.VITE_PUBLIC_STRIPE_KEY);; // Remplace par ta clé publique Stripe
+      const stripe = await loadStripe(import.meta.env.VITE_PUBLIC_STRIPE_KEY); 
 
       // Rediriger l'utilisateur vers Stripe Checkout
       const { error } = await stripe.redirectToCheckout({ sessionId: sessionId });
@@ -656,12 +505,15 @@ const createSubscription = async (app_url, customer) => {
   });
 
   if (response.status == 201 && response.data) {
-    ElMessage({
-      message: h('p', null, [
-        h('h4', { style: "color: #f75842; font-weight: bold;" }, 'Information:'),
-        h('span', { style: "font-size: 13px;" }, "Your account has been successfully created!"),
-      ]),
-    })
+
+      localStorage.setItem('uemail', planInfo.value.uEmail)
+      localStorage.setItem('upassword', planInfo.value.uPassword)
+      /*ElMessage({
+        message: h('p', null, [
+          h('h4', { style: "color: #f75842; font-weight: bold;" }, 'Information:'),
+          h('span', { style: "font-size: 13px;" }, "Your account has been successfully created!"),
+        ]),
+      })*/
   }
   else {
     ElMessage({
@@ -678,29 +530,33 @@ const route = useRoute();
 
 onBeforeMount(async () => {
 
-  const { c, q, u } = route.query
+    const { c, q, u } = route.query
 
-  if (c && q && u) {
-    setPlan(c, q, u)
-  }
+    if (c && q && u) {
+      setPlan(c, q, u)
+    }
 
-  const response = await new Promise((resolve) => {
-    services.get_Record('plan/list', (response) => {
-      resolve(response)
-      if (response.status == 404) {
-        appStore.isLoading = false;
-      }
-    }, true, true);
-  });
+    const response = await new Promise((resolve) => {
+      services.get_Record('plan/list', (response) => {
+        resolve(response)
+        if (response.status == 404) {
+          appStore.isLoading = false;
+        }
+      }, true, true);
+    });
 
-  if (response.status == 200 && response.data) {
-    const data = response.data
-    plans.value = data.sort((a, b) => a.id - b.id);
-  }
+    if (response.status == 200 && response.data) {
+      const data = response.data
+      plans.value = data.sort((a, b) => a.id - b.id);
+    }
 })
 
 onMounted(async () => {
   referrerUrl.value = document.referrer;
+})
+
+onBeforeUnmount(() => {
+  showSpinner.value = false
 })
 
 

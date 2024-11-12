@@ -143,6 +143,13 @@ const router = createRouter({
           path: '/public/:tag/establishment/:id/external',
           name: 'externalUrl',
           component: () => import('@Views/ExternalUrlPageView.vue')
+        },
+        {
+              
+          path: '/payment/process',
+          name: 'paymentProcess',
+          component: () => import('@Views/PaymentProcessPageView.vue')
+        
         }
       ]
     },
