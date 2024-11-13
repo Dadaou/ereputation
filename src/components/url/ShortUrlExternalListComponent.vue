@@ -1,5 +1,9 @@
 <template>
   <div class="security__header border__bottom">
+    <button @click="add"
+      class="inline-flex items-center py-2 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+      External Url <i class="uil uil-plus"></i>
+    </button>
   </div>
   <div class="search">
     <el-input v-model="search" size="small" placeholder="Type to search" />
@@ -20,8 +24,7 @@
           </a>
           <el-button size="small" @click="handleClickExternalUrl(scope.row.url, scope.row.establishment_tag)"><i
               class="uil uil-qrcode-scan"></i></el-button>
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
-              class="uil uil-edit"></i></el-button>
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
             <template #reference>
               <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
@@ -77,6 +80,10 @@ function handleClickExternalUrl(url, establishment_tag) {
   scanUrl.value = `${baseurl}/public/${route.params.tag}/establishment/${establishment_tag}/external?url=${url}`;
   showModal.value = true;
 }
+
+const add = () => {
+  router.push({ name: 'Parameters', params: { tab: 'urls', sub_tab: 'urls_external_form' } });
+};
 
 const filterTableData = computed(() => {
   if (!allLinks.value) return [];
@@ -147,7 +154,8 @@ const handleEdit = async (index, link) => {
   linkStore.setLink(link)
   console.log(linkStore.link)
   router.push({
-    name: 'Parameters', params: { tab: 'urls', sub_tab: 'urls_external_form'}});
+    name: 'Parameters', params: { tab: 'urls', sub_tab: 'urls_external_form' }
+  });
 };
 
 </script>
