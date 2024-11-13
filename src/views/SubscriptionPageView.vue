@@ -179,12 +179,13 @@
               <div class="w-full inline-flex items-center gap-2 mt-5">
                 <input v-model="planInfo.acceptConditions" type="checkbox" id="coding" name="interest" value="coding"
                    required />
-                <label for="coding">I read and accept <a href="" class="terms-conditions-link">Terms and
-                    Conditions</a>
+                <label for="coding">I read and accept <span class="cgv-link" @click="showCgv">terms and conditions</span>
                   of
                   service.</label>
               </div>
-            </div>
+            </div><br/>
+
+            <div class="cgv-container" v-show="isCgvVisible"></div>
 
             <div class="d-inline-flex justify-content-between align-items-center mt-5 mb-5">
               <!-- <button type="button" class="btn subscription-button btn-navigation" style="margin-top: 12px; border-radius: 2px;"
@@ -198,68 +199,7 @@
         </div>
       </el-tab-pane>
 
-      <el-tab-pane name="checkout">
-        <div class="tab-pane-header">
-          <h6>STEP 3 OF 3</h6>
-          <div class="section__title">
-            <p class="mt-4">Checkout</p>
-          </div>
-        </div>
-        <div class="w-full">
-          <div class="flex flex-col items-start lg:flex-row lg:space-x-8 p-4">
-            <div class="flex-1">
-              <SubscriptionSummary :data="planInfo"></SubscriptionSummary>
-            </div>
-            <div class="shrink-0 lg:order-2">
-              <div v-if="planInfo && planInfo.plan" class="summary-card">
-                <div class="summary-card__content">
-                  <div class="section__title">
-                    <p class="mt-4">Order Summary</p>
-                  </div>
-                  <table class="w-full">
-                    <tr>
-                      <td>Plan</td>
-                      <td style="text-align:right;"><strong>{{ planInfo.plan.name }}</strong></td>
-                    </tr>
-                    <tr>
-                      <td>Subtotal</td>
-                      <td style="text-align:right;">{{ planInfo.total }}{{ planInfo.plan.currency }}</td>
-                    </tr>
-                    <tr>
-                      <td>Order Total</td>
-                      <td style="text-align:right;"><strong>{{ planInfo.total }}{{ planInfo.plan.currency }}</strong>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-              <div class="summary-card shrink-0 lg:order-2 my-4">
-                <div class="summary-card__content">
-                  <div class="section__title">
-                    <p class="mt-4">Payment information</p>
-                  </div>
-                  <label for="cardName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name on
-                    card
-                    <span>*</span></label>
-                  <input v-model="planInfo.cardName" type="text" id="cardName"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-                  <div class="w-full my-8" id="card-element"></div>
-                  <div id="card-errors" role="alert"></div>
-                  <div id="card-success" role="alert"></div>
-                  <div class="flex items-center justify-end" style="text-align: right;"><button id="processPaymentBtn"
-                      class="btn subscription-button" :class="showSpinner == true ? 'isLoaded' : ''"
-                      style="margin-top: 12px; border-radius: 2px; width: 208px;" @click="() => subscribe()">
-                      <SpinnerComponent v-if="showSpinner == true" :color="'red'" /> <span v-else>Process to
-                        payment</span>
-                    </button></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <button class="btn subscription-button btn-navigation" style="margin-top: 12px; border-radius: 2px;"
-          @click="activeName = 'user-info'">Previous</button>
-      </el-tab-pane>
+     
     </el-tabs>
     <call-us-selector phonesystem-url="https://m-unit.on3cx.fr:5001" :party="chatID"></call-us-selector>
   </div>
@@ -304,6 +244,7 @@ const showSpinner = ref(false)
 const userCreated = ref(false)
 const app_url = inject('app_url');
 const { locale } = useI18n();
+const isCgvVisible = ref(false)
 
 
 const submitForm = async () => {
@@ -525,6 +466,10 @@ const createSubscription = async (app_url, customer) => {
   }
 }
 
+const showCgv = () => {
+  isCgvVisible.value = !isCgvVisible.value;
+}
+
 const appStore = useAppStore();
 const route = useRoute();
 
@@ -552,7 +497,31 @@ onBeforeMount(async () => {
 })
 
 onMounted(async () => {
-  referrerUrl.value = document.referrer;
+  
+  const partnerCode = import.meta.env.VITE_PARTNER_CODE
+
+  try {
+    const response = await new Promise((resolve) => {
+      services.get_Record(`partner/info?code=${partnerCode}`, (response) => {
+        resolve(response)
+      }, false, true)
+    })
+
+    if (response.status === 200) {
+
+      const cgvContainer = document.querySelector('.cgv-container')
+      cgvContainer.innerHTML = response.data.cgv
+      const images = cgvContainer.querySelectorAll("img")
+
+      images.forEach((image) => {
+        image.remove()
+      })
+    }
+  } catch (error) {
+    console.error(error)
+  }
+
+  referrerUrl.value = document.referrer
 })
 
 onBeforeUnmount(() => {
@@ -562,6 +531,30 @@ onBeforeUnmount(() => {
 
 </script>
 <style>
+
+.cgv-container {
+  height: 500px;
+  overflow: auto;
+  padding: 0 5px;
+}
+
+.cgv-container p {
+  text-align: justify;
+  font-family: 'Cartograph Mono CF';
+}
+
+.cgv-container h1 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+
+}
+
+.cgv-link {
+  color: #3076e0;
+  cursor: pointer;
+}
+
 .subscription-button {
   cursor: pointer;
   transition: var(--transition);
