@@ -20,7 +20,7 @@
                 <el-input v-model="terms" size="large" />
             </div>
              <div class="catfiltre">
-                <el-button @click="  loadReviews(route.params.tag,optionsReview.page,optionsReview.rowLimit,optionsReview.current, start_date, end_date,terms,establishments)" type="primary" class="search_button" :icon="Search">Search</el-button>
+                <el-button @click="  loadReviews(route.params.tag,optionsReview.page,optionsReview.rowLimit,optionsReview.current, start_date, end_date,terms,establishments)" size="large" type="primary" class="search_button" :icon="Search">Search</el-button>
             </div>
         </div>
     </div>

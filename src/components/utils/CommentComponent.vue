@@ -39,6 +39,12 @@
                                 <span v-if="review.source === 'App (Private)'">
                                     &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
                                     <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
+                                    &nbsp;&nbsp;<em v-if="review.review_establishment_name">{{ review.review_establishment_name }}</em>
+                                </span>
+                                <span v-else>
+                                  
+                                    &nbsp;&nbsp;<em v-if="review.review_establishment_name">{{ review.review_establishment_name }}</em>
+                                    
                                 </span>
                             </li>
                         </ul>
