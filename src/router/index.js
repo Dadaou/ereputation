@@ -398,6 +398,11 @@ const router = createRouter({
               component: () => import('@Views/CategorizationPageView.vue')
             },
             {
+              path: 'customer/:tag/establishment/search/reviews',
+              name: 'CustomerSearchReview',
+              component: () => import('@Views/SearchReviewsPageView.vue')
+            },
+            {
               path: 'customers',
               name: 'CustomersList',
               component: () => import('@Views/CustomerListView.vue')

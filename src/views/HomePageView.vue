@@ -17,6 +17,9 @@
                     <RouterLink class="search__icon" :to="{ name: 'EstablishmentListByTrend', params: { tag: tag } }">
                         <Icon :icon="'gg:trending'" width="25"></Icon>
                     </RouterLink>
+                    <RouterLink class="search__icon" :to="{ name: 'CustomerSearchReview', params: { tag: tag } }">
+                        <Icon :icon="'gg:search'" width="25"></Icon>
+                    </RouterLink>
                 </div>
 
                 <div class="toggle-switch" :class="{ 'active': isActiveErep }">
