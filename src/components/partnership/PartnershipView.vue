@@ -4,7 +4,7 @@
                     <el-tab-pane label="Partnerships requested by your establishment" name="partnership_list">
                         <PartnershipListComponent @update="() => reloadPartnershipsData()" />
                     </el-tab-pane>
-                    <el-tab-pane label="Request for partnerships" name="partnership_request">
+                    <el-tab-pane label="Requests for partnerships" name="partnership_request">
                         <PartnershipRequestComponent @update="() => reloadPartnershipsData()" />
                     </el-tab-pane>
                     <el-tab-pane label="Request a new partnership" name="partnership_form">
