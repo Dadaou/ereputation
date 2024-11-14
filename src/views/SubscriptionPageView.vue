@@ -179,7 +179,7 @@
               <div class="w-full inline-flex items-center gap-2 mt-5">
                 <input v-model="planInfo.acceptConditions" type="checkbox" id="coding" name="interest" value="coding"
                    required />
-                <label for="coding">I read and accept <span class="cgv-link" @click="showCgv">terms and conditions</span>
+                <label for="coding">I read and accept <span class="cgv-link" @click.stop="showCgv">terms and conditions</span>
                   of
                   service.</label>
               </div>
@@ -466,8 +466,9 @@ const createSubscription = async (app_url, customer) => {
   }
 }
 
-const showCgv = () => {
-  isCgvVisible.value = !isCgvVisible.value;
+const showCgv = (e) => {
+  e.preventDefault()
+  isCgvVisible.value = !isCgvVisible.value
 }
 
 const appStore = useAppStore();
