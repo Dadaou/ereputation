@@ -17,17 +17,17 @@
                 <el-date-picker v-model="end_date" type="date" :size="'large'" />
             </div>
             <div class="catfiltre">
-                <el-input v-model="terms" size="large" />
+                <el-input v-model="terms" v-on:keyup.enter="loadReviews(route.params.tag,optionsReview.page,optionsReview.rowLimit,optionsReview.current, start_date, end_date,terms,establishments)" size="large" />
             </div>
              <div class="catfiltre">
-                <el-button @click="  loadReviews(route.params.tag,optionsReview.page,optionsReview.rowLimit,optionsReview.current, start_date, end_date,terms,establishments)" type="primary" class="search_button" :icon="Search">Search</el-button>
+                <el-button  @click="  loadReviews(route.params.tag,optionsReview.page,optionsReview.rowLimit,optionsReview.current, start_date, end_date,terms,establishments)" size="large" type="primary" class="search_button" :icon="Search">Search</el-button>
             </div>
         </div>
     </div>
 
-    <!-- <span v-if=" 0 >= visibleData.length">Loading...</span> -->
+    <span v-if=" reviews_loader == true">Loading...</span>
 
-    <div class="society__list mt-5" v-if="visibleData.length > 0">
+    <div id= "society__list" class="society__list " v-if="visibleData.length > 0">
         <suspense>
 
               <div class="reviews__content">
@@ -74,6 +74,9 @@
           
         </suspense>
     </div>
+    <div class="no-comment" v-if="reviews_loader == false && visibleData.length == 0">
+                            No reviews meet to the current filters
+    </div>
 </template>
 
 <script setup>
@@ -86,12 +89,15 @@ import 'element-plus/es/components/date-picker/style/css'
 import services from '@Services/services.js';
 import moment from 'moment';
 import { useUserStore } from '@Stores/user.js';
-import { useRoute } from "vue-router";
+import { useRoute,useRouter } from "vue-router";
 import { Search } from '@element-plus/icons-vue'
 import CommentComponent from '@Components/utils/CommentComponent.vue';
 import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
+import { useAppStore } from "@Stores/app.js";
 
 const route = useRoute();
+const router = useRouter();
+const appStore = useAppStore();
 const establishments = ref('all');
 const terms = ref(null);
 const dataLoading = ref(true);
@@ -121,6 +127,8 @@ let reviewFeedbackData = ref({
     green: 0,
     feeling: 0
 });
+
+
 
 const handleEstablishmentDropdown = (type) => {
     const filters = type == 'other' ? establishments.value.filter(name => name != 'all') : ['all']
@@ -164,7 +172,7 @@ const updateFeeling = (newFeedbackData) =>{
 provide('reviewFeedbackData',reviewFeedbackData);
 provide('calculSentimentAnalysis',calculSentimentAnalysis);
 
-let reviews_loader = ref(true);
+let reviews_loader = ref(null);
 let visibleData = ref([])
 const optionsReview = ref({
     rowLimit: 20,
@@ -234,354 +242,18 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, terms,
         });
     });
 
-    reviews_loader.value=false;
-    optionsReview.value.max=2;
-    visibleData.value=[
-        // {
-        //     "id": 1,
-        //     "author": "Anonymous",
-        //     "author_url": null,
-        //     "language": "en",
-        //     "profile_photo": null,
-        //     "rating": "2",
-        //     "comment": "“We had a short but very lovely stay at this beautiful place”",
-        //     "date_review": "2024-07-05 00:00:00",
-        //     "translated": null,
-        //     "source": "App (Private)",
-        //     "created_at": "2024-05-06 18:01:07",
-        //     "feeling": null,
-        //     "score": null,
-        //     "confidence": null,
-        //     "email": null,
-        //     "optin": null,
-        //     "country": null,
-        //     "date_visit": null,
-        //     "url": null,
-        //     "category_check": "Acceuil,Mobilier,Emplacement,Ménage,Service,Nourriture,Bar,Accueil,Test",
-        //     "updated_at": null,
-        //     "feeling_updated": null,
-        //     "summary": [],
-        //     "classifications": [
-        //         {
-        //             "classification_id": 19,
-        //             "category": "Acceuil",
-        //             "section": "Test section 6",
-        //             "feeling": null,
-        //             "classification_confidence": "0.012478",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 70,
-        //             "category": "Accueil",
-        //             "section": "… En savoir plus",
-        //             "feeling": null,
-        //             "classification_confidence": "0.80772823095321",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 69,
-        //             "category": "Emplacement",
-        //             "section": "Très beau séjour au calme.Résidence propre ( a par quelques truc)Idéal pour les personnes qui cherchent un cadre calme et reposant !",
-        //             "feeling": null,
-        //             "classification_confidence": "0.80844777822495",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 20,
-        //             "category": "Emplacement",
-        //             "section": "Test section 7",
-        //             "feeling": null,
-        //             "classification_confidence": "0.012478",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 62,
-        //             "category": "Emplacement",
-        //             "section": "L'arrivée a été un peu compliquée (en arrivée tardive nous avons eu le mauvais numéro de chambre dans l'enveloppe) mais après un coup de téléphone, le mal a été vite réparé !",
-        //             "feeling": null,
-        //             "classification_confidence": "0.82010415810312",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 63,
-        //             "category": "Emplacement",
-        //             "section": "Logement un peu vieillissant cependant avec quelques petits travaux d'embellissement à prévoir mais bien équipé...Nous aurions souhaité néanmoins avoir une terrasse côté soleil et vue dégagée mais ça n'a pas été",
-        //             "feeling": null,
-        //             "classification_confidence": "0.84348515340042",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 65,
-        //             "category": "Emplacement",
-        //             "section": "Nous avons apprécié notre séjour malgré quelques détails qui gâchent un peu le",
-        //             "feeling": null,
-        //             "classification_confidence": "0.81585311889148",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 67,
-        //             "category": "Emplacement",
-        //             "section": "Il y aurait besoin d un coup de rafraîchissement.",
-        //             "feeling": null,
-        //             "classification_confidence": "0.87718343734741",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 66,
-        //             "category": "Emplacement",
-        //             "section": "On a trouvé la résidence vieillissante.",
-        //             "feeling": null,
-        //             "classification_confidence": "0.87409514188711",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 68,
-        //             "category": "Emplacement",
-        //             "section": "Petit coin perché dans la montagne, mais qui vaut le détour.Nous avons passé un agréable we en pleine nature, petit village sympa et résidence au top.",
-        //             "feeling": null,
-        //             "classification_confidence": "0.80431008338928",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 64,
-        //             "category": "Ménage",
-        //             "section": "Logement un peu vieillissant cependant avec quelques petits travaux d'embellissement à prévoir mais bien équipé...Nous aurions souhaité néanmoins avoir une terrasse côté soleil et vue dégagée mais ça n'a pas été",
-        //             "feeling": null,
-        //             "classification_confidence": "0.88131147825241",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 17,
-        //             "category": "Ménage",
-        //             "section": "Test section 4",
-        //             "feeling": null,
-        //             "classification_confidence": "0.012478",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 7,
-        //             "category": "Ménage",
-        //             "section": "new section",
-        //             "feeling": null,
-        //             "classification_confidence": "0.012478",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 18,
-        //             "category": "Mobilier",
-        //             "section": "Test section 5",
-        //             "feeling": null,
-        //             "classification_confidence": "0.012478",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         }
-        //     ],
-        //     "category": "Acceuil;Accueil;Emplacement;Ménage;Mobilier",
-        //     "classification_feeling": {
-        //         "Acceuil": null,
-        //         "Accueil": null,
-        //         "Emplacement": null,
-        //         "Ménage": null,
-        //         "Mobilier": null
-        //     },
-        //     "classification_section": {
-        //         "Acceuil": "Test section 6",
-        //         "Accueil": "… En savoir plus",
-        //         "Emplacement": "Très beau séjour au calme.Résidence propre ( a par quelques truc)Idéal pour les personnes qui cherchent un cadre calme et reposant !",
-        //         "Ménage": "Logement un peu vieillissant cependant avec quelques petits travaux d'embellissement à prévoir mais bien équipé...Nous aurions souhaité néanmoins avoir une terrasse côté soleil et vue dégagée mais ça n'a pas été",
-        //         "Mobilier": "Test section 5"
-        //     }
-        // },
-        // {
-        //     "id": 1,
-        //     "author": "Anonymous",
-        //     "author_url": null,
-        //     "language": "en",
-        //     "profile_photo": null,
-        //     "rating": "2",
-        //     "comment": "“We had a short but very lovely stay at this beautiful place”",
-        //     "date_review": "2024-07-05 00:00:00",
-        //     "translated": null,
-        //     "source": "App (Private)",
-        //     "created_at": "2024-05-06 18:01:07",
-        //     "feeling": null,
-        //     "score": null,
-        //     "confidence": null,
-        //     "email": null,
-        //     "optin": null,
-        //     "country": null,
-        //     "date_visit": null,
-        //     "url": null,
-        //     "category_check": "Acceuil,Mobilier,Emplacement,Ménage,Service,Nourriture,Bar,Accueil,Test",
-        //     "updated_at": null,
-        //     "feeling_updated": null,
-        //     "summary": [],
-        //     "classifications": [
-        //         {
-        //             "classification_id": 19,
-        //             "category": "Acceuil",
-        //             "section": "Test section 6",
-        //             "feeling": null,
-        //             "classification_confidence": "0.012478",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 70,
-        //             "category": "Accueil",
-        //             "section": "… En savoir plus",
-        //             "feeling": null,
-        //             "classification_confidence": "0.80772823095321",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 69,
-        //             "category": "Emplacement",
-        //             "section": "Très beau séjour au calme.Résidence propre ( a par quelques truc)Idéal pour les personnes qui cherchent un cadre calme et reposant !",
-        //             "feeling": null,
-        //             "classification_confidence": "0.80844777822495",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 20,
-        //             "category": "Emplacement",
-        //             "section": "Test section 7",
-        //             "feeling": null,
-        //             "classification_confidence": "0.012478",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 62,
-        //             "category": "Emplacement",
-        //             "section": "L'arrivée a été un peu compliquée (en arrivée tardive nous avons eu le mauvais numéro de chambre dans l'enveloppe) mais après un coup de téléphone, le mal a été vite réparé !",
-        //             "feeling": null,
-        //             "classification_confidence": "0.82010415810312",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 63,
-        //             "category": "Emplacement",
-        //             "section": "Logement un peu vieillissant cependant avec quelques petits travaux d'embellissement à prévoir mais bien équipé...Nous aurions souhaité néanmoins avoir une terrasse côté soleil et vue dégagée mais ça n'a pas été",
-        //             "feeling": null,
-        //             "classification_confidence": "0.84348515340042",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 65,
-        //             "category": "Emplacement",
-        //             "section": "Nous avons apprécié notre séjour malgré quelques détails qui gâchent un peu le",
-        //             "feeling": null,
-        //             "classification_confidence": "0.81585311889148",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 67,
-        //             "category": "Emplacement",
-        //             "section": "Il y aurait besoin d un coup de rafraîchissement.",
-        //             "feeling": null,
-        //             "classification_confidence": "0.87718343734741",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 66,
-        //             "category": "Emplacement",
-        //             "section": "On a trouvé la résidence vieillissante.",
-        //             "feeling": null,
-        //             "classification_confidence": "0.87409514188711",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 68,
-        //             "category": "Emplacement",
-        //             "section": "Petit coin perché dans la montagne, mais qui vaut le détour.Nous avons passé un agréable we en pleine nature, petit village sympa et résidence au top.",
-        //             "feeling": null,
-        //             "classification_confidence": "0.80431008338928",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 64,
-        //             "category": "Ménage",
-        //             "section": "Logement un peu vieillissant cependant avec quelques petits travaux d'embellissement à prévoir mais bien équipé...Nous aurions souhaité néanmoins avoir une terrasse côté soleil et vue dégagée mais ça n'a pas été",
-        //             "feeling": null,
-        //             "classification_confidence": "0.88131147825241",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 17,
-        //             "category": "Ménage",
-        //             "section": "Test section 4",
-        //             "feeling": null,
-        //             "classification_confidence": "0.012478",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 7,
-        //             "category": "Ménage",
-        //             "section": "new section",
-        //             "feeling": null,
-        //             "classification_confidence": "0.012478",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         },
-        //         {
-        //             "classification_id": 18,
-        //             "category": "Mobilier",
-        //             "section": "Test section 5",
-        //             "feeling": null,
-        //             "classification_confidence": "0.012478",
-        //             "classification_confidence_feeling": null,
-        //             "id": 1
-        //         }
-        //     ],
-        //     "category": "Acceuil;Accueil;Emplacement;Ménage;Mobilier",
-        //     "classification_feeling": {
-        //         "Acceuil": null,
-        //         "Accueil": null,
-        //         "Emplacement": null,
-        //         "Ménage": null,
-        //         "Mobilier": null
-        //     },
-        //     "classification_section": {
-        //         "Acceuil": "Test section 6",
-        //         "Accueil": "… En savoir plus",
-        //         "Emplacement": "Très beau séjour au calme.Résidence propre ( a par quelques truc)Idéal pour les personnes qui cherchent un cadre calme et reposant !",
-        //         "Ménage": "Logement un peu vieillissant cependant avec quelques petits travaux d'embellissement à prévoir mais bien équipé...Nous aurions souhaité néanmoins avoir une terrasse côté soleil et vue dégagée mais ça n'a pas été",
-        //         "Mobilier": "Test section 5"
-        //     }
-        // }
-        ]
-    
 
     if (response.status == 200) {
+
         console.log(response)
         reviews_loader.value = false;
         optionsReview.value.max = response.data['count'];
         visibleData.value = response.data['data'];
+    }else{
+          reviews_loader.value=null;
     }
+
+     
 }
 
 
@@ -595,14 +267,16 @@ onMounted(async () => {
            //  start_date.value,end_date.value,terms.value,establishments.value)
         ])
 
-    
+    reviews_loader.value=null;
 
 });
 
 </script>
 
 <style scoped>
-
+#society__list{
+    margin-top: -15px;
+}
 .search_button{
    background-color: var(--color-danger);
 }
@@ -670,7 +344,7 @@ onMounted(async () => {
 
     .filters>* {
         flex-basis: 100%;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         max-width: 100%;
         gap: 0.1rem;
     }
@@ -695,7 +369,7 @@ onMounted(async () => {
 
     .filters>* {
         flex-basis: 100%;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         /* width: 500px; */
         gap: 0.5rem;
         /* margin-left: 200px; */
@@ -752,7 +426,7 @@ onMounted(async () => {
 
     .filters>* {
         flex-basis: 100%;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         /* width: 500px; */
         gap: 0.5rem;
         /* margin-left: 200px; */
@@ -809,7 +483,7 @@ onMounted(async () => {
 
     .filters>* {
         flex-basis: 100%;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         width: 500px;
         gap: 0.5rem;
         /* margin-left: 200px; */

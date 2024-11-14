@@ -71,6 +71,7 @@ export const homePageUrls = {
   EstablishmentRanking: { label: 'Score-based ranking', icon: 'solar:cup-star-linear' },
   EstablishmentList: { label: 'Customer', icon: 'ion:list' },
   EstablishmentListByTrend: { label: 'Trends', icon: 'gg:trending' },
+  CustomerSearchReview: { label: 'Search reviews', icon: 'gg:search' },
 }
 
 export const homeLeadgenUrls = {
