@@ -17,17 +17,17 @@
                 <el-date-picker v-model="end_date" type="date" :size="'large'" />
             </div>
             <div class="catfiltre">
-                <el-input v-model="terms" size="large" />
+                <el-input v-model="terms" v-on:keyup.enter="loadReviews(route.params.tag,optionsReview.page,optionsReview.rowLimit,optionsReview.current, start_date, end_date,terms,establishments)" size="large" />
             </div>
              <div class="catfiltre">
-                <el-button @click="  loadReviews(route.params.tag,optionsReview.page,optionsReview.rowLimit,optionsReview.current, start_date, end_date,terms,establishments)" size="large" type="primary" class="search_button" :icon="Search">Search</el-button>
+                <el-button  @click="  loadReviews(route.params.tag,optionsReview.page,optionsReview.rowLimit,optionsReview.current, start_date, end_date,terms,establishments)" size="large" type="primary" class="search_button" :icon="Search">Search</el-button>
             </div>
         </div>
     </div>
 
     <span v-if=" reviews_loader == true">Loading...</span>
 
-    <div class="society__list mt-5" v-if="visibleData.length > 0">
+    <div id= "society__list" class="society__list " v-if="visibleData.length > 0">
         <suspense>
 
               <div class="reviews__content">
@@ -89,12 +89,15 @@ import 'element-plus/es/components/date-picker/style/css'
 import services from '@Services/services.js';
 import moment from 'moment';
 import { useUserStore } from '@Stores/user.js';
-import { useRoute } from "vue-router";
+import { useRoute,useRouter } from "vue-router";
 import { Search } from '@element-plus/icons-vue'
 import CommentComponent from '@Components/utils/CommentComponent.vue';
 import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
+import { useAppStore } from "@Stores/app.js";
 
 const route = useRoute();
+const router = useRouter();
+const appStore = useAppStore();
 const establishments = ref('all');
 const terms = ref(null);
 const dataLoading = ref(true);
@@ -124,6 +127,8 @@ let reviewFeedbackData = ref({
     green: 0,
     feeling: 0
 });
+
+
 
 const handleEstablishmentDropdown = (type) => {
     const filters = type == 'other' ? establishments.value.filter(name => name != 'all') : ['all']
@@ -269,7 +274,9 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-
+#society__list{
+    margin-top: -15px;
+}
 .search_button{
    background-color: var(--color-danger);
 }
@@ -337,7 +344,7 @@ onMounted(async () => {
 
     .filters>* {
         flex-basis: 100%;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         max-width: 100%;
         gap: 0.1rem;
     }
@@ -362,7 +369,7 @@ onMounted(async () => {
 
     .filters>* {
         flex-basis: 100%;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         /* width: 500px; */
         gap: 0.5rem;
         /* margin-left: 200px; */
@@ -419,7 +426,7 @@ onMounted(async () => {
 
     .filters>* {
         flex-basis: 100%;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         /* width: 500px; */
         gap: 0.5rem;
         /* margin-left: 200px; */
@@ -476,7 +483,7 @@ onMounted(async () => {
 
     .filters>* {
         flex-basis: 100%;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         width: 500px;
         gap: 0.5rem;
         /* margin-left: 200px; */

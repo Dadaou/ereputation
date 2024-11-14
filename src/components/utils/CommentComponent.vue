@@ -39,11 +39,11 @@
                                 <span v-if="review.source === 'App (Private)'">
                                     &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
                                     <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
-                                    &nbsp;&nbsp;<em v-if="review.review_establishment_name">{{ review.review_establishment_name }}</em>
+                                    &nbsp;&nbsp;<em v-if="review.review_establishment_name" style="cursor: pointer;" @click="goToCompany(review.review_establishment_tag)">{{ review.review_establishment_name }}</em>
                                 </span>
                                 <span v-else>
                                   
-                                    &nbsp;&nbsp;<em v-if="review.review_establishment_name">{{ review.review_establishment_name }}</em>
+                                    &nbsp;&nbsp;<em v-if="review.review_establishment_name" style="cursor: pointer;" @click="goToCompany(review.review_establishment_tag)">{{ review.review_establishment_name }}</em>
                                     
                                 </span>
                             </li>
@@ -376,7 +376,9 @@ import { ElDatePicker, ElOption, ElSelect, ElTooltip, ElPopconfirm } from 'eleme
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import { Icon } from '@iconify/vue';
-import services from '@Services/services.js'
+import services from '@Services/services.js';
+import { useAppStore } from "@Stores/app.js";
+import { useRoute,useRouter } from "vue-router";
 
 
 const props = defineProps({
@@ -411,6 +413,8 @@ const emits = defineEmits(['reloadData', 'update-feeling']);
 
 const { width, height } = useWindowSize();
 const userStore = useUserStore();
+const router = useRouter();
+const appStore = useAppStore();
 const feedbackStore = useFeedbackStore();
 const companiesStore = useCompanyStore();
 const modalWidth = computed(() => {
@@ -429,6 +433,22 @@ const visibleCateg = ref(false)
 const visible2 = ref(false);
 const feeling_new_category = ref(null);
 const baseURL = ref(import.meta.env.VITE_APP_API_URL);
+
+
+const goToCompany = (establishment_tag) => {
+
+    appStore.isLoading = true;
+    setTimeout(() => {
+        router.push({
+            name: 'Establishment',
+            params: {
+                id: establishment_tag,
+                tag: userStore.customer.tag
+            },
+
+        });
+    }, 100);
+};
 
 
 const getFeeling = (categ, feel) => {
