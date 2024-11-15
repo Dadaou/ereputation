@@ -484,7 +484,7 @@ const submit = async () => {
     const data = {
         value1: isHashtag.value ? getHashtagValue(link.value) : (urlObject ? getValueUrl(link.value, urlObject.url) : link.value),
         provider: urlObject ? urlObject.uri : null,
-        enable: true,
+        enable: false,
         section: section.value,
         caption: caption.value,
     };
