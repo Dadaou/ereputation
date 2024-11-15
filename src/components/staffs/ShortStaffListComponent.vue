@@ -8,7 +8,7 @@
       <el-input v-model="search" size="small" placeholder="Type to search" />
     </div>
   </div>
-  <div class="mt-5 table__container">
+  <div class="mt-2 table__container">
     <el-table :data="filterTableData">
       <el-table-column width="100">
         <template #default="scope">

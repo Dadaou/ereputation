@@ -4,7 +4,7 @@
             <h2>Establishments</h2>
         </div> -->
     </div>
-    <div class="mt-5 table__container">
+    <div class="table__container">
         <el-table :data="establishments">
             <el-table-column width="100">
                 <template #default="scope">
