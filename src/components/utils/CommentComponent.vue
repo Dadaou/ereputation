@@ -37,13 +37,27 @@
                                 <i class="uil uil-map-pin-alt"></i>
                                 <span>{{ review.source }}</span>
                                 <span v-if="review.source === 'App (Private)'">
-                                    &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
-                                    <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
-                                    &nbsp;&nbsp;<em v-if="review.review_establishment_name" style="cursor: pointer;" @click="goToCompany(review.review_establishment_tag)">{{ review.review_establishment_name }}</em>
+                                    
+                                    <span v-if="review.review_establishment_name" style="display: flex;justify-content: space-between;align-items: center;">
+
+                                        &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
+                                        <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
+
+                                        <a class="establishment__link" @click="goToCompany(review.review_establishment_tag)">
+                                                <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important" class="society__name">{{ review.review_establishment_name }}</label>
+                                        </a>
+                                    </span>
+                                    <em v-else>
+                                        &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
+                                        <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
+                                    </em>
                                 </span>
                                 <span v-else>
                                   
-                                    &nbsp;&nbsp;<em v-if="review.review_establishment_name" style="cursor: pointer;" @click="goToCompany(review.review_establishment_tag)">{{ review.review_establishment_name }}</em>
+                                    <a v-if="review.review_establishment_name" class="establishment__link" @click="goToCompany(review.review_establishment_tag)">
+                                                <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important" class="society__name">{{ review.review_establishment_name }}</label>
+                                    </a>
+                                    <!-- <em v-if="review.review_establishment_name" style="cursor: pointer;" @click="goToCompany(review.review_establishment_tag)">{{ review.review_establishment_name }}</em> -->
                                     
                                 </span>
                             </li>
@@ -179,7 +193,14 @@
                 {{ review.summary[0].overview }}
             </ExpansionPanel>
             <div class="col-span-2">
-                <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 comment">{{ review.comment }}</p>
+                 <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 comment" 
+                    v-html="highlightWord(review.comment, terms)">
+                        
+                 </p>
+             <!--    <p >
+                  
+                {{ review.comment }}
+                </p> -->
             </div>
 
 
@@ -406,6 +427,10 @@ const props = defineProps({
     via: {
         type: String,
         default: "review"
+    },
+    terms: {
+        type: String,
+        default: ""
     }
 });
 
@@ -434,6 +459,14 @@ const visible2 = ref(false);
 const feeling_new_category = ref(null);
 const baseURL = ref(import.meta.env.VITE_APP_API_URL);
 
+const highlightWord=(_text, _word)=>{
+     
+      if (!_word) return _text;
+
+      const regex = new RegExp(`\\b${_word}\\b`, 'gi');
+
+      return _text.replace(regex, `<span style="color : white;background:var(--color-danger)">${_word}</span>`);
+    }
 
 const goToCompany = (establishment_tag) => {
 

@@ -33,13 +33,14 @@
               <div class="reviews__content">
                         <div class="reviews__pagination">
                             <PaginationComponent :options="optionsReview" v-if="visibleData.length > 0" @next="(option) => {
-                                loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
+                              
+                                loadReviews(route.params.tag,option.page,option.limit,option.current, start_date, end_date,terms,establishments)
                             }" @prev="(option) => {
-                                loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
+                                  loadReviews(route.params.tag,option.page,option.limit,option.current, start_date, end_date,terms,establishments)
                             }" />
                         </div>
                         <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
-                            @reloadData="(review) => reloadData(review)" :categories="categories" @update-feeling="updateFeeling" via='analysis' />
+                            @reloadData="(review) => reloadData(review)" :categories="categories" @update-feeling="updateFeeling" via='analysis' :terms="terms"/>
                         <div v-else role="status"
                             class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
                             v-for="index in 5" :key="index">
@@ -65,9 +66,9 @@
                         </div>
                         <div class="reviews__pagination">
                             <PaginationComponent :options="optionsReview" v-if="visibleData.length > 0" @next="(option) => {
-                                loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
+                                  loadReviews(route.params.tag,option.page,option.limit,option.current, start_date, end_date,terms,establishments)
                             }" @prev="(option) => {
-                                loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
+                                   loadReviews(route.params.tag,option.page,option.limit,option.current, start_date, end_date,terms,establishments)
                             }" />
                         </div>
              </div>
