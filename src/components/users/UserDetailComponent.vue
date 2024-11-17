@@ -104,6 +104,14 @@
                     </div>
                 </div>
             </el-tab-pane>
+            <el-tab-pane label="Subscription" name="subscription">
+                <div v-if="!isViewingNewSubscription" class="user__main__container">
+                    <SubscriptionsList @viewNewSubscription="isViewingNewSubscription = true" />
+                </div>
+                <div v-else>
+                    <NewsSubscription @back="isViewingNewSubscription = false" />
+                </div>
+            </el-tab-pane>
             <el-tab-pane label="Settings" name="customer">
                 <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
                     <template #content>
@@ -117,10 +125,10 @@
                                 <i class="uil uil-times-circle" @click="showModal = false"></i>
                             </div>
                         </div>
-                        <EditCustomerEdit @close-modal="showModal = false"/>
+                        <EditCustomerEdit @close-modal="showModal = false" />
                     </template>
                 </ModalComponent>
-                
+
                 <div class="grid gap-6 mb-6 grid-cols-1 w-full">
                     <div class="personal__info w-full">
                         <div class="info__title">
@@ -130,9 +138,9 @@
                             <div class="info__container">
                                 <div class="info__edit inline-flex w-full gap-6">
                                     <div class="image-container" @click="showModal = true" style="width:30%">
-                                    <img :src="customerLogo.logo" :alt="customerLogo.name" class="logo__img"/>
-                                    <div class="overlay">  <i class="uil uil-edit mr-1"></i>Change logo</div>
-                                </div>
+                                        <img :src="customerLogo.logo" :alt="customerLogo.name" class="logo__img" />
+                                        <div class="overlay"> <i class="uil uil-edit mr-1"></i>Change logo</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -207,10 +215,10 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, defineAsyncComponent, computed,watch } from 'vue';
+import { ref, onBeforeMount, defineAsyncComponent, computed, watch } from 'vue';
 import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from '@Stores/app.js';
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css';
 import services from '@Services/services.js';
@@ -245,6 +253,14 @@ const ColorViewer = defineAsyncComponent(
     () => import("@Components/utils/ColorViewComponent.vue")
 );
 
+const SubscriptionsList = defineAsyncComponent(
+    () => import("@Views/SubscriptionsListPageView.vue")
+);
+
+const NewsSubscription = defineAsyncComponent(
+    () => import("@Views/NewSubscriptionPageView.vue")
+);
+
 const date = ref();
 const flow = ref(['month', 'year', 'calendar']);
 const activeName = ref('user');
@@ -258,7 +274,7 @@ const modalWidth = computed(() => {
     let gap = (windowSize - width.value) / 19;
     return gap + 45;
 });
-
+const isViewingNewSubscription = ref(false);
 const colorData = ref({});
 const newColorData = ref({});
 
@@ -311,7 +327,7 @@ const submitCustomer = async () => {
         if (newColorData.value.title_color)
             formData['titlecolor'] = newColorData.value.title_color;
     }
-   
+
     await saveTheme(formData);
 
 };
@@ -410,7 +426,7 @@ const setCustomerLogo = async (tag) => {
     });
 
     if ((response.status == 200)) {
-      customerLogo.value = response.data;
+        customerLogo.value = response.data;
     }
 };
 
@@ -426,16 +442,16 @@ onBeforeMount(() => {
     user.value.email = userStore.user.email;
     user.value.address = userStore.user.address;
     colorData.value = {
-        'back_color': userStore.customer.back_color || appStore.account.back_color,
-        'font_color': userStore.customer.font_color || appStore.account.font_color,
-        'title_color': userStore.customer.title_color || appStore.account.title_color
+        'back_color': userStore?.customer?.back_color || appStore?.account?.back_color,
+        'font_color': userStore?.customer?.font_color || appStore?.account?.font_color,
+        'title_color': userStore?.customer?.title_color || appStore?.account?.title_color
     }
     newColorData.value = { ...colorData.value };
 });
 
 watch(() => userStore.customer.tag, (newTag) => {
     getCustomerLogo(newTag);
-},{ immediate: true });
+}, { immediate: true });
 
 
 function toggleEdit() {
@@ -656,6 +672,7 @@ input {
     color: grey;
     font-size: 14px;
 }
+
 .image-container {
     cursor: pointer;
     position: relative;
@@ -685,6 +702,7 @@ input {
     font-size: 12px;
     border-radius: 0 0 0.44rem 0.44rem;
 }
+
 @media screen and (max-width: 800px) {
     .user__main__container {
         width: 120%;

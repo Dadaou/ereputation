@@ -1,5 +1,8 @@
 <template>
   <div class="subscription__container">
+    <div class="links__header">
+      <button @click="$emit('back')" class="button__back">Back</button>
+    </div>
     <el-tabs v-model="activeName" type="card" class="demo-tabs subscription-tabs container">
       <el-tab-pane name="plan">
         <div class="tab-pane-header">
@@ -336,7 +339,23 @@ onMounted(() => {
 })
 
 </script>
-<style>
+<style scoped>
+.links__header {
+  display: flex;
+  align-items: center;
+}
+
+.links__header .button__back {
+  margin-left: auto;
+  background-color: var(--color-primary);
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  min-height: 25px !important;
+}
+
 button.isLoaded {
   display: flex;
   justify-content: center;

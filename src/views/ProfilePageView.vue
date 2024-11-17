@@ -3,59 +3,62 @@
     <div class="breadcrumb__container">
       <BreadcrumbComponent :data="breadcrumbData" />
     </div>
-    <div class="admin__container" >
+    <div class="admin__container">
       <button class="menu-toggle" @click="toggleMenu">
         <i class="uil uil-bars"></i>
-        <span v-if="selectedMenu" class="text-sm font-medium text-gray-700 dark:text-gray-400"> {{ selectedMenu }}</span>
+        <span v-if="selectedMenu" class="text-sm font-medium text-gray-700 dark:text-gray-400"> {{ selectedMenu
+          }}</span>
       </button>
       <div class="admin__menu" :class="{ 'menu-open': isMenuOpen }">
-        
-          <li>
-            <router-link :to="{ name: 'Personal_details' }"  @click.native="selectMenu('Account')">
-              <i class="uil uil-user"></i><span>Account</span>
-            </router-link>
-          </li>
-          <li>
+
+        <li>
+          <router-link :to="{ name: 'Personal_details' }" @click.native="selectMenu('Account')">
+            <i class="uil uil-user"></i><span>Account</span>
+          </router-link>
+        </li>
+        <!-- <li>
             <router-link :to="{ name: 'Subscription' }" active-class="active"  @click.native="selectMenu('Subscription')">
               <i class="uil uil-book"></i> <span>Subscription</span>
             </router-link>
-          </li>
-          <li>
-            <router-link :to="{ name: 'QRCodes' }" active-class="active"  @click.native="selectMenu('My QRCodes')">
-              <i class="uil uil-qrcode-scan"></i> <span>My QRCodes</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link :to="{ name: 'Screen' }" active-class="active"  @click.native="selectMenu('My Screens')">
-              <i class="uil uil-presentation"></i> <span>My Screens</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link :to="{ name: 'Advantage' }"  @click.native="selectMenu('Advantages')">
-              <i class="uil uil-bill"></i> <span>Advantages</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link :to="{ name: 'Partnership' }"  @click.native="selectMenu('Partnership')">
-              <Icon icon="lucide:handshake" style="margin-top: 3px;"/><span>Partnerships</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link :to="{ name: 'Contact' }"  @click.native="selectMenu('Contacts')">
-              <i class="uil uil-envelope"></i> <span>Contacts</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link :to="{ name: 'Discount_coupons' }"  @click.native="selectMenu('Discount coupons')">
-              <Icon icon="ic:outline-discount" style="margin-top: 3px;"/> <span>Discount coupons</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link :to="{ name: 'Parameters', params:{tag: route.params.tag, tab: 'establishments', sub_tab:'establishments_list' } }" active-class="active"  @click.native="selectMenu('Parameters')" :class="{ active: isActive('Parameters') }">
-              <i class="uil uil-setting"></i> <span>Parameters</span>
-            </router-link>
-          </li>
-   
+          </li> -->
+        <li>
+          <router-link :to="{ name: 'QRCodes' }" active-class="active" @click.native="selectMenu('My QRCodes')">
+            <i class="uil uil-qrcode-scan"></i> <span>My QRCodes</span>
+          </router-link>
+        </li>
+        <li>
+          <router-link :to="{ name: 'Screen' }" active-class="active" @click.native="selectMenu('My Screens')">
+            <i class="uil uil-presentation"></i> <span>My Screens</span>
+          </router-link>
+        </li>
+        <li>
+          <router-link :to="{ name: 'Advantage' }" @click.native="selectMenu('Advantages')">
+            <i class="uil uil-bill"></i> <span>Advantages</span>
+          </router-link>
+        </li>
+        <li>
+          <router-link :to="{ name: 'Partnership' }" @click.native="selectMenu('Partnership')">
+            <Icon icon="lucide:handshake" style="margin-top: 3px;" /><span>Partnerships</span>
+          </router-link>
+        </li>
+        <li>
+          <router-link :to="{ name: 'Contact' }" @click.native="selectMenu('Contacts')">
+            <i class="uil uil-envelope"></i> <span>Contacts</span>
+          </router-link>
+        </li>
+        <li>
+          <router-link :to="{ name: 'Discount_coupons' }" @click.native="selectMenu('Discount coupons')">
+            <Icon icon="ic:outline-discount" style="margin-top: 3px;" /> <span>Discount coupons</span>
+          </router-link>
+        </li>
+        <li>
+          <router-link
+            :to="{ name: 'Parameters', params: {tag: route.params.tag, tab: 'establishments', sub_tab:'establishments_list' } }"
+            active-class="active" @click.native="selectMenu('Parameters')" :class="{ active: isActive('Parameters') }">
+            <i class="uil uil-setting"></i> <span>Parameters</span>
+          </router-link>
+        </li>
+
       </div>
       <div class="all__content">
         <RouterView />
@@ -66,7 +69,7 @@
 
 <script setup>
 import { ref, computed, provide, watch } from 'vue';
-import { RouterView, useRoute, useRouter} from 'vue-router';
+import { RouterView, useRoute, useRouter } from 'vue-router';
 import BreadcrumbComponent from '@Components/utils/BreadcrumbComponent.vue';
 import { Icon } from '@iconify/vue';
 
@@ -103,7 +106,7 @@ const selectMenu = (menuName) => {
 
 const isActive = (menuName) => {
   if (menuName === 'Parameters') {
-    return ['establishments','urls', 'competitors', 'staffs', 'services', 'events', 'categories'].includes(route.params.tab);
+    return ['establishments', 'urls', 'competitors', 'staffs', 'services', 'events', 'categories'].includes(route.params.tab);
   }
   return route.name === menuName;
 };
@@ -192,7 +195,7 @@ watch(route, (newRoute) => {
   width: 95% !important;
   margin: auto;
   overflow-x: hidden;
-  
+
 }
 
 .breadcrumb__container {
@@ -277,7 +280,7 @@ watch(route, (newRoute) => {
   cursor: pointer;
 }
 
-.menu-open  {
+.menu-open {
   display: block;
   /* Affiche toujours la liste du menu sur les petits écrans */
 }
@@ -289,15 +292,15 @@ watch(route, (newRoute) => {
 
 /* Pour les petits écrans (par exemple, les téléphones mobiles) */
 @media screen and (max-width: 800px) {
-  
+
   .admin__menu {
     position: auto;
     padding-bottom: 1%;
     margin-top: -10%;
-}
+  }
 
   .admin__menu.menu-open {
-    display: none; 
+    display: none;
   }
 
   .menu-toggle {
@@ -335,14 +338,15 @@ watch(route, (newRoute) => {
   .admin__menu li a {
     flex-direction: row;
   }
-  
+
   .menu-toggle span {
     margin-left: 8px;
     font-size: 0.9rem;
     white-space: nowrap;
-  
+
   }
- /* .menu-toggle i {
+
+  /* .menu-toggle i {
     font-size: 1.5rem;
   }*/
 

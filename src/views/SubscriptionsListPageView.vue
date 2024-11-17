@@ -33,13 +33,12 @@
 
                 </div>
             </div>
-            <RouterLink :to="`/customer/${userStore.user.customer.tag}/account/subscriptions/new`"
-                class="subscription-item new">
+            <button @click="$emit('viewNewSubscription')" class="subscription-item new">
                 <div class="text-center">
                     <i class="uil uil-plus-circle" style="font-size: 64px;"></i>
                     <p style="font-size: 14px;">New subscription</p>
                 </div>
-            </RouterLink>
+            </button>
         </div>
     </div>
 </template>
