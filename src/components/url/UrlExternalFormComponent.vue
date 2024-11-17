@@ -150,7 +150,7 @@ const submit = async () => {
         externalUrl: true,
         value1: link.value,
         provider: null,
-        enable: true,
+        enable: false,
         section: section.value,
         caption: caption.value,
     };
