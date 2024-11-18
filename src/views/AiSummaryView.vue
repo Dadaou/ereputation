@@ -10,18 +10,15 @@
         <div v-else-if="summaries.length > 0">
             <div v-if="summaries[0] && summaries[0].overview" class="summary-card">
                 <h2 v-if="summaries[0].datefrom && summaries[0].dateto && summaries[0].overview">
-                    Summary reviews between {{ moment(summaries[0].datefrom).format('D MMMM YYYY') }} and
-                    {{ moment(summaries[0].dateto).format('D MMMM YYYY') }} - {{
-                        summaries[0].establishment_name }}</h2>
+                    Summary reviews {{ summaries[0].date_to_display }} - 
+                    {{ summaries[0].establishment_name }}</h2>
                 <h2 v-else>Summary - {{ summaries[0].establishment_name }}</h2>
                 <p v-html="formatOverview(summaries[0].overview)"></p>
             </div>
-            <ExpansionPanel v-if="summaries.length > 0" title="AI History">
-                <div v-for="summary in summaries" :key="summary.id" class="summary-card">
-                    <h2 v-if="summary.datefrom && summary.dateto && summary.overview">Summary reviews between {{
-                        moment(summary.datefrom).format('D MMMM YYYY') }} and
-                        {{ moment(summary.dateto).format('D MMMM YYYY') }} - {{
-                            summary.establishment_name }}</h2>
+            <ExpansionPanel v-if="filteredSummary.length > 0" title="AI History">
+                <div v-for="summary in filteredSummary" :key="summary.id" class="summary-card">
+                    <h2 v-if="summary.datefrom && summary.dateto && summary.overview">
+                       Summary reviews {{ summary.date_to_display }} - {{ summary.establishment_name }}</h2>
                     <h2 v-else>Summary - {{ summary.establishment_name }}</h2>
                     <p v-html="formatOverview(summary.overview)"></p>
                 </div>
@@ -35,7 +32,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import services from '@Services/services.js';
 import { useRoute } from "vue-router";
 import moment from 'moment';
@@ -60,7 +57,7 @@ const loadAiSummary = async () => {
                 });
             });
             if (response.status === 200 && response.data) {
-                summaries.value = response.data;
+                addNewKeyToDisplayDate(response.data)
             } else {
                 console.error('Error fetching summaries:', response);
             }
@@ -95,9 +92,32 @@ const handleToggleYear = () => {
     //     .catch(err => console.error(err));
 }
 
+const addNewKeyToDisplayDate = (data) => {
+
+    data.forEach(item => {
+
+        if (item.periodicity === 'MONTH'){
+            item.date_to_display = `of ${moment(item.datefrom).format('MMMM YYYY')}`
+        }
+
+        else if (item.periodicity === 'YEAR') {
+            item.date_to_display = `of ${moment(item.datefrom).format('YYYY')}`
+        }
+    })
+
+    summaries.value = data
+
+}
+
+const filteredSummary = computed(() => {
+    return summaries.value.slice(1)
+})
+
 onMounted(async () => {
     loadAiSummary()
 });
+
+
 </script>
 
 <style scoped>
@@ -162,6 +182,12 @@ onMounted(async () => {
     color: white;
     font-weight: bold;
     background-color: var(--light-color-bg2);
+}
+
+p {
+    font-size: 16px;
+    font-family: Montserrat, sans-serif;
+    text-align: justify;
 }
 
 @media screen and (max-width: 568px) {
