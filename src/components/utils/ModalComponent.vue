@@ -1,4 +1,4 @@
-s<template>
+<template>
 <transition name="modal-flip">
     <div v-if="showModal" class="modal">
         <div class="modal-content" :style="{'width':`${width}%`}">

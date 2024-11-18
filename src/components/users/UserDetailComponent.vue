@@ -3,7 +3,6 @@
         <el-tabs v-model="activeName" type="card" class="demo-tabs">
             <el-tab-pane label="Personal details" name="user">
                 <div class="flex flex-row justify-between">
-
                     <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
                         <template #content>
                             <div class="modal__header mb-5">
@@ -125,7 +124,7 @@
                                 <i class="uil uil-times-circle" @click="showModal = false"></i>
                             </div>
                         </div>
-                        <EditCustomerEdit @close-modal="showModal = false" />
+                        <EditCustomerEdit @logo-updated="updateLogo" @close-modal="showModal = false" />
                     </template>
                 </ModalComponent>
 
@@ -139,7 +138,9 @@
                                 <div class="info__edit inline-flex w-full gap-6">
                                     <div class="image-container" @click="showModal = true" style="width:30%">
                                         <img :src="customerLogo.logo" :alt="customerLogo.name" class="logo__img" />
-                                        <div class="overlay"> <i class="uil uil-edit mr-1"></i>Change logo</div>
+                                        <div class="overlay">
+                                            <i class="uil uil-edit mr-1"></i>Change logo
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -300,6 +301,9 @@ const updateColorData = (value, key) => {
     newColorData.value[key] = value;
 }
 
+const updateLogo = (newLogoUrl) => {
+    customerLogo.value.logo = newLogoUrl;
+};
 
 const updateUser = () => {
     editing.value = true;
@@ -431,9 +435,9 @@ const setCustomerLogo = async (tag) => {
 };
 
 const getCustomerLogo = async (tag) => {
-    if (!customerLogo.value) await setCustomerLogo(tag)
-    return customerLogo.value
-}
+    await setCustomerLogo(tag);
+    return customerLogo.value;
+};
 
 onBeforeMount(() => {
     getCustomerLogo(userStore.customer.tag);

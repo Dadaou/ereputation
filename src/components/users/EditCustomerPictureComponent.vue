@@ -1,15 +1,16 @@
 <template>
     <form id="editForm" @submit.prevent="upload">
         <div class="md:order-2">
-            <div class="image-selector border-gray-300" :class="!previewImage && 'hover'" @click="selectImg"
-                @mouseover="imageInputHover = true" @mouseleave="imageInputHover = false">
+            <div class="image-selector border-gray-300" :class="[{ hover: !previewImage }, { 'drag-over': isDragging }]"
+                @click="selectImg" @mouseover="imageInputHover = true" @mouseleave="imageInputHover = false"
+                @dragover.prevent="onDragOver" @dragleave.prevent="onDragLeave" @drop.prevent="onDrop">
                 <img v-if="previewImage" :src="previewImage" class="uploading-image" />
                 <i v-else class="uil uil-image-plus"></i>
                 <div v-if="imageInputHover && previewImage" class="img-hover">
                     <i class="uil uil-image-edit"></i>
                 </div>
             </div>
-            <input id="logoInput" name="file" type="file" @change=updateImage style="display:none">
+            <input id="logoInput" name="file" type="file" @change="updateImage" style="display:none">
         </div>
         <div
             class="flex flex-wrap gap-3 items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600 mt-5">
@@ -30,14 +31,25 @@ import { ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useUserStore } from "@Stores/user.js";
 import services from '@Services/services.js';
+
 const userStore = useUserStore();
 const previewImage = ref(null);
 const imageInputHover = ref(false);
 const imgHasChanged = ref(false);
 const selectedLogo = ref(null);
+const isDragging = ref(false);
 const emit = defineEmits(['close-modal']);
+
 const updateImage = (e) => {
     const image = e.target.files[0];
+    handleFile(image);
+};
+
+const handleFile = (image) => {
+    if (!image || !image.type.startsWith('image/')) {
+        ElMessage.error('Please upload a valid image file.');
+        return;
+    }
     selectedLogo.value = image;
     const reader = new FileReader();
     reader.readAsDataURL(image);
@@ -51,6 +63,19 @@ const selectImg = () => {
     document.getElementById('logoInput').click();
 };
 
+const onDragOver = () => {
+    isDragging.value = true;
+};
+
+const onDragLeave = () => {
+    isDragging.value = false;
+};
+
+const onDrop = (event) => {
+    isDragging.value = false;
+    const image = event.dataTransfer.files[0];
+    handleFile(image);
+};
 
 const upload = async () => {
     if (!imgHasChanged.value || !previewImage.value) {
@@ -62,16 +87,16 @@ const upload = async () => {
     formData.append('file', selectedLogo.value);
     formData.append('customer', userStore.customer.tag);
 
-
     try {
         const response = await new Promise((resolve) => {
             services.post_Record_formData('/customer/update_logo', formData, (response) => {
-                resolve(response)
-            }, false);
+                resolve(response);
+            });
         });
+
         if (response.status === 200) {
-            previewImage.value = response.data.logoUrl;
             ElMessage.success('Logo updated successfully!');
+            emit('logo-updated', URL.createObjectURL(selectedLogo.value));
             emit('close-modal');
         } else {
             ElMessage.error(response.data.message || 'An error occurred while uploading the logo.');
