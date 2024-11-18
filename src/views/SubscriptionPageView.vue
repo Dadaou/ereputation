@@ -310,7 +310,7 @@ const showPostErrorMsg = () => {
 }
 
 const plans = ref([]);
-
+const planList = ref([]);
 const chatID = ref(import.meta.env.VITE_3CX_CHAT_ID);
 
 const activeName = ref('user-info');
@@ -340,19 +340,52 @@ provide('checkout_to_update', checkout_to_update);
 
 const router = useRouter();
 
-const setPlan = (code, quantity, unity) => {
-  if (code == '657b0feaa0258') {
-    planInfo.value['planName'] = 'All Inclusive'
-    planInfo.value['plan'] = { tag: '66e2cc89a2fa1' }
-  } else {
-    planInfo.value['planName'] = 'Lead-Gen'
-    planInfo.value['plan'] = { tag: '66e2cc52f03f4' }
+const getPlan = async(tag) => {
+
+  const response = await new Promise((resolve) => {
+    services.get_Record(`plan/list`, (response) => {
+      resolve(response)
+      if (response.status == 404) {
+        console.log("error getting plan list")
+      }
+    }, false, true)
+  })
+
+  if(response.status === 200 && response.data) {
+     planList.value = response.data
   }
 
-  planInfo.value['quantity'] = quantity
-  planInfo.value['unit'] = unity
-  planInfo.value['code'] = code
+}
 
+const filterPlan = (tag) => {
+  const filteredArray = planList.value.filter(item => item.tag === tag);
+  return filteredArray
+}
+
+
+const setPlan = (code, quantity, unity) => {
+
+  /*if (code == '657b0feaa0258') {
+    planInfo.value['planName'] = 'All Inclusive'
+    planInfo.value['plan'] = { tag: '657b0feaa0258' }
+  } else {
+    planInfo.value['planName'] = 'Lead-Gen'
+    planInfo.value['plan'] = { tag: '657b0fbfdca0b' }
+  }*/
+
+  const plan = filterPlan(code)
+
+  if(plan.length !== 0) {
+
+    planInfo.value['planName'] = plan[0].name
+    planInfo.value['plan'] = { tag: plan[0].tag }
+
+    planInfo.value['quantity'] = quantity
+    planInfo.value['unit'] = unity
+    planInfo.value['code'] = code
+  }
+
+  else console.log("empty plan")
 }
 
 const createAccount = async () => {
@@ -478,6 +511,8 @@ onBeforeMount(async () => {
 
     const { c, q, u } = route.query
 
+    await getPlan()
+
     if (c && q && u) {
       setPlan(c, q, u)
     }
@@ -524,6 +559,7 @@ onMounted(async () => {
 
   referrerUrl.value = document.referrer
 })
+
 
 onBeforeUnmount(() => {
   showSpinner.value = false
