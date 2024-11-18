@@ -6,18 +6,21 @@
                 <el-tab-pane label="Categorization" name="categorization">
 
                     <AnalysisCategory text="Your customers appreciated your establishment for the following services"
-                        :ratings="ratingsCondition1" condition='condition1' v-if="ratingsCondition1.length > 0 && noScore !==false"
-                        class="mb-4" @labelChange="handleLabelChange" />
+                        :ratings="ratingsCondition1" condition='condition1'
+                        v-if="ratingsCondition1.length > 0 && noScore !== false" class="mb-4"
+                        @labelChange="handleLabelChange" />
 
                     <AnalysisCategory
                         text="Your customers believe that you can improve the quality of the following services"
-                        :ratings="ratingsCondition2" condition='condition2' v-if="ratingsCondition2.length > 0 && noScore !==false"
-                        class="mb-4" @labelChange="handleLabelChange" />
+                        :ratings="ratingsCondition2" condition='condition2'
+                        v-if="ratingsCondition2.length > 0 && noScore !== false" class="mb-4"
+                        @labelChange="handleLabelChange" />
 
                     <AnalysisCategory
                         text="It is necessary to establish actions in order to improve the following areas"
-                        :ratings="ratingsCondition3" condition='condition3' v-if="ratingsCondition3.length > 0 && noScore !==false"
-                        class="mb-4" @labelChange="handleLabelChange" />
+                        :ratings="ratingsCondition3" condition='condition3'
+                        v-if="ratingsCondition3.length > 0 && noScore !== false" class="mb-4"
+                        @labelChange="handleLabelChange" />
 
                     <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']" v-if="visibleData.length > 0">
                         <div class="containerChart" ref="scrollContainer1"
@@ -40,7 +43,8 @@
                         <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" />
                     </div>
 
-                    <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']" v-if="showConfidenceChart && noScore !== false">
+                    <div :class="['chartBox mt-5', isLoading ? 'loaded' : '']"
+                        v-if="showConfidenceChart && noScore !== false">
                         <div class="containerChart" ref="scrollContainer2"
                             @scroll="syncScroll('scrollContainer2', 'scrollContainer1')">
                             <div :class="['containerBody2 mt-5', !isLoading ? '' : 'loading']">
@@ -70,7 +74,8 @@
                             }" />
                         </div>
                         <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
-                            @reloadData="(review) => reloadData(review)" :categories="categories" @update-feeling="updateFeeling" via='analysis' />
+                            @reloadData="(review) => reloadData(review)" :categories="categories"
+                            @update-feeling="updateFeeling" via='analysis' />
                         <div v-else role="status"
                             class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
                             v-for="index in 5" :key="index">
@@ -198,7 +203,7 @@
 
             <el-date-picker v-model="end_date" placeholder="End date" :size="'large'" />
         </div>
-        <div class="px-2 w-full my-2" v-if="activeName !== 'trends' && activeName !== 'analysis_competitors'">
+        <div class="px-2 w-full my-2" v-if="activeName == 'categorization'">
             <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
                 :max-collapse-tags="3" placeholder="select categories" size="large">
                 <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
@@ -316,7 +321,7 @@
                     selectedFeeling = feeling
                 }" :default="feelings[0]" /> -->
 
-            <div class="date__filter" v-if="activeName !== 'trends'  && activeName !== 'analysis_competitors'">
+            <div class="date__filter" v-if="activeName == 'categorization'">
                 <div class="text-sm title">Filter by category</div>
                 <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
                     :max-collapse-tags="3" placeholder="select categories" size="large">
@@ -339,7 +344,7 @@
             }" :default="timePeriods[0]" /> -->
         </div>
 
-        <CommunityFeedbackComponent v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' && showConfidenceChart && noScore !== false"
+        <CommunityFeedbackComponent v-if="activeName == 'categorization' && showConfidenceChart && noScore !== false"
             :reviewFeedbackData="reviewFeedbackData" />
         <el-tooltip ref="tooltipRef" :visible="desc.visible" :virtual-ref="buttonRef" virtual-triggering
             popper-class="singleton-tooltip" placement="top">
@@ -347,10 +352,11 @@
                 <span> {{ desc.text }} </span>
             </template>
         </el-tooltip>
-        <div class="content_legend" v-if="activeName !== 'trends' && activeName !== 'analysis_competitors' && legendData.length > 0">
+        <div class="content_legend" v-if="activeName == 'categorization' && legendData.length > 0">
             <div v-for="(item, index) in legendData" :key="index">
                 <div class="container_legend society__location" @click="handleLegendChange(item.name)">
-                    <div class="card_legend society__location" :style="{ backgroundColor: item.color}"></div> {{ item.name }}
+                    <div class="card_legend society__location" :style="{ backgroundColor: item.color }"></div> {{
+                    item.name }}
                 </div>
             </div>
         </div>
@@ -459,41 +465,41 @@ let reviewFeedbackData = ref({
 });
 
 // calcul sentiment analysis
-const calculSentimentAnalysis = (_score) =>{
+const calculSentimentAnalysis = (_score) => {
 
-        
-        let rawWidth = _score * 100 / 2
-        let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
-        let feeling = rawWidth > 0 ? 1 : -1
-        let red = 255
-        let green = 255
-        if (feeling == -1) {
-            red = 255
-            green = 255 - ((_score * 100 * 255) / 100)
-        } else {
-            green = 255
-            red = 255 - ((_score * 100 * 255) / 100)
-        }
 
-       let _reviewFeedbackData = {
-            width: width,
-            red: red,
-            green: green,
-            feeling: feeling,
-            score: _score
-        }
-        console.log(_score)
-           console.log(rawWidth)
-        return _reviewFeedbackData;
+    let rawWidth = _score * 100 / 2
+    let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
+    let feeling = rawWidth > 0 ? 1 : -1
+    let red = 255
+    let green = 255
+    if (feeling == -1) {
+        red = 255
+        green = 255 - ((_score * 100 * 255) / 100)
+    } else {
+        green = 255
+        red = 255 - ((_score * 100 * 255) / 100)
+    }
+
+    let _reviewFeedbackData = {
+        width: width,
+        red: red,
+        green: green,
+        feeling: feeling,
+        score: _score
+    }
+    console.log(_score)
+    console.log(rawWidth)
+    return _reviewFeedbackData;
 }
 
-const updateFeeling = (newFeedbackData) =>{
-   
+const updateFeeling = (newFeedbackData) => {
+
     reviewFeedbackData.value = newFeedbackData;
 }
 
-provide('reviewFeedbackData',reviewFeedbackData);
-provide('calculSentimentAnalysis',calculSentimentAnalysis);
+provide('reviewFeedbackData', reviewFeedbackData);
+provide('calculSentimentAnalysis', calculSentimentAnalysis);
 
 //Fin
 const _categories = computed(() => {
@@ -528,14 +534,14 @@ const ratingChart = ref({
     datasets: []
 })
 // const colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
-const colors = ['#013B54', '#018BAD','#DA9A55','#4EA9CC', '#01DFFF', '#7FA8BB', '#0A8D87BF',  '#01BDDE', '#573427', '#915138', '#FCB08F', '#91CBDE','#A483BD', '#458EE9', '#01254F', '#014A93']
+const colors = ['#013B54', '#018BAD', '#DA9A55', '#4EA9CC', '#01DFFF', '#7FA8BB', '#0A8D87BF', '#01BDDE', '#573427', '#915138', '#FCB08F', '#91CBDE', '#A483BD', '#458EE9', '#01254F', '#014A93']
 
 const confidenceChart = ref({
     labels: [],
     datasets: []
 })
-const showConfidenceChart=ref(true);
-const showRatingChart=ref(true)
+const showConfidenceChart = ref(true);
+const showRatingChart = ref(true)
 const ratings = ref([])
 
 const salesAnalysis = ref(null)
@@ -546,21 +552,21 @@ const salesAnalysis = ref(null)
 const ratingsCondition1 = computed(() => {
     let data = ratings.value;
     data = data.filter(value => value.avg_rating >= 0.5)
-   
+
     return data
 })
 
 const ratingsCondition2 = computed(() => {
     let data = ratings.value;
     data = data.filter(value => value.avg_rating < 0.5 && value.avg_rating >= 0)
-   
+
     return data
 })
 
 const ratingsCondition3 = computed(() => {
     let data = ratings.value;
     data = data.filter(value => value.avg_rating < 0)
- 
+
     return data
 })
 
@@ -574,7 +580,7 @@ appStore.setCurrentPage({
 const ratingsCondition4 = computed(() => {
     let data = ratings.value;
     data = data.filter(value => value.avg_rating < 4)
-        console.log('< 4',data)
+    console.log('< 4', data)
     return data
 })
 const starParams = route.query.star;
@@ -722,7 +728,7 @@ const handleLabelChange = (selectedLabel) => {
 }
 
 const loadCategories = async (tag) => {
-       const api = `customer/establishment/categorizations?tag=${tag}`
+    const api = `customer/establishment/categorizations?tag=${tag}`
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
             resolve(response)
@@ -730,10 +736,10 @@ const loadCategories = async (tag) => {
     });
 
     if (response.status == 200) {
-         if (response.data) {
-            let cats=[];
-            response.data.forEach((_cat,_index)=>{
-                cats.push({id:_index,category:_cat});
+        if (response.data) {
+            let cats = [];
+            response.data.forEach((_cat, _index) => {
+                cats.push({ id: _index, category: _cat });
             });
 
             categories.value = cats;
@@ -840,7 +846,7 @@ const transformData = (chartData) => {
 
 
 
-    const { labels, datasets,categorizations } = chartData;
+    const { labels, datasets, categorizations } = chartData;
     //scores or confidence chart
     let plotData1 = {
         labels: labels,
@@ -858,53 +864,53 @@ const transformData = (chartData) => {
 
     let legends = []
     ratings.value = []
-    let label_category=[];
-     noScore.value=false;
- 
-    
+    let label_category = [];
+    noScore.value = false;
+
+
     datasets.forEach((category, index) => {
         const { avg_score, feeling, scores, data, label } = category
         // const color = services.generateColor(label)
         const color = colors[index]
         const allScoresZero = scores.every(score => score == 0)
-       
-      
-       let categoryShow=false;
-       let addInChart = false;
-       let reviewHaveSentiment = false;
-     
-       categorizations.forEach((_categorization)=>{
+
+
+        let categoryShow = false;
+        let addInChart = false;
+        let reviewHaveSentiment = false;
+
+        categorizations.forEach((_categorization) => {
 
             if (_categorization.category == label && _categorization.classification_feeling[_categorization.category] && _categorization.classification_feeling[_categorization.category] != null) {
                 categoryShow = true;
-               reviewHaveSentiment = true;
+                reviewHaveSentiment = true;
 
             }
 
             if (_categorization.category == label && _categorization.classification_feeling[_categorization.category] && _categorization.classification_feeling[_categorization.category] != null && _categorization.feeling) {
                 addInChart = true;
-             
+
             }
 
-       });
+        });
 
-         if (!allScoresZero && addInChart == true) {
-            noScore.value =true;
-           
+        if (!allScoresZero && addInChart == true) {
+            noScore.value = true;
+
         }
 
 
         if (categoryShow == true && reviewHaveSentiment == true) {
-             
+
             if (addInChart == true) {
                 plotData1.datasets.push({
-                label: label,
-                backgroundColor: color,
-                borderColor: color,
-                data: scores,
-                // pointRadius: 0,
-                // fill: false,
-                tension: 0.1
+                    label: label,
+                    backgroundColor: color,
+                    borderColor: color,
+                    data: scores,
+                    // pointRadius: 0,
+                    // fill: false,
+                    tension: 0.1
                 })
             }
             plotData2.datasets.push({
@@ -921,32 +927,32 @@ const transformData = (chartData) => {
 
             label_category.push(label);
 
-             scores.forEach((_sco)=>{
-                 if (_sco != 0) {
-                scoreLength++;
-                score += _sco;
+            scores.forEach((_sco) => {
+                if (_sco != 0) {
+                    scoreLength++;
+                    score += _sco;
                 }
-             })
+            })
 
             legends.push({
-            label: label,
-            color: color,
-            avg_score,
-            feeling
+                label: label,
+                color: color,
+                avg_score,
+                feeling
             })
         }
 
-      
 
-     
+
+
     })
 
     ratingChart.value = plotData2;
-      if (plotData2.datasets.length <= 0) {
-            showRatingChart.value = false;
-        }
-    
-  
+    if (plotData2.datasets.length <= 0) {
+        showRatingChart.value = false;
+    }
+
+
 
     if (legends.length > 0) {
         legendData.value = []
@@ -973,37 +979,37 @@ const transformData = (chartData) => {
     }
     //let missing_category_response = getReviewsNoClassificate(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, label_category, language.value)
 
-   // missing_category_response.then((rep)=>{
-        // let newDatasetsFilter={
-        //     labels:plotData1.labels,
-        //     datasets:plotData1.datasets.filter(_dat=>rep.includes(_dat.label) == false)
-        // }
+    // missing_category_response.then((rep)=>{
+    // let newDatasetsFilter={
+    //     labels:plotData1.labels,
+    //     datasets:plotData1.datasets.filter(_dat=>rep.includes(_dat.label) == false)
+    // }
 
-        if ( noScore.value == false ) {
-            showConfidenceChart.value = false;
-            noScore.value=false
- 
-        }else{
+    if (noScore.value == false) {
+        showConfidenceChart.value = false;
+        noScore.value = false
 
-             confidenceChart.value = plotData1;
-             console.log(confidenceChart.value)
-              
-            if (scoreLength > 0) {
-                avgScore.value = score/scoreLength;
-            } else {
-                avgScore.value = 0;
-            }
+    } else {
 
-            let feeling_score = calculSentimentAnalysis(avgScore.value);
-            reviewFeedbackData.value = feeling_score;
-              showConfidenceChart.value = true;
+        confidenceChart.value = plotData1;
+        console.log(confidenceChart.value)
 
+        if (scoreLength > 0) {
+            avgScore.value = score / scoreLength;
+        } else {
+            avgScore.value = 0;
         }
-     
-        
-   // })
 
-  
+        let feeling_score = calculSentimentAnalysis(avgScore.value);
+        reviewFeedbackData.value = feeling_score;
+        showConfidenceChart.value = true;
+
+    }
+
+
+    // })
+
+
     loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, label_category, language.value)
 }
 
@@ -1048,12 +1054,12 @@ const starFilter = (star) => {
 watch([start_date, end_date, selectedWebsites, categoryFilters], () => {
     categoryFilters.value = categoryFilters.value.length > 0 ? categoryFilters.value : ['all']
     //loadAnalysisData(companyId, start_date.value, end_date.value, categoryFilters.value)
-   loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
+    loadReviews(companyId, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
 })
 
 
 const getReviewsNoClassificate = async (tag, page, limit, current, dateStart, dateEnd, source, stars, category, language) => {
-  
+
 
     let apiBase = '/review/by_establishment';
     let apiParams = `tag=${tag}&page=${page}&limit=${limit}&platform=${'all'}`;
@@ -1079,30 +1085,30 @@ const getReviewsNoClassificate = async (tag, page, limit, current, dateStart, da
 
     if (response.status == 200) {
 
-       
-       let cats=[];
-       const responses = response.data['data'];
-        let allCategories=[];
 
-       
-        responses.forEach((_rev)=>{
-           
-            _rev.classifications.forEach((_cat)=>{
-                  
-                 if (_cat.feeling != null) {
-                     cats.push(_cat.category);
-                 }
-                 allCategories.push(_cat.category);
+        let cats = [];
+        const responses = response.data['data'];
+        let allCategories = [];
+
+
+        responses.forEach((_rev) => {
+
+            _rev.classifications.forEach((_cat) => {
+
+                if (_cat.feeling != null) {
+                    cats.push(_cat.category);
+                }
+                allCategories.push(_cat.category);
             });
-           
+
         })
 
-     
-        allCategories.forEach((_cat)=>{
 
-            let isMissing=true;
+        allCategories.forEach((_cat) => {
 
-            cats.forEach((_val)=>{
+            let isMissing = true;
+
+            cats.forEach((_val) => {
 
                 if (_val == _cat) {
                     isMissing = false
@@ -1112,11 +1118,11 @@ const getReviewsNoClassificate = async (tag, page, limit, current, dateStart, da
 
             if (isMissing) {
 
-                    if (reviews_missing_categ == '') {
-                        reviews_missing_categ = _cat
-                    } else {
-                        reviews_missing_categ = reviews_missing_categ+','+ _cat
-                    }
+                if (reviews_missing_categ == '') {
+                    reviews_missing_categ = _cat
+                } else {
+                    reviews_missing_categ = reviews_missing_categ + ',' + _cat
+                }
 
             }
 
@@ -1308,10 +1314,12 @@ const widthimage = (event) => {
         margin-top: 0px;
         border-radius: 10px;
     }
+
     .mediumClass {
         margin-top: 10px ! important;
         margin-bottom: 10px;
     }
+
     .largeClass {
         margin-top: 10px ! important;
         margin-bottom: 10px;
@@ -1333,12 +1341,12 @@ const widthimage = (event) => {
         margin-top: 0px;
         border-radius: 10px;
     }
-    
+
     .mediumClass {
         margin-top: 0px ! important;
         margin-bottom: 10px;
     }
-    
+
     .largeClass {
         margin-top: 20px ! important;
         margin-bottom: 10px;
@@ -1438,13 +1446,15 @@ p {
     margin-bottom: 30px;
     border-radius: 10px;
 }
+
 .largeClass {
     width: 100% !important;
     height: auto !important;
     /* margin-top: 50px; */
     border-radius: 10px;
 }
-.mediumClass{
+
+.mediumClass {
     border-radius: 10px;
 }
 
@@ -1473,7 +1483,7 @@ p {
 }
 
 .container_legend:hover {
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .card_legend {
