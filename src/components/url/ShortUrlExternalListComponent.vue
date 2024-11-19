@@ -22,6 +22,7 @@
           <a :href="scope.row.url + '?preview=true'" target="_blank">
             <i class="uil uil-external-link-alt"></i>
           </a>
+          <el-button size="small" @click="copyLink(scope.row.url)"><i class='fa fa-copy'></i></el-button>
           <el-button size="small" @click="handleClickExternalUrl(scope.row.url, scope.row.establishment_tag)"><i
               class="uil uil-qrcode-scan"></i></el-button>
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
@@ -158,6 +159,15 @@ const handleEdit = async (index, link) => {
   });
 };
 
+const copyLink = (link) => {
+  navigator.clipboard.writeText(link)
+    .then(() => {
+      ElMessage.success("Link successfully copied!");
+    })
+    .catch(() => {
+      ElMessage.error("Failed to copy the link.");
+    });
+};
 </script>
 <style scoped>
 button,
