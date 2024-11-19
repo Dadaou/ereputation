@@ -51,6 +51,7 @@
             <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
                 class="uil uil-external-link-alt"></i></a>
           </el-tooltip>
+          <el-button size="small" @click="copyLink(scope.row.link)"><i class='fa fa-copy'></i></el-button>
           <el-button size="small" @click="showQRCode(scope.row)"><i class="uil uil-qrcode-scan"></i></el-button>
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
@@ -163,6 +164,16 @@ const redirectToQRCode = async (tag, establishment_tag) => {
   const link = `/customer/${route.params.tag}/establishment/${establishment_tag}/qr_code_document_preview?section=staffs&tag=${tag}`;
   router.push(link);
 }
+
+const copyLink = (link) => {
+    navigator.clipboard.writeText(link)
+        .then(() => {
+            ElMessage.success("Link successfully copied!");
+        })
+        .catch(() => {
+            ElMessage.error("Failed to copy the link.");
+        });
+};
 
 </script>
 <style scoped>

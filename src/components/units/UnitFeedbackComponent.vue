@@ -443,7 +443,7 @@ const  widthimage = (event) => {
 .largeClass{
     width: 100%! important;
     height: auto! important;
-    object-fit:contain! important;
+    object-fit:cover! important;
 }
 .fade-in {
     opacity: 0;

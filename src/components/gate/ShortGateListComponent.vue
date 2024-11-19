@@ -32,6 +32,7 @@
                             <a :href="scope.row.link" target="_blank" class="el-button el-button--small"><i
                                     class="uil uil-external-link-alt"></i></a>
                         </el-tooltip>
+                        <el-button size="small" @click="copyLink(scope.row.link)"><i class='fa fa-copy'></i></el-button>
                         <el-button size="small" @click="showModal = true, establishment = scope.row"><i
                                 class="uil uil-qrcode-scan"></i></el-button>
                     </div>
@@ -249,6 +250,16 @@ onBeforeMount(async () => {
         console.error('Error in onBeforeMount:', error);
     }
 });
+
+const copyLink = (link) => {
+    navigator.clipboard.writeText(link)
+        .then(() => {
+            ElMessage.success("Link successfully copied!");
+        })
+        .catch(() => {
+            ElMessage.error("Failed to copy the link.");
+        });
+};
 </script>
 <style scoped>
 .establishment_name {
