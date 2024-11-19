@@ -74,12 +74,12 @@
 
                                 <div v-if="categ != ' ' " class="review__category-container ml-1"> 
 
-                                    <span   @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review,categ),category=categ,old_item_category=categ" class="review__category">{{
+                                    <span @click.stop="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review,categ),category=categ,old_item_category=categ, addExisteCategorie = null" class="review__category">{{
                                         categ }}
                                     <span
                                         v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')"
                                         class="emoji "
-                                        @click.stop="handleModal('Category feeling', 'edit', 'uil-edit', 'feeling', review, categ, review.classification_section[categ]), feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
+                                        @click.stop="handleModal('Category feeling', 'edit', 'uil-edit', 'feeling', review, categ, review?.classification_section?.[categ]), feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
                                         <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
                                         <span
                                             v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
@@ -93,7 +93,7 @@
                                                 buttonRefCateg = e.currentTarget
                                                 visibleCateg = true
                                             }" @mouseleave="() => visibleCateg = false"
-                                            @click.stop="handleModal('Category feeling', 'add', 'uil-add', 'feeling', review, categ, review.classification_section[categ]), feeling_new_category = 'yes', feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
+                                            @click.stop="handleModal('Category feeling', 'add', 'uil-add', 'feeling', review, categ, review?.classification_section?.[categ]), feeling_new_category = 'yes', feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
                                         </i>
                                         <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg"
                                             :virtual-ref="buttonRefCateg" virtual-triggering
@@ -221,14 +221,14 @@
                             <div v-if="categ != ''" class="review__category-container ml-1">
 
                                 <span
-                                    @click="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review, categ), category = categ, old_item_category = categ"
+                                    @click.stop="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review, categ), category = categ, old_item_category = categ, addExisteCategorie = null"
                                     class="review__category">{{
                                         categ }}
 
                                     <span
                                         v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')"
                                         class="emoji "
-                                        @click.stop="handleModal('Category feeling', 'edit', 'uil-edit', 'feeling', review, categ, review.classification_section[categ]), feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
+                                        @click.stop="handleModal('Category feeling', 'edit', 'uil-edit', 'feeling', review, categ, review?.classification_section?.[categ]), feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
                                         <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
                                         <span
                                             v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
@@ -242,7 +242,7 @@
                                                 buttonRefCateg = e.currentTarget
                                                 visibleCateg = true
                                             }" @mouseleave="() => visibleCateg = false"
-                                            @click.stop="handleModal('Category feeling', 'add', 'uil-add', 'feeling', review, categ, review.classification_section[categ]), feeling_new_category = 'yes', feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
+                                            @click.stop="handleModal('Category feeling', 'add', 'uil-add', 'feeling', review, categ, review?.classification_section?.[categ]), feeling_new_category = 'yes', feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
                                         </i>
                                         <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg"
                                             :virtual-ref="buttonRefCateg" virtual-triggering
@@ -690,7 +690,6 @@ const calculFeelingScore = (_reviews, _selectedReview, _feeling, type) => {
 
 const updateReview = async () => {
 
-
     let updatedValue = {
         feeling: modal.value.type == 'feeling' ? feel.value : feel_review.value,
         confidence: 1,
@@ -733,7 +732,7 @@ const updateReview = async () => {
 
         } else {
 
-            console.log(modal.value.type)
+            //console.log("1")
             var cur_cat = modal.value.type == 'delete' ? null : category.value;
             var old_cat = modal.value.type == 'delete' ? category.value : old_item_category.value;
 
@@ -744,12 +743,14 @@ const updateReview = async () => {
 
 
             if (modal.value.action == 'add' && !selectedReview.value.category) {
+                //console.log("2")
                 selectedReview.value.category = cur_cat;
                 selectedReview.value.classification_feeling = [];
                 selectedReview.value.classification_feeling[old_item_category.value] = null;
             }
 
             if (selectedReview.value.category.split(';').length > 0) {
+                //console.log("3")   
                 var new_cat = '';
                 for (var i = 0; i < selectedReview.value.category.split(';').length; i++) {
 
@@ -769,27 +770,48 @@ const updateReview = async () => {
 
                     } else {
 
+                        //console.log("4")
 
                         if (addExisteCategorie.value) {
+
+                            if (checkIfCategoryAlreadyExist(selectedReview.value.category, category.value)) return
 
                             new_cat = selectedReview.value.category + ';' + category.value;
 
                         } else {
 
+                            //console.log("6")
+
                             if (new_cat != '') {
 
+                                //console.log("7")
+
                                 if (selectedReview.value.category.split(';')[i] == old_item_category.value) {
+                                    //console.log("8")
                                     new_cat = new_cat + ';' + category.value;
                                 } else {
+                                    //console.log("9")
                                     new_cat = new_cat + ';' + selectedReview.value.category.split(';')[i];
                                 }
 
                             } else {
+                                //console.log("10")
+
+                                if (checkIfCategoryAlreadyExist(selectedReview.value.category, category.value)) return
+
 
                                 if (selectedReview.value.category.split(';')[i] == old_item_category.value) {
-                                    new_cat = category.value;
+
+                                    //console.log("11")
+                                    new_cat = category.value
+
                                 } else {
-                                    new_cat = selectedReview.value.category.split(';')[i];
+                                    //console.log("12")
+
+                                    const categoryArray = selectedReview.value.category.split(';')
+                                    if(categoryArray.includes(category.value)) return
+
+                                    new_cat = selectedReview.value.category.split(';')[i]
                                 }
 
                             }
@@ -800,13 +822,13 @@ const updateReview = async () => {
                 }
 
                 if (feeling_new_category.value) {
+                    //console.log("13")
                     selectedReview.value.classification_feeling[category.value] = selectedReview.value.classification_feeling[old_item_category.value]
                 }
 
                 selectedReview.value.category = new_cat;
-
             } else {
-
+                //console.log("14")
                 selectedReview.value.category = null;
             }
 
@@ -841,9 +863,18 @@ const handleModal = (text, action, icon, type, review, category = '', section = 
             }
 
 
+            console.log("review", review)
+            console.log("cat", review)
+
+
             editReview(review, category)
 
 };
+
+const checkIfCategoryAlreadyExist = (categories, categoryToCheck) => {
+    const categoryArray = categories.split(';')
+    return categoryArray.includes(categoryToCheck)
+}
 
 onMounted(() => {
     console.log("********", props.reviews)
