@@ -112,7 +112,6 @@ const establishments = computed(() => {
     let filteredData = [];
     if (userStore.user && userStore.user.customer && userStore.user.customer.establishments) {
         data = userStore.user.customer.establishments;
-        console.log(data)
 
         data.forEach(establishment => {
             filteredData.push({
@@ -134,7 +133,8 @@ const establishments = computed(() => {
                 id: establishment.id,
                 universe_id : establishment.universe_id,
                 universe_name : establishment.universe_name,
-                disable: establishment.disable
+                disable: establishment.disable,
+                pin:establishment.pin
             })
         });
     }
