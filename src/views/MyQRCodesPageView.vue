@@ -1,9 +1,6 @@
 <template>
   <div class="user__main__container">
     <el-tabs v-model="activeName" type="card" class="demo-tabs">
-      <el-tab-pane label="Gates" name="gates">
-        <ShortGateListComponent />
-      </el-tab-pane>
       <el-tab-pane label="Establishments" name="establishments">
         <ShortEstablishmentListComponent @edit="(establishment) => handleEdit(establishment, 'establishment')"
           @setEnable="(id) => setStatus(id, 'enable')" @setDisable="(id) => setStatus(id, 'disable')" />
@@ -13,6 +10,9 @@
       </el-tab-pane>
       <el-tab-pane label="Services" name="service">
         <ShortUnitListComponent />
+      </el-tab-pane>
+      <el-tab-pane label="Gates" name="gates">
+        <ShortGateListComponent />
       </el-tab-pane>
       <el-tab-pane label="External URL" name="external_url">
         <ShortUrlExternalListComponent/>
@@ -67,7 +67,7 @@ watch(width, () => {
 });
 
 const userStore = useUserStore()
-const activeName = ref('gates')
+const activeName = ref('establishments')
 const activeStaffTab = ref('staff_list')
 
 const establishment_to_update = ref(null)
