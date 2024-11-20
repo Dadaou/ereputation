@@ -89,19 +89,30 @@
                     <input type="text" id="rank" name="rank" v-model="data.rank"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
-                    <div>
-                        <label for="language" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Language
-                            <span>*</span></label>
-                        <el-select v-model="data.language" placeholder="" size="large" filterable ref="selectLanguage">
-                            <el-option v-for="(language, index) in ['fr','en','es']" :key="index" :label="language"
-                                :value="language" />
-                        </el-select>
-                    </div>
+                <div>
+
+                    <label for="language" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Language
+                        <span>*</span></label>
+                    <el-select v-model="data.language" placeholder="" size="large" filterable ref="selectLanguage">
+                        <el-option v-for="(language, index) in ['fr','en','es']" :key="index" :label="language"
+                        :value="language" />
+                    </el-select>
+
+                </div>
                 <div>
                     <label for="positionning"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">positionning
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Positionning
                     </label>
                     <input type="text" id="positionning" name="positionning" v-model="data.positionning"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                </div>
+                <div>
+                    <label for="pin"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Pin
+                        <Tooltip text="Select a code with a minimum of 4 digits to validate the discount coupons provided by your customers" />
+                    </label>
+                    <input type="text" id="pin" name="pin" v-model="data.pin" style="width: 250px;"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
             </div>
@@ -135,7 +146,7 @@
                         ...</span>
                     <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} establishment</span>
                 </button>
-                <button @click="resetForm"
+                <button @click.stop="resetForm"
                     class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-gray-700 rounded-lg focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-900 hover:bg-gray-800">
                     <span><i class="uil uil-times"></i> Clear </span>
                 </button>
@@ -145,7 +156,7 @@
 </template>
 <script setup>
 import moment from 'moment';
-import { ref, inject, watch, onMounted } from 'vue';
+import { ref, inject, watch, onMounted, defineAsyncComponent } from 'vue';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import { useStaffStore } from "@Stores/staff.js";
@@ -159,6 +170,10 @@ import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
 import { useRouter, useRoute } from 'vue-router';
 import { countries, competitor_countries } from '@Services/input-list.js';
+
+const Tooltip = defineAsyncComponent(() =>
+    import('@Components/utils/QuestionMarkTooltipComponent.vue')
+)
 
 const router = useRouter();
 const route = useRoute();
@@ -215,7 +230,8 @@ const updateImageFromFile = (file) => {
 };
 
 
-const resetForm = () => {
+const resetForm = (e) => {
+    //e.preventDefault()
     data.value = {};
     previewImage.value = null;
     type.value = 'Add';
