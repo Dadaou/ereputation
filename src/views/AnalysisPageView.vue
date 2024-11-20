@@ -588,7 +588,25 @@ const starParams = route.query.star;
 const activeName = ref('categorization');
 const newOptions = {
     maintainAspectRatio: false,
-    scales: {
+   scales: {
+
+        y: {
+          beginAtZero: true,
+          suggestedMin: -1, 
+          suggestedMax: 1,
+          ticks: {
+            stepSize: 0.5 ,
+            padding: 10
+            
+          },
+          grid: {
+            
+            drawBorder: true,
+            drawOnChartArea: true
+          
+          }
+
+        },
     },
     plugins: {
         legend: {
