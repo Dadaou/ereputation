@@ -136,13 +136,32 @@
                         <el-date-picker v-model="dateTo" :size="'large'" />
                     </div>
                 </div>
-                <div>
-                    <label for="message"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-                    <textarea v-model="description" id="message" rows="4"
-                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Write your thoughts here...">
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div>
+                        <label for="message"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
+                        <textarea v-model="description" id="message" rows="4"
+                            class="block p-2.5 w-50 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Write your thoughts here...">
                       </textarea>
+                    </div>
+                    <div>
+                        <label for="message"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Logo</label>
+                        <div class="md:order-2">
+                            <div class="image-selector border-gray-300" @dragover.prevent="onDragOver"
+                                @drop.prevent="onDrop" @click="selectImg">
+                                <div v-if="previewImage" class="image-preview">
+                                    <img :src="previewImage" alt="Preview Image" class="uploading-image" />
+                                    <div class="img-hover">
+                                        <i class="uil uil-image-edit"></i>
+                                    </div>
+                                </div>
+                                <i v-else class="uil uil-image-plus"></i>
+                                <input id="imgInput" name="file" type="file" @change="updateImage" style="display:none">
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="flex items-center justify-between py-5 border-t border-b dark:border-gray-600">
@@ -218,6 +237,72 @@ const advantage_to_update = inject('advantage_to_update');
 const advantages = inject('advantages');
 const activeAdvantageTab = inject('advantage_activeTab');
 const metrics = ref(['Percent', 'Amount'])
+
+const imageInputHover = ref(false);
+const imgHasChanged = ref(false);
+const previewImage = ref(null);
+
+const onDragOver = (event) => {
+    imageInputHover.value = true;
+};
+
+const onDrop = (event) => {
+    event.preventDefault();
+    const files = event.dataTransfer.files;
+    if (files.length > 0) {
+        const file = files[0];
+        if (isImageFile(file)) {
+            updateImageFromFile(file);
+            document.getElementById('imgInput').files = event.dataTransfer.files;
+            imgHasChanged.value = true;
+        } else {
+            showErrorMessage("Veuillez télécharger un fichier image valide.");
+        }
+    }
+};
+
+const isImageFile = (file) => {
+    return ['image/png', 'image/jpeg', 'image/gif'].includes(file.type);
+};
+
+const updateImageFromFile = (file) => {
+    if (isImageFile(file)) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (e) => {
+            previewImage.value = e.target.result;
+            const event = new Event('change', { bubbles: true });
+            document.getElementById('imgInput').dispatchEvent(event);
+        };
+    } else {
+        showErrorMessage("Veuillez télécharger un fichier image valide.");
+    }
+};
+
+const updateImage = (e) => {
+    const image = e.target.files[0];
+    if (isImageFile(image)) {
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+        reader.onload = e => {
+            previewImage.value = e.target.result;
+        };
+        imgHasChanged.value = true;
+    } else {
+        showErrorMessage("Please upload a valid image file.");
+    }
+};
+
+const showErrorMessage = (message) => {
+    ElMessage({
+        message: message,
+        type: 'error',
+    });
+};
+
+const selectImg = () => {
+    document.getElementById('imgInput').click();
+}
 
 watch(advantage_to_update, () => {
     if (advantage_to_update.value != null) {
@@ -317,7 +402,7 @@ const submit = async () => {
         "validity": validity.value,
         "description": description.value,
         "expiredAt": expiredAt.value,
-        "advantageLimit": (advantageLimit.value=="") ? null : advantageLimit.value,
+        "advantageLimit": (advantageLimit.value == "") ? null : advantageLimit.value,
         "dateFrom": dateFrom.value,
         "dateTo": dateTo.value,
     }
@@ -394,7 +479,7 @@ const selectAdvantage = (advantage) => {
     establishment.value = companies.length > 0 ? `/api/establishments/${companies[0].id},${companies[0].name}` : "";
 };
 
-onBeforeMount (() => {
+onBeforeMount(() => {
     const establishments = userStore.user.customer.establishments;
     if (establishments.length > 0) {
         establishment.value = `/api/establishments/${establishments[0].id},${establishments[0].name}`;
@@ -485,5 +570,44 @@ input {
     color: #6b778c;
     font-size: 32px;
     font-weight: 600;
+}
+
+
+.image-selector {
+    width: 100%;
+    height: 102px;
+    border-radius: 8px;
+    border-width: 2px;
+    border-style: solid;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.image-selector.hover:hover {
+    background: rgba(245, 245, 250, .4);
+}
+
+.image-selector * {
+    font-size: 64px;
+    color: var(--color-bg2)
+}
+
+.img-hover {
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(245, 245, 250, .4);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 </style>
