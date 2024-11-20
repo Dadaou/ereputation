@@ -45,7 +45,7 @@
       <div class="nav-dropdown">
         <div v-if="isFeedback" class="feedback__option">
           <a v-if="establishement?.whatsapp == null" href="https://wa.me/message/IZFK26272CXFB1" target="_blank">
-            <i class="fa fa-whatsapp"></i>
+            <!-- <i class="fa fa-whatsapp"></i> -->
           </a>
           <a v-else :href="establishement?.whatsapp" target="_blank">
             <i class="fa fa-whatsapp"></i>
