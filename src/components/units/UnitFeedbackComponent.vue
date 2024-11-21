@@ -446,6 +446,7 @@ const widthimage = (event) => {
     width: 100% ! important;
     height: auto ! important;
     object-fit: contain ! important;
+    border-radius: 5px;
 }
 
 .fade-in {

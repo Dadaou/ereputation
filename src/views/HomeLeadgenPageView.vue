@@ -3,6 +3,9 @@
         <div class="container client__container ">
             <div class="header">
                 <div class="header_navigation">
+                    <RouterLink class="search__icon" :to="{ name: 'LeadgenMyQrcode', params: { tag: tag } }">
+                        <Icon :icon="'uil:qrcode-scan'" width="25"></Icon>
+                    </RouterLink>
                     <RouterLink class="search__icon" :to="{ name: 'LeadgenAdvantage', params: { tag: tag } }">
                         <Icon :icon="'uil:bill'" width="26"></Icon>
                     </RouterLink>
@@ -14,9 +17,6 @@
                     </RouterLink>
                     <RouterLink class="search__icon" :to="{ name: 'LeadgenContact', params: { tag: tag } }">
                         <Icon :icon="'uil:envelope'" width="25"></Icon>
-                    </RouterLink>
-                    <RouterLink class="search__icon" :to="{ name: 'LeadgenMyQrcode', params: { tag: tag } }">
-                        <Icon :icon="'uil:qrcode-scan'" width="25"></Icon>
                     </RouterLink>
                     <RouterLink class="search__icon" :to="{ name: 'LeadgenMyScreen', params: { tag: tag } }">
                         <Icon :icon="'uil:presentation'" width="25"></Icon>
@@ -94,7 +94,7 @@ const handleToggleErep = () => {
 }
 
 const handleToggleLeadgen = () => {
-    router.push({ name: 'LeadgenAdvantage', params: { tag: customerTag.value } })
+    router.push({ name: 'LeadgenMyQrcode', params: { tag: customerTag.value } })
         .catch(err => console.error(err));
 }
 </script>

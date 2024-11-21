@@ -89,7 +89,7 @@ const handleToggleErep = () => {
 }
 
 const handleToggleLeadgen = () => {
-    router.push({ name: 'LeadgenAdvantage', params: { tag: customerTag.value } })
+    router.push({ name: 'LeadgenMyQrcode', params: { tag: customerTag.value } })
         .catch(err => console.error(err));
 }
 </script>
