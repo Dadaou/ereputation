@@ -1,16 +1,16 @@
 <template>
     <div class="user__main__container">
         <el-tabs v-model="activePartnershipTab" class="demo-tabs">
-                    <el-tab-pane label="Partnerships requested by your establishment" name="partnership_list">
-                        <PartnershipListComponent @update="() => reloadPartnershipsData()" />
-                    </el-tab-pane>
-                    <el-tab-pane label="Requests for partnerships" name="partnership_request">
-                        <PartnershipRequestComponent @update="() => reloadPartnershipsData()" />
-                    </el-tab-pane>
-                    <el-tab-pane label="Request a new partnership" name="partnership_form">
-                        <PartnershipFormComponent @update="() => reloadPartnershipsData()" />
-                    </el-tab-pane>
-                </el-tabs>
+            <el-tab-pane label="Partnerships requested by your establishment" name="partnership_list">
+                <PartnershipListComponent @update="() => reloadPartnershipsData()" />
+            </el-tab-pane>
+            <el-tab-pane label="Requests for partnerships" name="partnership_request">
+                <PartnershipRequestComponent @update="() => reloadPartnershipsData()" />
+            </el-tab-pane>
+            <el-tab-pane label="Request a new partnership" name="partnership_form">
+                <PartnershipFormComponent @update="() => reloadPartnershipsData()" />
+            </el-tab-pane>
+        </el-tabs>
     </div>
 </template>
 <script setup>

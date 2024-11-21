@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-5 table__container">
+  <div class="mt-2">
     <div class="table-description" style="margin-bottom: 16px;">
       <p></p>
       <div>

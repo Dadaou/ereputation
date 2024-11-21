@@ -1,5 +1,5 @@
 <template>
-    <div class="profile__header mt-2">
+    <div class="profile__header">
         <!-- <div class="profile__edit">
             <h2>Establishments</h2>
         </div> -->

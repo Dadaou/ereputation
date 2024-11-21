@@ -1,16 +1,13 @@
 <template>
     <div class="user__main__container">
-    
-                <el-tabs v-model="myscreensUrlsConf.screens" class="demo-tabs" @tab-click="() => clearScreenForm()">
-                    <el-tab-pane label="Screens" name="screens_list">
-                        <ScreenListComponent
-                            @edit="(screen) => handleEdit(screen, 'screens')" />
-                    </el-tab-pane>
-                    <el-tab-pane label="Add a new screen" name="screens_form">
-                        <ScreenFormComponent @show-screen-list = "showScreenList"/>
-                    </el-tab-pane>
-                </el-tabs>
-  
+        <el-tabs v-model="myscreensUrlsConf.screens" class="demo-tabs" @tab-click="() => clearScreenForm()">
+            <el-tab-pane label="Screens" name="screens_list">
+                <ScreenListComponent @edit="(screen) => handleEdit(screen, 'screens')" />
+            </el-tab-pane>
+            <el-tab-pane label="Add a new screen" name="screens_form">
+                <ScreenFormComponent @show-screen-list="showScreenList" />
+            </el-tab-pane>
+        </el-tabs>
     </div>
 </template>
 <script setup>
@@ -56,7 +53,7 @@ watch(width, () => {
 
 const myscreensUrlsConf = reactive({
     tabs: 'screens',
-    screens : 'screens_list'
+    screens: 'screens_list'
 })
 
 provide('myscreensUrlsConf', myscreensUrlsConf);
@@ -67,7 +64,7 @@ provide('cleanScreenForm', cleanScreenForm);
 
 const clearScreenForm = () => {
     cleanScreenForm.value = cleanScreenForm.value + 1;
-    
+
 }
 
 const showScreenList = (payload) => {
@@ -90,12 +87,12 @@ const handleEdit = (value, type) => {
     myscreensUrlsConf[type] = `${type}_form`;
 
     // if (type == 'screens') {
-        screen_to_update.value = value;
-        screen_to_update.value['establishment'] = `/api/establishments/${value.establishment_id}`
-         screen_to_update.value['screentemplate'] = `/api/screentemplates/${value.screentemplate_id}`
+    screen_to_update.value = value;
+    screen_to_update.value['establishment'] = `/api/establishments/${value.establishment_id}`
+    screen_to_update.value['screentemplate'] = `/api/screentemplates/${value.screentemplate_id}`
     // }
-         cleanScreenForm.value = 0;
-         console.log(value)
+    cleanScreenForm.value = 0;
+    console.log(value)
 
 };
 
@@ -111,7 +108,7 @@ const loadScreens = async () => {
             allscreens.value = response.data
             console.log(allscreens.value)
         }
-  
+
 
     } catch (error) {
         console.error(error);
@@ -129,7 +126,7 @@ const loadAdvantages = async () => {
             advantages.value = response.data
             console.log(advantages)
         }
-  
+
     } catch (error) {
         console.error(error);
     }
@@ -138,24 +135,24 @@ const loadAdvantages = async () => {
 
 
 
-const routeParameters = async (conf)=>{
+const routeParameters = async (conf) => {
     router.push({ name: route.name, params: { ...route.params, tab: conf.tabs, sub_tab: conf[conf.tabs] } });
 }
 
-watch(myscreensUrlsConf, (newValue)=>{
+watch(myscreensUrlsConf, (newValue) => {
     routeParameters(newValue)
 })
 
-const params = computed(()=> route.params);
+const params = computed(() => route.params);
 
-watch(params, ()=>{
+watch(params, () => {
     myscreensUrlsConf.tabs = route.params.tab;
-    myscreensUrlsConf[myscreensUrlsConf.tabs] = route.params.sub_tab; 
+    myscreensUrlsConf[myscreensUrlsConf.tabs] = route.params.sub_tab;
 })
 
 onBeforeMount(async () => {
-    myscreensUrlsConf.tabs = (route.params.tab !== '')?route.params.tab:'screens';
-    myscreensUrlsConf[myscreensUrlsConf.tabs] = (route.params.sub_tab !== '')?route.params.sub_tab:'screens_list';
+    myscreensUrlsConf.tabs = (route.params.tab !== '') ? route.params.tab : 'screens';
+    myscreensUrlsConf[myscreensUrlsConf.tabs] = (route.params.sub_tab !== '') ? route.params.sub_tab : 'screens_list';
     await routeParameters(myscreensUrlsConf)
 
     if (width.value < 800) {
@@ -166,12 +163,11 @@ onBeforeMount(async () => {
 
     await loadScreens();
     await loadAdvantages();
-   
+
 });
 
 </script>
 <style scoped>
-
 * {
     overflow: hidden;
 }
