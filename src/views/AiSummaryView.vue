@@ -9,17 +9,25 @@
         <div v-if="loading">Loading summary...</div>
         <div v-else-if="summaries.length > 0">
             <div v-if="summaries[0] && summaries[0].overview" class="summary-card">
-                <h2 v-if="summaries[0].datefrom && summaries[0].dateto && summaries[0].overview">
-                    Summary reviews {{ summaries[0].date_to_display }} - 
-                    {{ summaries[0].establishment_name }}</h2>
-                <h2 v-else>Summary - {{ summaries[0].establishment_name }}</h2>
+                <div class="flex justify-between items-start">
+                    <h2 v-if="summaries[0].datefrom && summaries[0].dateto && summaries[0].overview">
+                        Summary reviews {{ summaries[0].date_to_display }} -
+                        {{ summaries[0].establishment_name }}</h2>
+                    <h2 v-else>Summary - {{ summaries[0].establishment_name }}</h2>
+                    <span v-if="summaries[0].limit_item">{{ summaries[0].limit_item || "" }} {{
+                        limit_item > 1 ? "reviews" : "review" }} </span>
+                </div>
                 <p v-html="formatOverview(summaries[0].overview)"></p>
             </div>
             <ExpansionPanel v-if="filteredSummary.length > 0" title="AI History">
                 <div v-for="summary in filteredSummary" :key="summary.id" class="summary-card">
-                    <h2 v-if="summary.datefrom && summary.dateto && summary.overview">
-                       Summary reviews {{ summary.date_to_display }} - {{ summary.establishment_name }}</h2>
-                    <h2 v-else>Summary - {{ summary.establishment_name }}</h2>
+                    <div class="flex justify-between items-start">
+                        <h2 v-if="summary.datefrom && summary.dateto && summary.overview">
+                            Summary reviews {{ summary.date_to_display }} - {{ summary.establishment_name }}</h2>
+                        <h2 v-else>Summary - {{ summary.establishment_name }}</h2>
+                        <span v-if="summary.limit_item">{{ summary.limit_item || "" }} {{
+                            limit_item > 1 ? "reviews" : "review" }} </span>
+                    </div>
                     <p v-html="formatOverview(summary.overview)"></p>
                 </div>
             </ExpansionPanel>
@@ -96,7 +104,7 @@ const addNewKeyToDisplayDate = (data) => {
 
     data.forEach(item => {
 
-        if (item.periodicity === 'MONTH'){
+        if (item.periodicity === 'MONTH') {
             item.date_to_display = `of ${moment(item.datefrom).format('MMMM YYYY')}`
         }
 
@@ -121,7 +129,8 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.summary-card h2 {
+.summary-card h2,
+.summary-card span {
     font-weight: bold;
     margin-bottom: 1.5rem;
 }
