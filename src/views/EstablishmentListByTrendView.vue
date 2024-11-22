@@ -26,12 +26,16 @@
             </div>
         </div>
     </div>
+    <span v-if="dataLoading && establishments.length == 0">Loading...</span>
     <div class="society__list mt-5" v-if="establishments.length > 0">
         <suspense>
-            <div class="establishment-rank-view">
+            <span v-if="dataLoading ">Loading...</span>
+            <div v-else class="establishment-rank-view">
                 <establishments-list-component :establishments="establishments" :tag='customerTag'
-                    :selectedDate="selectedDate" />
+                    :selectedDate="selectedDate"
+                    :filter_type="type" />
             </div>
+
             <template #fallback>
                 <establishment-list-loaded-component :nb="3" />
             </template>
@@ -113,7 +117,7 @@ watch([type, categoryFilters, days, selectedDate, start_date, end_date], async (
 const loadEstablishment = async (tag, category, days, note, date, dateStart, dateEnd) => {
     let uri = 'get/establishment/trend';
     let params = `tag=${tag}&category=${category}&note=${note}&user_id=${userId}`;
-
+     dataLoading.value = true;
     if (date) {
         params += `&date=${date}`;
     } else {
@@ -156,14 +160,16 @@ const loadEstablishment = async (tag, category, days, note, date, dateStart, dat
             return { ...objet, ratio: objet.ratio_value, ratio_text: objet.ratio, isTrends: true };
 
         });
+         dataLoading.value = false;
     } else {
         console.error('Error loading establishments:', response);
+         dataLoading.value = false;
     }
 };
 
 onMounted(async () => {
     await loadEstablishment(customerTag.value, categoryFilters.value, days.value, type.value, selectedDate.value, start_date.value, end_date.value);
-    dataLoading.value = false;
+   
 });
 </script>
 
