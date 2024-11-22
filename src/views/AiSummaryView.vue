@@ -14,7 +14,8 @@
                         Summary reviews {{ summaries[0].date_to_display }} -
                         {{ summaries[0].establishment_name }}</h2>
                     <h2 v-else>Summary - {{ summaries[0].establishment_name }}</h2>
-                    <span v-if="summaries[0].limit_item">{{ summaries[0].limit_item || "" }} reviews </span>
+                    <span v-if="summaries[0].limit_item">{{ summaries[0].limit_item || "" }} {{
+                        limit_item > 1 ? "reviews" : "review" }} </span>
                 </div>
                 <p v-html="formatOverview(summaries[0].overview)"></p>
             </div>
@@ -24,7 +25,8 @@
                         <h2 v-if="summary.datefrom && summary.dateto && summary.overview">
                             Summary reviews {{ summary.date_to_display }} - {{ summary.establishment_name }}</h2>
                         <h2 v-else>Summary - {{ summary.establishment_name }}</h2>
-                        <span v-if="summary.limit_item">{{ summary.limit_item || "" }} reviews </span>
+                        <span v-if="summary.limit_item">{{ summary.limit_item || "" }} {{
+                            limit_item > 1 ? "reviews" : "review" }} </span>
                     </div>
                     <p v-html="formatOverview(summary.overview)"></p>
                 </div>
@@ -127,7 +129,8 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.summary-card h2 {
+.summary-card h2,
+.summary-card span {
     font-weight: bold;
     margin-bottom: 1.5rem;
 }
