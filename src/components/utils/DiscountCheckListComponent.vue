@@ -64,10 +64,10 @@
                 <div>{{ info.value }}<span style="font-size: 1.75rem">{{ info.metric }}</span></div>
               </div>
               <ul class="modal-discount-other">
-                <li v-if="info.date_from">From {{ info.date_from }}</li>
-                <li v-if="info.date_to">To {{ info.date_to }}</li>
-                <li v-if="info.expired_at">Expired at {{ info.expired_at }}</li>
-                <li v-if="info.validity">Valid within {{ info.validity }} days</li>
+                <li v-if="info.date_from && info.date_from !== 'Invalid date'">From {{ info.date_from }}</li>
+                <li v-if="info.date_to && info.date_to !== 'Invalid date'">To {{ info.date_to }}</li>
+                <li v-if="info.expired_at && info.expired_at !== 'Invalid date'">Expired at {{ info.expired_at }}</li>
+                <li v-if="info.validity && info.validity !== 'Invalid date'">Valid within {{ info.validity }} days</li>
               </ul>
             </div>
             <span v-if="currentDiscount.description" class="modal-discount-description">
