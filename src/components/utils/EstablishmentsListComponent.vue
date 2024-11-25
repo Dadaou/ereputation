@@ -41,7 +41,8 @@
                 <div class="stat__content">
                     <RatingComponent class="rating__content" :reviews="company.totalReviews"
                         :rating="Number(company.rating).toFixed(1)" :score="company.score" :feeling="company.feeling"
-                        :company="company" />
+                        :company="company"
+                        :filter_type="filter_type" />
                     <div class="list__actions">
                         <button class="btn" @click="goToCompany(company)">More details</button>
 
@@ -150,7 +151,11 @@ const props = defineProps({
     showMoreInformation : {
         type : Boolean,
         default : true
-    }
+    },
+    filter_type: {
+        type: String,
+        default: "global"
+    },
 
 });
 

@@ -853,6 +853,8 @@ const updateFeelingFeedback = ((_feeling, _type) => {
 })
 
 const handleModal = (text, action, icon, type, review, category = '', section = null) => {
+
+    console.log("katal", category)
             showModal.value = true
             modal.value = {
                 text: text,
@@ -877,7 +879,7 @@ const checkIfCategoryAlreadyExist = (categories, categoryToCheck) => {
 }
 
 onMounted(() => {
-    console.log("********", props.reviews)
+    console.log("********", props.categories)
 })
 
 </script>

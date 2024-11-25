@@ -250,7 +250,7 @@ const positionIcons = () => {
     iconSpan.style.color = "#5D6166";
 
     const tempSpan = document.createElement("span");
-    tempSpan.innerHTML = `${icons.value[i]['temperature'].toFixed(0)} ${icons.value[i]['unit']}`;
+    tempSpan.innerHTML = icons.value[i]['temperature'] != 0 ? `${icons.value[i]['temperature'].toFixed(0)} ${icons.value[i]['unit']}` : '';
     tempSpan.style.fontSize = "14px";
     tempSpan.style.display = "block";
     tempSpan.style.color = "	#5D6166";

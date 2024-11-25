@@ -31,15 +31,15 @@
     <div class="reviews__value mb-2" v-if="company.isTrends">
       
       <div v-if="selectedDate">
-        <div>Selected Date: {{ selectedDate }} , Score: <b>{{ company.previous.note }}</b>
+        <div>Selected Date: {{ selectedDate }} , {{filter_type == "score" ? 'Score' : 'Global'}}: <b>{{ company.previous.note }}</b>
         </div>
-        <div >Current Date: {{ company.curent.to }} , Score: <b>{{ company.curent.note }}</b></div>
+        <div >Current Date: <b>{{ company.curent.to }}</b> , {{filter_type == "score" ? 'Score' : 'Global'}}: <b>{{ company.curent.note }}</b></div>
     </div>
       <div v-else>
         
-        <div>Previous: {{ company.previous.from }} / {{ company.previous.to }} , Score: <b>{{ company.previous.note }}</b>
+        <div>Previous: {{ company.previous.from }} / {{ company.previous.to }} , {{filter_type == "score" ? 'Score' : 'Global'}}: <b>{{ company.previous.note }}</b>
         </div>
-        <div >Period: {{ company.curent.from }} / {{ company.curent.to }} , Score: <b>{{ company.curent.note }}</b></div>
+        <div >Period: <b>{{ company.curent.from }} / {{ company.curent.to }}</b> , {{filter_type == "score" ? 'Score' : 'Global'}}: <b>{{ company.curent.note }}</b></div>
       </div>
     </div>
  <!--  <div class="ratio">{{company.ratio?`Ratio ${Number(company.ratio).toFixed(1)}%`:''}}</div> -->
@@ -55,7 +55,38 @@ const Tooltip = defineAsyncComponent(() =>
 
 
 const selectedDate = inject('selectedDate')
-const props = defineProps(['reviews', 'rating', 'score', 'feeling', 'company', 'selectedDate']);
+
+// const props = defineProps(['reviews', 'rating', 'score', 'feeling', 'company', 'selectedDate'],{
+//      filter_type: {
+//         type: String,
+//         default: "global"
+//     }
+// });
+const props = defineProps({
+    reviews:{
+default: null
+    },
+    rating:{
+default: null
+    },
+    score:{
+default: null
+    },
+    feeling:{
+default: null
+    },
+    company:{
+default: null
+    },
+    selectedDate:{
+    default: null
+    },
+    filter_type: {
+        type: String,
+        default: "global"
+    },
+
+});
 
 const arrondirRatio = (ratio)=>{
     ratio = ratio ? Number(ratio) : 0;
