@@ -41,8 +41,7 @@
                 <div class="stat__content">
                     <RatingComponent class="rating__content" :reviews="company.totalReviews"
                         :rating="Number(company.rating).toFixed(1)" :score="company.score" :feeling="company.feeling"
-                        :company="company"
-                        :filter_type="filter_type" />
+                        :company="company" :filter_type="filter_type" />
                     <div class="list__actions">
                         <button class="btn" @click="goToCompany(company)">More details</button>
 
@@ -51,33 +50,25 @@
 
             </div>
         </div>
-        <!-- <div v-if="company.categories" class="category_container_mobile"></div> -->
         <div class="category_container_mobile">
-            <div class="inline-flex category_mobile"  v-if="showMoreInformation">
+            <div class="inline-flex category_mobile" v-if="showMoreInformation">
 
                 <span class="reviews-loader" v-if="dataCategoriesLoading[i]"></span>
-                
-                <div v-else v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category" class="reviews_category">
+
+                <div v-else v-for="(cat, category, index) in sortedCategory(company.categories)" :key="category"
+                    class="reviews_category">
 
                     <div v-if="cat" class="ml-1 review__category-container cat_desc">
 
-                        <span :style="
-                        { backgroundColor: colorBetweenRedYellowGreen(cat) ,
+                        <span :style="{
+                            backgroundColor: colorBetweenRedYellowGreen(cat),
                             padding: '5px',
                             borderRadius: '5px',
                             marginRight: '10px'
-                        }"
-             class="review__category emoji"
-                            @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)" >
-                            {{ capitalize(category) }} :  {{ cat }}
-                           <!--  <span class="emoji ">
-                               
-                            </span> -->
+                        }" class="review__category emoji"
+                            @click="redirectToReviewsCategory(route.params.tag, company.competitor_tag, category)">
+                            {{ capitalize(category) }} : {{ cat }}
                         </span>
-
-
-               
-
                     </div>
                 </div>
 
@@ -144,13 +135,13 @@ const props = defineProps({
         type: Boolean,
         required: false,
     },
-    dataCategoriesLoading : {
-        type : Array,
-        default : []
+    dataCategoriesLoading: {
+        type: Array,
+        default: []
     },
-    showMoreInformation : {
-        type : Boolean,
-        default : true
+    showMoreInformation: {
+        type: Boolean,
+        default: true
     },
     filter_type: {
         type: String,
@@ -285,22 +276,21 @@ const capitalize = (str) => {
 
 </script>
 <style scoped>
+.cat_desc {
+    font-weight: 450;
+}
 
-    .cat_desc{
-        font-weight: 450;
-    }
+.cat_desc span {
+    font-size: 12px;
+}
 
-    .cat_desc span{
-        font-size: 12px;
-    }
+.cat_desc span:nth-child(2) {
+    margin-left: 1rem;
+}
 
-    .cat_desc span:nth-child(2) {
-        margin-left: 1rem;
-    }
-
-    .cat_desc p span{
-        font-size: 18px;
-    }
+.cat_desc p span {
+    font-size: 18px;
+}
 
 
 .category_container_mobile {
@@ -656,7 +646,12 @@ div.review-box {
     }
 
     .category_mobile {
+        width: 100%;
         padding: 0 8px;
+    }
+
+    .review-box {
+        width: 50% !important;
     }
 }
 
