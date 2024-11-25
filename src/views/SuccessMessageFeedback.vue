@@ -5,15 +5,18 @@
         </div>
 
     </div>
-    <div class="main__container" v-if="exist">
+    <div v-if="exist">
         <div class="feedback__form">
-            <p> {{ $t("success") }} </p>
+            <p style="font-size: 17px;"> {{ $t("success") }} </p>
             <div class="mt-6" v-if="route.params.share !== 'message'">
-                <h2 v-if="links.length > 0">{{ $t("success_text") }}</h2>
+                <p v-if="links.length > 0">{{ $t("success_text") }}</p>
+                <div class="comment_container" v-if="comment !== ''">
+                    <p style="font-size: 13px;">{{ comment }}</p>
+                    <el-button @click="copyComment" ><i class='fa fa-copy' v-if="copySuccess === ''"></i>{{ copySuccess }}</el-button>
+                </div>
                 <ul v-if="links.length > 0" class="logoSrc">
                     <li v-for="link in links" :key="link.id">
                         <a :href="link.url" target="_blank" @click="handleClick($event, link)">
-                            <el-tooltip :content="`${$t('success_text')} ${link.name}`" placement="top">
                                 <img v-if="link.name.toLowerCase().includes('booking')"
                                     src="@/assets/images/logo/Booking.svg" alt="Booking" width="24" height="24">
                                 <img v-if="link.name.toLowerCase().includes('camping')"
@@ -36,29 +39,25 @@
                                     src="@/assets/images/logo/Trustpilot.svg" alt="Trustpilot" width="24" height="24">
                                 <img v-if="link.name.toLowerCase().includes('yelp')" src="@/assets/images/logo/Yelp.svg"
                                     alt="Yelp" width="24" height="24">
-
-                            </el-tooltip>
                         </a>
                     </li>
                 </ul>
-                <h2 v-if="socials.length > 0">{{ $t("success_text2") }}</h2>
+                <p v-if="socials.length > 0">{{ $t("success_text2") }}</p>
                 <ul v-if="socials.length > 0" class="social">
                     <li v-for="link in socials" :key="link.id">
                         <a :href="link.url" target="_blank" @click="handleClick($event, link)">
-                            <el-tooltip :content="`${$t('success_text2')} ${link.name}`" placement="top">
                                 <img v-if="link.name.toLowerCase().includes('facebook')"
-                                    src="@/assets/images/logo/Facebook.svg" alt="Facebook">
+                                    src="@/assets/images/logo/Facebook.svg" alt="Facebook" width="24" height="24">
                                 <img v-if="link.name.toLowerCase().includes('instagram')"
-                                    src="@/assets/images/logo/Instagram.svg" alt="Instagram">
+                                    src="@/assets/images/logo/Instagram.svg" alt="Instagram" width="24" height="24">
                                 <img v-if="link.name.toLowerCase().includes('twitter')"
-                                    src="@/assets/images/logo/Twitter.svg" alt="Twitter">
+                                    src="@/assets/images/logo/Twitter.svg" alt="Twitter" width="24" height="24">
                                 <img v-if="link.name.toLowerCase().includes('youtube')"
-                                    src="@/assets/images/logo/Youtube.svg" alt="Youtube">
+                                    src="@/assets/images/logo/Youtube.svg" alt="Youtube" width="24" height="24">
                                 <img v-if="link.name.toLowerCase().includes('tiktok')"
-                                    src="@/assets/images/logo/Tiktok.svg" alt="Tiktok">
+                                    src="@/assets/images/logo/Tiktok.svg" alt="Tiktok" width="24" height="24">
                                 <Icon icon="logos:linkedin-icon" width="2rem" height="2rem"
                                     v-if="link.name.toLowerCase().includes('linkedin')"></Icon>
-                            </el-tooltip>
                         </a>
                     </li>
                 </ul>
@@ -78,7 +77,7 @@ import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from "@Stores/app.js";
 import services from '@Services/services.js';
 import 'element-plus/es/components/tooltip/style/css';
-import { ElTooltip } from 'element-plus'
+import { ElTooltip, ElButton } from 'element-plus'
 
 let exist = ref(true);
 const EstablishmentNotFound = defineAsyncComponent(() =>
@@ -92,9 +91,11 @@ let media = [];
 const links = ref([])
 const socials = ref([])
 const route = useRoute();
+const comment = ref('')
 const companyStore = useCompanyStore();
 const userStore = useUserStore();
 const appStore = useAppStore();
+const copySuccess = ref('');
 
 const handleClick = async (event,element) => {
     const visitorId = localStorage.getItem('visitId');
@@ -131,14 +132,25 @@ const handleClick = async (event,element) => {
     }
 };
 
+const copyComment = async (e) => {
+    if(copySuccess.value) return
+    
+    e.preventDefault()
+    await navigator.clipboard.writeText(comment.value);
+    copySuccess.value = 'copy to clipboard'
+}
+
 onBeforeMount(async () => {
     appStore.setCurrentPage({
-        title1: t("feedback.title1"),
-        title2: t("feedback.title2"),
+        title1: t("thanks_title1"),
+        title2: t("thanks_title2"),
         icon: "uil-comment-alt"
     });
 
+    comment.value = route?.query?.comment
+
     links.value = await companyStore.loadLinksByEstablishment(route.params.etab)
+    
     socials.value = links.value.filter((link) => {
         return link.category == 'Social' 
     });
@@ -146,6 +158,7 @@ onBeforeMount(async () => {
     links.value = links.value.filter((link) => {
         return link.category == 'Platform' 
     });
+    
 });
   
 watch(() => {
@@ -161,9 +174,18 @@ watch(() => {
 </script>
 
 <style scoped>
+
+.comment_container {
+    margin-top: 15px;
+    padding: 8px;
+    border: 1px solid #e6e5f9;
+    border-radius: 5px;
+}
 p {
     /* text-align: center;*/
     font-weight: 500;
+    text-align: justify;
+    word-wrap: break-word;
 }
 
 .logoSrc {
@@ -179,7 +201,7 @@ p {
     display: flex;
     gap: 20px;
     align-items: center;
-    margin-top: 2%;
+    margin-top: 1%;
 }
 
 .link li {
@@ -213,7 +235,7 @@ h2 {
 
 .feedback__form {
     width: 50%;
-    margin: 3rem auto;
+    margin: auto;
     /* box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;*/
     /* border: 1px solid var(--light-color-bg2);*/
     border-radius: 5px;
