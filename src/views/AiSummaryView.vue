@@ -194,7 +194,7 @@ onMounted(async () => {
 }
 
 p {
-    font-size: 16px;
+    font-size: 14px;
     font-family: Montserrat, sans-serif;
     text-align: justify;
 }

@@ -55,8 +55,8 @@
         "title": "Coupon de Réduction Activé !",
         "content": "Félicitations ! Votre coupon de réduction a été activé avec succès. Utilisez le code de réduction lors du paiement pour économiser sur votre commande."
     },
-    "success_text": "Vous pouvez également partager vos retours sur les plateformes",
-    "success_text2": "Rejoignez-nous sur les réseaux sociaux",
+    "success_text": "Vous pouvez également partager votre expérience sur les plateformes en un clic grâce à un copier-coller de votre commentaire",
+    "success_text2": "Restons en contact sur les réseaux sociaux  ",
     "coupon": {
         "coupon_expirer": "Désolé, il semble que votre coupon ait expiré ",
         "title": "Offre exclusive * ",

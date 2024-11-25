@@ -326,6 +326,7 @@ const submit = async () => {
                             }
                         }, true);
                     }
+                    console.log("comment ", comment.value)
                     router.push({
                         name: 'SuccessFeedback',
                         params: {
@@ -333,6 +334,9 @@ const submit = async () => {
                             tag: route.params.tag,
                             share: parseFloat(review.rating) >= 4 ? 'message-and-join-us' : 'message'
                         },
+                        query : {
+                            comment : comment.value,
+                        }
                     });
                 }
                 if (response.status == 200) {
