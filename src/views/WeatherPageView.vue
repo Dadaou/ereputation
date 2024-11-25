@@ -202,7 +202,7 @@ const loadWeatherFromServer = async (tag, dateStart, dateEnd, unit) => {
     });
 
     if (response.status == 200) {
-        let results = response.data['data'].reverse()
+        let results = response.data['data']
         data.value = results.map(r =>
         ({
             name: r['name'],
