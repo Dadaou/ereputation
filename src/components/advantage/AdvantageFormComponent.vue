@@ -234,6 +234,7 @@ const advantageLimit = ref(null);
 
 const type = ref('add');
 const advantage_to_update = inject('advantage_to_update');
+
 const advantages = inject('advantages');
 const activeAdvantageTab = inject('advantage_activeTab');
 const metrics = ref(['Percent', 'Amount'])
@@ -321,56 +322,13 @@ watch(advantage_to_update, () => {
         description.value = advantage_to_update.value["description"];
         type.value = 'edit';
 
-        console.log("dateFrom:", dateFrom.value);
-        console.log("dateTo:", dateTo.value);
+        if (advantage_to_update.value.logo) {
+            previewImage.value = advantage_to_update.value.logo;
+        } else {
+            previewImage.value = null;
+        }
     }
 })
-
-const loadData = (_advantage, advantage, establishment) => {
-    const new_advantage = {
-        id: _advantage.id,
-        name: _advantage.name,
-        category: _advantage.category,
-        code: _advantage.code,
-        amount: _advantage.amount,
-        validity: _advantage.validity,
-        advantageLimit: _advantage.advantageLimit,
-        metric: _advantage.metric,
-        scope: _advantage.scope,
-        expired_at: _advantage.expiredAt ? moment(_advantage.expiredAt).format('YYYY-MM-DD') : null,
-        date_from: _advantage.dateFrom ? moment(_advantage.dateFrom).format('YYYY-MM-DD') : null,
-        date_to: _advantage.dateTo ? moment(_advantage.dateTo).format('YYYY-MM-DD') : null,
-        establishment_name: establishment[1],
-        establishment_id: establishment[0].split('/')[3],
-        enable: true
-    }
-    advantages.value.push(new_advantage);
-    activeAdvantageTab.value = 'advantage_list'
-}
-
-const updateData = (_advantage, establishment) => {
-    const new_advantage = {
-        id: _advantage.id,
-        name: _advantage.name,
-        category: _advantage.category,
-        code: _advantage.code,
-        amount: _advantage.amount,
-        validity: _advantage.validity,
-        advantageLimit: _advantage.advantageLimit,
-        metric: _advantage.metric,
-        scope: _advantage.scope,
-        expired_at: _advantage.expiredAt ? moment(_advantage.expiredAt).format('YYYY-MM-DD') : null,
-        date_from: _advantage.dateFrom ? moment(_advantage.dateFrom).format('YYYY-MM-DD') : null,
-        date_to: _advantage.dateTo ? moment(_advantage.dateTo).format('YYYY-MM-DD') : null,
-        establishment_name: establishment[1],
-        establishment_id: establishment[0].split('/')[3],
-        enable: true
-    }
-
-    advantages.value.forEach((advantage, index) => {
-        if (advantage.id == new_advantage.id) advantages.value[index] = new_advantage;
-    })
-}
 
 const resetForm = () => {
     dateFrom.value = null;
@@ -386,76 +344,60 @@ const resetForm = () => {
     validity.value = '';
     advantageLimit.value = ''
     establishment.value = "";
+    imgHasChanged.value = false;
+    previewImage.value = null;
     type.value = 'add';
 }
 
 const submit = async () => {
-    const advantageData = {
-        "category": category.value,
-        "code": code.value,
-        "name": advantageName.value,
-        "amount": parseFloat(amount.value),
-        "metric": metric.value,
-        "enable": true,
-        "establishment": establishment.value.split(",")[0],
-        "scope": scope.value,
-        "validity": validity.value,
-        "description": description.value,
-        "expiredAt": expiredAt.value,
-        "advantageLimit": (advantageLimit.value == "") ? null : advantageLimit.value,
-        "dateFrom": dateFrom.value,
-        "dateTo": dateTo.value,
+    const formData = new FormData();
+    const establishmentPath = establishment.value.split(",")[0];
+    const establishmentId = establishmentPath.split("/").pop();
+
+    const selectedEstablishment = userStore.user.customer.establishments.find(
+        (item) => item.id === parseInt(establishmentId, 10)
+    );
+    formData.append("category", category.value);
+    formData.append("code", code.value);
+    formData.append("name", advantageName.value);
+    formData.append("amount", parseFloat(amount.value));
+    formData.append("metric", metric.value);
+    formData.append("enable", true);
+    formData.append("establishment", selectedEstablishment?.competitor_tag || "");
+    formData.append("scope", scope.value);
+    formData.append("validity", validity.value);
+    formData.append("description", description.value);
+    formData.append("expiredAt", moment(expiredAt.value).format('YYYY-MM-DD'));
+    formData.append("advantageLimit", (advantageLimit.value === "") ? null : advantageLimit.value);
+    formData.append("dateFrom", moment(dateFrom.value).format('YYYY-MM-DD'));
+    formData.append("dateTo", moment(dateTo.value).format('YYYY-MM-DD'));
+
+
+    if (type.value === 'edit' && advantage_to_update.value !== null) {
+        const advantageId = advantage_to_update.value.id;
+        formData.append("id", advantageId);
     }
 
-    try {
-        if (category.value.length > 0) {
-            showSpinner.value = true;
+    const imageInput = document.getElementById('imgInput');
+    if (imageInput.files.length > 0) {
+        formData.append("file", imageInput.files[0]);
+    }
 
-            if (type.value === 'add') {
-                const response = await new Promise((resolve) => {
-                    services.createRecord('advantages', advantageData, (response) => {
-                        resolve(response);
-                    });
-                });
-
-                if (response.status === 201) {
-                    const { id, ...data } = response.data;
-                    advantageData.id = id;
-                    loadData(advantageData, advantageData, establishment.value.split(","));
-                    ElMessage({
-                        message: `Advantage added successfully.`,
-                        type: 'success',
-                    });
-                }
-            } else if (type.value === 'edit' && advantage_to_update.value !== null) {
-                const advantageId = advantage_to_update.value.id;
-                const response = await new Promise((resolve) => {
-                    services.putRecord('advantages', advantageId, advantageData, (response) => {
-                        resolve(response);
-                    });
-                });
-
-                if (response.status === 200) {
-                    ElMessage({
-                        message: `Advantage updated successfully.`,
-                        type: 'success',
-                    });
-                    const { id, ...data } = response.data;
-                    advantageData.id = id;
-                    updateData(advantageData, establishment.value.split(','));
-                }
-            }
-
-            resetForm(); // Réinitialiser le formulaire ici
-            showSpinner.value = false;
-            activeAdvantageTab.value = 'advantage_list';
+    const handleResponse = (response) => {
+        if (response && (response.status === 201 || response.status === 200)) {
+            ElMessage({
+                message: `Advantage ${type.value === 'add' ? 'added' : 'updated'} successfully.`,
+                type: 'success',
+            });
+            resetForm();
         } else {
-            ElMessage.error(`Please, provide all needed information to add/update an advantage`);
-            showSpinner.value = false;
+            ElMessage.error(`Failed to ${type.value === 'add' ? 'add' : 'update'} advantage.`);
         }
-    } catch (error) {
-        console.error('Error during form submission:', error);
-    }
+        showSpinner.value = false;
+    };
+
+    showSpinner.value = true;
+    services.postFormData('advantage/front_post', formData, handleResponse);
 };
 
 const selectAdvantage = (advantage) => {
