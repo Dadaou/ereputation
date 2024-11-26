@@ -320,13 +320,12 @@ const submit = async () => {
                                         template: "workflow_"+((lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase())
                                     }
                                     await services.createRecord('public/workflow', coupons, (res) => {
-                                        resetForm()
+                                        //resetForm()
                                     }, true);
                                 }
                             }
                         }, true);
                     }
-                    console.log("comment ", comment.value)
                     router.push({
                         name: 'SuccessFeedback',
                         params: {

@@ -12,7 +12,7 @@
                 <p v-if="links.length > 0">{{ $t("success_text") }}</p>
                 <div class="comment_container" v-if="comment !== ''">
                     <p style="font-size: 13px;">{{ comment }}</p>
-                    <el-button @click="copyComment" ><i class='fa fa-copy' v-if="copySuccess === ''"></i>{{ copySuccess }}</el-button>
+                    <el-button @click="copyComment" style="margin-top: 8px;"><i class='fa fa-copy' v-if="copySuccess === ''"></i>{{ copySuccess }}</el-button>
                 </div>
                 <ul v-if="links.length > 0" class="logoSrc">
                     <li v-for="link in links" :key="link.id">
