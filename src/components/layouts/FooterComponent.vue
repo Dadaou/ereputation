@@ -16,9 +16,7 @@
             <ul v-if="!isFeedback">
               <li>Legal Notice</li>
               <li>
-                <RouterLink to="/sign-up" :class="{ 'active-link': isSignUpActive }">
-                  Pricing
-                </RouterLink>
+                <a href="https://linkystar.com/pricing" :class="{ 'active-link': isSignUpActive }" target="_blank">Pricing</a>
               </li>
             </ul>
             <ul v-else></ul>
