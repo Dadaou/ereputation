@@ -169,7 +169,7 @@
                                     buttonRef2 = e.currentTarget
                                     visible2 = true
                                 }" @mouseleave="() => visible2 = false"
-                                @click="handleModal('Review feeling', 'add', 'uil-add', 'feeling_review', review, null)">
+                                @click="handleModal('Review feeling', 'add', 'uil-add', 'feeling_review', review, null), feeling_categorization = null">
                             </i>
                             <el-tooltip ref="tooltipRef2" :visible="visible2" :virtual-ref="buttonRef2"
                                 virtual-triggering popper-class="singleton-tooltip" placement="top">
