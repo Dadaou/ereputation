@@ -1,5 +1,5 @@
 <template>
-    <h3>Gate & Feedback visits</h3>
+    <h3>About gate & feedback visits</h3>
     <div v-if="hasData">
         <div class="chart-container">
             <apexchart type="line" height="460" :options="chartOptions" :series="series"></apexchart>
@@ -16,9 +16,7 @@
                     </span>
                 </span><br>
             </span>
-
             <span v-if="IsValueOkay(source)">source : {{ source }}<br></span>
-
             <span v-if="IsValueOkay(units)">units :
                 <span v-for="(unit_id, index) in units" :key="unit_id">
                     <span v-for="unite in unites" :key="unite.id">
@@ -28,7 +26,6 @@
                     </span>
                 </span><br>
             </span>
-
             <span v-if="IsValueOkay(staff)"> staff :
                 <span v-for="(staff_id, index) in staff" :key="staff_id">
                     <span v-for="staff_name in staffs" :key="staff_name.id">
@@ -38,15 +35,12 @@
                     </span>
                 </span>
             </span>
-            <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)">date :
-                from {{ formattedStartDate }} to {{ formattedEndDate }}
-            </span>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, onBeforeMount, inject, watch, computed } from 'vue'
+import { ref, onBeforeMount, inject, watch } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router';
 import moment from 'moment';
@@ -68,8 +62,6 @@ const establishments = inject('establishments');
 const staffs = inject('staffs');
 const unites = inject('units');
 const hasData = ref(false);
-const formattedStartDate = computed(() => moment(start_date.value).format('ddd DD MMM YYYY'));
-const formattedEndDate = computed(() => moment(end_date.value).format('ddd DD MMM YYYY'));
 
 // Options du graphique
 const chartOptions = ref({

@@ -212,6 +212,12 @@
                     :value="item.category" @click="handleCategoryDropdown('other')" />
             </el-select>
         </div>
+        <div class="px-2 w-full my-2" v-if="activeName == 'trends'">
+                <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform"
+                    placeholder="Select a website" :data="formattedWebsites" @submit="(website) => {
+                        selectedWebsites = website
+                    }" :default="formattedWebsites[0]" />
+        </div>
     </div>
     <div class="tablet_mobile__head">
         <div class="establishment__info_tablet">
@@ -338,6 +344,13 @@
                 <el-date-picker class="mt-2" v-model="end_date" placeholder="End date" :size="'large'" />
             </div>
 
+            <div class="date__filter" v-if="activeName == 'trends'">
+                <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform"
+                    placeholder="Select a website" :data="formattedWebsites" @submit="(website) => {
+                        selectedWebsites = website
+                    }" :default="formattedWebsites[0]" />
+            </div>
+
             <!-- <DropdownComponent v-if="activeName === 'analysis_competitors'" :showTitle="false" placeholder=""
                 :data="timePeriods" @submit="(timePeriod) => {
                 selectedTimePeriod = timePeriod
@@ -455,6 +468,14 @@ let noScore = ref(false);
 provide('categories', categories)
 const avgScore = ref(0)
 
+const language = inject('language')
+let selectedWebsites = ref('Global');
+provide('selectedWebsites',selectedWebsites)
+let websites = ref(['Global']);
+const formattedWebsites = computed(() => {
+    return websites.value.map(website => formatString(website));
+});
+
 // calcul feedBack
 
 let reviewFeedbackData = ref({
@@ -463,6 +484,8 @@ let reviewFeedbackData = ref({
     green: 0,
     feeling: 0
 });
+
+
 
 // calcul sentiment analysis
 const calculSentimentAnalysis = (_score) => {
@@ -1043,9 +1066,11 @@ let paginationConfig = ref({
     _data: []
 });
 
-const language = inject('language')
-let selectedWebsites = ref('Global');
-let websites = ref(['Global']);
+
+const formatString = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 let updatePage = function (pageNumber) {
     paginationConfig.value.current = pageNumber;
     updateVisibleData(_reviews.value);
@@ -1228,6 +1253,7 @@ onBeforeMount(async () => {
             all_items.value[0].value = establishment.value.rating;
             all_items.value[1].value = establishment.value.totalReviews;
             appStore.isLoading = false;
+            websites.value = ['Global', 'App (Private)', ...establishment.value['websites']];
         }
     })
     await loadCategories(companyId)

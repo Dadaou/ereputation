@@ -1,8 +1,6 @@
 <template>
     <h3>Number of total media click</h3>
-
     <div v-if="hasData">
-
         <div class="chart-container">
             <apexchart type="donut" height="480" :options="chartOptions" :series="series"></apexchart>
         </div>
@@ -10,7 +8,6 @@
     <div v-else class="no_data">
         No clicks <br>
         <div v-if="IsValueOkay(establishment) && establishment[0] != 'all'">for establishments :
-
             <span v-for="estab_id, index in establishment" :key="estab_id">
                 <span v-for="estab_name in establishments" :key="estab_name.id">
                     <span v-if="estab_name.id == estab_id">
@@ -20,14 +17,11 @@
                 </span>
             </span>
         </div>
-        <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)">
-            from {{ formattedStartDate }} to {{ formattedEndDate }}
-        </span>
     </div>
 </template>
 
 <script setup>
-import { ref, onBeforeMount, inject, watch, computed } from 'vue'
+import { ref, onBeforeMount, inject, watch } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router'
 import moment from 'moment';
@@ -51,8 +45,6 @@ const series = ref([]);
 const labels = ref([]);
 const hasData = ref(false);
 const userStore = useUserStore();
-const formattedStartDate = computed(() => moment(start_date.value).format('ddd DD MMM YYYY'));
-const formattedEndDate = computed(() => moment(end_date.value).format('ddd DD MMM YYYY'));
 
 const chartOptions = ref({
     labels: labels.value,

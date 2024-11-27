@@ -1,12 +1,10 @@
 <template>
-  <h3>Feedback form submissions</h3>
-
+  <h3>About feedback form submissions</h3>
   <div v-if="hasData">
     <div class="chart-container">
       <apexchart type="bar" height="460" :options="chartOptions" :series="series" />
     </div>
   </div>
-
   <div v-else class="content-message">
     <div>No clicks for <br>
       <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'"> establishment :
@@ -18,7 +16,6 @@
           </span>
         </span><br>
       </span>
-
       <span v-if="IsValueOkay(units)">units :
         <span v-for="(unit_id, index) in units" :key="unit_id">
           <span v-for="unite in unites" :key="unite.id">
@@ -28,7 +25,6 @@
           </span>
         </span><br>
       </span>
-
       <span v-if="IsValueOkay(staff)"> staff :
         <span v-for="(staff_id, index) in staff" :key="staff_id">
           <span v-for="staff_name in staffs" :key="staff_name.id">
@@ -38,15 +34,12 @@
           </span>
         </span>
       </span>
-      <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)"> date :
-        from {{ formattedStartDate }} to {{ formattedEndDate }}
-      </span>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onBeforeMount, watch, inject, computed } from 'vue';
+import { ref, onBeforeMount, watch, inject } from 'vue';
 import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router';
 import services from '@Services/services.js';
@@ -68,8 +61,7 @@ const unites = inject('units');
 const units = inject('unitsFilter');
 const userStore = useUserStore();
 const hasData = ref(false);
-const formattedStartDate = computed(() => moment(start_date.value).format('ddd DD MMM YYYY'));
-const formattedEndDate = computed(() => moment(end_date.value).format('ddd DD MMM YYYY'));
+
 const chartOptions = ref({
   chart: {
     id: 'vuechart-example',
