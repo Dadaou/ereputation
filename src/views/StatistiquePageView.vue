@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="filtre_content p-4">
+        <div class="filtre_content pt-4 pb-4">
             <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-7 lg:grid-cols-7 gap-4">
                 <el-select v-model="establishment" multiple size="large" class="space" placeholder="All Etablishments">
                     <el-option label="All Etablishments" :value="'all'" @click="handleEstablishmentDropdown('all')"
