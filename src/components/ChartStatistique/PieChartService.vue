@@ -1,6 +1,5 @@
 <template>
-
-    <h3>Number of form submitted by Services</h3>
+    <h3>About Services forms</h3>
     <div v-if="hasData">
         <div class="chart-container">
             <apexchart type="donut" height="480"  :options="chartOptions" :series="series"></apexchart>
@@ -30,16 +29,13 @@
                     </span>
                 </span>
             </div>
-            <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)">
-                from {{ formattedStartDate }} to {{ formattedEndDate }}
-            </span>
         </div>
     </div>
 </template>
 
 
 <script setup>
-import { ref, onBeforeMount, inject, watch, computed } from 'vue'
+import { ref, onBeforeMount, inject, watch } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router'
 import moment from 'moment';
@@ -60,8 +56,6 @@ const unites = inject('units');
 const units = inject('unitsFilter');
 const source = inject('sourceFilter');
 const hasData = ref(false);
-const formattedStartDate = computed(() => moment(start_date.value).format('ddd DD MMM YYYY'));
-const formattedEndDate = computed(() => moment(end_date.value).format('ddd DD MMM YYYY'));
 
 const series = ref([]);
 const labels = ref([]);

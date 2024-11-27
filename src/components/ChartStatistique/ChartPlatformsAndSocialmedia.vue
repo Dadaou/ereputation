@@ -1,6 +1,5 @@
 <template>
-    <h3>Platforms & Social Media</h3>
-
+    <h3>About platforms & Social Media</h3>
     <div v-if="hasData">
         <div class="chart-container">
             <apexchart type="bar" height="350" :options="options" :series="series"></apexchart>
@@ -17,18 +16,13 @@
                     </span>
                 </span><br>
             </span>
-
             <span v-if="IsValueOkay(source)">for source : {{ source }}<br></span>
-
-            <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)">
-                from {{ formattedStartDate }} to {{ formattedEndDate }}
-            </span>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, onBeforeMount, inject, watch, computed } from 'vue'
+import { ref, onBeforeMount, inject, watch } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router'
 import moment from 'moment'
@@ -43,8 +37,6 @@ const end_date = inject('end_date')
 const timePeriods = inject('timePeriods')
 const establishment = inject('establishment')
 const establishments = inject('establishments')
-const staffs = inject('staffs')
-const unites = inject('units')
 const staff = inject('staffFilter')
 const units = inject('unitsFilter')
 const source = inject('sourceFilter')
@@ -52,8 +44,6 @@ const source = inject('sourceFilter')
 const series = ref([])
 const hasData = ref(false)
 const userStore = useUserStore()
-const formattedStartDate = computed(() => moment(start_date.value).format('ddd DD MMM YYYY'));
-const formattedEndDate = computed(() => moment(end_date.value).format('ddd DD MMM YYYY'));
 
 const options = ref({
     series: [],

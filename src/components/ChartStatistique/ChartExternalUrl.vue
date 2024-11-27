@@ -1,31 +1,27 @@
 <template>
-  <h3>QR Code Scans</h3>
-
+  <h3>About external Qrcodes</h3>
   <div v-if="hasData">
     <div class="chart-container">
       <apexchart type="bar" height="460" :options="chartOptions" :series="series" />
     </div>
   </div>
   <div v-else class="content-message">
-    <div>No scan for <br>
-      <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'"> establishment :
+    <div>No scan<br>
+      <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'"> for establishment :
         <span v-for="(estab_id, index) in establishment" :key="estab_id">
           <span v-for="estab_name in establishments" :key="estab_name.id">
             <span v-if="estab_name.id == estab_id">
               {{ estab_name.name }}<span v-if="index !== establishment.length - 1">, </span>
             </span>
           </span>
-        </span><br>
-      </span>
-      <span v-if="IsValueOkay(start_date) && IsValueOkay(end_date)"> date :
-        from {{ formattedStartDate }} to {{ formattedEndDate }}
+        </span>
       </span>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onBeforeMount, watch, inject, computed } from 'vue';
+import { ref, onBeforeMount, watch, inject } from 'vue';
 import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router';
 import services from '@Services/services.js';
@@ -42,13 +38,10 @@ const timePeriods = inject('timePeriods');
 const establishment = inject('establishment');
 const establishments = inject('establishments');
 const staff = inject('staffFilter');
-const staffs = inject('staffs');
-const unites = inject('units');
 const units = inject('unitsFilter');
 const userStore = useUserStore();
 const hasData = ref(false);
-const formattedStartDate = computed(() => moment(start_date.value).format('ddd DD MMM YYYY'));
-const formattedEndDate = computed(() => moment(end_date.value).format('ddd DD MMM YYYY'));
+
 const chartOptions = ref({
   chart: {
     id: 'vuechart-example',
