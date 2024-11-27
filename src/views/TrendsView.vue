@@ -51,6 +51,7 @@ appStore.setIsExist(true);
 const dataLoading = ref(true)
 const companyId = route.params.id;
 const customerTag = inject('tag')
+const selectedWebsites = inject('selectedWebsites');
 
 let timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
 let selectedTimePeriod = ref(timePeriods.value[0]);
@@ -64,30 +65,51 @@ let data = ref({
 })
 
 const options = ref({
-    responsive: true,
+    // responsive: true,
     maintainAspectRatio: true,
-    aspectRatio: 2,
+    // aspectRatio: 2,
+    scales: {
+
+        y: {
+          beginAtZero: true,
+          suggestedMin: 0, 
+          suggestedMax: 5,
+          ticks: {
+            stepSize: 1 ,
+            padding: 10
+            
+          },
+          grid: {
+            
+            drawBorder: true,
+            drawOnChartArea: true
+          
+          }
+
+        },
+    },
     plugins: {
         legend: {
             display: true,
             position: 'bottom'
         }
     },
-    scales: {
-        y: {
-            min: 0,
-            max: 6,
-            ticks: {
-                stepSize: 1,
-                precision: 0,
-                beginAtZero: true
-            }
-        }
-    }
+    // scales: {
+    //     y: {
+    //         min: 0,
+    //         max: 6,
+    //         ticks: {
+    //             stepSize: 1,
+    //             precision: 0,
+    //             beginAtZero: true
+    //         }
+    //     }
+    // }
 });
 
 provide('date', date);
 provide('type', selectedTimePeriod);
+
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
     { title: "Reviews", value: 0, icon: "uil-comment" },
@@ -103,10 +125,15 @@ watch([start_date, end_date], () => {
     }
 })
 
-const loadFromServer = async (type, company, datefrom, dateto) => {
-     isLoading.value = true
+const loadFromServer = async (type, company, datefrom, dateto,source) => {
+     isLoading.value = true;
+       if (IsValueOkay(source)) {
+        source = (source == 'App (Private)') ? 'App (Private)' : source.toLowerCase();
+        source = source == 'global' ? 'non' : source;
+        
+    }
     const response = await new Promise((resolve) => {
-        services.get_Record(`establishment/trends?tag=${company}&dateFrom=${datefrom}&dateTo=${dateto}`, (response) => {
+        services.get_Record(`establishment/trends?tag=${company}&dateFrom=${datefrom}&dateTo=${dateto}&platform=${source}`, (response) => {
             resolve(response)
         });
 
@@ -118,7 +145,7 @@ const loadFromServer = async (type, company, datefrom, dateto) => {
      isLoading.value = false;
 }
 
-watch([date, selectedTimePeriod], () => {
+watch([date, selectedTimePeriod,selectedWebsites], () => {
     if (date.value.length == 0) {
 
         date.value = [moment().subtract(10, 'days').format('YYYY-M-DD'), moment().format('YYYY-M-DD')];
@@ -126,11 +153,11 @@ watch([date, selectedTimePeriod], () => {
     
     let datefrom = moment(date.value[0]).format('YYYY-MM-DD');
     let dateto = moment(date.value[1]).format('YYYY-MM-DD');
-    loadFromServer(selectedTimePeriod.value.toLowerCase(), companyId, datefrom, dateto);
+    loadFromServer(selectedTimePeriod.value.toLowerCase(), companyId, datefrom, dateto,selectedWebsites.value);
 })
 
 onBeforeMount(async () => {
-    await loadFromServer('daily', companyId, start_date.value, end_date.value)
+    await loadFromServer('daily', companyId, start_date.value, end_date.value,selectedWebsites.value)
 })
 
 
