@@ -261,12 +261,12 @@ const router = createRouter({
           redirect: { name: 'DiscountAuthentication' },
           children: [
             {
-              path: '/public/customer/:tag/discount/auth',
+              path: '/public/customer/:tag/discount/auth/:discountTag',
               name: 'DiscountAuthentication',
               component: () => import('@Views/DiscountValidationAuthPageView.vue')
             },
             {
-              path: '/public/customer/:tag/discount/validation/:discountTag',
+              path: '/public/discount/validation/:discountTag',
               name: 'DiscountQRCodeValidation',
               component: () => import('@Views/EnableAdvantagePageView.vue'),
               meta: {
@@ -274,7 +274,7 @@ const router = createRouter({
               }
             },
             {
-              path: 'public/discount/code/validation',
+              path: 'public/discount/code/validation/:discountTag',
               name: 'DiscountCodeValidation',
               component: () => import('@Views/DiscountValidationCodePageView.vue')
             }
@@ -331,11 +331,11 @@ const router = createRouter({
           name: 'QRCodeAdvContact',
           component: () => import('@Views/QRCodeAdvantagePageView.vue')
         },
-        {
+        /*{
           path: '/public/customer/:tag/advantagecontact/:discountTag',
           name: 'QRCodeAdvContactExpired',
           component: () => import('@Views/QRCodeAdvantagePageViewExpired.vue')
-        }
+        }*/
       ]
     },
     {

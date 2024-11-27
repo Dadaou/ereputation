@@ -1,7 +1,7 @@
 <template>
-    <div class="main__container">
-        <div class="container mx-auto">
-            <div
+    <div class="main__container" >
+        <div class="container mx-auto" >
+            <div 
                 class="validation__qrc_content w-full max-w-md mx-auto bg-gradient-to-br from-purple-600 to-indigo-600 text-white text-center py-5 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative">
                 <h3 class="text-xl font-semibold mb-4">🔍 Validate the coupon</h3>
                 <div class="w-full flex flex-col items-center space-y-4 mb-6">
@@ -23,7 +23,7 @@
 <script setup>
 import { ref, defineAsyncComponent, onBeforeMount } from 'vue';
 import services from '@Services/services.js';
-import { useRouter } from "vue-router"
+import { useRouter, useRoute } from "vue-router"
 import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from "@Stores/app.js";
 import { ElMessage } from 'element-plus';
@@ -38,45 +38,63 @@ const showSpinner = ref(false);
 const userStore = useUserStore();
 const appStore = useAppStore();
 const router = useRouter();
+const route= useRoute(); 
 
 const submit = async () => {
+
     showSpinner.value = true;
+
     try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`public/customer/establishments/advantagecontacts/list?code=${couponCode.value}`, (response) => {
+            services.get_Record(`public/customer/establishments/advantagecontacts/list?tag=${route.params.discountTag}`, (response) => {
                 resolve(response);
             }, true);
         });
 
         if (response.status === 200) {
             const discount = response.data[0]
-            showSpinner.value = false;
-            router.push({
-                name: 'DiscountQRCodeValidation',
-                params: {
-                    etab: discount.establishment_tag,
-                    discountTag: discount.tag
-                },
-            });
+
+            if(couponCode.value == discount.code) {
+
+                router.push({
+                    name: 'DiscountQRCodeValidation',
+                    params: {
+                        discountTag: discount.tag
+                    },
+                });
+
+            }
+            else {
+                ElMessage({
+                    message: `Invalid coupon code.`,
+                    type: 'warning',
+                });
+            }
+
+
         } else {
             ElMessage({
-                message: `Advantage contacts not found.`,
+                message: `Invalid advantage tag.`,
                 type: 'warning',
             });
         }
     } catch (error) {
         console.error('Error in onBeforeMount:', error);
     }
+    finally {
+        showSpinner.value = false;
+    }
+   
 };
 
-onBeforeMount(()=>{
+/*onBeforeMount(()=>{
     appStore.header = false;
      appStore.setCurrentPage({
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),
         icon: "uil-comment-alt"
     });
- });
+ });*/
 </script>
 
 <style scoped>
@@ -84,7 +102,7 @@ onBeforeMount(()=>{
     margin: auto;
     padding: 20px;
     border-radius: 10px;
-    margin-top: 2rem;
+    margin-top: 200px;
 }
 
 .input-field {

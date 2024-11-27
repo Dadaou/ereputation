@@ -64,6 +64,8 @@
         </div>
         <button v-if="!valid" id="cpnBtn2" class="btn-copy mt-6" @click="submit">Validate <i
             class="uil uil-check"></i></button>
+        <button v-else id="closeBtn" class="btn-copy mt-6" @click="closeWindow">Close the window <i
+            class="uil uil-times"></i></button>
       </div>
     </div>
   </div>
@@ -74,7 +76,7 @@
 import { ref, defineAsyncComponent, onBeforeMount } from 'vue'
 import { useUserStore } from "@Stores/user.js"
 import { useAppStore } from "@Stores/app.js"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import services from '@Services/services.js'
 import moment from 'moment';
 import { ElMessage } from 'element-plus'
@@ -88,10 +90,15 @@ const EstablishmentNotFound = defineAsyncComponent(() =>
 const showSpinner = ref(false)
 const code = ref('')
 const route = useRoute()
+const router = useRouter()
 const advantages = ref(null)
 const userStore = useUserStore()
 const appStore = useAppStore()
 const valid = ref(true)
+
+const closeWindow = () => {
+  router.replace({ name: 'Home'})
+}
 
 const submit = () => {
   const data = {

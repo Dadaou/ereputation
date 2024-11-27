@@ -1,27 +1,24 @@
 <template>
     <div class="main__container qrcontainer" v-if="exist">
-        <div class="container mx-auto advantage__qrc_content" v-if="isNotExpired">
+        <div class="container mx-auto advantage__qrc_content" v-if="!isExpired">
             <div
                 class="bg-gradient-to-br from-purple-600 to-indigo-600 text-white text-center py-10 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative">
                 <h3 class="text-xl font-semibold mb-4">🎉 {{ $t("coupon.title") }} 🎁</h3>
                 <div id="qrcode__container" ref="qrcode">
                     <vue-qrious class="qr__code mx-auto"
-                        :value="`${baseurl}/public/customer/${route.params.tag}/discount/validation/${route.params.discountTag}`"
+                        :value="`${baseurl}/public/customer/${route.params.tag}/discount/auth/${route.params.discountTag}`"
                         @change="onDataUrlChange" size="5000" />
                 </div>
                   
-                
-                
                 <span id="cpnCode" class="border-dashed border text-white px-4 py-2 rounded-l">{{ code }}</span>
                 <br>
                 <h3 class="text-xl font-semibold mb-4 mt-4" v-if="advantages">{{ advantages.adv_name }} <br>{{
                     advantages.establishment_name }}</h3>
                 <div v-if="advantages">
-                    <div v-if="advantages.adv_date_to != null && advantages.adv_date_from != null">
-                        <h3 class="text-xl font-semibold mb-4 mt-4"
-                            v-if="advantages.adv_date_to && advantages.adv_date_from">
-                            {{ $t("coupon.utilisation") }} {{ advantages.adv_date_from }} {{ $t("coupon.et") }} {{
-                                advantages.adv_date_to }}
+                    <div v-if="advantages.created_at != null && advantages.expired_at!= null">
+                        <h3 class="text-xl font-semibold mb-4 mt-4">
+                            {{ $t("coupon.utilisation") }} {{ moment(advantages.created_at).format('YYYY-MM-DD')}} {{ $t("coupon.et") }} {{
+                                moment(advantages.expired_at).format('YYYY-MM-DD') }}
                         </h3>
                     </div>
                 </div>
@@ -33,7 +30,7 @@
                     <button id="cpnBtn2" class="btn-copy" @click="downloadQrcode">Download <i
                             class="uil uil-qrcode-scan"></i></button>
                 </div>
-                <p class="text-sm" v-if="advantages">Valid Till: {{ moment(advantages.expired_at).format("DDMMM, YYYY")
+                <p class="text-sm" v-if="advantages">Valid till: {{ moment(advantages.expired_at).format("DDMMM, YYYY")
                     }}</p>
                 
 
@@ -60,7 +57,7 @@
                 </transition>
             </div>
         </div>
-        <QRCodeAdvantagePageViewExpired v-else />
+        <QRCodeAdvantagePageViewExpired v-else/>
     </div>
 
 </template>
@@ -75,14 +72,12 @@ import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
 import { useClipboard } from '@vueuse/core'
 import 'element-plus/es/components/date-picker/style/css';
+import QRCodeAdvantagePageViewExpired from '@Views/QRCodeAdvantagePageViewExpired.vue';
 
 
 const code = ref('')
 const { text, copy, copied, isSupported } = useClipboard()
 let exist = ref(true);
-const QRCodeAdvantagePageViewExpired = defineAsyncComponent(() =>
-    import("@Views/QRCodeAdvantagePageViewExpired.vue")
-)
 
 const page = ref({
     title1: "",
@@ -99,7 +94,7 @@ const isCopied = ref(false)
 const appStore = useAppStore();
 const dateJour = moment().format('YYYY-MM-DD HH:mm:ss');
 const dateExperied = ref(null);
-const isNotExpired = ref(true);
+const isExpired = ref(false);
 const date_to = ref(null);
 const adv_description = ref('')
 
@@ -145,19 +140,6 @@ onBeforeMount(async () => {
         icon: "uil-comment-alt"
     });
 
-    const response = await new Promise((resolve) => {
-        services.get_Record(`public/customer/establishments/advantagecontacts/list`, (response) => {
-            resolve(response);
-        }, true);
-    });
-    response.data.forEach(obj => {
-        listAdvantage.value.push(obj.tag);
-    });
-
-    // if (!listAdvantage.value.includes(route.params.discountTag)) {
-    //     router.push({ name: 'NotFound' })
-    // }
-
     try {
         const response = await new Promise((resolve) => {
             services.get_Record(`public/customer/establishments/advantagecontacts/list?tag=${route.params.discountTag}`, (response) => {
@@ -169,13 +151,13 @@ onBeforeMount(async () => {
             advantages.value = response.data[0];
             code.value = advantages.value.code;
             dateExperied.value = advantages.value.expired_at;
-            date_to.value = advantages.value.adv_date_to;
+            //date_to.value = advantages.value.adv_date_to;
             adv_description.value = advantages.value.adv_description;
             localStorage.setItem('nameAdvantage', advantages.value.adv_name);
 
-            if (dateJour != null || date_to.value != null) {
-                if (dateJour > dateExperied.value || dateJour > date_to.value) {
-                    isNotExpired.value = false;
+            if (dateJour != null) {
+                if (dateJour > dateExperied.value ) {
+                    isExpired.value = true;
                 }
             }
 

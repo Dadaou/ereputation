@@ -3,22 +3,11 @@
         <div class="container mx-auto advantage__qrc_content">
             <div
                 class="bg-gradient-to-br from-purple-600 to-indigo-600 text-white text-center py-10 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative">
-                <h3 class="text-xl font-semibold mb-4">🎉 {{ $t("coupon.title") }} 🎁</h3>
                 <h5 class="text-xl font-semibold mb-4">{{ $t("coupon.coupon_expirer") }}</h5>
 
                 <br>
                 <h3 class="text-xl font-semibold mb-4 mt-4" v-if="advantages">{{ advantages.adv_name }} <br>{{
                     advantages.establishment_name }}</h3>
-
-                <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2 mb-6">
-                    <button id="cpnBtn1" :class="[isCopied ? 'btn-copy2' : 'btn-copy']" @click="copyCode(code)"
-                        v-if="isSupported">{{ isCopied ? 'Copied' : 'Copy' }} <i class="uil uil-copy"></i></button>
-                    <button id="cpnBtn2" class="btn-copy" @click="downloadQrcode">Download <i
-                            class="uil uil-qrcode-scan"></i></button>
-                </div>
-
-                <p class="text-sm" v-if="advantages">Valid Till: {{ moment(advantages.expired_at).format("DDMMM, YYYY")
-                    }}</p>
 
                 <div class="w-12 h-12 bg-white rounded-full absolute top-1/2 transform -translate-y-1/2 left-0 -ml-6">
                 </div>
@@ -31,83 +20,19 @@
 </template>
 
 <script setup>
-import { ref, defineAsyncComponent, onBeforeMount, watch } from 'vue';
-import VueQrious from 'vue-qrious';
-import moment from 'moment';
-import { useUserStore } from "@Stores/user.js";
-import { useAppStore } from "@Stores/app.js";
+import { ref, onBeforeMount } from 'vue';
 import { useRoute, useRouter } from "vue-router";
 import services from '@Services/services.js';
-import { useClipboard } from '@vueuse/core'
+
 import 'element-plus/es/components/date-picker/style/css';
 
 
-const code = ref('')
-const { text, copy, copied, isSupported } = useClipboard()
 let exist = ref(true);
-const EstablishmentNotFound = defineAsyncComponent(() =>
-    import("@Views/EstablishmentNotFound.vue")
-)
-
-const page = ref({
-    title1: "",
-    title2: "Discount QR Code",
-    icon: "uil-qrcode-scan",
-});
-
 const route = useRoute();
-const router = useRouter();
-const baseurl = window.location.origin
-const base64Image = ref(null)
-const qrcode = ref(null)
-const isCopied = ref(false)
-const appStore = useAppStore();
-const dateJour = moment().format('YYYY-MM-DD HH:mm:ss');
-const dateExperied = ref(null);
-
-const listAdvantage = ref([]);
-
-watch(isCopied, () => {
-    if (isCopied.value == true) {
-        setTimeout(() => {
-            isCopied.value = false;
-        }, 3000);
-    }
-})
-
 const advantages = ref(null)
-
-const userStore = useUserStore();
-
-const copyCode = (code) => {
-    isCopied.value = true
-    copy(code)
-}
-
-const downloadQrcode = () => {
-    const filename = `${advantages.value.adv_name}-${advantages.value.contact_firstname}-discount-link`;;
-    services.downloadQrcode(filename, base64Image.value);
-}
-
-const onDataUrlChange = (dataUrl) => {
-    base64Image.value = dataUrl;
-};
 
 onBeforeMount(async () => {
     appStore.header = false;
-    /* voir si le discounttag exit sinon redirection page 404 */
-    const response = await new Promise((resolve) => {
-        services.get_Record(`public/customer/establishments/advantagecontacts/list`, (response) => {
-            resolve(response);
-        }, true);
-    });
-    response.data.forEach(obj => {
-        listAdvantage.value.push(obj.tag);
-    });
-
-    if (!listAdvantage.value.includes(route.params.discountTag)) {
-        router.push({ name: 'NotFound' })
-    }
 
     try {
         const response = await new Promise((resolve) => {
@@ -118,8 +43,6 @@ onBeforeMount(async () => {
 
         if (response.status === 200) {
             advantages.value = response.data[0];
-            code.value = advantages.value.code;
-            dateExperied.value = advantages.value.expired_at;
         } else {
             console.error('Error fetching advantages:', response);
         }

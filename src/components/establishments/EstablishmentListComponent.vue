@@ -110,7 +110,7 @@ const handleEdit = (index, establishment) => {
 const establishments = computed(() => {
     let data = [];
     let filteredData = [];
-    if (userStore.user && userStore.user.customer && userStore.user.customer.establishments) {
+    if (userStore.user && userStore.user.customer && userStore.user.customer.establishments) { 
         data = userStore.user.customer.establishments;
 
         data.forEach(establishment => {

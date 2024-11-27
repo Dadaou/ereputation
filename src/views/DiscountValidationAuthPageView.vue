@@ -6,7 +6,7 @@
         <div class="login__container" ref="form__ref">
             <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="login__form">
                 <span>{{ $t("coupon.validationcoupon") }}<br>{{ nameAdvantage }}</span>
-                <input type="password" name="code" placeholder="code" v-model="code" required>
+                <input type="text" name="code" placeholder="code" v-model="code" required>
                 <button type="submit" :class="['btn btn__light2', showSpinner == true ? 'isLoaded' : '']">
                     <SpinnerComponent v-if="showSpinner == true" :color="'red'" />
                     <span v-else>{{ $t("login.submit") }}</span>
@@ -24,8 +24,9 @@ import { useUserStore } from "@Stores/user.js"
 import { useAppStore } from "@Stores/app.js";
 import { useRouter, useRoute } from "vue-router"
 import { useWindowSize } from '@vueuse/core'
-import { ElMessage } from 'element-plus'
+import { ElMessage, tagEmits } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
+import services from '@Services/services.js'
 
 const SpinnerComponent = defineAsyncComponent(() =>
     import('@Components/utils/SpinnerComponent.vue')
@@ -39,6 +40,7 @@ const route = useRoute()
 const appStore = useAppStore()
 const userStore = useUserStore()
 const nameAdvantage = localStorage.getItem('nameAdvantage');
+const pinCode = ref('')
 
 const form = ref({
     email: '',
@@ -58,14 +60,17 @@ const showSpinner = ref(false)
 
 
 const submit = async () => {
+
     showSpinner.value = true;
+    await wait(5000);
+
     try {
-        if (code.value === '4321') {
+        if (code.value === pinCode.value) {
             localStorage.setItem('isSellerAuthenticated', 'true');
             if (route.query.redirect !== undefined) {
                 router.push(route.query.redirect)
             }
-            else router.push({ name: 'DiscountCodeValidation' })
+            else router.push({ name: 'DiscountCodeValidation', params : { discountTag : route.params.discountTag } })
 
             showSpinner.value = false;
         } else {
@@ -78,8 +83,27 @@ const submit = async () => {
     }
 };
 
-onBeforeMount(()=>{
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+onBeforeMount(async ()=>{
     appStore.header = false;
+
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`public/customer/establishments/advantagecontacts/list?tag=${route.params.discountTag}`, (response) => {
+                resolve(response);
+            }, true);
+        });
+
+        if (response.status === 200) {
+            pinCode.value = response.data[0].establishment_pin
+        } else {
+            console.error('Error fetching advantages:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+
  });
 
 </script>
