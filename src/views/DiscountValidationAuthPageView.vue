@@ -62,7 +62,7 @@ const showSpinner = ref(false)
 const submit = async () => {
 
     showSpinner.value = true;
-    await wait(5000);
+    await wait(3000);
 
     try {
         if (code.value === pinCode.value) {
@@ -74,8 +74,10 @@ const submit = async () => {
 
             showSpinner.value = false;
         } else {
-            notification.value.message = "Please provide the right code";
-            notification.value.type = "warning";
+            ElMessage({
+                message: `Please provide the right code`,
+                type: 'warning',
+            });
             showSpinner.value = false;
         }
     } catch (error) {
