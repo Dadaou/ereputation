@@ -84,7 +84,10 @@ const filteredData = computed (() => {
     return !search.value || 
       (data.lastname && data.lastname.toLowerCase().includes(search.value.toLowerCase())) ||
       (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase())) ||
-      (data.email && data.email.toLowerCase().includes(search.value.toLowerCase()));
+      (data.email && data.email.toLowerCase().includes(search.value.toLowerCase())) || 
+      (data.created_at && data.created_at.toLowerCase().includes(search.value.toLowerCase())) || 
+      (data.updated_at && data.updated_at.toLowerCase().includes(search.value.toLowerCase()))
+      ;
   });
 
   // Trier les données par date de création (de la plus récente à la plus ancienne)
