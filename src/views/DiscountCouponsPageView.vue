@@ -1,10 +1,10 @@
 <template>
   <div>
-    <el-input v-model="search" size="small" placeholder="Type to search" class="search"/>  
+    <el-input v-model="search" size="small" placeholder="Type to search" class="search" />
   </div>
   <div class="overflow-x-auto mt-5">
     <el-table :data="filteredData" class="responsive-table" style="width: 100%">
-      <el-table-column fixed label="Advantage name" prop="adv_name" width="250" />
+      <el-table-column fixed="left" label="Advantage name" prop="adv_name" :width="isMobile ? 130 : 250" />
       <el-table-column label="Establishment" prop="establishment_name" width="200" />
       <el-table-column label="Customer email" width="250">
         <template #default="scope">
@@ -29,19 +29,15 @@
           {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="Confirm" width="200">
-   
-         
+      <el-table-column fixed="right" align="center" label="Confirm" :width="isMobile ? 70 : 200" >
         <template #default="scope">
           <span v-if="scope.row.confirm" @click="handleCancel(scope.row.id)" class="has-hover"><i
               class="uil uil-check-square" style="color: #777; font-size: 15px;"></i></span>
-
           <span v-else @click="handleConfirm(scope.row.id)" class="has-hover"><i class="uil uil-square"
               style="color: #777; font-size: 15px;"></i></span>
         </template>
       </el-table-column>
     </el-table>
-    
   </div>
 </template>
 
@@ -54,7 +50,9 @@ import {
   ref,
   onBeforeMount,
   computed,
-  watchEffect
+  watchEffect,
+  onMounted,
+  onBeforeUnmount
 } from 'vue';
 
 const discountLoading = ref(false);
@@ -73,7 +71,7 @@ const compareDatesDesc = (a, b) => {
   if (dateA.isAfter(dateB)) return -1;
   return 0;
 };
-const filteredData = computed (() => {
+const filteredData = computed(() => {
   let filtered = discountData.value.filter((data) => {
     return !search.value ||
       (data.adv_name && data.adv_name.toLowerCase().includes(search.value.toLowerCase())) ||
@@ -137,6 +135,19 @@ onBeforeMount(async () => {
     console.error('Error in onBeforeMount:', error);
   }
 });
+
+const isMobile = ref(window.innerWidth < 768);
+
+const handleResize = () => {
+  isMobile.value = window.innerWidth < 768;
+};
+onMounted(() => {
+  window.addEventListener('resize', handleResize);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize);
+});
 </script>
 <style scoped>
 button i {
@@ -161,20 +172,22 @@ button:hover {
 .has-hover:hover {
   cursor: pointer;
 }
-.search{
+
+.search {
   display: flex;
   max-width: 150px;
   float: right;
 }
 
-@media screen and (max-width: 768px) { 
-    .search {
-      display: flex;
-      max-width: 220px;
-      float: right;
-    }
-    .el-table--fit {
-      font-size: 11px !important;
-    }
+@media screen and (max-width: 768px) {
+  .search {
+    display: flex;
+    max-width: 220px;
+    float: right;
+  }
+
+  .el-table--fit {
+    font-size: 11px !important;
+  }
 }
 </style>
