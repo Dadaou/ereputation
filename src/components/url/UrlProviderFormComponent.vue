@@ -1,93 +1,105 @@
 <template>
-    <div class="security__header border__bottom mt-10">
-        <div class="security__edit">
-            <!-- <h4><i class="uil uil-company"></i> Establishment</h4> -->
-            <p>Add the URL of your public review platforms, social medoia profiles, or hashtags you wish to monitor.
-                You can display these links into your Gate (Your unique QR Code) by selecting the corresponding section
-                in the section field. </p>
+    <div v-show="show">
+        <div style="display: flex; justify-content: end;">
+            <el-button :icon="Close" @click="toggleShow(true)" circle />
+        </div>
+        <div class="security__header border__bottom mt-10">
+            <div class="security__edit">
+                <!-- <h4><i class="uil uil-company"></i> Establishment</h4> -->
+                <p>Add the URL of your public review platforms, social medoia profiles, or hashtags you wish to monitor.
+                    You can display these links into your Gate (Your unique QR Code) by selecting the corresponding section
+                    in the section field. </p>
+            </div>
+        </div>
+        <div>
+            <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div>
+                        <label for="countries"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
+                            <span>*</span></label>
+                        <el-select v-model="establishment" placeholder="Choose establishment" size="large"
+                            :disabled="IsValueOkay(competitor)" clearable filterable>
+                            <el-option v-for="item in establishments" :key="item.tag" :label="item.name"
+                                :value="item.uri" />
+                        </el-select>
+                    </div>
+                    <div>
+                        <label for="category"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
+                        <el-select id="category" v-model="category" placeholder="Choose category" size="large" clearable>
+                            <el-option v-for="item in categories" :key="item" :label="item" :value="item" />
+                        </el-select>
+                    </div>
+                    <div>
+                        <label for="providers"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Providers</label>
+                        <el-select id="providers" v-model="provider" placeholder="Choose provider" size="large" filterable
+                            clearable>
+                            <el-option v-for="item in filteredProviders" :key="item.uri" :label="item.name"
+                                :value="`${item.uri}${item.url}`" />
+                        </el-select>
+                    </div>
+                    <!-- <div>
+                        <label for="caption"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Caption</label>
+                        <input type="text" id="caption" v-model="caption"
+                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                    </div> -->
+                    <div>
+                        <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section
+                            <Tooltip
+                                text="Please choose the section of the gate (Unified QR code) in which you wish to share this link. Leave it blank to not share it." />
+                        </label>
+                        <el-select id="section" v-model="section" placeholder="" size="large">
+                            <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
+                        </el-select>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ !isHashtag
+                            ? 'Link' : 'Hashtag' }} <span>*</span></label>
+                        <p v-if="!isHashtag && provider" class="text-gray-900 text-sm">Url must start with {{
+                            splitUriAndUrl(provider).url }}</p>
+                        <p v-if="!isValidLink && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
+                        <p v-if="!isValidHashtag && isHashtag" class="text-red-500 text-sm">Invalid hashtag format</p>
+                        <input v-if="isHashtag" type="text" id="link" v-model="link"
+                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']"
+                            placeholder="#hashtag" required>
+                        <input v-else type="text" id="link" v-model="link"
+                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']"
+                            required>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
+                    <button v-if="!isHashtag" type="submit" :disabled="!isValidLink"
+                        :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                        <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
+                            ...</span>
+                        <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
+                    </button>
+                    <button v-else type="submit" :disabled="!isValidHashtag"
+                        :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidHashtag ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                        <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
+                            ...</span>
+                        <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-    <div>
-        <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
-            <div class="grid gap-6 mb-6 md:grid-cols-2">
-                <div>
-                    <label for="countries"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
-                        <span>*</span></label>
-                    <el-select v-model="establishment" placeholder="Choose establishment" size="large"
-                        :disabled="IsValueOkay(competitor)" clearable filterable>
-                        <el-option v-for="item in establishments" :key="item.tag" :label="item.name"
-                            :value="item.uri" />
-                    </el-select>
-                </div>
-                <div>
-                    <label for="category"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
-                    <el-select id="category" v-model="category" placeholder="Choose category" size="large" clearable>
-                        <el-option v-for="item in categories" :key="item" :label="item" :value="item" />
-                    </el-select>
-                </div>
-                <div>
-                    <label for="providers"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Providers</label>
-                    <el-select id="providers" v-model="provider" placeholder="Choose provider" size="large" filterable
-                        clearable>
-                        <el-option v-for="item in filteredProviders" :key="item.uri" :label="item.name"
-                            :value="`${item.uri}${item.url}`" />
-                    </el-select>
-                </div>
-                <!-- <div>
-                    <label for="caption"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Caption</label>
-                    <input type="text" id="caption" v-model="caption"
-                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
-                </div> -->
-                <div>
-                    <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section
-                        <Tooltip
-                            text="Please choose the section of the gate (Unified QR code) in which you wish to share this link. Leave it blank to not share it." />
-                    </label>
-                    <el-select id="section" v-model="section" placeholder="" size="large">
-                        <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
-                    </el-select>
-                </div>
-            </div>
-            <div>
-                <div>
-                    <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ !isHashtag
-                        ? 'Link' : 'Hashtag' }} <span>*</span></label>
-                    <p v-if="!isHashtag && provider" class="text-gray-900 text-sm">Url must start with {{
-                        splitUriAndUrl(provider).url }}</p>
-                    <p v-if="!isValidLink && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
-                    <p v-if="!isValidHashtag && isHashtag" class="text-red-500 text-sm">Invalid hashtag format</p>
-                    <input v-if="isHashtag" type="text" id="link" v-model="link"
-                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']"
-                        placeholder="#hashtag" required>
-                    <input v-else type="text" id="link" v-model="link"
-                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']"
-                        required>
-                </div>
-            </div>
-            <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
-                <button v-if="!isHashtag" type="submit" :disabled="!isValidLink"
-                    :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
-                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
-                        ...</span>
-                    <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
-                </button>
-                <button v-else type="submit" :disabled="!isValidHashtag"
-                    :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidHashtag ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
-                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
-                        ...</span>
-                    <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
-                </button>
-            </div>
-        </form>
+    <div v-show="!show">
+        <div style="display: flex; justify-content: end;">
+            <el-button type="primary" :icon="Plus" @click="toggleShow">Add</el-button>
+        </div>
+        <LinksUrlsListComponent @edit="handleEdit" @deleteData="deleteRow"  :table-data="urlProviderList"/>
     </div>
+
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent, ref, onBeforeMount, watch, inject } from 'vue'
+import { computed, defineAsyncComponent, ref, onBeforeMount, watch, inject, provide } from 'vue'
 import { useUserStore } from "@Stores/user.js"
 import { ElMessage, ElTable, ElTableColumn, ElButton, ElInput, ElOption, ElSelect, ElPopconfirm } from 'element-plus'
 import { useWindowSize } from '@vueuse/core';
@@ -103,6 +115,8 @@ import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import { useRoute, useRouter } from 'vue-router';
+import LinksUrlsListComponent from '../links/LinksUrlsListComponent.vue';
+import {Plus, Close} from '@element-plus/icons-vue'
 
 const ModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/ModalComponent.vue')
@@ -115,7 +129,6 @@ const Tooltip = defineAsyncComponent(() =>
 const router = useRouter();
 const route = useRoute();
 
-const emit = defineEmits(['reload']);
 const userStore = useUserStore();
 const { width } = useWindowSize();
 const modalWidth = computed(() => {
@@ -123,7 +136,6 @@ const modalWidth = computed(() => {
     let gap = (windowSize - width.value) / 19;
     return gap + 45;
 });
-const link_to_update = inject('link_to_update');
 const showModal = ref(false);
 const showLinkModal = ref(false);
 const providers = ref([]);
@@ -134,18 +146,13 @@ const sections = ref(['', 'MENUS', 'REVIEWS', 'OFFERS', 'INFOS', 'FOLLOW US'])
 const section = ref('')
 const showSpinner = ref(false)
 const search = ref('')
-const searchLink = ref('')
 const link = ref('')
 const caption = ref('')
 const isValidLink = ref(true)
 const establishment = ref(null)
-const allLinks = ref([])
-const isLoading = ref(false)
 const title = computed(() => {
     return showLinkModal.value ? 'Links list' : 'Links configuration'
 })
-const currentEstablishment = ref(null)
-const competitors = inject('competitorsData');
 const competitor = ref(null)
 const links = inject('links');
 
@@ -156,12 +163,17 @@ const isHashtag = computed(() => {
 
 const isEdit = ref(false)
 const id = ref('')
+const show = ref(false)
+const urlProviderList = ref([])
 
-watch(link_to_update, () => {
-    if (link_to_update.value != null) {
-        handleEdit(link_to_update.value);
+
+const toggleShow = (closeForm = null) => {
+    if (closeForm) {
+        resetValue()
+        isEdit.value = false
     }
-})
+    show.value = !show.value;
+}
 
 const establishments = computed(() => {
     let data = [];
@@ -185,16 +197,6 @@ const establishments = computed(() => {
     return filteredData;
 });
 
-const filteredLinks = computed(() => {
-    let filteredData = allLinks.value;
-    filteredData = filteredData.filter((data) => {
-        return !searchLink.value ||
-            data.name.toLowerCase().includes(searchLink.value.toLowerCase()) ||
-            (data.category && data.category.toLowerCase().includes(searchLink.value.toLowerCase())) ||
-            (data.establishment && data.establishment.toLowerCase().includes(searchLink.value.toLowerCase()))
-    })
-    return filteredData
-})
 
 const filteredProviders = computed(() => {
     let data = providers.value;
@@ -213,26 +215,6 @@ const isValidHashtag = computed(() => {
     return true
 })
 
-const handleDelete = async (index, link) => {
-    try {
-        const response = await new Promise((resolve, reject) => {
-            services.patchRecord('settings', link.id, { enable: false }, (response) => {
-                resolve(response);
-            });
-        });
-        if (response.status == 200) {
-            ElMessage({
-                message: `Links deleted successfully`,
-                type: 'success',
-            })
-            loadLinksByEstablishment(currentEstablishment.value)
-        }
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-
 const urlPattern = (urlTemplate, extensions = ['fr', 'es', 'com']) => {
     const url = new URL(urlTemplate);
 
@@ -250,7 +232,6 @@ const urlPattern = (urlTemplate, extensions = ['fr', 'es', 'com']) => {
 };
 
 const splitUriAndUrl = (combinedString) => {
-
 
     if (combinedString !== '') {
         const urlPattern = /https?:\/\/\S+/;
@@ -298,44 +279,6 @@ const getValueUrl = (url, urlTemplate) => {
     return null;
 }
 
-const transformLinksData = (inputData, tag) => {
-    return inputData.map(item => {
-        return {
-            establishment: item.establishment_name || '',
-            establishmentTag: tag,
-            category: item.provider_category || '',
-            name: item.provider_name || '',
-            providerurl: item.provider_url,
-            url: item.provider_url ? item.provider_url.replace('{value1}', item.settings_value1) : '',
-            id: item.settings_id || 0,
-            settings_value1: item.settings_value1 || ''
-        };
-    });
-}
-
-const LoadLinks = (link) => {
-    links.value.push(link);
-}
-
-const loadLinksByEstablishment = async (etab) => {
-    showLinkModal.value = !showLinkModal.value
-    isLoading.value = true
-    establishment.value = etab.uri
-
-    try {
-        const response = await new Promise((resolve) => {
-            services.get_Record(`establishment/url?tag=${etab.tag}`, (response) => {
-                resolve(response);
-            });
-        });
-        if (response.status == 200) {
-            allLinks.value = transformLinksData(response.data.data, etab.tag)
-            isLoading.value = false
-        }
-    } catch (error) {
-        console.log(error)
-    }
-}
 
 const getHashtagValue = (value) => {
     if (value.startsWith("#")) {
@@ -345,17 +288,27 @@ const getHashtagValue = (value) => {
 }
 
 const submit = async () => {
-    showSpinner.value = true;
-
+    
     let urlObject = null;
     if (provider.value) {
         urlObject = splitUriAndUrl(provider.value);
     }
 
+    else {
+        ElMessage({
+            message: `Please select a provider`,
+            type: 'warning',
+        });
+
+        return
+    }
+
+    showSpinner.value = true;
+
     const data = {
         // value1: link.value,
         value1: isHashtag.value ? getHashtagValue(link.value) : (urlObject ? getValueUrl(link.value, urlObject.url) : link.value),
-        provider: urlObject ? urlObject.uri : null,
+        provider: urlObject.uri,
         enable: true,
         section: section.value,
         caption: caption.value,
@@ -380,7 +333,7 @@ const submit = async () => {
                 showSpinner.value = false;
                 isEdit.value = false
                 resetValue()
-                emit('reload');
+                reloadData()
             }
         } catch (error) {
             console.log(error)
@@ -400,14 +353,16 @@ const submit = async () => {
                 })
                 showSpinner.value = false;
                 resetValue()
-                emit('reload');
+                reloadData()
+                
             }
         } catch (error) {
             console.log(error)
         }
     }
 
-    router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'urls_list' } });
+    toggleShow()
+    //router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'urls_list' } });
 }
 
 const resetValue = () => {
@@ -420,12 +375,6 @@ const resetValue = () => {
     showModal.value = false
 }
 
-const getURIbyName = (name) => {
-    let data = filteredProviders.value
-    data = data.filter(item => item.name == name)
-    if (data.length > 0) return `${data[0].uri}${data[0].url}`
-    return ''
-}
 
 const handleEdit = async (data) => {
     category.value = data.category
@@ -440,6 +389,7 @@ const handleEdit = async (data) => {
     }, 250);
 
     isEdit.value = true;
+    toggleShow()
 }
 
 watch([provider, link], () => {
@@ -458,6 +408,28 @@ watch(category, () => {
     isValidLink.value = true
     link.value = ''
 })
+
+
+const reloadData = async () => {
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`customer/setting/list?tag=${route.params.tag}&categ=all`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            urlProviderList.value = response.data.filter(item => item.idprovider != null && item.external_url == null && item.category != null);
+        } else {
+            console.error('Error fetching links:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const deleteRow = (settingId) => {
+    urlProviderList.value = urlProviderList.value.filter((data) => data.id != settingId)
+}
 
 onBeforeMount(async () => {
     if (establishments.value.length > 0) {
@@ -498,6 +470,7 @@ onBeforeMount(async () => {
 
         if (response.status === 200) {
             const data = response.data;
+            urlProviderList.value = data.filter(item => item.idprovider != null && item.external_url == null && item.category != null);
 
             data.forEach(item => {
                 links.value.push({

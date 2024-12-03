@@ -59,12 +59,13 @@ const search = ref('')
 const linksLoading = ref(false);
 
 const filterTableData = computed(() => {
+
   let filteredData = [];
   tableData.value.forEach((_val) => {
     _val.url_trunked = _val.url.length > 20 ? _val.url.substring(0, 20) + '...' : _val.url;
     filteredData.push(_val);
   })
-  filteredData = filteredData.filter((data) => {
+  /*filteredData = filteredData.filter((data) => {
 
     if (data.section == 'INFOS' || data.section == 'OFFERS' || data.section == 'MENUS' || data.section == 'REVIEWS' || data.section == 'FOLLOW US' || data.section == '' || data.section == null) {
       return (
@@ -75,11 +76,12 @@ const filterTableData = computed(() => {
         (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase()))
       );
     }
-  });
+  });*/
   return filteredData;
 });
 
 const providers = inject('providers');
+
 
 const getURIbyName = (id) => {
   let data = providers.value

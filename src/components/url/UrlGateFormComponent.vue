@@ -1,115 +1,126 @@
 <template>
-    <div class="security__header border__bottom mt-10">
-        <div class="security__edit">
-            <p>Add the URLs pointing to your internal resources (menus, promotional offers, websites…) so that they are
-                displayed in your Gate.</p>
+    <div v-show="show"> 
+        <div style="display: flex; justify-content: end;">
+            <el-button :icon="Close" @click="toggleShow(true)" circle />
+        </div>
+        <div class="security__header border__bottom mt-10">
+            <div class="security__edit">
+                <p>Add the URLs pointing to your internal resources (menus, promotional offers, websites…) so that they are
+                    displayed in your Gate.</p>
+            </div>
+        </div>
+        <div>
+            <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div>
+                        <label for="countries"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
+                            <span>*</span></label>
+                        <el-select v-model="establishment" placeholder="Choose establishment" size="large"
+                            :disabled="IsValueOkay(competitor)" clearable filterable>
+                            <el-option v-for="item in establishments" :key="item.tag" :label="item.name"
+                                :value="item.uri" />
+                        </el-select>
+                    </div>
+                    <div>
+                        <label for="caption"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Caption</label>
+                        <input type="text" id="caption" v-model="caption"
+                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                    </div>
+                    <div>
+                        <label for="section"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
+                        <el-select id="section" v-model="section" placeholder="" size="large">
+                            <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
+                        </el-select>
+                    </div>
+                    <div>
+                        <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ !isHashtag
+                            ? 'Link' : 'Hashtag' }} </label>
+                        <p v-if="!isHashtag && provider" class="text-gray-900 text-sm">Url must start with {{
+                            splitUriAndUrl(provider).url }}</p>
+                        <p v-if="!isValidLink && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
+                        <p v-if="!isValidHashtag && isHashtag" class="text-red-500 text-sm">Invalid hashtag format</p>
+                        <input v-if="isHashtag" type="text" id="link" v-model="link"
+                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']"
+                            placeholder="#hashtag">
+                        <input v-else type="text" id="link" v-model="link"
+                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']">
+                    </div>
+                    <div>
+                        <label for="logoFile"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Logo</label>
+                        <div class="drop-area" @dragover.prevent @drop="onLogoDrop">
+                            <div class="image-selector border-gray-300" :class="!previewImage && 'hover'"
+                                @click="selectLogo" @mouseover="imageInputHover = true"
+                                @mouseleave="imageInputHover = false">
+                                <draggable v-model="logoFiles" @end="onEnd" @change="onChange">
+                                    <template #item="{ element }">
+                                        <div class="file-item">
+                                            <img v-if="previewImage" :src="previewImage" class="uploading-image" />
+                                            <i v-if="imageInputHover" class="uil uil-image-edit img-hover"></i>
+                                        </div>
+                                    </template>
+                                </draggable>
+                                <i v-if="!logoFiles.length" class="uil uil-image-plus"></i>
+                            </div>
+                            <input type="file" id="logoFile" ref="logoInput" @change="handleFileChange('logo', $event)"
+                                accept="image/png, image/jpeg, image/gif" style="display:none">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="documentFile"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Document</label>
+                        <div class="drop-area" @dragover.prevent @drop="onDocumentDrop">
+                            <div class="image-selector border-gray-300" @click="selectDocument"
+                                @mouseover="documentInputHover = true" @mouseleave="documentInputHover = false">
+                                <draggable v-model="documentFiles" @end="onEnd" @change="onChange">
+                                    <template #item="{ element }">
+                                        <div class="file-item" style="font-size: 16px">
+                                            {{ element.name }}
+                                            <i v-if="documentInputHover && documentFiles.length"
+                                                class="uil uil-file-edit-alt img-hover"></i>
+                                        </div>
+                                    </template>
+                                </draggable>
+                                <i v-if="!documentFiles.length" class="uil uil-file-plus"></i>
+                            </div>
+                            <input type="file" id="documentFile" ref="documentInput"
+                                @change="handleFileChange('document', $event)" accept="application/pdf"
+                                style="display:none">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
+                    <button v-if="!isHashtag" type="submit" :disabled="!isValidLink"
+                        :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                        <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
+                            ...</span>
+                        <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
+                    </button>
+                    <button v-else type="submit" :disabled="!isValidHashtag"
+                        :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidHashtag ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
+                        <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
+                            ...</span>
+                        <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-    <div>
-        <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
-            <div class="grid gap-6 mb-6 md:grid-cols-2">
-                <div>
-                    <label for="countries"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
-                        <span>*</span></label>
-                    <el-select v-model="establishment" placeholder="Choose establishment" size="large"
-                        :disabled="IsValueOkay(competitor)" clearable filterable>
-                        <el-option v-for="item in establishments" :key="item.tag" :label="item.name"
-                            :value="item.uri" />
-                    </el-select>
-                </div>
-                <div>
-                    <label for="caption"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Caption</label>
-                    <input type="text" id="caption" v-model="caption"
-                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
-                </div>
-                <div>
-                    <label for="section"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
-                    <el-select id="section" v-model="section" placeholder="" size="large">
-                        <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
-                    </el-select>
-                </div>
-                <div>
-                    <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ !isHashtag
-                        ? 'Link' : 'Hashtag' }} </label>
-                    <p v-if="!isHashtag && provider" class="text-gray-900 text-sm">Url must start with {{
-                        splitUriAndUrl(provider).url }}</p>
-                    <p v-if="!isValidLink && !isHashtag" class="text-red-500 text-sm">Invalid URL format</p>
-                    <p v-if="!isValidHashtag && isHashtag" class="text-red-500 text-sm">Invalid hashtag format</p>
-                    <input v-if="isHashtag" type="text" id="link" v-model="link"
-                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']"
-                        placeholder="#hashtag">
-                    <input v-else type="text" id="link" v-model="link"
-                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']">
-                </div>
-                <div>
-                    <label for="logoFile"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Logo</label>
-                    <div class="drop-area" @dragover.prevent @drop="onLogoDrop">
-                        <div class="image-selector border-gray-300" :class="!previewImage && 'hover'"
-                            @click="selectLogo" @mouseover="imageInputHover = true"
-                            @mouseleave="imageInputHover = false">
-                            <draggable v-model="logoFiles" @end="onEnd" @change="onChange">
-                                <template #item="{ element }">
-                                    <div class="file-item">
-                                        <img v-if="previewImage" :src="previewImage" class="uploading-image" />
-                                        <i v-if="imageInputHover" class="uil uil-image-edit img-hover"></i>
-                                    </div>
-                                </template>
-                            </draggable>
-                            <i v-if="!logoFiles.length" class="uil uil-image-plus"></i>
-                        </div>
-                        <input type="file" id="logoFile" ref="logoInput" @change="handleFileChange('logo', $event)"
-                            accept="image/png, image/jpeg, image/gif" style="display:none">
-                    </div>
-                </div>
-                <div>
-                    <label for="documentFile"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Document</label>
-                    <div class="drop-area" @dragover.prevent @drop="onDocumentDrop">
-                        <div class="image-selector border-gray-300" @click="selectDocument"
-                            @mouseover="documentInputHover = true" @mouseleave="documentInputHover = false">
-                            <draggable v-model="documentFiles" @end="onEnd" @change="onChange">
-                                <template #item="{ element }">
-                                    <div class="file-item" style="font-size: 16px">
-                                        {{ element.name }}
-                                        <i v-if="documentInputHover && documentFiles.length"
-                                            class="uil uil-file-edit-alt img-hover"></i>
-                                    </div>
-                                </template>
-                            </draggable>
-                            <i v-if="!documentFiles.length" class="uil uil-file-plus"></i>
-                        </div>
-                        <input type="file" id="documentFile" ref="documentInput"
-                            @change="handleFileChange('document', $event)" accept="application/pdf"
-                            style="display:none">
-                    </div>
-                </div>
-            </div>
-            <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
-                <button v-if="!isHashtag" type="submit" :disabled="!isValidLink"
-                    :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidLink ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
-                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
-                        ...</span>
-                    <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
-                </button>
-                <button v-else type="submit" :disabled="!isValidHashtag"
-                    :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800', !isValidHashtag ? 'bg-gray-500 hover:bg-gray focus:ring-gray-500' : '']">
-                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
-                        ...</span>
-                    <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
-                </button>
-            </div>
-        </form>
+    <div v-show="!show">
+        <div style="display: flex; justify-content: end;">
+            <el-button type="primary" :icon="Plus" @click="toggleShow">Add</el-button>
+        </div>
+        <LinksUrlsListComponent @edit="handleEdit" @deleteData="deleteRow" :table-data="urlGateList"/>
     </div>
 </template>
 
 <script setup>
 import { computed, ref, onBeforeMount, watch, inject } from 'vue'
 import { useUserStore } from "@Stores/user.js"
-import { ElMessage, ElOption, ElSelect } from 'element-plus'
+import { ElMessage, ElOption, ElSelect, ElButton } from 'element-plus'
 import { useWindowSize } from '@vueuse/core';
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import services from '@Services/services.js';
@@ -124,6 +135,9 @@ import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import { useRoute, useRouter } from 'vue-router';
 import draggable from 'vuedraggable';
+import {Plus, Close} from '@element-plus/icons-vue'
+
+import LinksUrlsListComponent from '../links/LinksUrlsListComponent.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -145,6 +159,16 @@ const imgHasChanged = ref(false);
 const fileName = ref('');
 const logoFiles = ref([]);
 const documentFiles = ref([]);
+const show = ref(false)
+
+
+const toggleShow = (closeForm = null) => {
+    if (closeForm) {
+        resetValue()
+        isEdit.value = false
+    }
+    show.value = !show.value;
+}
 
 const onLogoDrop = (event) => {
     event.preventDefault();
@@ -278,11 +302,8 @@ const isHashtag = computed(() => {
 const isEdit = ref(false)
 const id = ref('')
 
-watch(link_to_update, () => {
-    if (link_to_update.value != null) {
-        handleEdit(link_to_update.value);
-    }
-})
+const urlGateList = ref([])
+
 
 const establishments = computed(() => {
     let data = [];
@@ -474,16 +495,28 @@ const submit = async () => {
         formDataTwo.append('file', selectedDocument.value);
         formDataTwo.append('type', "document");
     }
-    showSpinner.value = true;
+   
 
     let urlObject = null;
     if (provider.value) {
         urlObject = splitUriAndUrl(provider.value);
     }
 
+    if(!section.value) {
+
+        ElMessage({
+            message: `Please select a section`,
+            type: 'warning',
+        });
+
+        return
+    }
+
+    showSpinner.value = true;
+
     const data = {
         value1: isHashtag.value ? getHashtagValue(link.value) : (urlObject ? getValueUrl(link.value, urlObject.url) : link.value),
-        provider: urlObject ? urlObject.uri : null,
+        provider: null,
         enable: false,
         section: section.value,
         caption: caption.value,
@@ -513,6 +546,9 @@ const submit = async () => {
                                     resolve(response);
                                 }, false);
                             });
+
+                            
+
                             if (response.status !== 200 && response.status !== 201) {
                                 uploadErrors.push('An error occurred while uploading the logo.');
                             }
@@ -550,7 +586,7 @@ const submit = async () => {
                 showSpinner.value = false;
                 isEdit.value = false
                 resetValue()
-                emit('reload');
+                reloadData()
             }
         } catch (error) {
             console.log(error)
@@ -573,6 +609,7 @@ const submit = async () => {
                                     resolve(response)
                                 }, false);
                             })
+
                             if (response.status !== 200 && response.status !== 201) {
                                 uploadErrors.push('An error occurred while uploading the logo.');
                             }
@@ -609,14 +646,36 @@ const submit = async () => {
                 })
                 showSpinner.value = false;
                 resetValue()
-                emit('reload');
+                reloadData()
             }
         } catch (error) {
             console.log(error)
         }
     }
 
-    router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'urls_list' } });
+    toggleShow()
+    //router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'urls_list' } });
+}
+
+const reloadData = async () => {
+    try {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`customer/setting/list?tag=${route.params.tag}&categ=all&type=all`, (response) => {
+                resolve(response);
+            });
+        });
+        if (response.status === 200) {
+            urlGateList.value = response.data.filter(item => (item.idprovider === null || item.idprovider === "") && (item.section !== null || item.section !== "") && item.category == null && item.external_url == null )
+        } else {
+            console.error('Error fetching links:', response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const deleteRow = (settingId) => {
+    urlGateList.value = urlGateList.value.filter((data) => data.id != settingId)
 }
 
 const resetValue = () => {
@@ -675,6 +734,7 @@ const handleEdit = async (data) => {
     }, 250);
 
     isEdit.value = true;
+    toggleShow()
 }
 
 watch([provider, link], () => {
@@ -723,13 +783,15 @@ onBeforeMount(async () => {
 
     try {
         const response = await new Promise((resolve) => {
-            services.get_Record(`customer/setting/list?tag=${route.params.tag}&categ=all`, (response) => {
+            services.get_Record(`customer/setting/list?tag=${route.params.tag}&categ=all&type=all`, (response) => {
                 resolve(response);
             });
         });
 
         if (response.status === 200) {
+
             const data = response.data;
+            urlGateList.value = data.filter(item => (item.idprovider === null || item.idprovider === "") && (item.section !== null || item.section !== "") && item.external_url == null && item.external_url == null)
 
             data.forEach(item => {
                 links.value.push({

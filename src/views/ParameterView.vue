@@ -26,16 +26,16 @@
             </el-tab-pane> -->
             <el-tab-pane label="URLs" name="urls">
                 <el-tabs v-model="parametersUrlsConf.urls" class="demo-tabs">
-                    <el-tab-pane label="URLs" name="urls_list">
+                    <!--<el-tab-pane label="URLs" name="urls_list">
                         <LinksListComponent @reload="reloadLink()" @edit="(url) => handleEdit(url, 'links')" />
+                    </el-tab-pane>-->
+                    <el-tab-pane label="Provider URLs" name="urls_form">
+                        <UrlProviderFormComponent />
                     </el-tab-pane>
-                    <el-tab-pane label="Add a new provider URL" name="urls_form">
-                        <UrlProviderFormComponent @reload="reloadLink()" />
-                    </el-tab-pane>
-                    <el-tab-pane label="Add URL to Gate" name="urls_gate_form">
+                    <el-tab-pane label="Gate URLs" name="urls_gate_form">
                         <UrlGateFormComponent @reload="reloadLink()" />
                     </el-tab-pane>
-                    <el-tab-pane label="Add External URL" name="urls_external_form">
+                    <el-tab-pane label="External URLs" name="urls_external_form">
                         <UrlExternalFormComponent @reload="reloadLink()" />
                     </el-tab-pane>
                 </el-tabs>
@@ -251,7 +251,7 @@ const parametersUrlsConf = reactive({
     tabs: 'establishments',
     establishments : 'establishments_list',
     links: 'links_list',
-    urls: 'urls_list',
+    urls: 'urls_form',
     competitors: 'competitors_list',
     staffs: 'staffs_list',
     events: 'events_list',
@@ -319,6 +319,7 @@ const competitorsData = ref([])
 provide('competitorsData', competitorsData)
 
 const handleEdit = (value, type) => {
+    console.log("gala ", type)
     parametersUrlsConf[type] = `${type}_form`;
     if (type == 'staffs') {
         staff_to_update.value = value;
