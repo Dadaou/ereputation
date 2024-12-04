@@ -212,11 +212,16 @@
                     :value="item.category" @click="handleCategoryDropdown('other')" />
             </el-select>
         </div>
-        <div class="px-2 w-full my-2" v-if="activeName == 'trends'">
-                <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform"
-                    placeholder="Select a website" :data="formattedWebsites" @submit="(website) => {
-                        selectedWebsites = website
-                    }" :default="formattedWebsites[0]" />
+        <div class="px-2 w-full my-2" v-if="activeName == 'trends' || activeName == 'analysis_competitors'">
+            <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform"
+                placeholder="Select a website" :data="formattedWebsites" @submit="(website) => {
+                    selectedWebsites = website
+                }" :default="formattedWebsites[0]" />
+        </div>
+        <div class="px-2 w-full my-2" v-if="activeName == 'trends' || activeName == 'analysis_competitors'">
+            <DropdownComponent :showTitle="false" placeholder="" :data="timePeriods" @submit="(timePeriod) => {
+                selectedTimePeriod = timePeriod
+            }" :default="timePeriods[0]" />
         </div>
     </div>
     <div class="tablet_mobile__head">
@@ -344,17 +349,17 @@
                 <el-date-picker class="mt-2" v-model="end_date" placeholder="End date" :size="'large'" />
             </div>
 
-            <div class="date__filter" v-if="activeName == 'trends'">
+            <div class="date__filter" v-if="activeName == 'trends' || activeName == 'analysis_competitors'">
                 <DropdownComponent :showTitle="false" class="dropdown w-full" title="Filter by plateform"
                     placeholder="Select a website" :data="formattedWebsites" @submit="(website) => {
                         selectedWebsites = website
                     }" :default="formattedWebsites[0]" />
             </div>
 
-            <!-- <DropdownComponent v-if="activeName === 'analysis_competitors'" :showTitle="false" placeholder=""
-                :data="timePeriods" @submit="(timePeriod) => {
-                selectedTimePeriod = timePeriod
-            }" :default="timePeriods[0]" /> -->
+            <DropdownComponent v-if="activeName == 'trends' || activeName == 'analysis_competitors'" :showTitle="false"
+                placeholder="" :data="timePeriods" @submit="(timePeriod) => {
+                    selectedTimePeriod = timePeriod
+                }" :default="timePeriods[0]" />
         </div>
 
         <CommunityFeedbackComponent v-if="activeName == 'categorization' && showConfidenceChart && noScore !== false"
@@ -467,10 +472,9 @@ const categories = ref([])
 let noScore = ref(false);
 provide('categories', categories)
 const avgScore = ref(0)
-
 const language = inject('language')
 let selectedWebsites = ref('Global');
-provide('selectedWebsites',selectedWebsites)
+provide('selectedWebsites', selectedWebsites)
 let websites = ref(['Global']);
 const formattedWebsites = computed(() => {
     return websites.value.map(website => formatString(website));
@@ -547,7 +551,9 @@ const all_items = ref([
     { title: "Reviews", value: 0, icon: "uil-comment" },
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
-let timePeriods = ref(['Daily', 'Weeks', 'Months']);
+const timePeriods = ref(['days', 'weeks', 'months', 'semesters']);
+const selectedTimePeriod = ref(timePeriods.value[0]);
+provide('type', selectedTimePeriod);
 const dataLegend = ref([]);
 const legendData = ref([]);
 const start_date = inject('start_date');
@@ -611,23 +617,23 @@ const starParams = route.query.star;
 const activeName = ref('categorization');
 const newOptions = {
     maintainAspectRatio: false,
-   scales: {
+    scales: {
 
         y: {
-          beginAtZero: true,
-          suggestedMin: -1, 
-          suggestedMax: 1,
-          ticks: {
-            stepSize: 0.5 ,
-            padding: 10
-            
-          },
-          grid: {
-            
-            drawBorder: true,
-            drawOnChartArea: true
-          
-          }
+            beginAtZero: true,
+            suggestedMin: -1,
+            suggestedMax: 1,
+            ticks: {
+                stepSize: 0.5,
+                padding: 10
+
+            },
+            grid: {
+
+                drawBorder: true,
+                drawOnChartArea: true
+
+            }
 
         },
     },
@@ -1531,7 +1537,7 @@ p {
 }
 
 .card_legend {
-    width:16px;
+    width: 16px;
     height: 12px;
 }
 

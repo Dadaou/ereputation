@@ -58,7 +58,7 @@ import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { useRoute, useRouter } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
-import { ref, watch, onMounted ,computed, provide, inject, defineAsyncComponent , nextTick } from 'vue';
+import { ref, watch, onMounted, computed, provide, inject, defineAsyncComponent, nextTick } from 'vue';
 import 'element-plus/es/components/date-picker/style/css'
 import { useChartsStore } from "@Stores/charts.js"
 
@@ -106,9 +106,9 @@ appStore.setBreadcrumbs([
 const chartsStore = useChartsStore();
 const companiesStore = useCompanyStore();
 let selectedCompetitors = ref('Global');
-let selectedWebsites = ref('Global');
+// let selectedWebsites = ref('Global');
 let websites = ref(['Global']);
-
+const selectedWebsites = inject('selectedWebsites');
 let establishment = ref({ reviews: [] });
 
 
@@ -135,11 +135,8 @@ const start_date = inject('start_date');
 const end_date = inject('end_date');
 const categories = ref([])
 const isLoading = ref(false);
+const selectedTimePeriod = inject('type');
 
-
-
-let selectedTimePeriod = ref('');
-// let timePeriods = ref(['Days', 'Weeks', 'Months', 'Quarters', 'Semesters']);
 
 let competitorData = ref([]);
 
@@ -156,21 +153,22 @@ const colors = ref(['#f75842', '#337ecc', '#4682B4', '#6495ED', '#1E90FF', '#00B
 let chartConfig = {
     maintainAspectRatio: false,
     scales: {
-          y: {
-          beginAtZero: true,
-          suggestedMin: 0, 
-          suggestedMax: 5,
-          ticks: {
-            stepSize: 1 ,
-            padding: 10
-            
-          },
-          grid: {
-            
-            drawBorder: true,
-            drawOnChartArea: true
-          
-          }
+
+        y: {
+            beginAtZero: true,
+            suggestedMin: 0,
+            suggestedMax: 5,
+            ticks: {
+                stepSize: 1,
+                padding: 10
+
+            },
+            grid: {
+
+                drawBorder: true,
+                drawOnChartArea: true
+
+            }
 
         },
     },
@@ -273,7 +271,7 @@ const loadCategories = async (tag) => {
             categories.value = response.data.data
         }
 
-        
+
     }
 }
 
@@ -311,19 +309,20 @@ const viewData = async (establishment, establishmentTag, dateStart, dateEnd, web
         website = (website == 'App (Private)') ? website : website.toLowerCase()
 
         //Global value to change
-        
+
         // plotdata.value = await chartsStore.loadData(tags, "Days", dateStart, dateEnd, website)
-        let datachart = await chartsStore.loadDataCompetitor(establishmentTag, "daily", dateStart, dateEnd, website)
-       
-        await chartsStore.fetchDataCompetitor(establishmentTag, "daily", dateStart, dateEnd, website, (data) => {
+        let datachart = await chartsStore.loadDataCompetitor(establishmentTag, timePeriods, dateStart, dateEnd, website)
+
+        await chartsStore.fetchDataCompetitor(establishmentTag, timePeriods, dateStart, dateEnd, website, (data) => {
             // let data = response.data.data
+            console.log("ittitit", data)
             competitorData.value = data;
         })
 
 
-        
+
         chartData.value = formatSixMonthsChartData(datachart);
-        
+
 
         await nextTick();
 
@@ -346,7 +345,7 @@ const viewData = async (establishment, establishmentTag, dateStart, dateEnd, web
             containerBody.style.width = '';
             containerBody2.style.width = '';
         }
-        
+
         legendData.value = companiesStore.generateLegend(datachart, colors.value);
     }
     chartLoading.value = false;
