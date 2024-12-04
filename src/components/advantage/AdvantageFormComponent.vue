@@ -357,20 +357,22 @@ const submit = async () => {
     const selectedEstablishment = userStore.user.customer.establishments.find(
         (item) => item.id === parseInt(establishmentId, 10)
     );
-    formData.append("category", category.value);
-    formData.append("code", code.value);
-    formData.append("name", advantageName.value);
-    formData.append("amount", parseFloat(amount.value));
-    formData.append("metric", metric.value);
+
+
+    category.value != "" ? formData.append("category", category.value != "" ? category.value : null) : null;
+    code.value != "" ? formData.append("code", code.value != "" ? code.value : null) : null;
+    advantageName.value != "" ? formData.append("name", advantageName.value != "" ? advantageName.value : null) : null;
+    amount.value != null  ? formData.append("amount", amount.value != null ? parseFloat(amount.value) : null) : null;
+    metric.value != "" ? formData.append("metric", metric.value != "" ? metric.value : null) : null;
     formData.append("enable", true);
     formData.append("establishment", selectedEstablishment?.competitor_tag || "");
-    formData.append("scope", scope.value);
-    formData.append("validity", validity.value);
-    formData.append("description", description.value);
-    formData.append("expiredAt", moment(expiredAt.value).format('YYYY-MM-DD'));
-    formData.append("advantageLimit", (advantageLimit.value === "") ? null : advantageLimit.value);
-    formData.append("dateFrom", moment(dateFrom.value).format('YYYY-MM-DD'));
-    formData.append("dateTo", moment(dateTo.value).format('YYYY-MM-DD'));
+    scope.value != null ? formData.append("scope", scope.value != null ? scope.value : null) : null;
+    validity.value != null && validity.value != "" ? formData.append("validity", validity.value != null && validity.value != "" ? parseInt(validity.value) : null) : null;
+    description.value != null ? formData.append("description", description.value != null ? description.value : null) : null;
+    expiredAt.value != null ? formData.append("expiredAt", expiredAt.value != null ? moment(expiredAt.value).format('YYYY-MM-DD') : null) : null;
+    advantageLimit.value != null ? formData.append("advantageLimit", advantageLimit.value != null ? advantageLimit.value : null) : null;
+    dateFrom.value != null ? formData.append("dateFrom", dateFrom.value != null ? moment(dateFrom.value).format('YYYY-MM-DD') : null) : null;
+    dateTo.value != null ? formData.append("dateTo", dateTo.value != null ? moment(dateTo.value).format('YYYY-MM-DD') : null) : null;
 
 
     if (type.value === 'edit' && advantage_to_update.value !== null) {
