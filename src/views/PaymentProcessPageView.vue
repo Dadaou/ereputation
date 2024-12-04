@@ -98,6 +98,19 @@
         
     }
 
+    const updateInvoice = async(invoiceID) => {
+        
+        const subscriptionID = localStorage.getItem('subscriptionId')
+
+        const response = await new Promise((resolve) => {
+            services.patchRecord('subscriptions', subscriptionID, {invoice: invoiceID}, (response) => {
+                resolve(response)
+            })
+        })
+
+        return response
+    }
+
     
     const checkAllInformations = async () => {
 
@@ -112,7 +125,9 @@
             const session = await checkPaymentStatus(route.query.session_id)
 
             if(session.payment_status === 'paid') {
+
                 await authUser()
+                await updateInvoice(session.invoice)
             }
 
             else  showErrorMessage("An error occurred during payment")
@@ -120,8 +135,6 @@
         }
 
     }
-
-
 
     const showErrorMessage = (msg) => {
         loading.value.close()

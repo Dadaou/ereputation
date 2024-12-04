@@ -287,7 +287,6 @@ const submitCompanyForm = async () => {
   showSpinner.value = true;
   createAccount().then(async (response) => {
     if (response.status == 200) {
-      console.log(response.data)
       planInfo.value.customer = response.data.customer.tag;
       userCreated.value = true
       await subscribe()
@@ -403,18 +402,26 @@ const createAccount = async () => {
     plan: planInfo.value.plan.tag,
     partner: import.meta.env.VITE_PARTNER_CODE
   }
-  console.log(tsvFormatBody)
+
   const response = await new Promise((resolve,) => {
     services.post_Record('account/create', body, (response) => {
       resolve(response)
     }, true, true);
   });
 
-  if (response && response.data) {
+  if (response.status === 200 && response.data) {
     localStorage.setItem('uId', response.data.user.id)
     await createSubscription(app_url.value, response.data.customer)
     return response;
   }
+
+  else if(response.status === 403) {
+    ElMessage({
+      message: response.data,
+      type: 'warning',
+    });
+  }
+
 }
 
 const selectedPrice = (code, quantity, unit) => {
@@ -426,8 +433,7 @@ const subscribe = async () => {
   const price = selectedPrice(planInfo.value.code, planInfo.value.quantity, planInfo.value.unit)
 
   if (price) {
-    // console.log(price)
-    console.log(planInfo.value)
+
     const stripeServer = Stripe(import.meta.env.VITE_SECRET_STRIPE_KEY);
 
     try {
@@ -480,6 +486,7 @@ const createSubscription = async (app_url, customer) => {
 
   if (response.status == 201 && response.data) {
 
+      localStorage.setItem('subscriptionId', response.data.id)
       localStorage.setItem('uemail', planInfo.value.uEmail)
       localStorage.setItem('upassword', planInfo.value.uPassword)
       /*ElMessage({
