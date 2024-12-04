@@ -9,7 +9,7 @@
                 <input type="text" name="code" placeholder="code" v-model="code" required>
                 <button type="submit" :class="['btn btn__light2', showSpinner == true ? 'isLoaded' : '']">
                     <SpinnerComponent v-if="showSpinner == true" :color="'red'" />
-                    <span v-else>{{ $t("login.submit") }}</span>
+                    <span v-else>{{ $t("login.validate") }}</span>
                 </button>
             </form>
         </div>
@@ -66,13 +66,23 @@ const submit = async () => {
 
     try {
         if (code.value === pinCode.value) {
+
             localStorage.setItem('isSellerAuthenticated', 'true');
+
             if (route.query.redirect !== undefined) {
                 router.push(route.query.redirect)
             }
-            else router.push({ name: 'DiscountCodeValidation', params : { discountTag : route.params.discountTag } })
+            else {
+                router.replace({
+                    name: 'DiscountQRCodeValidation',
+                    params: {
+                        discountTag: route.params.discountTag
+                    }
+                });
+            }
 
             showSpinner.value = false;
+
         } else {
             ElMessage({
                 message: `Please provide the right code`,

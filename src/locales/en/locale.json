@@ -6,7 +6,8 @@
         "password": "Password",
         "forgot": "Forgot Password?",
         "create": "Don't have an account?",
-        "submit": "Submit"
+        "submit": "Submit",
+        "validate" : "Validate"
     },
     "feedback": {
         "title1": "Leave ",
@@ -63,7 +64,7 @@
         "validation": "Valid Till:",
         "utilisation": "To be used between",
         "et": "and",
-        "validationcoupon": "Please enter the password to validate the coupon"
+        "validationcoupon": "Please enter the code to validate the coupon"
     },
     "advantage": {
         "limit_qty": "Limited Quantity",

@@ -6,7 +6,8 @@
         "password": "Contraseña",
         "forgot": "¿Has olvidado tu contraseña?",
         "create": "¿No tienes una cuenta?",
-        "submit": "Entregar"
+        "submit": "Entregar",
+        "validate" : "Valide"
     },
     "feedback": {
         "title1": "Deja ",
@@ -68,7 +69,7 @@
         "validation": "Válido hasta el:",
         "utilisation": "Para utilizar entre el",
         "et": "y el",
-        "validationcoupon": "Por favor ingresa la contraseña para validar el cupón"
+        "validationcoupon": "Por favor ingresa la código para validar el cupón"
     },
     "advantage": {
         "limit_qty": "Cantidad Limitada",
