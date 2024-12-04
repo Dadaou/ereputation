@@ -1,20 +1,20 @@
 <template>
     <div class="user__main__container">
-       <el-tabs v-model="activeAdvantageTab" class="demo-tabs">
-                    <el-tab-pane label="Advantages" name="advantage_list">
-                        <AdvantageListComponent @edit="(advantage) => handleEdit(advantage, 'advantage')"
-                            @setEnable="(advantage) => handleEnable(advantage, 'advantage')"
-                            @setDisable="(advantage) => handleDisable(advantage, 'advantage')" />
-                    </el-tab-pane>
-                    <el-tab-pane label="Add a new advantage" name="advantage_form">
-                        <AdvantageFormComponent />
-                    </el-tab-pane>
+        <el-tabs v-model="activeAdvantageTab" class="demo-tabs">
+            <el-tab-pane label="Advantages" name="advantage_list">
+                <AdvantageListComponent @edit="(advantage) => handleEdit(advantage, 'advantage')"
+                    @setEnable="(advantage) => handleEnable(advantage, 'advantage')"
+                    @setDisable="(advantage) => handleDisable(advantage, 'advantage')"
+                    @advantage-updated="loadAdvantage" />
+            </el-tab-pane>
+            <el-tab-pane label="Add a new advantage" name="advantage_form">
+                <AdvantageFormComponent @advantage-updated="loadAdvantage" />
+            </el-tab-pane>
         </el-tabs>
     </div>
 </template>
 <script setup>
 import { ref, provide, defineAsyncComponent, onBeforeMount, watch } from 'vue';
-import moment from 'moment';
 import { ElTabs, ElTabPane } from 'element-plus';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
