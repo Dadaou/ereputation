@@ -10,7 +10,7 @@
             <p style="font-size: 17px;"> {{ $t("success") }} </p>
             <div class="mt-6" v-if="route.params.share !== 'message'">
                 <p v-if="links.length > 0">{{ $t("success_text") }}</p>
-                <div class="comment_container" v-if="comment !== ''">
+                <div class="comment_container" v-if="comment !== '' && links.length > 0">
                     <p style="font-size: 13px;">{{ comment }}</p>
                     <el-button @click="copyComment" style="margin-top: 8px;"><i class='fa fa-copy' v-if="copySuccess === ''"></i>{{ copySuccess }}</el-button>
                 </div>

@@ -97,7 +97,7 @@ const appStore = useAppStore()
 const valid = ref(true)
 
 const closeWindow = () => {
-  router.replace({ name: 'Home'})
+  router.replace({ name: 'default'})
 }
 
 const submit = () => {

@@ -6,7 +6,8 @@
         "password": "Mot de passe",
         "forgot": "Mot de passe oublie",
         "create": "Pas de compte, creer un",
-        "submit": "Connexion"
+        "submit": "Connexion",
+        "validate" : "Valider"
     },
     "feedback": {
         "title1": "Laissez ",
@@ -41,7 +42,7 @@
         "interne": "Usage interne uniquement, votre commentaire ne sera pas diffusé sur les plateformes publiques.",
         "departement": "Department",
         "staffs_list": "Liste du personnel",
-        "staffs_link": "Liens du personnel pour commentaires",
+        "staffs_link": "Liens du personnel pour commentaires", 
         "input_required": "Champs requis"
     },
     "success": "Merci pour vos précieux commentaires. Nous espérons vous revoir bientôt et vous souhaitons une agréable journée.",

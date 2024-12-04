@@ -6,7 +6,8 @@
         "password": "Mot de passe",
         "forgot": "Mot de passe oublie",
         "create": "Pas de compte, creer un",
-        "submit": "Connexion"
+        "submit": "Connexion",
+        "validate" : "Valider"
     },
     "feedback": {
         "title1": "Laissez ",
@@ -63,7 +64,7 @@
         "validation": "Valide jusqu’au:",
         "utilisation": "A utiliser entre le",
         "et": "et",
-        "validationcoupon": "Veuillez entrer le mot de passe pour valider le coupon"
+        "validationcoupon": "Veuillez entrer le code pour valider le coupon"
     },
     "advantage": {
         "limit_qty": "Quantité limitée",
