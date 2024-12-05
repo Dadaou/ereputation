@@ -70,10 +70,10 @@
                 <li v-if="info.validity && info.validity !== 'Invalid date'">Valid within {{ info.validity }} days</li>
               </ul>
             </div>
-            <span v-if="currentDiscount.description" class="modal-discount-description">
-              {{ currentDiscount.description }}
-            </span>
-
+          </div>
+          <div v-if="currentDiscount.description && currentDiscount.description !== 'null'"
+            class="modal-discount-description">
+            {{ currentDiscount.description }}
           </div>
         </div>
       </div>
@@ -329,7 +329,7 @@ const isSelected = (index) => {
   color: var(--color-secondary);
   font-weight: 500;
   max-height: 200px;
-  min-height: 160px;
+  min-height: 100px;
   overflow-y: auto;
   border: 0 1px solid var(--color-primary);
   padding: 8px;
