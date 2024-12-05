@@ -171,6 +171,10 @@
                             v-if="showSpinner">Loading ...</span>
                         <span v-show="!showSpinner"><i class="uil uil-save"></i> {{ type }} advantage</span>
                     </button>
+                    <button @click.stop="(e) => resetForm(e)"
+                        class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-gray-700 rounded-lg focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-900 hover:bg-gray-800">
+                        <span><i class="uil uil-times"></i> Clear </span>
+                    </button>
                 </div>
             </form>
         </div>
@@ -330,7 +334,9 @@ watch(advantage_to_update, () => {
     }
 })
 
-const resetForm = () => {
+const resetForm = (e = null) => {
+    if(e) e.preventDefault();
+
     dateFrom.value = null;
     dateTo.value = null;
     expiredAt.value = null;

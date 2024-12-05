@@ -88,6 +88,10 @@ const loadAdvantage = async () => {
     } catch (error) {
         console.error(error);
     }
+
+    finally {
+        activeAdvantageTab.value = 'advantage_list'
+    }
 }
 
 const handleEnable = async (value, type) => {
