@@ -3,10 +3,15 @@
     <div class="table-description" style="margin-bottom: 16px;">
       <p>Partnerships requested by your establishment</p>
       <div>
-        <el-input v-model="searchSent" size="small" placeholder="Type to search" class="input_searchs"/>
+        <el-input v-model="searchSent" size="small" placeholder="Type to search" class="input_searchs" />
       </div>
     </div>
     <el-table :data="filterTableDataSent" class="responsive-table">
+      <el-table-column width="100">
+        <template #default="scope">
+          <img class="establishment_img" :src="scope.row.establishment_logo" alt="Establishment Logo" />
+        </template>
+      </el-table-column>
       <el-table-column label="Advantage" prop="advantage_name" style="width: 15%; min-width: 200px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 30%; min-width: 400px;" />
       <el-table-column label="Partnership" prop="partnership_name" style="width: 30%; min-width: 4%;" />
@@ -102,7 +107,7 @@ watchEffect(() => {
         data.establishment_name.toLowerCase().includes(searchSent.value.toLowerCase()) ||
         data.state.toLowerCase().includes(searchSent.value.toLowerCase())
     );
-    
+
     filterTableDataSent.value = filterdata;
   }
 });
@@ -160,6 +165,11 @@ const handleEvent = async (index, partnership, column, value) => {
 };
 </script>
 <style scoped>
+img.establishment_img {
+  height: 50px;
+  object-fit: cover;
+  width: 100%;
+}
 
 button {
   border: none;
@@ -174,6 +184,7 @@ button i.uil-trash-alt {
 button i.uil-edit {
   color: var(--color-danger) !important;
 }
+
 .table-description {
   display: flex;
   justify-content: space-between;
@@ -193,22 +204,23 @@ button i.uil-edit {
   .responsive-table {
     width: 85%;
   }
+
   .input_searchs,
   .input_search {
     display: inline;
-    margin-right: 7rem; 
+    margin-right: 7rem;
   }
 }
 
 @media screen and (max-width: 468px) {
   .input_search {
     display: inline;
-    margin-right: 3.5rem; 
+    margin-right: 3.5rem;
   }
 
   .input_searchs {
     display: inline;
-    margin-right: 9rem; 
+    margin-right: 9rem;
   }
 
   .el-table--fit {
