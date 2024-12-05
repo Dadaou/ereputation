@@ -11,7 +11,7 @@
           <div class="w-full inline-flex items-start justify-center">
             <div class="discount-icon">
               <span :class="['icon', isSelected(index) ? 'icon-selected' : '',]">
-                {{ isSelected(index) ? '✔' : discount.icon }}
+                {{ isSelected(index) ? '✔' : '' }}
               </span>
             </div>
             <div id="discount_name">
@@ -22,7 +22,7 @@
 
             <div class="discount-icon">
               <span :class="['icon', isSelected(index) ? 'icon-selected' : '']">
-                {{ isSelected(index) ? '✔' : discount.icon }}
+                {{ isSelected(index) ? '✔' : '' }}
               </span>
             </div>
 
@@ -174,15 +174,10 @@ onMounted(async () => {
 
   } else {
 
-    discounts.value = data.map((discount, index) => {
-      let icon = '';
-      if (index % 2 === 0) {
-        icon = "🎁";
-      } else {
-        icon = "🎉";
-      }
-      return { ...discount, icon };
+    discounts.value = data.map(discount => {
+      return { ...discount, icon: '' };
     });
+
 
     if (discounts.value.length == 1) {
       selectDiscount(0, discounts.value[0])
