@@ -16,7 +16,7 @@
             <a href="https://wa.me/message/IZFK26272CXFB1" target="_blank">
               <i class="fa fa-whatsapp"></i>
             </a>
-            <LanguageMenuDropdown :current="currentLanguage" @select="(language) => selectCurrentLanguage(language)" />
+            <!--<LanguageMenuDropdown :current="currentLanguage" @select="(language) => selectCurrentLanguage(language)" />-->
           </div>
         </div>
       </div>
@@ -35,7 +35,7 @@
           <div class="form-group features-list w-50">
             <div v-if="planInfo && planInfo.planName" class="d-inline-flex align-center justify-start mb-5">
               <span class="plan-name mr-2">{{ planInfo.planName }}</span>
-              <a :href="`${referrerUrl}pricing`" title="change plan"><i class="uil uil-edit change-plan-icon"></i></a>
+              <a href="https://linkystar.com/pricing" title="change plan"><i class="uil uil-edit change-plan-icon"></i></a>
             </div>
             <ul v-if="planInfo && planInfo.planName == 'Lead-Gen'">
               <AdvantageList text="Unified QR Codes Hub" />
@@ -177,14 +177,14 @@
                 </div>
               </div>
               <div class="w-full inline-flex items-center gap-2 mt-5">
-                <input v-model="planInfo.acceptConditions" type="checkbox" id="coding" name="interest" value="coding"
-                   required />
+                <input v-model="planInfo.acceptConditions" type="checkbox" id="coding" name="interest" value="coding"/>
                 <label for="coding">I read and accept <span class="cgv-link" @click.stop="showCgv">terms and conditions</span>
                   of
                   service.</label>
               </div>
             </div><br/>
 
+            <p v-show="isTermAccepted" style="color: #FF4433; font-size: 12px;">Please accept the terms and conditions of sale to continue</p>
             <div class="cgv-container" v-show="isCgvVisible"></div>
 
             <div class="d-inline-flex justify-content-between align-items-center mt-5 mb-5">
@@ -206,7 +206,7 @@
 </template>
 
 <script setup>
-import { ref, provide, onBeforeMount, defineAsyncComponent, inject, onMounted, onBeforeUnmount } from 'vue';
+import { ref, provide, onBeforeMount, defineAsyncComponent, inject, onMounted, onBeforeUnmount, watch } from 'vue';
 import { ElTabs, ElTabPane } from 'element-plus';
 import SubscriptionSummary from '@Components/subscription/SubscriptionSummary.vue';
 import 'element-plus/es/components/tabs/style/css';
@@ -245,9 +245,18 @@ const userCreated = ref(false)
 const app_url = inject('app_url');
 const { locale } = useI18n();
 const isCgvVisible = ref(false)
+const isTermAccepted = ref(false)
 
 
 const submitForm = async () => {
+
+  if(!planInfo.value.acceptConditions) {
+
+    isTermAccepted.value = true
+    return
+
+  }
+
   await submitUserForm()
 }
 
