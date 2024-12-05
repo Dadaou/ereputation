@@ -181,7 +181,7 @@
 </template>
 <script setup>
 import moment from 'moment';
-import { ref, inject, watch, onBeforeMount, defineAsyncComponent } from 'vue';
+import { ref, inject, watch, onBeforeMount, defineAsyncComponent, defineEmits } from 'vue';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
@@ -217,7 +217,7 @@ const categoriesOptions = ref([
 
 const userStore = useUserStore();
 const showSpinner = ref(false);
-
+const emit = defineEmits();
 const dateFrom = ref(null);
 const dateTo = ref(null);
 const expiredAt = ref(null);
@@ -391,6 +391,7 @@ const submit = async () => {
                 message: `Advantage ${type.value === 'add' ? 'added' : 'updated'} successfully.`,
                 type: 'success',
             });
+            emit('advantage-updated');
             resetForm();
         } else {
             ElMessage.error(`Failed to ${type.value === 'add' ? 'add' : 'update'} advantage.`);
