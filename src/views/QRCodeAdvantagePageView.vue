@@ -3,7 +3,7 @@
         <div class="container mx-auto advantage__qrc_content" v-if="!isExpired">
             <div
                 class="bg-gradient-to-br from-purple-600 to-indigo-600 text-white text-center py-10 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative">
-                <h3 class="text-xl font-semibold mb-4">🎉 {{ $t("coupon.title") }} 🎁</h3>
+                <h3 class="text-xl font-semibold mb-4"> {{ $t("coupon.title") }} </h3>
                 <div id="qrcode__container" ref="qrcode">
                     <vue-qrious class="qr__code mx-auto"
                         :value="`${baseurl}/public/customer/${route.params.tag}/discount/auth/${route.params.discountTag}`"
