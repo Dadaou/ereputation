@@ -9,7 +9,7 @@
     <el-table :data="filterTableDataSent" class="responsive-table">
       <el-table-column width="100">
         <template #default="scope">
-          <img class="establishment_img" :src="scope.row.establishment_logo" alt="Establishment Logo" />
+          <img class="establishment_img" :src="scope.row.partnership_logo" alt="Establishment Logo" />
         </template>
       </el-table-column>
       <el-table-column label="Advantage" prop="advantage_name" style="width: 15%; min-width: 200px;" />
