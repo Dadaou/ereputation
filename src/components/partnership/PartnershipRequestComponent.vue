@@ -38,22 +38,8 @@
       </el-table-column>
       <el-table-column label="State" prop="state" align="center" style="width: 10%; min-width: 200px;">
         <template #default="scope">
-          <el-popconfirm v-if="scope.row.state == 'valid'"
-            title='Are you sure to change the state of partnership to "PENDING"?'
-            @confirm="handleEvent(scope.$index, scope.row, 'state', 'pending')">
-            <template #reference>
-              <el-button><i class="uil uil-check mr-1"
-                  style="color:var(--color-success); font-size: 16px;"></i></el-button>
-            </template>
-          </el-popconfirm>
-          <el-popconfirm v-if="scope.row.state == 'pending'"
-            title='Are you sure to change the state of partnership to "VALID"'
-            @confirm="handleEvent(scope.$index, scope.row, 'state', 'valid')">
-            <template #reference>
-              <el-button><i class="uil uil-dna mr-1" style="font-size: 16px;"></i></el-button>
-            </template>
-          </el-popconfirm>
-          <!-- <span style="text-transform: uppercase; font-size: 12px;">{{ scope.row.state }}</span> -->
+          <i v-if="scope.row.state == 'pending'" class="uil uil-dna mr-1" style="font-size: 16px;"></i>
+          <i v-else class="uil uil-check mr-1" style="color:var(--color-success); font-size: 16px;"></i>
         </template>
       </el-table-column>
       <el-table-column label="Enable" prop="enable" align="center" style="width: 10%; min-width: 200px;">

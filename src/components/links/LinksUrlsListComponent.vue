@@ -135,6 +135,8 @@
   
   const handleEdit = async (data) => {
 
+    localStorage.removeItem('showForms')
+
     let provider = providers.value.filter(item => item.id == data.idprovider)[0];
     const payload = {
       category: data.category,
@@ -146,7 +148,8 @@
       caption: data.caption,
       logo: data.logo,
       document_url: data.document_url,
-      establishment_name : data.establishment_name
+      establishment_name : data.establishment_name,
+      no_tracking :  data.no_tracking
     }
     /*const sub_tab = payload.category && payload.category.trim() !== '' ? 'urls_form' : 'urls_gate_form';
   

@@ -83,7 +83,9 @@ function handleClickExternalUrl(url, establishment_tag) {
 }
 
 const add = () => {
+  linkStore.resetLink()
   router.push({ name: 'Parameters', params: { tab: 'urls', sub_tab: 'urls_external_form' } });
+  localStorage.setItem('showForms', true)
 };
 
 const filterTableData = computed(() => {
@@ -152,11 +154,15 @@ const handleDelete = async (index, link) => {
 
 
 const handleEdit = async (index, link) => {
+
   linkStore.setLink(link)
-  console.log(linkStore.link)
+  linkStore.setAction('edit')
+  localStorage.setItem('showForms', true)
+  
   router.push({
     name: 'Parameters', params: { tab: 'urls', sub_tab: 'urls_external_form' }
   });
+
 };
 
 const copyLink = (link) => {
