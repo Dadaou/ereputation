@@ -9,20 +9,21 @@
                         :value="`${baseurl}/public/customer/${route.params.tag}/discount/auth/${route.params.discountTag}`"
                         @change="onDataUrlChange" size="5000" />
                 </div>
-                  
+
                 <span id="cpnCode" class="border-dashed border text-white px-4 py-2 rounded-l">{{ code }}</span>
                 <br>
                 <h3 class="text-xl font-semibold mb-4 mt-4" v-if="advantages">{{ advantages.adv_name }} <br>{{
                     advantages.establishment_name }}</h3>
                 <div v-if="advantages">
-                    <div v-if="advantages.created_at != null && advantages.expired_at!= null">
+                    <div v-if="advantages.created_at != null && advantages.expired_at != null">
                         <h3 class="text-xl font-semibold mb-4 mt-4">
-                            {{ $t("coupon.utilisation") }} {{ moment(advantages.created_at).format('YYYY-MM-DD')}} {{ $t("coupon.et") }} {{
+                            {{ $t("coupon.utilisation") }} {{ moment(advantages.created_at).format('YYYY-MM-DD') }} {{
+                                $t("coupon.et") }} {{
                                 moment(advantages.expired_at).format('YYYY-MM-DD') }}
                         </h3>
                     </div>
                 </div>
-                <h7 class="text-xl read-more " @click.stop="showMore(index)"> {{ $t("feedback.read_more") }}  </h7>
+                <h7 class="text-xl read-more " @click.stop="showMore(index)"> {{ $t("feedback.read_more") }} </h7>
 
                 <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2 mb-6">
                     <button id="cpnBtn1" :class="[isCopied ? 'btn-copy2' : 'btn-copy']" @click="copyCode(code)"
@@ -32,7 +33,7 @@
                 </div>
                 <p class="text-sm" v-if="advantages">Valid till: {{ moment(advantages.expired_at).format("DDMMM, YYYY")
                     }}</p>
-                
+
 
                 <div class="w-12 h-12 bg-white rounded-full absolute top-1/2 transform -translate-y-1/2 left-0 -ml-6">
                 </div>
@@ -42,12 +43,39 @@
                     <div v-if="showModal" class="modal">
                         <div class="modal-content" style="width: 350px; padding: 1rem;">
                             <div class="modal-header" style="color: black !important ">
-                                <h2><strong>{{ $t("feedback.description") }}</strong></h2>
                                 <div class="modal__close">
                                     <i class="uil uil-times-circle mb-8" @click="showModal = false"></i>
                                 </div>
                             </div>
-                            <div class="modal-body">
+                            <div class="inline-flex items-baseline gap-2 modal-content-name"
+                                style="max-width: calc(100% - 20px)">
+                                <h4 class="modal-discount-name"><strong>{{ advantages.establishment_name }}</strong>
+                                </h4>
+                                <span class="modal-discount-category">{{ adv_category }}</span>
+                            </div>
+                            <h6 class="modal-discount-establishment">
+                                {{ advantages.adv_name }}
+                            </h6>
+                            <div class="inline-flex items-center gap-2 w-full mt-4">
+                                <div class="flex flex-col items-center w-full">
+                                    <!-- <div v-if="info.value" class="modal-discount-offer">
+                                    <div>{{ info.value }}<span style="font-size: 1.75rem">{{ info.metric }}</span>
+                                    </div>
+                                </div> -->
+                                    <ul class="modal-discount-other">
+                                        <li v-if="adv_date_from && adv_date_from !== 'Invalid date'">From {{
+                                            adv_date_from }}</li>
+                                        <li v-if="adv_date_to && adv_date_to !== 'Invalid date'">To {{ adv_date_to }}
+                                        </li>
+                                        <li v-if="advantages.expired_at && advantages.expired_at !== 'Invalid date'">
+                                            Expired at {{ moment(advantages.expired_at).format("YYYY-MM-DD") }} </li>
+                                        <li v-if="adv_validity && adv_validity !== 'Invalid date'">Valid within
+                                            {{ adv_validity }} days</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="modal-discount-description"
+                                v-if="adv_description && adv_description !== 'null'">
                                 <div class="inline-flex items-baseline gap-2" style="max-width: calc(100% - 20px)">
                                     <h4 style="color: black !important"> {{ adv_description }}</h4>
                                 </div>
@@ -57,7 +85,7 @@
                 </transition>
             </div>
         </div>
-        <QRCodeAdvantagePageViewExpired v-else/>
+        <QRCodeAdvantagePageViewExpired v-else />
     </div>
 
 </template>
@@ -95,15 +123,15 @@ const appStore = useAppStore();
 const dateJour = moment().format('YYYY-MM-DD HH:mm:ss');
 const dateExperied = ref(null);
 const isExpired = ref(false);
-const date_to = ref(null);
 const adv_description = ref('')
-
-const listAdvantage = ref([]);
-
+const adv_date_from = ref('');
+const adv_date_to = ref('');
+const adv_validity = ref('');
+const adv_category = ref('');
 const showModal = ref(false);
 
 const showMore = () => {
-  showModal.value = true;
+    showModal.value = true;
 }
 
 watch(isCopied, () => {
@@ -146,17 +174,20 @@ onBeforeMount(async () => {
                 resolve(response);
             }, true);
         });
-        
+
         if (response.status === 200) {
             advantages.value = response.data[0];
             code.value = advantages.value.code;
             dateExperied.value = advantages.value.expired_at;
-            //date_to.value = advantages.value.adv_date_to;
             adv_description.value = advantages.value.adv_description;
+            adv_date_from.value = advantages.value.adv_date_from;
+            adv_date_to.value = advantages.value.adv_date_to;
+            adv_validity.value = advantages.value.adv_validity;
+            adv_category.value = advantages.value.adv_category;
             localStorage.setItem('nameAdvantage', advantages.value.adv_name);
 
             if (dateJour != null) {
-                if (dateJour > dateExperied.value ) {
+                if (dateJour > dateExperied.value) {
                     isExpired.value = true;
                 }
             }
@@ -172,54 +203,118 @@ onBeforeMount(async () => {
 
 <style scoped>
 .read-more:hover {
-  text-decoration: underline;
-  cursor: pointer;
+    text-decoration: underline;
+    cursor: pointer;
 }
+
 .modal__close i {
-  position: absolute;
-  top: 0;
-  right: 8px;
-  float: right;
-  font-size: 25px;
-  color: red;
-  cursor: pointer;
-  transition: var(--transition);
+    position: absolute;
+    top: 0;
+    right: 8px;
+    float: right;
+    font-size: 25px;
+    color: red;
+    cursor: pointer;
+    transition: var(--transition);
 }
 
 .modal__close i:hover {
-  transform: rotate(360deg);
+    transform: rotate(360deg);
 }
 
 .modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 3;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 3;
 }
 
 .modal-content {
-  background-color: #fff;
-  margin: 6rem auto;
-  padding: 25px;
-  border-radius: 16px 16px 5px 5px;
-  /*overflow: auto; */
-  max-width: 90%;
-  min-width: 300px;
-  position: relative;
+    background-color: #fff;
+    margin: 6rem auto;
+    padding: 25px;
+    border-radius: 16px 16px 5px 5px;
+    /*overflow: auto; */
+    max-width: 90%;
+    min-width: 300px;
+    position: relative;
 }
 
 .modal-body {
-  padding: 1rem;
+    padding: 1rem;
 }
+
+.modal-content-name {
+    width: 100%;
+}
+
+.modal-discount-description {
+    font-size: .7rem;
+    color: var(--color-secondary);
+    font-weight: 500;
+    max-height: 200px;
+    min-height: 100px;
+    overflow-y: auto;
+    border: 0 1px solid var(--color-primary);
+    padding: 8px;
+    border-radius: 2px 12px 2px 12px;
+    box-shadow: 1px -1px 4px color-mix(in srgb, var(--color-primary) 50%, white 50%) inset;
+    background: color-mix(in srgb, var(--color-primary) 8%, white)
+}
+
+.modal-discount-category {
+    text-transform: uppercase;
+    font-size: .65rem;
+    padding: 4px 8px;
+    border-radius: 16px;
+    background: var(--color-primary);
+    height: 22px;
+    color: white;
+    font-weight: 600;
+}
+
+.modal-discount-name {
+    text-transform: uppercase;
+    font-size: .9rem;
+    color: #000;
+}
+
+.modal-discount-establishment {
+    font-size: .7rem;
+    color: #707067;
+    font-weight: 500;
+    text-align: left;
+    margin-left: 10px;
+}
+
+ul.modal-discount-other {
+    margin: 10px 0px;
+    padding: 0;
+    display: block;
+    white-space: nowrap;
+    color: #000;
+}
+
+.modal-discount-other li {
+    font-size: .7rem;
+    font-weight: 600;
+}
+
+.modal-discount-other li:before {
+    content: "\1F449";
+}
+
+
 .read-more {
-  font-size: 9px;
-  font-weight: 400;
+    font-size: 9px;
+    font-weight: 400;
 }
-.qrcontainer{
-    margin-top: 8rem; 
+
+.qrcontainer {
+    margin-top: 8rem;
 }
 
 .head__container {
