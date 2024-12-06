@@ -5,7 +5,8 @@ export const useLinkStore = defineStore("link", {
     state: () => ({
         links: [],
         entity: 'link',
-        link: null
+        link: null,
+        action : null
     }),
     actions: {
         async updateLink(link, id, next){
@@ -34,6 +35,15 @@ export const useLinkStore = defineStore("link", {
 
         getLink(){
           return this.link;
+        },
+
+        setAction(action) {
+          this.action = action
+        },
+
+        getAction() {
+          return this.action;
         }
+
     },
 })
