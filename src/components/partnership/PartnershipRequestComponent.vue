@@ -10,10 +10,22 @@
     <el-table :data="filterTableDataReceived" class="responsive-table">
       <el-table-column width="100">
         <template #default="scope">
-          <img class="establishment_img" :src="scope.row.establishment_logo" alt="Establishment Logo" />
+          <img class="establishment_img" :src="scope.row.partnership_logo" alt="" />
         </template>
       </el-table-column>
-      <el-table-column label="Advantage" prop="advantage_name" style="width: 15%; min-width: 200px;" />
+
+      <!-- <el-table-column label="Advantage" prop="advantage_name" style="width: 15%; min-width: 200px;" /> -->
+      <el-table-column label="Advantage" style="width: 15%; min-width: 200px;" >
+                <template #default="scope">
+                                    
+                <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
+                        {{scope.row.advantage_name}}
+                 </span>
+                 <el-button  v-if="scope.row.other_customer != null" style="border: none; cursor:default; !default;important;"><Icon icon="lucide:handshake" style=" color: var(--color-danger) !important; display: flex; align-items: center;" /></el-button>
+
+        </template>
+      </el-table-column>
+
       <el-table-column label="Establishment" prop="establishment_name" style="width: 30%; min-width: 400px;" />
       <el-table-column label="Partnership" prop="partnership_name" style="width: 30%; min-width: 4%;" />
       <el-table-column label="Limit" prop="limit" align="center" style="width: 10%; min-width: 100px;" />
@@ -95,6 +107,7 @@ import 'element-plus/es/components/popconfirm/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
 import services from '@Services/services.js';
+import { Icon } from '@iconify/vue';
 // import { useUserStore } from "@Stores/user.js";
 import moment from "moment";
 // const categories = inject('categories');

@@ -7,7 +7,7 @@
                     customers in order to promote your products and acquire new clients.</p>
             </div>
         </div>
-        <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
+        <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4">
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
                     <label for="advantage"
