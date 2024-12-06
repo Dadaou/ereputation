@@ -7,22 +7,42 @@
       </div>
     </div>
     <el-table :data="filterTableData" class="responsive-table">
-      <el-table-column label="Name" prop="name" align="center" style="width: 5%; min-width: 200px;" />
-      <el-table-column label="Establishment" prop="establishment_name" align="center" style="width: 5%; min-width: 400px;" />
-      <el-table-column label="Amount" prop="amount" align="center" style="width: 10%; min-width: 4%;" />
-      <el-table-column label="Category" prop="category" align="center" style="width: 20%; min-width: 100px;" />
-      <el-table-column label="Code" prop="code" align="center" style="width: 5%; min-width: 200px;" />
-      <el-table-column label="Limit" prop="advantageLimit" align="center" style="width: 5%; min-width: 400px;" />
-      <el-table-column label="Received" prop="received" align="center" style="width: 10%; min-width: 4%;" />
-      <el-table-column label="Used" prop="used" align="center" style="width: 20%; min-width: 100px;" />
-      <el-table-column label="Expired At" align="center" style="width: 5%; min-width: 200px;" >
+    <el-table-column label="Name" align="center" style="width: 20%; min-width: 800px;" >
+                <template #default="scope">
+                                    
+                <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
+                        {{scope.row.name}}
+                 </span>
+                 <el-button size="small" v-if="scope.row.other_customer != null" style="cursor:default; !default;important;"><Icon icon="lucide:handshake" style=" color: var(--color-danger) !important; display: flex; align-items: center;" /></el-button>
+
+        </template>
+      </el-table-column>
+
+    <el-table-column label="Establishment" align="center" style="width: 20%; min-width: 800px;" >
+                <template #default="scope">
+                   <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
+                        {{scope.row.establishment_name}}
+                 </span>
+          
+        </template>
+      </el-table-column>
+
+
+      <!-- <el-table-column class="td" label="Establishment" prop="establishment_name" align="center" style="width: 5%; min-width: 400px;" /> -->
+      <el-table-column class="td" label="Amount" prop="amount" align="center" style="width: 10%; min-width: 4%;" />
+      <el-table-column class="td" label="Category" prop="category" align="center" style="width: 20%; min-width: 100px;" />
+      <el-table-column class="td" label="Code" prop="code" align="center" style="width: 5%; min-width: 200px;" />
+      <el-table-column class="td" label="Limit" prop="advantageLimit" align="center" style="width: 5%; min-width: 400px;" />
+      <el-table-column class="td" label="Received" prop="received" align="center" style="width: 10%; min-width: 4%;" />
+      <el-table-column class="td" label="Used" prop="used" align="center" style="width: 20%; min-width: 100px;" />
+      <el-table-column class="td" label="Expired At" align="center" style="width: 5%; min-width: 200px;" >
                 <template #default="scope">
           <span :class="{'expired-date': isExpired(scope.row.expired_at)}">
       {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
          </span>
         </template>
       </el-table-column>
-      <el-table-column label="Enable" align="center" style="width: 5%; min-width: 400px;">
+      <el-table-column class="td" label="Enable" align="center" style="width: 5%; min-width: 400px;">
        <template #default="scope">
          <el-button 
           :class="{'enabled-button': scope.row.enable}" 
@@ -73,6 +93,8 @@ import services from '@Services/services.js';
 import moment from 'moment';
 import { useWindowSize } from '@vueuse/core';
 import { useRoute, useRouter } from "vue-router";
+import { Icon } from '@iconify/vue';
+
 
 const advantageLoading = ref(false);
 const emit = defineEmits(['edit', 'setEnable', 'setDisable']);
@@ -152,6 +174,13 @@ const isExpired = (date) => {
 </script>
 
 <style scoped>
+
+  .td{
+ 
+  word-wrap: break-word !important; 
+  word-break: break-word !important;
+  white-space: normal !important;
+}
   .enabled-button {
     color: #74d474;
   

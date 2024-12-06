@@ -4,7 +4,21 @@
   </div>
   <div class="overflow-x-auto mt-5">
     <el-table :data="filteredData" class="responsive-table" style="width: 100%">
-      <el-table-column fixed="left" label="Advantage name" prop="adv_name" :width="isMobile ? 130 : 250" />
+
+      <!-- <el-table-column fixed="left" label="Advantage name" prop="adv_name" :width="isMobile ? 130 : 250" /> -->
+
+      <el-table-column label="Advantage name" fixed="left" :width="isMobile ? 130 : 250" >
+                <template #default="scope">
+                                    
+                <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
+                        {{scope.row.adv_name}}
+                 </span>
+                 <el-button  v-if="scope.row.contact_email == ''" style="border: none; cursor:default; !default;important;"><Icon icon="lucide:handshake" style=" color: var(--color-danger) !important; display: flex; align-items: center;" /></el-button>
+
+        </template>
+      </el-table-column>
+
+
       <el-table-column label="Establishment" prop="establishment_name" width="200" />
       <el-table-column label="Customer email" width="250">
         <template #default="scope">
@@ -43,9 +57,10 @@
 
 <script setup>
 import moment from 'moment';
-import { ElTable, ElTableColumn, ElInput } from 'element-plus';
+import { ElTable, ElTableColumn, ElInput,ElButton } from 'element-plus';
 import services from '@Services/services.js';
 import { useRoute } from "vue-router";
+import { Icon } from '@iconify/vue';
 import {
   ref,
   onBeforeMount,
@@ -150,7 +165,7 @@ onBeforeUnmount(() => {
 });
 </script>
 <style scoped>
-button i {
+/*button i {
   color: var(--color-danger);
 }
 
@@ -167,7 +182,7 @@ button {
 button:hover {
   background-color: var(--color-primary);
   color: white;
-}
+}*/
 
 .has-hover:hover {
   cursor: pointer;
