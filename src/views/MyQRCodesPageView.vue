@@ -14,8 +14,8 @@
       <el-tab-pane label="Gates" name="gates">
         <ShortGateListComponent />
       </el-tab-pane>
-      <el-tab-pane label="External URL" name="external_url">
-        <ShortUrlExternalListComponent/>
+      <el-tab-pane label="External URLS" name="external_url">
+        <ShortUrlExternalListComponent />
       </el-tab-pane>
     </el-tabs>
 
