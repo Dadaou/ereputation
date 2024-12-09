@@ -2,13 +2,13 @@
     <div class="user__main__container">
         <el-tabs v-model="activePartnershipTab" class="demo-tabs">
                     <el-tab-pane label="Partnerships requested by your establishment" name="partnership_list">
-                        <PartnershipListComponent @update="() => reloadPartnershipsData()" />
+                        <PartnershipListComponent @update="() => reloadPartnershipsData()"  @edit="handleEdit"/>
                     </el-tab-pane>
                     <el-tab-pane label="Outside requests" name="partnership_request">
-                        <PartnershipRequestComponent @update="() => reloadPartnershipsData()" />
+                        <PartnershipRequestComponent @update="() => reloadPartnershipsData()"/>
                     </el-tab-pane>
                     <el-tab-pane label="Request a new partnership" name="partnership_form">
-                        <PartnershipFormComponent @update="() => reloadPartnershipsData()" />
+                        <PartnershipFormComponent @update="() => reloadPartnershipsData()" :dataToEdit="dataToEdit"/>
                     </el-tab-pane>
                 </el-tabs>
     </div>
@@ -53,6 +53,7 @@ const clearEstablishmentForm = () => {
     cleanEstablishmentForm.value = !cleanEstablishmentForm.value
 }
 
+const dataToEdit = ref({})
 const appStore = useAppStore()
 const userStore = useUserStore()
 const activeName = ref('establishments')
@@ -70,6 +71,11 @@ const reloadPartnershipsData = async () => {
     if (response.status === 200) {
         allPartnerships.value = response.data;
     }
+}
+
+const handleEdit = (data) => {
+    activePartnershipTab.value = 'partnership_form'
+    dataToEdit.value = data
 }
 
 onBeforeMount(async () => {

@@ -178,7 +178,7 @@ const submit = async () => {
         enable: false,
         section: null,
         caption: caption.value,
-        no_tracking : noTracking.value
+        noTracking : noTracking.value
     };
 
     if (IsValueOkay(establishment.value)) data.establishment = establishment.value;
