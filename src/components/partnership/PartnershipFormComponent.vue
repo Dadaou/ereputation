@@ -13,7 +13,7 @@
                     <label for="advantage"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Advantage *</label>
                     <el-select v-model="advantage" placeholder="Choose an advantage" size="large" filterable remote
-                        reserve-keyword remote-show-suffix :loading="loading" :remote-method="searchAdvantage">
+                        reserve-keyword remote-show-suffix :loading="loading" :remote-method="searchAdvantage" :disabled="disableInput">
                         <el-option v-for="item in advantageOptions" :key="item.id" :label="item.name"
                             :value="`/api/advantages/${item.id}`">
                             <span><strong>{{ item.name }}</strong>, </span>
@@ -27,7 +27,7 @@
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Partnership
                         <span>*</span></label>
                     <el-select v-model="partnership" placeholder="Choose a partnership" size="large" filterable remote
-                        reserve-keyword remote-show-suffix :loading="loading2" :remote-method="searchPartnership">
+                        reserve-keyword remote-show-suffix :loading="loading2" :remote-method="searchPartnership" :disabled="disableInput">
                         <el-option v-for="item in partnershipOptions" :key="item.id" :label="item.name"
                             :value="item.id">
                             <span><strong>{{ item.name }}</strong>, </span>
@@ -47,8 +47,9 @@
                 <div>
                     <label for="limit"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Limit</label>
-                    <input type="number" id="limit" v-model="limit"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+
+                    <el-input-number v-model="limit" :min="0" size="large"/>
+
                 </div>
             </div>
             <AdvantagePartnershipList :items="allAdvantageList" class="mt-5" />
@@ -57,8 +58,12 @@
                     class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                     <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
                         ...</span>
-                    <span v-show="!showSpinner"><i class="uil uil-telegram-alt mr-1"></i> Request a new
-                        partnership</span>
+                    <span v-show="!showSpinner"><i class="uil uil-telegram-alt mr-1"></i> {{ partnerSubmitBtnText }}</span>
+                </button>
+
+                <button @click.stop="(e) => resetForm(e)"
+                        class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-gray-700 rounded-lg focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-900 hover:bg-gray-800">
+                        <span><i class="uil uil-times"></i> Clear </span>
                 </button>
             </div>
         </form>
@@ -75,14 +80,14 @@
                     <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Please
                         select your establishment
                         <span>*</span></label>
-                    <el-select v-model="establishmentInviteFriend" placeholder="Choose establishment" size="large">
+                    <el-select v-model="establishmentInviteFriend" placeholder="Choose establishment" size="large" :disabled="disableInput">
                         <el-option v-for="item in userStore.user.customer.establishments" :key="item.id"
-                            :label="item.name" :value="item.competitor_tag" />
+                            :label="item.name" :value="item.competitor_tag"/>
                     </el-select>
                 </div>
-                <input type="email" id="email" v-model="email" placeholder="Enter an email address"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-50 p-2" style="margin-top: 30px;">
-                <button type=" submit"
+                <input type="email" id="email" v-model="email" placeholder="Enter an email address" :disabled= "disableInput"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-50 p-2" style="margin-top: 30px;" >
+                <button type=" submit" :disabled= "disableInput"
                     class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
                     style="margin-top: 30px;">
                     <SpinnerComponent :show-spinner="showSpinnerEmail" :color="'gray'" /> <span
@@ -96,11 +101,11 @@
 </template>
 <script setup>
 // import moment from 'moment';
-import { ref, inject, watch, defineAsyncComponent, computed, onBeforeMount } from 'vue'
+import { ref, inject, watch, defineAsyncComponent, computed, onBeforeMount, defineProps, onMounted, reactive } from 'vue'
 import services from '@Services/services.js'
 import { useUserStore } from "@Stores/user.js"
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue'
-import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus'
+import { ElMessage, ElOption, ElSelect, ElDatePicker, ElInputNumber, ElInput } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
@@ -110,6 +115,15 @@ import { useAppStore } from "@Stores/app.js"
 const AdvantagePartnershipList = defineAsyncComponent(() =>
     import('@Components/utils/AdvantagePartnershipListComponent.vue')
 );
+
+const props = defineProps({
+
+    dataToEdit: {
+        type: Object,
+        default: {}
+    }
+
+})
 
 const partner = ref(import.meta.env.VITE_PARTNER_CODE);
 const app_url = inject('app_url')
@@ -127,6 +141,7 @@ const activePartnershipTab = inject('partnership_activeTab');
 const route = useRoute();
 const emit = defineEmits(['update']);
 const appStore = useAppStore()
+const disableInput = ref(false)
 
 const advantages = ref([]);
 const advantageOptions = ref([]);
@@ -137,26 +152,55 @@ const loading2 = ref(false)
 const userStore = useUserStore();
 const establishmentInviteFriend = ref('')
 
+const partnerSubmitBtnText = ref('Request a new partnership')
+
 watch(advantage, () => {
+
     if (advantage.value) {
         partnership.value = null;
         let advantage_id = advantage.value.split('/').slice(-1);
         updatePartnershipList(advantage_id);
         updateOtherAdvantageList(advantage_id);
-        establishment.value = advantages.value.find(v => { return v.id == Number(advantage.value.split('/').pop()) }).establishment_tag
+        establishment.value = advantages.value.find(v => { return v.id == Number(advantage.value.split('/').pop()) })?.establishment_tag
     }
 })
 
 watch(partnership, () => {
+
     if (partnership.value) {
         let estab = partnerships.value.find(v => { return v.tag == partnership.value })
         if (estab) {
             email.value = estab.email
         }
     }
+
 })
 
+
+watch(() => props.dataToEdit, (newData) => {
+
+    disableInput.value = true
+    partnerSubmitBtnText.value = 'Update partnership'
+
+    limit.value = newData.limit
+    expiredAt.value = newData.expired_at
+    advantage.value = `/api/advantages/${newData.advantage_id}`
+    partnership.value = newData.partnership_id
+    establishmentInviteFriend.value = newData.establishment_name
+
+}, {deep : true}) 
+
+const processForm = () => {
+    // Your form processing logic
+    
+    // If you want to use the onEdit function
+    if (props.onEdit) {
+        props.onEdit(formData)
+    }
+}
+
 onBeforeMount(async () => {
+
     await loadAdvantage();
     advantageOptions.value = advantages.value;
 
@@ -168,6 +212,7 @@ onBeforeMount(async () => {
 })
 
 const searchAdvantage = (query) => {
+
     if (query) {
         
         loading.value = true
@@ -213,18 +258,32 @@ const allAdvantageList = computed(() => {
 })
 
 const updatePartnershipList = async (advantageId) => {
+
     appStore.isLoading = true;
-    const response = await new Promise((resolve) => {
+
+    try {
+
+        const response = await new Promise((resolve) => {
         services.get_Record(`advantage/${advantageId}/other_establishments`, (response) => {
             resolve(response);
         });
-    });
-    if (response.status === 200) {
-        partnerships.value = response.data;
-        partnershipOptions.value = partnerships.value
+        });
+        if (response.status === 200) {
+            partnerships.value = response.data;
+            partnershipOptions.value = partnerships.value
+            appStore.isLoading = false;
+        }
+
+    }
+
+    catch(e) {
+        console.error(e)    
+    }
+
+    finally {
         appStore.isLoading = false;
     }
-    appStore.isLoading = false;
+  
 }
 
 const updateOtherAdvantageList = async (advantageId) => {
@@ -242,45 +301,94 @@ const updateOtherAdvantageList = async (advantageId) => {
 }
 
 const submit = async () => {
-    let data = {
-        "state": "pending",
-        "enable": false,
-        "advantage": advantage.value,
-        "partnership": "/api/establishments/" + partnership.value,
-        "limite": limit.value,
-        "expiredAt": expiredAt.value
+
+    if (partnerSubmitBtnText.value === "Request a new partnership") {
+
+        let data = {
+            "state": "pending",
+            "enable": false,
+            "advantage": advantage.value,
+            "partnership": "/api/establishments/" + partnership.value,
+            "limite": limit.value,
+            "expiredAt": expiredAt.value
+        }
+
+        try {
+            if (data.partnership && data.advantage) {
+                showSpinner.value = true;
+                const response = await new Promise((resolve) => {
+                    services.createRecord('partnerships', data, (response) => {
+                        resolve(response);
+                    });
+                });
+
+                if (response.status == 201) {
+                    ElMessage({
+                        message: 'partnership requested successfully',
+                        type: 'success',
+                    })
+
+                    partnership.value = '';
+                    advantage.value = '';
+                    showSpinner.value = false;
+                    expiredAt.value = '';
+                }
+                emit('update');
+
+                activePartnershipTab.value = 'partnership_list'
+            } else {
+                ElMessage.error(`Please, fill the form correctly!`);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
     }
 
-    try {
-        if (data.partnership && data.advantage) {
-            showSpinner.value = true;
-            const response = await new Promise((resolve) => {
-                services.createRecord('partnerships', data, (response) => {
-                    resolve(response);
-                });
-            });
-
-            if (response.status == 201) {
-                ElMessage({
-                    message: 'partnership requested successfully',
-                    type: 'success',
-                })
-
-                partnership.value = '';
-                advantage.value = '';
-                showSpinner.value = false;
-                expiredAt.value = '';
-            }
-            emit('update');
-
-            activePartnershipTab.value = 'partnership_list'
-        } else {
-            ElMessage.error(`Please, fill the form correctly!`);
-        }
-    } catch (error) {
-        console.log(error);
+    else {
+        updateExpirationDateAndLimit()
     }
 };
+
+const resetForm = (e = null) => {
+    if(e) e.preventDefault();
+
+    disableInput.value = false
+    partnerSubmitBtnText.value = 'Request a new partnership'
+    limit.value = 0
+    expiredAt.value = ''
+    advantage.value = ''
+    partnership.value = ''
+    establishmentInviteFriend.value = ''
+}
+
+const updateExpirationDateAndLimit = async () => {
+
+    showSpinner.value = true;
+
+    const response = await new Promise((resolve) => {
+
+        services.patchRecord('partnerships', props.dataToEdit.id, {limite: limit.value, expiredAt: expiredAt.value}, (response) => {
+            resolve(response);
+        });
+
+    });
+
+    if (response.status == 200) {
+        ElMessage({
+            message: 'partnership updated successfully',
+            type: 'success',
+        })
+
+        resetForm()
+    }
+
+    showSpinner.value = false
+    emit('update')
+    activePartnershipTab.value = 'partnership_list'
+
+    console.log("response", response)
+}
 
 const submitEmail = async () => {
     if (partner.value && email.value && establishmentInviteFriend.value) {

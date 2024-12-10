@@ -178,7 +178,7 @@ const submit = async () => {
         enable: false,
         section: null,
         caption: caption.value,
-        no_tracking : noTracking.value
+        noTracking : noTracking.value
     };
 
     if (IsValueOkay(establishment.value)) data.establishment = establishment.value;
@@ -388,7 +388,7 @@ button.isLoaded {
 }
 .closeView, .addBtn {
     display: flex; 
-    justify-content: end;
+    justify-content: flex-end;
 }
 
 
@@ -551,7 +551,7 @@ form button {
 
     .closeView, .addBtn {
         display: flex; 
-        justify-content: start;
+        justify-content: flex-start;
     }
 
     .closeView {
