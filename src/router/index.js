@@ -331,11 +331,11 @@ const router = createRouter({
           name: 'QRCodeAdvContact',
           component: () => import('@Views/QRCodeAdvantagePageView.vue')
         },
-        /*{
-          path: '/public/customer/:tag/advantagecontact/:discountTag',
-          name: 'QRCodeAdvContactExpired',
-          component: () => import('@Views/QRCodeAdvantagePageViewExpired.vue')
-        }*/
+        {
+          path: '/public/:tag_establishment/:tag_contact/unsubscribe',
+          name: 'UnsubscribePage',
+          component: () => import('@Views/UnsubscribePageView.vue')
+        }
       ]
     },
     {

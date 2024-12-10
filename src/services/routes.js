@@ -47,6 +47,7 @@ export const publicUrls = [
   'DiscountAuthentication',
   'Gate',
   'DiscountQRCodeValidation',
+  'UnsubscribePage',
   undefined
 ]
 

@@ -7,7 +7,8 @@
         "forgot": "¿Has olvidado tu contraseña?",
         "create": "¿No tienes una cuenta?",
         "submit": "Entregar",
-        "validate" : "Valide"
+        "validate" : "Valide",
+        "confirm" : "Confirme"
     },
     "feedback": {
         "title1": "Deja ",
@@ -83,5 +84,11 @@
         "offers":"Ofertas y promociones",
         "infos":"Información",
         "follow_us":"Síguenos"
+    },
+
+    "unsubscribe": {
+        "confirmation_text": "Lamentamos verte partir. Si confirmas tu cancelación de suscripción, ya no recibirás nuestras comunicaciones.",
+        "after_submit_text1" : "Su cancelación de suscripción ha sido confirmada.",
+        "after_submit_text2" : "Ya no recibirá nuestras comunicaciones. ¡Esperamos verle pronto!"
     }
 }

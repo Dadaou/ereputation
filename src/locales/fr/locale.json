@@ -7,7 +7,8 @@
         "forgot": "Mot de passe oublie",
         "create": "Pas de compte, creer un",
         "submit": "Connexion",
-        "validate" : "Valider"
+        "validate" : "Valider",
+        "confirm" : "Confirmer"
     },
     "feedback": {
         "title1": "Laissez ",
@@ -78,5 +79,11 @@
         "offers":"Offres et promotions",
         "infos":"Infos",
         "follow_us":"Suivez-nous"
+    },
+
+    "unsubscribe": {
+        "confirmation_text": "Nous sommes désolés de vous voir partir. Si vous confirmez votre désinscription, vous ne recevrez plus nos communications.",
+        "after_submit_text1" : "Votre désinscription est confirmée.",
+        "after_submit_text2" : "Vous ne recevrez plus nos communications. Nous espérons vous revoir bientôt !"
     }
 }
