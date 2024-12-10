@@ -23,7 +23,7 @@
             <i class="uil uil-external-link-alt"></i>
           </a>
           <el-button size="small" @click="copyLink(scope.row.url)"><i class='fa fa-copy'></i></el-button>
-          <el-button size="small" @click="handleClickExternalUrl(scope.row.url, scope.row.establishment_tag)"><i
+          <el-button size="small" @click="handleClickExternalUrl(scope.row.url, scope.row.establishment_tag, scope.row.no_tracking)"><i
               class="uil uil-qrcode-scan"></i></el-button>
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
@@ -77,8 +77,15 @@ const scanUrl = ref('');
 const baseurl = window.location.origin;
 const linkStore = useLinkStore();
 
-function handleClickExternalUrl(url, establishment_tag) {
-  scanUrl.value = `${baseurl}/public/${route.params.tag}/establishment/${establishment_tag}/external?url=${url}`;
+function handleClickExternalUrl(url, establishment_tag, no_traking) {
+  
+  if(no_traking) {
+    scanUrl.value = url
+  }
+  else {
+    scanUrl.value = `${baseurl}/public/${route.params.tag}/establishment/${establishment_tag}/external?url=${url}`
+  }
+
   showModal.value = true;
 }
 

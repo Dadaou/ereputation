@@ -30,46 +30,39 @@
         </template>
       </el-table-column>
       <el-table-column label="Enable" prop="enable" align="center" style="width: 10%; min-width: 200px;">
-        <!--<template #default="scope">
-          <span style="text-transform: uppercase;">
-            <i v-if="scope.row.enable" class="uil uil-check mr-1"
-              style="color:var(--color-success); font-size: 16px;"></i>
-            <i v-else class="uil uil-times mr-1" style="color:var(--color-danger2); font-size: 16px;"></i>
-          </span>
-
-        </template>-->
-
         <template #default="scope">
-          <el-popconfirm v-if="scope.row.enable == false" title='Are you sure you want to "ENABLE" this partnership?'
-            @confirm="handleEvent(scope.$index, scope.row, 'enable', true)">
+          <el-popconfirm 
+            v-if="scope.row.enable == false" 
+            title='Are you sure you want to "ENABLE" this partnership?'
+            @confirm="handleEvent(scope.$index, scope.row, 'enable', true)"
+          >
             <template #reference>
-              <el-button><i class="uil uil-times mr-1"
-                  style="color:var(--color-danger2); font-size: 16px;"></i></el-button>
+              <el-button>
+                <i class="uil uil-times mr-1" style="color:var(--color-danger2); font-size: 16px;"></i>
+              </el-button>
             </template>
           </el-popconfirm>
-          <el-popconfirm v-if="scope.row.enable == true" title='Are you sure you want to "DISABLE" this partnership?'
-            @confirm="handleEvent(scope.$index, scope.row, 'enable', false)">
+          <el-popconfirm 
+            v-if="scope.row.enable == true" 
+            title='Are you sure you want to "DISABLE" this partnership?'
+            @confirm="handleEvent(scope.$index, scope.row, 'enable', false)"
+          >
             <template #reference>
-              <el-button><i class="uil uil-check mr-1"
-                  style="color:var(--color-success); font-size: 16px;"></i></el-button>
+              <el-button>
+                <i class="uil uil-check mr-1" style="color:var(--color-success); font-size: 16px;"></i>
+              </el-button>
             </template>
           </el-popconfirm>
-          <!-- <span style="text-transform: uppercase;">
-            <i v-if="scope.row.enable" class="uil uil-check mr-1"
-              style="color:var(--color-success); font-size: 16px;"></i>
-            <i v-else class="uil uil-times mr-1" style="color:var(--color-danger2); font-size: 16px;"></i>
-          </span> -->
-
         </template>
-
       </el-table-column>
-      <!-- <el-table-column>
-        <template #header>
-          <el-input v-model="searchSent" size="small" placeholder="Type to search" class="searchTab"/>
+      <el-table-column align="center" style="width: 10%; min-width: 200px;">
+        <template #default="scope">
+          <el-button size="small" @click="handleEdit(scope.row)">
+            <i class="uil uil-edit"></i>
+          </el-button>
         </template>
-      </el-table-column> -->
+      </el-table-column>
     </el-table>
-
   </div>
 </template>
 <script setup>
@@ -90,11 +83,16 @@ const datasentLoading = ref(false);
 const datareceivedLoading = ref(false);
 const searchSent = ref('')
 const searchReceived = ref('')
-const emit = defineEmits(['update']);
+const emit = defineEmits(['update', 'edit']);
 // const userStore = useUserStore()
 const partnerships = inject('partnerships')
 let filterTableDataSent = ref([]);
 let filterTableDataReceived = ref([]);
+
+
+const handleEdit = (data) => {
+  emit('edit', data)
+};
 
 watchEffect(() => {
   if (partnerships.value && partnerships.value['sent']) {
