@@ -41,34 +41,38 @@
                 </div>
                 <transition name="modal-flip">
                     <div v-if="showModal" class="modal">
-                        <div class="modal-content" style="width: 350px; padding: 1rem;">
+                        <div class="modal-content" style="width: 350px;">
+                            <div v-if="adv_logo" class="modal-header__img">
+                                <img :src="adv_logo">
+                            </div>
                             <div class="modal-header" style="color: black !important ">
                                 <div class="modal__close">
                                     <i class="uil uil-times-circle mb-8" @click="showModal = false"></i>
                                 </div>
                             </div>
+
                             <div class="inline-flex items-baseline gap-2 modal-content-name"
                                 style="max-width: calc(100% - 20px)">
-                                <h4 class="modal-discount-name"><strong>{{ advantages.establishment_name }}</strong>
+                                <h4 class="modal-discount-name"><strong>{{ advantages.adv_name }}</strong>
                                 </h4>
                                 <span class="modal-discount-category">{{ adv_category }}</span>
                             </div>
                             <h6 class="modal-discount-establishment">
-                                {{ advantages.adv_name }}
+                                {{ advantages.establishment_name }}
                             </h6>
                             <div class="inline-flex items-center gap-2 w-full mt-4">
                                 <div class="flex flex-col items-center w-full">
-                                    <!-- <div v-if="info.value" class="modal-discount-offer">
-                                    <div>{{ info.value }}<span style="font-size: 1.75rem">{{ info.metric }}</span>
+                                    <div v-if="value" class="modal-discount-offer">
+                                        <div>{{ value }}<span style="font-size: 1.75rem">{{ adv_metric }}</span>
+                                        </div>
                                     </div>
-                                </div> -->
                                     <ul class="modal-discount-other">
-                                        <li v-if="adv_date_from && adv_date_from !== 'Invalid date'">From {{
-                                            adv_date_from }}</li>
-                                        <li v-if="adv_date_to && adv_date_to !== 'Invalid date'">To {{ adv_date_to }}
+                                        <li v-if="from && from !== 'Invalid date'">From {{
+                                            from }}</li>
+                                        <li v-if="to && to !== 'Invalid date'">To {{ to }}
                                         </li>
-                                        <li v-if="advantages.expired_at && advantages.expired_at !== 'Invalid date'">
-                                            Expired at {{ moment(advantages.expired_at).format("YYYY-MM-DD") }} </li>
+                                        <li v-if="expired_at && expired_at !== 'Invalid date'">
+                                            Expired at {{ moment(expired_at).format("YYYY-MM-DD") }} </li>
                                         <li v-if="adv_validity && adv_validity !== 'Invalid date'">Valid within
                                             {{ adv_validity }} days</li>
                                     </ul>
@@ -91,7 +95,7 @@
 </template>
 
 <script setup>
-import { ref, defineAsyncComponent, onBeforeMount, watch } from 'vue';
+import { ref, onBeforeMount, watch } from 'vue';
 import VueQrious from 'vue-qrious';
 import moment from 'moment';
 import { useUserStore } from "@Stores/user.js";
@@ -129,6 +133,14 @@ const adv_date_to = ref('');
 const adv_validity = ref('');
 const adv_category = ref('');
 const showModal = ref(false);
+const adv_logo = ref('');
+const adv_metric = ref('');
+const adv_amount = ref('');
+const adv_advantage_limit = ref('');
+const from = ref(null);
+const to = ref(null);
+const expired_at = ref(null);
+const value = ref(null);
 
 const showMore = () => {
     showModal.value = true;
@@ -184,6 +196,55 @@ onBeforeMount(async () => {
             adv_date_to.value = advantages.value.adv_date_to;
             adv_validity.value = advantages.value.adv_validity;
             adv_category.value = advantages.value.adv_category;
+            adv_logo.value = advantages.value.adv_logo;
+            adv_metric.value = advantages.value.adv_metric;
+            adv_amount.value = advantages.value.adv_amount;
+            adv_advantage_limit.value = advantages.value.adv_advantage_limit;
+
+            switch (advantages.value.adv_category) {
+                case 'Gift':
+                    from.value = null;
+                    to.value = null;
+                    adv_category.value = 'Gift';
+                    expired_at.value = dateExperied.value;
+                    value.value = null;
+                    adv_metric.value = null;
+                    break;
+
+                case 'Lottery':
+                    from.value = adv_date_from.value;
+                    to.value = adv_date_to.value;
+                    adv_category.value = 'Lottery';
+                    expired_at.value = dateExperied.value;
+                    value.value = adv_advantage_limit.value;
+                    adv_metric.value = null;
+                    break;
+
+                case 'Discount':
+                    from.value = null;
+                    to.value = null;
+                    adv_category.value = 'Discount';
+                    expired_at.value = dateExperied.value;
+                    value.value = adv_amount.value;
+                    adv_metric.value = adv_metric.value === 'percent' ? '%' : '$';
+                    break;
+
+                case 'Free':
+                    from.value = null;
+                    to.value = null;
+                    adv_category.value = 'Free';
+                    expired_at.value = dateExperied.value;
+                    value.value = 'F';
+                    adv_metric.value = 'ree';
+                    adv_validity.value = null
+                    break;
+
+                default:
+                    console.error('Unknown category:', advantages.value.adv_category);
+                    break;
+            }
+
+
             localStorage.setItem('nameAdvantage', advantages.value.adv_name);
 
             if (dateJour != null) {
@@ -235,7 +296,7 @@ onBeforeMount(async () => {
 .modal-content {
     background-color: #fff;
     margin: 6rem auto;
-    padding: 25px;
+    /* padding: 25px; */
     border-radius: 16px 16px 5px 5px;
     /*overflow: auto; */
     max-width: 90%;
@@ -249,6 +310,8 @@ onBeforeMount(async () => {
 
 .modal-content-name {
     width: 100%;
+    padding-top: 18px;
+    padding-left: 6px;
 }
 
 .modal-discount-description {
@@ -276,6 +339,22 @@ onBeforeMount(async () => {
     font-weight: 600;
 }
 
+.modal-discount-offer {
+    text-transform: uppercase;
+    color: white;
+    font-size: 2.8rem;
+    padding: 16px;
+    border-radius: 100%;
+    max-width: 150px;
+    aspect-ratio: 1/1;
+    background: #D3B302;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-family: 'Courier New', Courier, monospace;
+}
+
 .modal-discount-name {
     text-transform: uppercase;
     font-size: .9rem;
@@ -287,7 +366,7 @@ onBeforeMount(async () => {
     color: #707067;
     font-weight: 500;
     text-align: left;
-    margin-left: 10px;
+    margin-left: 16px;
 }
 
 ul.modal-discount-other {
@@ -307,6 +386,16 @@ ul.modal-discount-other {
     content: "\1F449";
 }
 
+.modal-header__img {
+    width: 100%;
+
+}
+
+.modal-header__img img {
+    border-radius: 16px 16px 0 0;
+    max-height: 240px;
+    height: 100%;
+}
 
 .read-more {
     font-size: 9px;

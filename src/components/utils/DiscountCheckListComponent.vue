@@ -152,8 +152,8 @@ const info = computed(() => {
         to: null,
         category: currentDiscount.value.category,
         expired_at: moment(currentDiscount.value.expired_at).format('DD-MM-YYYY'),
-        value: currentDiscount.value.advantage_limit,
-        metric: 'free'
+        value: 'F',
+        metric: 'ree'
       }
   }
 
