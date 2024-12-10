@@ -551,7 +551,7 @@ form button {
 
     .closeView, .addBtn {
         display: flex; 
-        justify-content: start;
+        justify-content: flex-start;
     }
 
     .closeView {
