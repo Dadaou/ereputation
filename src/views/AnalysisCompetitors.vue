@@ -315,7 +315,6 @@ const viewData = async (establishment, establishmentTag, dateStart, dateEnd, web
 
         await chartsStore.fetchDataCompetitor(establishmentTag, timePeriods, dateStart, dateEnd, website, (data) => {
             // let data = response.data.data
-            console.log("ittitit", data)
             competitorData.value = data;
         })
 

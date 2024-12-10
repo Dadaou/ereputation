@@ -7,13 +7,13 @@
 
       <!-- <el-table-column fixed="left" label="Advantage name" prop="adv_name" :width="isMobile ? 130 : 250" /> -->
 
-      <el-table-column label="Advantage name" fixed="left" :width="isMobile ? 130 : 250" >
+      <el-table-column label="Advantage" fixed="left" :width="isMobile ? 130 : 250" >
                 <template #default="scope">
                                     
                 <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
                         {{scope.row.adv_name}}
                  </span>
-                 <el-button  v-if="scope.row.contact_email == ''" style="border: none; cursor:default; !default;important;"><Icon icon="lucide:handshake" style=" color: var(--color-danger) !important; display: flex; align-items: center;" /></el-button>
+                 <el-button  v-if="scope.row.other_customer != null" style="border: none; cursor:default; !default;important;"><Icon icon="lucide:handshake" style=" color: var(--color-danger) !important; display: flex; align-items: center;" /></el-button>
 
         </template>
       </el-table-column>
@@ -45,9 +45,9 @@
       </el-table-column>
       <el-table-column fixed="right" align="center" label="Confirm" :width="isMobile ? 70 : 200" >
         <template #default="scope">
-          <span v-if="scope.row.confirm" @click="handleCancel(scope.row.id)" class="has-hover"><i
+          <span v-if="scope.row.confirm && scope.row.other_customer == null" @click="handleCancel(scope.row.id)" class="has-hover"><i
               class="uil uil-check-square" style="color: #777; font-size: 15px;"></i></span>
-          <span v-else @click="handleConfirm(scope.row.id)" class="has-hover"><i class="uil uil-square"
+          <span v-if="!scope.row.confirm && scope.row.other_customer == null" @click="handleConfirm(scope.row.id)" class="has-hover"><i class="uil uil-square"
               style="color: #777; font-size: 15px;"></i></span>
         </template>
       </el-table-column>

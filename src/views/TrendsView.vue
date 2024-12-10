@@ -52,11 +52,9 @@ const dataLoading = ref(true)
 const companyId = route.params.id;
 const customerTag = inject('tag')
 const selectedWebsites = inject('selectedWebsites');
-
 let timePeriods = ref(['Daily', 'Monthly', 'Yearly']);
-let selectedTimePeriod = ref(timePeriods.value[0]);
+const selectedTimePeriod = inject('type');
 const date = ref([]);
-
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 let data = ref({
@@ -133,7 +131,7 @@ const loadFromServer = async (type, company, datefrom, dateto,source) => {
         
     }
     const response = await new Promise((resolve) => {
-        services.get_Record(`establishment/trends?tag=${company}&dateFrom=${datefrom}&dateTo=${dateto}&platform=${source}`, (response) => {
+        services.get_Record(`establishment/trends?tag=${company}&dateFrom=${datefrom}&dateTo=${dateto}&platform=${source}&type=${type}`, (response) => {
             resolve(response)
         });
 

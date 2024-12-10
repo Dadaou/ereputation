@@ -30,8 +30,34 @@
     <div id= "society__list" class="society__list " v-if="visibleData.length > 0">
         <suspense>
 
-              <div class="reviews__content">
-                        <div class="reviews__pagination">
+              <div class="reviews__content"> 
+
+
+ 
+  
+
+                        <div class="reviews__pagination" style=" display: flex;flex-direction: row; justify-content: space-between;align-items: center;">
+
+
+ <div class="item" style="height: 2px;">
+        <div class="item__left" style=" display: flex;flex-direction: row; justify-content: flex-start;align-items: center;width: 220px !important;">
+            <span class="item__title">{{ all_items.title }} : 
+            
+            </span>
+            <span class="item__value ml-1"> 
+                <i v-for="average_sta in average_star" class="fa fa-star ml-1" aria-hidden="true"></i>
+              <!--   <i class="fa fa-star " aria-hidden="true"></i>
+                <i class="fa fa-star " aria-hidden="true"></i>
+                <i class="fa fa-star " aria-hidden="true"></i>
+                <i class="fa fa-star " aria-hidden="true"></i> -->
+            </span>
+          
+        </div>
+  
+    </div>
+
+
+
                             <PaginationComponent :options="optionsReview" v-if="visibleData.length > 0" @next="(option) => {
                               
                                 loadReviews(route.params.tag,option.page,option.limit,option.current, start_date, end_date,terms,establishments)
@@ -39,6 +65,8 @@
                                   loadReviews(route.params.tag,option.page,option.limit,option.current, start_date, end_date,terms,establishments)
                             }" />
                         </div>
+
+
                         <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
                             @reloadData="(review) => reloadData(review)" :categories="categories" @update-feeling="updateFeeling" via='analysis' :terms="terms"/>
                         <div v-else role="status"
@@ -83,7 +111,7 @@
 <script setup>
 import { ref, onMounted, defineAsyncComponent, inject, watch, provide } from 'vue';
 import EstablishmentListLoadedComponent from '@Components/utils/EstablishmentListLoadedComponent.vue';
-import { ElOption, ElSelect, ElDatePicker,ElInput,ElButton } from 'element-plus';
+import { ElOption, ElSelect, ElDatePicker,ElInput,ElButton,ElTooltip } from 'element-plus';
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
@@ -95,6 +123,7 @@ import { Search } from '@element-plus/icons-vue'
 import CommentComponent from '@Components/utils/CommentComponent.vue';
 import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import { useAppStore } from "@Stores/app.js";
+import DashboardComponent from '@Components/utils/DashboardComponent.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -108,6 +137,10 @@ const userId = userStore.user.id;
 
 const review_category = ref('');
 
+const buttonRef = ref()
+const tooltipRef = ref()
+const visible = ref(false)
+
 
 
 const categories = ref([]);
@@ -116,9 +149,12 @@ const categoryFilters = ref('all');
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 const dataCategoriesLoading = ref([]);
+const average_star = ref(0);
 
 provide('categories', categories)
 const avgScore = ref(0)
+
+const all_items = ref({ title: "Average Score", value: 0, icon: "uil-thumbs-up", description: "Average score from selected filters" });
 
 // calcul feedBack
 
@@ -250,6 +286,22 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, terms,
         reviews_loader.value = false;
         optionsReview.value.max = response.data['count'];
         visibleData.value = response.data['data'];
+
+        let somme=0;
+        let k=0;
+        response.data['data'].forEach((av)=>{
+
+            if (av.star && av.star > 0) {
+
+                somme+=av.star;
+                k++;
+            }
+
+            if (somme > 0 && k > 0) {
+                average_star.value=Math.floor(somme/k)
+            }
+           
+        })
     }else{
           reviews_loader.value=null;
     }
@@ -275,6 +327,130 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.item {
+    display: flex;
+    gap: 3rem;
+    justify-content: space-between;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    flex-basis: 210px;
+    padding: 25px;
+    border-radius: 10px;
+}
+
+.item__title {
+    color: var(--color-bg2);
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.item__value {
+    color: var(--color-danger);
+    font-size: 18px;
+    font-weight: bolder;
+    transition: var(--transition);
+}
+
+.item__icon {
+    color: var(--light-color-bg2);
+    font-size: 25px;
+    transition: var(--transition);
+}
+/*@media screen and (max-width:1440px) {
+  .item {
+        flex-basis: 187px;
+        padding: 20px;
+         width: 16% !important;
+    }
+}
+
+@media screen and (max-width:1024px) {
+  .item {
+        flex-basis: 150px;
+        gap: 1rem;
+    }
+}*/
+/* end css */
+
+/*@media screen and (max-width:1287px) {
+    .item__value {
+        font-size: 20px !important;
+    }
+
+    .item__icon {
+        font-size: 22px;
+    }
+}*/
+
+/*@media screen and (max-width:1225px) {
+
+    .item__value {
+        font-size: 18px !important;
+    }
+
+    .item__icon {
+        font-size: 20px !important;
+    }
+}
+
+@media screen and (max-width:1075px) {
+
+    .item {
+        padding: 15px !important;
+         width: 26% !important;
+    }
+
+    .item__icon {
+        font-size: 18px !important;
+    }
+
+    .item__title {
+        font-size: 13px !important;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .item {
+        flex-basis: 100px !important;
+    }
+
+    .item__value {
+        font-size: 15px !important;
+    }
+
+    .item__icon {
+        font-size: 18px !important;
+    }
+}
+
+@media screen and (max-width:840px) {
+
+    .item {
+        width: 26% !important;
+    }
+
+   
+}
+
+@media screen and (max-width:610px) {
+
+    .item {
+        width: 40% !important;
+    }
+
+   
+}
+@media screen and (max-width:470px) {
+
+    .item {
+        width: 80% !important;
+    }
+
+   
+}*/
+
+
+
+
 #society__list{
     margin-top: -15px;
 }
