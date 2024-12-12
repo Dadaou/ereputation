@@ -28,7 +28,8 @@
           {{ scope.row.contact_email || '-' }}
         </template>
       </el-table-column>
-      <el-table-column label="Discount Code" prop="adv_code" :formatter="(row) => row.adv_code || ''" width="150" />
+      <el-table-column label="Discount Code" prop="adv_code" :formatter="(row) => row.adv_code || '-'" align="center"
+        width="150" />
       <el-table-column label="Code" prop="code" width="100" />
       <el-table-column label="Amount" prop="adv_amount" width="100" />
       <el-table-column label="Created at" width="120">
@@ -48,11 +49,13 @@
       </el-table-column>
       <el-table-column fixed="right" align="center" label="Confirm" :width="isMobile ? 70 : 200">
         <template #default="scope">
+          <span v-if="scope.row.other_customer != null"><i class="uil uil-dna"
+              style="color: #777; font-size: 16px;"></i></span>
           <span v-if="scope.row.confirm && scope.row.other_customer == null" @click="handleCancel(scope.row.id)"
             class="has-hover"><i class="uil uil-check mr-1"
               style="color:var(--color-success); font-size: 16px;"></i></span>
           <span v-if="!scope.row.confirm && scope.row.other_customer == null" @click="handleConfirm(scope.row.id)"
-            class="has-hover"><i class="uil uil-dna" style="color: #777; font-size: 15px;"></i></span>
+            class="has-hover"><i class="uil uil-square" style="color: #777; font-size: 15px;"></i></span>
         </template>
       </el-table-column>
     </el-table>
