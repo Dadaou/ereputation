@@ -7,13 +7,16 @@
 
       <!-- <el-table-column fixed="left" label="Advantage name" prop="adv_name" :width="isMobile ? 130 : 250" /> -->
 
-      <el-table-column label="Advantage" fixed="left" :width="isMobile ? 130 : 250" >
-                <template #default="scope">
-                                    
-                <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
-                        {{scope.row.adv_name}}
-                 </span>
-                 <el-button  v-if="scope.row.other_customer != null" style="border: none; cursor:default; !default;important;"><Icon icon="lucide:handshake" style=" color: var(--color-danger) !important; display: flex; align-items: center;" /></el-button>
+      <el-table-column label="Advantage" fixed="left" :width="isMobile ? 130 : 250">
+        <template #default="scope">
+
+          <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
+            {{ scope.row.adv_name }}
+          </span>
+          <el-button v-if="scope.row.other_customer != null" style="border: none; cursor:default; !default;important;">
+            <Icon icon="lucide:handshake"
+              style=" color: var(--color-danger) !important; display: flex; align-items: center;" />
+          </el-button>
 
         </template>
       </el-table-column>
@@ -25,7 +28,7 @@
           {{ scope.row.contact_email || '-' }}
         </template>
       </el-table-column>
-      <el-table-column label="Discount Code" prop="adv_code" width="150" />
+      <el-table-column label="Discount Code" prop="adv_code" :formatter="(row) => row.adv_code || ''" width="150" />
       <el-table-column label="Code" prop="code" width="100" />
       <el-table-column label="Amount" prop="adv_amount" width="100" />
       <el-table-column label="Created at" width="120">
@@ -43,12 +46,12 @@
           {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
         </template>
       </el-table-column>
-      <el-table-column fixed="right" align="center" label="Confirm" :width="isMobile ? 70 : 200" >
+      <el-table-column fixed="right" align="center" label="Confirm" :width="isMobile ? 70 : 200">
         <template #default="scope">
-          <span v-if="scope.row.confirm && scope.row.other_customer == null" @click="handleCancel(scope.row.id)" class="has-hover"><i
-              class="uil uil-check-square" style="color: #777; font-size: 15px;"></i></span>
-          <span v-if="!scope.row.confirm && scope.row.other_customer == null" @click="handleConfirm(scope.row.id)" class="has-hover"><i class="uil uil-square"
-              style="color: #777; font-size: 15px;"></i></span>
+          <span v-if="scope.row.confirm && scope.row.other_customer == null" @click="handleCancel(scope.row.id)"
+            class="has-hover"><i class="uil uil-check-square" style="color: #777; font-size: 15px;"></i></span>
+          <span v-if="!scope.row.confirm && scope.row.other_customer == null" @click="handleConfirm(scope.row.id)"
+            class="has-hover"><i class="uil uil-square" style="color: #777; font-size: 15px;"></i></span>
         </template>
       </el-table-column>
     </el-table>
@@ -57,7 +60,7 @@
 
 <script setup>
 import moment from 'moment';
-import { ElTable, ElTableColumn, ElInput,ElButton } from 'element-plus';
+import { ElTable, ElTableColumn, ElInput, ElButton } from 'element-plus';
 import services from '@Services/services.js';
 import { useRoute } from "vue-router";
 import { Icon } from '@iconify/vue';
