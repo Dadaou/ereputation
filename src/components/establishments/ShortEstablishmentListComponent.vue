@@ -13,10 +13,9 @@
             </el-table-column>
             <el-table-column label="Name" prop="name" style="width: 25%; min-width: 200px;">
                 <template #default="scope">
-                    <el-tooltip :content="`Click to enter ${scope.row.name}'s page`" placement="top">
-                        <h1 class="establishment_name" @click="goToCompany(route.params.tag, scope.row.tag)">
-                            {{ scope.row.name }}</h1>
-                    </el-tooltip>
+                    <h1 class="establishment_name" @click="goToCompany(route.params.tag, scope.row.tag)">
+                        {{ scope.row.name }}
+                    </h1>
                 </template>
             </el-table-column>
             <el-table-column label="Reviews" prop="totalReviews" style="width: 20%; min-width: 300px;">

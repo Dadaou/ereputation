@@ -16,10 +16,9 @@
             </el-table-column>
             <el-table-column label="Name" prop="name" style="width: 25%; min-width: 200px;">
                 <template #default="scope">
-                    <el-tooltip :content="`Click to enter ${scope.row.name}'s page`" placement="top">
-                        <h1 class="establishment_name" @click="goToCompany(route.params.tag, scope.row.tag)">
-                            {{ scope.row.name }}</h1>
-                    </el-tooltip>
+                    <h1 class="establishment_name" @click="goToCompany(route.params.tag, scope.row.tag)">
+                        {{ scope.row.name }}
+                    </h1>
                 </template>
             </el-table-column>
             <el-table-column label="Language" align="center" prop="language" style="width: 15%; min-width: 200px;" />
@@ -110,13 +109,13 @@ const handleEdit = (index, establishment) => {
 const establishments = computed(() => {
     let data = [];
     let filteredData = [];
-    if (userStore.user && userStore.user.customer && userStore.user.customer.establishments) { 
+    if (userStore.user && userStore.user.customer && userStore.user.customer.establishments) {
         data = userStore.user.customer.establishments;
 
         data.forEach(establishment => {
             filteredData.push({
                 name: establishment.name,
-                language:establishment.language,
+                language: establishment.language,
                 media: (establishment.url_source) ? establishment.url_source : '',
                 tag: establishment.competitor_tag,
                 uri: `/api/establishments/${establishment.id}`,
@@ -131,10 +130,10 @@ const establishments = computed(() => {
                 zipcode: establishment.zipcode,
                 positionning: establishment.positionning,
                 id: establishment.id,
-                universe_id : establishment.universe_id,
-                universe_name : establishment.universe_name,
+                universe_id: establishment.universe_id,
+                universe_name: establishment.universe_name,
                 disable: establishment.disable,
-                pin:establishment.pin
+                pin: establishment.pin
             })
         });
     }
