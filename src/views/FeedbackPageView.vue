@@ -4,7 +4,8 @@
             <div class="tablet_mobile__head">
                 <div class="establishment__info">
                     <h1 class="society__name">{{ establishment.name }}</h1>
-                    <div class="society__category" v-if="['Restaurant', 'Hotel', 'Residence'].includes(establishment.category)">
+                    <div class="society__category"
+                        v-if="['Restaurant', 'Hotel', 'Residence'].includes(establishment.category)">
                         <i
                             :class="['uil', establishment.category == 'Restaurant' ? 'uil-restaurant' : '', establishment.category == 'Hotel' ? 'uil-bed-double' : '', establishment.category == 'Residence' ? 'uil-home' : '']"></i>
                         <span class="ml-2">{{ establishment.category }}</span>
@@ -20,7 +21,7 @@
                 </div>
                 <div class="photo">
                     <div v-if="establishment.url_source !== null" class="establishment__img">
-                        <img id="logoimage" :src="establishment.url_source"  alt="" />
+                        <img id="logoimage" :src="establishment.url_source" alt="" />
                     </div>
                     <div v-else role="status"
                         class="flex items-center justify-center max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
@@ -77,7 +78,7 @@
                     <div class="grid gap-6 mb-8 md:grid-cols-2 email">
                         <div class="author__email">
                             <DiscountCheckList :establishment="route.params.id" :customer="route.params.tag"
-                                @select="(value) => randomAdvantage = value" :discount="discount"/>
+                                @select="(value) => randomAdvantage = value" :discount="discount" />
                             <span v-if="randomAdvantage">
                                 <i class="uil uil-info-circle"></i>{{ $t("feedback.indice1") }}
                             </span>
@@ -205,16 +206,16 @@ onMounted(() => {
     });
     console.log(route.query)
 
-   if (!route.query.preview) {
-         try {
+    if (!route.query.preview) {
+        try {
             if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
                 window.FingerprintApp.default.main();
             }
         } catch (error) {
             console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
         }
-   }
-    
+    }
+
 })
 
 watch(() => {
@@ -257,7 +258,7 @@ const submit = async () => {
     } else {
         showRatingError.value = false;
     }
-    
+
     var lg = localStorage.getItem("langue")
     let visitorId = localStorage.getItem("visitId")
     let date_review = new Date();
@@ -299,13 +300,13 @@ const submit = async () => {
                         await services.createRecord('public/contacts', contactData, async (contactResponse) => {
                             if (contactResponse.status == 201) {
                                 if (visitorId) {
-                                    services.post_Record('public/visitors', 
-                                    { 
-                                        'visitor': visitorId, 
-                                        'contact': contactResponse.data.data['@id'],
-                                    }, (res) => {
-                                       console.log(res)
-                                    }, true)
+                                    services.post_Record('public/visitors',
+                                        {
+                                            'visitor': visitorId,
+                                            'contact': contactResponse.data.data['@id'],
+                                        }, (res) => {
+                                            console.log(res)
+                                        }, true)
                                 }
 
                                 if (randomAdvantage.value) {
@@ -317,7 +318,7 @@ const submit = async () => {
                                         email: email.value,
                                         language: (lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase(),
                                         app_url: app_url.value,
-                                        template: "workflow_"+((lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase())
+                                        template: "workflow_" + ((lg.toLowerCase() == 'sp') ? 'es' : lg.toLowerCase())
                                     }
                                     await services.createRecord('public/workflow', coupons, (res) => {
                                         //resetForm()
@@ -333,8 +334,8 @@ const submit = async () => {
                             tag: route.params.tag,
                             share: parseFloat(review.rating) >= 4 ? 'message-and-join-us' : 'message'
                         },
-                        query : {
-                            comment : comment.value,
+                        query: {
+                            comment: comment.value,
                         }
                     });
                 }
@@ -354,84 +355,88 @@ const submit = async () => {
 /**
  * obtenir width image from url
  */
- const getMeta = (url, cb) => {
-  const img = new Image();
-  img.onload = () => cb(null, img);
-  img.onerror = (err) => cb(err);
-  img.src = url;
+const getMeta = (url, cb) => {
+    const img = new Image();
+    img.onload = () => cb(null, img);
+    img.onerror = (err) => cb(err);
+    img.src = url;
 };
 
 /** Fonction widthimage pour savoir le width 
  * @param event 
 */
-const  widthimage = (event) => {
-    
+const widthimage = (event) => {
+
     document.getElementsByClassName("establishment__img").innerText = "Loading image...";
-    return getMeta(event,(err, img) =>{
+    return getMeta(event, (err, img) => {
         const heightresize = 150; //hauteur div pour l'image
         var aspectRatio = img.naturalWidth / img.naturalHeight;
         var newWidth = 0;
-        if(aspectRatio == 1){
+        if (aspectRatio == 1) {
             // ici carre
-            newWidth =heightresize;
-        }else{
-            newWidth =heightresize * aspectRatio;
-        }   
-        let classy =   (newWidth>210)? "largeClass" : "smallClass";
+            newWidth = heightresize;
+        } else {
+            newWidth = heightresize * aspectRatio;
+        }
+        let classy = (newWidth > 210) ? "largeClass" : "smallClass";
         // pour le desktop
         var elem = document.getElementById("logoimage");
         elem.classList.add("fade-in");
         setTimeout(() => {
             elem.classList.add('show');
-            
-            }, 10);
+
+        }, 10);
         elem.classList.add(classy);
         elem.src = event;
         //new Promise(resolve=>{elem.onload = resolve})
-       
+
         //pour le mobile
         var elemmob = document.getElementById("logoimagemobile");
-        if(elemmob !== null){
+        if (elemmob !== null) {
             elemmob.classList.add(classy);
-            
-            elemmob.src=event;
+
+            elemmob.src = event;
             // Ajouter la classe 'show' pour déclencher l'animation de fondu en entrée
             setTimeout(() => {
-                
+
                 elemmob.classList.add('show');
                 elemmob.style.display = "block";
             }, 10);
         }
-        
+
         return "OK";
     });
-   
+
 }
 
 </script>
 
 <style scoped>
-.smallClass{
-    width: auto! important;
-    height: 100%! important;
-    object-fit:contain! important;
+.smallClass {
+    width: auto ! important;
+    height: 100% ! important;
+    object-fit: contain ! important;
     border-radius: 5px;
 }
-.establishment__img{
-    display:flex;
-    justify-content:center;
+
+.establishment__img {
+    display: flex;
+    justify-content: center;
     flex-basis: 350px;
 }
-.largeClass{
-    width: 100%! important;
-    height: auto! important;
+
+.largeClass {
+    width: 100% ! important;
+    height: auto ! important;
     /*object-fit:contain! important;*/
     border-radius: 5px;
 }
+
 .fade-in {
     opacity: 0;
     transition: opacity 1s ease-in;
 }
+
 .fade-in.show {
     opacity: 1;
 }
@@ -480,6 +485,8 @@ const  widthimage = (event) => {
 
 .checkbox-container {
     margin: 15px;
+    font-size: 14px;
+    font-weight: 500;
 }
 
 input {
