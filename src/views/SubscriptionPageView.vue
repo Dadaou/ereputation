@@ -437,7 +437,7 @@ const subscribe = async () => {
 
   const plan = filterPlan(planInfo.value.plan.tag)
 
-  if (plan) {
+  if (plan?.price_code !== null) {
 
     const stripeServer = Stripe(import.meta.env.VITE_SECRET_STRIPE_KEY);
 
@@ -470,13 +470,18 @@ const subscribe = async () => {
       const { error } = await stripe.redirectToCheckout({ sessionId: sessionId });
 
       if (error) {
-        console.error('Erreur lors de la redirection vers Stripe:', error);
+        ElMessage({
+          message: 'Error redirecting to payment portal ' + error,
+          type: 'warning',
+        });
       }
     } catch (error) {
-      console.error('Erreur lors de la création de la session de paiement:', error)
     }
   } else {
-    console.error("Aucun plan n'a été trouvé!!!")
+    ElMessage({
+      message: 'No price code found',
+      type: 'warning',
+    });
   }
 }
 
