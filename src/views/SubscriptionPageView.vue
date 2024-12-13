@@ -348,7 +348,7 @@ provide('checkout_to_update', checkout_to_update);
 
 const router = useRouter();
 
-const getPlan = async(tag) => {
+const getPlan = async() => {
 
   const response = await new Promise((resolve) => {
     services.get_Record(`plan/list`, (response) => {
@@ -447,16 +447,23 @@ const subscribe = async () => {
 
     try {
       const session = await stripeServer.checkout.sessions.create({
-        payment_method_types: ['card'],
+        //payment_method_types: ['card'],
+        automatic_tax: {
+          enabled : true
+        },
         line_items: [
           {
             price: price.id, // ID du prix du produit (récupéré depuis le tableau de bord Stripe)
             quantity: 1,
+            adjustable_quantity : {
+              enabled : true
+            }
           },
         ],
         mode: 'subscription',
-        success_url: `${app_url.value}/payment/process?session_id={CHECKOUT_SESSION_ID}`, // URL de succès après paiement
-        cancel_url: `${app_url.value}/sign-in`,   // URL en cas d'annulation du paiement
+        allow_promotion_codes : true,
+        success_url: `${app_url.value}/payment/process?session_id={CHECKOUT_SESSION_ID}`, 
+        cancel_url: `${app_url.value}/sign-in`, 
       });
 
       const sessionId = session.id;
