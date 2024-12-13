@@ -541,6 +541,8 @@ const widthimage = (event) => {
 
 .checkbox-container {
     margin: 15px;
+    font-size: 14px;
+    font-weight: 500;
 }
 
 .feedback__form {

@@ -551,7 +551,7 @@ const all_items = ref([
     { title: "Reviews", value: 0, icon: "uil-comment" },
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
-const timePeriods = ref(['days', 'weeks', 'months', 'semesters']);
+const timePeriods = ref(['days', 'weeks', 'months']);
 const selectedTimePeriod = ref(timePeriods.value[0]);
 provide('type', selectedTimePeriod);
 const dataLegend = ref([]);
