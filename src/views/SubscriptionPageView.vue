@@ -133,11 +133,10 @@
                 <span>*</span></label>
               <input v-model="planInfo.uCPassword" type="password" id="cpassword"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
-            </div>
+            </div><br/>
             <!-- <p class="mb-5 mt-8">Company informations</p> -->
             <div class="w-full">
-              <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
-                name <span>*</span></label>
+              <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company name <span>*</span></label>
               <input v-model="planInfo.cName" type="text" id="company_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
             </div>
@@ -371,29 +370,26 @@ const filterPlan = (tag) => {
 }
 
 
-const setPlan = (code, quantity, unity) => {
+const setPlan = (tag) => {
 
-  /*if (code == '657b0feaa0258') {
-    planInfo.value['planName'] = 'All Inclusive'
-    planInfo.value['plan'] = { tag: '657b0feaa0258' }
-  } else {
-    planInfo.value['planName'] = 'Lead-Gen'
-    planInfo.value['plan'] = { tag: '657b0fbfdca0b' }
-  }*/
-
-  const plan = filterPlan(code)
+  const plan = filterPlan(tag)
 
   if(plan.length !== 0) {
 
     planInfo.value['planName'] = plan[0].name
     planInfo.value['plan'] = { tag: plan[0].tag }
 
-    planInfo.value['quantity'] = quantity
-    planInfo.value['unit'] = unity
-    planInfo.value['code'] = code
+    //planInfo.value['quantity'] = quantity
+    //planInfo.value['unit'] = unity
+    //planInfo.value['code'] = code
   }
 
-  else console.log("empty plan")
+  else  {
+    ElMessage({
+      message: 'Plan code not found',
+      type: 'warning',
+    });
+  }
 }
 
 const createAccount = async () => {
@@ -433,27 +429,27 @@ const createAccount = async () => {
 
 }
 
-const selectedPrice = (code, quantity, unit) => {
+/*const selectedPrice = (code, quantity, unit) => {
   return prices.find(price => price.code === code && price.quantity === quantity && price.unit === unit) || null;
-}
+}*/
 
 const subscribe = async () => {
 
-  const price = selectedPrice(planInfo.value.code, planInfo.value.quantity, planInfo.value.unit)
+  const plan = filterPlan(planInfo.value.plan.tag)
 
-  if (price) {
+  if (plan) {
 
     const stripeServer = Stripe(import.meta.env.VITE_SECRET_STRIPE_KEY);
 
     try {
       const session = await stripeServer.checkout.sessions.create({
-        //payment_method_types: ['card'],
+
         automatic_tax: {
           enabled : true
         },
         line_items: [
           {
-            price: price.id, // ID du prix du produit (récupéré depuis le tableau de bord Stripe)
+            price: plan.price_code, // ID du prix du produit (récupéré depuis le tableau de bord Stripe)
             quantity: 1,
             adjustable_quantity : {
               enabled : true
@@ -493,7 +489,6 @@ const createSubscription = async (app_url, customer) => {
       email: planInfo.value.uEmail,
       updated_at: moment().format('YYYY-MM-DD'),
       expired_at: moment().add(366, 'days').format('YYYY-MM-DD'),
-      // card_name: planInfo.value.cardName,
       app_url: app_url
     }, (response) => {
       resolve(response)
@@ -505,12 +500,7 @@ const createSubscription = async (app_url, customer) => {
       localStorage.setItem('subscriptionId', response.data.id)
       localStorage.setItem('uemail', planInfo.value.uEmail)
       localStorage.setItem('upassword', planInfo.value.uPassword)
-      /*ElMessage({
-        message: h('p', null, [
-          h('h4', { style: "color: #f75842; font-weight: bold;" }, 'Information:'),
-          h('span', { style: "font-size: 13px;" }, "Your account has been successfully created!"),
-        ]),
-      })*/
+
   }
   else {
     ElMessage({
