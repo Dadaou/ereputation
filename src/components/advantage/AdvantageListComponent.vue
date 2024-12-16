@@ -46,6 +46,8 @@
         style="width: 5%; min-width: 400px;" />
       <el-table-column class="td" label="Received" prop="received" align="center" style="width: 10%; min-width: 4%;" />
       <el-table-column class="td" label="Used" prop="used" align="center" style="width: 20%; min-width: 100px;" />
+      <el-table-column class="td" label="Section" prop="section" align="center" style="width: 20%; min-width: 800px;" />
+      <el-table-column class="td" label="Website" prop="website" align="center" style="width: 20%; min-width: 800px;" />
       <el-table-column class="td" label="Expired At" align="center" style="width: 5%; min-width: 200px;">
         <template #default="scope">
           <span :class="{ 'expired-date': isExpired(scope.row.expired_at) }">
