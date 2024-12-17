@@ -437,7 +437,7 @@ const subscribe = async () => {
 
   const plan = filterPlan(planInfo.value.plan.tag)
 
-  if (plan?.price_code !== null) {
+  if (plan[0]?.price_code !== null) {
 
     const stripeServer = Stripe(import.meta.env.VITE_SECRET_STRIPE_KEY);
 
@@ -449,7 +449,7 @@ const subscribe = async () => {
         },
         line_items: [
           {
-            price: plan.price_code, // ID du prix du produit (récupéré depuis le tableau de bord Stripe)
+            price: plan[0].price_code, // ID du prix du produit (récupéré depuis le tableau de bord Stripe)
             quantity: 1,
             adjustable_quantity : {
               enabled : true
@@ -531,7 +531,7 @@ onBeforeMount(async () => {
 
     await getPlan()
 
-    if (c && q && u) {
+    if (c) {
       setPlan(c, q, u)
     }
 
