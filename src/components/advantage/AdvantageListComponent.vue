@@ -1,66 +1,75 @@
 <template>
   <div class="mt-2 table__container">
-     <div class="table-description" style="margin-bottom: 16px;">
+    <div class="table-description" style="margin-bottom: 16px;">
       <p></p>
       <div>
-        <el-input v-model="search" size="small" placeholder="Type to search" class="input_searchs"/>
+        <el-input v-model="search" size="small" placeholder="Type to search" class="input_searchs" />
       </div>
     </div>
     <el-table :data="filterTableData" class="responsive-table">
-    <el-table-column label="Name" align="center" style="width: 20%; min-width: 800px;" >
-                <template #default="scope">
-                                    
-                <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
-                        {{scope.row.name}}
-                 </span>
-                 <el-button size="small" v-if="scope.row.other_customer != null" style="cursor:default; !default;important;"><Icon icon="lucide:handshake" style=" color: var(--color-danger) !important; display: flex; align-items: center;" /></el-button>
+      <el-table-column label="Name" align="center" style="width: 20%; min-width: 800px;">
+        <template #default="scope">
+
+          <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
+            {{ scope.row.name }}
+          </span>
+          <el-button size="small" v-if="scope.row.other_customer != null" style="cursor:default; !default;important;">
+            <Icon icon="lucide:handshake"
+              style=" color: var(--color-danger) !important; display: flex; align-items: center;" />
+          </el-button>
 
         </template>
       </el-table-column>
 
-    <el-table-column label="Establishment" align="center" style="width: 20%; min-width: 800px;" >
-                <template #default="scope">
-                   <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
-                        {{scope.row.establishment_name}}
-                 </span>
-          
+      <el-table-column label="Establishment" align="center" style="width: 20%; min-width: 800px;">
+        <template #default="scope">
+          <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
+            {{ scope.row.establishment_name }}
+          </span>
+
         </template>
       </el-table-column>
 
 
       <!-- <el-table-column class="td" label="Establishment" prop="establishment_name" align="center" style="width: 5%; min-width: 400px;" /> -->
       <el-table-column class="td" label="Amount" prop="amount" align="center" style="width: 10%; min-width: 4%;" />
-      <el-table-column class="td" label="Category" prop="category" align="center" style="width: 20%; min-width: 100px;" />
-      <el-table-column class="td" label="Code" prop="code" align="center" style="width: 5%; min-width: 200px;" />
-      <el-table-column class="td" label="Limit" prop="advantageLimit" align="center" style="width: 5%; min-width: 400px;" />
+      <el-table-column class="td" label="Category" prop="category" align="center"
+        style="width: 20%; min-width: 100px;" />
+      <el-table-column class="td" label="Code" prop="code" align="center" style="width: 5%; min-width: 200px;">
+        <template #default="scope">
+          <span v-if="scope.row.code" class="custom-badge">
+            {{ scope.row.code }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column class="td" label="Limit" prop="advantageLimit" align="center"
+        style="width: 5%; min-width: 400px;" />
       <el-table-column class="td" label="Received" prop="received" align="center" style="width: 10%; min-width: 4%;" />
       <el-table-column class="td" label="Used" prop="used" align="center" style="width: 20%; min-width: 100px;" />
-      <el-table-column class="td" label="Expired At" align="center" style="width: 5%; min-width: 200px;" >
-                <template #default="scope">
-          <span :class="{'expired-date': isExpired(scope.row.expired_at)}">
-      {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
-         </span>
+      <el-table-column class="td" label="Section" prop="section" align="center" style="width: 20%; min-width: 800px;" />
+      <el-table-column class="td" label="Website" prop="website" align="center" style="width: 20%; min-width: 800px;" />
+      <el-table-column class="td" label="Expired At" align="center" style="width: 5%; min-width: 200px;">
+        <template #default="scope">
+          <span :class="{ 'expired-date': isExpired(scope.row.expired_at) }">
+            {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column class="td" label="Enable" align="center" style="width: 5%; min-width: 400px;">
-       <template #default="scope">
-         <el-button 
-          :class="{'enabled-button': scope.row.enable}" 
-          size="small" 
-          @click="scope.row.enable ? handleDisable(scope.$index, scope.row) : handleEnable(scope.$index, scope.row)">
-         <i 
-          :class="scope.row.enable ? 'uil uil-check-square' : 'uil uil-square'" 
-          >
-         </i>
-        </el-button>
-      </template>
+        <template #default="scope">
+          <el-button :class="{ 'enabled-button': scope.row.enable }" size="small"
+            @click="scope.row.enable ? handleDisable(scope.$index, scope.row) : handleEnable(scope.$index, scope.row)">
+            <i :class="scope.row.enable ? 'uil uil-check-square' : 'uil uil-square'">
+            </i>
+          </el-button>
+        </template>
       </el-table-column>
-   
+
 
       <el-table-column label="Actions" style="width: 20%; min-width: 200px;text-align: center;" align="right">
-  
 
-       
+
+
         <template #default="scope">
           <el-tooltip placement="top">
             <template #content> Boost this advantage </template>
@@ -74,7 +83,7 @@
             </template>
           </el-popconfirm>
         </template>
-        
+
 
       </el-table-column>
 
@@ -174,19 +183,19 @@ const isExpired = (date) => {
 </script>
 
 <style scoped>
+.td {
 
-  .td{
- 
-  word-wrap: break-word !important; 
+  word-wrap: break-word !important;
   word-break: break-word !important;
   white-space: normal !important;
 }
-  .enabled-button {
-    color: #74d474;
-  
-  }
 
-  .expired-date {
+.enabled-button {
+  color: #74d474;
+
+}
+
+.expired-date {
   color: red;
 }
 
@@ -204,6 +213,7 @@ button i.uil-trash-alt {
 button i.uil-edit {
   color: var(--color-danger) !important;
 }
+
 .table-description {
   display: flex;
   justify-content: space-between;
@@ -219,26 +229,42 @@ button i.uil-edit {
   width: 100%
 }
 
+.custom-badge {
+  display: inline-block;
+  background-color: var(--color-danger);
+  /* Vert */
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px 12px;
+  border-radius: 12px;
+  /* Coins arrondis */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  /* Ombre légère */
+  text-align: center;
+}
+
 @media screen and (max-width: 768px) {
   .responsive-table {
     width: 85%;
   }
+
   .input_searchs,
   .input_search {
     display: inline;
-    margin-right: 7rem; 
+    margin-right: 7rem;
   }
 }
 
 @media screen and (max-width: 468px) {
   .input_search {
     display: inline;
-    margin-right: 3.5rem; 
+    margin-right: 3.5rem;
   }
 
   .input_searchs {
     display: inline;
-    margin-right: 9rem; 
+    margin-right: 9rem;
   }
 
   .el-table--fit {

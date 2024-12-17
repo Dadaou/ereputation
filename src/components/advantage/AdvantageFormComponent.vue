@@ -136,6 +136,28 @@
                         <el-date-picker v-model="dateTo" :size="'large'" />
                     </div>
                 </div>
+
+
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div>
+                        <label for="message"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Website</label>
+                        <textarea v-model="website" id="message" rows="4"
+                            class="block p-2.5 w-50 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Write your thoughts here...">
+                      </textarea>
+                    </div>
+
+                     <div>
+                        <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
+                        <el-select id="section" v-model="section" placeholder="" size="large">
+                            <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
+                        </el-select>
+                    </div>
+                </div>
+
+
+
                 <div class="grid gap-6 mb-6 md:grid-cols-2">
                     <div>
                         <label for="message"
@@ -219,6 +241,9 @@ const categoriesOptions = ref([
     { label: 'Lottery', value: 'Lottery' },
 ]);
 
+const sections = ref(['','MENUS', 'REVIEWS', 'OFFERS', 'INFOS', 'FOLLOW US'])
+const section = ref('')
+const website = ref('')
 const userStore = useUserStore();
 const showSpinner = ref(false);
 const emit = defineEmits();
@@ -324,6 +349,8 @@ watch(advantage_to_update, () => {
         establishment.value = `/api/establishments/${advantage_to_update.value['establishment_id']},${advantage_to_update.value['establishment_name']}`
         advantageLimit.value = advantage_to_update.value["advantageLimit"];
         description.value = advantage_to_update.value["description"];
+        section.value = advantage_to_update.value["section"];
+        website.value = advantage_to_update.value["website"];
         type.value = 'edit';
 
         if (advantage_to_update.value.logo) {
@@ -348,7 +375,9 @@ const resetForm = (e = null) => {
     metric.value = '';
     scope.value = '';
     validity.value = '';
-    advantageLimit.value = ''
+    advantageLimit.value = '';
+    section.value = '';
+    website.value = '';
     establishment.value = "";
     imgHasChanged.value = false;
     previewImage.value = null;
@@ -379,7 +408,8 @@ const submit = async () => {
     advantageLimit.value != null ? formData.append("advantageLimit", advantageLimit.value != null ? advantageLimit.value : null) : null;
     dateFrom.value != null ? formData.append("dateFrom", dateFrom.value != null ? moment(dateFrom.value).format('YYYY-MM-DD') : null) : null;
     dateTo.value != null ? formData.append("dateTo", dateTo.value != null ? moment(dateTo.value).format('YYYY-MM-DD') : null) : null;
-
+    section.value != "" ? formData.append("section", section.value != "" ? section.value : null) : null;
+    website.value != "" ? formData.append("website", website.value != "" ? website.value : null) : null;
 
     if (type.value === 'edit' && advantage_to_update.value !== null) {
         const advantageId = advantage_to_update.value.id;
