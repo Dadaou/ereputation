@@ -65,7 +65,13 @@
         "validation": "Valid Till:",
         "utilisation": "To be used between",
         "et": "and",
-        "validationcoupon": "Please enter the code to validate the coupon"
+        "validationcoupon": "Please enter the code to validate the coupon",
+        "customer" : "Customer",
+        "code" : "Code",
+        "expire" : "Expires",
+        "validated_at" : "Validated at",
+        "advantage_attribute" : "Advantage Attribute",
+        "value" : "Value"
     },
     "advantage": {
         "limit_qty": "Limited Quantity",
