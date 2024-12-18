@@ -70,7 +70,13 @@
         "validation": "Válido hasta el:",
         "utilisation": "Para utilizar entre el",
         "et": "y el",
-        "validationcoupon": "Por favor ingresa la código para validar el cupón"
+        "validationcoupon": "Por favor ingresa la código para validar el cupón",
+        "customer" : "Cliente",
+        "code" : "Código",
+        "expire" : "Expira en",
+        "validated_at" : "Validado en",
+        "advantage_attribute" : "Atributo Ventaja",
+        "value" : "Valor"
     },
     "advantage": {
         "limit_qty": "Cantidad Limitada",
