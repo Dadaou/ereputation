@@ -72,7 +72,7 @@
                                         <li v-if="to && to !== 'Invalid date'">To {{ to }}
                                         </li>
                                         <li v-if="expired_at && expired_at !== 'Invalid date'">
-                                            Expired at {{ moment(expired_at).format("YYYY-MM-DD") }} </li>
+                                            Expired at {{ moment(expired_at).format("DD-MM-YYYY") }} </li>
                                         <li v-if="adv_validity && adv_validity !== 'Invalid date'">Valid within
                                             {{ adv_validity }} days</li>
                                     </ul>
@@ -81,7 +81,7 @@
                             <div class="modal-discount-description"
                                 v-if="adv_description && adv_description !== 'null'">
                                 <div class="inline-flex items-baseline gap-2" style="max-width: calc(100% - 20px)">
-                                    <h4 style="color: black !important"> {{ adv_description }}</h4>
+                                    <h4 style="color: black !important;text-align: justify;"> {{ adv_description }}</h4>
                                 </div>
                             </div>
                         </div>
@@ -302,6 +302,7 @@ onBeforeMount(async () => {
     max-width: 90%;
     min-width: 300px;
     position: relative;
+    padding-bottom: 2px;
 }
 
 .modal-body {
@@ -315,6 +316,8 @@ onBeforeMount(async () => {
 }
 
 .modal-discount-description {
+    padding: 7px 0px 2px !important;
+    margin: 0px 15px 15px 15px;
     font-size: .7rem;
     color: var(--color-secondary);
     font-weight: 500;
@@ -323,7 +326,7 @@ onBeforeMount(async () => {
     overflow-y: auto;
     border: 0 1px solid var(--color-primary);
     padding: 8px;
-    border-radius: 2px 12px 2px 12px;
+    border-radius: 12px;
     box-shadow: 1px -1px 4px color-mix(in srgb, var(--color-primary) 50%, white 50%) inset;
     background: color-mix(in srgb, var(--color-primary) 8%, white)
 }
