@@ -7,7 +7,7 @@
     </div>
     <div class="advantage_container">
         <div class="form-container">
-            <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2 h-full">
+            <form @submit.prevent="submit" class="mt-4 px-2 h-full">
                 <div class="grid gap-6 mb-6 md:grid-cols-2">
                     <div>
                         <label for="countries"
@@ -156,22 +156,11 @@
                     </div>
                 </div>
 
-
-
-                <div class="grid gap-6 mb-6 md:grid-cols-2">
-                    <div>
-                        <label for="message"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-                        <textarea v-model="description" id="message" rows="4"
-                            class="block p-2.5 w-50 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Write your thoughts here...">
-                      </textarea>
-                    </div>
-                    <div>
-                        <label for="message"
+                <div class="gap-6 mb-6">
+                    <label for="message"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Logo</label>
                         <div class="md:order-2">
-                            <div class="image-selector border-gray-300" @dragover.prevent="onDragOver"
+                            <div class="image-selector border-gray-300" @dragover.prevent="onDragOver" style="min-height: 300px; aspect-ratio: 16/9;"
                                 @drop.prevent="onDrop" @click="selectImg">
                                 <div v-if="previewImage" class="image-preview">
                                     <img :src="previewImage" alt="Preview Image" class="uploading-image" />
@@ -183,11 +172,36 @@
                                 <input id="imgInput" name="file" type="file" @change="updateImage" style="display:none">
                             </div>
                         </div>
+                </div>
+
+
+
+                <div class="grid gap-6 mb-6 md:grid-cols-1">
+                    <div>
+                        <label for="message"
+                            class="block mb-2">Description</label>
+                        <!-- <textarea v-model="description" id="message" rows="4"
+                            class="block p-2.5 w-50 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" style="min-height: 350px;"
+                            placeholder="Write your thoughts here..."> 
+                      </textarea>-->
+
+                      <QuillEditor 
+                        style="height: 260px; max-width: 900px;" 
+                        theme="snow"
+                        :toolbar="toolbarOptions"
+                        ref="description"
+                        :content="html"
+                        content-type="html"
+                        @text-change="handleDescriptionChange"
+                      />
+
+                     
                     </div>
+
                 </div>
 
                 <div class="flex items-center justify-between py-5 border-t border-b dark:border-gray-600">
-                    <button type="submit"
+                    <button type="submit" 
                         class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                         <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span
                             v-if="showSpinner">Loading ...</span>
@@ -205,9 +219,11 @@
         </div>
     </div>
 </template>
+
+
 <script setup>
 import moment from 'moment';
-import { ref, inject, watch, onBeforeMount, defineAsyncComponent, defineEmits } from 'vue';
+import { ref, inject, reactive, watch, onBeforeMount, defineAsyncComponent, defineEmits, onMounted } from 'vue';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
@@ -216,6 +232,9 @@ import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
+import '@vueup/vue-quill/dist/vue-quill.bubble.css'
 
 const QrCodeModalComponent = defineAsyncComponent(() =>
     import('@Components/utils/QrCodeModalComponent.vue')
@@ -241,6 +260,23 @@ const categoriesOptions = ref([
     { label: 'Lottery', value: 'Lottery' },
 ]);
 
+const toolbarOptions = [
+  ['bold', 'italic', 'underline'],      
+  ['link'],
+  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+  [{ 'align': [] }],   
+                     
+
+  //[{ 'size': ['small', false, 'large', 'huge'] }],  
+  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+  [{ 'font': [] }],
+
+  [{ 'color': [] }, { 'background': [] }],          
+
+                                     
+]
+
+
 const sections = ref(['','MENUS', 'REVIEWS', 'OFFERS', 'INFOS', 'FOLLOW US'])
 const section = ref('')
 const website = ref('')
@@ -250,7 +286,6 @@ const emit = defineEmits();
 const dateFrom = ref(null);
 const dateTo = ref(null);
 const expiredAt = ref(null);
-const description = ref(null);
 const category = ref('');
 const advantageName = ref('');
 const establishment = ref("");
@@ -272,8 +307,15 @@ const imageInputHover = ref(false);
 const imgHasChanged = ref(false);
 const previewImage = ref(null);
 
+const description = ref('')
+const descriptionContent = ref('')
+
 const onDragOver = (event) => {
     imageInputHover.value = true;
+};
+
+const handleDescriptionChange = () => {
+    descriptionContent.value = description.value.getContents()
 };
 
 const onDrop = (event) => {
@@ -335,6 +377,7 @@ const selectImg = () => {
 }
 
 watch(advantage_to_update, () => {
+
     if (advantage_to_update.value != null) {
         dateFrom.value = advantage_to_update.value["date_from"];
         dateTo.value = advantage_to_update.value["date_to"];
@@ -348,7 +391,7 @@ watch(advantage_to_update, () => {
         advantageName.value = advantage_to_update.value["name"];
         establishment.value = `/api/establishments/${advantage_to_update.value['establishment_id']},${advantage_to_update.value['establishment_name']}`
         advantageLimit.value = advantage_to_update.value["advantageLimit"];
-        description.value = advantage_to_update.value["description"];
+        advantage_to_update.value["description"] !== null && description.value.setContents(advantage_to_update.value["description"]);
         section.value = advantage_to_update.value["section"];
         website.value = advantage_to_update.value["website"];
         type.value = 'edit';
@@ -367,7 +410,7 @@ const resetForm = (e = null) => {
     dateFrom.value = null;
     dateTo.value = null;
     expiredAt.value = null;
-    description.value = null;
+    description.value.setContents('');
     category.value = '';
     code.value = '';
     advantageName.value = '';
@@ -393,7 +436,6 @@ const submit = async () => {
         (item) => item.id === parseInt(establishmentId, 10)
     );
 
-
     category.value != "" ? formData.append("category", category.value != "" ? category.value : null) : null;
     code.value != "" ? formData.append("code", code.value != "" ? code.value : null) : null;
     advantageName.value != "" ? formData.append("name", advantageName.value != "" ? advantageName.value : null) : null;
@@ -403,7 +445,7 @@ const submit = async () => {
     formData.append("establishment", selectedEstablishment?.competitor_tag || "");
     scope.value != null ? formData.append("scope", scope.value != null ? scope.value : null) : null;
     validity.value != null && validity.value != "" ? formData.append("validity", validity.value != null && validity.value != "" ? parseInt(validity.value) : null) : null;
-    description.value != null ? formData.append("description", description.value != null ? description.value : null) : null;
+    formData.append("description", descriptionContent.value)
     expiredAt.value != null ? formData.append("expiredAt", expiredAt.value != null ? moment(expiredAt.value).format('YYYY-MM-DD') : null) : null;
     advantageLimit.value != null ? formData.append("advantageLimit", advantageLimit.value != null ? advantageLimit.value : null) : null;
     dateFrom.value != null ? formData.append("dateFrom", dateFrom.value != null ? moment(dateFrom.value).format('YYYY-MM-DD') : null) : null;
@@ -422,6 +464,7 @@ const submit = async () => {
     }
 
     const handleResponse = (response) => {
+
         if (response && (response.status === 201 || response.status === 200)) {
             ElMessage({
                 message: `Advantage ${type.value === 'add' ? 'added' : 'updated'} successfully.`,
@@ -447,7 +490,7 @@ const selectAdvantage = (advantage) => {
     dateFrom.value = advantage.From ? new Date(advantage.From) : advantage.From;
     dateTo.value = advantage.To ? new Date(advantage.To) : advantage.To;
     expiredAt.value = advantage.Expired_at ? new Date(advantage.Expired_at) : advantage.Expired_at;
-    description.value = advantage.description;
+    description.value.setContents(advantage.description);
     category.value = capitalize(advantage.Category);
     code.value = null;
     advantageName.value = advantage.Name;
@@ -466,6 +509,11 @@ onBeforeMount(() => {
         establishment.value = `/api/establishments/${establishments[0].id},${establishments[0].name}`;
     }
 })
+
+/*onMounted(() => {
+    description.value.setContents('<p class="ql-align-center"><strong><em>Chouchou</em></strong></p>')
+})*/
+
 </script>
 
 <style scoped>

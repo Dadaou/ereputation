@@ -70,7 +70,7 @@
         "customer" : "Client",
         "code" : "Code",
         "expire" : "Expire le",
-        "validated_at" : "Validater le",
+        "validated_at" : "Valider le",
         "advantage_attribute" : "Attribut de l'avantage",
         "value" : "Valeur"
     },
