@@ -8,7 +8,8 @@
         "create": "¿No tienes una cuenta?",
         "submit": "Entregar",
         "validate" : "Valide",
-        "confirm" : "Confirme"
+        "confirm" : "Confirme",
+        "close" : "Cerrar"
     },
     "feedback": {
         "title1": "Deja ",

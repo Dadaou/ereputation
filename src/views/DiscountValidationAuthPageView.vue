@@ -8,10 +8,7 @@
             <div class="login__form">
 
                 <span v-if="advantages">{{ advantages.adv_name }} <br> {{advantages.establishment_name }}</span>
-                <div class="advantage_attibut" style="border-bottom: 2px solid var(--light-color-bg1);">
-                   <p class="title"> {{ $t("coupon.advantage_attribute") }}</p>
-                   <p class="title">{{ $t("coupon.value") }} </p>  
-                </div>
+                <div style="border-bottom: 2px solid var(--light-color-bg1);"></div>
                 <div class="advantage_attibut">
                    <p>{{ $t("coupon.customer") }}</p>
                    <p>{{ capitalizeFirstLetter(advantages.contact_firstname, advantages.contact_lastname) }}</p>  
@@ -33,6 +30,12 @@
                 </div>
 
                 <div style="border-bottom: 2px solid var(--light-color-bg1);"></div>
+
+                <!-- <div v-show="valid" style="display: flex; justify-content: center;">
+                    <button class='btn btn__light2' @click="closePage"> 
+                        <span>{{ $t("login.close") }}</span>
+                    </button>
+                </div> -->
 
                 <div class = "coupon_form" v-show="!valid">
 
@@ -117,6 +120,9 @@ const capitalizeFirstLetter = (firstname = "", lastname = "") => {
   return `${capitalizedFirstname} ${capitalizedLastname}`;
 }
 
+const closePage = () => {
+    router.replace({ name: 'default' })
+}
 
 const validateCoupon = async () => {
 
@@ -260,6 +266,8 @@ button.isLoaded {
 .advantage_attibut {
     display: flex;
     justify-content: space-between;
+    gap: 90px;
+    overflow: hidden;
 }
 
 .login__form input {

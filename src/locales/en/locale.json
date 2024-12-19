@@ -8,7 +8,8 @@
         "create": "Don't have an account?",
         "submit": "Submit",
         "validate" : "Validate",
-        "confirm" : "Confirm"
+        "confirm" : "Confirm",
+        "close" : "Close"
     },
     "feedback": {
         "title1": "Leave ",
