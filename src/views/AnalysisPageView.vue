@@ -343,7 +343,7 @@
                 </el-select>
             </div>
 
-            <div class="date__filter">
+            <div class="date__filter" v-if="activeName !== 'ai_summary'">
                 <div class="text-sm title">Select a date range</div>
                 <el-date-picker v-model="start_date" placeholder="Start date" :size="'large'" />
                 <el-date-picker class="mt-2" v-model="end_date" placeholder="End date" :size="'large'" />
