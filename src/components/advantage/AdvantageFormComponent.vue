@@ -261,7 +261,7 @@ const categoriesOptions = ref([
 ]);
 
 const toolbarOptions = [
-  ['bold', 'italic', 'underline'],      
+  ['bold', 'italic', 'underline', 'strike'],      
   ['link'],
   [{ 'list': 'ordered'}, { 'list': 'bullet' }],
   [{ 'align': [] }],   
@@ -316,7 +316,7 @@ const onDragOver = (event) => {
 
 const handleDescriptionChange = () => {
     descriptionContent.value = description.value.getContents()
-};
+}
 
 const onDrop = (event) => {
     event.preventDefault();
@@ -509,10 +509,6 @@ onBeforeMount(() => {
         establishment.value = `/api/establishments/${establishments[0].id},${establishments[0].name}`;
     }
 })
-
-/*onMounted(() => {
-    description.value.setContents('<p class="ql-align-center"><strong><em>Chouchou</em></strong></p>')
-})*/
 
 </script>
 

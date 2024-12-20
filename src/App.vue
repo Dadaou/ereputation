@@ -143,9 +143,9 @@ watch(width, () => {
   height: 100%;
 }
 
-* {
+/* {
   caret-color: transparent !important;
-}
+}*/
 
 .erep__app {
   min-height: 500px;
