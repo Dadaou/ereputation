@@ -2,13 +2,13 @@
     <div class="user__main__container">
         <el-tabs v-model="activePartnershipTab" class="demo-tabs">
             <el-tab-pane label="Partnerships requested by your establishment" name="partnership_list">
-                <PartnershipListComponent @update="() => reloadPartnershipsData()" />
+                <PartnershipListComponent @update="() => reloadPartnershipsData()" @edit="handleEdit"/>
             </el-tab-pane>
             <el-tab-pane label="Requests for partnerships" name="partnership_request">
                 <PartnershipRequestComponent @update="() => reloadPartnershipsData()" />
             </el-tab-pane>
             <el-tab-pane label="Request a new partnership" name="partnership_form">
-                <PartnershipFormComponent @update="() => reloadPartnershipsData()" />
+                <PartnershipFormComponent @update="() => reloadPartnershipsData()" :dataToEdit="dataToEdit" />
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -25,6 +25,7 @@ import 'element-plus/es/components/tab-pane/style/css';
 
 const { width } = useWindowSize();
 const route = useRoute();
+const dataToEdit = ref({});
 
 const PartnershipFormComponent = defineAsyncComponent(() =>
     import("@Components/partnership/PartnershipFormComponent.vue")
@@ -60,6 +61,11 @@ const reloadPartnershipsData = async () => {
     if (response.status === 200) {
         allPartnerships.value = response.data;
     }
+}
+
+const handleEdit = (data) => {
+    activePartnershipTab.value = 'partnership_form'
+    dataToEdit.value = data
 }
 
 onBeforeMount(async () => {

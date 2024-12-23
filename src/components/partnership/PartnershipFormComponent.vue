@@ -100,7 +100,7 @@
     </div>
 </template>
 <script setup>
-// import moment from 'moment';
+import moment from 'moment';
 import { ref, inject, watch, defineAsyncComponent, computed, onBeforeMount, defineProps, onMounted, reactive } from 'vue'
 import services from '@Services/services.js'
 import { useUserStore } from "@Stores/user.js"
@@ -174,6 +174,11 @@ watch(partnership, () => {
         }
     }
 
+})
+
+
+watch(expiredAt, (newValue) => {
+    expiredAt.value = moment(new Date(newValue)).format('YYYY-MM-DD')
 })
 
 
