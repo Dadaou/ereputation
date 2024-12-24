@@ -4,7 +4,7 @@
       <div class="footer__info">
         <ul>
           <li>
-            <div v-if="appStore.account && appStore.account.logo && !isFeedback" class="footer-logo"
+            <div v-if="appStore.account && appStore.account.logo && !isFeedback && !isSignUp" class="footer-logo"
               :title="appStore.account.brand || ''">
               <img :src="appStore.account.logo">
             </div>
@@ -14,9 +14,9 @@
           </li>
           <li class="flex items-start justify-center flex-col gap-2">
             <ul v-if="!isFeedback">
-              <li>Legal Notice</li>
-              <li>
-                <a href="https://linkystar.com/pricing" :class="{ 'active-link': isSignUpActive }" target="_blank">Pricing</a>
+              <li v-if="!isSignUp">Legal Notice</li>
+              <li v-if="!isSignUp">
+                <a href="https://linkystar.com/pricing" style="color: white;" target="_blank">Pricing</a>
               </li>
             </ul>
             <ul v-else></ul>
@@ -71,6 +71,10 @@ const logo = ref(null)
 
 const isFeedback = computed(() => {
   return publicUrls.includes(route.name)
+});
+
+const isSignUp = computed(() => {
+  return route.name == 'Signup'? true : false
 });
 
 

@@ -1,6 +1,7 @@
 <template>
+  <NavbarComponent :isPublic="true"></NavbarComponent>
   <div class="subscription__container">
-    <div class="subscription-page-header">
+    <!-- <div class="subscription-page-header">
       <div class="next-container" style="padding-inline: 16px;">
         <a :href="baseurl" class="flex items-center">
           <div v-if="appStore.account && appStore.account.logo" class="nav-logo">
@@ -16,11 +17,11 @@
             <a href="https://wa.me/message/IZFK26272CXFB1" target="_blank">
               <i class="fa fa-whatsapp"></i>
             </a>
-            <!--<LanguageMenuDropdown :current="currentLanguage" @select="(language) => selectCurrentLanguage(language)" />-->
+            <LanguageMenuDropdown :current="currentLanguage" @select="(language) => selectCurrentLanguage(language)" />
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
     <el-tabs v-model="activeName" type="card" class="demo-tabs subscription-tabs next-container">
 
       <el-tab-pane name="user-info">
@@ -84,17 +85,19 @@
                 <li>Analytics</li>
                 <li>Lead Generation</li>
               </ul>
-              <AdvantageList text="Review Analysis" />
-              <ul className="sub-list-price no-icon mb-4">
-                <li>Internal Survey per Category</li>
-                <li>1 source </li>
-                <li>Filters (weather, event)</li>
-                <li>1 hashtag</li>
-              </ul>
-              <AdvantageList text="Competitor Monitoring" />
-              <ul className="sub-list-price no-icon mb-4">
-                <li>1 competitor</li>
-              </ul>
+              <div v-if="planInfo.planNamePrefix === 'All_inclusive'">
+                <AdvantageList text="Review Analysis" />
+                <ul className="sub-list-price no-icon mb-4">
+                  <li>Internal Survey per Category</li>
+                  <li>1 source </li>
+                  <li>Filters (weather, event)</li>
+                  <li>1 hashtag</li>
+                </ul>
+                <AdvantageList text="Competitor Monitoring" />
+                <ul className="sub-list-price no-icon mb-4">
+                  <li>1 competitor</li>
+                </ul>
+            </div>
             </ul>
 
           </div>
@@ -202,6 +205,7 @@
     </el-tabs>
     <call-us-selector phonesystem-url="https://m-unit.on3cx.fr:5001" :party="chatID"></call-us-selector>
   </div>
+  <FooterComponent></FooterComponent>
 </template>
 
 <script setup>
@@ -232,6 +236,14 @@ const SpinnerComponent = defineAsyncComponent(() =>
 
 const LanguageMenuDropdown = defineAsyncComponent(
   () => import("@Components/utils/LanguageMenuDropdownComponent.vue")
+)
+
+const NavbarComponent = defineAsyncComponent(() =>
+    import('@Components/layouts/NavbarComponent.vue')
+)
+
+const FooterComponent = defineAsyncComponent(() =>
+    import('@Components/layouts/FooterComponent.vue')
 )
 
 const AdvantageList = defineAsyncComponent(() => import("@Components/subscription/AdvantageList.vue"))
@@ -370,7 +382,7 @@ const filterPlan = (tag) => {
 }
 
 
-const setPlan = (tag) => {
+const setPlan = (tag, name) => {
 
   const plan = filterPlan(tag)
 
@@ -378,6 +390,7 @@ const setPlan = (tag) => {
 
     planInfo.value['planName'] = plan[0].name
     planInfo.value['plan'] = { tag: plan[0].tag }
+    planInfo.value['planNamePrefix'] = name
 
     //planInfo.value['quantity'] = quantity
     //planInfo.value['unit'] = unity
@@ -474,6 +487,7 @@ const subscribe = async () => {
           message: 'Error redirecting to payment portal ' + error,
           type: 'warning',
         });
+        showSpinner.value = false;
       }
     } catch (error) {
     }
@@ -482,6 +496,7 @@ const subscribe = async () => {
       message: 'No price code found',
       type: 'warning',
     });
+    showSpinner.value = false;
   }
 }
 
@@ -527,12 +542,12 @@ const route = useRoute();
 
 onBeforeMount(async () => {
 
-    const { c, q, u } = route.query
+    const { c, n } = route.query
 
     await getPlan()
 
     if (c) {
-      setPlan(c, q, u)
+      setPlan(c, n)
     }
 
     const response = await new Promise((resolve) => {

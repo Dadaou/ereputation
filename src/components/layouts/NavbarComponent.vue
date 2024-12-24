@@ -54,7 +54,7 @@
         </div>
 
 
-        <UserDropdownMenu v-if="userStore.authenticated && !isFeedback" :user="{
+        <UserDropdownMenu v-if="userStore.authenticated && !isFeedback && !isSignUp" :user="{
           name: `${userStore.user.firstname} ${userStore.user.lastname}`,
           initial: userStore.getInitials(userStore.user.firstname, userStore.user.lastname),
           email: userStore.user.email
@@ -129,6 +129,10 @@ const props = defineProps({
 
 const isFeedback = computed(() => {
   return publicUrls.includes(route.name)
+});
+
+const isSignUp = computed(() => {
+  return route.name == 'Signup'? true : false
 });
 
 const showMenu = computed(() => {
