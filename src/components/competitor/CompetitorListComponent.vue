@@ -20,7 +20,7 @@
             </el-table-column>
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
                 <template #header>
-                    <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>
+                    <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
                 </template>
                 <template #default="scope">
                     <el-button size="small" @click="showModal = !showModal, establishment = scope.row.uri"><i
@@ -28,8 +28,7 @@
 
                     <el-button size="small" @click="loadLinksByEstablishment(scope.row)"><i
                             class="uil uil-file-alt"></i></el-button>
-                    <el-button size="small" @click="handleEdit(scope.row)"><i
-                            class="uil uil-edit"></i></el-button>
+                    <el-button size="small" @click="handleEdit(scope.row)"><i class="uil uil-edit"></i></el-button>
                     <el-popconfirm title="Are you sure to delete this?"
                         @confirm="handleDelete(scope.$index, scope.row)">
                         <template #reference>
@@ -52,7 +51,7 @@
                 <template #default="scope">
                     <el-button size="small" @click="handleEditLink(scope.row)"><i class="uil uil-edit"></i></el-button>
                     <el-button size="small">
-                        <a :href="scope.row.url" target="_blank" class="external-link"><i
+                        <a :href="scope.row.settings_value1" target="_blank" class="external-link"><i
                                 class="uil uil-external-link-alt"></i></a>
                     </el-button>
                     <el-popconfirm title="Are you sure to delete this?"
@@ -459,21 +458,21 @@ const isValidUrl = (url, urlTemplate) => {
     //   console.log("url:", url);
     console.log("urlTemplate:", urlTemplate);
 
-    const pattern = urlPattern(urlTemplate); 
+    const pattern = urlPattern(urlTemplate);
     // console.log("Pattern:", pattern);
 
     const domainUrlTemplate = getDomainFromUrl(urlTemplate);
     const domainUrlInput = getDomainFromUrl(url);
-    const path = getDomainAndPathFromUrl(url);    
+    const path = getDomainAndPathFromUrl(url);
     console.log("Nom de domaine urlTemplate :", domainUrlTemplate);
-    console.log("Nom de domaine input:", domainUrlInput )
+    console.log("Nom de domaine input:", domainUrlInput)
     console.log("le path est : ", path)
     let isValid = false;
 
-    if(domainUrlTemplate === domainUrlInput){
+    if (domainUrlTemplate === domainUrlInput) {
         isValid = true;
         console.log("Same domaine")
-    }else{
+    } else {
         isValid = false;
         console.log("Not match domaine")
     }
@@ -625,7 +624,7 @@ onBeforeMount(async () => {
                     url: item.url,
                     uri: `/api/providers/${item.id}`
                 })
-            })    
+            })
         } else {
             console.error('Error fetching advantages:', response);
         }
@@ -829,24 +828,27 @@ img {
     }
 }
 
-.search{
+.search {
     display: none;
 }
 
 .searchtab {
     max-width: 150px;
 }
-@media screen and (max-width: 468px) { 
+
+@media screen and (max-width: 468px) {
     .search {
         display: flex;
         max-width: 220px;
         float: right;
     }
-    .searchtab{
+
+    .searchtab {
         display: none;
     }
+
     .el-table--fit {
-            font-size: 11px !important;
+        font-size: 11px !important;
     }
 }
 </style>
