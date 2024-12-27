@@ -460,6 +460,9 @@ const subscribe = async () => {
         automatic_tax: {
           enabled : true
         },
+
+        customer_email : planInfo.value.uEmail,
+        
         line_items: [
           {
             price: plan[0].price_code, // ID du prix du produit (récupéré depuis le tableau de bord Stripe)
