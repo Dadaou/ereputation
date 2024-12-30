@@ -289,13 +289,6 @@ const filteredProviders = computed(() => {
 })
 
 const isValidHashtag = computed(() => {
-    // if(link.value != ''){
-    //     if (link.value.startsWith("#")) {
-    //         return true;
-    //     }else{
-    //         return false
-    //     }
-    // }
     return true
 })
 
@@ -361,42 +354,14 @@ const handleDeleteLink = async (index, link) => {
     }
 }
 
-// const urlPattern = (urlTemplate) => {
-//     let regexPattern = urlTemplate.replace(/[\-\[\]\/\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-//     regexPattern = regexPattern.replace(/{value1}/g, '(.+)');
-//     return new RegExp('^' + regexPattern);
-// }
 
-const urlPattern = (urlTemplate, extensions = ['fr', 'es', 'com']) => {
-    const url = new URL(urlTemplate);
+const urlPattern = (url) => {
+    const pattern = /^(?:https?:\/\/)?[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.(?:es|com|fr)(?:\/.*)?$/i;
 
-    const domainParts = url.hostname.split('.');
-
-    let regexPattern = urlTemplate.replace(/[\-\[\]\/\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-
-    regexPattern = regexPattern.replace(/{value1}/g, '(.+)');
-    regexPattern = regexPattern.replace(/q=/g, '');
-
-    const extensionPattern = extensions.join('|');
-    regexPattern = regexPattern.replace(new RegExp(`\\.${domainParts[domainParts.length - 1]}`), `.(?:${extensionPattern})`);
-
-    return new RegExp('^' + regexPattern);
+    return pattern.test(url);
 };
 
-// const splitUriAndUrl = (combinedString) => {
-//     if (combinedString !== '') {
-//         const urlPattern = /https?:\/\/\S+/;
-//         const match = combinedString.match(urlPattern);
 
-//         if (match) {
-//             const url = match[0];
-//             const uri = combinedString.replace(url, '').trim();
-//             return { uri, url };
-//         }
-//     }
-
-//     return { uri: combinedString, url: null };
-// }
 
 const splitUriAndUrl = (combinedString) => {
     if (combinedString !== '') {
@@ -454,33 +419,36 @@ function getDomainAndPathFromUrl(url) {
     return path;
 }
 
+function extractPureDomain(url) {
+  const { hostname } = new URL(url);
+  
+  let parts = hostname.split('.');
+
+  if (parts[0] === 'www') {
+    parts.shift();
+  }
+
+  const tld = parts[parts.length - 1];
+  if (['com', 'fr', 'es'].includes(tld)) {
+    parts.pop();
+  }
+  return parts[parts.length - 1] || '';
+}
+
 const isValidUrl = (url, urlTemplate) => {
-    //   console.log("url:", url);
-    console.log("urlTemplate:", urlTemplate);
-
-    const pattern = urlPattern(urlTemplate);
-    // console.log("Pattern:", pattern);
-
-    const domainUrlTemplate = getDomainFromUrl(urlTemplate);
-    const domainUrlInput = getDomainFromUrl(url);
-    const path = getDomainAndPathFromUrl(url);
-    console.log("Nom de domaine urlTemplate :", domainUrlTemplate);
-    console.log("Nom de domaine input:", domainUrlInput)
-    console.log("le path est : ", path)
-    let isValid = false;
-
-    if (domainUrlTemplate === domainUrlInput) {
-        isValid = true;
-        console.log("Same domaine")
-    } else {
-        isValid = false;
-        console.log("Not match domaine")
+    try {
+        const domainUrlTemplate = extractPureDomain(urlTemplate);
+        const domainUrlInput = extractPureDomain(url);
+        const pathTemplate = getDomainAndPathFromUrl(urlTemplate);
+        const pathInput = getDomainAndPathFromUrl(url);
+        
+        const pattern = urlPattern(url);
+        const isDomainValid = domainUrlTemplate === domainUrlInput;
+        const isPathValid = pathTemplate === pathInput;
+        return isDomainValid && pattern;
+    } catch (error) {
+        return false;
     }
-    // if (pattern.test(url)) { // Utilisation de la méthode test de l'objet RegExp
-    //     isValid = true;
-    // }
-
-    return isValid;
 }
 
 
@@ -507,12 +475,6 @@ const submit = async () => {
     showSpinner.value = true;
     let urlObject = splitUriAndUrl(provider.value)
     console.log(urlObject);
-    // const data = {
-    //     value1: isHashtag.value?getHashtagValue(link.value):link.value,
-    //     establishment: establishment.value,
-    //     provider: urlObject.uri,
-    //     enable: true
-    // }
 
     const data = {
         value1: link.value,
