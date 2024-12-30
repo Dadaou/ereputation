@@ -448,6 +448,13 @@ onBeforeMount(async () => {
   }
 }
 
+@media screen and (max-width: 750px) {
+  .user__main__container {
+    width: 200px;
+    min-width: 104% !important;
+  }
+}
+
 * {
   overflow: hidden;
 }
