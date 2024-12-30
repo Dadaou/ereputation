@@ -305,11 +305,11 @@ const selectCurrentLanguage = (language) => {
 
 const submitCompanyForm = async () => {
   showSpinner.value = true;
-  createAccount().then(async (response) => {
+  createAccount().then((response) => {
     if (response.status == 200) {
       planInfo.value.customer = response.data.customer.tag;
       userCreated.value = true
-      await subscribe()
+      redirectToPaymentPage()
       // activeName.value = 'checkout';
     } else {
       showSpinner.value = false;
@@ -392,14 +392,11 @@ const setPlan = (tag, name) => {
     planInfo.value['plan'] = { tag: plan[0].tag }
     planInfo.value['planNamePrefix'] = name
 
-    //planInfo.value['quantity'] = quantity
-    //planInfo.value['unit'] = unity
-    //planInfo.value['code'] = code
   }
 
   else  {
     ElMessage({
-      message: 'Plan code not found',
+      message: 'Plan tag not found',
       type: 'warning',
     });
   }
@@ -442,65 +439,29 @@ const createAccount = async () => {
 
 }
 
-/*const selectedPrice = (code, quantity, unit) => {
-  return prices.find(price => price.code === code && price.quantity === quantity && price.unit === unit) || null;
-}*/
-
-const subscribe = async () => {
+const redirectToPaymentPage = () => {
 
   const plan = filterPlan(planInfo.value.plan.tag)
 
   if (plan[0]?.price_code !== null) {
 
-    const stripeServer = Stripe(import.meta.env.VITE_SECRET_STRIPE_KEY);
-
-    try {
-      const session = await stripeServer.checkout.sessions.create({
-
-        automatic_tax: {
-          enabled : true
-        },
-
-        customer_email : planInfo.value.uEmail,
-        
-        line_items: [
-          {
-            price: plan[0].price_code, // ID du prix du produit (récupéré depuis le tableau de bord Stripe)
-            quantity: 1,
-            adjustable_quantity : {
-              enabled : true
-            }
-          },
-        ],
-        mode: 'subscription',
-        allow_promotion_codes : true,
-        success_url: `${app_url.value}/payment/process?session_id={CHECKOUT_SESSION_ID}`, 
-        cancel_url: `${app_url.value}/sign-in`, 
-      });
-
-      const sessionId = session.id;
-
-      const stripe = await loadStripe(import.meta.env.VITE_PUBLIC_STRIPE_KEY); 
-
-      // Rediriger l'utilisateur vers Stripe Checkout
-      const { error } = await stripe.redirectToCheckout({ sessionId: sessionId });
-
-      if (error) {
-        ElMessage({
-          message: 'Error redirecting to payment portal ' + error,
-          type: 'warning',
-        });
-        showSpinner.value = false;
+    router.push({
+      name : 'PaymentPage',
+      query : {
+        code : plan[0].price_code,
+        email : planInfo.value.uEmail
       }
-    } catch (error) {
-    }
+    })
+
   } else {
     ElMessage({
       message: 'No price code found',
       type: 'warning',
     });
-    showSpinner.value = false;
   }
+
+  showSpinner.value = false;
+
 }
 
 const createSubscription = async (app_url, customer) => {
@@ -549,8 +510,15 @@ onBeforeMount(async () => {
 
     await getPlan()
 
-    if (c) {
+    if (c && n) {
       setPlan(c, n)
+    }
+
+    else {
+      ElMessage({
+        message: 'Tag or name not found',
+        type: 'warning',
+      });
     }
 
     const response = await new Promise((resolve) => {
