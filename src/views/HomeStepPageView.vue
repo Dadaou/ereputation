@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@Stores/user.js';
 
@@ -68,6 +68,24 @@ const addEstablishment = () => {
 const navigateHome = () => {
     router.push({ name: 'EstablishmentList', params: { tag: tag } }).catch(err => console.error(err));
 };
+
+const mountChatWidget = () => {
+
+    const liveChatID = import.meta.env.VITE_LIVE_CHAT_ID
+
+    const callUsSelector = document.createElement("call-us-selector")
+    callUsSelector.setAttribute(
+    "phonesystem-url",
+    "https://m-unit.on3cx.fr:5001"
+    );
+    callUsSelector.setAttribute("party", liveChatID)
+    document.body.appendChild(callUsSelector)
+}
+
+onMounted(() => {
+    mountChatWidget()
+})
+
 </script>
 
 <style scoped>

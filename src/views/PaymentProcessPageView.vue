@@ -116,8 +116,9 @@
 
         loading.value = ElLoading.service({
             lock: true,
-            text: 'processing...',
+            text: 'Your payment has been made successfully. You will be redirected in a few moments...',
             background: 'rgba(0, 0, 0, 0.7)',
+            body : true
         })
 
         if(route?.query?.session_id) {
