@@ -156,11 +156,30 @@
                     </div>
                 </div>
 
-                <div class="gap-6 mb-6">
-                    <label for="message"
+
+
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div>
+                        <label for="message"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
+                        
+                            
+                      <QuillEditor 
+                        style="height: 200px;" 
+                        theme="snow"
+                        :toolbar="toolbarOptions"
+                        ref="description"
+                        :content="html"
+                        content-type="html"
+                        @text-change="handleDescriptionChange"
+                      />
+                      
+                    </div>
+                    <div>
+                        <label for="message"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Logo</label>
-                        <div class="md:order-2">
-                            <div class="image-selector border-gray-300" @dragover.prevent="onDragOver" style="min-height: 300px; aspect-ratio: 16/9;"
+                        <div class="md:order-2" >
+                            <div class="image-selector border-gray-300" @dragover.prevent="onDragOver"
                                 @drop.prevent="onDrop" @click="selectImg">
                                 <div v-if="previewImage" class="image-preview">
                                     <img :src="previewImage" alt="Preview Image" class="uploading-image" />
@@ -172,36 +191,11 @@
                                 <input id="imgInput" name="file" type="file" @change="updateImage" style="display:none">
                             </div>
                         </div>
-                </div>
-
-
-
-                <div class="grid gap-6 mb-6 md:grid-cols-1">
-                    <div>
-                        <label for="message"
-                            class="block mb-2">Description</label>
-                        <!-- <textarea v-model="description" id="message" rows="4"
-                            class="block p-2.5 w-50 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" style="min-height: 350px;"
-                            placeholder="Write your thoughts here..."> 
-                      </textarea>-->
-
-                      <QuillEditor 
-                        style="height: 260px; max-width: 900px;" 
-                        theme="snow"
-                        :toolbar="toolbarOptions"
-                        ref="description"
-                        :content="html"
-                        content-type="html"
-                        @text-change="handleDescriptionChange"
-                      />
-
-                     
                     </div>
-
                 </div>
 
                 <div class="flex items-center justify-between py-5 border-t border-b dark:border-gray-600">
-                    <button type="submit" 
+                    <button type="submit"
                         class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                         <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span
                             v-if="showSpinner">Loading ...</span>
@@ -600,9 +594,9 @@ input {
 
 .image-selector {
     width: 100%;
-    height: 102px;
-    border-radius: 8px;
-    border-width: 2px;
+    height: 270px;
+    border-radius: 2px;
+    border-width: 1px;
     border-style: solid;
     cursor: pointer;
     display: flex;
