@@ -74,10 +74,22 @@ const submit = async () => {
     console.log("all cache cleared")
     session.setItemWithTTL('verification_session', 1000 * 60 * 30, 1000 * 60 * 60 * 4);
     await userStore.signIn(form.value.email, form.value.password, async (response) => {
+
         if (response.authenticated) {
-            navigateUser(userStore.user)
-            showSpinner.value = false;
-            appStore.mustRefresh = true;
+
+            if(response?.userActive) {
+                navigateUser(userStore.user)
+                appStore.mustRefresh = true;
+            }
+
+            else {
+                isError.value = true;
+                await userStore.signOut();
+                userStore.authenticated = false
+                notification.value.message = "Your account is not yet active.";
+                notification.value.type = "warning";
+            }
+
         } else {
             isError.value = true;
             if (response.status == 401) {
@@ -94,8 +106,9 @@ const submit = async () => {
                 notification.value.message = "Oops! Something unexpected happened. A server connection issue";
                 notification.value.type = "error";
             }
-            showSpinner.value = false;
         }
+
+        showSpinner.value = false;
     })
 }
 

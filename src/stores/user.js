@@ -16,16 +16,27 @@ export const useUserStore = defineStore(
       const response = await services.login(email, password)
 
       if (response.status == 200) {
+        
         const _user = response.data['user']
         const roles = _user ? _user.roles : []
-      
+
         if (roles.includes('ROLE_EREP')) {
           
           authenticated.value = true
-          services.setUser()
-          user.value = _user
-          userId.value = _user.id
-          next({ authenticated: authenticated.value, status: 200 })
+
+          if(_user?.is_active) {
+
+            services.setUser()
+            user.value = _user
+            userId.value = _user.id
+
+            next({ authenticated: authenticated.value, userActive: true, status: 200 })
+          }
+
+          else {
+            next({ authenticated: authenticated.value, userActive: false,  status: 200})
+          }
+
       
         } else {
           next({ authenticated: authenticated.value, status: 403 })
@@ -76,13 +87,13 @@ export const useUserStore = defineStore(
       true)
     }
 
-    const getInitials = (firstName, lastName) => {
+    const getInitials = (firstName = '', lastName = '') => {
       const firstInitial = firstName.charAt(0).toUpperCase()
       const secondInitial = lastName.charAt(0).toUpperCase()
       return `${firstInitial}${secondInitial}`
     }
 
-    const getInitialsV2 = (name) => {
+    const getInitialsV2 = (name = '') => {
       let full_name = name.split(' ')
       let firstInitial = full_name[0].charAt(0).toUpperCase()
       let secondInitial = ''
