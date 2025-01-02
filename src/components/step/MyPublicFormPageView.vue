@@ -76,56 +76,61 @@
                             </span>
                         </div>
                         <div></div>
-                        <div v-for="(entry, index) in platformEntries" :key="index">
-                            <div>
-                                <div class="content__label">
-                                    <label for="platforms"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Platform</label>
-                                    <p class="button__close" @click="removePlatform(index)">x</p>
+                        <div>
+                            <div v-for="(entry, index) in platformEntries" :key="index">
+                                <div>
+                                    <div class="content__label">
+                                        <label for="platforms"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Platform</label>
+                                        <p class="button__close" @click="removePlatform(index)">x</p>
+                                    </div>
+                                    <el-select id="platforms" v-model="entry.platform" placeholder="Choose platform"
+                                        size="large" filterable clearable
+                                        @change="value => handleChangePlatform(value, index)">
+                                        <el-option v-for="item in dataPlatforms" :key="item.uri" :label="item.name"
+                                            :value="`${item.id}`" />
+                                    </el-select>
                                 </div>
-                                <el-select id="platforms" v-model="entry.platform" placeholder="Choose platform"
-                                    size="large" filterable clearable
-                                    @change="value => handleChangePlatform(value, index)">
-                                    <el-option v-for="item in dataPlatforms" :key="item.uri" :label="item.name"
-                                        :value="`${item.id}`" />
-                                </el-select>
+
+                                <label for="platformLink"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link platform
+                                    <span>*</span></label>
+
+                                <p v-if="entry.platform" class="text-gray-900 text-sm">Url must start with {{
+                                    entry.selectedPlatform.url }}</p>
+                                <p v-if="entry.platformLink && !entry.isValidPlatform" class="text-red-500 text-sm">
+                                    Invalid
+                                    URL format</p>
+                                <input type="text" id="platformLink" v-model="entry.platformLink"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                             </div>
-
-                            <label for="platformLink"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link platform
-                                <span>*</span></label>
-
-                            <p v-if="entry.platform" class="text-gray-900 text-sm">Url must start with {{
-                                entry.selectedPlatform.url }}</p>
-                            <p v-if="entry.platformLink && !entry.isValidPlatform" class="text-red-500 text-sm">Invalid
-                                URL format</p>
-                            <input type="text" id="platformLink" v-model="entry.platformLink"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
-
-                        <div v-for="(entry, index) in socialEntries" :key="index">
-                            <div>
-                                <div class="content__label">
-                                    <label for="socials"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Social</label>
-                                    <p class="button__close" @click="removeSocial(index)">x</p>
+                        <div>
+                            <div v-for="(entry, index) in socialEntries" :key="index">
+                                <div>
+                                    <div class="content__label">
+                                        <label for="socials"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Social</label>
+                                        <p class="button__close" @click="removeSocial(index)">x</p>
+                                    </div>
+                                    <el-select id="socials" v-model="entry.social" placeholder="Choose social"
+                                        size="large" filterable clearable
+                                        @change="value => handleChangeSocial(value, index)">
+                                        <el-option v-for="item in dataSocials" :key="item.uri" :label="item.name"
+                                            :value="`${item.id}`" />
+                                    </el-select>
                                 </div>
-                                <el-select id="socials" v-model="entry.social" placeholder="Choose social" size="large"
-                                    filterable clearable @change="value => handleChangeSocial(value, index)">
-                                    <el-option v-for="item in dataSocials" :key="item.uri" :label="item.name"
-                                        :value="`${item.id}`" />
-                                </el-select>
+                                <label for="socialLink"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link social
+                                    <span>*</span>
+                                </label>
+                                <p v-if="entry.social" class="text-gray-900 text-sm">Url must start with {{
+                                    entry.selectedSocial.url }}</p>
+                                <p v-if="entry.socialLink && !entry.isValidSocial" class="text-red-500 text-sm">Invalid
+                                    URL format</p>
+                                <input type="text" id="socialLink" v-model="entry.socialLink"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                             </div>
-                            <label for="socialLink"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link social
-                                <span>*</span>
-                            </label>
-                            <p v-if="entry.social" class="text-gray-900 text-sm">Url must start with {{
-                                entry.selectedSocial.url }}</p>
-                            <p v-if="entry.socialLink && !entry.isValidSocial" class="text-red-500 text-sm">Invalid
-                                URL format</p>
-                            <input type="text" id="socialLink" v-model="entry.socialLink"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
                     </div>
 
