@@ -416,10 +416,24 @@ const generateColor = (text) => {
   return `rgb(${red}, ${green}, ${blue})`
 }
 
+const mountChatWidget = () => {
+
+  const liveChatID = import.meta.env.VITE_LIVE_CHAT_ID
+
+  const callUsSelector = document.createElement("call-us-selector")
+  callUsSelector.setAttribute(
+    "phonesystem-url",
+    "https://m-unit.on3cx.fr:5001"
+  );
+  callUsSelector.setAttribute("party", liveChatID)
+  document.body.appendChild(callUsSelector)
+}
+
 
 
 export default {
   setToken,
+  mountChatWidget,
   setAccess,
   getRecords,
   getRecord,

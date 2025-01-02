@@ -72,21 +72,9 @@ const mountStripePaymentForm = async () => {
   })
 }
 
-const mountChatWidget = () => {
-
-  const liveChatID = import.meta.env.VITE_LIVE_CHAT_ID
-
-  const callUsSelector = document.createElement("call-us-selector")
-  callUsSelector.setAttribute(
-    "phonesystem-url",
-    "https://m-unit.on3cx.fr:5001"
-  );
-  callUsSelector.setAttribute("party", liveChatID)
-  document.body.appendChild(callUsSelector)
-}
 
 onMounted(async () => {
-  mountChatWidget()
+  services.mountChatWidget()
   await mountStripePaymentForm()
 })
 

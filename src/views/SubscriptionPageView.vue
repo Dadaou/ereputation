@@ -539,6 +539,7 @@ onBeforeMount(async () => {
 onMounted(async () => {
   
   const partnerCode = import.meta.env.VITE_PARTNER_CODE
+  services.mountChatWidget()
 
   try {
     const response = await new Promise((resolve) => {
