@@ -717,4 +717,11 @@ input {
         /* Aligner les éléments en haut de la colonne */
     }
 }
+
+@media screen and (max-width: 500px) {
+    .user__main__container {
+        width: 200px;
+        min-width: 104% !important;
+    }
+}
 </style>
