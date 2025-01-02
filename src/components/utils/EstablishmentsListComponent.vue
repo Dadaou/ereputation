@@ -1,4 +1,4 @@
-<template>
+ <template>
     <div class="list__item" v-for="(company, i) in establishments" :key="company.id">
         <div class="society__info__container">
             <swiper v-if="company.url_source !== null" @click="goToCompany(company)" class="society__logo"
@@ -386,6 +386,7 @@ const capitalize = (str) => {
 }
 
 .society__logo {
+    cursor: pointer;
     width: 200px;
     height: 95px;
     z-index: 0;
@@ -465,6 +466,7 @@ div.review-box {
 }
 
 .society__info label {
+    cursor: pointer;
     font-size: 14px;
     font-weight: bold;
     color: var(--color-primary)
