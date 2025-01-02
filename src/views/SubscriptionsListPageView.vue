@@ -20,9 +20,6 @@
                         <p><strong>Expires On:</strong> {{ moment(subscription.expired_at).format('YYYY-MM-DD') }}</p>
                         <p v-if="subscription.discount > 0"><strong>Discount:</strong> {{ subscription.discount }}%</p>
                         <p><strong>Periodicity:</strong> {{ subscription.periodicity }} months</p>
-                        <p><strong>Event Limit:</strong> {{ subscription.event_limit }}</p>
-                        <p><strong>Establishment Limit:</strong> {{ subscription.establishment_limit }}</p>
-                        <p><strong>Point of Sale Limit:</strong> {{ subscription.pointofsale_limit }}</p>
                         <p v-if="subscription.crm"><strong>CRM:</strong> Included</p>
                         <p v-if="subscription.api"><strong>API Access:</strong> Included</p>
                     </div>
@@ -131,7 +128,7 @@ onBeforeMount(async () => {
 .subscription-item.new {
     cursor: pointer;
     padding: 24px !important;
-    height: 180px;
+    height: 160px;
     width: 200px;
 
 }
@@ -198,5 +195,24 @@ onBeforeMount(async () => {
     background-color: #52c41a;
     color: white;
     width: 100%;
+}
+
+@media screen and (max-width: 500px) {
+    .subscription-container {
+        display: block !important;
+    }
+
+    .subscription-item.new {
+        margin-top: 10px;
+        width: 51.2%;
+    }
+
+    .subscription-item {
+        width: 51.2%;
+    }
+
+    .subscription__container {
+        width: 73% !important;
+    }
 }
 </style>
