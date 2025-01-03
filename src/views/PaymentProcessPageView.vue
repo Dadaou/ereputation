@@ -56,8 +56,19 @@
         await userStore.signIn(email, password, async (response) => {
 
             if (response.authenticated) {
+
                 const res = await activateAccount()
-                if(res.status === 200) navigateUser(userStore.user) 
+
+                if(res.status === 200) {
+
+                    await userStore.signIn(email, password, (response) => {
+
+                        if (response.authenticated) {
+                            navigateUser(userStore.user)
+                        }
+                    })
+                } 
+                 
                 else showErrorMessage("Unable to activate your account")
             }
 

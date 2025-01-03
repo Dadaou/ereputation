@@ -10,6 +10,7 @@ import { onMounted, defineAsyncComponent, inject } from 'vue';
 import { loadStripe } from '@stripe/stripe-js/pure';
 import { Stripe } from 'stripe';
 import { useRoute } from 'vue-router';
+import services from '@Services/services.js';
 
 const NavbarComponent = defineAsyncComponent(() =>
   import('@Components/layouts/NavbarComponent.vue')
