@@ -76,7 +76,7 @@
         companiesStore.getEstablishments(user.customer.tag).then((data) => {
                 establishments.value = data
                 if (establishments.value.length === 0) {
-                    defaultRoute = { name: "Step", params: { tag : user.customer.tag} }
+                    defaultRoute = { name: "Step" }
                 }else {
                     defaultRoute = { name: "Home" }
                 }
