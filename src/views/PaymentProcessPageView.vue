@@ -76,7 +76,7 @@
         companiesStore.getEstablishments(user.customer.tag).then((data) => {
                 establishments.value = data
                 if (establishments.value.length === 0) {
-                    defaultRoute = { name: "Step" }
+                    defaultRoute = { name: "Step", params: { tag : user.customer.tag} }
                 }else {
                     defaultRoute = { name: "Home" }
                 }
@@ -89,8 +89,8 @@
         const userId = localStorage.getItem('uId')
 
         const response = await new Promise((resolve) => {
-            services.patchRecord('users', userId, {isActive: true}, (response) => {
-                resolve(response)
+            services.createRecord('user/enable', {id : userId}, (response) => {
+                resolve(response);
             })
         })
 
