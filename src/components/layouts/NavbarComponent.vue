@@ -43,7 +43,7 @@
       </div>
 
       <div class="nav-dropdown">
-        <div v-if="isFeedback" class="feedback__option">
+        <div v-if="isFeedback || isSignUp" class="feedback__option">
           <a v-if="establishement?.whatsapp == null" href="https://wa.me/message/IZFK26272CXFB1" target="_blank">
             <!-- <i class="fa fa-whatsapp"></i> -->
           </a>
@@ -54,7 +54,7 @@
         </div>
 
 
-        <UserDropdownMenu v-if="userStore.authenticated && !isFeedback && !isSignUp" :user="{
+        <UserDropdownMenu v-if="userStore.authenticated && !isFeedback && !isSignUp && !isPaymentPage" :user="{
           name: `${userStore?.user?.firstname} ${userStore?.user?.lastname}`,
           initial: userStore.getInitials(userStore?.user?.firstname, userStore?.user?.lastname),
           email: userStore?.user?.email
@@ -132,8 +132,13 @@ const isFeedback = computed(() => {
 });
 
 const isSignUp = computed(() => {
-  return route.name === 'Signup' || route.name === 'PaymentPage';
+  return route.name === 'Signup' 
 });
+
+const isPaymentPage = computed(() => {
+  return route.name === 'PaymentPage';
+});
+
 
 const showMenu = computed(() => {
   return privateUrls.includes(route.name)
