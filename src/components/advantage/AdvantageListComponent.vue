@@ -35,7 +35,7 @@
       <el-table-column class="td" label="Amount" prop="amount" align="center" style="width: 10%; min-width: 4%;" />
       <el-table-column class="td" label="Category" prop="category" align="center"
         style="width: 20%; min-width: 100px;" />
-      <el-table-column class="td" label="Code" prop="code" align="center" style="width: 5%; min-width: 200px;">
+      <el-table-column class="td" label="Code" prop="code" align="center" style="width: 50%">
         <template #default="scope">
           <span v-if="scope.row.code" class="custom-badge">
             {{ scope.row.code }}
@@ -236,12 +236,16 @@ button i.uil-edit {
   color: #ffffff;
   font-size: 14px;
   font-weight: bold;
-  padding: 5px 12px;
-  border-radius: 12px;
+  padding: 3px;
+  border-radius: 8px;
   /* Coins arrondis */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   /* Ombre légère */
   text-align: center;
+  width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap; 
 }
 
 @media screen and (max-width: 768px) {
