@@ -50,7 +50,7 @@ const isChildRoute = ref(false);
 
 
 const checkIfChildRoute = () => {
-    isChildRoute.value = route.path.includes('/first-step/customer');
+    isChildRoute.value = route.path.includes('/step-view');
 };
 
 
