@@ -466,17 +466,16 @@ const router = createRouter({
           ]
         },
         {
-          path: '/first-step',
+          path: '/customer/:tag/first-step',
           name: 'Step',
           beforeEnter: [CheckAccess],
-          component: () => import('@Views/HomeStepPageView.vue'),
-          children: [
-            {
-              path: 'customer/:tag',
-              name: 'StepView',
-              component: () => import('@Views/StepPageView.vue')
-            },
-          ]
+          component: () => import('@Views/HomeStepPageView.vue')
+        },
+        {
+          path: '/customer/:tag/step-view',
+          name: 'StepView',
+          beforeEnter: [CheckAccess],
+          component: () => import('@Views/StepPageView.vue')
         },
         {
           path: '/customer/:tag/account',
