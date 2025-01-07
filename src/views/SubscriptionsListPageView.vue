@@ -19,7 +19,7 @@
                         </p>
                         <p><strong>Expires On:</strong> {{ moment(subscription.expired_at).format('YYYY-MM-DD') }}</p>
                         <p v-if="subscription.discount > 0"><strong>Discount:</strong> {{ subscription.discount }}%</p>
-                        <p><strong>Periodicity:</strong> {{ subscription.periodicity }} months</p>
+                        <p><strong>Periodicity:</strong> {{ subscription.periodicity }} </p>
                         <p v-if="subscription.crm"><strong>CRM:</strong> Included</p>
                         <p v-if="subscription.api"><strong>API Access:</strong> Included</p>
                     </div>
