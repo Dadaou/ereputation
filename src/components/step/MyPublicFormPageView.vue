@@ -375,14 +375,14 @@ const submit = async () => {
 
     const platformsData = platformEntries.value.map(entry => ({
         value1: entry.platformLink,
-        provider: `/api/providers/${entry.selectedPlatform.id}`,
-        name: entry.selectedPlatform.name
+        provider: `/api/providers/${entry?.selectedPlatform?.id}`,
+        name: entry?.selectedPlatform?.name
     }));
 
     const socialsData = socialEntries.value.map(entry => ({
         value1: entry.socialLink,
-        provider: `/api/providers/${entry.selectedSocial.id}`,
-        name: entry.selectedSocial.name
+        provider: `/api/providers/${entry?.selectedSocial?.id}`,
+        name: entry?.selectedSocial?.name
     }));
 
     const providersAllData = [...providersData, ...platformsData, ...socialsData];
