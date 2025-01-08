@@ -112,8 +112,8 @@ const activateAccount = async() => {
 const updateSubscriptionInfo = async(invoiceID, expiresDate) => {
     
     const subscriptionID = localStorage.getItem('subscriptionId')
-    const data = {invoice: invoiceID, expiredAt: expiresDate}
-
+    //const data = {invoice: invoiceID, expiredAt: expiresDate}
+    const data = {invoice: invoiceID}
     const response = await new Promise((resolve) => {
         services.patchRecord('subscriptions', subscriptionID, data, (response) => {
             resolve(response)
