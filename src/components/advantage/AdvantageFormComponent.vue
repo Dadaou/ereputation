@@ -498,8 +498,8 @@ const selectAdvantage = (advantage) => {
 };
 
 onBeforeMount(() => {
-    const establishments = userStore.user.customer.establishments;
-    if (establishments.length > 0) {
+    const establishments = userStore.user?.customer?.establishments;
+    if (establishments?.length > 0) {
         establishment.value = `/api/establishments/${establishments[0].id},${establishments[0].name}`;
     }
 })

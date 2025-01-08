@@ -143,7 +143,7 @@ onBeforeMount(() => {
     }
 
     // Sélectionner le premier établissement par défaut
-    if (userStore.user.customer.establishments.length > 0) {
+    if (userStore.user?.customer?.establishments?.length > 0) {
         establishment.value = `/api/establishments/${userStore.user.customer.establishments[0].id}`;
     }
 });

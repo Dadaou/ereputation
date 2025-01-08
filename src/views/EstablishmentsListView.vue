@@ -70,7 +70,7 @@ const loadCustomer = async (partner) => {
 onBeforeMount(async () => {
     dataLoading.value = true;
 
-    if (userStore.user.roles.includes("ROLE_PARTNER") && userStore.user.partner && userStore.customer.tag !== customerTag.value) {
+    if (userStore.user.roles.includes("ROLE_PARTNER") && userStore.user.partner && userStore.user.customer.tag !== customerTag.value) {
         userStore.customer = null
         await loadCustomer(userStore.user.partner.id)
     }

@@ -146,14 +146,16 @@ const establishments = computed(() => {
     let filteredData = [];
     if (userStore.user && userStore.user.customer) {
         data = userStore.user.customer.establishments;
-        data.forEach(establishment => {
-            filteredData.push({
-                name: establishment.name,
-                media: (establishment.url_source) ? establishment.url_source : '',
-                tag: establishment.competitor_tag,
-                uri: `/api/establishments/${establishment.id}`,
-            })
-        });
+        if(data) {
+            data.forEach(establishment => {
+                filteredData.push({
+                    name: establishment.name,
+                    media: (establishment.url_source) ? establishment.url_source : '',
+                    tag: establishment.competitor_tag,
+                    uri: `/api/establishments/${establishment.id}`,
+                })
+            });
+        }
     }
 
     filteredData = filteredData.filter((data) => {

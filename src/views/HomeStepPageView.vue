@@ -41,6 +41,7 @@ import { ref, watch, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@Stores/user.js';
 import services from '@Services/services.js';
+import { onBeforeUnmount } from 'vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -72,6 +73,10 @@ const navigateHome = () => {
 
 onMounted(() => {
     services.mountChatWidget()
+})
+
+onBeforeUnmount(() => {
+    services.unmountChatWidget()
 })
 
 </script>

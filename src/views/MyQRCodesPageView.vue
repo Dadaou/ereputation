@@ -284,6 +284,9 @@ const reloadEventsList = async (type) => {
     });
     if (response.status === 200) {
       const events = response.data;
+
+      if(events.length === 1 && typeof(events[0] == String)) return
+
       events.forEach(event => {
         let event_found = allEvents.value.find(obj => obj.id === event.id);
         if (event_found) {
@@ -397,22 +400,24 @@ const reloadLink = async () => {
   }
 }
 const filterCategory = (data) => {
-  const establishments = userStore.user.customer.establishments;
+  const establishments = userStore.user?.customer?.establishments;
   let categories = []
-  data.forEach(category => {
-    let establishment = establishments.find(i => category.establishment == `/api/establishments/${i.id}`);
-    if (establishment) {
-      const { id, name } = establishment
-      categories.push({
-        id: category.id,
-        category: category.category,
-        category_uri: category['@id'],
-        establishment: category.establishment,
-        establishment_id: id,
-        establishment_name: name
-      })
-    }
-  })
+  if(establishments) {
+    data.forEach(category => {
+      let establishment = establishments.find(i => category.establishment == `/api/establishments/${i.id}`);
+      if (establishment) {
+        const { id, name } = establishment
+        categories.push({
+          id: category.id,
+          category: category.category,
+          category_uri: category['@id'],
+          establishment: category.establishment,
+          establishment_id: id,
+          establishment_name: name
+        })
+      }
+    })
+  }
   return categories
 }
 

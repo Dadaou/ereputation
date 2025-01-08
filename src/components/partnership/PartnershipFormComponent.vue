@@ -210,7 +210,7 @@ onBeforeMount(async () => {
     advantageOptions.value = advantages.value;
 
     // Vérifiez s'il y a des établissements et sélectionnez le premier par défaut
-    if (userStore.user.customer.establishments.length > 0) {
+    if (userStore.user?.customer?.establishments?.length > 0) {
         const firstEstablishment = userStore.user.customer.establishments[0]
         establishmentInviteFriend.value = firstEstablishment.competitor_tag
     }

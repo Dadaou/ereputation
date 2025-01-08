@@ -27,7 +27,7 @@ export const useUserStore = defineStore(
           if(_user?.is_active) {
 
             services.setUser()
-            user.value = _user
+            user.value = _user        
             userId.value = _user.id
 
             next({ authenticated: authenticated.value, userActive: true, status: 200 })

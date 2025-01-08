@@ -187,7 +187,6 @@ const establishment_to_update = inject('establishment_to_update');
 const imgHasChanged = ref(false);
 const cleanEstablishmentForm = inject('clearEstablishmentForm');
 const categories = inject('allUniverses');
-console.log(categories)
 
 const onDragOver = (event) => {
     imageInputHover.value = true; 

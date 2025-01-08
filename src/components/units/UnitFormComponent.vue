@@ -58,6 +58,7 @@ import moment from 'moment';
 import { ref, inject, watch, onMounted, watchEffect } from 'vue'
 import { useUserStore } from "@Stores/user.js"
 import { useStaffStore } from "@Stores/staff.js";
+import { useCompanyStore } from "@Stores/company.js";
 import { useRoute, useRouter } from 'vue-router';
 import services from '@Services/services.js'
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue'
@@ -71,6 +72,7 @@ const route = useRoute();
 const clearForm = inject('clearUnitForm')
 const userStore = useUserStore();
 const staffStore = useStaffStore();
+const companyStore = useCompanyStore();
 const type = ref('add');
 const unit = ref({});
 const categories = [{ label: 'Points of sale', value: 'Points of sale' }, { label: 'Transport', value: 'Transport' }]
@@ -214,12 +216,12 @@ onMounted(async () => {
         staffStore.resetUnit();
     } else {
         // Chargez les établissements s'ils ne sont pas déjà chargés
-        if (!userStore.user.customer.establishments || userStore.user.customer.establishments.length === 0) {
-            await userStore.fetchCustomerEstablishments();
+        if (!userStore.user?.customer?.establishments || userStore.user?.customer?.establishments?.length === 0) {
+            await companyStore.fetchCustomerEstablishments(userStore.user.customer.tag);
         }
 
         // Définissez la valeur par défaut pour l'établissement
-        const establishments = userStore.user.customer.establishments;
+        const establishments = userStore.user?.customer?.establishments;
         if (establishments && establishments.length > 0) {
             unit.value.establishment = `/api/establishments/${establishments[0].id}`;
         }
@@ -227,8 +229,8 @@ onMounted(async () => {
 });
 
 watchEffect(() => {
-    const establishments = userStore.user.customer.establishments;
-    if (establishments && establishments.length > 0 && !unit.value.establishment) {
+    const establishments = userStore.user?.customer?.establishments;
+    if (establishments && establishments?.length > 0 && !unit.value.establishment) {
         unit.value.establishment = `/api/establishments/${establishments[0].id}`;
     }
 });

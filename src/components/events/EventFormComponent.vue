@@ -251,7 +251,7 @@ const submit = async () => {
   }
 };
 onBeforeMount(() => {
-  if (userStore.user.customer.establishments.length > 0) {
+  if (userStore.user?.customer?.establishments?.length > 0) {
     establishments.value = [`/api/establishments/${userStore.user.customer.establishments[0].id}`];
   }
 });

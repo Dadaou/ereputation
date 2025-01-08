@@ -429,11 +429,23 @@ const mountChatWidget = () => {
   document.body.appendChild(callUsSelector)
 }
 
+const unmountChatWidget = () => {
+
+  const callUsSelector = document.querySelector("call-us-selector");
+
+  if (callUsSelector) {
+    callUsSelector.remove()
+  } else {
+    console.log("Chat widget not found in the DOM.")
+  }
+}
+
 
 
 export default {
   setToken,
   mountChatWidget,
+  unmountChatWidget,
   setAccess,
   getRecords,
   getRecord,

@@ -333,7 +333,7 @@ const loadScreenTemplates = async () => {
 
 
 onBeforeMount(() => {
-  if (userStore.user.customer.establishments.length > 0) {
+  if (userStore.user?.customer?.establishments?.length > 0) {
     establishment.value = [`/api/establishments/${userStore.user.customer.establishments[0].id}`];
   }
   loadScreenTemplates();

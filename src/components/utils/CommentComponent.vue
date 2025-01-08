@@ -476,7 +476,7 @@ const goToCompany = (establishment_tag) => {
             name: 'Establishment',
             params: {
                 id: establishment_tag,
-                tag: userStore.customer.tag
+                tag: userStore.user?.customer?.tag
             },
 
         });

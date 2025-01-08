@@ -507,6 +507,9 @@ const reloadEventsList = async (type) => {
         });
         if (response.status === 200) {
             const events = response.data;
+
+            if(events.length == 1 && typeof(events[0] === String)) return
+
             events.forEach(event => {
                 let event_found = allEvents.value.find(obj => obj.id === event.id);
                 if (event_found) {

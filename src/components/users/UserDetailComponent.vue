@@ -321,7 +321,7 @@ const updateUser = () => {
 
 const submitCustomer = async () => {
     const formData = {
-        tag: userStore.customer.tag
+        tag: userStore.user?.customer?.tag
     };
     if (newColorData.value) {
         if (newColorData.value.back_color)
@@ -380,7 +380,7 @@ const resetColors = async () => {
     try {
 
         const response = await new Promise((resolve, reject) => {
-            services.post_Record('customer/reset/colors', { tag: userStore.customer.tag }, (response) => {
+            services.post_Record('customer/reset/colors', { tag: userStore.user?.customer?.tag }, (response) => {
                 if (response.status === 200) {
                     resolve(response);
                 } else {
@@ -440,7 +440,7 @@ const getCustomerLogo = async (tag) => {
 };
 
 onBeforeMount(() => {
-    getCustomerLogo(userStore.customer.tag);
+    getCustomerLogo(userStore.user?.customer?.tag);
     user.value.firstname = userStore.user.firstname;
     user.value.lastname = userStore.user.lastname;
     user.value.email = userStore.user.email;
@@ -453,7 +453,7 @@ onBeforeMount(() => {
     newColorData.value = { ...colorData.value };
 });
 
-watch(() => userStore.customer.tag, (newTag) => {
+watch(() => userStore.user.customer.tag, (newTag) => {
     getCustomerLogo(newTag);
 }, { immediate: true });
 

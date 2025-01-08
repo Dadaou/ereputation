@@ -85,7 +85,7 @@ const upload = async () => {
 
     const formData = new FormData();
     formData.append('file', selectedLogo.value);
-    formData.append('customer', userStore.customer.tag);
+    formData.append('customer', userStore.user.customer.tag);
 
     try {
         const response = await new Promise((resolve) => {

@@ -53,8 +53,6 @@ const checkSubsription = async (subscriptionId) => {
     const stripeServer = Stripe(import.meta.env.VITE_SECRET_STRIPE_KEY);
     const subscription = await stripeServer.subscriptions.retrieve(subscriptionId)
     
-    console.log('subscription ', subscription)
-
     return subscription
 } 
 
