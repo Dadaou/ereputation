@@ -40,13 +40,23 @@ const showError = ref(false)
 const errorMesssage = ref("")
 
 
-const checkPaymentStatus = async (sessionId) => {
+const checkSession = async (sessionId) => {
 
     const stripeServer = Stripe(import.meta.env.VITE_SECRET_STRIPE_KEY);
     const session = await stripeServer.checkout.sessions.retrieve(sessionId)
 
     return session
 }
+
+const checkSubsription = async (subscriptionId) => {
+
+    const stripeServer = Stripe(import.meta.env.VITE_SECRET_STRIPE_KEY);
+    const subscription = await stripeServer.subscriptions.retrieve(subscriptionId)
+    
+    console.log('subscription ', subscription)
+
+    return subscription
+} 
 
 const authUser = async () => {
 
@@ -112,8 +122,7 @@ const activateAccount = async() => {
 const updateSubscriptionInfo = async(invoiceID, expiresDate) => {
     
     const subscriptionID = localStorage.getItem('subscriptionId')
-    //const data = {invoice: invoiceID, expiredAt: expiresDate}
-    const data = {invoice: invoiceID}
+    const data = {invoice: invoiceID, expiredAt: expiresDate}
     const response = await new Promise((resolve) => {
         services.patchRecord('subscriptions', subscriptionID, data, (response) => {
             resolve(response)
@@ -143,11 +152,12 @@ const checkAllInformations = async () => {
 
     if(route?.query?.session_id) {
 
-        const session = await checkPaymentStatus(route.query.session_id)
+        const session = await checkSession(route.query.session_id)
 
         if(session.payment_status === 'paid') {
 
-            const expiresDate = formatDate(session.expires_at)
+            const subscription = await checkSubsription(session.subscription)
+            const expiresDate = formatDate(subscription.current_period_end)
 
             await authUser()
             await updateSubscriptionInfo(session.invoice, expiresDate)
