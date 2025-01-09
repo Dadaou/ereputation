@@ -60,8 +60,8 @@
           </h6>
           <div class="inline-flex items-center gap-2 w-full mt-4">
             <div class="flex flex-col items-center w-full">
-              <div v-if="info.value" class="modal-discount-offer">
-                <div>{{ info.value }}<span style="font-size: 1.75rem">{{ info.metric }}</span></div>
+              <div v-if="info.value && info.value !== '0'" class="modal-discount-offer">
+                <div>{{ info.value }}<span style="font-size: 45px">{{ info.metric }}</span></div>
               </div>
               <ul class="modal-discount-other">
                 <li v-if="info.date_from && info.date_from !== 'Invalid date'">From {{ info.date_from }}</li>
