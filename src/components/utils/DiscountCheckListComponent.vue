@@ -72,9 +72,9 @@
             </div>
           </div>
           <div v-if="currentDiscount.description && currentDiscount.description !== 'null'"
-            class="modal-discount-description">
-            {{ currentDiscount.description }}
-          </div>
+            class="modal-discount-description"
+            v-html="currentDiscount.description">
+        </div>
         </div>
       </div>
     </div>
@@ -143,7 +143,7 @@ const info = computed(() => {
         category: currentDiscount.value.category,
         expired_at: moment(currentDiscount.value.expired_at).format('DD-MM-YYYY'),
         value: currentDiscount.value.amount,
-        metric: currentDiscount.value.metric == 'percent' ? '%' : '$',
+        metric: currentDiscount.value.metric == 'Percent' ? '%' : '$',
         validity: currentDiscount.value.validity
       }
     case 'Free':
