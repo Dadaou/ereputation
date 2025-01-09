@@ -47,14 +47,24 @@
                     </div>
 
                 </div>
-                <div class="grid gap-6 mb-6 md:grid-cols-2">
-                    <div class="grid gap-6 mb-6 md:grid-cols-2">
+                <div class="grid gap-6 mb-6 md:grid-cols-4">
                         <div>
                             <label for="amount"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount
                                 <span></span></label>
                             <input type="number" id="amount" v-model="amount"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
+                        </div>
+                        <div>
+                            <label for="currency" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Currency<span></span>
+                            </label>
+                            <input
+                                type="text"
+                                id="currency"
+                                v-model="currency"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2"
+                            />
                         </div>
                         <!--<div>
                               <label for="code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -71,7 +81,6 @@
                                 <el-option v-for="metric in metrics" :key="metric" :label="metric" :value="metric" />
                             </el-select>
                         </div>
-                    </div>
                     <!--<div>
                             <label for="metric" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Metric <span></span></label>
                             <el-select v-model="metric" placeholder="Select metric" size="large">
@@ -285,6 +294,7 @@ const advantageName = ref('');
 const establishment = ref("");
 const code = ref('');
 const amount = ref(null);
+const currency = ref('');
 const metric = ref('');
 const scope = ref(null);
 const validity = ref(null);
@@ -382,6 +392,7 @@ watch(advantage_to_update, () => {
         scope.value = advantage_to_update.value["scope"];
         validity.value = advantage_to_update.value["validity"];
         amount.value = advantage_to_update.value["amount"];
+        currency.value = advantage_to_update.value["currency"];
         advantageName.value = advantage_to_update.value["name"];
         establishment.value = `/api/establishments/${advantage_to_update.value['establishment_id']},${advantage_to_update.value['establishment_name']}`
         advantageLimit.value = advantage_to_update.value["advantageLimit"];
@@ -409,6 +420,7 @@ const resetForm = (e = null) => {
     code.value = '';
     advantageName.value = '';
     amount.value = '';
+    currency.value = '';
     metric.value = '';
     scope.value = '';
     validity.value = '';
@@ -434,6 +446,7 @@ const submit = async () => {
     code.value != "" ? formData.append("code", code.value != "" ? code.value : null) : null;
     advantageName.value != "" ? formData.append("name", advantageName.value != "" ? advantageName.value : null) : null;
     amount.value != null  ? formData.append("amount", amount.value != null ? parseFloat(amount.value) : null) : null;
+    currency.value != "" ? formData.append("currency", currency.value != "" ? currency.value : null) : null;
     metric.value != "" ? formData.append("metric", metric.value != "" ? metric.value : null) : null;
     formData.append("enable", true);
     formData.append("establishment", selectedEstablishment?.competitor_tag || "");
@@ -489,6 +502,7 @@ const selectAdvantage = (advantage) => {
     code.value = null;
     advantageName.value = advantage.Name;
     amount.value = advantage.Amount;
+    currency.value = advantage.Currency;
     metric.value = advantage.Metric;
     scope.value = advantage.Scope;
     validity.value = advantage.Validity;
