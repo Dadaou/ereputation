@@ -110,8 +110,7 @@ const loadData = async (start_date, end_date, timePeriods, establishment, staff,
       });
     });
 
-    console.log("fff******", response)
-    
+
     if (response.status === 200) {
       dataChart.value = response.data;
       category.value = response.data.categories || [];

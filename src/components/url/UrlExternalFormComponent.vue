@@ -249,7 +249,6 @@ const resetValue = () => {
 }
 
 const handleEdit = async (data) => {
-    console.log(data)
     category.value = data.category
     establishment.value = data.establishment
     noTracking.value = data.no_tracking === null ? false : data.no_tracking

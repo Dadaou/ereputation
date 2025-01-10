@@ -24,15 +24,12 @@ onMounted(() => {
     const pathParts = url.pathname.split('/');
     id.value = pathParts[pathParts.indexOf('external-url') + 1];
 
-
-    if (!route.query.preview) {
-        try {
-            if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
-                window.FingerprintApp.default.main();
-            }
-        } catch (error) {
-            console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
+    try {
+        if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
+            window.FingerprintApp.default.main();
         }
+    } catch (error) {
+            console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
     }
 
     if (externalUrl.value) {
