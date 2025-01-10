@@ -13,6 +13,13 @@
       <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Caption" prop="caption" style="width: 10%; min-width: 200px;" />
       <el-table-column label="QR code scans" prop="qr_code_count" style="width: 25%; min-width: 200px;" />
+      <el-table-column label="Direct link" style="width: 10%; min-width: 200px;">
+        <template #default="scope">
+          <div>
+            <span>{{ scope.row.no_tracking == true ? 'Yes' : 'No' }}</span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="Url" prop="url" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Operations" style="width: 25%; min-width: 200px;" align="right">
         <template #header>
@@ -141,13 +148,14 @@ const getValueUrl = (url, urlTemplate) => {
 
 const handleDelete = async (index, link) => {
   try {
+
     const response = await new Promise((resolve, reject) => {
-      services.patchRecord('settings', link.id, { enable: false }, (response) => {
-        resolve(response);
-      });
+        services.deleteRecord('settings', link.id, (response) => {
+          resolve(response);
+        });
     });
 
-    if (response.status == 200) {
+    if (response.status == 204) {
       ElMessage({
         message: `Links deleted successfully`,
         type: 'success',
