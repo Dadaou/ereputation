@@ -8,16 +8,45 @@
     <div class="mt-5 erep_table table__container">
       <el-table v-if="linksLoading == false" :data="filterTableData">
         <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" />
-        <el-table-column label="Source" prop="source" style="width: 25%; min-width: 200px;" />
-        <el-table-column label="Category" prop="category" style="width: 10%; min-width: 200px;" />
+
+        <el-table-column label="Direct link" style="width: 10%; min-width: 200px;" v-if="activeUrlTabName.urls === 'urls_external_form'">
+          <template #default="scope">
+            <div>
+              <span>{{ scope.row.no_tracking == true ? 'Yes' : 'No' }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        
+        <el-table-column label="Source" style="width: 25%; min-width: 200px;" v-if="activeUrlTabName.urls !== 'urls_external_form' && activeUrlTabName.urls !== 'urls_gate_form'">
+          <template #default="scope">
+            <div>
+              <span>{{ scope.row.source }}</span>
+            </div>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="Category" style="width: 10%; min-width: 200px;" v-if="activeUrlTabName.urls !== 'urls_external_form' && activeUrlTabName.urls !== 'urls_gate_form'">
+          <template #default="scope">
+            <div>
+              <span>{{ scope.row.category }}</span>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="Url" prop="url_trunked" style="width: 25%; min-width: 200px;" />
   
-        <el-table-column label="Gate" prop="section" style="width: 25%; min-width: 200px;"></el-table-column>
+        <el-table-column label="Gate" style="width: 25%; min-width: 200px;" v-if="activeUrlTabName.urls !== 'urls_external_form'">
+          <template #default="scope">
+            <div>
+              <span>{{ scope.row.section }}</span>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="Operations" style="width: 25%; min-width: 200px;" align="right">
           <template #header>
             <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
           </template>
           <template #default="scope">
+            
             <a :href="scope.row.url" target="_blank"><i class="uil uil-external-link-alt"></i></a>
             <el-button size="small" @click="handleEdit(scope.row)"><i class="uil uil-edit"></i></el-button>
             <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
@@ -57,6 +86,7 @@
   //const Data = inject('links');
   const search = ref('')
   const linksLoading = ref(false);
+  const activeUrlTabName = inject('parametersUrlsConf')
 
   const props = defineProps({
         tableData: {
@@ -64,7 +94,7 @@
             default : []
         },
     });
-  
+
   const filterTableData = computed(() => {
 
     let filteredData = [];
