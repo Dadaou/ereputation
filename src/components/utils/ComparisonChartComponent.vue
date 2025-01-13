@@ -7,7 +7,7 @@
         'width': '100%',
     }">
         <div class="colSmall">
-            <GroupedBarChart class="chart" :plot-data="props.data" x-key="name" :width="custom_width"
+            <GroupedBarChart class="chart" :plot-data="props.data" x-key="name" :width="custom_width" :y-max="5"
                 :height="200" :margin="{top: 20, bottom: 35, left: 55, right: 20 }" :colors="colors" :x-axis-label="_timePeriod"
                 :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
             </GroupedBarChart>
@@ -15,7 +15,7 @@
 
         <div class="colLarge" id="colLarge">
             <div class="boxLarge">
-                <GroupedBarChart class="chart" :plot-data="props.data" x-key="name" :width="custom_width"
+                <GroupedBarChart class="chart" :plot-data="props.data" x-key="name" :width="custom_width" :y-max="5"
                     :height="200" :margin="{top: 20, bottom: 35, left: 55, right: 25 } " :colors="colors" :x-axis-label="_timePeriod"
                     :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
                 </GroupedBarChart>
@@ -68,7 +68,7 @@
                 'width': `${get_Width()}`,
                 'overflowX': 'auto'
             }">
-                <GroupedBarChart class="chart" :plot-data="plotData" x-key="name" :width="custom_width2"
+                <GroupedBarChart class="chart" :plot-data="plotData" x-key="name" :width="custom_width2" :y-max="5"
                     :height="chart_Height" :margin="margin" :colors="colors" :x-axis-label="selectedTimePeriod"
                     :y-axis-label="props.labels.y" :y-tick-format="d => `${d}`">
                 </GroupedBarChart>
