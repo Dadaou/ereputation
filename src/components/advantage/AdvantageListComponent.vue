@@ -120,11 +120,11 @@ const filterTableData = computed(() => {
   return advantages.value.filter(data => {
     return (
       !search.value ||
-      data.name.toLowerCase().includes(search.value.toLowerCase()) ||
-      (data.category && data.category.toLowerCase().includes(search.value.toLowerCase())) ||
-      (data.establishment_name && data.establishment_name.toLowerCase().includes(search.value.toLowerCase())) ||
-      (data.metric && data.metric.toLowerCase().includes(search.value.toLowerCase())) ||
-      (data.scope && data.scope.toLowerCase().includes(search.value.toLowerCase()))
+      data?.name?.toLowerCase().includes(search.value.toLowerCase()) ||
+      (data.category && data?.category?.toLowerCase().includes(search.value.toLowerCase())) ||
+      (data.establishment_name && data?.establishment_name?.toLowerCase().includes(search.value.toLowerCase())) ||
+      (data.metric && data?.metric?.toLowerCase().includes(search.value.toLowerCase())) ||
+      (data.scope && data?.scope?.toLowerCase().includes(search.value.toLowerCase()))
     );
   });
 });
