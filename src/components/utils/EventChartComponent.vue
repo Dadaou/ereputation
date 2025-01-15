@@ -153,6 +153,13 @@ const newOptions = {
           }
 
         },
+        x: {
+          
+          ticks: {
+            maxRotation: 0, // Rotation maximale des ticks pour améliorer la lisibilité
+            minRotation: 0, 
+          }
+        }
    
     },
     plugins: {
@@ -190,7 +197,7 @@ const custom_width = computed(() => {
   let gap = 41 * gapFactor;
 
   return {
-    chart: width,
+    chart: widthEvent,
     event: widthEvent,
     gap: gap
   }
@@ -358,6 +365,8 @@ const getPlotData = async (period, rangedate, next) => {
         scores.push(_note.note);
         plotData1.labels.push(_note.date)
       });
+        // const labels1 = plotData1.labels.map(date => new Date(date).getTime());
+        // plotData1.labels=labels1;
         // scores.push(0);
         // scores.push(5);
        plotData1.datasets.push({

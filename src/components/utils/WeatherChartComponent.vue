@@ -165,7 +165,7 @@ const custom_width = computed(() => {
     width = (width * nb) / 9;
   }
 
-  return width;
+  return chartWidth.value;
 });
 
 const containerStyles = computed(() => ({
