@@ -1,12 +1,17 @@
 <template>
-    <div></div>
+    <div class="app__loader" :style="loaderStyle">
+        <SpinnerComponent :size="'large'" />
+    </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute } from "vue-router";
+import { ref, onMounted, defineAsyncComponent, watch } from 'vue';
+import { useWindowSize } from '@vueuse/core';
 
-const route = useRoute();
+const SpinnerComponent = defineAsyncComponent(() =>
+    import('@Components/utils/SpinnerComponent.vue')
+)
+
 const externalUrl = ref('');
 const id = ref('');
 
@@ -38,4 +43,29 @@ onMounted(() => {
         }, 5000);
     }
 });
+
+const { width } = useWindowSize();
+
+const loaderStyle = ref({
+    'width': `${width.value}px`,
+});
+
+watch(width, () => {
+    loaderStyle.value = {
+        'width': `${width.value}px`,
+    }
+});
+
 </script>
+<style scoped>
+.app__loader {
+    background: white;
+    opacity: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1;
+    height: 100%;
+}
+</style>
