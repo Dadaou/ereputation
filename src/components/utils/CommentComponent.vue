@@ -878,9 +878,9 @@ const checkIfCategoryAlreadyExist = (categories, categoryToCheck) => {
     return categoryArray.includes(categoryToCheck)
 }
 
-onMounted(() => {
+/*onMounted(() => {
     console.log("********", props.categories)
-})
+})*/
 
 </script>
 <style scoped>

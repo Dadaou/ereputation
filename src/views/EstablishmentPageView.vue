@@ -539,7 +539,7 @@ const loadDatasets = async () => {
         let competitorInfo = establishment.value['competitors'].find(c => c.name === selectedCompetitors.value)
         const tags = competitorInfo ? [companyId.value, competitorInfo.tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.tag)]
         const website = (selectedWebsites.value == 'App (Private)') ? selectedWebsites.value : selectedWebsites.value.toLowerCase()
-        let datas = await chartsStore.loadData(tags, 'months', moment(sDate).format('YYYY-M-DD'), moment(eDate).format('YYYY-M-DD'), website)
+        let datas = await chartsStore.loadData(tags, selectedTimePeriod.value, moment(sDate).format('YYYY-M-DD'), moment(eDate).format('YYYY-M-DD'), website)
         chartData.value = formatSixMonthsChartData(datas);
         semesterChartLoading.value = false
     }
