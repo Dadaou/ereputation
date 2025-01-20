@@ -421,7 +421,7 @@ const widthimage = (event) => {
 
 .establishment__img {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     flex-basis: 350px;
 }
 
@@ -522,10 +522,12 @@ textarea {
     justify-content: space-between;
     margin: auto;
     width: 100%;
+    height: 130px;
     border-radius: 5px;
     font-size: 14px;
     border: 1px solid var(--light-color-bg2);
     padding: 5px;
+    overflow: hidden;
 }
 
 .tablet_mobile__head img {
@@ -617,4 +619,14 @@ input:focus {
         width: 90%;
     }
 }
+
+@media screen and (max-width:500px) {
+    .establishment__img {
+            justify-content: center;
+    }
+    .tablet_mobile__head {
+            height: auto;
+    }
+}
+
 </style>
