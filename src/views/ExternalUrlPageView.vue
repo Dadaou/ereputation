@@ -33,7 +33,9 @@ onMounted(() => {
     }
 
     if (externalUrl.value) {
-        window.location.href = externalUrl.value;
+        setTimeout(() => {
+            window.location.href = externalUrl.value;
+        }, 5000);
     }
 });
 </script>
