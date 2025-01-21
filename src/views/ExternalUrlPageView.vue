@@ -16,16 +16,34 @@ const externalUrl = ref('');
 const id = ref('');
 
 const initFingerprint = async () => {
+    const runWithTimeout = async (asyncFunction, timeout) => {
+        // const startTime = Date.now(); // Enregistre le temps de départ
+        const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => {
+                // const elapsedTime = Date.now() - startTime // Calcule le temps écoulé
+                // alert(`Temps d'attente dépassé : ${elapsedTime} ms`)
+                reject(new Error('Temps d’attente dépassé'))
+            }, timeout)
+        );
 
-    try {
-        if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
-            await window.FingerprintApp.default.main()
-        }
-    } catch (error) {
-        console.error('Erreur:', error)
+        const result = await Promise.race([asyncFunction(), timeoutPromise]);
+        // const elapsedTime = Date.now() - startTime; // Calcule le temps écoulé
+        // alert(`Temps d’exécution : ${elapsedTime} ms`);
+
+        return result;
     }
 
-    finally {
+    try {
+        if (
+            window.FingerprintApp &&
+            window.FingerprintApp.default &&
+            typeof window.FingerprintApp.default.main === 'function'
+        ) {
+            await runWithTimeout(() => window.FingerprintApp.default.main(), 5000); // Timeout fixé à 5 secondes
+        }
+    } catch (error) {
+        alert('Erreur:', error.message);
+    } finally {
         if (externalUrl.value) {
             window.location.href = externalUrl.value;
         }
