@@ -15,9 +15,9 @@
           <li class="flex items-start justify-center flex-col gap-2">
             <ul v-if="!isFeedback">
               <li v-if="!isSignUp">Legal Notice</li>
-              <li v-if="!isSignUp">
+              <!-- <li v-if="!isSignUp">
                 <a href="https://linkystar.com/pricing" style="color: white;" target="_blank">Pricing</a>
-              </li>
+              </li> -->
             </ul>
             <ul v-else></ul>
             <!-- <span v-if="!isFeedback"><i class="uil uil-copyright"></i>2024, all rights reserved</span> -->
