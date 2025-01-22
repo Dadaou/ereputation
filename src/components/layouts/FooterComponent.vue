@@ -15,11 +15,11 @@
           <li class="flex items-start justify-center flex-col gap-2">
             <ul v-if="!isFeedback">
               <li v-if="!isSignUp">Legal Notice</li>
-              <!-- <li v-if="!isSignUp">
-                <a href="https://linkystar.com/pricing" style="color: white;" target="_blank">Pricing</a>
-              </li> -->
+              <li v-else @click="dialogVisible = true" style="cursor: pointer;">Privacy Policy</li>
             </ul>
-            <ul v-else></ul>
+            <ul v-else>
+              <li @click="dialogVisible = true" style="cursor: pointer;">Privacy Policy</li>
+            </ul>
             <!-- <span v-if="!isFeedback"><i class="uil uil-copyright"></i>2024, all rights reserved</span> -->
           <!--   <span v-if="appStore.account && appStore.account.brand">
               Powered by 
@@ -53,21 +53,29 @@
       </div>
     </div>
   </footer>
+  <el-dialog v-model="dialogVisible" style="min-width: 400px; height: 670px; overflow-y: scroll;" center>
+    <div v-html="privacy"></div>
+  </el-dialog>
 </template>
 
 
 <script setup>
-import { ref, computed, onBeforeMount } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, computed, onBeforeMount, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useAppStore } from "@Stores/app.js";
 import { Icon } from '@iconify/vue';
 import { publicUrls } from '@Services/routes.js';
+import { ElDialog } from 'element-plus';
+import services from '@Services/services.js'
 
 const appStore = useAppStore();
 const route = useRoute();
+const router = useRouter();
 const isContactActive = ref(route.path === '/contact');
 const isSignUpActive = ref(route.path === '/sign-up');
 const logo = ref(null)
+const dialogVisible = ref(false)
+const privacy = ref('')
 
 const isFeedback = computed(() => {
   return publicUrls.includes(route.name)
@@ -76,6 +84,11 @@ const isFeedback = computed(() => {
 const isSignUp = computed(() => {
   return route.name === 'Signup' || route.name === 'PaymentPage';
 });
+
+/*const redirectToPrivacyPolicy = (e) => {
+  const link = router.resolve(`/privacy-policy`);
+  window.open(link.href, '_bltrue
+};*/
 
 
 const footerLogoClassObject = computed(() => ({
@@ -88,6 +101,25 @@ onBeforeMount(async () => {
     logo.value = await appStore.getCustomerLogo(route.params.tag)
   }
 });
+
+onMounted(async () => {
+  
+  const partnerCode = import.meta.env.VITE_PARTNER_CODE
+
+  try {
+    const response = await new Promise((resolve) => {
+      services.get_Record(`partner/info?code=${partnerCode}`, (response) => {
+        resolve(response)
+      }, false, true)
+    })
+
+    if (response.status === 200) {
+      privacy.value = response.data.privacy
+    }
+  } catch (error) {
+    console.error(error)
+  }
+})
 
 const handleBrandClick = () => {
         window.open('https://linkystar.com', '_blank');
@@ -173,6 +205,10 @@ footer {
 }
 
 .footer__links li:hover {}
+
+.el-dialog__body {
+  padding: 0 !important;
+}
 
 /* Media query for smaller screens */
 @media screen and (min-width: 768px) {

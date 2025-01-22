@@ -11,13 +11,13 @@
 }
 
 /*Header*/
-header {
+/*header {
   position: relative;
   top: 5rem;
   height: 60vh;
   overflow: hidden;
   margin-bottom: 5rem;
-}
+}*/
 
 .header__container {
   display: grid;

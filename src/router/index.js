@@ -111,6 +111,11 @@ const router = createRouter({
           component: SubscriptionPageView
         },
         {
+          path: '/privacy-policy',
+          name: 'PrivacyPolicyPage',
+          component: () => import('@Views/PrivacyPolicyPageView.vue')
+        },
+        {
           path: '/404',
           name: 'NotFound',
           component: () => import('@Views/NotFoundPageView.vue')
