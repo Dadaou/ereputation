@@ -6,7 +6,8 @@
           @setEnable="(id) => setStatus(id, 'enable')" @setDisable="(id) => setStatus(id, 'disable')" />
       </el-tab-pane>
       <el-tab-pane label="Staff" name="staff">
-        <ShortStaffListComponent />
+        <ShortStaffListComponent v-if="showStaffListView" @showStaffList="handleShowStaffView"/>
+        <StaffFormComponent v-else @showStaffList="handleShowStaffView"/>
       </el-tab-pane>
       <el-tab-pane label="Services" name="service">
         <ShortUnitListComponent />
@@ -41,6 +42,10 @@ const ShortStaffListComponent = defineAsyncComponent(() =>
   import("@Components/staffs/ShortStaffListComponent.vue")
 )
 
+const StaffFormComponent = defineAsyncComponent(() =>
+    import("@Components/staffs/StaffFormComponent.vue")
+)
+
 const ShortEstablishmentListComponent = defineAsyncComponent(() =>
   import("@Components/establishments/ShortEstablishmentListComponent.vue")
 )
@@ -69,6 +74,7 @@ watch(width, () => {
 const userStore = useUserStore()
 const activeName = ref('establishments')
 const activeStaffTab = ref('staff_list')
+const showStaffListView = ref(true)
 
 const establishment_to_update = ref(null)
 const activeEstablishmentTab = ref('establishment_list')
@@ -90,6 +96,11 @@ const allAdvantages = ref([])
 const allCategories = ref([])
 const allUnits = ref([])
 const allLinks = ref([])
+
+const handleShowStaffView = async (payload) => {
+  showStaffListView.value = payload;
+  if(showStaffListView.value) await reloadStaffsList()
+}
 
 provide('staffs', allStaffs)
 provide('events', allEvents)

@@ -1,4 +1,7 @@
 <template>
+    <div class="closeView">
+        <el-button :icon="Close" @click="closeView" circle />
+    </div>
     <div class="security__header border__bottom mt-10">
         <!-- <div class="security__edit">
             <h4><i class="uil uil-users-alt"></i> Staff</h4>
@@ -87,12 +90,13 @@ import { useStaffStore } from "@Stores/staff.js";
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
-import { ElMessage, ElOption, ElSelect, ElDatePicker } from 'element-plus';
+import { ElMessage, ElOption, ElSelect, ElDatePicker, ElButton } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import 'element-plus/es/components/date-picker/style/css'
 import { useRoute, useRouter } from 'vue-router';
+import { Close } from '@element-plus/icons-vue'
 
 const router = useRouter();
 const route = useRoute();
@@ -101,6 +105,7 @@ const staffStore = useStaffStore();
 const staffs = inject('staffs');
 const clearForm = inject('clearStaffForm');
 const showSpinner = ref(false);
+const emit = defineEmits('showStaffList');
 
 const firstname = ref('');
 const lastname = ref('');
@@ -131,6 +136,10 @@ const section = ref('');
 const staff_to_update = inject('staff_to_update');
 const type = ref('add');
 
+const closeView = () => {
+    emit('showStaffList', true);
+}
+
 // Charger le formulaire avec les données du personnel à mettre à jour s'il y en a
 onBeforeMount(() => {
     const staff = staffStore.getStaff();
@@ -143,7 +152,7 @@ onBeforeMount(() => {
     }
 
     // Sélectionner le premier établissement par défaut
-    if (userStore.user?.customer?.establishments?.length > 0) {
+    if (userStore.user?.customer?.establishments?.length > 0 && establishment.value == '') {
         establishment.value = `/api/establishments/${userStore.user.customer.establishments[0].id}`;
     }
 });
@@ -157,7 +166,7 @@ const fillForm = (staff) => {
     department.value = staff["department"];
     startDate.value = new Date(staff["datefrom"]);
     endDate.value = (staff["dateto"] == null) ? null : new Date(staff["dateto"]);
-    establishment.value = staff["establishment"];
+    establishment.value = `/api/establishments/${staff["establishment_id"]}`;
     lastname.value = staff["lastname"];
     firstname.value = staff["firstname"];
     section.value = staff["section"];
@@ -229,7 +238,8 @@ const submit = async () => {
                 }
             }
             resetForm();
-            router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'staffs_list' } });
+            closeView();
+            //router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'staffs_list' } });
         } else {
             ElMessage.error(`Please, provide all needed information to ${type.value} a staff`);
         }
@@ -330,9 +340,25 @@ input {
     caret-color: var(--light-color-bg2);
 }
 
+.closeView {
+    display: flex; 
+    justify-content: flex-end;
+}
+
 @media screen and (max-width: 468px) {
     form {
         height: 775px !important;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .closeView {
+        display: flex; 
+        justify-content: flex-start;
+    }
+
+    .closeView {
+        margin-left: 30px;
     }
 }
 </style>

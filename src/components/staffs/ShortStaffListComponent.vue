@@ -25,6 +25,7 @@
           {{ `${scope.row.firstname} ${scope.row.lastname}` }}
         </template>
       </el-table-column>
+      <el-table-column label="Gender" prop="gender" style="width: 20%; min-width: 300px;" />
       <el-table-column label="Reviews" prop="reviews" style="width: 20%; min-width: 300px;">
         <template #default="scope">
           <div class="reviews-link">
@@ -37,6 +38,7 @@
         </template>
       </el-table-column>
       <el-table-column label="Department" prop="department" style="width: 20%; min-width: 300px;" />
+      <el-table-column label="Section" prop="section" style="width: 20%; min-width: 300px;" />
 
       <el-table-column style="width: 15%; min-width: 200px;" align="right">
         <template #header>
@@ -95,6 +97,8 @@ const staffStore = useStaffStore();
 const staff = ref(null);
 const staffs = inject('staffs');
 const tag = inject('tag');
+const emit = defineEmits('showStaffList');
+
 
 let tableData = computed(() => {
   let data = [];
@@ -125,13 +129,19 @@ const filterTableData = computed(() => {
   return filterdata
 })
 
+const closeView = () => {
+  emit('showStaffList', false);
+}
+
 const add = () => {
-  router.push({ name: 'Parameters', params: { tab: 'staffs', sub_tab: 'staffs_form' } });
+  closeView()
+  //router.push({ name: 'Parameters', params: { tab: 'staffs', sub_tab: 'staffs_form' } });
 }
 
 const handleEdit = (index, staff) => {
   staffStore.setStaff(staff);
-  router.push({ name: 'Parameters', params: { tab: 'staffs', sub_tab: 'staffs_form' } });
+  closeView();
+  //router.push({ name: 'Parameters', params: { tab: 'staffs', sub_tab: 'staffs_form' } });
 }
 
 const showQRCode = (value) => {
