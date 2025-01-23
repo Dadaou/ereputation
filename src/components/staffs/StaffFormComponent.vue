@@ -355,9 +355,6 @@ input {
     .closeView {
         display: flex; 
         justify-content: flex-start;
-    }
-
-    .closeView {
         margin-left: 30px;
     }
 }

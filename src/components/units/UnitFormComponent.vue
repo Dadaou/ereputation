@@ -1,4 +1,7 @@
 <template>
+    <div class="closeView">
+        <el-button :icon="Close" @click="closeView" circle />
+    </div>
     <div>
         <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
             <div class="grid gap-6 mb-6 md:grid-cols-2">
@@ -62,10 +65,11 @@ import { useCompanyStore } from "@Stores/company.js";
 import { useRoute, useRouter } from 'vue-router';
 import services from '@Services/services.js'
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue'
-import { ElMessage, ElOption, ElSelect } from 'element-plus'
+import { ElMessage, ElOption, ElSelect, ElButton } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
+import { Close } from '@element-plus/icons-vue'
 
 const router = useRouter();
 const route = useRoute();
@@ -80,6 +84,11 @@ const showSpinner = ref(false);
 const unit_to_update = inject('unit_to_update');
 const units = inject('units');
 const sections = ref(['','MENUS', 'INFOS', 'FOLLOW US', 'REVIEWS', 'OFFERS'])
+const emit = defineEmits('showServiceList');
+
+const closeView = () => {
+    emit('showServiceList', true);
+}
 
 watch(unit_to_update, () => {
     if (unit_to_update.value != null) {
@@ -153,7 +162,8 @@ const submit = async () => {
                     showSpinner.value = false;
                 }
             }
-            router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'services_list'} });
+            closeView()
+            //router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'services_list'} });
         } else {
             ElMessage.error(`Please, fill the form correctly!`);
         }
@@ -267,5 +277,18 @@ label span {
 
 input {
     caret-color: var(--light-color-bg2);
+}
+
+.closeView {
+    display: flex; 
+    justify-content: flex-end;
+}
+
+@media screen and (max-width: 800px) {
+    .closeView {
+        display: flex; 
+        justify-content: flex-start;
+        margin-left: 30px;
+    }
 }
 </style>

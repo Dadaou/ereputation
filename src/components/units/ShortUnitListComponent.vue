@@ -21,6 +21,7 @@
         </template>
       </el-table-column>
       <el-table-column label="Name" prop="name" style="width: 15%; min-width: 300px;" />
+      <el-table-column label="Code" prop="code" style="width: 15%; min-width: 300px;" />
       <el-table-column label="Reviews" prop="reviews" style="width: 20%; min-width: 300px;">
         <template #default="scope">
           <div class="reviews-link">
@@ -32,6 +33,7 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="Section" prop="section" />
       <el-table-column label="Category" prop="category" width="117" />
       <el-table-column style="width: 20%; min-width: 450px;" align="right">
         <template #header>
@@ -81,6 +83,7 @@ import 'element-plus/es/components/button/style/css';
 import 'element-plus/es/components/input/style/css';
 import services from '@Services/services.js';
 
+
 const QrCodeModalComponent = defineAsyncComponent(() =>
   import('@Components/utils/QrCodeModalComponent.vue')
 )
@@ -96,6 +99,7 @@ const tag = inject('tag');
 const baseurl = window.location.origin;
 const unit = ref(null);
 const staffStore = useStaffStore();
+const emit = defineEmits('showServiceList');
 
 const establishments = computed(() => {
   return userStore.user.customer.establishments.map(establishment => ({
@@ -130,8 +134,13 @@ const showQRCode = (value) => {
   showModal.value = true;
 };
 
+const closeView = () => {
+    emit('showServiceList', false);
+}
+
 const add = () => {
-  router.push({ name: 'Parameters', params: { tab: 'services', sub_tab: 'services_form' } });
+  closeView()
+  //router.push({ name: 'Parameters', params: { tab: 'services', sub_tab: 'services_form' } });
 };
 
 const filterTableData = computed(() => {
@@ -168,7 +177,8 @@ const handleDelete = async (index, unit) => {
 
 const handleEdit = (index, unit) => {
   staffStore.setUnit(unit);
-  router.push({ name: 'Parameters', params: { tab: 'services', sub_tab: 'services_form' } });
+  closeView();
+  //router.push({ name: 'Parameters', params: { tab: 'services', sub_tab: 'services_form' } });
 };
 
 const redirectToQRCode = async (tag, establishment_tag) => {

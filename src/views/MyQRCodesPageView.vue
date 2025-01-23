@@ -10,7 +10,8 @@
         <StaffFormComponent v-else @showStaffList="handleShowStaffView"/>
       </el-tab-pane>
       <el-tab-pane label="Services" name="service">
-        <ShortUnitListComponent />
+        <ShortUnitListComponent v-if="showServiceListView" @showServiceList="handleShowServiceView"/>
+        <UnitFormComponent v-else  @showServiceList="handleShowServiceView"/> 
       </el-tab-pane>
       <el-tab-pane label="Gates" name="gates">
         <ShortGateListComponent />
@@ -40,6 +41,10 @@ const route = useRoute();
 
 const ShortStaffListComponent = defineAsyncComponent(() =>
   import("@Components/staffs/ShortStaffListComponent.vue")
+)
+
+const UnitFormComponent = defineAsyncComponent(() =>
+    import("@Components/units/UnitFormComponent.vue")
 )
 
 const StaffFormComponent = defineAsyncComponent(() =>
@@ -75,6 +80,7 @@ const userStore = useUserStore()
 const activeName = ref('establishments')
 const activeStaffTab = ref('staff_list')
 const showStaffListView = ref(true)
+const showServiceListView = ref(true)
 
 const establishment_to_update = ref(null)
 const activeEstablishmentTab = ref('establishment_list')
@@ -100,6 +106,11 @@ const allLinks = ref([])
 const handleShowStaffView = async (payload) => {
   showStaffListView.value = payload;
   if(showStaffListView.value) await reloadStaffsList()
+}
+
+const handleShowServiceView = async (payload) => {
+  showServiceListView.value = payload
+  if(showServiceListView.value) await loadUnits()
 }
 
 provide('staffs', allStaffs)
