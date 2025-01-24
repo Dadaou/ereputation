@@ -792,9 +792,11 @@ onBeforeMount(async () => {
         socials.value = transformToSourceURL(socialResponse.data);
         // dataLoading.value = false;
     }
-    if (!socialStore.trendsByEstablishment[`${companyId}`]) {
+
+    await socialStore.fetchEstablishmentTrends(companyId);
+    /*if (!socialStore.trendsByEstablishment[`${companyId}`]) {
         await socialStore.fetchEstablishmentTrends(companyId);
-    }
+    }*/
 
 });
 
