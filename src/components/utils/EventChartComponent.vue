@@ -240,7 +240,15 @@ const positionEvent = () => {
 
       let textNode = document.createElement("span");
       let width = group.endPosition - group.startPosition + elementWidth;
-      textNode.setAttribute("style", `left: ${group.startPosition - elementWidth / 2}px; width: ${width}px; top: ${topOffset}px; opacity: 1; height: 10px; position: absolute; font-size: 14px; font-weight: 500; cursor: pointer; color: green; background-color: ${generateColor(eventName.split(': ')[eventName.split(': ').length - 1])};`);
+
+      if(width === 0) {
+        textNode.setAttribute("style", `left: ${group.startPosition - elementWidth / 2 + 29 }px; width: 30px; top: ${topOffset}px; opacity: 1; height: 10px; position: absolute; font-size: 14px; font-weight: 500; cursor: pointer; color: green; background-color: ${generateColor(eventName.split(': ')[eventName.split(': ').length - 1])};`);
+      }
+
+      else {
+        textNode.setAttribute("style", `left: ${group.startPosition - elementWidth / 2}px; width: ${width}px; top: ${topOffset}px; opacity: 1; height: 10px; position: absolute; font-size: 14px; font-weight: 500; cursor: pointer; color: green; background-color: ${generateColor(eventName.split(': ')[eventName.split(': ').length - 1])};`);
+      }
+
       textNode.setAttribute("title", eventName);
       chartEvents.appendChild(textNode);
     });
