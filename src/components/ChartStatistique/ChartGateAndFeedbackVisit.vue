@@ -6,7 +6,7 @@
         </div>
     </div>
     <div v-else class="content-message">
-        <div>No clicks for <br>
+        <div>No clicks <br>
             <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'"> establishment :
                 <span v-for="(estab_id, index) in establishment" :key="estab_id">
                     <span v-for="estab_name in establishments" :key="estab_name.id">

@@ -1,5 +1,5 @@
 <template>
-    <h3>Number of total media click</h3>
+    <h3>Number of total media clicks</h3>
     <div v-if="hasData">
         <div class="chart-container">
             <apexchart type="donut" height="480" :options="chartOptions" :series="series"></apexchart>
