@@ -51,7 +51,7 @@
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="Staff" name="staffs">
+            <!--<el-tab-pane label="Staff" name="staffs">
                 <el-tabs v-model="parametersUrlsConf.staffs" class="demo-tabs" @tab-click="() => clearStaffForm()">
                     <el-tab-pane label="Staffs" name="staffs_list">
                         <StaffListComponent @edit="(staff) => handleEdit(staff, 'staffs')" />
@@ -70,7 +70,7 @@
                         <UnitFormComponent />
                     </el-tab-pane>
                 </el-tabs>
-            </el-tab-pane>
+            </el-tab-pane>-->
             <el-tab-pane label="Events" name="events">
                 <el-tabs v-model="parametersUrlsConf.events" class="demo-tabs">
                     <el-tab-pane label="Events" name="events_list">

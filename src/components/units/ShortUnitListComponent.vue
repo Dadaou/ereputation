@@ -40,7 +40,6 @@
           <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
         </template>
         <template #default="scope">
-          <div class="action-buttons">
             <el-button size="small" @click="redirectToQRCode(scope.row.tag, scope.row.establishment_competitor_tag)">
               <i class="uil uil-print"></i>
             </el-button>
@@ -57,7 +56,6 @@
                 <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
               </template>
             </el-popconfirm>
-          </div>
         </template>
       </el-table-column>
     </el-table>
