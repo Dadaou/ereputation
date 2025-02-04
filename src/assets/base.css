@@ -134,6 +134,11 @@ a {
   color: var(--color-white);
 }
 
+
+.el-popconfirm__main {
+  word-break: break-word !important;
+}
+
 /*Background Color*/
 .primary {
   background: var(--color-primary);
