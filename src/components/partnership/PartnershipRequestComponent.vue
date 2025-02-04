@@ -38,8 +38,28 @@
       </el-table-column>
       <el-table-column label="State" prop="state" align="center" style="width: 10%; min-width: 200px;">
         <template #default="scope">
-          <i v-if="scope.row.state == 'pending'" class="uil uil-dna mr-1" style="font-size: 16px;"></i>
-          <i v-else class="uil uil-check mr-1" style="color:var(--color-success); font-size: 16px;"></i>
+          <el-popconfirm 
+            v-if="scope.row.state == 'pending'" 
+            title='Are you sure you want to enable state?'
+            @confirm="handleEvent(scope.$index, scope.row, 'state', 'valid')"
+          >
+            <template #reference>
+              <el-button :disabled="scope.row.other_customer">
+                <i class="uil uil-dna mr-1" style="font-size: 16px;"></i>
+              </el-button>
+            </template>
+          </el-popconfirm>
+          <el-popconfirm 
+            v-else
+            title='Are you sure you want to disable state?'
+            @confirm="handleEvent(scope.$index, scope.row, 'state', 'pending')"
+          >
+            <template #reference>
+              <el-button :disabled="scope.row.other_customer">
+                <i class="uil uil-check mr-1" style="color:var(--color-success); font-size: 16px;"></i>
+              </el-button>
+            </template>
+          </el-popconfirm>
         </template>
       </el-table-column>
       <el-table-column label="Enable" prop="enable" align="center" style="width: 10%; min-width: 200px;">
@@ -47,14 +67,14 @@
           <el-popconfirm v-if="scope.row.enable == false" title='Are you sure you want to "ENABLE" this partnership?'
             @confirm="handleEvent(scope.$index, scope.row, 'enable', true)">
             <template #reference>
-              <el-button><i class="uil uil-times mr-1"
+              <el-button :disabled="scope.row.other_customer"><i class="uil uil-times mr-1"
                   style="color:var(--color-danger2); font-size: 16px;"></i></el-button>
             </template>
           </el-popconfirm>
           <el-popconfirm v-if="scope.row.enable == true" title='Are you sure you want to "DISABLE" this partnership?'
             @confirm="handleEvent(scope.$index, scope.row, 'enable', false)">
             <template #reference>
-              <el-button><i class="uil uil-check mr-1"
+              <el-button :disabled="scope.row.other_customer"><i class="uil uil-check mr-1"
                   style="color:var(--color-success); font-size: 16px;"></i></el-button>
             </template>
           </el-popconfirm>
