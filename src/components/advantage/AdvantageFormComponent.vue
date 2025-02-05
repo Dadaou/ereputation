@@ -124,7 +124,7 @@
                     </div>
                      <div>
                             <label for="limit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Positioning
+                                Order
                            
                             </label>
                             <input type="number" id="positioning" v-model="positioning"
