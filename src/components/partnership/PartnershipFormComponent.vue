@@ -215,40 +215,55 @@ onBeforeMount(async () => {
         establishmentInviteFriend.value = firstEstablishment.competitor_tag
     }
 })
-
-const searchAdvantage = (query) => {
-
-    if (query) {
-        
-        loading.value = true
-        setTimeout(() => {
-            loading.value = false
-            advantageOptions.value = advantages.value.filter((item) => {
-                return item.name.toLowerCase().includes(query.toLowerCase()) || item.establishment_name.toLowerCase().includes(query.toLowerCase())
-                // return true
-            })
-        }, 200)
-    } else {
-        
-        advantageOptions.value = advantages.value
-    }
-}
+const normalizeText = (text) => {
+    if (!text) return ''
+    return text.normalize('NFD')
+             .replace(/[\u0300-\u036f]/g, '')
+             .toLowerCase()
+};
 
 const searchPartnership = (query) => {
     if (query) {
+        console.log(query);
+        loading2.value = true;
         
-        loading2.value = true
         setTimeout(() => {
-            loading2.value = false
+            loading2.value = false;
+            
+            const normalizedQuery = normalizeText(query);
+            
             partnershipOptions.value = partnerships.value.filter((item) => {
-                return item.name.toLowerCase().includes(query.toLowerCase())
-            })
-        }, 200)
+                const normalizedName = normalizeText(item.name);
+                return normalizedName.includes(normalizedQuery);
+            });
+        }, 200);
     } else {
-        
-        partnershipOptions.value = partnerships.value
+        partnershipOptions.value = partnerships.value;
     }
-}
+};
+
+
+const searchAdvantage = (query) => {
+    if (query) {
+        loading.value = true;
+        
+        setTimeout(() => {
+            loading.value = false;
+            
+            const normalizedQuery = normalizeText(query);
+            
+            advantageOptions.value = advantages.value.filter((item) => {
+                const normalizedName = normalizeText(item.name);
+                const normalizedEstablishmentName = normalizeText(item.establishment_name);
+                
+                return normalizedName.includes(normalizedQuery) || 
+                       normalizedEstablishmentName.includes(normalizedQuery);
+            });
+        }, 200);
+    } else {
+        advantageOptions.value = advantages.value;
+    }
+};
 
 const allAdvantageList = computed(() => {
     return other_advantages.value.map((discount, index) => {
