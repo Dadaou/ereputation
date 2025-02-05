@@ -2,19 +2,22 @@
     <div class="main__container qrcontainer" v-if="exist">
         <div class="container mx-auto advantage__qrc_content" v-if="!isExpired">
             <div
-                class="bg-gradient-to-br from-purple-600 to-indigo-600 text-white text-center py-10 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative">
-                <h3 class="text-xl font-semibold mb-4"> {{ $t("coupon.title") }} </h3>
+                class="bg-gradient-to-br from-purple-600 to-indigo-600 text-white py-10 px-4 md:px-8 lg:px-16 xl:px-20 rounded-lg shadow-md relative">
+                <h3 class="text-xl font-semibold mb-4 text-center"> {{ $t("coupon.title") }} </h3>
                 <div id="qrcode__container" ref="qrcode">
                     <vue-qrious class="qr__code mx-auto"
                         :value="`${baseurl}/public/customer/${route.params.tag}/discount/auth/${route.params.discountTag}`"
                         @change="onDataUrlChange" size="5000" />
                 </div>
 
-                <span id="cpnCode" class="border-dashed border text-white px-4 py-2 rounded-l">{{ code }}</span>
-                <br>
-                <h3 class="text-xl font-semibold mb-4 mt-4" v-if="advantages">{{ advantages.adv_name }} <br>{{
-                    advantages.establishment_name }}</h3>
-                <div v-if="advantages">
+                <div class="text-center">
+                    <span id="cpnCode" class="border-dashed border text-white px-4 py-2 rounded-l">{{ code }}</span>
+                </div>
+                <h3 class="text-xl font-semibold mb-4 mt-4 text-center" v-if="advantages">{{ advantages.adv_name }}
+                    <br>{{
+                        advantages.establishment_name }}
+                </h3>
+                <div v-if="advantages" class="text-center">
                     <div v-if="advantages.created_at != null && advantages.expired_at != null">
                         <h3 class="text-xl font-semibold mb-4 mt-4">
                             {{ $t("coupon.utilisation") }} {{ moment(advantages.created_at).format('YYYY-MM-DD') }} {{
@@ -23,7 +26,8 @@
                         </h3>
                     </div>
                 </div>
-                <h7 class="text-xl read-more " @click.stop="showMore(index)"> {{ $t("feedback.read_more") }} </h7>
+                <div class="text-xl read-more text-center" @click.stop="showMore(index)"> {{ $t("feedback.read_more") }}
+                </div>
 
                 <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2 mb-6">
                     <button id="cpnBtn1" :class="[isCopied ? 'btn-copy2' : 'btn-copy']" @click="copyCode(code)"
@@ -31,7 +35,8 @@
                     <button id="cpnBtn2" class="btn-copy" @click="downloadQrcode">Download <i
                             class="uil uil-qrcode-scan"></i></button>
                 </div>
-                <p class="text-sm" v-if="advantages">Valid till: {{ moment(advantages.expired_at).format("DDMMM, YYYY")
+                <p class="text-sm text-center" v-if="advantages">Valid till: {{
+                    moment(advantages.expired_at).format("DDMMM, YYYY")
                     }}</p>
 
 
@@ -63,10 +68,10 @@
                             <div class="inline-flex items-center gap-2 w-full mt-4">
                                 <div class="flex flex-col items-center w-full">
                                     <div v-if="value" class="modal-discount-offer">
-                                        <div>{{ value }}<span style="font-size: 1.75rem">{{ adv_metric }}</span>
+                                        <div>{{ value }}<span>{{ adv_metric }}</span>
                                         </div>
                                     </div>
-                                    <ul class="modal-discount-other">
+                                    <ul class="modal-discount-other text-center">
                                         <li v-if="from && from !== 'Invalid date'">From {{
                                             from }}</li>
                                         <li v-if="to && to !== 'Invalid date'">To {{ to }}
@@ -78,10 +83,9 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="modal-discount-description"
-                                v-if="adv_description && adv_description !== 'null'">
-                                <div class="inline-flex items-baseline gap-2" style="max-width: calc(100% - 20px)">
-                                    <h4 style="color: black !important;text-align: justify;"> {{ adv_description }}</h4>
+                            <div>
+                                <div class="modal-discount-description"
+                                    v-if="adv_description && adv_description !== 'null'" v-html="adv_description">
                                 </div>
                             </div>
                         </div>
@@ -311,15 +315,14 @@ onBeforeMount(async () => {
 
 .modal-content-name {
     width: 100%;
-    padding-top: 18px;
-    padding-left: 6px;
+    padding: 16px 0px 0px 16px;
 }
 
 .modal-discount-description {
-    padding: 7px 0px 2px !important;
+    padding: 7px 7px 2px !important;
     margin: 0px 15px 15px 15px;
     font-size: .7rem;
-    color: var(--color-secondary);
+    color: #000;
     font-weight: 500;
     max-height: 200px;
     min-height: 100px;
@@ -328,7 +331,8 @@ onBeforeMount(async () => {
     padding: 8px;
     border-radius: 12px;
     box-shadow: 1px -1px 4px color-mix(in srgb, var(--color-primary) 50%, white 50%) inset;
-    background: color-mix(in srgb, var(--color-primary) 8%, white)
+    background: color-mix(in srgb, var(--color-primary) 8%, white);
+    padding-left: 2px;
 }
 
 .modal-discount-category {
