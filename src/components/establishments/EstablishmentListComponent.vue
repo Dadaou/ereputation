@@ -128,7 +128,7 @@ const establishments = computed(() => {
                 rank: establishment.rank,
                 region: establishment.region,
                 zipcode: establishment.zipcode,
-                positionning: establishment.positionning,
+                positioning: establishment.positioning,
                 id: establishment.id,
                 universe_id: establishment.universe_id,
                 universe_name: establishment.universe_name,
