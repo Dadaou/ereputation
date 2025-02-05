@@ -44,7 +44,7 @@
       </el-table-column>
       <el-table-column class="td" label="Limit" prop="advantageLimit" align="center"
         style="width: 5%; min-width: 400px;" />
-      <el-table-column class="td" label="Positioning" prop="positioning" align="center"
+      <el-table-column class="td" label="Order" prop="positioning" align="center"
         style="width: 5%; min-width: 400px;" />
       <el-table-column class="td" label="Received" prop="received" align="center" style="width: 10%; min-width: 4%;" />
       <el-table-column class="td" label="Used" prop="used" align="center" style="width: 20%; min-width: 100px;" />
