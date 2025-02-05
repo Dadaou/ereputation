@@ -122,6 +122,14 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
                         </div>
                     </div>
+                     <div>
+                            <label for="limit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Positioning
+                           
+                            </label>
+                            <input type="number" id="positioning" v-model="positioning"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
+                    </div>
                     <div>
                         <label for="last_name"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Expired at
@@ -299,6 +307,7 @@ const metric = ref('');
 const scope = ref(null);
 const validity = ref(null);
 const advantageLimit = ref(null);
+const positioning = ref(null);
 
 const type = ref('add');
 const advantage_to_update = inject('advantage_to_update');
@@ -396,6 +405,7 @@ watch(advantage_to_update, () => {
         advantageName.value = advantage_to_update.value["name"];
         establishment.value = `/api/establishments/${advantage_to_update.value['establishment_id']},${advantage_to_update.value['establishment_name']}`
         advantageLimit.value = advantage_to_update.value["advantageLimit"];
+         positioning.value = advantage_to_update.value["positioning"];
         advantage_to_update.value["description"] !== null && description.value.setContents(advantage_to_update.value["description"]);
         section.value = advantage_to_update.value["section"];
         website.value = advantage_to_update.value["website"];
@@ -425,6 +435,7 @@ const resetForm = (e = null) => {
     scope.value = '';
     validity.value = '';
     advantageLimit.value = '';
+    positioning.value = '';
     section.value = '';
     website.value = '';
     establishment.value = "";
@@ -455,6 +466,7 @@ const submit = async () => {
     formData.append("description", descriptionContent.value)
     expiredAt.value != null ? formData.append("expiredAt", expiredAt.value != null ? moment(expiredAt.value).format('YYYY-MM-DD') : null) : null;
     advantageLimit.value != null ? formData.append("advantageLimit", advantageLimit.value != null ? advantageLimit.value : null) : null;
+    positioning.value != null ? formData.append("positioning", positioning.value != null ? positioning.value : null) : null;
     dateFrom.value != null ? formData.append("dateFrom", dateFrom.value != null ? moment(dateFrom.value).format('YYYY-MM-DD') : null) : null;
     dateTo.value != null ? formData.append("dateTo", dateTo.value != null ? moment(dateTo.value).format('YYYY-MM-DD') : null) : null;
     section.value != "" ? formData.append("section", section.value != "" ? section.value : null) : null;
@@ -506,7 +518,8 @@ const selectAdvantage = (advantage) => {
     metric.value = advantage.Metric;
     scope.value = advantage.Scope;
     validity.value = advantage.Validity;
-    advantageLimit.value = advantage.Limit
+    advantageLimit.value = advantage.Limit;
+    positioning.value = advantage.positioning;
     const companies = userStore.user.customer.establishments
     establishment.value = companies.length > 0 ? `/api/establishments/${companies[0].id},${companies[0].name}` : "";
 };

@@ -44,6 +44,8 @@
       </el-table-column>
       <el-table-column class="td" label="Limit" prop="advantageLimit" align="center"
         style="width: 5%; min-width: 400px;" />
+      <el-table-column class="td" label="Positioning" prop="positioning" align="center"
+        style="width: 5%; min-width: 400px;" />
       <el-table-column class="td" label="Received" prop="received" align="center" style="width: 10%; min-width: 4%;" />
       <el-table-column class="td" label="Used" prop="used" align="center" style="width: 20%; min-width: 100px;" />
       <el-table-column class="td" label="Section" prop="section" align="center" style="width: 20%; min-width: 800px;" />
@@ -117,6 +119,7 @@ const route = useRoute();
 const router = useRouter();
 
 const filterTableData = computed(() => {
+  console.log(advantages.value)
   return advantages.value.filter(data => {
     return (
       !search.value ||
