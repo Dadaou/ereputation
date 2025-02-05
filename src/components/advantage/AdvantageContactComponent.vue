@@ -27,7 +27,14 @@
             {{ formatUpdatedAt(scope.row.updated_at)}}
         </template>
       </el-table-column>
+      <el-table-column label="Optout" class="contain_tab">
+        <template #default="scope">
+            <i v-if="scope.row.optout" class="uil uil-ban mr-1" style="color:var(--color-danger2); font-size: 20px; text-align: center;"></i> 
+        </template>
+      </el-table-column>
     </el-table>
+
+
   </div>
   <ExportcsvexcelComponent :showModal="showExport" :downloaded="downloaded"
     @close="showExport = false, downloaded = false" @submit="(data) => exportData(data.type, 'contacts')" />
