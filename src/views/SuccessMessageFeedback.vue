@@ -12,7 +12,7 @@
                 <p v-if="links.length > 0">{{ $t("success_text") }}</p>
                 <div class="comment_container" v-if="comment !== '' && links.length > 0">
                     <p style="font-size: 13px;">{{ comment }}</p>
-                    <el-button @click="copyComment" style="margin-top: 8px;"><i class='fa fa-copy' v-if="copySuccess === ''"></i>{{ copySuccess }}</el-button>
+                    <el-button @click.stop="copyComment" style="margin-top: 8px;"><i class='fa fa-copy' v-if="copySuccess === ''"></i>{{ copySuccess }}</el-button>
                 </div>
                 <ul v-if="links.length > 0" class="logoSrc">
                     <li v-for="link in links" :key="link.id">
@@ -133,10 +133,26 @@ const handleClick = async (event,element) => {
 };
 
 const copyComment = async (e) => {
-    if(copySuccess.value) return
-    
+
     e.preventDefault()
-    await navigator.clipboard.writeText(comment.value);
+
+    if(copySuccess.value) return
+
+    try {
+        await navigator.clipboard.writeText(text);
+    } catch (err) {
+
+        const textarea = document.createElement('textarea');
+        textarea.value = comment.value;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'absolute';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+    }
+
     copySuccess.value = 'copy to clipboard'
 }
 
