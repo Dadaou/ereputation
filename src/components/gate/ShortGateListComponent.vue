@@ -119,8 +119,8 @@ const establishments = computed(() => {
         });
     }
     filteredData = filteredData.filter((data) => {
-        return !search.value || data.name.toLowerCase().includes(search.value.toLowerCase()) || data.category.toLowerCase().includes(search.value.toLowerCase())
-            || data.address.toLowerCase().includes(search.value.toLowerCase()) || (data.country && data.country.toLowerCase().includes(search.value.toLowerCase()))
+        return !search.value || data?.name?.toLowerCase().includes(search.value.toLowerCase()) || data?.category?.toLowerCase().includes(search.value.toLowerCase())
+            || data?.address?.toLowerCase().includes(search.value.toLowerCase()) || (data?.country && data?.country?.toLowerCase().includes(search.value.toLowerCase()))
     })
 
     return filteredData;

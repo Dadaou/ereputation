@@ -87,7 +87,6 @@ const exportData = (type, filename) => {
 
 const filteredData = computed (() => {
   let filteredData = contacts.value;
-  console.log("bb ", filteredData)
   filteredData = filteredData.filter((data) => {
     return !search.value || 
       (data.lastname && data.lastname.toLowerCase().includes(search.value.toLowerCase())) ||
