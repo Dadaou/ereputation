@@ -296,9 +296,10 @@ const submit = async () => {
         showRatingError.value = true;
         if (window.innerWidth <= 760) {
             ElMessage({
-                message: t("feedback.indice"),
+                message: `<div style="max-width: 700px;width: 235px; white-space: normal;">${t("feedback.indice")}</div>`,
                 type: "error",
-                showClose: true
+                showClose: true,
+                dangerouslyUseHTMLString: true
             });
         }
         return;
