@@ -26,8 +26,11 @@
                         </h3>
                     </div>
                 </div>
-                <div class="text-xl read-more text-center" @click.stop="showMore(index)"> {{ $t("feedback.read_more") }}
+                <div class=" text-center">
+                    <h7 class="text-xl read-more" @click.stop="showMore(index)"> {{ $t("feedback.read_more") }}
+                    </h7>
                 </div>
+
 
                 <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2 mb-6">
                     <button id="cpnBtn1" :class="[isCopied ? 'btn-copy2' : 'btn-copy']" @click="copyCode(code)"
@@ -405,7 +408,7 @@ ul.modal-discount-other {
 }
 
 .read-more {
-    font-size: 9px;
+    font-size: 12px;
     font-weight: 400;
 }
 
