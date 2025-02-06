@@ -69,7 +69,7 @@
         "validationcoupon": "Please enter the code to validate the coupon",
         "customer" : "Customer",
         "code" : "Code",
-        "expire" : "Expires",
+        "expire" : "Expires on",
         "validated_at" : "Validated at",
         "advantage_attribute" : "Advantage Attribute",
         "value" : "Value"

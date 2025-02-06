@@ -40,8 +40,7 @@
             </div>
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
-                    <label for="expired_at" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Expired
-                        at </label>
+                    <label for="expired_at" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Expires on </label>
                     <el-date-picker v-model="expiredAt" :size="'large'" />
                 </div>
                 <div>

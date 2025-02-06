@@ -132,7 +132,7 @@
                     </div>
                     <div>
                         <label for="last_name"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Expired at
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Expires on
                             <span></span></label>
                         <el-date-picker v-model="expiredAt" :size="'large'" />
                     </div>

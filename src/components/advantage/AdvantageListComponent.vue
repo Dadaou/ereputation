@@ -50,7 +50,7 @@
       <el-table-column class="td" label="Used" prop="used" align="center" style="width: 20%; min-width: 100px;" />
       <el-table-column class="td" label="Section" prop="section" align="center" style="width: 20%; min-width: 800px;" />
       <el-table-column class="td" label="Website" prop="website" align="center" style="width: 20%; min-width: 800px;" />
-      <el-table-column class="td" label="Expired At" align="center" style="width: 5%; min-width: 200px;">
+      <el-table-column class="td" label="Expires On" align="center" style="width: 5%; min-width: 200px;">
         <template #default="scope">
           <span :class="{ 'expired-date': isExpired(scope.row.expired_at) }">
             {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}

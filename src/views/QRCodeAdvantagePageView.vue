@@ -77,7 +77,7 @@
                                         <li v-if="to && to !== 'Invalid date'">To {{ to }}
                                         </li>
                                         <li v-if="expired_at && expired_at !== 'Invalid date'">
-                                            Expired at {{ moment(expired_at).format("DD-MM-YYYY") }} </li>
+                                            Expires on {{ moment(expired_at).format("DD-MM-YYYY") }} </li>
                                         <li v-if="adv_validity && adv_validity !== 'Invalid date'">Valid within
                                             {{ adv_validity }} days</li>
                                     </ul>

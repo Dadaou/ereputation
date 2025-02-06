@@ -16,7 +16,7 @@
       <el-table-column label="Establishment" prop="establishment_name" style="width: 30%; min-width: 400px;" />
       <el-table-column label="Partnership" prop="partnership_name" style="width: 30%; min-width: 4%;" />
       <el-table-column label="Limit" prop="limit" align="center" style="width: 10%; min-width: 100px;" />
-      <el-table-column label="Expired at" prop="expired_at" style="width: 15%; min-width: 150px;">
+      <el-table-column label="Expires On" prop="expired_at" style="width: 15%; min-width: 150px;">
         <template #default="scope">
           <span v-if="scope.row.expired_at" style="text-transform: uppercase;">
             {{ moment(scope.row.expired_at).format('YYYY-MM-DD') }}
