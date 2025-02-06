@@ -39,9 +39,13 @@
                 <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4">
                     <div class="mb-6 feedback__rating">
                         <label>{{ $t("feedback.rating.title") }} <span>*</span></label>
-                        <RatingFeedbackComponent @updateValue="(rating) => {
+                        <RatingFeedbackComponent @click="hideMessage" @updateValue="(rating) => {
                             ratingCustomer = rating
+                            hideMessage();
                         }" />
+                        <span v-if="showRatingError" class="error_message">
+                            {{ $t("feedback.indice") }}
+                        </span>
                     </div>
                     <div class="grid gap-6 md:grid-cols-2">
                         <div>
@@ -294,7 +298,25 @@ const disabledDate = (time) => {
     return time.getTime() > Date.now()
 }
 
+let showRatingError = ref(false);
+const hideMessage = () => {
+    showRatingError.value = false;
+};
+
 const submit = async () => {
+    if (!ratingCustomer.value || ratingCustomer.value.note === null) {
+        showRatingError.value = true;
+        if (window.innerWidth <= 760) {
+            ElMessage({
+                message: t("feedback.indice"),
+                type: "error",
+                showClose: true
+            });
+        }
+        return;
+    } else {
+        showRatingError.value = false;
+    }
     var lg = localStorage.getItem("langue")
     let visitorId = localStorage.getItem("visitId")
     let date_review = new Date();
@@ -691,6 +713,18 @@ span.label {
     font-size: 14px;
 }
 
+.error_message {
+    display: inline;
+}
+
+.feedback__rating span {
+    margin-top: 20px;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 500;
+    color: rgba(255, 0, 0, 0.729);
+}
+
 @media screen and (max-width:1075px) {
     .feedback__form {
         width: 60%;
@@ -725,6 +759,10 @@ span.label {
 
     .largeClass {
         margin-top: 0px ! important;
+    }
+
+    .error_message {
+        display: none;
     }
 }
 </style>
