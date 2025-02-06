@@ -44,7 +44,7 @@
                             ratingCustomer = rating
                             hideMessage();
                         }" />
-                        <span v-if="showRatingError">
+                        <span v-if="showRatingError" class="error_message">
                             {{ $t("feedback.indice") }}
                         </span>
                     </div>
@@ -255,6 +255,14 @@ const hideMessage = () => {
 const submit = async () => {
     if (!ratingCustomer.value || ratingCustomer.value.note === null) {
         showRatingError.value = true;
+        if (window.innerWidth <= 760) {
+            ElMessage({
+                message: t("feedback.indice"),
+                type: "error",
+                showClose: true
+            });
+        }
+        return;
     } else {
         showRatingError.value = false;
     }
@@ -594,6 +602,10 @@ input:focus {
     color: rgba(255, 0, 0, 0.729);
 }
 
+.error_message {
+    display: inline;
+}
+
 @media screen and (max-width:1075px) {
     .feedback__form {
         width: 60%;
@@ -618,15 +630,19 @@ input:focus {
     .feedback__form {
         width: 90%;
     }
+
+    .error_message {
+        display: none;
+    }
 }
 
 @media screen and (max-width:500px) {
     .establishment__img {
-            justify-content: center;
+        justify-content: center;
     }
+
     .tablet_mobile__head {
-            height: auto;
+        height: auto;
     }
 }
-
 </style>
