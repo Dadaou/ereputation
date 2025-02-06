@@ -172,7 +172,7 @@ const submit = async () => {
 
         } else {
             ElMessage({
-                message: `Please provide the right code`,
+                message: `Please provide the correct PIN code`,
                 type: 'warning',
             });
             showSpinner.value = false;
