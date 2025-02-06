@@ -134,12 +134,23 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
+                    <div class="flex items-center py-4 border-t border-b dark:border-gray-600">
                         <button type="submit"
                             :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800']">
                             <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" />
                             <span v-if="showSpinner">Loading...</span>
                             <span v-show="!showSpinner"><i class="uil uil-save"></i> Submit</span>
+                        </button>
+                        <button @click="goToNextStep"
+                            class="inline-flex items-center py-2.5 ml-2 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                            <span class="icon pr-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M10.354 3.646a.5.5 0 0 0 0 .708L13.207 7H1.5a.5.5 0 0 0 0 1h11.707l-2.853 2.646a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z" />
+                                </svg>
+                            </span>
+                            Skip this step
                         </button>
                     </div>
                 </form>
@@ -286,24 +297,6 @@ const handleChangeSocial = (value, index) => {
     validateSocialUrl(index);
 }
 
-// const isPlatformUrl = (url, urlTemplate) => {
-//     const langAccept = ['fr', 'mu']
-//     const splitLink = platformLink.value.split('/')
-//     const existsInB = langAccept.some(item => splitLink.includes(item));
-//     const pattern = urlPattern(urlTemplate);
-
-//     let isValid = false
-
-//     if (pattern.test(url)) {
-//         isValid = true;
-//     }
-
-//     if (existsInB) {
-//         isValid = true;
-//     }
-
-//     return isValid
-// }
 
 const validatePlatformUrl = (index) => {
     const entry = platformEntries.value[index];
@@ -324,26 +317,6 @@ const validateSocialUrl = (index) => {
         entry.isValidSocial = false;
     }
 }
-
-// const isValidSocialUrl = (url, urlTemplate) => {
-//     const langAccept = ['fr', 'mu'];
-//     const splitLink = social.value.split('/');
-//     const existsInB = langAccept.some(item => splitLink.includes(item));
-//     const pattern = urlPattern(urlTemplate);
-
-//     let isValid = false;
-
-//     if (pattern.test(url)) {
-//         isValid = true;
-//     }
-
-//     if (existsInB) {
-//         isValid = true;
-//     }
-
-//     return isValid;
-// };
-
 
 const urlPattern = (urlTemplate, extensions = ['fr', 'es', 'com']) => {
     const url = new URL(urlTemplate);
@@ -646,5 +619,10 @@ form button {
 .button__close {
     font-weight: bold;
     color: red;
+}
+
+.icon {
+    margin-right: 8px;
+    vertical-align: middle;
 }
 </style>
