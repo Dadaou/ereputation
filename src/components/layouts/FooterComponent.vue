@@ -21,12 +21,12 @@
               <li @click="dialogVisible = true" style="cursor: pointer;">Privacy Policy</li>
             </ul>
             <!-- <span v-if="!isFeedback"><i class="uil uil-copyright"></i>2024, all rights reserved</span> -->
-          <!--   <span v-if="appStore.account && appStore.account.brand">
+            <!--   <span v-if="appStore.account && appStore.account.brand">
               Powered by 
               <a href="#" @click="handleBrandClick">Linkystar</a>
             </span> -->
-              <span>
-              Powered by 
+            <span>
+              Powered by
               <a href="#" @click="handleBrandClick">Linkystar</a>
             </span>
           </li>
@@ -54,13 +54,13 @@
     </div>
   </footer>
   <el-dialog v-model="dialogVisible" style="min-width: 400px; height: 670px; overflow-y: scroll;" center>
-    <div v-html="privacy"></div>
+    <div ref="shadowHost"></div>
   </el-dialog>
 </template>
 
 
 <script setup>
-import { ref, computed, onBeforeMount, onMounted } from 'vue';
+import { ref, computed, onBeforeMount, onMounted, watch, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAppStore } from "@Stores/app.js";
 import { Icon } from '@iconify/vue';
@@ -76,6 +76,8 @@ const isSignUpActive = ref(route.path === '/sign-up');
 const logo = ref(null)
 const dialogVisible = ref(false)
 const privacy = ref('')
+
+const shadowHost = ref(null);
 
 const isFeedback = computed(() => {
   return publicUrls.includes(route.name)
@@ -93,8 +95,20 @@ const isSignUp = computed(() => {
 
 const footerLogoClassObject = computed(() => ({
   'footer-logo': !(logo.value && logo.value.logo && isFeedback.value),
-  'footer-logo-public' : logo.value && logo.value.logo && isFeedback.value
+  'footer-logo-public': logo.value && logo.value.logo && isFeedback.value
 }))
+
+watch(dialogVisible, async (newValue) => {
+  if (newValue) {
+    await nextTick();
+    if (shadowHost.value) {
+
+      const shadowRoot = shadowHost.value.attachShadow({ mode: "open" });
+      shadowRoot.innerHTML = privacy.value;
+    }
+  }
+
+});
 
 onBeforeMount(async () => {
   if (route.params.tag) {
@@ -103,7 +117,7 @@ onBeforeMount(async () => {
 });
 
 onMounted(async () => {
-  
+
   const partnerCode = import.meta.env.VITE_PARTNER_CODE
 
   try {
@@ -122,9 +136,9 @@ onMounted(async () => {
 })
 
 const handleBrandClick = () => {
-        window.open('https://linkystar.com', '_blank');
+  window.open('https://linkystar.com', '_blank');
   // if (appStore.account && appStore.account.website) {
-    
+
   //   // window.open(appStore.account.website, '_blank');
 
   // } else {
@@ -171,7 +185,7 @@ footer {
   padding: 12px;
   cursor: pointer;
   display: flex;
-  justify-content : center;
+  justify-content: center;
 }
 
 .footer-logo-public img {
