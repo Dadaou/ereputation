@@ -20,8 +20,8 @@
 
         </template>
       </el-table-column>
-      <el-table-column label="Name" prop="name" style="width: 15%; min-width: 300px;" />
-      <el-table-column label="Code" prop="code" style="width: 15%; min-width: 300px;" />
+      <el-table-column label="Name" prop="name" style="width: 25%; min-width: 300px;" />
+      <el-table-column label="Code" prop="code" style="width: 25%; min-width: 300px;" />
       <el-table-column label="Reviews" prop="reviews" style="width: 20%; min-width: 300px;">
         <template #default="scope">
           <div class="reviews-link">
@@ -33,9 +33,9 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="Section" prop="section" />
-      <el-table-column label="Category" prop="category" width="117" />
-      <el-table-column style="width: 20%; min-width: 450px;" align="right">
+      <el-table-column label="Section" prop="section" style="width: 25%; min-width: 300px;"/>
+      <el-table-column label="Category" prop="category" style="width: 25%; min-width: 300px;" />
+      <el-table-column style="width: 15%; min-width: 200px;" align="right">
         <template #header>
           <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
         </template>
@@ -308,12 +308,6 @@ button i.uil-edit {
   .table__container {
     width: 70%;
   }
-
-  .vertical-buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
 }
 
 /* Définissez une largeur maximale pour l'en-tête sur les grands écrans */
@@ -347,8 +341,5 @@ button i.uil-edit {
     font-size: 11px !important;
   }
 
-  .action-buttons {
-    display: block;
-  }
 }
 </style>
