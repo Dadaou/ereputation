@@ -72,7 +72,8 @@
         "expire" : "Expires on",
         "validated_at" : "Validated at",
         "advantage_attribute" : "Advantage Attribute",
-        "value" : "Value"
+        "value" : "Value",
+        "valid_advantage_header" : "The benefit has been successfully validated"
     },
     "advantage": {
         "limit_qty": "Limited Quantity",

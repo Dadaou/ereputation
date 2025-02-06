@@ -77,7 +77,8 @@
         "expire" : "Expira en",
         "validated_at" : "Validado en",
         "advantage_attribute" : "Atributo Ventaja",
-        "value" : "Valor"
+        "value" : "Valor",
+        "valid_advantage_header" : "El beneficio ha sido validado con éxito"
     },
     "advantage": {
         "limit_qty": "Cantidad Limitada",

@@ -7,7 +7,8 @@
 
             <div class="login__form">
 
-                <span v-if="advantages">{{ advantages.adv_name }} <br> {{advantages.establishment_name }}</span>
+                <span v-if="advantages && !valid">{{ advantages.adv_name }} <br> {{advantages.establishment_name }}</span>
+                <span v-else-if="valid">{{ $t("coupon.valid_advantage_header") }} </span>
                 <div style="border-bottom: 2px solid var(--light-color-bg1);"></div>
                 <div class="advantage_attibut">
                    <p>{{ $t("coupon.customer") }}</p>
@@ -87,7 +88,7 @@ const userStore = useUserStore()
 const nameAdvantage = localStorage.getItem('nameAdvantage');
 const pinCode = ref('')
 const advantages = ref({})
-const valid = ref(true)
+const valid = ref(null)
 const code = ref('')
 
 const form = ref({
