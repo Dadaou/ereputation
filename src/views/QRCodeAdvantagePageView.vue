@@ -16,6 +16,9 @@
                 <h3 class="text-xl font-semibold mb-4 mt-4 text-center" v-if="advantages">{{ advantages.adv_name }}
                     <br>{{
                         advantages.establishment_name }}
+                    <br><span class="address">{{ adv_address1 }}</span>
+                    <br>{{ adv_zipcode }}
+                    <br>{{ adv_city }}
                 </h3>
                 <div v-if="advantages" class="text-center">
                     <div v-if="advantages.created_at != null && advantages.expired_at != null">
@@ -67,6 +70,9 @@
                             </div>
                             <h6 class="modal-discount-establishment">
                                 {{ advantages.establishment_name }}
+                                <br>{{ adv_address1 }}
+                                <br>{{ adv_zipcode }}
+                                <br>{{ adv_city }}
                             </h6>
                             <div class="inline-flex items-center gap-2 w-full mt-4">
                                 <div class="flex flex-col items-center w-full">
@@ -107,7 +113,7 @@ import VueQrious from 'vue-qrious';
 import moment from 'moment';
 import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from "@Stores/app.js";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import services from '@Services/services.js';
 import { useClipboard } from '@vueuse/core'
 import 'element-plus/es/components/date-picker/style/css';
@@ -125,7 +131,6 @@ const page = ref({
 });
 
 const route = useRoute();
-const router = useRouter();
 const baseurl = window.location.origin
 const base64Image = ref(null)
 const qrcode = ref(null)
@@ -148,6 +153,10 @@ const from = ref(null);
 const to = ref(null);
 const expired_at = ref(null);
 const value = ref(null);
+const adv_address1 = ref('');
+const adv_zipcode = ref('');
+const adv_city = ref('');
+
 
 const showMore = () => {
     showModal.value = true;
@@ -207,6 +216,9 @@ onBeforeMount(async () => {
             adv_metric.value = advantages.value.adv_metric;
             adv_amount.value = advantages.value.adv_amount;
             adv_advantage_limit.value = advantages.value.adv_advantage_limit;
+            adv_address1.value = advantages.value.establishment_address1;
+            adv_zipcode.value = advantages.value.establishment_zipcode;
+            adv_city.value = advantages.value.establishment_city;
 
             switch (advantages.value.adv_category) {
                 case 'Gift':
@@ -273,6 +285,10 @@ onBeforeMount(async () => {
 .read-more:hover {
     text-decoration: underline;
     cursor: pointer;
+}
+
+.address {
+    font-size: 14px;
 }
 
 .modal__close i {
@@ -408,7 +424,7 @@ ul.modal-discount-other {
 }
 
 .read-more {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 400;
 }
 
