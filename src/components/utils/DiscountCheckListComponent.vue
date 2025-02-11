@@ -57,6 +57,9 @@
           </div>
           <h6 class="modal-discount-establishment">
             {{ currentDiscount.establishment_name }}
+            <br>{{ currentDiscount.establishment_address1 }}
+            <br>{{ currentDiscount.establishment_zipcode }}
+            <br>{{ currentDiscount.establishment_city }}
           </h6>
           <div class="inline-flex items-center gap-2 w-full mt-4">
             <div class="flex flex-col items-center w-full">
@@ -72,9 +75,8 @@
             </div>
           </div>
           <div v-if="currentDiscount.description && currentDiscount.description !== 'null'"
-            class="modal-discount-description"
-            v-html="currentDiscount.description">
-        </div>
+            class="modal-discount-description" v-html="currentDiscount.description">
+          </div>
         </div>
       </div>
     </div>

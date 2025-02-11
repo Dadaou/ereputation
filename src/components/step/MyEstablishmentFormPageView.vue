@@ -89,19 +89,13 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                     </div>
                     <div>
-                        <label for="language" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Language
+                        <label for="language"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Language
                             <span>*</span></label>
                         <el-select v-model="data.language" placeholder="" size="large" filterable ref="selectLanguage">
-                            <el-option v-for="(language, index) in ['fr','en','es']" :key="index" :label="language"
+                            <el-option v-for="(language, index) in ['fr', 'en', 'es']" :key="index" :label="language"
                                 :value="language" />
                         </el-select>
-                    </div>
-                    <div>
-                        <label for="positionning"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">positionning
-                        </label>
-                        <input type="text" id="positionning" name="positionning" v-model="data.positionning"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                     </div>
                 </div>
                 <div class="grid gap-6 mb-6 md:grid-cols-4"></div>
@@ -134,7 +128,7 @@ import { competitor_countries } from '@Services/input-list.js';
 const emit = defineEmits(['changeStep']);
 const previewImage = ref(null);
 const imageInputHover = ref(false);
-const data = ref({});
+const data = ref({ positioning: 1 });
 const showSpinner = ref(false);
 const userStore = useUserStore();
 const imgHasChanged = ref(false);
@@ -229,21 +223,26 @@ onMounted(() => {
 const submit = async () => {
     const form = document.querySelector('#establishmentForm');
     const formData = new FormData(form);
-    const establishmentData = { ...data.value, customer: `${userStore.user.customer.tag}` };
+    const establishmentData = {
+        ...data.value,
+        customer: `${userStore.user.customer.tag}`,
+        positioning: data.value.positioning || 1
+    };
 
     if (establishmentData.universe_id
         && establishmentData.country
         && establishmentData.city
         && establishmentData.language
         && establishmentData.zipcode
-        && establishmentData.universe_id
         && establishmentData.name
         && establishmentData.address1) {
 
         formData.append('universe', establishmentData.universe_id);
         formData.append('country', establishmentData.country);
         formData.append('language', establishmentData.language);
-        formData.append('customer', `${userStore.user.customer.tag}`)
+        formData.append('customer', `${userStore.user.customer.tag}`);
+        formData.append('positioning', establishmentData.positioning);
+
         showSpinner.value = true;
 
         if (!imgHasChanged.value) formData.delete('file');
@@ -262,7 +261,7 @@ const submit = async () => {
                 message: `Establishment added successfully.`,
                 type: 'success',
             });
-            data.value = {}
+            data.value = { positioning: 1 };
             showSpinner.value = false;
             const establishmentName = response.data.name;
             const competitorId = response.data.id;
@@ -279,13 +278,13 @@ const goToNextStep = (establishmentName, competitorId) => {
 };
 
 const loadData = (establishment, type) => {
-    establishment.url_source = establishment.media
-
+    establishment.url_source = establishment.media;
     if (type == 'new') {
         userStore.user.customer.establishments?.push(establishment);
     }
-}
+};
 </script>
+
 <style scoped>
 .title {
     margin-bottom: 1.5rem;
