@@ -59,11 +59,11 @@
                             <label for="currency" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Currency<span></span>
                             </label>
-                            <input
-                                type="text"
-                                id="currency"
+
+                            <el-input
                                 v-model="currency"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2"
+                                size="large"
+                                :disabled="metric !== '' && metric !== null"
                             />
                         </div>
                         <!--<div>
@@ -77,7 +77,7 @@
                             <label for="metric"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Metric
                                 <span></span></label>
-                            <el-select v-model="metric" placeholder="Select metric" size="large">
+                            <el-select v-model="metric" placeholder="Select metric" size="large" :disabled="currency !== '' && currency !== null" >
                                 <el-option v-for="metric in metrics" :key="metric" :label="metric" :value="metric" />
                             </el-select>
                         </div>
@@ -238,7 +238,7 @@ import { ref, inject, reactive, watch, onBeforeMount, defineAsyncComponent, defi
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
-import { ElMessage, ElOption, ElSelect, ElDatePicker, ElTooltip } from 'element-plus';
+import { ElMessage, ElOption, ElSelect, ElDatePicker, ElTooltip, ElInput } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'

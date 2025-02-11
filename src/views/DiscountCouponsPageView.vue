@@ -31,7 +31,11 @@
       <el-table-column label="Discount Code" prop="adv_code" :formatter="(row) => row.adv_code || '-'" align="center"
         width="150" />
       <el-table-column label="Code" prop="code" width="100" />
-      <el-table-column label="Amount" prop="adv_amount" width="100" />
+      <el-table-column label="Amount" prop="adv_amount" width="100">
+        <template #default="scope">
+          {{ scope.row.adv_amount }} {{ displayMetricOrCurrency(scope.row.adv_amount, scope.row.adv_metric, scope.row.adv_currency) }}
+        </template>
+      </el-table-column>
       <el-table-column label="Created at" width="120">
         <template #default="scope">
           {{ formatCreatedAt(scope.row.created_at) }}
@@ -107,6 +111,25 @@ const filteredData = computed(() => {
 
   return filtered.sort(compareDatesDesc);
 });
+
+const displayMetricOrCurrency = (amount = null, metric = null, currency = null) => {
+
+  if(amount) {
+
+    if (metric) {
+
+      switch(metric.toLowerCase()) {
+        case 'percent':
+          return '%';
+        default:
+          return '';
+      }
+    } else if (currency) {
+      return currency;
+    }
+    return '';
+  }
+}
 
 const handleConfirm = async (value) => {
   const response = await new Promise((resolve) => {
