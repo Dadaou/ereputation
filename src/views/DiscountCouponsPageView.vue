@@ -122,12 +122,9 @@ const displayMetricOrCurrency = (amount = null, metric = null, currency = null) 
         case 'percent':
           return '%';
         default:
-          return '';
+          return currency;
       }
-    } else if (currency) {
-      return currency;
-    }
-    return '';
+    } 
   }
 }
 

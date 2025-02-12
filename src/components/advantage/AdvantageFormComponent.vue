@@ -63,7 +63,6 @@
                             <el-input
                                 v-model="currency"
                                 size="large"
-                                :disabled="metric !== '' && metric !== null"
                             />
                         </div>
                         <!--<div>
@@ -77,7 +76,7 @@
                             <label for="metric"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Metric
                                 <span></span></label>
-                            <el-select v-model="metric" placeholder="Select metric" size="large" :disabled="currency !== '' && currency !== null" >
+                            <el-select v-model="metric" placeholder="Select metric" size="large" >
                                 <el-option v-for="metric in metrics" :key="metric" :label="metric" :value="metric" />
                             </el-select>
                         </div>
