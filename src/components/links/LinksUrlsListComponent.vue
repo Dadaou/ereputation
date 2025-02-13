@@ -9,6 +9,14 @@
       <el-table v-if="linksLoading == false" :data="filterTableData">
         <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" />
 
+        <el-table-column label="Caption" style="width: 25%; min-width: 200px;" v-if="activeUrlTabName.urls === 'urls_gate_form'">
+          <template #default="scope">
+            <div>
+              <span>{{ scope.row.caption }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        
         <el-table-column label="Direct link" style="width: 10%; min-width: 200px;" v-if="activeUrlTabName.urls === 'urls_external_form'">
           <template #default="scope">
             <div>
@@ -33,7 +41,7 @@
           </template>
         </el-table-column>
         <el-table-column label="Url" prop="url_trunked" style="width: 25%; min-width: 200px;" />
-  
+
         <el-table-column label="Gate" style="width: 25%; min-width: 200px;" v-if="activeUrlTabName.urls !== 'urls_external_form'">
           <template #default="scope">
             <div>
