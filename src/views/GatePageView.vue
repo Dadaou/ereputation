@@ -141,8 +141,8 @@ const loadLinks = async (tag) => {
     const response = await new Promise((resolve) => {
         services.get_Record(uri, (response) => {
             resolve(response);
-        },true);
-    }, true);
+        }, true);
+    });
 
     if (response.status == 200) {
         links.value = response.data;
