@@ -1,8 +1,44 @@
-<template>
+<template >
   <h3>About feedback form submissions</h3>
-  <div v-if="hasData">
-    <div class="chart-container">
-      <apexchart type="bar" height="460" :options="chartOptions" :series="series" />
+  <div v-if="hasData" style="position: relative;" >
+
+    
+ <div v-if="showModal" class="overlay" >
+    <div class="modal" @click.stop>
+     <div>
+        <h3 class="text-lg font-bold" style="margin: -15px;">Visitors</h3>
+        <button class="btn text-lg close-btn" style="color: red;" @click="showModal = false">x</button>
+     </div>
+      <div class="modal-content">
+
+
+          <el-table :data="visitors" class="custom-header" style="width: 1200px !important;min-width: 1200px !important;">
+         
+         
+            <el-table-column label="OS" align="center" prop="os"/>
+            <el-table-column label="Device" prop="device"   />
+            <el-table-column label="Country" prop="country" />
+            <el-table-column label="City" prop="city"
+                 />
+            <el-table-column label="Gps" align="center" prop="gps"  show-overflow-tooltip/>
+            <el-table-column label="IP Address" prop="ip_address" />
+            <el-table-column label="Contact" prop="email"  show-overflow-tooltip/>
+            <el-table-column label="Visited at" prop="created_at" />
+           
+        </el-table>
+
+        
+      </div>
+      
+    </div>
+  </div>
+
+
+   
+
+    <div class="chart-container" >
+      <apexchart  type="bar" height="460" :options="chartOptions" :series="series" @dataPointSelection="handleBarClick"/>
+      
     </div>
   </div>
   <div v-else class="content-message">
@@ -36,6 +72,11 @@
       </span>
     </div>
   </div>
+
+
+
+
+
 </template>
 
 <script setup>
@@ -45,10 +86,19 @@ import { useRoute } from 'vue-router';
 import services from '@Services/services.js';
 import moment from 'moment';
 import { useUserStore } from "@Stores/user.js"
+import {
+    ElMessage,
+    ElTable,
+    ElTableColumn,
+    ElPopconfirm,
+    ElButton,
+    ElInput, ElOption, ElSelect, ElDatePicker, ElTooltip
+} from 'element-plus'
 
 const route = useRoute();
 const dataChart = ref([]);
 const series = ref([]);
+const visitors = ref([]);
 const category = ref([]);
 const start_date = inject('start_date');
 const end_date = inject('end_date');
@@ -62,10 +112,20 @@ const units = inject('unitsFilter');
 const userStore = useUserStore();
 const hasData = ref(false);
 
+const showModal = ref(false);
+const selectedData = ref(null);
+
+
 const chartOptions = ref({
   chart: {
     id: 'vuechart-example',
     stacked: true,
+  },
+  events: {
+      dataPointSelection: (event, chartContext, config) => {
+       
+        handleBarClick(event, chartContext, config);
+      }
   },
   xaxis: {
     categories: [],
@@ -92,6 +152,22 @@ const chartOptions = ref({
     },
   },
 });
+
+const handleBarClick = (event, chartContext, config)=> {
+ 
+  const { dataPointIndex } = config;
+  const serieName = series.value[config.seriesIndex]?.name;
+  if (serieName=='Feedback submitted') {
+    getVisitors(chartOptions.value.xaxis.categories[dataPointIndex], chartOptions.value.xaxis.categories[dataPointIndex], timePeriods.value, establishment.value, staff.value, units.value,'yes');
+  } else {
+    getVisitors(chartOptions.value.xaxis.categories[dataPointIndex], chartOptions.value.xaxis.categories[dataPointIndex], timePeriods.value, establishment.value, staff.value, units.value,'no');
+  }
+
+ 
+
+  showModal.value = true;
+  
+}
 
 const getMaxData = (data1, data2) => {
   let max1 = Math.ceil(Math.max(...data1) / 10) * 10;
@@ -157,6 +233,43 @@ const loadData = async (start_date, end_date, timePeriods, establishment, staff,
   }
 };
 
+// GET VISITORS
+
+const getVisitors = async (start_date, end_date, timePeriods, establishment, staff, units,submitted) => {
+
+ 
+
+  let api = `/customer/visitor/feedbacks/list?tag=${route.params.tag}&from=${start_date}&to=${end_date}&submitted=${submitted}&type=${timePeriods || 'daily'}`
+  if (establishment) {
+    api = api + `&establishment=${establishment}`
+  }
+  if (staff) {
+    api = api + `&staff=${staff}`
+  }
+  if (units) {
+    api = api + `&units=${units}`
+  }
+
+  try {
+    const response = await new Promise((resolve) => {
+      services.get_Record(api, (response) => {
+        resolve(response);
+      });
+    });
+    if (response.status === 200) {
+      visitors.value = response.data;
+      console.log(response.data)
+
+    } else {
+      console.error('Error fetching visitors:', response);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// 
+
 watch([start_date, end_date, timePeriods, establishment, staff, units], () => {
   loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, staff.value, units.value)
 })
@@ -177,6 +290,46 @@ export default {
 </script>
 
 <style scoped>
+
+  .modal {
+  position: absolute;
+  top: 10%;
+  left: 8%;
+ background: white;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  height: 80%;
+  overflow: auto; 
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  scrollbar-width: none;
+}
+
+.modal-content {
+  flex-grow: 1;
+  overflow-x: auto; 
+  overflow-y: auto; 
+  border: 1px solid #ccc;
+  padding: 5px;
+  white-space: nowrap; 
+}
+
+.close-btn {
+  position: absolute;
+  top: 1px;
+  right: 5px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: red;
+  cursor: pointer;
+
+}
+
+
 .chart-container {
   width: 100%;
   max-width: 100%;
