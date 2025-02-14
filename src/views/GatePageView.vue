@@ -141,7 +141,7 @@ const loadLinks = async (tag) => {
     const response = await new Promise((resolve) => {
         services.get_Record(uri, (response) => {
             resolve(response);
-        });
+        },true);
     }, true);
 
     if (response.status == 200) {
@@ -221,6 +221,7 @@ const menuLinks = computed(() => {
 })
 
 onBeforeMount(async () => {
+    console.log(localStorage.getItem('access'))
     await services.get_Record(`public/establishment/${route.params.id}/media`, (response) => {
         if (response.status == 200) {
             establishment.value = response['data'];
