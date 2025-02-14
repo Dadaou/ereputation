@@ -163,7 +163,12 @@ const reloadData = (unit) => {
 };
 
 const handleDelete = async (index, unit) => {
-  const response = await services.deleteRecord('units', unit['id']);
+  const response = await new Promise((resolve) => {
+    services.deleteRecord('units', unit['id'], (response) => {
+      resolve(response);
+    });
+  });
+
   if (response.status == 204) {
     reloadData(unit);
     ElMessage({
