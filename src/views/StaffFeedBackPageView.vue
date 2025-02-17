@@ -335,6 +335,8 @@ const submit = async () => {
         "authorUrl": null,
         "profilePhoto": null,
         "email": email.value,
+        "firstname": firstname.value,
+        "lastname": lastname.value,
         "staff": `/api/staff/${staff.value.id}`,
         "establishment": `/api/establishments/${establishment.value.id}`,
         "optin": true,
@@ -356,18 +358,18 @@ const submit = async () => {
             await feedbackStore.createReview(review, async (response) => {
                 if (response.status == 201) {
                     if (email.value !== null || email.value !== '') {
-                        await services.createRecord('public/contacts', contactData, async (contactResponse) => {
+                        // await services.createRecord('public/contacts', contactData, async (contactResponse) => {
 
-                            if (contactResponse.status == 201) {
-                                if (visitorId) {
-                                    services.post_Record('public/visitors',
-                                        {
-                                            'visitor': visitorId,
-                                            'contact': contactResponse.data.data['@id'],
-                                        }, (res) => {
-                                            console.log(res)
-                                        }, true)
-                                }
+                            // if (contactResponse.status == 201) {
+                                // if (visitorId) {
+                                //     services.post_Record('public/visitors',
+                                //         {
+                                //             'visitor': visitorId,
+                                //             'contact': contactResponse.data.data['@id'],
+                                //         }, (res) => {
+                                //             console.log(res)
+                                //         }, true)
+                                // }
 
                                 if (randomAdvantage.value) {
                                     let coupons = {
@@ -384,8 +386,8 @@ const submit = async () => {
                                         resetForm()
                                     }, true);
                                 }
-                            }
-                        }, true);
+                            // }
+                        // }, true);
                     }
                     router.push({
                         name: 'SuccessFeedback',
