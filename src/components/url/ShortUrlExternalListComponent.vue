@@ -8,7 +8,7 @@
   <div class="search">
     <el-input v-model="search" size="small" placeholder="Type to search" />
   </div>
-  <div class="mt-2 erep_table table__container">
+  <div class="mt-2 table__container">
     <el-table v-if="linksLoading == false" :data="filterTableData">
       <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Caption" prop="caption" style="width: 10%; min-width: 200px;" />
@@ -96,10 +96,15 @@ function handleClickExternalUrl(url, establishment_tag, no_traking) {
   showModal.value = true;
 }
 
+const closeView = () => {
+  emit('showExternalUrlList', false);
+}
+
 const add = () => {
-  linkStore.resetLink()
+  closeView()
+  /*linkStore.resetLink()
   router.push({ name: 'Parameters', params: { tab: 'urls', sub_tab: 'urls_external_form' } });
-  localStorage.setItem('showForms', true)
+  localStorage.setItem('showForms', true)*/
 };
 
 const filterTableData = computed(() => {
@@ -171,13 +176,7 @@ const handleDelete = async (index, link) => {
 const handleEdit = async (index, link) => {
 
   linkStore.setLink(link)
-  linkStore.setAction('edit')
-  localStorage.setItem('showForms', true)
-  
-  router.push({
-    name: 'Parameters', params: { tab: 'urls', sub_tab: 'urls_external_form' }
-  });
-
+  closeView()
 };
 
 const copyLink = (link) => {

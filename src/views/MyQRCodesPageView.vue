@@ -17,7 +17,8 @@
         <ShortGateListComponent />
       </el-tab-pane>
       <el-tab-pane label="External URLS" name="external_url">
-        <ShortUrlExternalListComponent />
+        <ShortUrlExternalListComponent v-if = "showExternalUrlList" @showExternalUrlList = "handleShowExternalUrlList"/>
+        <ShortUrlExternalFormComponent v-else @showExternalUrlList = "handleShowExternalUrlList" />
       </el-tab-pane>
     </el-tabs>
 
@@ -67,6 +68,10 @@ const ShortUrlExternalListComponent = defineAsyncComponent(() =>
   import("@Components/url/ShortUrlExternalListComponent.vue")
 )
 
+const ShortUrlExternalFormComponent = defineAsyncComponent(() =>
+  import("@Components/url/ShortUrlExternalFormComponent.vue")
+)
+
 const position = ref('top')
 watch(width, () => {
   if (width.value < 800) {
@@ -81,6 +86,7 @@ const activeName = ref('establishments')
 const activeStaffTab = ref('staff_list')
 const showStaffListView = ref(true)
 const showServiceListView = ref(true)
+const  showExternalUrlList = ref(true)
 
 const establishment_to_update = ref(null)
 const activeEstablishmentTab = ref('establishment_list')
@@ -111,6 +117,11 @@ const handleShowStaffView = async (payload) => {
 const handleShowServiceView = async (payload) => {
   showServiceListView.value = payload
   if(showServiceListView.value) await loadUnits()
+}
+
+const handleShowExternalUrlList = async (payload) => {
+  showExternalUrlList.value = payload
+  if(showExternalUrlList.value) await reloadLink()
 }
 
 provide('staffs', allStaffs)
@@ -347,6 +358,7 @@ const reloadStaffsList = async (type) => {
     console.error(error);
   }
 }
+
 
 const loadAdvantage = async () => {
   try {
