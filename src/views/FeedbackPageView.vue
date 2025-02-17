@@ -44,9 +44,9 @@
                             ratingCustomer = rating
                             hideMessage();
                         }" />
-                        <span v-if="showRatingError" class="error_message">
+                        <!-- <span v-if="showRatingError" class="error_message">
                             {{ $t("feedback.indice") }}
-                        </span>
+                        </span> -->
                     </div>
                     <div class="grid gap-6 md:grid-cols-2">
                         <div>
@@ -254,16 +254,14 @@ const hideMessage = () => {
 
 const submit = async () => {
     if (!ratingCustomer.value || ratingCustomer.value.note === null) {
+
         showRatingError.value = true;
-        if (window.innerWidth <= 760) {
-            ElMessage({
-                message: `<div style="max-width: 700px;width: 235px; white-space: normal;">${t("feedback.indice")}</div>`,
-                type: "error",
-                showClose: true,
-                dangerouslyUseHTMLString: true
-            });
-        }
-        return;
+        
+        ElMessage({
+            message: `${t("feedback.indice")}`,
+            type: "error"
+        })
+
     } else {
         showRatingError.value = false;
     }
