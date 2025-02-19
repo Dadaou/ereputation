@@ -49,7 +49,6 @@ const props = defineProps({
 })
 
 const _data = computed(() => {
-  console.log(props.data)
   return props.data;
 })
 
