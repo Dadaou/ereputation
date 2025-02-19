@@ -3,27 +3,89 @@
   <div v-if="hasData" style="position: relative;" >
 
     
- <div v-if="showModal" class="overlay" >
-    <div class="modal" @click.stop>
-     <div>
+ <div v-if="showModal" class="overlay" style="z-index: 9999 !important;">
+    <div class="modal" @click.stop style="z-index: 9999 !important;">
+     <div style="z-index: 9999 !important;">
         <h3 class="text-lg font-bold" style="margin: -15px;">Visitors</h3>
         <button class="btn text-lg close-btn" style="color: red;" @click="showModal = false">x</button>
      </div>
-      <div class="modal-content">
+      <div class="modal-content" style="z-index: 9999 !important;">
 
 
-          <el-table :data="visitors" class="custom-header" style="width: 1200px !important;min-width: 1200px !important;">
+          <el-table :data="visitors" class="custom-header" style="font-size: 13px !important;padding: 0px !important;margin: 0px !important;">
+
+            <!--  <el-table-column label="Os" align="left" >
+                <template #default="scope">
+                  <span style="width: 3px !important;">
+                    {{ scope.row.os }}
+                  </span>
+
+                </template>
+              </el-table-column> -->
+
+               <el-table-column label="OS" align="center" prop="os" show-overflow-tooltip/>
+
+              <!--  <el-table-column label="Device" align="left" >
+                <template #default="scope">
+                  <span style=" word-wrap: break-word;word-break: break-word;white-space: normal">
+                    {{ scope.row.device }}
+                  </span>
+
+                </template>
+              </el-table-column>
+ -->
+              <el-table-column label="Device" prop="device"  show-overflow-tooltip />
+
+              <el-table-column label="Country" prop="country" show-overflow-tooltip/>
+            <!--   <el-table-column label="Country" align="left" >
+                <template #default="scope">
+                  <span style=" word-wrap: break-word;word-break: break-word;white-space: normal">
+                    {{ scope.row.country }}
+                  </span>
+
+                </template>
+              </el-table-column> -->
+
+              <el-table-column label="City" prop="city" show-overflow-tooltip/>
+              <!--  <el-table-column label="City" align="left" >
+                <template #default="scope">
+                  <span style=" word-wrap: break-word;word-break: break-word;white-space: normal">
+                    {{ scope.row.city }}
+                  </span>
+
+                </template>
+              </el-table-column> -->
+
+               <el-table-column label="Gps" align="center" prop="gps"  show-overflow-tooltip/> 
+            <!--   <el-table-column label="Gps" align="left" >
+                <template #default="scope">
+                  <span style=" word-wrap: break-word;word-break: break-word;white-space: normal">
+                    {{ scope.row.gps }}
+                  </span>
+
+                </template>
+              </el-table-column> -->
+
+              <el-table-column label="Contact" align="left" show-overflow-tooltip>
+                <template #default="scope">
+                  <span >
+                    {{ scope.row.email }}
+                  </span>
+
+                </template>
+              </el-table-column>
+             
+               <el-table-column label="Created at" prop="created_at" show-overflow-tooltip/>
+          <!--    <el-table-column label="Created At" align="left">
+                <template #default="scope">
+                  <span style=" word-wrap: break-word;word-break: break-word;white-space: normal">
+                     {{ scope.row.created_at ? moment(scope.row.created_at).format('YYYY-MM-DD HH:mm') : '' }}
+                  </span>
+
+                </template>
+              </el-table-column> -->
          
          
-            <el-table-column label="OS" align="center" prop="os"/>
-            <el-table-column label="Device" prop="device"   />
-            <el-table-column label="Country" prop="country" />
-            <el-table-column label="City" prop="city"
-                 />
-            <el-table-column label="Gps" align="center" prop="gps"  show-overflow-tooltip/>
-            <el-table-column label="IP Address" prop="ip_address" />
-            <el-table-column label="Contact" prop="email"  show-overflow-tooltip/>
-            <el-table-column label="Visited at" prop="created_at" />
            
         </el-table>
 
@@ -257,8 +319,12 @@ const getVisitors = async (start_date, end_date, timePeriods, establishment, sta
       });
     });
     if (response.status === 200) {
-      visitors.value = response.data;
-      console.log(response.data)
+
+      response.data.forEach((_d)=>{
+        _d['created_at']=moment(_d['created_at']).format('YYYY-MM-DD HH:mm')
+        visitors.value.push(_d);
+      })
+    
 
     } else {
       console.error('Error fetching visitors:', response);
@@ -289,22 +355,26 @@ export default {
 };
 </script>
 
-<style scoped>
 
+<style scoped>
+.apexcharts-svg{
+  z-index: 1 !important;
+}
   .modal {
   position: absolute;
-  top: 10%;
-  left: 8%;
+  top: 0%;
+  left: -8%;
  background: white;
+ opacity: 1;
   padding: 10px;
   border-radius: 12px;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-  width: 90%;
-  height: 80%;
+  width: 110%;
+  height: 90%;
   overflow: auto; 
   display: flex;
   flex-direction: column;
-  z-index: 1000;
+  z-index: 9999 !important;
   scrollbar-width: none;
 }
 
@@ -313,7 +383,7 @@ export default {
   overflow-x: auto; 
   overflow-y: auto; 
   border: 1px solid #ccc;
-  padding: 5px;
+  padding: 0px;
   white-space: nowrap; 
 }
 
@@ -333,6 +403,7 @@ export default {
 .chart-container {
   width: 100%;
   max-width: 100%;
+  z-index: 1 !important;
 }
 
 .inside {
