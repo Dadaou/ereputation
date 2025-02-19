@@ -15,10 +15,10 @@
           <li class="flex items-start justify-center flex-col gap-2">
             <ul v-if="!isFeedback">
               <li v-if="!isSignUp">Legal Notice</li>
-              <li v-else @click="dialogVisible = true" style="cursor: pointer;">Privacy Policy</li>
+              <li v-else @click.stop="showPrivacyPolicy" style="cursor: pointer;">Privacy Policy</li>
             </ul>
             <ul v-else>
-              <li @click="dialogVisible = true" style="cursor: pointer;">Privacy Policy</li>
+              <li @click.stop="showPrivacyPolicy" style="cursor: pointer;">Privacy Policy</li>
             </ul>
             <!-- <span v-if="!isFeedback"><i class="uil uil-copyright"></i>2024, all rights reserved</span> -->
             <!--   <span v-if="appStore.account && appStore.account.brand">
@@ -87,6 +87,11 @@ const isSignUp = computed(() => {
   return route.name === 'Signup' || route.name === 'PaymentPage';
 });
 
+const showPrivacyPolicy = (e) => {
+  e.preventDefault()
+  dialogVisible.value = true
+}
+
 /*const redirectToPrivacyPolicy = (e) => {
   const link = router.resolve(`/privacy-policy`);
   window.open(link.href, '_bltrue
@@ -148,6 +153,7 @@ const handleBrandClick = () => {
 </script>
 
 <style scoped>
+
 .active-link {
   font-weight: 600;
   color: #007bff;
