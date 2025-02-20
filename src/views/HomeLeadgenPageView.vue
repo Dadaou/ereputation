@@ -3,6 +3,10 @@
         <div class="container client__container ">
             <div class="header">
                 <div class="header_navigation">
+
+                    <RouterLink class="search__icon" :to="{ name: 'Analytic', params: { tag: tag } }">
+                        <Icon :icon="'uim:chart-pie'" width="25"></Icon>
+                    </RouterLink>
                     <RouterLink class="search__icon" :to="{ name: 'LeadgenMyQrcode', params: { tag: tag } }">
                         <Icon :icon="'uil:qrcode-scan'" width="25"></Icon>
                     </RouterLink>
@@ -21,9 +25,7 @@
                     <RouterLink class="search__icon" :to="{ name: 'LeadgenMyScreen', params: { tag: tag } }">
                         <Icon :icon="'uil:presentation'" width="25"></Icon>
                     </RouterLink>
-                    <RouterLink class="search__icon" :to="{ name: 'Analytic', params: { tag: tag } }">
-                        <Icon :icon="'uim:chart-pie'" width="25"></Icon>
-                    </RouterLink>
+                  
                 </div>
                 <div class="toggle-switch" :class="{ 'active': isActiveLeadgen }">
                     <div class="toggle-option" @click="handleToggleErep">E-Rep</div>
