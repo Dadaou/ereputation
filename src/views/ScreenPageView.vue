@@ -1,7 +1,7 @@
 <template>
     <div class="screen__container">
         <div v-if="!stayTuned" style="background: white;" v-html="core"></div>
-        <div v-else-if="!loading" class="sreen__stay-tuned">
+        <div v-else class="sreen__stay-tuned">
             <span>The offers will be available again soon.</span>
             <span>Stay tuned!</span>
         </div>
@@ -23,8 +23,7 @@ const core = ref('');
 const interval = ref(null);
 const slideInterval = ref(null);
 const screen = ref(null);
-const stayTuned = ref(true);
-const loading = ref(true);
+const stayTuned = ref(false);
 
 const qrSize = computed(() => {
     let size = 610
@@ -78,8 +77,22 @@ const isCurrentAdvantage = (obj) => {
     const dateNow = moment();
 
     // Convertir les chaînes de dates de l'objet en objets Date
-    let dateFrom = obj.date_from ? moment(new Date(obj.date_from).toDateString()) : obj.hour_from ? moment() : moment().subtract(1, 'days');
-    let dateTo = obj.date_to ? moment(new Date(obj.date_to).toDateString()) : obj.hour_to ? moment() : moment().add(1, 'days');
+
+    let dateFrom = moment().subtract(1, 'days');
+    let dateTo = moment().add(1, 'days');
+
+    if (obj.date_from) {
+        dateFrom = moment(new Date(obj.date_from).toDateString())
+    } else if (obj.hour_from || obj.minute_from || obj.seconde_from) {
+        dateFrom = moment();
+    }
+
+    if (obj.date_to) {
+        dateTo = moment(new Date(obj.date_to).toDateString())
+    } else if (obj.hour_to || obj.minute_to || obj.seconde_to) {
+        dateTo = moment();
+    }
+
     let expiredAt = moment(new Date(obj.adv_expired_at).toDateString() + " " + obj.minute_to || 23 + ":" + obj.minute_to || 59 + ":" + obj.seconde_to || 59)
 
     if (dateNow > expiredAt) {
@@ -89,7 +102,7 @@ const isCurrentAdvantage = (obj) => {
     if (obj.hour_from) {
         dateFrom.set({ hour: obj.hour_from })
     } else {
-        dateFrom.set({ hour: 0 })
+        dateFrom.set({ hour: moment().hour() })
     }
 
     if (obj.minute_from) {
@@ -107,7 +120,7 @@ const isCurrentAdvantage = (obj) => {
     if (obj.hour_to) {
         dateTo.set({ hour: obj.hour_to })
     } else {
-        dateTo.set({ hour: 23 })
+        dateTo.set({ hour: moment().hour() })
     }
 
     if (obj.minute_to) {
@@ -133,18 +146,15 @@ const setCurrentAdvantage = () => {
             stayTuned.value = false;
             generateCore(screen.value.screentemplates.core, screen.value.screentemplates, currentAdvantages[0]);
         } else {
-            loading.value = false;
             stayTuned.value = true;
         }
     } else {
-        loading.value = false;
         stayTuned.value = true;
     }
 }
 
 
 onMounted(() => {
-    loading.value = true
     const screenId = route.params.screen;
     if (screenId) {
         loadScreenDetails(screenId);
