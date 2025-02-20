@@ -1,30 +1,15 @@
 <template>
     <div class="screen__container">
-
-        <!-- <div class="bg__circle"></div> -->
-
-
-
-        <!--  <div class="inline-flex items-start justify-center w-full discount-container">
-                <div class="icon__container">
-                    <img v-if="icon2Src" :src="icon2Src" :alt="`icon`">
-                </div>
-                <h1 v-if="advantage_name"  class="boost__title"><strong>{{ advantage_name }}</strong></h1>
-                <div class="icon__container">
-                    <img v-if="iconSrc" :src="icon2Src" :alt="`icon`">
-                </div>
-
-            </div> -->
-
-
-        <div style="background: white;" v-html="core"></div>
-        <!-- <div v-html="screen.coreProcessed"></div> -->
-
+        <div v-if="!stayTuned" style="background: white;" v-html="core"></div>
+        <div v-else-if="!loading" class="sreen__stay-tuned">
+            <span>The offers will be available again soon.</span>
+            <span>Stay tuned!</span>
+        </div>
     </div>
 </template>
 
 <script setup>
-import { onMounted, ref, inject, computed, onBeforeUnmount, nextTick } from 'vue';
+import { onMounted, ref, inject, computed, onBeforeUnmount } from 'vue';
 import { useQrStore } from "@Stores/qrtemplate.js";
 import services from '@Services/services.js';
 import { useRoute } from 'vue-router';
@@ -38,7 +23,8 @@ const core = ref('');
 const interval = ref(null);
 const slideInterval = ref(null);
 const screen = ref(null);
-const currentSlide = ref(0);
+const stayTuned = ref(true);
+const loading = ref(true);
 
 const qrSize = computed(() => {
     let size = 610
@@ -60,7 +46,6 @@ const loadScreenDetails = () => {
     services.get_Record(`customer/screens/templates?tag=${route.params.tag}&id=${route.params.screen}`, (response) => {
         if (response && response.status === 200) {
             screen.value = response.data;
-            console.log("ici")
 
         } else {
             console.error('Error loading screen details:', response);
@@ -93,17 +78,51 @@ const isCurrentAdvantage = (obj) => {
     const dateNow = moment();
 
     // Convertir les chaînes de dates de l'objet en objets Date
-    let dateFrom = moment(new Date(obj.date_from).toDateString());
-    let dateTo = moment(new Date(obj.date_to).toDateString());
+    let dateFrom = obj.date_from ? moment(new Date(obj.date_from).toDateString()) : obj.hour_from ? moment() : moment().subtract(1, 'days');
+    let dateTo = obj.date_to ? moment(new Date(obj.date_to).toDateString()) : obj.hour_to ? moment() : moment().add(1, 'days');
+    let expiredAt = moment(new Date(obj.adv_expired_at).toDateString() + " " + obj.minute_to || 23 + ":" + obj.minute_to || 59 + ":" + obj.seconde_to || 59)
 
-    if (!dateNow.isBetween(dateFrom, dateTo)) {
+    if (dateNow > expiredAt) {
         return false;
     }
 
-    dateFrom = moment(new Date(obj.date_from).toDateString() + " " + obj.hour_from || 0 + ":" + obj.minute_from || 0 + ":" + obj.seconde_from || 0)
-    dateTo = moment(new Date(obj.date_to).toDateString() + " " + obj.hour_to || 0 + ":" + obj.minute_to || 0 + ":" + obj.seconde_to || 0)
+    if (obj.hour_from) {
+        dateFrom.set({ hour: obj.hour_from })
+    } else {
+        dateFrom.set({ hour: 0 })
+    }
 
-    // // Vérifier si l'heure actuelle est dans l'intervalle
+    if (obj.minute_from) {
+        dateFrom.set({ minute: obj.minute_from })
+    } else {
+        dateFrom.set({ minute: 0 })
+    }
+
+    if (obj.seconde_from) {
+        dateFrom.set({ second: obj.seconde_from })
+    } else {
+        dateFrom.set({ second: 0 })
+    }
+
+    if (obj.hour_to) {
+        dateTo.set({ hour: obj.hour_to })
+    } else {
+        dateTo.set({ hour: 23 })
+    }
+
+    if (obj.minute_to) {
+        dateTo.set({ minute: obj.minute_to })
+    } else {
+        dateTo.set({ minute: 59 })
+    }
+
+    if (obj.seconde_to) {
+        dateTo.set({ second: obj.seconde_to })
+    } else {
+        dateTo.set({ second: 59 })
+    }
+
+    // Vérifier si l'heure actuelle est dans l'intervalle
     return dateNow.isBetween(dateFrom, dateTo)
 }
 
@@ -111,14 +130,21 @@ const setCurrentAdvantage = () => {
     if (screen.value && screen.value.advantages.length > 0) {
         const currentAdvantages = screen.value.advantages.filter(adv => isCurrentAdvantage(adv))
         if (currentAdvantages.length > 0) {
+            stayTuned.value = false;
             generateCore(screen.value.screentemplates.core, screen.value.screentemplates, currentAdvantages[0]);
-            // executeScripts(screen.value.screentemplates.core);
+        } else {
+            loading.value = false;
+            stayTuned.value = true;
         }
+    } else {
+        loading.value = false;
+        stayTuned.value = true;
     }
 }
 
 
 onMounted(() => {
+    loading.value = true
     const screenId = route.params.screen;
     if (screenId) {
         loadScreenDetails(screenId);
@@ -142,8 +168,6 @@ onBeforeUnmount(() => {
 })
 
 const generateCore = async (_core, _screen, _adv) => {
-
-    console.log("Traitement ...")
 
     qrStore.setQrCodeValue(`${app_url.value}/public/${route.params.tag}/establishment/${route.params.id}/feedback?adv=${_adv.adv_id}`)
     let tmp = _core;
@@ -188,16 +212,18 @@ const generateCore = async (_core, _screen, _adv) => {
 <style>
 .screen__container {
     width: 100%;
+}
 
-    /* height: 100vh; */
-    /* height: 100vh; */
-    /* width: 1920px;
-    height: 1080px; */
-
-    /* background: linear-gradient(180deg, rgba(216, 217, 226, 1) 0%, white 40%);*/
-
-
-
+.sreen__stay-tuned {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
 }
 
 .bg__circle {
