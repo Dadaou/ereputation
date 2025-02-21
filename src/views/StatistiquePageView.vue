@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div >
         <div class="filtre_content pb-4">
             <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-7 lg:grid-cols-7 gap-4">
                 <el-select v-model="establishment" multiple size="large" class="space" placeholder="All Etablishments">
@@ -45,7 +45,7 @@
             </div>
         </div>
 
-        <div class="number">
+        <div ref="contentTop" class="number">
             <div class="square bordure-bleu">
                 <h5><i class="uil uil-user"></i> <span>Total visits</span></h5>
                 <p>{{ nbrTotalVisit }}<sup :class="nbrGapVisit >= 0 ? 'texte-vert' : 'texte-rouge'">{{ nbrGapVisit >= 0
@@ -71,16 +71,122 @@
             </div>
         </div>
 
+
+
+         <!-- modal liste visitors -->
+
+                    <div v-if="modal" class="overlay" >
+                    <div class="modal" @click.stop :style="{ top: modalTop + 'px',position: 'absolute' }">
+                     <div >
+                        <h6 v-if="isExternal != true" class="text-lg font-bold" style="text-align: center;color: gray;"> Feedback Form Submissions</h6>
+                        <h6 v-else class="text-lg font-bold" style="text-align: center;color: gray;"> External Qrcodes</h6>
+                        <button class="btn text-lg close-btn" style="color: red;" @click="closeModal">x</button>
+                     </div>
+                      <div class="modal-content" >
+
+
+                          <el-table :data="visitors" class="custom-header" style="font-size: 13px !important;padding: 0px !important;margin: 0px !important;">
+
+                            <!--  <el-table-column label="Os" align="left" >
+                                <template #default="scope">
+                                  <span style="width: 3px !important;">
+                                    {{ scope.row.os }}
+                                  </span>
+
+                                </template>
+                              </el-table-column> -->
+
+                               <el-table-column label="OS" align="center" prop="os" show-overflow-tooltip/>
+
+                              <!--  <el-table-column label="Device" align="left" >
+                                <template #default="scope">
+                                  <span style=" word-wrap: break-word;word-break: break-word;white-space: normal">
+                                    {{ scope.row.device }}
+                                  </span>
+
+                                </template>
+                              </el-table-column>
+                 -->
+                              <el-table-column label="Device" prop="device"  show-overflow-tooltip />
+
+                              <el-table-column label="Country" prop="country" show-overflow-tooltip/>
+                            <!--   <el-table-column label="Country" align="left" >
+                                <template #default="scope">
+                                  <span style=" word-wrap: break-word;word-break: break-word;white-space: normal">
+                                    {{ scope.row.country }}
+                                  </span>
+
+                                </template>
+                              </el-table-column> -->
+
+                              <el-table-column label="City" prop="city" show-overflow-tooltip/>
+                              <!--  <el-table-column label="City" align="left" >
+                                <template #default="scope">
+                                  <span style=" word-wrap: break-word;word-break: break-word;white-space: normal">
+                                    {{ scope.row.city }}
+                                  </span>
+
+                                </template>
+                              </el-table-column> -->
+
+                               <el-table-column label="Gps" align="center" prop="gps"  show-overflow-tooltip/> 
+                            <!--   <el-table-column label="Gps" align="left" >
+                                <template #default="scope">
+                                  <span style=" word-wrap: break-word;word-break: break-word;white-space: normal">
+                                    {{ scope.row.gps }}
+                                  </span>
+
+                                </template>
+                              </el-table-column> -->
+                            <el-table-column  label="Language" align="center" prop="language"  show-overflow-tooltip/> 
+                            <el-table-column  label="User Agent" align="center" prop="ua"  show-overflow-tooltip/> 
+                             <el-table-column label="ISP" align="center" prop="isp"  show-overflow-tooltip/> 
+
+                              <el-table-column v-if="isExternal != true" label="Contact" align="left" show-overflow-tooltip>
+                                <template #default="scope">
+                                  <span >
+                                    {{ scope.row.email }}
+                                  </span>
+
+                                </template>
+                              </el-table-column>
+                             
+                               <el-table-column label="Created at" prop="created_at" show-overflow-tooltip/>
+                          <!--    <el-table-column label="Created At" align="left">
+                                <template #default="scope">
+                                  <span style=" word-wrap: break-word;word-break: break-word;white-space: normal">
+                                     {{ scope.row.created_at ? moment(scope.row.created_at).format('YYYY-MM-DD HH:mm') : '' }}
+                                  </span>
+
+                                </template>
+                              </el-table-column> -->
+                         
+                         
+                           
+                        </el-table>
+
+                        
+                      </div>
+                      
+                    </div>
+                  </div>
+
+
+                        <!-- Fin modal -->
+
+    
+
         <!-- <div class="dashboard__chart"> -->
         <div class="grid max-[1080px]:grid-cols-1 grid-cols-2 min-[1920px]:grid-cols-3 grid-flow-row gap-4 mt-8">
+
             <div class="statistique">
-                <ChartFeedbackSubmissions />
+                <ChartFeedbackSubmissions @show-visitors="showVisitors" @showModal="showModal" @isExternal="setExternal"/>
             </div>
             <div class="statistique">
                 <ChartGateAndFeedbackVisit />
             </div>
             <div class="statistique">
-                <ChartExternalUrl />
+                <ChartExternalUrl @show-visitors="showVisitors" @showModal="showModal" @isExternal="setExternal"/>
             </div>
             <div class="statistique">
                 <PieChartService />
@@ -108,15 +214,21 @@
 </template>
 
 <script setup>
-import { ref, provide, onBeforeMount } from 'vue'
+import { ref, provide, onBeforeMount,nextTick } from 'vue'
 import { Icon } from '@iconify/vue';
 import { defineAsyncComponent, watch } from 'vue';
-import { ElOption, ElSelect, ElDatePicker } from 'element-plus';
+import { ElOption, ElSelect, ElDatePicker,ElMessage,
+    ElTable,
+    ElTableColumn,
+    ElPopconfirm,
+    ElButton,
+    ElTooltip } from 'element-plus';
 import { useUserStore } from "@Stores/user.js"
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import services from '@Services/services.js';
 import { useRoute } from 'vue-router';
 import moment from 'moment';
+
 
 const ChartFeedbackSubmissions = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/ChartFeedbackSubmissions.vue")
@@ -156,6 +268,44 @@ const nbrGapSubmitted = ref(null);
 const nbrGapClickSocial = ref(null);
 const userStore = useUserStore();
 const timePeriods = ref(['daily', 'monthly', 'yearly']);
+const visitors = ref([]);
+const modal = ref(false);
+const isExternal=ref(false);
+const scrollPosition = ref(0);
+const contentTop = ref(null);
+const modalTop = ref(0);
+
+const showVisitors = (_visitors) => {
+    visitors.value=_visitors;
+}
+
+const showModal = (_modal) => {
+    modal.value=_modal;
+    modalTop.value = window.scrollY;
+    // scrollPosition.value = window.scrollY; 
+
+    // nextTick(() => {
+    //     if (contentTop.value) {
+    //       const rect = contentTop.value.getBoundingClientRect();
+    //       window.scrollTo({
+    //         top: window.scrollY + rect.bottom - 80,
+    //         behavior: "smooth",
+    //       });
+    //     }
+    // });
+    
+}
+const closeModal = () => {
+    modal.value=false;
+    // nextTick(() => {
+    //     window.scrollTo({ top: scrollPosition.value, behavior: "smooth" });
+    // });
+    
+}
+const setExternal = (_isExternal) => {
+  
+    isExternal.value = _isExternal;
+}
 
 const sources = ref([
     { id: "gates", name: 'Gates' },
@@ -339,6 +489,50 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod, start_date, 
 
 </script>
 <style scoped>
+
+.modal {
+ 
+ background: white;
+ opacity: 1;
+  padding: 15px;
+  padding-top: 40px;
+  margin-top: 30px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  height: 500px;
+  overflow: auto; 
+  display: flex;
+  flex-direction: column;
+  z-index: 9 !important;
+  scrollbar-width: none;
+
+}
+
+.modal-content {
+  flex-grow: 1;
+  overflow-x: auto; 
+  overflow-y: auto; 
+  border: 1px solid #ccc;
+  padding: 5px;
+    width: 100%;
+  white-space: nowrap; 
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 25px;
+  color: red;
+  cursor: pointer;
+
+}
+
+
+
 .filtre_content {
     width: 100% !important;
 }
