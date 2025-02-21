@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory} from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@Views/LoginView.vue'
 import SubscriptionPageView from '@Views/SubscriptionPageView.vue'
 import ForgotPwdPageView from '@Views/ForgotPwdPageView.vue'
@@ -11,10 +11,7 @@ import PublicLayout from '../layouts/PublicLayout.vue'
 
 import { useUserStore } from '@Stores/user.js'
 import { useAppStore } from '@Stores/app.js'
-import session from '@Services/session.js';
-
-
-
+import session from '@Services/session.js'
 
 const CheckAuthentication = (to, from, next) => {
   const user = useUserStore().user
@@ -140,7 +137,7 @@ const router = createRouter({
           component: () => import('@Views/BoostAdvantagePageView.vue')
         },
         {
-          path: '/customer/:tag/establishment/:id/screens/:screen',
+          path: '/public/:id/screens/:screen',
           name: 'ScreenPage',
           component: () => import('@Views/ScreenPageView.vue')
         },
@@ -150,18 +147,14 @@ const router = createRouter({
           component: () => import('@Views/ExternalUrlPageView.vue')
         },
         {
-              
           path: '/payment/checkout',
           name: 'PaymentPage',
           component: () => import('@Views/PaymentPageView.vue')
-        
         },
         {
-              
           path: '/payment/process',
           name: 'paymentProcess',
           component: () => import('@Views/PaymentProcessPageView.vue')
-        
         }
       ]
     },
@@ -181,7 +174,7 @@ const router = createRouter({
           path: 'customer/:tag/categorization/:id/review',
           name: 'CategorizationReview',
           beforeEnter: [CheckAccess],
-          component: () => import('@Views/CategorizationReviewPageView.vue'),
+          component: () => import('@Views/CategorizationReviewPageView.vue')
         },
         {
           path: '/customer/:tag/establishment/:id',
@@ -313,18 +306,20 @@ const router = createRouter({
           name: 'UnitFeedBack',
           component: () => import('@Components/units/UnitFeedbackComponent.vue'),
           beforeEnter: (to, from, next) => {
-            
             if (!to.params.rfuid) {
               const rfuid = generateRandomString(16)
               next({ name: 'UnitFeedBack', params: { ...to.params, rfuid } })
             } else {
               if (to.params.rfuid == 'preview') {
-                    const rfuid = generateRandomString(16);
-                    next({ name: 'UnitFeedBack', params: { ...to.params, rfuid },query:{preview:true} })
+                const rfuid = generateRandomString(16)
+                next({
+                  name: 'UnitFeedBack',
+                  params: { ...to.params, rfuid },
+                  query: { preview: true }
+                })
               } else {
                 next()
               }
-              
             }
           }
         },
@@ -424,7 +419,7 @@ const router = createRouter({
               name: 'HomeViewForUserConnected',
               beforeEnter: [checkNavigation],
               component: () => import('@Views/HomeViewForUserConnected.vue')
-            },
+            }
           ]
         },
         {
@@ -467,7 +462,7 @@ const router = createRouter({
               path: 'customer/:tag/establishment/analytic',
               name: 'Analytic',
               component: () => import('@Views/StatistiquePageView.vue')
-            },
+            }
           ]
         },
         {
@@ -530,7 +525,7 @@ const router = createRouter({
               name: 'Screen',
               component: () => import('@Views/MyScreen.vue')
             },
-      
+
             {
               path: 'parameters/:tab?/:sub_tab?',
               name: 'Parameters',
@@ -554,43 +549,42 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.name != 'Login' && to.name != 'Signup' && to.name != 'externalUrl'  && !to.path.startsWith('/public') && session.getItemWithTTL('verification_session') == null) {
-      console.log('session expired');
-      useUserStore().signOut();
-    useUserStore().authenticated = false;
-    useAppStore().isLoading = false;
+  if (
+    to.name != 'Login' &&
+    to.name != 'Signup' &&
+    to.name != 'externalUrl' &&
+    !to.path.startsWith('/public') &&
+    session.getItemWithTTL('verification_session') == null
+  ) {
+    console.log('session expired')
+    useUserStore().signOut()
+    useUserStore().authenticated = false
+    useAppStore().isLoading = false
     // profileLayout
-    if(useUserStore().authenticated === false) next({ name: "Login"});
-
-      
-    } else {
-
-          if (to.name != 'Login') {
-
-            session.setItemWithTTL('verification_session', 1000 * 60 * 30, 1000 * 60 * 60 * 4);
-            window.scrollTo(0, 0);
-            if (to.matched.some((record) => record.meta.requiresAuth)) {
-              const isAuthenticated = checkAuthentication()
-              if (!isAuthenticated) {
-                next({
-                  name: 'DiscountAuthentication',
-                  params: {
-                    tag: to.params.tag
-                  },
-                  query: { redirect: to.fullPath }
-                })
-                localStorage.setItem('isSellerAuthenticated', false)
-              } else {
-                next()
-              }
-            } else {
-              next()
-            }
-
-          }else next()
-      
-          
-    }
+    if (useUserStore().authenticated === false) next({ name: 'Login' })
+  } else {
+    if (to.name != 'Login') {
+      session.setItemWithTTL('verification_session', 1000 * 60 * 30, 1000 * 60 * 60 * 4)
+      window.scrollTo(0, 0)
+      if (to.matched.some((record) => record.meta.requiresAuth)) {
+        const isAuthenticated = checkAuthentication()
+        if (!isAuthenticated) {
+          next({
+            name: 'DiscountAuthentication',
+            params: {
+              tag: to.params.tag
+            },
+            query: { redirect: to.fullPath }
+          })
+          localStorage.setItem('isSellerAuthenticated', false)
+        } else {
+          next()
+        }
+      } else {
+        next()
+      }
+    } else next()
+  }
 })
 
 function checkAuthentication() {
