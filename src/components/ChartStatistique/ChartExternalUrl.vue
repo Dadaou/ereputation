@@ -86,7 +86,7 @@
 
 
     <div class="chart-container">
-      <apexchart type="bar" height="460" :options="chartOptions" :series="series"  @dataPointSelection="handleBarClick"/>
+      <apexchart type="bar" height="478" :options="chartOptions" :series="series"  @dataPointSelection="handleBarClick"/>
     </div>
 
   </div>

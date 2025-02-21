@@ -2,7 +2,7 @@
     <h3>About platforms & Social Media</h3>
     <div v-if="hasData">
         <div class="chart-container">
-            <apexchart type="bar" height="350" :options="options" :series="series"></apexchart>
+            <apexchart type="bar" height="460" :options="options" :series="series"></apexchart>
         </div>
     </div>
     <div v-else class="content-message">
