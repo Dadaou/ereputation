@@ -268,6 +268,12 @@ const submit = async () => {
 
     var lg = localStorage.getItem("langue")
     let visitorId = localStorage.getItem("visitId")
+    // if (!visitorId) {
+    //       ElMessage.error("Visitor not found");
+    // }
+    // if (visitorId) {
+    //       ElMessage.error("Visitor found"+visitorId);
+    // }
     let date_review = new Date();
     let review = {
         "author": `${firstname.value} ${lastname.value}`,
@@ -300,7 +306,7 @@ const submit = async () => {
     };
 
     try {
-        if (firstname.value !== '' && ratingCustomer.value !== null) {
+        if (firstname.value !== '' && ratingCustomer.value !== null && visitorId) {
             showSpinner.value = true;
 
             await feedbackStore.createReview(review, async (response) => {
@@ -353,7 +359,15 @@ const submit = async () => {
                 }
             });
         } else {
-            ElMessage.error(t('feedback.requiredinputs'));
+            if (visitorId) {
+                ElMessage.error(t('feedback.requiredinputs'));
+                
+            }else{
+               ElMessage.error("Visitor not found");
+                
+            }
+            
+            
         }
     } catch (error) {
         console.log(error);
