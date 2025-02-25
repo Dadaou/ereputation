@@ -86,7 +86,7 @@
 
 
     <div class="chart-container">
-      <apexchart type="bar" height="460" :options="chartOptions" :series="series"  @dataPointSelection="handleBarClick"/>
+      <apexchart type="bar" height="478" :options="chartOptions" :series="series"  @dataPointSelection="handleBarClick"/>
     </div>
 
   </div>
@@ -136,7 +136,7 @@ const units = inject('unitsFilter');
 const userStore = useUserStore();
 const hasData = ref(false);
 const showModal = ref(false);
-
+const emits = defineEmits(['showModal','isExternal','show-visitors']);
 
 function interpolateColor(color1, color2, steps) {
     const c1 = color1.match(/\w\w/g).map(c => parseInt(c, 16));
@@ -197,8 +197,9 @@ const handleBarClick = (event, chartContext, config)=> {
   const serieName = series.value[config.seriesIndex]?.name;
   
     getVisitors(chartOptions.value.xaxis.categories[dataPointIndex], chartOptions.value.xaxis.categories[dataPointIndex], timePeriods.value, establishment.value, staff.value, units.value,serieName);
- 
-  showModal.value = true;
+  emits('showModal',true);
+ emits('isExternal',true);
+  // showModal.value = true;
   
 }
 
@@ -294,8 +295,16 @@ const getVisitors = async (start_date, end_date, timePeriods, establishment, sta
 
 
     if (response.status === 200) {
-      visitors.value = response.data;
-       console.log(response.data);
+       let visiteurs=[];
+      response.data.forEach((_d)=>{
+        _d['created_at']=moment(_d['created_at']).format('YYYY-MM-DD HH:mm')
+        // visitors.value.push(_d);
+        visiteurs.push(_d);
+      })
+    
+      emits('show-visitors',visiteurs);
+      // visitors.value = response.data;
+      // emits('show-visitors',response.data);
 
     } else {
       console.error('Error fetching data:', response);

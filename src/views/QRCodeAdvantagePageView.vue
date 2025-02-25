@@ -348,7 +348,7 @@ onBeforeMount(async () => {
     overflow-y: auto;
     border: 0 1px solid var(--color-primary);
     padding: 8px;
-    border-radius: 6px;
+    border-radius: 4px;
     box-shadow: 1px -1px 4px color-mix(in srgb, var(--color-primary) 50%, white 50%) inset;
     background: color-mix(in srgb, var(--color-primary) 8%, white);
     padding-left: 2px;

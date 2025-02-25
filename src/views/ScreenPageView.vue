@@ -148,8 +148,10 @@ const setCurrentAdvantage = () => {
         } else {
             stayTuned.value = true;
         }
-    } else {
+    } else if (screen.value && screen.value.advantages.length == 0) {
         stayTuned.value = true;
+    } else {
+        stayTuned.value = false;
     }
 }
 
@@ -178,7 +180,6 @@ onBeforeUnmount(() => {
 })
 
 const generateCore = async (_core, _screen, _adv) => {
-
     qrStore.setQrCodeValue(`${app_url.value}/public/${route.params.tag}/establishment/${route.params.id}/feedback?adv=${_adv.adv_id}`)
     let tmp = _core;
     tmp = tmp.replace('{{textgreeting}}', "");

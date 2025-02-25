@@ -2,7 +2,7 @@
     <h3>About Services forms</h3>
     <div v-if="hasData">
         <div class="chart-container">
-            <apexchart type="donut" height="480"  :options="chartOptions" :series="series"></apexchart>
+            <apexchart type="donut" height="511"  :options="chartOptions" :series="series"></apexchart>
         </div>
     </div>
     <div v-else class="no_data">

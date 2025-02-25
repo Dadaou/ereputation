@@ -177,6 +177,8 @@ const hasData = ref(false);
 const showModal = ref(false);
 const selectedData = ref(null);
 
+const emits = defineEmits(['showModal','isExternal','show-visitors']);
+
 
 const chartOptions = ref({
   chart: {
@@ -225,9 +227,10 @@ const handleBarClick = (event, chartContext, config)=> {
     getVisitors(chartOptions.value.xaxis.categories[dataPointIndex], chartOptions.value.xaxis.categories[dataPointIndex], timePeriods.value, establishment.value, staff.value, units.value,'no');
   }
 
- 
+ emits('showModal',true);
+ emits('isExternal',false);
 
-  showModal.value = true;
+  //showModal.value = true;
   
 }
 
@@ -320,12 +323,14 @@ const getVisitors = async (start_date, end_date, timePeriods, establishment, sta
     });
     if (response.status === 200) {
 
+      let visiteurs=[];
       response.data.forEach((_d)=>{
         _d['created_at']=moment(_d['created_at']).format('YYYY-MM-DD HH:mm')
         visitors.value.push(_d);
+        visiteurs.push(_d);
       })
     
-
+      emits('show-visitors',visiteurs);
     } else {
       console.error('Error fetching visitors:', response);
     }
@@ -357,9 +362,7 @@ export default {
 
 
 <style scoped>
-.apexcharts-svg{
-  z-index: 1 !important;
-}
+
   .modal {
   position: absolute;
   top: 0%;
