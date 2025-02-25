@@ -197,7 +197,7 @@ const discount = computed(() => {
     return null
 })
 
-onMounted(() => {
+onMounted(async() => {
 
     appStore.setCurrentPage({
         title1: t("feedback.title1"),
@@ -209,7 +209,11 @@ onMounted(() => {
     if (!route.query.preview) {
         try {
             if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
-                window.FingerprintApp.default.main();
+                 await window.FingerprintApp.default.main(); 
+            
+         console.log("visitorId in window: "+window.page);
+
+
             }
         } catch (error) {
             console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
@@ -267,13 +271,20 @@ const submit = async () => {
     }
 
     var lg = localStorage.getItem("langue")
-    let visitorId = localStorage.getItem("visitId")
-    // if (!visitorId) {
-    //       ElMessage.error("Visitor not found");
-    // }
-    // if (visitorId) {
-    //       ElMessage.error("Visitor found"+visitorId);
-    // }
+    
+   
+ let visitorId=null;
+    if (!route.query.preview) {
+
+          visitorId=window.page;
+
+        if (!visitorId) {
+            visitorId = localStorage.getItem("visitId")
+            console.log("visitorId in localStorage: "+visitorId)
+        }
+    }
+    
+  
     let date_review = new Date();
     let review = {
         "author": `${firstname.value} ${lastname.value}`,
@@ -306,7 +317,7 @@ const submit = async () => {
     };
 
     try {
-        if (firstname.value !== '' && ratingCustomer.value !== null && visitorId) {
+        if (firstname.value !== '' && ratingCustomer.value !== null) {
             showSpinner.value = true;
 
             await feedbackStore.createReview(review, async (response) => {
