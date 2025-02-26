@@ -41,9 +41,9 @@
                             ratingCustomer = rating
                             hideMessage();
                         }" />
-                        <span v-if="showRatingError" class="error_message">
+                        <!--<span v-if="showRatingError" class="error_message">
                             {{ $t("feedback.indice") }}
-                        </span>
+                        </span>-->
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                         <div>
@@ -294,16 +294,14 @@ const hideMessage = () => {
 
 const submit = async () => {
     if (!ratingCustomer.value || ratingCustomer.value.note === null) {
+        
         showRatingError.value = true;
-        if (window.innerWidth <= 760) {
-            ElMessage({
-                message: `<div style="max-width: 700px;width: 235px; white-space: normal;">${t("feedback.indice")}</div>`,
-                type: "error",
-                showClose: true,
-                dangerouslyUseHTMLString: true
-            });
-        }
-        return;
+        
+        ElMessage({
+            message: `${t("feedback.indice")}`,
+            type: "error"
+        })
+
     } else {
         showRatingError.value = false;
     }
@@ -397,6 +395,9 @@ const submit = async () => {
                             tag: route.params.tag,
                             share: parseFloat(review.rating) >= 4 ? 'message-and-join-us' : 'message'
                         },
+                        query: {
+                            comment: comment.value,
+                        }
                     });
                 }
                 if (response.status == 200) {
