@@ -209,6 +209,7 @@ const iframeVisible = ref(false);
 const showSpinner = ref(false);
 
 onBeforeMount(async () => {
+     localStorage.removeItem("visitId");
     appStore.setCurrentPage({
         title1: t("feedback.title1"),
         title2: t("feedback.title2"),
