@@ -258,6 +258,8 @@ const isSelected = (index) => {
 
 .modal-body {
   padding: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .truncate-content {
