@@ -7,6 +7,7 @@
 				<span class="font-medium initial" id="userinitial">{{ user.initial }}</span>
 			</div>
 		</button>
+	
 		<!-- Dropdown menu -->
 		<transition name="fade" enter-active-class="animate__animated animate__fadeInRight"
 			leave-active-class="animate__animated animate__fadeOutRight">
@@ -39,9 +40,16 @@
 					</li>
 					<li @click="closeDropdown" v-if="customer">
 						<RouterLink :to="`/customer/${customer.tag}/account/contact`"
-							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" >
 							<i class="uil uil-envelope"></i>
 							Contacts
+						</RouterLink>
+					</li>
+					<li @click="closeDropdown" v-if="customer">
+						<RouterLink :to="`/customer/${customer.tag}/account/discount_coupons`"
+							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" style="display: flex; flex-direction: row; align-items: center;">
+							<Icon icon="ic:outline-discount" />
+							Discount coupons
 						</RouterLink>
 					</li>
 					<li @click="closeDropdown" v-if="customer">
@@ -67,6 +75,7 @@
 <script setup>
 import { useUserStore } from "@Stores/user.js";
 import { ref, onMounted, onUnmounted } from 'vue';
+import { Icon } from '@iconify/vue';
 const userStore = useUserStore();
 const props = defineProps({
 	user: {
