@@ -51,7 +51,7 @@
           {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
         </template>
       </el-table-column>
-      <el-table-column fixed="right" align="center" label="Confirm" :width="isMobile ? 70 : 200">
+      <el-table-column fixed="right" align="center" label="Confirm" min-width="280">
         <template #default="scope">
           <span v-if="!scope.row.confirm && scope.row.other_customer != null"><i class="uil uil-dna"
               style="color: #777; font-size: 16px;"></i></span>
