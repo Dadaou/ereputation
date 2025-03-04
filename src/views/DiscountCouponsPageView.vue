@@ -170,7 +170,12 @@ onBeforeMount(async () => {
     });
 
     if (response.status === 200) {
-      discountData.value = response.data;
+      const data = response.data
+      if(route?.query?.adv_name) {
+        discountData.value = data.filter((adv) => adv.adv_name === route.query.adv_name);
+      } else {
+        discountData.value = data;
+      }
 
     } else {
       console.error('Error fetching contacts:', response);

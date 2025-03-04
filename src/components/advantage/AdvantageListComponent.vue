@@ -46,7 +46,19 @@
         style="width: 5%; min-width: 400px;" />
       <el-table-column class="td" label="Order" prop="positioning" align="center"
         style="width: 5%; min-width: 400px;" />
-      <el-table-column class="td" label="Received" prop="received" align="center" style="width: 10%; min-width: 4%;" />
+      <el-table-column class="td" label="Received" prop="received" align="center" style="width: 50%">
+        <template #default="scope">
+          <span v-if="scope.row.received == 0">
+            {{ scope.row.received }}
+          </span>
+          <router-link v-else
+            :to="{name: 'Discount_coupons', params: {tag : $route.params.tag}, query : {adv_name : scope.row.name}}"
+          >
+            {{ scope.row.received }}
+          </router-link>
+        </template>
+      </el-table-column>
+      <!--<el-table-column class="td" label="Received" prop="received" align="center" style="width: 10%; min-width: 4%;" />-->
       <el-table-column class="td" label="Used" prop="used" align="center" style="width: 20%; min-width: 100px;" />
       <el-table-column class="td" label="Section" prop="section" align="center" style="width: 20%; min-width: 800px;" />
       <el-table-column class="td" label="Website" prop="website" align="center" style="width: 20%; min-width: 800px;" />
