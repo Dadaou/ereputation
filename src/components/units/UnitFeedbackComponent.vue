@@ -247,7 +247,7 @@ onMounted(async() => {
             }
         } catch (error) {
 
-              setTimeout(() => {
+              setTimeout(async() => {
 
                  try {
                     if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
