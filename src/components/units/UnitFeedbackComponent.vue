@@ -246,7 +246,23 @@ onMounted(async() => {
                   console.log("visitorId in window: "+window.page);
             }
         } catch (error) {
-            console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
+
+              setTimeout(() => {
+
+                 try {
+                    if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
+                        await window.FingerprintApp.default.main();
+                          console.log("visitorId in window: "+window.page);
+                    }
+                } catch (error) {
+                    console.error("Une erreur s'est produite lors de l'exécution de Fingerprint : ", error);
+                }
+                   
+            }, 1000);
+
+           
+
+            //console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
         }
     }
     requiredinput.value = t('feedback.requiredinputs')
