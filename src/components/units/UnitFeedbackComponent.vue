@@ -41,9 +41,9 @@
                             ratingCustomer = rating
                             hideMessage();
                         }" />
-                        <!--<span v-if="showRatingError" class="error_message">
+                        <span v-if="showRatingError" class="error_message">
                             {{ $t("feedback.indice") }}
-                        </span>-->
+                        </span>
                     </div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                         <div>
@@ -246,23 +246,7 @@ onMounted(async() => {
                   console.log("visitorId in window: "+window.page);
             }
         } catch (error) {
-
-              setTimeout(async() => {
-
-                 try {
-                    if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
-                        await window.FingerprintApp.default.main();
-                          console.log("visitorId in window: "+window.page);
-                    }
-                } catch (error) {
-                    console.error("Une erreur s'est produite lors de l'exécution de Fingerprint : ", error);
-                }
-                   
-            }, 1000);
-
-           
-
-            //console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
+            console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
         }
     }
     requiredinput.value = t('feedback.requiredinputs')
@@ -310,14 +294,16 @@ const hideMessage = () => {
 
 const submit = async () => {
     if (!ratingCustomer.value || ratingCustomer.value.note === null) {
-        
         showRatingError.value = true;
-        
-        ElMessage({
-            message: `${t("feedback.indice")}`,
-            type: "error"
-        })
-
+        if (window.innerWidth <= 760) {
+            ElMessage({
+                message: `<div style="max-width: 700px;width: 235px; white-space: normal;">${t("feedback.indice")}</div>`,
+                type: "error",
+                showClose: true,
+                dangerouslyUseHTMLString: true
+            });
+        }
+        return;
     } else {
         showRatingError.value = false;
     }
@@ -411,9 +397,6 @@ const submit = async () => {
                             tag: route.params.tag,
                             share: parseFloat(review.rating) >= 4 ? 'message-and-join-us' : 'message'
                         },
-                        query: {
-                            comment: comment.value,
-                        }
                     });
                 }
                 if (response.status == 200) {
