@@ -169,7 +169,7 @@ const iframeVisible = ref(false);
 let randomAdvantage = ref(null);
 
 const showSpinner = ref(false);
-const fingerprint_code = ref(null);
+
 const visitorId = ref(null);
 
 
@@ -187,7 +187,7 @@ const generateFingerprint=async()=> {
 
 onBeforeMount(async () => {
 
-generateFingerprint().then(fp => {fingerprint_code.value=fp;});
+
 
 
     localStorage.removeItem("visitId");
@@ -231,18 +231,23 @@ onMounted(async() => {
 
     if (!route.query.preview) {
         try {
-
+            let current_date=new Date();
+            current_date.setHours(current_date.getHours() + 2);
+           const visitedAt = current_date.toISOString();
+           let fingerprint_code=null;
+          await generateFingerprint().then(fp => {fingerprint_code=fp;});
+           console.log(fingerprint_code)
              let data_visitor = {
             "browser": "",
-            "fingerprint": fingerprint_code.value,
-            "code": fingerprint_code.value,
+            "fingerprint": fingerprint_code,
+            "code": fingerprint_code,
             "device": isMobile()? 'Mobile' : 'Desktop',
             "language": navigator.languages ? JSON.stringify(navigator.languages) : JSON.stringify([navigator.language]),
             "os": navigator.userAgent.includes('Win') ? 'Win32' : 'Linux armv81',
             "timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
             "url":window.location.href,
             "userAgent": navigator.userAgent,
-            "visitedAt": new Date()
+            "visitedAt": visitedAt
         }
 
              const response = await new Promise((resolve) => {
@@ -253,6 +258,7 @@ onMounted(async() => {
 
                 if (response.status == 201 || response.status == 200) {
                     visitorId.value = response.data.id;
+                      localStorage.setItem('visitId',response.data.id);
                     console.log(response)
                 }
 

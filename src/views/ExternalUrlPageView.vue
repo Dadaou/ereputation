@@ -15,7 +15,7 @@ const SpinnerComponent = defineAsyncComponent(() =>
 
 const externalUrl = ref('');
 const id = ref('');
-const fingerprint_code = ref(null);
+// const fingerprint_code = ref(null);
 const visitorId = ref(null);
 
 
@@ -37,17 +37,23 @@ const isMobile=()=> {
 
  const postVisitor=async()=>{
 
+            let current_date=new Date();
+                current_date.setHours(current_date.getHours() + 2);
+               const visitedAt = current_date.toISOString();
+                let fingerprint_code=null;
+              await generateFingerprint().then(fp => {fingerprint_code=fp;});
+
          let data_visitor = {
             "browser": "",
-            "fingerprint": fingerprint_code.value,
-            "code": fingerprint_code.value,
+            "fingerprint": fingerprint_code,
+            "code": fingerprint_code,
             "device": isMobile()? 'Mobile' : 'Desktop',
             "language": navigator.languages ? JSON.stringify(navigator.languages) : JSON.stringify([navigator.language]),
             "os": navigator.userAgent.includes('Win') ? 'Win32' : 'Linux armv81',
             "timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
             "url":window.location.href,
             "userAgent": navigator.userAgent,
-            "visitedAt": new Date()
+            "visitedAt": visitedAt
         }
 
              const response = await new Promise((resolve) => {
@@ -107,7 +113,7 @@ const initFingerprint = async () => {
     }
 }
 onBeforeMount( () => {
-    generateFingerprint().then(fp => {fingerprint_code.value=fp;});
+    // generateFingerprint().then(fp => {fingerprint_code.value=fp;});
  localStorage.removeItem("visitId");
 });
 

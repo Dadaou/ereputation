@@ -206,7 +206,7 @@ const establishment = ref({});
 const iframeVisible = ref(false);
 const showSpinner = ref(false);
 const fingerprint_error = ref(null);
-const fingerprint_code = ref(null);
+// const fingerprint_code = ref(null);
 const visitorId = ref(null);
 
 
@@ -224,7 +224,7 @@ const generateFingerprint=async()=> {
 
 onBeforeMount(async () => {
 
-    generateFingerprint().then(fp => {fingerprint_code.value=fp;});
+    // generateFingerprint().then(fp => {fingerprint_code.value=fp;});
  localStorage.removeItem("visitId");
     appStore.setCurrentPage({
         title1: t("feedback.title1"),
@@ -270,18 +270,22 @@ onMounted(async() => {
         if (!route.query.preview) {
             try {
 
-
-                let data_visitor = {
+                   let current_date=new Date();
+                current_date.setHours(current_date.getHours() + 2);
+               const visitedAt = current_date.toISOString();
+                let fingerprint_code=null;
+              await generateFingerprint().then(fp => {fingerprint_code=fp;});
+                    let data_visitor = {
                     "browser": "",
-                    "fingerprint": fingerprint_code.value,
-                    "code": fingerprint_code.value,
+                    "fingerprint": fingerprint_code,
+                    "code": fingerprint_code,
                     "device": isMobile()? 'Mobile' : 'Desktop',
                     "language": navigator.languages ? JSON.stringify(navigator.languages) : JSON.stringify([navigator.language]),
                     "os": navigator.userAgent.includes('Win') ? 'Win32' : 'Linux armv81',
                     "timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
                     "url":window.location.href,
                     "userAgent": navigator.userAgent,
-                    "visitedAt": new Date()
+                    "visitedAt": visitedAt
                 }
 
              const response = await new Promise((resolve) => {
@@ -292,6 +296,7 @@ onMounted(async() => {
 
                 if (response.status == 201 || response.status == 200) {
                     visitorId.value = response.data.id;
+                    localStorage.setItem('visitId',response.data.id);
                     console.log(response)
                 }
 
