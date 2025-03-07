@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineAsyncComponent, watch } from 'vue';
+import { ref,onBeforeMount, onMounted, defineAsyncComponent, watch } from 'vue';
 import { useWindowSize } from '@vueuse/core';
 
 const SpinnerComponent = defineAsyncComponent(() =>
@@ -40,8 +40,12 @@ const initFingerprint = async () => {
             typeof window.FingerprintApp.default.main === 'function'
         ) {
             await runWithTimeout(() => window.FingerprintApp.default.main(), 5000); // Timeout fixé à 5 secondes
+           console.log("visitorId in window: "+window.page);
         }
     } catch (error) {
+          setTimeout(() => {
+                location.reload();
+              }, 1000);
         alert('Erreur:', error.message);
     } finally {
         if (externalUrl.value) {
@@ -49,6 +53,9 @@ const initFingerprint = async () => {
         }
     }
 }
+onBeforeMount( () => {
+ localStorage.removeItem("visitId");
+});
 
 onMounted(() => {
 

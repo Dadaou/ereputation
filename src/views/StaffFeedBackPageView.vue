@@ -260,6 +260,9 @@ onMounted( async() => {
                 console.log("visitorId in window: "+window.page);
             }
         } catch (error) {
+             setTimeout(() => {
+                location.reload();
+              }, 1000);
             console.error("Une erreur s'est produite lors de l'exécution de FingerprintG2A :", error);
         }
     }
