@@ -262,7 +262,7 @@ onMounted( async() => {
         } catch (error) {
              setTimeout(() => {
                 location.reload();
-              }, 1000);
+              }, 500);
             console.error("Une erreur s'est produite lors de l'exécution de FingerprintG2A :", error);
         }
     }

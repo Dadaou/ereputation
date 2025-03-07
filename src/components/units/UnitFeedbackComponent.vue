@@ -241,7 +241,7 @@ onBeforeMount(async () => {
     }, true);
 })
 const requiredinput = ref('');
-onMounted(() => {
+onMounted(async() => {
 
      
 
@@ -255,7 +255,7 @@ onMounted(() => {
                 console.error("Une Erreur s'est produite lors de l'exécution de Fingerprint : ", error);
                  setTimeout(() => {
                     location.reload();
-                  }, 1000);
+                  }, 500);
                 
             }
         }
