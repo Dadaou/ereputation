@@ -243,22 +243,24 @@ onBeforeMount(async () => {
 const requiredinput = ref('');
 onMounted(() => {
 
-            setTimeout(async() => {
+     
 
-                if (!route.query.preview) {
-                    try {
-                        if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
-                            await window.FingerprintApp.default.main();
-                              console.log("visitorId in window: "+window.page);
-                        }
-                    } catch (error) {
-                        console.error("Une Erreur s'est produite lors de l'exécution de Fingerprint : ", error);
-                        fingerprint_error.value="error";
-                        
-                    }
+        if (!route.query.preview) {
+            try {
+                if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
+                    await window.FingerprintApp.default.main();
+                      console.log("visitorId in window: "+window.page);
                 }
-               
-              }, 3000);
+            } catch (error) {
+                console.error("Une Erreur s'est produite lors de l'exécution de Fingerprint : ", error);
+                 setTimeout(() => {
+                    location.reload();
+                  }, 1000);
+                
+            }
+        }
+       
+             
   
     requiredinput.value = t('feedback.requiredinputs')
 
