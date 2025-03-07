@@ -7,6 +7,7 @@
 <script setup>
 import { ref,onBeforeMount, onMounted, defineAsyncComponent, watch } from 'vue';
 import { useWindowSize } from '@vueuse/core';
+import services from '@Services/services.js';
 
 const SpinnerComponent = defineAsyncComponent(() =>
     import('@Components/utils/SpinnerComponent.vue')
@@ -14,8 +15,58 @@ const SpinnerComponent = defineAsyncComponent(() =>
 
 const externalUrl = ref('');
 const id = ref('');
+const fingerprint_code = ref(null);
+const visitorId = ref(null);
+
+
+const generateFingerprint=async()=> {
+    const text = navigator.userAgent + navigator.language + screen.width + screen.height + Date.now();
+    const encoder = new TextEncoder();
+    const data = encoder.encode(text);
+
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const fingerprint = hashArray.map(byte => byte.toString(16).padStart(2, "0")).join("");
+
+    return fingerprint;
+}
+
+const isMobile=()=> {
+    return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Opera Mini|IEMobile/i.test(navigator.userAgent);
+}
+
+ const postVisitor=async()=>{
+
+         let data_visitor = {
+            "browser": "",
+            "fingerprint": fingerprint_code.value,
+            "code": fingerprint_code.value,
+            "device": isMobile()? 'Mobile' : 'Desktop',
+            "language": navigator.languages ? JSON.stringify(navigator.languages) : JSON.stringify([navigator.language]),
+            "os": navigator.userAgent.includes('Win') ? 'Win32' : 'Linux armv81',
+            "timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
+            "url":window.location.href,
+            "userAgent": navigator.userAgent,
+            "visitedAt": new Date()
+        }
+
+             const response = await new Promise((resolve) => {
+                    services.createRecord('fingerprint/publish-visitor', JSON.stringify(data_visitor), (response) => {
+                        resolve(response);
+                    },true,true);
+                });
+
+                if (response.status == 201 || response.status == 200) {
+                    visitorId.value = response.data.id;
+                    console.log(response)
+                }
+
+    }
 
 const initFingerprint = async () => {
+
+   
+
     const runWithTimeout = async (asyncFunction, timeout) => {
         // const startTime = Date.now(); // Enregistre le temps de départ
         const timeoutPromise = new Promise((_, reject) =>
@@ -34,18 +85,20 @@ const initFingerprint = async () => {
     }
 
     try {
-        if (
-            window.FingerprintApp &&
-            window.FingerprintApp.default &&
-            typeof window.FingerprintApp.default.main === 'function'
-        ) {
-            await runWithTimeout(() => window.FingerprintApp.default.main(), 5000); // Timeout fixé à 5 secondes
-           console.log("visitorId in window: "+window.page);
-        }
+
+        await runWithTimeout(() => postVisitor(), 5000); 
+        // if (
+        //     window.FingerprintApp &&
+        //     window.FingerprintApp.default &&
+        //     typeof window.FingerprintApp.default.main === 'function'
+        // ) {
+        //     await runWithTimeout(() => window.FingerprintApp.default.main(), 5000); // Timeout fixé à 5 secondes
+        //    console.log("visitorId in window: "+window.page);
+        // }
     } catch (error) {
-          setTimeout(() => {
-                location.reload();
-              }, 1000);
+          // setTimeout(() => {
+          //       location.reload();
+          //     }, 1000);
         alert('Erreur:', error.message);
     } finally {
         if (externalUrl.value) {
@@ -54,8 +107,10 @@ const initFingerprint = async () => {
     }
 }
 onBeforeMount( () => {
+    generateFingerprint().then(fp => {fingerprint_code.value=fp;});
  localStorage.removeItem("visitId");
 });
+
 
 onMounted(() => {
 
