@@ -241,9 +241,9 @@ onBeforeMount(async () => {
     }, true);
 })
 const requiredinput = ref('');
-onMounted(async() => {
+onMounted(() => {
 
-            setTimeout(() => {
+            setTimeout(async() => {
 
                 if (!route.query.preview) {
                     try {
