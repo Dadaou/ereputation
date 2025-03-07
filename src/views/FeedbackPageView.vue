@@ -217,9 +217,9 @@ onMounted(async() => {
 
             }
         } catch (error) {
-             // setTimeout(() => {
+             setTimeout(() => {
                 location.reload();
-              // }, 500);
+              }, 500);
             console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
         }
     }
