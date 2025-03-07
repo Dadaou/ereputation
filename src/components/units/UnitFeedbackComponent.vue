@@ -216,20 +216,7 @@ onBeforeMount(async () => {
     });
 
 
-      if (!route.query.preview) {
-        try {
-            if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
-                await window.FingerprintApp.default.main();
-                  console.log("visitorId in window: "+window.page);
-            }
-        } catch (error) {
-            console.error("Une Erreur s'est produite lors de l'exécution de Fingerprint : ", error);
-            fingerprint_error.value="error";
-             setTimeout(() => {
-                location.reload();
-              }, 1000);
-        }
-    }
+      
 
     await services.get_Record(`public/establishment/${route.params.etab}/media`, (response) => {
         if (response !== undefined && response.status == 200) {
@@ -256,16 +243,20 @@ onBeforeMount(async () => {
 const requiredinput = ref('');
 onMounted(async() => {
 
-    // if (!route.query.preview) {
-    //     try {
-    //         if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
-    //             await window.FingerprintApp.default.main();
-    //               console.log("visitorId in window: "+window.page);
-    //         }
-    //     } catch (error) {
-    //         console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
-    //     }
-    // }
+   if (!route.query.preview) {
+        try {
+            if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
+                await window.FingerprintApp.default.main();
+                  console.log("visitorId in window: "+window.page);
+            }
+        } catch (error) {
+            console.error("Une Erreur s'est produite lors de l'exécution de Fingerprint : ", error);
+            fingerprint_error.value="error";
+             setTimeout(() => {
+                location.reload();
+              }, 1000);
+        }
+    }
     requiredinput.value = t('feedback.requiredinputs')
 
     appStore.setCurrentPage({
