@@ -47,7 +47,7 @@
 					</li>
 					<li @click="closeDropdown" v-if="customer">
 						<RouterLink :to="`/customer/${customer.tag}/account/discount_coupons`"
-							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" style="display: flex; flex-direction: row; align-items: center;">
+							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" style="display: flex; flex-direction: row; align-items: center; gap: 3px;">
 							<Icon icon="ic:outline-discount" />
 							Discount coupons
 						</RouterLink>

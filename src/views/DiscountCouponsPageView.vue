@@ -51,7 +51,7 @@
           {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
         </template>
       </el-table-column>
-      <el-table-column fixed="right" align="center" label="Confirm" min-width="280">
+      <el-table-column fixed="right" align="center" label="Confirm" :min-width="minWidth">
         <template #default="scope">
           <span v-if="!scope.row.confirm && scope.row.other_customer != null"><i class="uil uil-dna"
               style="color: #777; font-size: 16px;"></i></span>
@@ -84,6 +84,7 @@ import {
 } from 'vue';
 
 const discountLoading = ref(false);
+const minWidth = ref(240);
 const route = useRoute();
 const customer = route.params.tag;
 const search = ref('');
@@ -189,7 +190,15 @@ const isMobile = ref(window.innerWidth < 768);
 
 const handleResize = () => {
   isMobile.value = window.innerWidth < 768;
+
+  if(window.innerWidth < 500) {
+    minWidth.value = 140
+  }
+  else {
+    minWidth.value = 240
+  }
 };
+
 onMounted(() => {
   window.addEventListener('resize', handleResize);
 });
