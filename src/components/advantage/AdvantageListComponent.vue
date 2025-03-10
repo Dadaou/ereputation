@@ -52,7 +52,7 @@
             {{ scope.row.received }}
           </span>
           <router-link v-else
-            :to="{name: 'Discount_coupons', params: {tag : $route.params.tag}, query : {adv_name : scope.row.name}}"
+            :to="{name: 'Discount_coupons', params: {tag : $route.params.tag}, query : {adv_id : scope.row.id}}"
           >
             {{ scope.row.received }}
           </router-link>
@@ -131,7 +131,6 @@ const route = useRoute();
 const router = useRouter();
 
 const filterTableData = computed(() => {
-  console.log(advantages.value)
   return advantages.value.filter(data => {
     return (
       !search.value ||

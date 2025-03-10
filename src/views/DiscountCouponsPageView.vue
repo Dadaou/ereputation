@@ -172,8 +172,8 @@ onBeforeMount(async () => {
 
     if (response.status === 200) {
       const data = response.data
-      if(route?.query?.adv_name) {
-        discountData.value = data.filter((adv) => adv.adv_name === route.query.adv_name);
+      if(route?.query?.adv_id) {
+        discountData.value = data.filter((dicount) => dicount.adv_id == route.query.adv_id);
       } else {
         discountData.value = data;
       }
