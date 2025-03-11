@@ -84,7 +84,7 @@ import {
 } from 'vue';
 
 const discountLoading = ref(false);
-const minWidth = ref(240);
+const minWidth = ref(140);
 const route = useRoute();
 const customer = route.params.tag;
 const search = ref('');
@@ -189,17 +189,21 @@ onBeforeMount(async () => {
 const isMobile = ref(window.innerWidth < 768);
 
 const handleResize = () => {
+  setMinWidth()
   isMobile.value = window.innerWidth < 768;
+};
 
+const setMinWidth = () => {
   if(window.innerWidth < 500) {
     minWidth.value = 140
   }
   else {
     minWidth.value = 240
   }
-};
+}
 
 onMounted(() => {
+  setMinWidth()
   window.addEventListener('resize', handleResize);
 });
 
