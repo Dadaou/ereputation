@@ -78,8 +78,9 @@
                     <div v-if="modal" class="overlay" >
                     <div class="modal" @click.stop :style="{ top: modalTop + 'px',position: 'absolute' }">
                      <div >
-                        <h6 v-if="isExternal != true" class="text-lg font-bold" style="text-align: center;color: gray;"> Feedback Form Submissions</h6>
-                        <h6 v-else class="text-lg font-bold" style="text-align: center;color: gray;"> External Qrcodes</h6>
+                        <h6 v-if="isExternal == 'Feedback'" class="text-lg font-bold" style="text-align: center;color: gray;"> Feedback Form Submissions</h6>
+                        <h6 v-if="isExternal == 'Discount'" class="text-lg font-bold" style="text-align: center;color: gray;"> Discount coupons</h6>
+                        <h6 v-if="isExternal == 'External'" class="text-lg font-bold" style="text-align: center;color: gray;"> External Qrcodes</h6>
                         <button class="btn text-lg close-btn" style="color: red;" @click="closeModal">x</button>
                      </div>
                       <div class="modal-content" >
@@ -142,7 +143,7 @@
                             <el-table-column  label="User Agent" align="center" prop="ua"  show-overflow-tooltip/> 
                              <el-table-column label="ISP" align="center" prop="isp"  show-overflow-tooltip/> 
 
-                              <el-table-column v-if="isExternal != true" label="Contact" align="left" show-overflow-tooltip>
+                              <el-table-column v-if="isExternal == 'Feedback'" label="Contact" align="left" show-overflow-tooltip>
                                 <template #default="scope">
                                   <span >
                                     {{ scope.row.email }}
@@ -180,14 +181,15 @@
         <div class="grid max-[1080px]:grid-cols-1 grid-cols-2 min-[1920px]:grid-cols-3 grid-flow-row gap-4 mt-8">
 
             <div class="statistique">
-                <ChartFeedbackSubmissions @show-visitors="showVisitors" @showModal="showModal" @isExternal="setExternal"/>
+                <ChartFeedbackSubmissions @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
             </div>
             <div class="statistique">
                 <ChartGateAndFeedbackVisit />
             </div>
             <div class="statistique">
-                <ChartExternalUrl @show-visitors="showVisitors" @showModal="showModal" @isExternal="setExternal"/>
+                <ChartExternalUrl @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
             </div>
+
             <div class="statistique">
                 <PieChartService />
             </div>
@@ -199,6 +201,9 @@
             </div>
             <div class="statistique">
                 <PieChartReseauxSociaux />
+            </div>
+            <div class="statistique">
+                <ChartDiscount @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
             </div>
 
         </div>
@@ -240,6 +245,10 @@ const ChartAboutGate = defineAsyncComponent(() =>
 
 const ChartExternalUrl = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/ChartExternalUrl.vue")
+)
+
+const ChartDiscount = defineAsyncComponent(() =>
+    import("@Components/ChartStatistique/ChartDiscount.vue")
 )
 
 const ChartGateAndFeedbackVisit = defineAsyncComponent(() =>

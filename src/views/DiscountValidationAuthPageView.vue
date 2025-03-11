@@ -107,6 +107,20 @@ const notification = ref({
 
 const showSpinner = ref(false)
 
+const visitorId = ref(null);
+
+const generateFingerprint=async()=> {
+    const text = navigator.userAgent + navigator.language + screen.width + screen.height + Date.now();
+    const encoder = new TextEncoder();
+    const data = encoder.encode(text);
+
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const fingerprint = hashArray.map(byte => byte.toString(16).padStart(2, "0")).join("");
+
+    return fingerprint;
+}
+
 const capitalizeFirstLetter = (firstname = "", lastname = "") => {
 
   const capitalizedFirstname = firstname.charAt(0).toUpperCase() + firstname.slice(1);
@@ -189,8 +203,62 @@ const submit = async () => {
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+const isMobile=()=> {
+    return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Opera Mini|IEMobile/i.test(navigator.userAgent);
+}
+
 onBeforeMount(async ()=>{
     appStore.header = false;
+    localStorage.removeItem("visitId");
+
+
+
+        try {
+
+             let current_date=new Date();
+            current_date.setHours(current_date.getHours() + 2);
+            const visitedAt = current_date.toISOString();
+            let fingerprint_code=null;
+            await generateFingerprint().then(fp => {fingerprint_code=fp;});
+              let data_visitor = {
+                    "browser": "",
+                    "fingerprint": fingerprint_code,
+                    "code": fingerprint_code,
+                    "device": isMobile()? 'Mobile' : 'Desktop',
+                    "language": navigator.languages ? JSON.stringify(navigator.languages) : JSON.stringify([navigator.language]),
+                    "os": navigator.userAgent.includes('Win') ? 'Win32' : 'Linux armv81',
+                    "timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    "url":window.location.href,
+                    "userAgent": navigator.userAgent,
+                    "visitedAt": visitedAt
+                }
+
+             const response = await new Promise((resolve) => {
+                    services.createRecord('fingerprint/publish-visitor', JSON.stringify(data_visitor), (response) => {
+                        resolve(response);
+                    },true,true);
+                });
+
+                if (response.status == 201 || response.status == 200) {
+                    visitorId.value = response.data.id;
+                      // localStorage.setItem('visitId',response.data.id);
+                    console.log(response)
+                }
+
+
+            // if (window.FingerprintApp && window.FingerprintApp.default && typeof window.FingerprintApp.default.main === 'function') {
+            //    await window.FingerprintApp.default.main();
+            //     console.log("visitorId in window: "+window.page);
+            // }
+        } catch (error) {
+             // setTimeout(() => {
+             //    location.reload();
+             //  }, 500);
+            console.error("Une erreur s'est produite lors de l'exécution de FingerprintG2A :", error);
+        }
+
+
+
 
     try {
         const response = await new Promise((resolve) => {

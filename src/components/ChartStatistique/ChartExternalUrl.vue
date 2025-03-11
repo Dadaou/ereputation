@@ -136,7 +136,7 @@ const units = inject('unitsFilter');
 const userStore = useUserStore();
 const hasData = ref(false);
 const showModal = ref(false);
-const emits = defineEmits(['showModal','isExternal','show-visitors']);
+const emits = defineEmits(['showModal','setSource','show-visitors']);
 
 function interpolateColor(color1, color2, steps) {
     const c1 = color1.match(/\w\w/g).map(c => parseInt(c, 16));
@@ -198,7 +198,7 @@ const handleBarClick = (event, chartContext, config)=> {
   
     getVisitors(chartOptions.value.xaxis.categories[dataPointIndex], chartOptions.value.xaxis.categories[dataPointIndex], timePeriods.value, establishment.value, staff.value, units.value,serieName);
   emits('showModal',true);
- emits('isExternal',true);
+ emits('setSource','External');
   // showModal.value = true;
   
 }
