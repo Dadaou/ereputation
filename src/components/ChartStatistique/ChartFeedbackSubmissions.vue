@@ -1,5 +1,5 @@
 <template >
-  <h3>About feedback form submissions</h3>
+  <h3 v-if="hasData">About feedback form submissions</h3>
   <div v-if="hasData" style="position: relative;" >
 
     
@@ -104,7 +104,7 @@
     </div>
   </div>
   <div v-else class="content-message">
-    <div>No clicks for <br>
+    <div v-if="hasData">No clicks for <br>
       <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'"> establishment :
         <span v-for="(estab_id, index) in establishment" :key="estab_id">
           <span v-for="estab_name in establishments" :key="estab_name.id">
@@ -177,7 +177,7 @@ const hasData = ref(false);
 const showModal = ref(false);
 const selectedData = ref(null);
 
-const emits = defineEmits(['showModal','setSource','show-visitors']);
+const emits = defineEmits(['showModal','setSource','show-visitors','show-chart']);
 
 
 const chartOptions = ref({
@@ -289,6 +289,11 @@ const loadData = async (start_date, end_date, timePeriods, establishment, staff,
       }, 0);
 
       hasData.value = total > 0;
+       if (total <= 0) {
+            emits('show-chart','submission_false');
+        }else{
+            emits('show-chart','submission');
+        }
 
     } else {
       console.error('Error fetching data:', response);

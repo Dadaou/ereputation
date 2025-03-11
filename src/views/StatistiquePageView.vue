@@ -175,35 +175,35 @@
 
                         <!-- Fin modal -->
 
-    
+  
 
         <!-- <div class="dashboard__chart"> -->
         <div class="grid max-[1080px]:grid-cols-1 grid-cols-2 min-[1920px]:grid-cols-3 grid-flow-row gap-4 mt-8">
 
-            <div class="statistique">
-                <ChartFeedbackSubmissions @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
+            <div class="statistique" v-if = "showChart.submission">
+                <ChartFeedbackSubmissions @show-chart="displayChart" @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
             </div>
-            <div class="statistique">
-                <ChartGateAndFeedbackVisit />
+            <div class="statistique" v-if = "showChart.gateAndFeedback">
+                <ChartGateAndFeedbackVisit @show-chart="displayChart" />
             </div>
-            <div class="statistique">
-                <ChartExternalUrl @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
+            <div class="statistique" v-if = "showChart.external">
+                <ChartExternalUrl @show-chart="displayChart" @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
             </div>
 
-            <div class="statistique">
-                <PieChartService />
+            <div class="statistique" v-if = "showChart.service">
+                <PieChartService @show-chart="displayChart" />
             </div>
-            <div class="statistique">
-                <ChartAboutGate />
+            <div class="statistique" v-if = "showChart.gate">
+                <ChartAboutGate @show-chart="displayChart" />
             </div>
-            <div class="statistique">
-                <ChartPlatformsAndSocialmedia />
+            <div class="statistique" v-if = "showChart.platform">
+                <ChartPlatformsAndSocialmedia @show-chart="displayChart" />
             </div>
-            <div class="statistique">
-                <PieChartReseauxSociaux />
+            <div class="statistique" v-if = "showChart.sociaux">
+                <PieChartReseauxSociaux @show-chart="displayChart" />
             </div>
-            <div class="statistique">
-                <ChartDiscount @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
+            <div class="statistique" v-if = "showChart.discount == true">
+                <ChartDiscount @show-chart="displayChart" @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
             </div>
 
         </div>
@@ -284,6 +284,77 @@ const scrollPosition = ref(0);
 const contentTop = ref(null);
 const modalTop = ref(0);
 
+const showChart=ref({
+    submission: true,
+    gateAndFeedback: true,
+    external: true,
+    service: true,
+    gate: true,
+    platform: true,
+    sociaux: true,
+    discount: true
+})
+
+const displayChart = (_ch)=>{
+    if (_ch == 'submission') {
+        showChart.value.submission = true;
+    }
+    if (_ch == 'submission_false') {
+        showChart.value.submission = false;
+    }
+
+    if (_ch == 'gateAndFeedback') {
+        showChart.value.gateAndFeedback = true;
+    }
+     if (_ch == 'gateAndFeedback_false') {
+        showChart.value.gateAndFeedback = false;
+    }
+
+    if (_ch == 'external') {
+        showChart.value.external = true;
+    }
+    if (_ch == 'external_false') {
+        showChart.value.external = false;
+    }
+
+
+    if (_ch == 'service') {
+        showChart.value.service = true;
+    }
+     if (_ch == 'service_false') {
+        showChart.value.service = false;
+    }
+
+    if (_ch == 'gate') {
+        showChart.value.gate = true;
+    }
+    if (_ch == 'gate_false') {
+        showChart.value.gate = false;
+    }
+
+    if (_ch == 'platform') {
+        showChart.value.platform = true;
+    }
+    if (_ch == 'platform_false') {
+        showChart.value.platform = false;
+    }
+
+    if (_ch == 'sociaux') {
+        showChart.value.sociaux = true;
+    }
+     if (_ch == 'sociaux_false') {
+        showChart.value.sociaux = false;
+    }
+
+    if (_ch == 'discount') {
+        showChart.value.discount = true;
+         console.log(showChart.value.discount)
+    }
+     if (_ch == 'discount_false') {
+        showChart.value.discount = false;
+        console.log(showChart.value.discount)
+    }
+}
 const showVisitors = (_visitors) => {
     visitors.value=_visitors;
 }
@@ -494,6 +565,14 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod, start_date, 
     totalNotSubmitted(selectedTimePeriod.value);
     totalSubmitted(selectedTimePeriod.value);
     totalClickSocial(selectedTimePeriod.value);
+    showChart.value.submission = true;
+    showChart.value.discount = true;
+    showChart.value.gate = true;
+    showChart.value.gateAndFeedback = true;
+    showChart.value.sociaux = true;
+    showChart.value.platform = true;
+    showChart.value.service = true;
+     showChart.value.external = true;
 })
 
 </script>

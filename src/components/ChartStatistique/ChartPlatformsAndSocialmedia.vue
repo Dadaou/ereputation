@@ -1,12 +1,12 @@
 <template>
-    <h3>About platforms & Social Media</h3>
+    <h3 v-if="hasData">About platforms & Social Media</h3>
     <div v-if="hasData">
         <div class="chart-container">
             <apexchart type="bar" height="460" :options="options" :series="series"></apexchart>
         </div>
     </div>
     <div v-else class="content-message">
-        <div>No clicks <br>
+        <div v-if="hasData">No clicks <br>
             <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'">for establishments :
                 <span v-for="(estab_id, index) in establishment" :key="estab_id">
                     <span v-for="estab_name in establishments" :key="estab_name.id">
@@ -44,6 +44,8 @@ const source = inject('sourceFilter')
 const series = ref([])
 const hasData = ref(false)
 const userStore = useUserStore()
+const emits = defineEmits(['showModal','setSource','show-visitors','show-chart']);
+
 
 const options = ref({
     series: [],
@@ -102,7 +104,12 @@ const loadData = async () => {
                     data: response.data.data
                 }]
 
-                hasData.value = response.data.data.length > 0
+                hasData.value = response.data.data.length > 0;
+                  if (response.data.data.length <= 0) {
+                      emits('show-chart','platform_false');
+                  }else{
+                     emits('show-chart','platform');
+                  }
 
                 options.value.xaxis.categories = response.data.data.map(item => item.x) || []
             } else {

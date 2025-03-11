@@ -1,12 +1,12 @@
 <template>
-    <h3>About the gate</h3>
+    <h3 v-if="hasData">About the gate</h3>
     <div v-if="hasData">
         <div class="chart-container">
             <apexchart type="treemap" height="450" :options="chartOptions" :series="series"></apexchart>
         </div>
     </div>
     <div v-else class="content-message">
-        <div>No interactions
+        <div v-if="hasData">No interactions
             <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'">for establishments :
                 <span v-for="(estab_id, index) in establishment" :key="estab_id" style="display: inline;">
                     <span v-for="estab_name in establishments" :key="estab_name.id" style="display: inline;">
@@ -47,6 +47,8 @@ const source = inject('sourceFilter');
 const series = ref([]);
 const hasData = ref(false);
 const userStore = useUserStore();
+
+const emits = defineEmits(['showModal','setSource','show-visitors','show-chart']);
 
 // Options du graphique
 const chartOptions = ref({
@@ -131,6 +133,11 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
 
             if (response.data.series.length > 0) {
                 hasData.value = response.data.series[0].data.length > 0;
+                 if (response.data.series[0].data.length <= 0) {
+                      emits('show-chart','gate_false');
+                  }else{
+                     emits('show-chart','gate');
+                  }
                 chartOptions.value = {
                     chart: {
                         id: 'vuechart-treemap',
