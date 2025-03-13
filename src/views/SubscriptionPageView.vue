@@ -31,7 +31,11 @@
             
           </div>
         </div>-->
-        <div class="tab__pane-body w-full">
+        <div class="tab__pane-body w-full" style="position: relative; width: 100%;">
+
+          <div>
+              <img src="../assets/images/logo/caddie.png" alt="caddie" class="caddie">
+          </div>
 
           <div class="form-group features-list w-50">
             <div v-if="planInfo && planInfo.planName" class="d-inline-flex align-center justify-start mb-5">
@@ -574,6 +578,16 @@ onBeforeUnmount(() => {
 </script>
 <style>
 
+.caddie {
+  width: 300px; 
+  height: 300px; 
+  opacity: 0.10; 
+  position: absolute; 
+  top: 200px; 
+  left: 170px;
+  z-index: 1;
+}
+
 .cgv-container {
   height: 500px;
   overflow: auto;
@@ -675,6 +689,7 @@ button.isLoaded {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  /*background-image: url('../assets/images/logo/caddie.png');*/
 }
 
 .subscription__container {
@@ -896,6 +911,12 @@ button.isLoaded {
 
   .next-container {
     max-width: 1320px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .caddie {
+    left: 25px;
   }
 }
 </style>
