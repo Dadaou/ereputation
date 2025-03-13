@@ -106,7 +106,7 @@
 
           </div>
           <form class="form-group" @submit.prevent="submitForm">
-            <p class="my-5">Already have an account? Click the link below to access your dashboard:<a href="/sign-in"
+            <p>Already have an account? Click the link below to access your dashboard:<a href="/sign-in"
                 class="register-link mx-3">Login</a></p>
             <p class="my-4">Please fill out the form to create your account</p>
             <!-- <p class="mb-5">User informations</p> -->
