@@ -282,8 +282,8 @@ button i.uil-edit {
 
 @media screen and (max-width: 768px) {
   .responsive-modal {
-    width: 50%;
-    height: 20%;
+    /*width: 50%;
+    height: 20%;*/
     overflow-y: scroll;
   }
 

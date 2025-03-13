@@ -4,12 +4,12 @@
     </div>
     <div>
         <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
-            <div class="grid gap-6 mb-6 md:grid-cols-2">
+            <div class="grid gap-6 mb-6 md:grid-cols-2" style="padding: 0 50px 0 0;">
                 <div>
                     <label for="unit_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name
                         <span>*</span></label>
                     <input type="text" id="unit_name" v-model="unit.name"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" placeholder="name">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm" placeholder="name" style="width: 100%;">
                 </div>
                 <div>
                     <label for="unit_code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Code
@@ -25,7 +25,7 @@
                     </el-select>
                 </div>
             </div>
-            <div class="grid gap-6 mb-6 md:grid-cols-2">
+            <div class="grid gap-6 mb-6 md:grid-cols-2" style="padding: 0 50px 0 0;">
                 <div>
                     <label for="first_name"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
@@ -45,7 +45,7 @@
                     </el-select>
                 </div>
             </div>
-            <div class="flex items-center justify-between py-2 border-t border-b dark:border-gray-600">
+            <div class="flex items-center justify-between py-2 border-t border-b dark:border-gray-600" >
                 <button type="submit"
                     class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                     <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" />
