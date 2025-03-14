@@ -576,6 +576,10 @@ onBeforeMount(() => {
         align-items: center;
         gap: 15px;
     }
+
+    form {
+        margin: 0 0;
+    }
 }
 
 form button {

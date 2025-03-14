@@ -460,9 +460,6 @@ input {
     justify-content: center;
 }
 
-form button {
-    width: 100%;
-}
 
 @media screen and (min-width: 480px) {
 
@@ -493,7 +490,12 @@ form button {
     }
 
     .closeView {
-        margin-left: 30px;
+        margin-left: 5px;
+    }
+
+    form {
+        margin-left: 0;
+        padding-right: 50px;
     }
 
     .addBtn {
@@ -505,7 +507,6 @@ form button {
 @media screen and (max-width: 500px) {
     form {
         height: 850px !important;
-        padding-right: 3.5rem !important;
     }
 }
 </style>

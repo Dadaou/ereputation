@@ -4,7 +4,7 @@
     </div>
     <div>
         <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
-            <div class="grid gap-6 mb-6 md:grid-cols-2" style="padding: 0 50px 0 0;">
+            <div class="grid gap-6 mb-6 md:grid-cols-2" >
                 <div>
                     <label for="unit_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name
                         <span>*</span></label>
@@ -25,7 +25,7 @@
                     </el-select>
                 </div>
             </div>
-            <div class="grid gap-6 mb-6 md:grid-cols-2" style="padding: 0 50px 0 0;">
+            <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
                     <label for="first_name"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
@@ -288,7 +288,12 @@ input {
     .closeView {
         display: flex; 
         justify-content: flex-start;
-        margin-left: 30px;
+        margin-left: 5px;
+    }
+
+    form {
+        margin-left: 0;
+        padding-right: 50px;
     }
 }
 </style>
