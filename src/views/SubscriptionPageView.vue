@@ -31,7 +31,11 @@
             
           </div>
         </div>-->
-        <div class="tab__pane-body w-full">
+        <div class="tab__pane-body w-full" style="position: relative; width: 100%;">
+
+          <div>
+              <img src="../assets/images/logo/caddie.png" alt="caddie" class="caddie">
+          </div>
 
           <div class="form-group features-list w-50">
             <div v-if="planInfo && planInfo.planName" class="d-inline-flex align-center justify-start mb-5">
@@ -102,7 +106,7 @@
 
           </div>
           <form class="form-group" @submit.prevent="submitForm">
-            <p class="my-5">Already have an account? Click the link below to access your dashboard:<a href="/sign-in"
+            <p>Already have an account? Click the link below to access your dashboard:<a href="/sign-in"
                 class="register-link mx-3">Login</a></p>
             <p class="my-4">Please fill out the form to create your account</p>
             <!-- <p class="mb-5">User informations</p> -->
@@ -574,10 +578,20 @@ onBeforeUnmount(() => {
 </script>
 <style>
 
+.caddie {
+  width: 300px; 
+  height: 300px; 
+  opacity: 0.10; 
+  position: absolute; 
+  top: 220px; 
+  left: 350px;
+  z-index: 1;
+}
+
 .cgv-container {
   height: 500px;
   overflow: auto;
-  padding: 0 5px;
+  padding: 0 12px;
 }
 
 .cgv-container p {
@@ -675,6 +689,7 @@ button.isLoaded {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  /*background-image: url('../assets/images/logo/caddie.png');*/
 }
 
 .subscription__container {
@@ -896,6 +911,28 @@ button.isLoaded {
 
   .next-container {
     max-width: 1320px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .caddie {
+    left: 250px;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .caddie {
+    left: 25px;
+  }
+
+  .form-group {
+    padding: 40px 15px;
+  }
+}
+
+@media screen and (min-width: 800px) and  (max-width: 912px) {
+  .caddie {
+    left: 200px;
   }
 }
 </style>

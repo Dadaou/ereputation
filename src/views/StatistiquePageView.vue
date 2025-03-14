@@ -81,6 +81,7 @@
                         <h6 v-if="isExternal == 'Feedback'" class="text-lg font-bold" style="text-align: center;color: gray;"> Feedback Form Submissions</h6>
                         <h6 v-if="isExternal == 'Discount'" class="text-lg font-bold" style="text-align: center;color: gray;"> Discount coupons</h6>
                         <h6 v-if="isExternal == 'External'" class="text-lg font-bold" style="text-align: center;color: gray;"> External Qrcodes</h6>
+                        <h6 v-if="isExternal == 'Country'" class="text-lg font-bold" style="text-align: center;color: gray;"> Countries</h6>
                         <button class="btn text-lg close-btn" style="color: red;" @click="closeModal">x</button>
                      </div>
                       <div class="modal-content" >
@@ -143,7 +144,7 @@
                             <el-table-column  label="User Agent" align="center" prop="ua"  show-overflow-tooltip/> 
                              <el-table-column label="ISP" align="center" prop="isp"  show-overflow-tooltip/> 
 
-                              <el-table-column v-if="isExternal == 'Feedback'" label="Contact" align="left" show-overflow-tooltip>
+                              <el-table-column v-if="isExternal == 'Feedback' || isExternal == 'Country'" label="Contact" align="left" show-overflow-tooltip>
                                 <template #default="scope">
                                   <span >
                                     {{ scope.row.email }}
@@ -204,6 +205,10 @@
             </div>
             <div class="statistique" v-if = "showChart.discount == true">
                 <ChartDiscount @show-chart="displayChart" @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
+            </div>
+
+            <div class="statistique" v-if = "showChart.country">
+                <ChartCountry @show-chart="displayChart" @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
             </div>
 
         </div>
@@ -267,6 +272,10 @@ const PieChartService = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/PieChartService.vue")
 )
 
+const ChartCountry = defineAsyncComponent(() =>
+    import("@Components/ChartStatistique/ChartCountry.vue")
+)
+
 const nbrTotalVisit = ref(null);
 const nbrNotSubmitted = ref(null);
 const nbrSubmitted = ref(null);
@@ -292,7 +301,8 @@ const showChart=ref({
     gate: true,
     platform: true,
     sociaux: true,
-    discount: true
+    discount: true,
+    country: true
 })
 
 const displayChart = (_ch)=>{
@@ -315,6 +325,13 @@ const displayChart = (_ch)=>{
     }
     if (_ch == 'external_false') {
         showChart.value.external = false;
+    }
+
+      if (_ch == 'country') {
+        showChart.value.country = true;
+    }
+    if (_ch == 'country_false') {
+        showChart.value.country = false;
     }
 
 
@@ -572,7 +589,8 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod, start_date, 
     showChart.value.sociaux = true;
     showChart.value.platform = true;
     showChart.value.service = true;
-     showChart.value.external = true;
+    showChart.value.external = true;
+    showChart.value.country = true;
 })
 
 </script>
