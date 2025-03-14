@@ -85,9 +85,13 @@
     </div>
 
 
-    <div class="chart-container">
+
+        <div class="chart-container">
+            <apexchart type="donut" height="511"  :options="chartOptions" :series="series"></apexchart>
+        </div>
+  <!--   <div class="chart-container">
       <apexchart type="bar" height="460" :options="chartOptions" :series="series"  @dataPointSelection="handleBarClick"/>
-    </div>
+    </div> -->
 
   </div>
   <div v-else class="content-message">
@@ -110,8 +114,10 @@ import { ref, onBeforeMount, watch, inject } from 'vue';
 import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router';
 import services from '@Services/services.js';
+import {pays} from '@Services/countries.js';
 import moment from 'moment';
 import { useUserStore } from "@Stores/user.js"
+import { generateShadedPaletteByOpacity } from "@Services/theme.js"
 import {
     ElMessage,
     ElTable,
@@ -138,181 +144,7 @@ const source = inject('sourceFilter')
 const hasData = ref(false);
 const showModal = ref(false);
 const emits = defineEmits(['showModal','setSource','show-visitors','show-chart']);
-const pays = [
-    { nom: "Afghanistan", drapeau: "🇦🇫", couleur: "#002F6C" },
-    { nom: "Afrique du Sud", drapeau: "🇿🇦", couleur: "#007847" },
-    { nom: "Albanie", drapeau: "🇦🇱", couleur: "#E41E20" },
-    { nom: "Algérie", drapeau: "🇩🇿", couleur: "#006233" },
-    { nom: "Allemagne", drapeau: "🇩🇪", couleur: "#000000" },
-    { nom: "Andorre", drapeau: "🇦🇩", couleur: "#D61024" },
-    { nom: "Angola", drapeau: "🇦🇴", couleur: "#FF0000" },
-    { nom: "Arabie Saoudite", drapeau: "🇸🇦", couleur: "#006C35" },
-    { nom: "Argentine", drapeau: "🇦🇷", couleur: "#75AADB" },
-    { nom: "Arménie", drapeau: "🇦🇲", couleur: "#D90012" },
-    { nom: "Australie", drapeau: "🇦🇺", couleur: "#002868" },
-    { nom: "Autriche", drapeau: "🇦🇹", couleur: "#EF3340" },
-    { nom: "Azerbaïdjan", drapeau: "🇦🇿", couleur: "#0094C8" },
-    { nom: "Bahamas", drapeau: "🇧🇸", couleur: "#00778B" },
-    { nom: "Bahreïn", drapeau: "🇧🇭", couleur: "#D71A28" },
-    { nom: "Bangladesh", drapeau: "🇧🇩", couleur: "#006A4E" },
-    { nom: "Belgique", drapeau: "🇧🇪", couleur: "#FAE042" },
-    { nom: "Bénin", drapeau: "🇧🇯", couleur: "#FCD116" },
-    { nom: "Bhoutan", drapeau: "🇧🇹", couleur: "#FFCC00" },
-    { nom: "Biélorussie", drapeau: "🇧🇾", couleur: "#D32F2F" },
-    { nom: "Bolivie", drapeau: "🇧🇴", couleur: "#DA291C" },
-    { nom: "Botswana", drapeau: "🇧🇼", couleur: "#6DA9D2" },
-    { nom: "Brésil", drapeau: "🇧🇷", couleur: "#009739" },
-    { nom: "Bulgarie", drapeau: "🇧🇬", couleur: "#00966E" },
-    { nom: "Burkina Faso", drapeau: "🇧🇫", couleur: "#EF3340" },
-    { nom: "Burundi", drapeau: "🇧🇮", couleur: "#118600" },
-    { nom: "Cameroun", drapeau: "🇨🇲", couleur: "#007A5E" },
-    { nom: "Canada", drapeau: "🇨🇦", couleur: "#D52B1E" },
-    { nom: "Cap-Vert", drapeau: "🇨🇻", couleur: "#0033A0" },
-    { nom: "Chili", drapeau: "🇨🇱", couleur: "#D52B1E" },
-    { nom: "Chine", drapeau: "🇨🇳", couleur: "#DE2910" },
-    { nom: "Colombie", drapeau: "🇨🇴", couleur: "#FFD700" },
-    { nom: "Comores", drapeau: "🇰🇲", couleur: "#FFD700" },
-    { nom: "Congo (Brazzaville)", drapeau: "🇨🇬", couleur: "#009543" },
-    { nom: "Congo (Kinshasa)", drapeau: "🇨🇩", couleur: "#FCD116" },
-    { nom: "Corée du Nord", drapeau: "🇰🇵", couleur: "#C60C30" },
-    { nom: "Corée du Sud", drapeau: "🇰🇷", couleur: "#003478" },
-    { nom: "Costa Rica", drapeau: "🇨🇷", couleur: "#002B7F" },
-    { nom: "Côte d'Ivoire", drapeau: "🇨🇮", couleur: "#F77F00" },
-    { nom: "Croatie", drapeau: "🇭🇷", couleur: "#171796" },
-    { nom: "Cuba", drapeau: "🇨🇺", couleur: "#0055A4" },
-    { nom: "Danemark", drapeau: "🇩🇰", couleur: "#C8102E" },
-    { nom: "Djibouti", drapeau: "🇩🇯", couleur: "#0095B6" },
-    { nom: "Égypte", drapeau: "🇪🇬", couleur: "#C8102E" },
-    { nom: "Émirats Arabes Unis", drapeau: "🇦🇪", couleur: "#00732F" },
-    { nom: "Équateur", drapeau: "🇪🇨", couleur: "#FFD700" },
-    { nom: "Espagne", drapeau: "🇪🇸", couleur: "#FFCC00" },
-    { nom: "Estonie", drapeau: "🇪🇪", couleur: "#0072CE" },
-    { nom: "États-Unis", drapeau: "🇺🇸", couleur: "#B22234" },
-    { nom: "Éthiopie", drapeau: "🇪🇹", couleur: "#008000" },
-    { nom: "Fidji", drapeau: "🇫🇯", couleur: "#5BC4E8" },
-    { nom: "France", drapeau: "🇫🇷", couleur: "#0055A4" },
-    { nom: "Gabon", drapeau: "🇬🇦", couleur: "#009B77" },
-    { nom: "Gambie", drapeau: "🇬🇲", couleur: "#008F7B" },
-    { nom: "Géorgie", drapeau: "🇬🇪", couleur: "#C8102E" },
-    { nom: "Ghana", drapeau: "🇬🇭", couleur: "#F00A12" },
-    { nom: "Grèce", drapeau: "🇬🇷", couleur: "#0D5E8C" },
-    { nom: "Grenade", drapeau: "🇬🇩", couleur: "#F03C31" },
-    { nom: "Guatemala", drapeau: "🇬🇹", couleur: "#009639" },
-    { nom: "Guinée", drapeau: "🇬🇳", couleur: "#FCD116" },
-    { nom: "Guinée-Bissau", drapeau: "🇬🇼", couleur: "#E30B17" },
-    { nom: "Guyana", drapeau: "🇬🇾", couleur: "#009739" },
-    { nom: "Haïti", drapeau: "🇭🇹", couleur: "#0D47A1" },
-    { nom: "Honduras", drapeau: "🇭🇳", couleur: "#0033A0" },
-    { nom: "Hongrie", drapeau: "🇭🇺", couleur: "#C8102E" },
-    { nom: "Inde", drapeau: "🇮🇳", couleur: "#FF9933" },
-    { nom: "Indonésie", drapeau: "🇮🇩", couleur: "#D71A28" },
-    { nom: "Irak", drapeau: "🇮🇶", couleur: "#006747" },
-    { nom: "Irlande", drapeau: "🇮🇪", couleur: "#009B77" },
-    { nom: "Israël", drapeau: "🇮🇱", couleur: "#0038A8" },
-    { nom: "Italie", drapeau: "🇮🇹", couleur: "#008C45" },
-    { nom: "Jamaïque", drapeau: "🇯🇲", couleur: "#F8B500" },
-    { nom: "Japon", drapeau: "🇯🇵", couleur: "#BC002D" },
-    { nom: "Jordanie", drapeau: "🇯🇴", couleur: "#F00A12" },
-    { nom: "Kazakhstan", drapeau: "🇰🇿", couleur: "#00A9E0" },
-    { nom: "Kenya", drapeau: "🇰🇪", couleur: "#FF0000" },
-    { nom: "Kirghizistan", drapeau: "🇰🇬", couleur: "#E10000" },
-    { nom: "Kiribati", drapeau: "🇰🇮", couleur: "#FFCB00" },
-    { nom: "Koweït", drapeau: "🇰🇼", couleur: "#F00A12" },
-    { nom: "Laos", drapeau: "🇱🇦", couleur: "#0038A8" },
-    { nom: "Lesotho", drapeau: "🇱🇸", couleur: "#000000" },
-    { nom: "Lettonie", drapeau: "🇱🇻", couleur: "#9E0031" },
-    { nom: "Liban", drapeau: "🇱🇧", couleur: "#D71A28" },
-    { nom: "Liberia", drapeau: "🇱🇸", couleur: "#009639" },
-    { nom: "Libye", drapeau: "🇱🇾", couleur: "#009E49" },
-    { nom: "Liechtenstein", drapeau: "🇱🇮", couleur: "#1E47A1" },
-    { nom: "Lituanie", drapeau: "🇱🇹", couleur: "#FCD116" },
-    { nom: "Luxembourg", drapeau: "🇱🇺", couleur: "#F00A12" },
-    { nom: "Macédoine", drapeau: "🇲🇰", couleur: "#E50000" },
-    { nom: "Madagascar", drapeau: "🇲🇬", couleur: "#007847" },
-    { nom: "Malaisie", drapeau: "🇲🇾", couleur: "#F00A12" },
-    { nom: "Malawi", drapeau: "🇲🇼", couleur: "#D71A28" },
-    { nom: "Maldives", drapeau: "🇲🇻", couleur: "#E0D819" },
-    { nom: "Mali", drapeau: "🇲🇱", couleur: "#009E49" },
-    { nom: "Malte", drapeau: "🇲🇹", couleur: "#F00A12" },
-    { nom: "Maroc", drapeau: "🇲🇦", couleur: "#FF0000" },
-    { nom: "Marshall", drapeau: "🇲🇭", couleur: "#1D4E89" },
-    { nom: "Maurice", drapeau: "🇲🇺", couleur: "#E4002B" },
-    { nom: "Mauritanie", drapeau: "🇲🇷", couleur: "#009639" },
-    { nom: "Mexique", drapeau: "🇲🇽", couleur: "#006747" },
-    { nom: "Micronésie", drapeau: "🇫🇲", couleur: "#48C6E4" },
-    { nom: "Moldavie", drapeau: "🇲🇩", couleur: "#E10000" },
-    { nom: "Monaco", drapeau: "🇲🇨", couleur: "#D71A28" },
-    { nom: "Mongolie", drapeau: "🇲🇳", couleur: "#006AA7" },
-    { nom: "Mozambique", drapeau: "🇲🇿", couleur: "#FF0000" },
-    { nom: "Namibie", drapeau: "🇳🇦", couleur: "#009639" },
-    { nom: "Nauru", drapeau: "🇳🇷", couleur: "#F9A100" },
-    { nom: "Népal", drapeau: "🇳🇵", couleur: "#E10000" },
-    { nom: "Nicaragua", drapeau: "🇳🇮", couleur: "#004E80" },
-    { nom: "Niger", drapeau: "🇳🇬", couleur: "#FCD116" },
-    { nom: "Nigeria", drapeau: "🇳🇬", couleur: "#008B4A" },
-    { nom: "Niue", drapeau: "🇳🇺", couleur: "#0064A8" },
-    { nom: "Norvège", drapeau: "🇳🇴", couleur: "#BA0C2F" },
-    { nom: "Nouvelle-Zélande", drapeau: "🇳🇿", couleur: "#002B7F" },
-    { nom: "Oman", drapeau: "🇴🇲", couleur: "#F00A12" },
-    { nom: "Ouganda", drapeau: "🇺🇬", couleur: "#009E49" },
-    { nom: "Pakistan", drapeau: "🇵🇰", couleur: "#006847" },
-    { nom: "Palaos", drapeau: "🇵🇼", couleur: "#62B1B4" },
-    { nom: "Panama", drapeau: "🇵🇦", couleur: "#0063B1" },
-    { nom: "Papouasie-Nouvelle-Guinée", drapeau: "🇵🇬", couleur: "#E60012" },
-    { nom: "Paraguay", drapeau: "🇵🇾", couleur: "#005BAC" },
-    { nom: "Pays-Bas", drapeau: "🇳🇱", couleur: "#21468B" },
-    { nom: "Pérou", drapeau: "🇵🇪", couleur: "#D91D29" },
-    { nom: "Philippines", drapeau: "🇵🇭", couleur: "#0038A8" },
-    { nom: "Pologne", drapeau: "🇵🇱", couleur: "#E4002B" },
-    { nom: "Portugal", drapeau: "🇵🇹", couleur: "#006747" },
-    { nom: "Qatar", drapeau: "🇶🇦", couleur: "#9E0022" },
-    { nom: "République tchèque", drapeau: "🇨🇿", couleur: "#D52B1E" },
-    { nom: "Roumanie", drapeau: "🇷🇴", couleur: "#FCD116" },
-    { nom: "Royaume-Uni", drapeau: "🇬🇧", couleur: "#C8102E" },
-    { nom: "Russie", drapeau: "🇷🇺", couleur: "#0000FF" },
-    { nom: "Rwanda", drapeau: "🇷🇼", couleur: "#0A5F72" },
-    { nom: "Saint-Christophe-et-Niévès", drapeau: "🇰🇳", couleur: "#FDBB30" },
-    { nom: "Saint-Marin", drapeau: "🇸🇲", couleur: "#74B3D4" },
-    { nom: "Saint-Vincent-et-les-Grenadines", drapeau: "🇻🇨", couleur: "#01A7D6" },
-    { nom: "Sao Tomé-et-Principe", drapeau: "🇸🇹", couleur: "#3E8E41" },
-    { nom: "Sénégal", drapeau: "🇸🇳", couleur: "#009639" },
-    { nom: "Serbie", drapeau: "🇷🇸", couleur: "#D71A28" },
-    { nom: "Seychelles", drapeau: "🇸🇨", couleur: "#FFD700" },
-    { nom: "Sierra Leone", drapeau: "🇸🇱", couleur: "#18B2AA" },
-    { nom: "Singapour", drapeau: "🇸🇬", couleur: "#E4002B" },
-    { nom: "Slovaquie", drapeau: "🇸🇰", couleur: "#006B3F" },
-    { nom: "Slovénie", drapeau: "🇸🇮", couleur: "#FFFFFF" },
-    { nom: "Somalie", drapeau: "🇸🇴", couleur: "#009C9C" },
-    { nom: "Soudan", drapeau: "🇸🇩", couleur: "#F00A12" },
-    { nom: "Soudan du Sud", drapeau: "🇸🇸", couleur: "#1F6B3C" },
-    { nom: "Sri Lanka", drapeau: "🇱🇰", couleur: "#F8B900" },
-    { nom: "Suède", drapeau: "🇸🇪", couleur: "#006AA7" },
-    { nom: "Suisse", drapeau: "🇨🇭", couleur: "#FF0000" },
-    { nom: "Syrie", drapeau: "🇸🇾", couleur: "#D71A28" },
-    { nom: "Tadjikistan", drapeau: "🇹🇯", couleur: "#F80B1D" },
-    { nom: "Tanzanie", drapeau: "🇹🇿", couleur: "#FFB81C" },
-    { nom: "Tchad", drapeau: "🇹🇩", couleur: "#009639" },
-    { nom: "Thaïlande", drapeau: "🇹🇭", couleur: "#C8102E" },
-    { nom: "Timor-Leste", drapeau: "🇹🇱", couleur: "#E40000" },
-    { nom: "Togo", drapeau: "🇹🇬", couleur: "#009639" },
-    { nom: "Tonga", drapeau: "🇹🇴", couleur: "#F5A5A1" },
-    { nom: "Trinité-et-Tobago", drapeau: "🇹🇹", couleur: "#E4002B" },
-    { nom: "Tunisie", drapeau: "🇹🇳", couleur: "#E60012" },
-    { nom: "Turkménistan", drapeau: "🇹🇲", couleur: "#006747" },
-    { nom: "Turquie", drapeau: "🇹🇷", couleur: "#E30B17" },
-    { nom: "Tuvalu", drapeau: "🇹🇻", couleur: "#0089C2" },
-    { nom: "Ukraine", drapeau: "🇺🇦", couleur: "#0066B1" },
-    { nom: "Uruguay", drapeau: "🇺🇾", couleur: "#FFD700" },
-    { nom: "United States of America", drapeau: "🇺🇸", couleur: "#B22234" },
-    { nom: "United Kingdom of Great Britain and Northern Ireland", drapeau: "🇬🇧", couleur: "#00247D" },
-    { nom: "Vanuatu", drapeau: "🇻🇺", couleur: "#00A14E" },
-    { nom: "Vatican", drapeau: "🇻🇦", couleur: "#FFD700" },
-    { nom: "Venezuela", drapeau: "🇻🇪", couleur: "#FCD116" },
-    { nom: "Vietnam", drapeau: "🇻🇳", couleur: "#F00A12" },
-    { nom: "Yémen", drapeau: "🇾🇪", couleur: "#D71A28" },
-    { nom: "Zambie", drapeau: "🇿🇲", couleur: "#007847" },
-    { nom: "Zimbabwe", drapeau: "🇿🇼", couleur: "#00A859" }
-];
+const labels = ref([]);
 
 
 function interpolateColor(color1, color2, steps) {
@@ -330,43 +162,58 @@ function interpolateColor(color1, color2, steps) {
 }
 
 
-
 const chartOptions = ref({
-  chart: {
-    id: 'vuechart-example2',
-    stacked: true,
-  },
-  events: {
-      dataPointSelection: (event, chartContext, config) => {
-       
-        handleBarClick(event, chartContext, config);
-      }
-  },
-  xaxis: {
-    categories: [],
-  },
-  yaxis: {
-    min: 0,
-    max: 60,
-    tickAmount: 6,
-    labels: {
-      formatter: function (val) {
-        return val.toFixed(0);
-      }
-    }
-  },
-  colors: interpolateColor(userStore.user.partner ? userStore.user.partner.back_color : userStore.user.customer.partner_back_color, userStore.user.partner ? userStore.user.partner.title_color : userStore.user.customer.partner_title_color, 3),
-  // colors: userStore.user.partner ? [userStore.user.partner.back_color, userStore.user.partner.title_color] : [userStore.user.customer.partner_back_color, userStore.user.customer.partner_title_color],
-  legend: {
-    position: 'bottom',
-    horizontalAlign: 'center',
-  },
-  plotOptions: {
-    bar: {
-      borderRadius: 0,
+    labels: labels.value,
+    colors: userStore.user.partner ? generateShadedPaletteByOpacity(userStore.user.partner.title_color, 15) : generateShadedPaletteByOpacity(userStore.user.customer.partner_title_color, 15),
+    // Couleurs des séries
+    dataLabels: {
+        enabled: true,
+        formatter: function (val) {
+            return val.toFixed(0) + "%";
+        }
     },
-  },
+    legend: {
+        position: 'bottom',
+        horizontalAlign: 'center'
+    }
 });
+
+// const chartOptions = ref({
+//   chart: {
+//     id: 'vuechart-example2',
+//     stacked: true,
+//   },
+//   events: {
+//       dataPointSelection: (event, chartContext, config) => {
+       
+//         handleBarClick(event, chartContext, config);
+//       }
+//   },
+//   xaxis: {
+//     categories: [],
+//   },
+//   yaxis: {
+//     min: 0,
+//     max: 60,
+//     tickAmount: 6,
+//     labels: {
+//       formatter: function (val) {
+//         return val.toFixed(0);
+//       }
+//     }
+//   },
+//   colors: interpolateColor(userStore.user.partner ? userStore.user.partner.back_color : userStore.user.customer.partner_back_color, userStore.user.partner ? userStore.user.partner.title_color : userStore.user.customer.partner_title_color, 3),
+//   // colors: userStore.user.partner ? [userStore.user.partner.back_color, userStore.user.partner.title_color] : [userStore.user.customer.partner_back_color, userStore.user.customer.partner_title_color],
+//   legend: {
+//     position: 'bottom',
+//     horizontalAlign: 'center',
+//   },
+//   plotOptions: {
+//     bar: {
+//       borderRadius: 0,
+//     },
+//   },
+// });
 
 const handleBarClick = (event, chartContext, config)=> {
  
@@ -419,50 +266,117 @@ const loadData = async (start_date, end_date, timePeriods, establishment, staff,
 
 
     if (response.status === 200) {
-      dataChart.value = response.data;
-      category.value = response.data.categories || [];
-      let seriesFormatted=[];
-      let chart_colors=[];
-       response.data.series.forEach((_d)=>{
+
+
+
+        const data = response.data;
+        const color_generated=userStore.user.partner
+                        ? generateShadedPaletteByOpacity(userStore.user.partner.title_color, data.series.length)
+                        : generateShadedPaletteByOpacity(userStore.user.customer.partner_title_color, data.series.length);
+        let newLabels=[];
+        let newColors=[];
+        let c=0;
+
+          data.labels.forEach((_d)=>{
+           
+            const france = pays.find(_pays => _pays.nom.toLowerCase() === _d.toLowerCase())
+
+            if (france) {
+              _d=`${france.nom} ${france.drapeau} : ${data.count[c]}`;
+              newLabels.push(_d);
+              newColors.push(generateShadedPaletteByOpacity(france.couleur,5)[0]);
+            }else{
+              newColors.push(color_generated[c]);
+              newLabels.push(_d+' : '+data.count[c]);
+            }
+             c++;
+          });
+
+            // Combine labels and series into an array of objects
+            const combined = newLabels.map((label, index) => ({ label, color: newColors[index],series: data.series[index] }));
+
+            // Sort the array of objects by the series value in descending order
+            let sortedCombined = combined.sort((a, b) => b.series - a.series);
+
+            // Only use series greater than zero.
+            sortedCombined = sortedCombined.filter(item => item.series > 0)
+
+            // Separate the sorted array of objects back into labels and series arrays
+            const sortedData = {
+                labels: sortedCombined.map(item => item.label),
+                colors: sortedCombined.map(item => item.color),
+                series: sortedCombined.map(item => item.series)
+            };
+
+            series.value = sortedData.series;
+            labels.value = sortedData.labels;
+            chartOptions.value.labels = labels.value;
+
+            const total = series.value.reduce((acc, curr) => acc + curr, 0);
+            hasData.value = total > 0;
+             if (total <= 0) {
+                      emits('show-chart','country_false');
+                  }else{
+                    emits('show-chart','country');
+                  }
+
+            if (hasData.value) {
+                chartOptions.value = {
+                    ...chartOptions.value,
+                    labels: labels.value,
+                    colors: sortedData.colors,
+                };
+
+            } else {
+
+                console.warn('Data is present but the sum is zero.');
+            }
+
+
+      // dataChart.value = response.data;
+      // category.value = response.data.categories || [];
+      // let seriesFormatted=[];
+      // let chart_colors=[];
+      //  response.data.series.forEach((_d)=>{
         
-        const france = pays.find(pays => pays.nom.toLowerCase() === _d['name'].toLowerCase())
+      //   const france = pays.find(_pays => _pays.nom.toLowerCase() === _d['name'].toLowerCase())
 
-        if (france) {
-          _d['name']=`${france.drapeau} ${france.nom}`;
-          chart_colors.push(france.couleur);
-        }else{
-          chart_colors.push(userStore.user.partner ? userStore.user.partner.back_color : userStore.user.customer.partner_back_color);
-        }
-        seriesFormatted.push(_d);
-      })
+      //   if (france) {
+      //     _d['name']=`${france.drapeau} ${france.nom}`;
+      //     chart_colors.push(france.couleur);
+      //   }else{
+      //     chart_colors.push(userStore.user.partner ? userStore.user.partner.back_color : userStore.user.customer.partner_back_color);
+      //   }
+      //   seriesFormatted.push(_d);
+      // })
 
-      series.value = seriesFormatted || [];
-      const maxValue = response.data.series.length > 0 ? getMaxData(response.data.series) : 0;
+      // series.value = seriesFormatted || [];
+      // const maxValue = response.data.series.length > 0 ? getMaxData(response.data.series) : 0;
       
      
       
-      chartOptions.value = {
-        ...chartOptions.value,
-        xaxis: {
-          categories: category.value,
-        },
-        yaxis: {
-          max: maxValue,
-        },
-        colors : chart_colors
-        // colors : interpolateColor(userStore.user.partner ? userStore.user.partner.back_color : userStore.user.customer.partner_back_color, userStore.user.partner ? userStore.user.partner.title_color : userStore.user.customer.partner_title_color, response.data.series.length)
-      };
-      const total = series.value.reduce((totalAcc, serie) => {
-        return totalAcc + (serie.data ? serie.data.reduce((acc, curr) => acc + curr, 0) : 0);
-      }, 0);
+      // chartOptions.value = {
+      //   ...chartOptions.value,
+      //   xaxis: {
+      //     categories: category.value,
+      //   },
+      //   yaxis: {
+      //     max: maxValue,
+      //   },
+      //   colors : chart_colors
+      //   // colors : interpolateColor(userStore.user.partner ? userStore.user.partner.back_color : userStore.user.customer.partner_back_color, userStore.user.partner ? userStore.user.partner.title_color : userStore.user.customer.partner_title_color, response.data.series.length)
+      // };
+      // const total = series.value.reduce((totalAcc, serie) => {
+      //   return totalAcc + (serie.data ? serie.data.reduce((acc, curr) => acc + curr, 0) : 0);
+      // }, 0);
      
 
-      hasData.value = total > 0;
-      if (total <= 0) {
-          emits('show-chart','country_false');
-      }else{
-          emits('show-chart','country');
-      }
+      // hasData.value = total > 0;
+      // if (total <= 0) {
+      //     emits('show-chart','country_false');
+      // }else{
+      //     emits('show-chart','country');
+      // }
 
 
     } else {
