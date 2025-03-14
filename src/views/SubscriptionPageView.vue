@@ -583,15 +583,15 @@ onBeforeUnmount(() => {
   height: 300px; 
   opacity: 0.10; 
   position: absolute; 
-  top: 200px; 
-  left: 170px;
+  top: 220px; 
+  left: 350px;
   z-index: 1;
 }
 
 .cgv-container {
   height: 500px;
   overflow: auto;
-  padding: 0 5px;
+  padding: 0 12px;
 }
 
 .cgv-container p {
@@ -914,9 +914,25 @@ button.isLoaded {
   }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 768px) {
+  .caddie {
+    left: 250px;
+  }
+}
+
+@media screen and (max-width: 540px) {
   .caddie {
     left: 25px;
+  }
+
+  .form-group {
+    padding: 40px 15px;
+  }
+}
+
+@media screen and (min-width: 800px) and  (max-width: 912px) {
+  .caddie {
+    left: 200px;
   }
 }
 </style>
