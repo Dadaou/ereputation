@@ -93,7 +93,7 @@ const isCurrentAdvantage = (obj) => {
         dateTo = moment();
     }
 
-    let expiredAt = moment(new Date(obj.adv_expired_at).toDateString() + " " + obj.minute_to || 23 + ":" + obj.minute_to || 59 + ":" + obj.seconde_to || 59)
+    let expiredAt = moment(new Date(obj.adv_expired_at).toDateString() + " " + obj.hour_to || 23 + ":" + obj.minute_to || 59 + ":" + obj.seconde_to || 59)
 
     if (dateNow > expiredAt) {
         return false;
