@@ -114,8 +114,8 @@ const handleClick = async (event,element) => {
     }
     const response = await new Promise((resolve) => {
         services.createActionVisitor(vistorData, (response) => {
-            resolve(response);
-        });
+            resolve(response); 
+        },true);
     });
 
     if (response.status === 200) {

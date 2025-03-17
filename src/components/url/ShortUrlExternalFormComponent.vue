@@ -37,7 +37,7 @@
                             :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2', (!isValidLink && link !== '') ? 'border-red-500 ring-red-500 text-red-500 focus:border-red-500 focus:ring-red-500 hover:border-red-500 focus:outline-none hover:text-red-500 focus:text-red-500' : '']">
                     </div>
 
-                    <div class="tracking">
+                    <div class="tracking" v-if="!isEdit">
                         <el-checkbox v-model="noTracking" label="Direct link (no tracking)" size="large" />
                     </div>
                 </div>
@@ -120,6 +120,7 @@ const closeView = () => {
     emit('showExternalUrlList', true)
     linkStore.resetLink()
     resetValue()
+    isEdit.value = false
 }
 
 const establishments = computed(() => {
@@ -459,9 +460,6 @@ input {
     justify-content: center;
 }
 
-form button {
-    width: 100%;
-}
 
 @media screen and (min-width: 480px) {
 
@@ -492,7 +490,12 @@ form button {
     }
 
     .closeView {
-        margin-left: 30px;
+        margin-left: 5px;
+    }
+
+    form {
+        margin-left: 0;
+        padding-right: 50px;
     }
 
     .addBtn {
@@ -504,7 +507,6 @@ form button {
 @media screen and (max-width: 500px) {
     form {
         height: 850px !important;
-        padding-right: 3.5rem !important;
     }
 }
 </style>

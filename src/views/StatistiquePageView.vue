@@ -78,8 +78,10 @@
                     <div v-if="modal" class="overlay" >
                     <div class="modal" @click.stop :style="{ top: modalTop + 'px',position: 'absolute' }">
                      <div >
-                        <h6 v-if="isExternal != true" class="text-lg font-bold" style="text-align: center;color: gray;"> Feedback Form Submissions</h6>
-                        <h6 v-else class="text-lg font-bold" style="text-align: center;color: gray;"> External Qrcodes</h6>
+                        <h6 v-if="isExternal == 'Feedback'" class="text-lg font-bold" style="text-align: center;color: gray;"> Feedback Form Submissions</h6>
+                        <h6 v-if="isExternal == 'Discount'" class="text-lg font-bold" style="text-align: center;color: gray;"> Discount coupons</h6>
+                        <h6 v-if="isExternal == 'External'" class="text-lg font-bold" style="text-align: center;color: gray;"> External Qrcodes</h6>
+                        <h6 v-if="isExternal == 'Country'" class="text-lg font-bold" style="text-align: center;color: gray;"> Countries</h6>
                         <button class="btn text-lg close-btn" style="color: red;" @click="closeModal">x</button>
                      </div>
                       <div class="modal-content" >
@@ -142,7 +144,7 @@
                             <el-table-column  label="User Agent" align="center" prop="ua"  show-overflow-tooltip/> 
                              <el-table-column label="ISP" align="center" prop="isp"  show-overflow-tooltip/> 
 
-                              <el-table-column v-if="isExternal != true" label="Contact" align="left" show-overflow-tooltip>
+                              <el-table-column v-if="isExternal == 'Feedback' || isExternal == 'Country'" label="Contact" align="left" show-overflow-tooltip>
                                 <template #default="scope">
                                   <span >
                                     {{ scope.row.email }}
@@ -174,31 +176,39 @@
 
                         <!-- Fin modal -->
 
-    
+  
 
         <!-- <div class="dashboard__chart"> -->
         <div class="grid max-[1080px]:grid-cols-1 grid-cols-2 min-[1920px]:grid-cols-3 grid-flow-row gap-4 mt-8">
 
-            <div class="statistique">
-                <ChartFeedbackSubmissions @show-visitors="showVisitors" @showModal="showModal" @isExternal="setExternal"/>
+            <div class="statistique" v-if = "showChart.submission">
+                <ChartFeedbackSubmissions @show-chart="displayChart" @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
             </div>
-            <div class="statistique">
-                <ChartGateAndFeedbackVisit />
+            <div class="statistique" v-if = "showChart.gateAndFeedback">
+                <ChartGateAndFeedbackVisit @show-chart="displayChart" />
             </div>
-            <div class="statistique">
-                <ChartExternalUrl @show-visitors="showVisitors" @showModal="showModal" @isExternal="setExternal"/>
+            <div class="statistique" v-if = "showChart.external">
+                <ChartExternalUrl @show-chart="displayChart" @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
             </div>
-            <div class="statistique">
-                <PieChartService />
+
+            <div class="statistique" v-if = "showChart.service">
+                <PieChartService @show-chart="displayChart" />
             </div>
-            <div class="statistique">
-                <ChartAboutGate />
+            <div class="statistique" v-if = "showChart.gate">
+                <ChartAboutGate @show-chart="displayChart" />
             </div>
-            <div class="statistique">
-                <ChartPlatformsAndSocialmedia />
+            <div class="statistique" v-if = "showChart.platform">
+                <ChartPlatformsAndSocialmedia @show-chart="displayChart" />
             </div>
-            <div class="statistique">
-                <PieChartReseauxSociaux />
+            <div class="statistique" v-if = "showChart.sociaux">
+                <PieChartReseauxSociaux @show-chart="displayChart" />
+            </div>
+            <div class="statistique" v-if = "showChart.discount == true">
+                <ChartDiscount @show-chart="displayChart" @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
+            </div>
+
+            <div class="statistique" v-if = "showChart.country">
+                <ChartCountry @show-chart="displayChart" @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
             </div>
 
         </div>
@@ -242,6 +252,10 @@ const ChartExternalUrl = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/ChartExternalUrl.vue")
 )
 
+const ChartDiscount = defineAsyncComponent(() =>
+    import("@Components/ChartStatistique/ChartDiscount.vue")
+)
+
 const ChartGateAndFeedbackVisit = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/ChartGateAndFeedbackVisit.vue")
 )
@@ -256,6 +270,10 @@ const PieChartReseauxSociaux = defineAsyncComponent(() =>
 
 const PieChartService = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/PieChartService.vue")
+)
+
+const ChartCountry = defineAsyncComponent(() =>
+    import("@Components/ChartStatistique/ChartCountry.vue")
 )
 
 const nbrTotalVisit = ref(null);
@@ -275,6 +293,85 @@ const scrollPosition = ref(0);
 const contentTop = ref(null);
 const modalTop = ref(0);
 
+const showChart=ref({
+    submission: true,
+    gateAndFeedback: true,
+    external: true,
+    service: true,
+    gate: true,
+    platform: true,
+    sociaux: true,
+    discount: true,
+    country: true
+})
+
+const displayChart = (_ch)=>{
+    if (_ch == 'submission') {
+        showChart.value.submission = true;
+    }
+    if (_ch == 'submission_false') {
+        showChart.value.submission = false;
+    }
+
+    if (_ch == 'gateAndFeedback') {
+        showChart.value.gateAndFeedback = true;
+    }
+     if (_ch == 'gateAndFeedback_false') {
+        showChart.value.gateAndFeedback = false;
+    }
+
+    if (_ch == 'external') {
+        showChart.value.external = true;
+    }
+    if (_ch == 'external_false') {
+        showChart.value.external = false;
+    }
+
+      if (_ch == 'country') {
+        showChart.value.country = true;
+    }
+    if (_ch == 'country_false') {
+        showChart.value.country = false;
+    }
+
+
+    if (_ch == 'service') {
+        showChart.value.service = true;
+    }
+     if (_ch == 'service_false') {
+        showChart.value.service = false;
+    }
+
+    if (_ch == 'gate') {
+        showChart.value.gate = true;
+    }
+    if (_ch == 'gate_false') {
+        showChart.value.gate = false;
+    }
+
+    if (_ch == 'platform') {
+        showChart.value.platform = true;
+    }
+    if (_ch == 'platform_false') {
+        showChart.value.platform = false;
+    }
+
+    if (_ch == 'sociaux') {
+        showChart.value.sociaux = true;
+    }
+     if (_ch == 'sociaux_false') {
+        showChart.value.sociaux = false;
+    }
+
+    if (_ch == 'discount') {
+        showChart.value.discount = true;
+         console.log(showChart.value.discount)
+    }
+     if (_ch == 'discount_false') {
+        showChart.value.discount = false;
+        console.log(showChart.value.discount)
+    }
+}
 const showVisitors = (_visitors) => {
     visitors.value=_visitors;
 }
@@ -485,6 +582,15 @@ watch([establishment, unitsFilter, staffFilter, selectedTimePeriod, start_date, 
     totalNotSubmitted(selectedTimePeriod.value);
     totalSubmitted(selectedTimePeriod.value);
     totalClickSocial(selectedTimePeriod.value);
+    showChart.value.submission = true;
+    showChart.value.discount = true;
+    showChart.value.gate = true;
+    showChart.value.gateAndFeedback = true;
+    showChart.value.sociaux = true;
+    showChart.value.platform = true;
+    showChart.value.service = true;
+    showChart.value.external = true;
+    showChart.value.country = true;
 })
 
 </script>

@@ -1,5 +1,5 @@
 <template >
-  <h3 v-if="hasData">About feedback form submissions</h3>
+  <h3 v-if="hasData">Discount coupons</h3>
   <div v-if="hasData" style="position: relative;" >
 
     
@@ -205,7 +205,7 @@ const chartOptions = ref({
     }
   },
   // colors: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']) : (userStore.user.customer.partner_back_color == "#0a8964" ? ['#0a8964', '#48c16c'] : ['#00569D', '#009DCF']),
-  colors: userStore.user.partner ? [userStore.user.partner.back_color, userStore.user.partner.title_color] : [userStore.user.customer.partner_back_color, userStore.user.customer.partner_title_color],
+  colors: userStore.user.partner ? [userStore.user.partner.title_color,userStore.user.partner.back_color] : [userStore.user.customer.partner_title_color,userStore.user.customer.partner_back_color],
   legend: {
     position: 'bottom',
     horizontalAlign: 'center',
@@ -221,14 +221,14 @@ const handleBarClick = (event, chartContext, config)=> {
  
   const { dataPointIndex } = config;
   const serieName = series.value[config.seriesIndex]?.name;
-  if (serieName=='Feedback submitted') {
-    getVisitors(chartOptions.value.xaxis.categories[dataPointIndex], chartOptions.value.xaxis.categories[dataPointIndex], timePeriods.value, establishment.value, staff.value, units.value,'yes');
+  if (serieName=='Discount QrCode') {
+    getVisitors(chartOptions.value.xaxis.categories[dataPointIndex], chartOptions.value.xaxis.categories[dataPointIndex], timePeriods.value, establishment.value, staff.value, units.value,'advantagecontact');
   } else {
-    getVisitors(chartOptions.value.xaxis.categories[dataPointIndex], chartOptions.value.xaxis.categories[dataPointIndex], timePeriods.value, establishment.value, staff.value, units.value,'no');
+    getVisitors(chartOptions.value.xaxis.categories[dataPointIndex], chartOptions.value.xaxis.categories[dataPointIndex], timePeriods.value, establishment.value, staff.value, units.value,'discount');
   }
 
  emits('showModal',true);
- emits('setSource',"Feedback");
+ emits('setSource','Discount');
 
   //showModal.value = true;
   
@@ -253,7 +253,7 @@ const loadData = async (start_date, end_date, timePeriods, establishment, staff,
     end_date = moment(new Date(end_date)).format('YYYY-MM-DD');
   }
 
-  let api = `/customer/visitor/reviews?tag=${route.params.tag}&from=${start_date}&to=${end_date}&type=${timePeriods || 'daily'}`
+  let api = `/customer/visitor/discount?tag=${route.params.tag}&from=${start_date}&to=${end_date}&type=${timePeriods || 'daily'}`
   if (establishment) {
     api = api + `&establishment=${establishment}`
   }
@@ -289,11 +289,13 @@ const loadData = async (start_date, end_date, timePeriods, establishment, staff,
       }, 0);
 
       hasData.value = total > 0;
-       if (total <= 0) {
-            emits('show-chart','submission_false');
-        }else{
-            emits('show-chart','submission');
-        }
+      if (total <= 0) {
+          emits('show-chart','discount_false');
+          console.log('discount_false')
+      }else{
+         emits('show-chart','discount');
+         console.log('discount')
+      }
 
     } else {
       console.error('Error fetching data:', response);
@@ -305,11 +307,11 @@ const loadData = async (start_date, end_date, timePeriods, establishment, staff,
 
 // GET VISITORS
 
-const getVisitors = async (start_date, end_date, timePeriods, establishment, staff, units,submitted) => {
+const getVisitors = async (start_date, end_date, timePeriods, establishment, staff, units,source) => {
 
  
 
-  let api = `/customer/visitor/feedbacks/list?tag=${route.params.tag}&from=${start_date}&to=${end_date}&submitted=${submitted}&type=${timePeriods || 'daily'}`
+  let api = `/customer/visitor/discount/list?tag=${route.params.tag}&from=${start_date}&to=${end_date}&source=${source}&type=${timePeriods || 'daily'}`
   if (establishment) {
     api = api + `&establishment=${establishment}`
   }

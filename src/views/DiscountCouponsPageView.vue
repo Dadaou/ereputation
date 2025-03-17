@@ -51,7 +51,7 @@
           {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
         </template>
       </el-table-column>
-      <el-table-column fixed="right" align="center" label="Confirm" :width="isMobile ? 70 : 200">
+      <el-table-column fixed="right" align="center" label="Confirm" :min-width="minWidth">
         <template #default="scope">
           <span v-if="!scope.row.confirm && scope.row.other_customer != null"><i class="uil uil-dna"
               style="color: #777; font-size: 16px;"></i></span>
@@ -84,6 +84,7 @@ import {
 } from 'vue';
 
 const discountLoading = ref(false);
+const minWidth = ref(140);
 const route = useRoute();
 const customer = route.params.tag;
 const search = ref('');
@@ -170,7 +171,12 @@ onBeforeMount(async () => {
     });
 
     if (response.status === 200) {
-      discountData.value = response.data;
+      const data = response.data
+      if(route?.query?.adv_id) {
+        discountData.value = data.filter((dicount) => dicount.adv_id == route.query.adv_id);
+      } else {
+        discountData.value = data;
+      }
 
     } else {
       console.error('Error fetching contacts:', response);
@@ -183,9 +189,21 @@ onBeforeMount(async () => {
 const isMobile = ref(window.innerWidth < 768);
 
 const handleResize = () => {
+  setMinWidth()
   isMobile.value = window.innerWidth < 768;
 };
+
+const setMinWidth = () => {
+  if(window.innerWidth < 500) {
+    minWidth.value = 140
+  }
+  else {
+    minWidth.value = 240
+  }
+}
+
 onMounted(() => {
+  setMinWidth()
   window.addEventListener('resize', handleResize);
 });
 

@@ -1,13 +1,14 @@
 <template>
-    <h3>About Services forms</h3>
+    <h3 v-if="hasData">About Services forms</h3>
     <div v-if="hasData">
         <div class="chart-container">
-            <apexchart type="donut" height="480"  :options="chartOptions" :series="series"></apexchart>
+            <apexchart type="donut" height="511"  :options="chartOptions" :series="series"></apexchart>
         </div>
     </div>
     <div v-else class="no_data">
+        
+        <div v-if="hasData">
         No forms submitted by services <br>
-        <div>
             <div v-if="IsValueOkay(establishment) && establishment[0] != 'all'">for establishments : 
                 <span v-for="estab_id, index in establishment" :key="estab_id">
                     <span v-for="estab_name in establishments" :key="estab_name.id">
@@ -60,6 +61,8 @@ const hasData = ref(false);
 const series = ref([]);
 const labels = ref([]);
 const userStore = useUserStore();
+
+const emits = defineEmits(['showModal','setSource','show-visitors','show-chart']);
 
 const chartOptions = ref({
     labels: labels.value,
@@ -129,6 +132,11 @@ const loadData = async (start_date, end_date, timePeriods, establishment, source
 
             const total = series.value.reduce((acc, curr) => acc + curr, 0);
             hasData.value = total > 0;
+             if (total <= 0) {
+                      emits('show-chart','service_false');
+                  }else{
+                    emits('show-chart','service');
+                  }
 
             if (hasData.value) {
                 chartOptions.value = {

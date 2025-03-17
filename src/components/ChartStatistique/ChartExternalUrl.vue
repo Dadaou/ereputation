@@ -1,5 +1,5 @@
 <template>
-  <h3>About external Qrcodes</h3>
+  <h3 v-if="hasData">About external Qrcodes</h3>
   <div v-if="hasData" style="position: relative;">
 
     <div v-if="showModal" class="overlay" >
@@ -91,7 +91,7 @@
 
   </div>
   <div v-else class="content-message">
-    <div>No scan<br>
+    <div v-if="hasData">No scan<br>
       <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'"> for establishment :
         <span v-for="(estab_id, index) in establishment" :key="estab_id">
           <span v-for="estab_name in establishments" :key="estab_name.id">
@@ -136,7 +136,7 @@ const units = inject('unitsFilter');
 const userStore = useUserStore();
 const hasData = ref(false);
 const showModal = ref(false);
-const emits = defineEmits(['showModal','isExternal','show-visitors']);
+const emits = defineEmits(['showModal','setSource','show-visitors','show-chart']);
 
 function interpolateColor(color1, color2, steps) {
     const c1 = color1.match(/\w\w/g).map(c => parseInt(c, 16));
@@ -198,7 +198,7 @@ const handleBarClick = (event, chartContext, config)=> {
   
     getVisitors(chartOptions.value.xaxis.categories[dataPointIndex], chartOptions.value.xaxis.categories[dataPointIndex], timePeriods.value, establishment.value, staff.value, units.value,serieName);
   emits('showModal',true);
- emits('isExternal',true);
+ emits('setSource','External');
   // showModal.value = true;
   
 }
@@ -262,6 +262,12 @@ const loadData = async (start_date, end_date, timePeriods, establishment, staff,
      
 
       hasData.value = total > 0;
+      if (total <= 0) {
+          emits('show-chart','external_false');
+      }else{
+          emits('show-chart','external');
+      }
+
 
     } else {
       console.error('Error fetching data:', response);

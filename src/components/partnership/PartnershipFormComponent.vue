@@ -481,6 +481,7 @@ const loadAdvantage = async () => {
     font-size: 14px;
     color: grey;
     font-weight: 500;
+    padding : 0 12px;
 }
 
 /* Responsive: Ajustement pour les petits écrans */
@@ -523,6 +524,14 @@ form {
     }
     .inline-flex input {
         margin-top: 0.5rem;
+    }
+
+    form {
+        margin: 7px;
+    }
+
+    .profile__edit {
+        padding: 0 2px;
     }
 }
 </style>

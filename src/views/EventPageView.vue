@@ -79,7 +79,7 @@ import { useRoute } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import EventItemComponent from '@Components/events/EventItemComponent.vue';
-import { ref, watch, onBeforeMount, onUpdated, provide, defineAsyncComponent, inject } from 'vue';
+import { ref, watch, onBeforeMount, onUpdated, provide, defineAsyncComponent, inject, onMounted } from 'vue';
 import { ElDatePicker } from 'element-plus';
 import 'element-plus/es/components/date-picker/style/css'
 import { useResizeObserver } from '@vueuse/core';
@@ -98,6 +98,7 @@ const SpinnerComponent = defineAsyncComponent(() =>
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 
+
 appStore.setIsExist(true);
 appStore.setCurrentPage({
     title1: "",
@@ -107,7 +108,7 @@ appStore.setCurrentPage({
 
 const route = useRoute();
 
-appStore.setBreadcrumbs([
+/*appStore.setBreadcrumbs([
     {
         title: "Establishment",
         path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
@@ -118,7 +119,7 @@ appStore.setBreadcrumbs([
         path: `${route.path}`,
         isCurrent: true
     }
-])
+])*/
 
 const dataLoading = ref(true);
 const chartLoading = ref(false);
@@ -163,6 +164,22 @@ watch(activeName, async () => {
     } else {
         await loadEvents(companyId, start_date.value, end_date.value, establishment.value.locality_id)
     }
+})
+
+onMounted(async () => {
+    const data = await companiesStore.getEstablishment(customerTag.value, companyId);
+    appStore.setBreadcrumbs([
+        {
+            title: data?.name,
+            path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
+            isCurrent: false,
+        },
+        {
+            title: "Events",
+            path: `${route.path}`,
+            isCurrent: true
+        }
+    ])
 })
 
 
