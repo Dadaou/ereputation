@@ -1,6 +1,6 @@
 <template>
     <div v-show="show"> 
-        <div style="display: flex; justify-content: end;">
+        <div class="closeView">
             <el-button :icon="Close" @click="toggleShow(true)" circle />
         </div>
         <div class="security__header border__bottom mt-10">
@@ -110,7 +110,7 @@
         </div>
     </div>
     <div v-show="!show">
-        <div style="display: flex; justify-content: end;">
+        <div class = "addBtn">
             <el-button type="primary" :icon="Plus" @click="toggleShow">Add</el-button>
         </div>
         <LinksUrlsListComponent @edit="handleEdit" @deleteData="deleteRow" :table-data="urlGateList"/>
@@ -840,6 +840,11 @@ button.isLoaded {
     font-weight: bold;
 }
 
+.closeView, .addBtn {
+    display: flex; 
+    justify-content: flex-end;
+}
+
 .security__header p {
     font-size: 15px;
     margin: 8px 0;
@@ -986,6 +991,20 @@ form button {
         width: 84%;
         /* Occuper toute la largeur sur les petits écrans */
     }
+
+    .closeView, .addBtn {
+        display: flex; 
+        justify-content: flex-start;
+    }
+
+    .closeView {
+        margin-left: 30px;
+    }
+
+    .addBtn {
+        margin-left: 10px;
+    }
+
 }
 
 @media screen and (max-width: 500px) {
