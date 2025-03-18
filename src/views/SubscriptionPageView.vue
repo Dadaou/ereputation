@@ -861,7 +861,7 @@ button.isLoaded {
 }
 
 input, select {
-  border-radius: 5px !important;
+  border-radius: 3px !important;
 }
 
 .form-group.features-list {

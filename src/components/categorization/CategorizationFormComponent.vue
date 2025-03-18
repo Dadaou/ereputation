@@ -186,4 +186,12 @@ onBeforeMount (() => {
 label span {
     color: red;
 }
+
+@media  (max-width: 800px) {
+    
+    form {
+        margin: 0 50px 0 0;
+    }
+    
+}
 </style>

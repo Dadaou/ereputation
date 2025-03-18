@@ -51,7 +51,7 @@
           {{ scope.row.expired_at ? moment(scope.row.expired_at).format('YYYY-MM-DD') : '' }}
         </template>
       </el-table-column>
-      <el-table-column fixed="right" align="center" label="Confirm" :min-width="minWidth">
+      <el-table-column label="Confirm" align="center" width="300">
         <template #default="scope">
           <span v-if="!scope.row.confirm && scope.row.other_customer != null"><i class="uil uil-dna"
               style="color: #777; font-size: 16px;"></i></span>
@@ -64,6 +64,19 @@
             class="has-hover"><i class="uil uil-square" style="color: #777; font-size: 15px;"></i></span>
         </template>
       </el-table-column>
+      <!--<el-table-column fixed="right" align="center" label="Confirm" :min-width="minWidth">
+        <template #default="scope">
+          <span v-if="!scope.row.confirm && scope.row.other_customer != null"><i class="uil uil-dna"
+              style="color: #777; font-size: 16px;"></i></span>
+           <span v-if="scope.row.confirm && scope.row.other_customer != null"><i class="uil uil-check mr-1"
+              style="color:var(--color-success); font-size: 16px;"></i></span>
+          <span v-if="scope.row.confirm && scope.row.other_customer == null" @click="handleCancel(scope.row.id)"
+            class="has-hover"><i class="uil uil-check mr-1"
+              style="color:var(--color-success); font-size: 16px;"></i></span>
+          <span v-if="!scope.row.confirm && scope.row.other_customer == null" @click="handleConfirm(scope.row.id)"
+            class="has-hover"><i class="uil uil-square" style="color: #777; font-size: 15px;"></i></span>
+        </template>
+      </el-table-column>-->
     </el-table>
   </div>
 </template>
