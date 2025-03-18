@@ -1,100 +1,37 @@
 <template>
   <h3 v-if="hasData">About Countries</h3>
-  <div v-if="hasData" style="position: relative;">
+  <div v-if="paginatedSeries.length > 0"   style="position: relative;" class="chart-wrapper">
 
-    <div v-if="showModal" class="overlay" >
-      <div class="modal" @click.stop>
-       <div>
-          <h3 class="text-lg font-bold" style="margin: -15px;">Visitors {{visitors[0].os}}</h3>
-          <button class="btn text-lg close-btn" style="color: red;" @click="showModal = false">x</button>
-       </div>
-        <div class="modal-content">
+   
 
 
-            <el-table :data="visitors" class="custom-header" style="font-size: 13px !important;padding: 0px !important;margin: 0px !important;">
-           
-              <el-table-column label="Os" align="center" style="width: 20%; min-width: 800px;">
-                <template #default="scope">
-                  <span style=" width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
-                    {{ scope.row.os }}
-                  </span>
 
-                </template>
-              </el-table-column>
-
-              <!-- <el-table-column label="OS" align="center" prop="os"/> -->
-
-               <el-table-column label="Device" align="center" style="width: 20%; min-width: 800px;">
-                <template #default="scope">
-                  <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
-                    {{ scope.row.device }}
-                  </span>
-
-                </template>
-              </el-table-column>
-
-              <!-- <el-table-column label="Device" prop="device"   /> -->
-
-              <!-- <el-table-column label="Country" prop="country" /> -->
-              <el-table-column label="Country" align="center" style="width: 20%; min-width: 800px;">
-                <template #default="scope">
-                  <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
-                    {{ scope.row.country }}
-                  </span>
-
-                </template>
-              </el-table-column>
-
-              <!-- <el-table-column label="City" prop="city"/> -->
-               <el-table-column label="City" align="center" style="width: 20%; min-width: 800px;">
-                <template #default="scope">
-                  <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
-                    {{ scope.row.city }}
-                  </span>
-
-                </template>
-              </el-table-column>
-
-              <!-- <el-table-column label="Gps" align="center" prop="gps"  show-overflow-tooltip/> -->
-              <el-table-column label="Gps" align="center" style="width: 20%; min-width: 800px;">
-                <template #default="scope">
-                  <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
-                    {{ scope.row.gps }}
-                  </span>
-
-                </template>
-              </el-table-column>
-             
-              <!-- <el-table-column label="Visited at" prop="created_at" /> -->
-            <el-table-column label="created_at" align="left" >
-                <template #default="scope">
-                  <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
-                     {{ scope.row.created_at ? moment(scope.row.created_at).format('YYYY-MM-DD HH:mm') : '' }}
-
-                  </span>
-
-                </template>
-              </el-table-column>
-             
-          </el-table>
-
-          
+        <div class="chart-container" ref="chartWrapper">
+            <apexchart type="donut" 
+        height="411"  :options="chartOptions" :series="series"></apexchart>
         </div>
-        
-      </div>
-    </div>
 
+          <div class="legend-container">
 
+            <ul ref="legendList">
+              <li v-for="(label,index) in paginatedSeries" :key="index">
+                <span class="legend-dot" :style="{ backgroundColor: chartOptions.colors[index] }"></span>
+               {{ label}}
+              </li>
+            </ul>
 
-        <div class="chart-container">
-            <apexchart type="donut" height="511"  :options="chartOptions" :series="series"></apexchart>
-        </div>
+            <div class="pagination-buttons" v-if="labels.length / dynamicItemsPerPage > 1">
+              <button @click="prevPage" :disabled="currentPage === 0">⬅</button>
+              <button @click="nextPage" :disabled="(currentPage + 1) * dynamicItemsPerPage >= labels.length">➡</button>
+            </div>
+
+          </div>
   <!--   <div class="chart-container">
       <apexchart type="bar" height="460" :options="chartOptions" :series="series"  @dataPointSelection="handleBarClick"/>
     </div> -->
 
   </div>
-  <div v-else class="content-message">
+ <!--  <div v-else class="content-message">
     <div v-if="hasData">No scan<br>
       <span v-if="IsValueOkay(establishment) && establishment[0] != 'all'"> for establishment :
         <span v-for="(estab_id, index) in establishment" :key="estab_id">
@@ -106,11 +43,11 @@
         </span>
       </span>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script setup>
-import { ref, onBeforeMount, watch, inject } from 'vue';
+import { ref, onBeforeMount, watch, inject,computed,nextTick,onMounted,watchEffect } from 'vue';
 import VueApexCharts from 'vue3-apexcharts'
 import { useRoute } from 'vue-router';
 import services from '@Services/services.js';
@@ -147,6 +84,101 @@ const emits = defineEmits(['showModal','setSource','show-visitors','show-chart']
 const labels = ref([]);
 
 
+
+
+const currentPage = ref(0);
+const dynamicItemsPerPage = ref(8);
+const chartWrapper = ref(null);
+const legendList = ref(null);
+
+// const itemsPerPage = ref(5);
+
+// const paginatedLabels = computed(() => {
+//   const start = currentPage.value * itemsPerPage.value;
+//   return labels.value.slice(start, start + itemsPerPage.value);
+// });
+
+// const nextPage = () => {
+//   if ((currentPage.value + 1) * itemsPerPage.value < labels.value.length) {
+//     currentPage.value++;
+//   }
+// };
+
+// const prevPage = () => {
+//   if (currentPage.value > 0) {
+//     currentPage.value--;
+//   }
+// };
+const paginatedSeries = computed(() => {
+  const start = currentPage.value * dynamicItemsPerPage.value;
+  return labels.value.slice(start, start + dynamicItemsPerPage.value);
+});
+
+const calculateItemsPerPage = async() => {
+  
+ await nextTick();
+  setTimeout(()=>{
+
+    if (!chartWrapper.value || !legendList.value || !paginatedSeries.value) return;
+
+    const containerHeight = chartWrapper.value.clientHeight; 
+    const legendItems = legendList.value.children; 
+
+    if (legendItems.length === 0) return;
+ 
+    let totalHeight = 0;
+    let count = 0;
+
+    for (let item of legendItems) {
+      const itemHeight = item.clientHeight;
+      if (totalHeight + itemHeight > containerHeight) break;
+      totalHeight += itemHeight;
+      count++;
+    }
+ console.log(count)
+    dynamicItemsPerPage.value = count > 0 ? count : 6; 
+
+  },1000)
+
+};
+
+
+
+
+const nextPage = () => {
+
+  if ((currentPage.value + 1) * dynamicItemsPerPage.value < labels.value.length) {
+    currentPage.value++;
+  }
+};
+
+const prevPage = () => {
+
+  if (currentPage.value > 0) {
+    currentPage.value--;
+     
+  }
+};
+
+// Recalcul après le rendu
+onMounted(() => {
+
+  nextTick(() => {
+   setTimeout(()=>{
+
+     if (chartWrapper.value) {
+      calculateItemsPerPage();
+      window.addEventListener("resize", calculateItemsPerPage);
+      }else{
+        console.log('next')
+      }
+
+   },1000)
+  });
+
+});
+
+
 function interpolateColor(color1, color2, steps) {
     const c1 = color1.match(/\w\w/g).map(c => parseInt(c, 16));
     const c2 = color2.match(/\w\w/g).map(c => parseInt(c, 16));
@@ -161,6 +193,9 @@ function interpolateColor(color1, color2, steps) {
     return colors;
 }
 
+const truncateText = (text, maxLength = 20) => {
+  return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+};
 
 const chartOptions = ref({
     labels: labels.value,
@@ -173,8 +208,11 @@ const chartOptions = ref({
         }
     },
     legend: {
-        position: 'bottom',
-        horizontalAlign: 'center'
+      show: false
+        // position: 'right',
+        // horizontalAlign: 'top',
+        // floating: false,
+        // formatter: (seriesName) => truncateText(seriesName, 20)
     }
 });
 
@@ -310,6 +348,26 @@ const loadData = async (start_date, end_date, timePeriods, establishment, staff,
 
             series.value = sortedData.series;
             labels.value = sortedData.labels;
+//             labels.value = ["Madagascar 🇲🇬 : 273",
+// "Saudi Arabia 🇺🇸 : 5",
+// "Congo (Kinshasa) 🇬🇧 : 1","Hungary 🇲🇬 : 273",
+// "North Macedonia 🇺🇸 : 5",
+// "Marshall Islands 🇬🇧 : 1",
+// "Congo (Kinshasa) 🇬🇧 : 1","Netherlands 🇲🇬 : 273",
+// "North Macedonia 🇺🇸 : 5",
+// "Marshall Islands 🇬🇧 : 1",
+// "Congo (Kinshasa) 🇬🇧 : 1","Lithuania 🇲🇬 : 273",
+// "North Macedonia 🇺🇸 : 5",
+// "Marshall Islands 🇬🇧 : 1",
+// "Congo (Kinshasa) 🇬🇧 : 1","Australia 🇲🇬 : 273",
+// "Austria 🇺🇸 : 5",
+// "Germany 🇬🇧 : 1",
+// "United States of America 🇺🇸 : 5",
+// "United Kingdom of Great Britain and Northern Ireland 🇬🇧 : 1","Belgium 🇲🇬 : 273",
+// "Congo (Brazzaville) 2 🇺🇸 : 5",
+// "Saint-Vincent-et-les-Grenadines 2 🇬🇧 : 1","Spain 🇲🇬 : 273",
+// "Papouasie-Nouvelle-Guinée 🇺🇸 : 5",
+// "Saint Vincent and the Grenadines 🇬🇧 : 1","France 🇲🇬 : 273"];
             chartOptions.value.labels = labels.value;
 
             const total = series.value.reduce((acc, curr) => acc + curr, 0);
@@ -430,6 +488,9 @@ const getVisitors = async (start_date, end_date, timePeriods, establishment, sta
   }
 };
 
+
+
+
 watch([start_date, end_date, timePeriods, establishment, staff, units], () => {
   loadData(start_date.value, end_date.value, timePeriods.value, establishment.value, staff.value, units.value)
 })
@@ -450,6 +511,101 @@ export default {
 </script>
 
 <style scoped>
+
+  .legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%; 
+  display: inline-block;
+  margin-right: 2px;
+}
+  .chart-wrapper {
+  display: flex;
+  align-items: top;
+  justify-content: center;
+
+}
+
+@media screen and (max-width:530px) {
+
+    .chart-wrapper {
+        display: flex;
+        align-items: top;
+        justify-content: center;
+        flex-direction: column;
+    }
+    .chart-container {
+    /* 2/3 de l'espace */
+      width: 100% !important;
+
+    }
+    .vue-apexcharts {
+     height: 200px !important;
+    }
+}
+
+.chart-container {
+  flex: 3; /* 2/3 de l'espace */
+  min-width: 30%;
+
+}
+
+.legend-container{
+   flex: 1; 
+   display: flex;
+  flex-direction: row;
+  align-items: center;
+  max-height: 300px;
+  min-width: 10%;
+/*  padding: 3px;*/
+/*  margin-left: -40px;*/
+ 
+}
+
+.legend-container ul {
+  list-style: none;
+/*  padding: 0;
+  margin-right: 3px;
+  padding-right: 5px;*/
+/*  padding: 5px;*/
+  font-size: 14px;
+ color: rgb(101, 101, 101);
+
+}
+/*.legend-container li {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 5px;
+}*/
+
+
+
+.pagination-buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.pagination-buttons button {
+  background-color: var(--color-bgp);
+  color: white;
+  border: none;
+  padding: 1px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 50px;
+  height: 20px;
+}
+
+.pagination-buttons button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+
+
 
   .modal {
   position: absolute;
