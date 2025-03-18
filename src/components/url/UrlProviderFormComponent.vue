@@ -6,7 +6,7 @@
         <div class="security__header border__bottom mt-10">
             <div class="security__edit">
                 <!-- <h4><i class="uil uil-company"></i> Establishment</h4> -->
-                <p>Add the URL of your public review platforms, social medoia profiles, or hashtags you wish to monitor.
+                <p style="text-align: justify; padding: 0 10px;">Add the URL of your public review platforms, social medoia profiles, or hashtags you wish to monitor.
                     You can display these links into your Gate (Your unique QR Code) by selecting the corresponding section
                     in the section field. </p>
             </div>
@@ -624,11 +624,15 @@ form button {
     }
 
     .closeView {
-        margin-left: 30px;
+        margin-left: 10px;
     }
 
     .addBtn {
         margin-left: 10px;
+    }
+
+    form {
+        margin: 15px 0;
     }
 }
 

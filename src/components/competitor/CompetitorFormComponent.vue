@@ -98,7 +98,7 @@
                 </div>
                 <div>
                     <label for="positionning"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">positionning
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Positionning
                     </label>
                     <input type="text" id="positionning" name="positionning" v-model="data.positionning"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
@@ -494,8 +494,7 @@ input {
 
 .table__container {
     /* overflow-x: scroll; */
-    overflow-y: auto;
-    width: 85%;
+    width: 100%;
 }
 
 form button {
@@ -517,8 +516,13 @@ form button {
 
     .table__container,
     .security__header {
-        width: 84%;
+        width: 88%;
         /* Occuper toute la largeur sur les petits écrans */
+    }
+
+    form {
+        margin: 0;
+        height: 100% !important;
     }
 }
 </style>

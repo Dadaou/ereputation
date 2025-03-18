@@ -5,7 +5,7 @@
         </div>
         <div class="security__header border__bottom mt-10">
             <div class="security__edit">
-                <p>Add the URLs pointing to your internal resources (menus, promotional offers, websites…) so that they are
+                <p style="text-align: justify; padding: 0 10px;">Add the URLs pointing to your internal resources (menus, promotional offers, websites…) so that they are
                     displayed in your Gate.</p>
             </div>
         </div>
@@ -998,11 +998,15 @@ form button {
     }
 
     .closeView {
-        margin-left: 30px;
+        margin-left: 10px;
     }
 
     .addBtn {
         margin-left: 10px;
+    }
+
+    form {
+        margin: 15px 0;
     }
 
 }

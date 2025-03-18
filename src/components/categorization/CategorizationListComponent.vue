@@ -1,5 +1,5 @@
 <template>
-  <div style="color:gray;">You have the option to add your own categories below</div>
+  <p style="color:gray; text-align: justify; margin-right: 50px;">You have the option to add your own categories below</p>
   <div class="search">
     <el-input v-model="search" size="small" placeholder="Type to search" />
   </div>

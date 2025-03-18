@@ -312,4 +312,12 @@ input {
   font-size: 32px;
   font-weight: 600;
 }
+
+@media screen and (max-width: 768px) {
+
+  form {
+        margin: 0 50px 0 0;
+    }
+  
+}
 </style>

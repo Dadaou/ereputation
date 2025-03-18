@@ -556,15 +556,18 @@ form button {
     }
 
     .closeView {
-        margin-left: 30px;
+        margin-left: 10px;
     }
 
     .addBtn {
         margin-left: 10px;
     }
 
-}
+    form {
+        margin: 15px 0;
+    }
 
+}
 @media screen and (max-width: 500px) {
     form {
         height: 850px !important;

@@ -6,7 +6,7 @@
         </div> -->
     </div>
     <div class="table__container">
-        <form id="establishmentForm" @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
+        <form id="establishmentForm" @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4">
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div class="md:order-2">
                     <div class="image-selector border-gray-300" @dragover.prevent="onDragOver" 
