@@ -131,15 +131,27 @@
             <div class="w-full">
               <label for="password" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Password
                 <span>*</span></label>
-              <input v-model="planInfo.uPassword" type="password" id="password"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
+              <div style= "position: relative; display: flex; align-items: center;">
+                <input v-model="planInfo.uPassword" :type="passwordInputType" id="password"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
+                <el-icon :size="15" class="password-icon" @click.stop="togglePasswordVisibility">
+                    <Hide v-if="!showPassword" />
+                    <View v-else/>
+                </el-icon>
+              </div>
             </div>
             <div class="w-full">
               <label for="cpassword" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Confirm
                 password
                 <span>*</span></label>
-              <input v-model="planInfo.uCPassword" type="password" id="cpassword"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
+              <div style= "position: relative; display: flex; align-items: center;">
+                <input v-model="planInfo.uCPassword" :type="passwordConfirmInputType" id="cpassword"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
+                <el-icon :size="15" class="password-icon" @click.stop="togglePasswordConfirmVisibility">
+                  <Hide v-if="!showConfirmPassword" />
+                  <View v-else/>
+                </el-icon>
+              </div>
             </div><br/>
             <!-- <p class="mb-5 mt-8">Company informations</p> -->
             <div class="w-full">
@@ -213,7 +225,7 @@
 </template>
 
 <script setup>
-import { ref, provide, onBeforeMount, defineAsyncComponent, inject, onMounted, onBeforeUnmount, watch } from 'vue';
+import { ref, provide, onBeforeMount, defineAsyncComponent, inject, onMounted, onBeforeUnmount, watch, computed } from 'vue';
 import { ElTabs, ElTabPane } from 'element-plus';
 import SubscriptionSummary from '@Components/subscription/SubscriptionSummary.vue';
 import 'element-plus/es/components/tabs/style/css';
@@ -225,13 +237,14 @@ import { loadStripe } from '@stripe/stripe-js/pure';
 import { Stripe } from 'stripe';
 import { useRouter, useRoute } from 'vue-router';
 import { h } from 'vue'
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElIcon } from 'element-plus';
 import { countries } from '@Services/input-list.js';
 import linkystar from '@/assets/images/logo/LinkyStar.png'
 import { current } from '@Services/languages.js';
 import { useI18n } from "vue-i18n";
 import { tsvFormatBody } from 'd3';
 import prices from '@/prices.json';
+import {View, Hide} from '@element-plus/icons-vue'
 
 
 const SpinnerComponent = defineAsyncComponent(() =>
@@ -262,6 +275,22 @@ const { locale } = useI18n();
 const isCgvVisible = ref(false)
 const isTermAccepted = ref(false)
 
+
+const showPassword = ref(false)
+const showConfirmPassword = ref(false)
+
+const passwordInputType = computed(() => showPassword.value ? 'text' : 'password')
+const passwordConfirmInputType = computed(() => showConfirmPassword.value ? 'text' : 'password')
+
+const togglePasswordVisibility = (e) => {
+  e.preventDefault()
+  showPassword.value = !showPassword.value
+}
+
+const togglePasswordConfirmVisibility = (e) => {
+  e.preventDefault()
+  showConfirmPassword.value = !showConfirmPassword.value
+}
 
 const submitForm = async () => {
 
@@ -831,6 +860,10 @@ button.isLoaded {
   width: 48%;
 }
 
+input, select {
+  border-radius: 5px !important;
+}
+
 .form-group.features-list {
   box-shadow: none;
 }
@@ -848,6 +881,15 @@ button.isLoaded {
 .change-plan-icon {
   color: #2da8e0;
 }
+
+.password-icon {
+  position: absolute; 
+  right: 20px; 
+  top: 50%; 
+  transform: translateY(-50%); 
+  cursor: pointer;
+}
+
 
 /* Ajustements pour les mobiles */
 

@@ -9,14 +9,22 @@
     </div>
   </div>
   <div class="overflow-x-auto">
-    <el-table :data="filteredData" class="responsive-table full-width" style="width: 100%;">
-      <el-table-column label="Name" fixed width="250">
+    <el-table :data="filteredData"  style="width: 100%;">
+
+      <el-table-column label="Name" fixed :min-width="130">
       	<template #default="scope">
       		{{ scope.row.firstname }} {{ scope.row.lastname }}
         </template>
       </el-table-column>
+
       <el-table-column label="Email" prop="email" class="contain_tab"/>
       <el-table-column label="Establishment" prop="establishment_name" class="contain_tab"/>
+      <el-table-column label="Optout" class="contain_tab" align="center">
+        <template #default="scope">
+            <i v-if="scope.row.optout" class="uil uil-ban mr-1" style="color:var(--color-danger2); font-size: 20px; text-align: center;"></i>
+            <span v-else>_</span> 
+        </template>
+      </el-table-column>
       <el-table-column label="Created at">
         <template #default="scope">
           {{ formatCreatedAt(scope.row.created_at) }}
@@ -27,11 +35,7 @@
             {{ formatUpdatedAt(scope.row.updated_at)}}
         </template>
       </el-table-column>
-      <el-table-column label="Optout" class="contain_tab">
-        <template #default="scope">
-            <i v-if="scope.row.optout" class="uil uil-ban mr-1" style="color:var(--color-danger2); font-size: 20px; text-align: center;"></i> 
-        </template>
-      </el-table-column>
+
     </el-table>
 
 

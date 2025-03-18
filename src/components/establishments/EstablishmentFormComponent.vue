@@ -47,7 +47,7 @@
                     </div>
                 </div>
             </div>
-            <div class="grid gap-6 mb-6 md:grid-cols-4">
+            <div class="grid gap-6 mb-6 md:grid-cols-5">
                 <div>
                     <label for="zipcode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Zipcode
                         <span>*</span></label>
@@ -75,14 +75,17 @@
                         <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.id" />
                     </el-select>
                 </div>
+
             </div>
             <div class="grid gap-6 mb-6 md:grid-cols-5">
-                <div class="col-span-2">
+
+                <div>
                     <label for="gps" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Website
                     </label>
                     <input type="text" id="website" name="website" v-model="data.website"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
+
                 <div>
                     <label for="rank" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rank
                     </label>
@@ -116,9 +119,9 @@
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
             </div>
-            <div class="grid gap-6 mb-6 md:grid-cols-4">
+            <!-- <div class="grid gap-6 mb-6 md:grid-cols-4">
 
-                <!--  <div class="col-span-2">
+                 <div class="col-span-2">
                     <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
                         <span>*</span></label>
                     <el-select v-model="data.universe_id" placeholder="" size="large">
@@ -137,8 +140,8 @@
                     </label>
                     <input type="text" id="positioning" name="positioning" v-model="data.positioning"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
-                </div> -->
-            </div>
+                </div> 
+            </div>-->
             <div class="flex flex-wrap gap-3 items-center justify-between py-2 border-t border-b dark:border-gray-600">
                 <button type="submit"
                     class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
@@ -363,9 +366,9 @@ watch(establishment_to_update, () => {
 
 </script>
 <style scoped>
-form {
+/*form {
     height: 750px !important;
-}
+}*/
 
 form button {
     min-width: 8rem !important;
@@ -453,7 +456,7 @@ input {
 
 .table__container {
     /* overflow-x: scroll; */
-    overflow-y: auto;
+    /*overflow-y: auto;*/
     width: 85%;
 }
 
@@ -479,5 +482,10 @@ form button {
         width: 84%;
         /* Occuper toute la largeur sur les petits écrans */
     }
+
+    form {
+        margin: 10px 0 0 13px;
+    }
+    
 }
 </style>

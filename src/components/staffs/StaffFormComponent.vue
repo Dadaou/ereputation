@@ -345,7 +345,7 @@ input {
     justify-content: flex-end;
 }
 
-@media screen and (max-width: 468px) {
+@media screen and (max-width: 540px) {
     form {
         height: 775px !important;
     }
@@ -355,7 +355,14 @@ input {
     .closeView {
         display: flex; 
         justify-content: flex-start;
-        margin-left: 30px;
+        margin-left: 5px;
+    }
+
+    form {
+        margin-left: 0;
+        padding-right: 50px;
     }
 }
+
+
 </style>

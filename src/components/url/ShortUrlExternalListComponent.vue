@@ -10,7 +10,13 @@
   </div>
   <div class="mt-2 table__container">
     <el-table v-if="linksLoading == false" :data="filterTableData">
-      <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" />
+      <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" >
+        <template #default="scope">
+          <router-link class="establishment_name" :to="{ name: 'Establishment', params: { id: scope.row.establishment_tag, tag: route.params.tag } }">
+            {{ scope.row.establishment_name }}
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column label="Caption" prop="caption" style="width: 10%; min-width: 200px;" />
       <el-table-column label="QR code scans" prop="qr_code_count" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Direct link" style="width: 10%; min-width: 200px;">
@@ -26,7 +32,7 @@
           <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
         </template>
         <template #default="scope">
-          <a :href="scope.row.url + '?preview=true'" target="_blank">
+          <a :href="scope.row.url + '?preview=true'" target="_blank" class="url-redirect">
             <i class="uil uil-external-link-alt"></i>
           </a>
           <el-button size="small" @click="copyLink(scope.row.url)"><i class='fa fa-copy'></i></el-button>
@@ -191,13 +197,13 @@ const copyLink = (link) => {
 </script>
 <style scoped>
 button,
-a {
+.url-redirect {
   border: none;
   cursor: pointer;
   font-size: 15px;
 }
 
-a {
+.url-redirect {
   margin: 0 10px;
 }
 
@@ -221,6 +227,10 @@ button i.uil-edit {
 
 .search {
   display: none;
+}
+
+.establishment_name {
+    font-weight: 500;
 }
 
 @media screen and (max-width: 468px) {

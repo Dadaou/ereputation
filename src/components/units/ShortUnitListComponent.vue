@@ -17,7 +17,9 @@
       </el-table-column>
       <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;">
         <template #default="scope">
-
+          <router-link class="establishment_name" :to="{ name: 'Establishment', params: { id: scope.row.establishment_competitor_tag, tag: route.params.tag } }">
+            {{ scope.row.establishment_name }}
+          </router-link>
         </template>
       </el-table-column>
       <el-table-column label="Name" prop="name" style="width: 25%; min-width: 300px;" />
@@ -201,10 +203,7 @@ const copyLink = (link) => {
 </script>
 
 <style scoped>
-.establishment_name {
-  cursor: pointer;
-  font-weight: 500;
-}
+
 
 img.establishment_img {
   height: 50px;
@@ -325,6 +324,10 @@ button i.uil-edit {
   .table__container {
     width: 100%;
   }
+}
+
+.establishment_name {
+    font-weight: 500;
 }
 
 .search {
