@@ -309,9 +309,9 @@ button i.uil-edit {
 }
 
 @media screen and (max-width: 768px) {
-  .table__container {
+  /*.table__container {
     width: 70%;
-  }
+  }*/
 }
 
 /* Définissez une largeur maximale pour l'en-tête sur les grands écrans */
@@ -338,7 +338,7 @@ button i.uil-edit {
   .search {
     display: inline;
     max-width: 220px;
-    margin-right: 100px;
+    margin-right: 70px;
   }
 
   .searchtab {
