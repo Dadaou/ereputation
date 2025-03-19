@@ -13,7 +13,8 @@
                                 </span>
                             </div>
                             <div class="font-medium dark:text-white">
-                                <p id="author__name">{{ review.author }}</p>
+                                 <p id="author__name">{{ review.author }} <span v-if="review.visitor_country" class="ml-2">{{ getCountry(review.visitor_country) }}
+                                </span></p>
                             </div>
                             <el-tooltip placement="top" v-if="review.review_url">
                                 <template #content> Reply </template>
@@ -400,6 +401,7 @@ import { Icon } from '@iconify/vue';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { useRoute,useRouter } from "vue-router";
+import {pays} from '@Services/countries.js';
 
 
 const props = defineProps({
@@ -564,6 +566,16 @@ provide('feelingCustomer', feelingCustomer);
 const category = ref('');
 const reviewFeedbackData = inject('reviewFeedbackData');
 const calculSentimentAnalysis = inject('calculSentimentAnalysis');
+
+const getCountry=(_country)=>{
+    const country_name = pays.find(_pays => _pays.nom.toLowerCase() === _country.toLowerCase())
+
+            if (country_name) {
+                return country_name.drapeau;
+            }else{
+              return '';
+            }
+}
 
 const editReview = (review, _category = '') => {
 
