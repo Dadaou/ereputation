@@ -28,9 +28,12 @@
         <template #default="scope">
           <div class="reviews-link">
             <el-tooltip :content="'Reviews ' + scope.row.name" placement="top">
-              <a
-                :href="`/customer/${tag}/establishment/${scope.row.establishment_competitor_tag}/services/units/${scope.row.tag}/reviews`">{{
-                  scope.row.reviews }}</a>
+              <router-link :to="{ name: 'UnitReview', params: { id: scope.row.establishment_competitor_tag, tag: route.params.tag, unit: scope.row.tag}, query: {source : 'QRCodes'} }">
+                {{ scope.row.reviews }}
+              </router-link>
+              <!--<a
+                :href="`/customer/${tag}/establishment/${scope.row.establishment_competitor_tag}/services/units/${scope.row.tag}/reviews?source=QRCodes`">{{
+                  scope.row.reviews }}</a> -->
             </el-tooltip>
           </div>
         </template>
