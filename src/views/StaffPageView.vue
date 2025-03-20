@@ -264,7 +264,9 @@ watch(route_name, async() => {
     }
 
     if (route_name.value == 'UnitReview') {
-        appStore.setBreadcrumbs([
+
+        let breadCrumbData = [
+        
             {
                 title: establishment_name,
                 path: `/customer/${route.params.tag}/establishment/${route.params.id}`,
@@ -280,7 +282,28 @@ watch(route_name, async() => {
                 path: `${route.path}`,
                 isCurrent: true,
             }
-        ]);
+        ]
+
+        if(route?.query?.source) {
+
+            breadCrumbData = [
+
+                {
+                    title: "My QRCodes",
+                    path: `/customer/${route.params.tag}/account/my_qrcodes`,
+                    isCurrent: false,
+                },
+
+                {
+                    title: "Unit Reviews",
+                    path: `${route.path}`,
+                    isCurrent: true,
+                }
+
+            ]
+        }
+
+        appStore.setBreadcrumbs(breadCrumbData);
     }
 
     if (route_name.value == 'Services') {

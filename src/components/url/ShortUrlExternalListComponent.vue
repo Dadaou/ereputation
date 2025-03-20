@@ -238,6 +238,7 @@ button i.uil-edit {
     display: flex;
     max-width: 220px;
     float: right;
+    margin-right: 70px;
   }
 
   .searchtab {

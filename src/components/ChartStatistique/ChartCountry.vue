@@ -1,24 +1,26 @@
 <template>
   <h3 v-if="hasData">About Countries</h3>
-  <div v-if="paginatedSeries.length > 0"   style="position: relative;" class="chart-wrapper">
+  <div v-if="paginatedSeries.length > 0" ref="chartWrapper"   style="position: relative;" class="chart-wrapper">
 
    
 
 
 
-        <div class="chart-container" ref="chartWrapper">
+        <div class="chart-container" >
             <apexchart type="donut" 
-        height="411"  :options="chartOptions" :series="series"></apexchart>
+        height="480"  :options="chartOptions" :series="series"></apexchart>
         </div>
 
           <div class="legend-container">
 
+            <div class ="legend-label">
             <ul ref="legendList">
               <li v-for="(label,index) in paginatedSeries" :key="index">
                 <span class="legend-dot" :style="{ backgroundColor: chartOptions.colors[index] }"></span>
                {{ label}}
               </li>
             </ul>
+            </div>
 
             <div class="pagination-buttons" v-if="labels.length / dynamicItemsPerPage > 1">
               <button @click="prevPage" :disabled="currentPage === 0">⬅</button>
@@ -87,7 +89,7 @@ const labels = ref([]);
 
 
 const currentPage = ref(0);
-const dynamicItemsPerPage = ref(8);
+const dynamicItemsPerPage = ref(19);
 const chartWrapper = ref(null);
 const legendList = ref(null);
 
@@ -136,7 +138,7 @@ const calculateItemsPerPage = async() => {
       count++;
     }
  console.log(count)
-    dynamicItemsPerPage.value = count > 0 ? count : 6; 
+    dynamicItemsPerPage.value = count > 0 ? count : 19; 
 
   },1000)
 
@@ -522,11 +524,15 @@ export default {
   .chart-wrapper {
   display: flex;
   align-items: top;
-  justify-content: center;
+  justify-content: space-around;
+  flex-direction: row;
+  align-content: top;
+  width: 100%;
+  height: 100%;
 
 }
 
-@media screen and (max-width:530px) {
+@media screen and (max-width:980px) {
 
     .chart-wrapper {
         display: flex;
@@ -542,23 +548,40 @@ export default {
     .vue-apexcharts {
      height: 200px !important;
     }
+    .legend-container{
+    /*   flex: 1; */
+       display: flex;
+      flex-direction: column !important;
+      align-items: center;
+      justify-content: flex-start;
+  
+
+     
+    }
+}
+
+.vue-apexcharts {
+    height: 300px !important;
 }
 
 .chart-container {
-  flex: 3; /* 2/3 de l'espace */
-  min-width: 30%;
-
+    width: 100%;
+    max-width: 100%;
 }
 
 .legend-container{
-   flex: 1; 
+/*   flex: 1; */
    display: flex;
-  flex-direction: row;
-  align-items: center;
-  max-height: 300px;
-  min-width: 10%;
+  flex-direction: column !important;
+  align-items: left;
+  justify-content: flex-start;
+/*  max-height: 300px;*/
+/*  min-width: 10%;*/
 /*  padding: 3px;*/
 /*  margin-left: -40px;*/
+  width: 100%;
+    max-width: 100%;
+
  
 }
 
@@ -572,15 +595,6 @@ export default {
  color: rgb(101, 101, 101);
 
 }
-/*.legend-container li {
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 5px;
-}*/
-
 
 
 .pagination-buttons {

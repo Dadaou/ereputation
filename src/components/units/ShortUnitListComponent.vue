@@ -28,9 +28,12 @@
         <template #default="scope">
           <div class="reviews-link">
             <el-tooltip :content="'Reviews ' + scope.row.name" placement="top">
-              <a
-                :href="`/customer/${tag}/establishment/${scope.row.establishment_competitor_tag}/services/units/${scope.row.tag}/reviews`">{{
-                  scope.row.reviews }}</a>
+              <router-link :to="{ name: 'UnitReview', params: { id: scope.row.establishment_competitor_tag, tag: route.params.tag, unit: scope.row.tag}, query: {source : 'QRCodes'} }">
+                {{ scope.row.reviews }}
+              </router-link>
+              <!--<a
+                :href="`/customer/${tag}/establishment/${scope.row.establishment_competitor_tag}/services/units/${scope.row.tag}/reviews?source=QRCodes`">{{
+                  scope.row.reviews }}</a> -->
             </el-tooltip>
           </div>
         </template>
@@ -309,9 +312,9 @@ button i.uil-edit {
 }
 
 @media screen and (max-width: 768px) {
-  .table__container {
+  /*.table__container {
     width: 70%;
-  }
+  }*/
 }
 
 /* Définissez une largeur maximale pour l'en-tête sur les grands écrans */
@@ -338,7 +341,7 @@ button i.uil-edit {
   .search {
     display: inline;
     max-width: 220px;
-    margin-right: 100px;
+    margin-right: 70px;
   }
 
   .searchtab {
