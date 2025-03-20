@@ -144,7 +144,7 @@
                             <el-table-column  label="User Agent" align="center" prop="ua"  show-overflow-tooltip/> 
                              <el-table-column label="ISP" align="center" prop="isp"  show-overflow-tooltip/> 
 
-                              <el-table-column v-if="isExternal == 'Feedback' || isExternal == 'Country'" label="Contact" align="left" show-overflow-tooltip>
+                              <el-table-column v-if="isExternal == 'Feedback' || isExternal == 'Country' || isExternal == 'Discount'" label="Contact" align="left" show-overflow-tooltip>
                                 <template #default="scope">
                                   <span >
                                     {{ scope.row.email }}

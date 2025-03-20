@@ -221,7 +221,7 @@ const handleBarClick = (event, chartContext, config)=> {
  
   const { dataPointIndex } = config;
   const serieName = series.value[config.seriesIndex]?.name;
-  if (serieName=='Discount QrCode') {
+  if (serieName=='Discount Email link') {
     getVisitors(chartOptions.value.xaxis.categories[dataPointIndex], chartOptions.value.xaxis.categories[dataPointIndex], timePeriods.value, establishment.value, staff.value, units.value,'advantagecontact');
   } else {
     getVisitors(chartOptions.value.xaxis.categories[dataPointIndex], chartOptions.value.xaxis.categories[dataPointIndex], timePeriods.value, establishment.value, staff.value, units.value,'discount');
