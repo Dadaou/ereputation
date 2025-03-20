@@ -13,8 +13,15 @@
                                 </span>
                             </div>
                             <div class="font-medium dark:text-white">
-                                 <p id="author__name">{{ review.author }} <span v-if="review.visitor_country" class="ml-2">{{ getCountry(review.visitor_country) }}
-                                </span></p>
+                                 <p id="author__name">{{ review.author }} 
+                                     <el-tooltip v-if="review.visitor_country && !isMobile" :content="review.visitor_country" placement="top">
+                                        <span v-if="review.visitor_country" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
+                                        </span>
+                                      </el-tooltip>
+                                        <span v-if="review.visitor_country && isMobile" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
+                                        </span>
+                                      <span v-if="showCountry && isMobile && showCountryId === review.id" class="ml-2 text-sm text-gray-500">{{ review.visitor_country }}</span>
+                                   </p>
                             </div>
                             <el-tooltip placement="top" v-if="review.review_url">
                                 <template #content> Reply </template>
@@ -460,6 +467,36 @@ const visibleCateg = ref(false)
 const visible2 = ref(false);
 const feeling_new_category = ref(null);
 const baseURL = ref(import.meta.env.VITE_APP_API_URL);
+
+const showCountry = ref(false);
+const showCountryId = ref(null);
+const isMobile = ref(false);
+
+
+onMounted(()=>{
+        if (window.innerWidth <= 975) {
+            isMobile.value = true;
+        } else {
+            isMobile.value = false;
+        }
+})
+
+window.addEventListener("resize", ()=>{
+        
+        if (window.innerWidth <= 975) {
+            isMobile.value = true;
+        } else {
+            isMobile.value = false;
+        }
+    });
+
+const toggleCountry = (_id) => {
+  showCountry.value = !showCountry.value;
+  showCountryId.value = _id;
+   setTimeout(() => {
+      showCountry.value = false;
+    }, 2000);
+};
 
 const highlightWord=(_text, _word)=>{
      
