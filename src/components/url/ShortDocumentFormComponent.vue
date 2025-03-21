@@ -43,14 +43,11 @@
                             <i v-if="!documentFiles.length" class="uil uil-file-plus"></i>
                         </div>
                         <input type="file" id="documentFile" ref="documentInput"
-                            @change="handleFileChange('document', $event)" accept=".doc,.docx,.jpg,.jpeg,.png,.gif,.pdf,.zip,.rar,.7z,
-                                    application/msword,
-                                    application/vnd.openxmlformats-officedocument.wordprocessingml.document,
-                                    image/jpeg, image/png, image/gif, image/*,
-                                    application/pdf,
-                                    application/zip, 
-                                    application/x-rar-compressed,
-                                    application/x-7z-compressed" style="display:none">
+                            @change="handleFileChange('document', $event)" accept=".jpg,.jpeg,.png,.gif,.pdf,.zip,.rar,
+                                                                image/jpeg, image/png, image/gif, image/*,
+                                                                application/pdf,
+                                                                application/zip, 
+                                                                application/x-rar-compressed" style="display:none">
                     </div>
                 </div>
 
