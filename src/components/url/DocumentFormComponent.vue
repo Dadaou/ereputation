@@ -46,8 +46,14 @@
                                 <i v-if="!documentFiles.length" class="uil uil-file-plus"></i>
                             </div>
                             <input type="file" id="documentFile" ref="documentInput"
-                                @change="handleFileChange('document', $event)" accept="application/pdf"
-                                style="display:none">
+                                @change="handleFileChange('document', $event)" accept=".doc,.docx,.jpg,.jpeg,.png,.gif,.pdf,.zip,.rar,.7z,
+                                    application/msword,
+                                    application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                                    image/jpeg, image/png, image/gif, image/*,
+                                    application/pdf,
+                                    application/zip, 
+                                    application/x-rar-compressed,
+                                    application/x-7z-compressed" style="display:none">
                         </div>
                     </div>
 
@@ -354,12 +360,6 @@ onMounted(async () => {
 
 
 onBeforeMount(async () => {
-
-
-    if (establishments.value.length > 0) {
-        establishment.value = establishments.value[0].name;
-    }
-
 
     try {
         const response = await new Promise((resolve) => {

@@ -43,8 +43,14 @@
                             <i v-if="!documentFiles.length" class="uil uil-file-plus"></i>
                         </div>
                         <input type="file" id="documentFile" ref="documentInput"
-                            @change="handleFileChange('document', $event)" accept="application/pdf"
-                            style="display:none">
+                            @change="handleFileChange('document', $event)" accept=".doc,.docx,.jpg,.jpeg,.png,.gif,.pdf,.zip,.rar,.7z,
+                                    application/msword,
+                                    application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                                    image/jpeg, image/png, image/gif, image/*,
+                                    application/pdf,
+                                    application/zip, 
+                                    application/x-rar-compressed,
+                                    application/x-7z-compressed" style="display:none">
                     </div>
                 </div>
 
@@ -67,7 +73,7 @@
     </div>
 </template>
 <script setup>
-import { computed, ref, onBeforeMount, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useUserStore } from "@Stores/user.js"
 import { ElOption, ElSelect, ElButton } from 'element-plus'
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
@@ -277,33 +283,6 @@ const handleEdit = async (data) => {
 onMounted(() => {
     const documentData = documentStore.getDocument()
     handleEdit(documentData)
-});
-
-
-onBeforeMount(async () => {
-
-    if (establishments.value.length > 0) {
-        establishment.value = establishments.value[0].name;
-    }
-
-    // try {
-    //     const response = await new Promise((resolve) => {
-    //         services.get_Record(`customer/setting/list?tag=${route.params.tag}&categ=all&type=all`, (response) => {
-    //             resolve(response);
-    //         });
-    //     });
-
-    //     if (response.status === 200) {
-
-    //         const data = response.data;
-    //         externalUrlList.value = data.filter(item => item.external_url === true)
-
-    //     } else {
-    //         console.error('Error setting:', response);
-    //     }
-    // } catch (error) {
-    //     console.error('Error fetching setting', error);
-    // }
 });
 
 onBeforeUnmount(() => {
