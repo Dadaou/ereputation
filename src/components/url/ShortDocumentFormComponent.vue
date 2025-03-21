@@ -1,87 +1,73 @@
 <template>
-    <div v-show="show">
-        <div class="closeView">
-            <el-button :icon="Close" @click="toggleShow(true)" circle />
+    <div class="closeView">
+        <el-button :icon="Close" @click="closeView" circle />
+    </div>
+    <div class="security__header border__bottom mt-10">
+        <div class="security__edit">
         </div>
-        <div class="security__header border__bottom mt-10">
-            <div class="security__edit">
-            </div>
-        </div>
-        <div>
-            <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
-                <div class="grid gap-6 mb-6 md:grid-cols-2">
-                    <div>
-                        <label for="countries"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
-                            <span>*</span></label>
-                        <el-select v-model="establishment" placeholder="Choose establishment" size="large" clearable
-                            filterable :disabled="isEdit">
-                            <el-option v-for="item in establishments" :key="item.tag" :label="item.name"
-                                :value="item.tag" />
-                        </el-select>
-                    </div>
-                    <div>
-                        <label for="caption"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Caption</label>
-                        <input type="text" id="caption" v-model="caption" :disabled="isEdit"
-                            :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
-                    </div>
-
-
-                    <div>
-                        <label for="documentFile"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Document</label>
-                        <div class="drop-area" @dragover.prevent @drop="onDocumentDrop">
-                            <div class="image-selector border-gray-300" @click="selectDocument"
-                                @mouseover="documentInputHover = true" @mouseleave="documentInputHover = false">
-                                <draggable v-model="documentFiles" @end="onEnd" @change="onChange">
-                                    <template #item="{ element }">
-                                        <div class="file-item" style="font-size: 16px">
-                                            {{ element.name }}
-                                            <i v-if="documentInputHover && documentFiles.length"
-                                                class="uil uil-file-edit-alt img-hover"></i>
-                                        </div>
-                                    </template>
-                                </draggable>
-                                <i v-if="!documentFiles.length" class="uil uil-file-plus"></i>
-                            </div>
-                            <input type="file" id="documentFile" ref="documentInput"
-                                @change="handleFileChange('document', $event)" accept="application/pdf"
-                                style="display:none">
+    </div>
+    <div>
+        <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
+            <div class="grid gap-6 mb-6 md:grid-cols-2">
+                <div>
+                    <label for="countries"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
+                        <span>*</span></label>
+                    <el-select v-model="establishment" placeholder="Choose establishment" size="large" clearable
+                        filterable :disabled="isEdit">
+                        <el-option v-for="item in establishments" :key="item.tag" :label="item.name"
+                            :value="item.tag" />
+                    </el-select>
+                </div>
+                <div>
+                    <label for="caption"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Caption</label>
+                    <input type="text" id="caption" v-model="caption" :disabled="isEdit"
+                        :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
+                </div>
+                <div>
+                    <label for="documentFile"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Document</label>
+                    <div class="drop-area" @dragover.prevent @drop="onDocumentDrop">
+                        <div class="image-selector border-gray-300" @click="selectDocument"
+                            @mouseover="documentInputHover = true" @mouseleave="documentInputHover = false">
+                            <draggable v-model="documentFiles" @end="onEnd" @change="onChange">
+                                <template #item="{ element }">
+                                    <div class="file-item" style="font-size: 16px">
+                                        {{ element.name }}
+                                        <i v-if="documentInputHover && documentFiles.length"
+                                            class="uil uil-file-edit-alt img-hover"></i>
+                                    </div>
+                                </template>
+                            </draggable>
+                            <i v-if="!documentFiles.length" class="uil uil-file-plus"></i>
                         </div>
-                    </div>
-
-                    <div v-if="isEdit">
-                        <label for="link"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link</label>
-                        <input type="text" id="link" v-model="link" disabled
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                        <input type="file" id="documentFile" ref="documentInput"
+                            @change="handleFileChange('document', $event)" accept="application/pdf"
+                            style="display:none">
                     </div>
                 </div>
 
-                <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
-                    <button type="submit"
-                        class="inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
-                        <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span
-                            v-if="showSpinner">Loading
-                            ...</span>
-                        <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
-                    </button>
+                <div v-if="isEdit">
+                    <label for="link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link</label>
+                    <input type="text" id="link" v-model="link" disabled
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
-            </form>
-        </div>
-    </div>
+            </div>
 
-    <div v-show="!show">
-        <div class="addBtn">
-            <el-button type="primary" :icon="Plus" @click="toggleShow">Add</el-button>
-        </div>
-        <LinksDocumentListComponent @edit="handleEdit" @deleteData="deleteRow" :table-data="documentList" />
+            <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
+                <button type="submit"
+                    class="inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                    <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span v-if="showSpinner">Loading
+                        ...</span>
+                    <span v-show="!showSpinner"><i class="uil uil-save"></i> submit</span>
+                </button>
+            </div>
+        </form>
     </div>
-
 </template>
 <script setup>
-import { computed, ref, onBeforeMount, watch, onMounted } from 'vue'
+import { computed, ref, onBeforeMount, onMounted } from 'vue'
 import { useUserStore } from "@Stores/user.js"
 import { ElOption, ElSelect, ElButton } from 'element-plus'
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
@@ -95,53 +81,38 @@ import 'element-plus/es/components/input/style/css'
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
-import { useRoute } from 'vue-router';
-import { useLinkStore } from '../../stores/link';
-import { Plus, Close } from '@element-plus/icons-vue'
-import LinksDocumentListComponent from '../links/LinksDocumentListComponent.vue';
+import { Close } from '@element-plus/icons-vue'
+import { useDocumentStore } from '../../stores/document';
 import { onBeforeUnmount } from 'vue';
 import draggable from 'vuedraggable';
 
-
-const route = useRoute();
-
+const emit = defineEmits(['reload', 'showDocumentList']);
 const userStore = useUserStore();
 const selectedDocument = ref(null);
 const documentInput = ref(null);
 const documentInputHover = ref(false);
 const fileName = ref('');
 const documentFiles = ref([]);
-const linkStore = useLinkStore();
+const documentStore = useDocumentStore();
 const showModal = ref(false);
-
-const category = ref('Platform')
 
 const showSpinner = ref(false)
 const search = ref('')
 
 const link = ref('')
 const caption = ref('')
-const isValidLink = ref(true)
 const establishment = ref(null)
 
 const isEdit = ref(false)
 const id = ref('')
 const show = ref(false)
-const documentList = ref([])
 
-const onEnd = (event) => {
-    console.log('Drag ended', event);
-};
 
-const toggleShow = (closeForm = null) => {
-    if (closeForm) {
-        resetValue()
-        localStorage.removeItem('showForms')
-        linkStore.resetLink()
-        linkStore.setAction(null)
-        isEdit.value = false
-    }
-    show.value = !show.value;
+const closeView = () => {
+    emit('showDocumentList', true)
+    documentStore.resetDocument()
+    resetValue()
+    isEdit.value = false
 }
 
 const establishments = computed(() => {
@@ -167,8 +138,12 @@ const establishments = computed(() => {
     return filteredData;
 });
 
-const onChange = (event) => {
-    console.log('onChange', event);
+const onDocumentDrop = (event) => {
+    event.preventDefault();
+    const droppedFiles = event.dataTransfer.files;
+    if (droppedFiles.length > 0) {
+        handleFiles(droppedFiles[0]);
+    }
 };
 
 const handleFiles = (file) => {
@@ -182,12 +157,8 @@ const handleFiles = (file) => {
     // }
 };
 
-const onDocumentDrop = (event) => {
-    event.preventDefault();
-    const droppedFiles = event.dataTransfer.files;
-    if (droppedFiles.length > 0) {
-        handleFiles(droppedFiles[0]);
-    }
+const onChange = (event) => {
+    console.log('onChange', event);
 };
 
 const selectDocument = () => {
@@ -196,6 +167,7 @@ const selectDocument = () => {
 
 const handleFileChange = (type, e) => {
     const file = e.target.files[0];
+    console.log(file)
     if (file) {
         selectedDocument.value = file;
         documentFiles.value = [{ file: file, name: file.name }];
@@ -231,8 +203,8 @@ const submit = async () => {
                     showSpinner.value = false;
                 } else {
                     showSpinner.value = false;
+                    isEdit.value = false
                     resetValue()
-                    reloadData()
                 }
             } catch (error) {
                 uploadErrors.push('An error occurred while uploading the document.');
@@ -257,8 +229,8 @@ const submit = async () => {
                     showSpinner.value = false;
                 } else {
                     showSpinner.value = false;
+                    isEdit.value = false
                     resetValue()
-                    reloadData()
                 }
             } catch (error) {
                 uploadErrors.push('An error occurred while uploading the document.');
@@ -266,8 +238,7 @@ const submit = async () => {
         }
     }
 
-    toggleShow()
-    //router.push({ name: route.name, params: { ...route.params, tab: route.params.tab, sub_tab: 'urls_list' } });
+    closeView()
 }
 
 const resetValue = () => {
@@ -300,85 +271,39 @@ const handleEdit = async (data) => {
     }, 250);
 
     isEdit.value = true;
-    toggleShow()
+    show.value = true;
 }
 
-watch(category, () => {
-    isValidLink.value = true
-    link.value = ''
-})
-
-const reloadData = async () => {
-    try {
-        const response = await new Promise((resolve) => {
-            services.get_Record(`customer/document/list?tag=${route.params.tag}`, (response) => {
-                resolve(response);
-            });
-        });
-        if (response.status === 200) {
-            documentList.value = response.data;
-        } else {
-            console.error('Error fetching links:', response);
-        }
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-const deleteRow = (settingId) => {
-    documentList.value = documentList.value.filter((data) => data.id != settingId)
-}
-
-
-onMounted(async () => {
-
-    if (localStorage.getItem('showForms')) {
-
-        resetValue()
-        show.value = true
-        const action = linkStore.getAction()
-
-        if (action === 'edit') {
-
-            const externalUrlData = linkStore.getLink()
-
-            if (externalUrlData) {
-                externalUrlData.link = externalUrlData.url
-            }
-
-            handleEdit(externalUrlData)
-        }
-
-    }
+onMounted(() => {
+    const documentData = documentStore.getDocument()
+    handleEdit(documentData)
 });
 
 
 onBeforeMount(async () => {
 
-
     if (establishments.value.length > 0) {
         establishment.value = establishments.value[0].name;
     }
 
+    // try {
+    //     const response = await new Promise((resolve) => {
+    //         services.get_Record(`customer/setting/list?tag=${route.params.tag}&categ=all&type=all`, (response) => {
+    //             resolve(response);
+    //         });
+    //     });
 
-    try {
-        const response = await new Promise((resolve) => {
-            services.get_Record(`customer/document/list?tag=${route.params.tag}`, (response) => {
-                resolve(response);
-            });
-        });
+    //     if (response.status === 200) {
 
-        if (response.status === 200) {
+    //         const data = response.data;
+    //         externalUrlList.value = data.filter(item => item.external_url === true)
 
-            const data = response.data;
-            documentList.value = data
-
-        } else {
-            console.error('Error setting:', response);
-        }
-    } catch (error) {
-        console.error('Error fetching setting', error);
-    }
+    //     } else {
+    //         console.error('Error setting:', response);
+    //     }
+    // } catch (error) {
+    //     console.error('Error fetching setting', error);
+    // }
 });
 
 onBeforeUnmount(() => {
@@ -546,9 +471,6 @@ input {
     justify-content: center;
 }
 
-form button {
-    width: 100%;
-}
 
 @media screen and (min-width: 480px) {
 
@@ -580,7 +502,12 @@ form button {
     }
 
     .closeView {
-        margin-left: 30px;
+        margin-left: 5px;
+    }
+
+    form {
+        margin-left: 0;
+        padding-right: 50px;
     }
 
     .addBtn {
@@ -592,7 +519,6 @@ form button {
 @media screen and (max-width: 500px) {
     form {
         height: 850px !important;
-        padding-right: 3.5rem !important;
     }
 }
 

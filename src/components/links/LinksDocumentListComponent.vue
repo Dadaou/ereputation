@@ -53,7 +53,7 @@
   </div>
 </template>
 <script setup>
-import { computed, ref, inject } from 'vue';
+import { computed, ref } from 'vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 import services from '@Services/services.js';
 import 'element-plus/es/components/message/style/css'
@@ -62,20 +62,16 @@ import 'element-plus/es/components/table-column/style/css'
 import 'element-plus/es/components/popconfirm/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
-import { useRoute, useRouter } from 'vue-router'
 
-const router = useRouter();
-const route = useRoute();
 const emit = defineEmits(['deleteData', 'edit']);
 //const Data = inject('links');
 const search = ref('')
 const linksLoading = ref(false);
-const activeUrlTabName = inject('parametersUrlsConf')
 
 const props = defineProps({
   tableData: {
     type: Array,
-    default: []
+    default: () => []
   },
 });
 
@@ -93,21 +89,21 @@ const filterTableData = computed(() => {
   return filteredData;
 });
 
-const handleDelete = async (index, link) => {
+const handleDelete = async (index, document) => {
   try {
-    const response = await new Promise((resolve, reject) => {
-      services.deleteRecord('customer/settings/delete/document', link.id, (response) => {
+    const response = await new Promise((resolve) => {
+      services.deleteRecord('customer/settings/delete/document', document.id, (response) => {
         resolve(response);
       });
     });
 
     if (response.status == 200 || response.status == 204) {
       ElMessage({
-        message: `Links deleted successfully`,
+        message: `Document deleted successfully`,
         type: 'success',
       })
 
-      emit('deleteData', link.id)
+      emit('deleteData', document.id)
     }
   } catch (error) {
     console.log(error)
