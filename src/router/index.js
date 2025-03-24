@@ -475,7 +475,25 @@ const router = createRouter({
           path: '/customer/:tag/step-view',
           name: 'StepView',
           beforeEnter: [CheckAccess],
-          component: () => import('@Views/StepPageView.vue')
+          component: () => import('@Views/StepPageView.vue'),
+          beforeEnter: [CheckAccess],
+          children: [
+            {
+              path: 'first-step',
+              name: 'firstStep',
+              component: () => import('@Components/step/MyEstablishmentFormPageView.vue')
+            },
+            {
+              path: 'second-step',
+              name: 'secondStep',
+              component: () => import('@Components/step/MyPublicFormPageView.vue')
+            },
+            {
+              path: 'third-step',
+              name: 'thirdStep',
+              component: () => import('@Components/step/PlatformReadyPageView.vue')
+            }
+          ]
         },
         {
           path: '/customer/:tag/account',

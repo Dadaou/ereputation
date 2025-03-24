@@ -63,7 +63,7 @@ checkIfChildRoute();
 
 
 const addEstablishment = () => {
-    router.push({ name: 'StepView', params: { tag: tag } }).catch(err => console.error(err));
+    router.push({ name: 'firstStep', params: { tag: tag } }).catch(err => console.error(err));
 };
 
 
