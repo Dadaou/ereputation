@@ -1,50 +1,45 @@
 <template>
+
     <div class="main__container">
-        <div v-if="currentStep < steps.length" class="step-progress">
-            <div v-for="(step, index) in steps" :key="index" class="step">
-                <div :class="['step-number', { 'active-step': index + 1 === currentStep }]">
-                    {{ index + 1 }}
-                </div>
-                <div v-if="index < steps.length - 1" class="step-line"
-                    :class="{ 'completed': index + 1 < currentStep }"></div>
+
+        <div class="step-progress">
+
+            <div v-for="(item, index) in stepRoute" :key="item.step" class="step">
+
+                <RouterLink  :to="{name : item.name}" class="step-number">
+                    {{ item.step }}
+                </RouterLink>
+
+                <div v-if="index < stepRoute.length - 1" class="step-line"></div>
             </div>
+
         </div>
 
-        <component :is="currentComponent" @changeStep="navigateToStep" :establishmentName="establishmentName" :competitorId="competitorId"></component>
+        <div>
+            <RouterView></RouterView>
+        </div>
+       
     </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import Myestablichment from '../components/step/MyEstablishmentFormPageView.vue';
-import Mypublicform from '../components/step/MyPublicFormPageView.vue';
-import Platformready from '../components/step/PlatformReadyPageView.vue';
+import { onMounted } from 'vue';
+import services from '@Services/services.js';
+import { onBeforeUnmount } from 'vue';
 
-const steps = ref([1, 2, 3]);
-const currentStep = ref(1);
+const stepRoute = [
+    { step: 1, name: 'firstStep' },
+    { step: 2, name: 'secondStep' },
+    { step: 3, name: 'thirdStep' },
+]
 
+onMounted(() => {
+    services.mountChatWidget()
+})
 
-const establishmentName = ref('');
-const competitorId = ref('');
-
-const navigateToStep = ({ step, establishmentName: name, competitorId: id }) => {
-    currentStep.value = step;
-    establishmentName.value = name;
-    competitorId.value = id;
-};
-
-const currentComponent = computed(() => {
-    switch (currentStep.value) {
-        case 1:
-            return Myestablichment;
-        case 2:
-            return Mypublicform;
-        case 3:
-            return Platformready;
-        default:
-            return null;
-    }
-});
+onBeforeUnmount(() => {
+    services.unmountChatWidget()
+})
 </script>
 
 <style scoped>
@@ -67,7 +62,7 @@ const currentComponent = computed(() => {
 .step {
     display: flex;
     align-items: center;
-    margin-top: 3rem;
+    /*margin-top: 3rem;*/
 }
 
 .step-number {
@@ -87,15 +82,16 @@ const currentComponent = computed(() => {
     cursor: pointer;
 }
 
-.step-number.active-step {
-    color: #fff;
-    background-color: var(--light-color-bg2);
-}
-
 .step-line {
     height: 2px;
     width: 50px;
     background-color: #ccc;
     margin: 0 8px;
 }
+
+.router-link-active{
+    color: #fff;
+    background-color: var(--light-color-bg2);
+}
+
 </style>

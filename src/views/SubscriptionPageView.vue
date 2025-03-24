@@ -342,6 +342,7 @@ const submitCompanyForm = async () => {
     if (response.status == 200) {
       planInfo.value.customer = response.data.customer.tag;
       userCreated.value = true
+      appStore.setPlanInfo(planInfo.value)
       redirectToPaymentPage()
       // activeName.value = 'checkout';
     } else {

@@ -116,6 +116,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
@@ -134,6 +135,9 @@ const userStore = useUserStore();
 const imgHasChanged = ref(false);
 const categories = ref([]);
 const selectLanguage = ref(null);
+
+const router = useRouter();
+const route = useRoute();
 
 const onDragOver = (event) => {
     imageInputHover.value = true;
@@ -266,15 +270,19 @@ const submit = async () => {
             const establishmentName = response.data.name;
             const competitorId = response.data.id;
 
-            goToNextStep(establishmentName, competitorId);
+            goToNextStep(establishmentName);
         }
     } else {
         ElMessage.error(`Please, provide all required information to add an establishment`);
     }
 };
 
-const goToNextStep = (establishmentName, competitorId) => {
+/*const goToNextStep = (establishmentName, competitorId) => {
     emit('changeStep', { step: 2, establishmentName, competitorId });
+};*/
+
+const goToNextStep = (establishmentName) => {
+    router.push({ name: 'secondStep', params: {tag : route.params.tag}, query: {establishment_name : establishmentName}});
 };
 
 const loadData = (establishment, type) => {

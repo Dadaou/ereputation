@@ -15,6 +15,7 @@ export const useAppStore = defineStore('app', () => {
   const mustRefresh = ref(false)
   const header = ref(true)
   const establishement = ref(null)
+  const planInfo = ref({})
 
   const setBreadcrumbs = (values) => {
     breadcrumbs.value = values
@@ -26,6 +27,15 @@ export const useAppStore = defineStore('app', () => {
 
   const setIsExist = (value) => {
     isExist.value = value
+  }
+
+  const setPlanInfo = (values) => {
+    planInfo.value = values
+    localStorage.setItem('planName', planInfo.value.planNamePrefix)
+  }
+
+  const getPlanInfo = () => {
+    return planInfo.value
   }
 
   const IsValueOkay = (value) =>
@@ -95,6 +105,8 @@ export const useAppStore = defineStore('app', () => {
     setCustomerLogo,
     getCustomerLogo,
     setEstablishement,
-    getEstablishement
+    getEstablishement,
+    setPlanInfo,
+    getPlanInfo,
   }
 })
