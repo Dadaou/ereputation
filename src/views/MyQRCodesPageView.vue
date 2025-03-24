@@ -6,19 +6,23 @@
           @setEnable="(id) => setStatus(id, 'enable')" @setDisable="(id) => setStatus(id, 'disable')" />
       </el-tab-pane>
       <el-tab-pane label="Staff" name="staff">
-        <ShortStaffListComponent v-if="showStaffListView" @showStaffList="handleShowStaffView"/>
-        <StaffFormComponent v-else @showStaffList="handleShowStaffView"/>
+        <ShortStaffListComponent v-if="showStaffListView" @showStaffList="handleShowStaffView" />
+        <StaffFormComponent v-else @showStaffList="handleShowStaffView" />
       </el-tab-pane>
       <el-tab-pane label="Services" name="service">
-        <ShortUnitListComponent v-if="showServiceListView" @showServiceList="handleShowServiceView"/>
-        <UnitFormComponent v-else  @showServiceList="handleShowServiceView"/> 
+        <ShortUnitListComponent v-if="showServiceListView" @showServiceList="handleShowServiceView" />
+        <UnitFormComponent v-else @showServiceList="handleShowServiceView" />
       </el-tab-pane>
       <el-tab-pane label="Gates" name="gates">
         <ShortGateListComponent />
       </el-tab-pane>
       <el-tab-pane label="External URLS" name="external_url">
-        <ShortUrlExternalListComponent v-if = "showExternalUrlList" @showExternalUrlList = "handleShowExternalUrlList"/>
-        <ShortUrlExternalFormComponent v-else @showExternalUrlList = "handleShowExternalUrlList" />
+        <ShortUrlExternalListComponent v-if="showExternalUrlList" @showExternalUrlList="handleShowExternalUrlList" />
+        <ShortUrlExternalFormComponent v-else @showExternalUrlList="handleShowExternalUrlList" />
+      </el-tab-pane>
+      <el-tab-pane label="Documents" name="documents">
+        <ShortDocumentListComponent v-if="showDocumentList" @showDocumentList="handleShowDocumentList" />
+        <ShortDocumentFormComponent v-else @showDocumentList="handleShowDocumentList" />
       </el-tab-pane>
     </el-tabs>
 
@@ -45,11 +49,11 @@ const ShortStaffListComponent = defineAsyncComponent(() =>
 )
 
 const UnitFormComponent = defineAsyncComponent(() =>
-    import("@Components/units/UnitFormComponent.vue")
+  import("@Components/units/UnitFormComponent.vue")
 )
 
 const StaffFormComponent = defineAsyncComponent(() =>
-    import("@Components/staffs/StaffFormComponent.vue")
+  import("@Components/staffs/StaffFormComponent.vue")
 )
 
 const ShortEstablishmentListComponent = defineAsyncComponent(() =>
@@ -72,6 +76,14 @@ const ShortUrlExternalFormComponent = defineAsyncComponent(() =>
   import("@Components/url/ShortUrlExternalFormComponent.vue")
 )
 
+const ShortDocumentListComponent = defineAsyncComponent(() =>
+  import("@Components/url/ShortDocumentListComponent.vue")
+)
+
+const ShortDocumentFormComponent = defineAsyncComponent(() =>
+  import("@Components/url/ShortDocumentFormComponent.vue")
+)
+
 const position = ref('top')
 watch(width, () => {
   if (width.value < 800) {
@@ -86,7 +98,8 @@ const activeName = ref('establishments')
 const activeStaffTab = ref('staff_list')
 const showStaffListView = ref(true)
 const showServiceListView = ref(true)
-const  showExternalUrlList = ref(true)
+const showExternalUrlList = ref(true)
+const showDocumentList = ref(true)
 
 const establishment_to_update = ref(null)
 const activeEstablishmentTab = ref('establishment_list')
@@ -108,20 +121,26 @@ const allAdvantages = ref([])
 const allCategories = ref([])
 const allUnits = ref([])
 const allLinks = ref([])
+const allDocuments = ref([])
 
 const handleShowStaffView = async (payload) => {
   showStaffListView.value = payload;
-  if(showStaffListView.value) await reloadStaffsList()
+  if (showStaffListView.value) await reloadStaffsList()
 }
 
 const handleShowServiceView = async (payload) => {
   showServiceListView.value = payload
-  if(showServiceListView.value) await loadUnits()
+  if (showServiceListView.value) await loadUnits()
 }
 
 const handleShowExternalUrlList = async (payload) => {
   showExternalUrlList.value = payload
-  if(showExternalUrlList.value) await reloadLink()
+  if (showExternalUrlList.value) await reloadLink()
+}
+
+const handleShowDocumentList = async (payload) => {
+  showDocumentList.value = payload
+  if (showDocumentList.value) await loadDocuments()
 }
 
 provide('staffs', allStaffs)
@@ -130,6 +149,7 @@ provide('advantages', allAdvantages)
 provide('categories', allCategories)
 provide('units', allUnits)
 provide('links', allLinks)
+provide('documents', allDocuments)
 
 const activeEventTab = ref('event_list')
 provide('event_activeTab', activeEventTab)
@@ -166,6 +186,9 @@ provide('competitorsData', competitorsData)
 
 const link_to_update = ref(null)
 provide('link_to_update', link_to_update)
+
+const document_to_update = ref(null)
+provide('document_to_update', document_to_update)
 
 const appStore = useAppStore();
 
@@ -208,6 +231,10 @@ const handleEdit = (value, type) => {
 
   if (type == 'links') {
     link_to_update.value = value;
+  }
+
+  if (type == 'document') {
+    document_to_update.value = value;
   }
 };
 
@@ -318,7 +345,7 @@ const reloadEventsList = async (type) => {
     if (response.status === 200) {
       const events = response.data;
 
-      if(events.length === 1 && typeof(events[0] == String)) return
+      if (events.length === 1 && typeof (events[0] == String)) return
 
       events.forEach(event => {
         let event_found = allEvents.value.find(obj => obj.id === event.id);
@@ -433,10 +460,28 @@ const reloadLink = async () => {
     console.error(error);
   }
 }
+
+const loadDocuments = async () => {
+  try {
+    const response = await new Promise((resolve) => {
+      services.get_Record(`customer/document/list?tag=${route.params.tag}`, (response) => {
+        resolve(response);
+      });
+    });
+    if (response.status === 200) {
+      allDocuments.value = response.data;
+    } else {
+      console.error('Error fetching links:', response);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 const filterCategory = (data) => {
   const establishments = userStore.user?.customer?.establishments;
   let categories = []
-  if(establishments) {
+  if (establishments) {
     data.forEach(category => {
       let establishment = establishments.find(i => category.establishment == `/api/establishments/${i.id}`);
       if (establishment) {
@@ -476,6 +521,7 @@ onBeforeMount(async () => {
   await loadAdvantage();
   await loadCategories();
   await loadUnits();
+  await loadDocuments();
   appStore.isLoading = false;
 });
 

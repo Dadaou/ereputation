@@ -207,7 +207,7 @@
                 <ChartDiscount @show-chart="displayChart" @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
             </div>
 
-            <div class="statistique" v-if = "showChart.country">
+            <div class="statistique col-span-1 lg:col-span-2"  v-if = "showChart.country">
                 <ChartCountry @show-chart="displayChart" @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
             </div>
 

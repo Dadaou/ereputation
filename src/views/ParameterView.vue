@@ -2,7 +2,8 @@
     <div class="user__main__container">
         <el-tabs v-model="parametersUrlsConf.tabs" type="card" class="demo-tabs">
             <el-tab-pane label="Establishments" name="establishments">
-                <el-tabs v-model="parametersUrlsConf.establishments" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
+                <el-tabs v-model="parametersUrlsConf.establishments" class="demo-tabs"
+                    @tab-click="() => clearEstablishmentForm()">
                     <el-tab-pane label="Establishments" name="establishments_list">
                         <EstablishmentListComponent
                             @edit="(establishment) => handleEdit(establishment, 'establishments')"
@@ -38,10 +39,14 @@
                     <el-tab-pane label="External URLs" name="urls_external_form">
                         <UrlExternalFormComponent @reload="reloadLink()" />
                     </el-tab-pane>
+                    <el-tab-pane label="Documents" name="documents_form">
+                        <DocumentFormComponent @reload="reloadLink()" />
+                    </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
             <el-tab-pane label="Competitors" name="competitors">
-                <el-tabs v-model="parametersUrlsConf.competitors" class="demo-tabs" @tab-click="() => clearEstablishmentForm()">
+                <el-tabs v-model="parametersUrlsConf.competitors" class="demo-tabs"
+                    @tab-click="() => clearEstablishmentForm()">
                     <el-tab-pane label="Competitors" name="competitors_list">
                         <CompetitorListComponent @edit="(establishment) => handleEdit(establishment, 'competitors')"
                             @reload="reloadCompetitorList('list')" />
@@ -191,6 +196,10 @@ const UrlExternalFormComponent = defineAsyncComponent(() =>
     import("@Components/url/UrlExternalFormComponent.vue")
 )
 
+const DocumentFormComponent = defineAsyncComponent(() =>
+    import("@Components/url/DocumentFormComponent.vue")
+)
+
 const EstablishmentListComponent = defineAsyncComponent(() =>
     import("@Components/establishments/EstablishmentListComponent.vue")
 )
@@ -249,14 +258,14 @@ const userStore = useUserStore()
 const activeName = ref('establishments')
 const parametersUrlsConf = reactive({
     tabs: 'establishments',
-    establishments : 'establishments_list',
+    establishments: 'establishments_list',
     links: 'links_list',
     urls: 'urls_form',
     competitors: 'competitors_list',
     staffs: 'staffs_list',
     events: 'events_list',
     services: 'services_list',
-    categories: 'categories_list' 
+    categories: 'categories_list'
 })
 
 provide('parametersUrlsConf', parametersUrlsConf)
@@ -335,7 +344,7 @@ const handleEdit = (value, type) => {
     }
 
     if (type == 'competitors') {
-       competitor_to_update.value = value;
+        competitor_to_update.value = value;
     }
 
     if (type == 'events') {
@@ -447,8 +456,8 @@ const transformData = (data) => {
                     rank: establishment_rank,
                     gps: establishment_gps,
                     media: url_source,
-                    universe_id:universe_id,
-                    universe_name:universe_name,
+                    universe_id: universe_id,
+                    universe_name: universe_name,
                     establishments: [competitorName],
                     competitors: [{
                         competitor_id: competitor_id,
@@ -508,7 +517,7 @@ const reloadEventsList = async (type) => {
         if (response.status === 200) {
             const events = response.data;
 
-            if(events.length == 1 && typeof(events[0] === String)) return
+            if (events.length == 1 && typeof (events[0] === String)) return
 
             events.forEach(event => {
                 let event_found = allEvents.value.find(obj => obj.id === event.id);
@@ -672,24 +681,24 @@ const filterCategory = (data) => {
     return categories
 }
 
-const routeParameters = async (conf)=>{
+const routeParameters = async (conf) => {
     router.push({ name: route.name, params: { ...route.params, tab: conf.tabs, sub_tab: conf[conf.tabs] } });
 }
 
-watch(parametersUrlsConf, (newValue, oldValue)=>{
+watch(parametersUrlsConf, (newValue, oldValue) => {
     routeParameters(newValue)
 })
 
-const params = computed(()=> route.params)
+const params = computed(() => route.params)
 
-watch(params, ()=>{
+watch(params, () => {
     parametersUrlsConf.tabs = route.params.tab;
-    parametersUrlsConf[parametersUrlsConf.tabs] = route.params.sub_tab; 
+    parametersUrlsConf[parametersUrlsConf.tabs] = route.params.sub_tab;
 })
 
 onBeforeMount(async () => {
-    parametersUrlsConf.tabs = (route.params.tab !== '')?route.params.tab:'establishments';
-    parametersUrlsConf[parametersUrlsConf.tabs] = (route.params.sub_tab !== '')?route.params.sub_tab:'establishments_list';
+    parametersUrlsConf.tabs = (route.params.tab !== '') ? route.params.tab : 'establishments';
+    parametersUrlsConf[parametersUrlsConf.tabs] = (route.params.sub_tab !== '') ? route.params.sub_tab : 'establishments_list';
     await routeParameters(parametersUrlsConf)
 
     if (width.value < 800) {
@@ -710,7 +719,6 @@ onBeforeMount(async () => {
 
 </script>
 <style scoped>
-
 * {
     overflow: hidden;
 }
