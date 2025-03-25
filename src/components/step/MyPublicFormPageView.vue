@@ -160,20 +160,29 @@
     </div>
 </template>
 <script setup>
-import { ref, onBeforeMount, watch } from 'vue'
+import { ref, onBeforeMount, watch, onMounted, inject } from 'vue'
+import { useRouter, useRoute } from 'vue-router';
+import { useAppStore } from "@Stores/app.js";
 import { ElMessage, ElOption, ElSelect } from 'element-plus'
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import services from '@Services/services.js';
 
-const props = defineProps({
+
+const router = useRouter();
+const route = useRoute();
+const appStore = useAppStore();
+const establishmentName = ref('')
+
+
+/*const props = defineProps({
     establishmentName: String,
     competitorId: String
-});
+});*/
 
 const emit = defineEmits(['changeStep']);
 
-const goToNextStep = (establishmentName, competitorId) => {
-    emit('changeStep', { step: 3, establishmentName, competitorId });
+const goToNextStep = () => {
+    router.push({ name: 'thirdStep', params: {tag : route.params.tag}});
 };
 
 const showSpinner = ref(false);
@@ -368,7 +377,7 @@ const submit = async () => {
                 value1: platform.value1 || ' ',
                 provider: platform.provider,
                 enable: true,
-                establishment: `/api/establishments/${props.competitorId}`,
+                establishment: `/api/establishments/${route.params.tag}`,
                 section: '',
                 caption: null
             };
@@ -388,7 +397,7 @@ const submit = async () => {
             type: 'success',
         });
 
-        goToNextStep(props.establishmentName, props.competitorId);
+        goToNextStep();
 
     } catch (error) {
         console.error('Error submitting platform data:', error);
@@ -479,6 +488,32 @@ onBeforeMount(async () => {
         console.error('Error in onBeforeMount:', error);
     }
 });
+
+
+const checkPlan = () => {
+
+    const planName = localStorage.getItem('planName')
+
+    if (planName == 'Lead_gen') {
+
+        ElMessage({
+            message:`It looks like you have chosen the Lead-Gen pack only. Reputation-related options will not be available. You can upgrade your pack at any time in your client area.
+                        Feel free to contact us in the chat below if you need any help.
+                        Thank you!`,
+           duration : 15000,
+           showClose: true
+        });
+    }
+}
+
+onMounted(() => {
+
+    if(route?.query?.establishment_name) {
+        establishmentName.value = route.query.establishment_name;
+    }
+
+    checkPlan()
+})
 
 </script>
 

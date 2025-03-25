@@ -37,9 +37,9 @@ const navigateHome = () => {
     font-weight: 600;
 }
 
-.container {
+/*.container {
     margin-top: 10rem;
-}
+}*/
 
 .container h1 {
     margin-top: 0.8rem;

@@ -82,6 +82,7 @@
                         <h6 v-if="isExternal == 'Discount'" class="text-lg font-bold" style="text-align: center;color: gray;"> Discount coupons</h6>
                         <h6 v-if="isExternal == 'External'" class="text-lg font-bold" style="text-align: center;color: gray;"> External Qrcodes</h6>
                         <h6 v-if="isExternal == 'Country'" class="text-lg font-bold" style="text-align: center;color: gray;"> Countries</h6>
+                        <h6 v-if="isExternal == 'Platform'" class="text-lg font-bold" style="text-align: center;color: gray;"> Platform & Social Media</h6>
                         <button class="btn text-lg close-btn" style="color: red;" @click="closeModal">x</button>
                      </div>
                       <div class="modal-content" >
@@ -144,7 +145,7 @@
                             <el-table-column  label="User Agent" align="center" prop="ua"  show-overflow-tooltip/> 
                              <el-table-column label="ISP" align="center" prop="isp"  show-overflow-tooltip/> 
 
-                              <el-table-column v-if="isExternal == 'Feedback' || isExternal == 'Country' || isExternal == 'Discount'" label="Contact" align="left" show-overflow-tooltip>
+                              <el-table-column v-if="isExternal == 'Feedback' || isExternal == 'Country' || isExternal == 'Discount' || isExternal == 'Platform'" label="Contact" align="left" show-overflow-tooltip>
                                 <template #default="scope">
                                   <span >
                                     {{ scope.row.email }}
@@ -198,7 +199,7 @@
                 <ChartAboutGate @show-chart="displayChart" />
             </div>
             <div class="statistique" v-if = "showChart.platform">
-                <ChartPlatformsAndSocialmedia @show-chart="displayChart" />
+                <ChartPlatformsAndSocialmedia @show-chart="displayChart" @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
             </div>
             <div class="statistique" v-if = "showChart.sociaux">
                 <PieChartReseauxSociaux @show-chart="displayChart" />
