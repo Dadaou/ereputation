@@ -1,6 +1,6 @@
 <template>
     <div :class="{ hidden: isChildRoute }" class="main__container home-step__container">
-        <div class="container">
+        <div class="container max-w-[50%] ml-0 mr-auto">
             <h1>Hi <span class="name">{{ userStore.user.customer.name }} </span> !</h1>
             <h1>We are happy to welcome you to the Linkystar platform 😊</h1>
             <h1>Let's start with a few settings to make your platform operational.</h1>
@@ -81,13 +81,30 @@ onBeforeUnmount(() => {
 
 </script>
 
+<style>
+footer {
+    margin-top: 0 !important;
+}
+</style>
+
 <style scoped>
 .hidden {
     display: none;
 }
 
 .home-step__container {
-    background: url("@/assets/images/dond_linkystar.webp");
+    background: url("@/assets/images/fond_linkystar.webp");
+    margin-block: 80px 0 !important;
+    padding-inline: 10%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100vw !important;
+    min-height: 100vh !important;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
 }
 
 .main__container {
@@ -107,7 +124,7 @@ onBeforeUnmount(() => {
 
 
 .container {
-    margin-top: 10rem;
+    margin-top: 3rem;
 }
 
 .container h1 {
