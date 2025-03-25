@@ -1,8 +1,8 @@
 <template>
   <div class="mt-2 table__container">
-    <div class="table-description" style="margin-bottom: 16px;">
+    <div style="margin-bottom: 16px;">
       <!--<p>Requests for partnerships</p>-->
-      <div :style="{display: 'flex', width: InputSearchWidth }">
+      <div :style="{display: 'flex', width: InputSearchWidth, float: floatProperty }">
         <el-input v-model="searchReceived" size="small" placeholder="Type to search"  />
       </div>
     </div>
@@ -147,6 +147,13 @@ const InputSearchWidth = computed(() => {
     return route.name === 'LeadgenPartnership' ? `${100}%` : `${88}%`
   }
   return `${200}px`;
+});
+
+const floatProperty = computed(() => {
+  if(width.value < 768) {
+    return 'none';
+  }
+  return 'right';
 });
 
 watchEffect(() => {

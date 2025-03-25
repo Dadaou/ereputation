@@ -1,6 +1,6 @@
 <template>
   <div class="mt-2 table__container">
-    <div :style="{display: 'flex', width: InputSearchWidth }" >
+    <div :style="{display: 'flex', width: InputSearchWidth, float : floatProperty }" >
         <el-input v-model="search" size="small" placeholder="Type to search" class="input_searchs" />
     </div>
     <el-table :data="filterTableData" class="responsive-table">
@@ -132,6 +132,15 @@ const InputSearchWidth = computed(() => {
     return route.name === 'LeadgenAdvantage' ? `${100}%` : `${88}%`
   }
   return `${200}px`;
+
+});
+
+
+const floatProperty = computed(() => {
+  if(width.value < 768) {
+    return 'none';
+  }
+  return 'right';
 });
 
 const filterTableData = computed(() => {

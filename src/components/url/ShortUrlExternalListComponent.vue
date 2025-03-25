@@ -236,9 +236,8 @@ button i.uil-edit {
 @media screen and (max-width: 468px) {
   .search {
     display: flex;
-    max-width: 220px;
-    float: right;
-    margin-right: 70px;
+    width: 85%;
+    margin-top: 10px;
   }
 
   .searchtab {

@@ -1,5 +1,5 @@
 <template>
-  <div :style="{display: 'flex', width: InputSearchWidth }" >
+  <div :style="{display: 'flex', width: InputSearchWidth, float: floatProperty }" >
     <el-input v-model="search" size="small" placeholder="Type to search" class="search" />
   </div>
   <div class="overflow-x-auto mt-5">
@@ -115,6 +115,13 @@ const InputSearchWidth = computed(() => {
       return route.name === 'LeadgenDiscountCoupon' ? `${100}%` : `${88}%`
     }
     return `${200}px`;
+});
+
+const floatProperty = computed(() => {
+  if(width.value < 768) {
+    return 'none';
+  }
+  return 'right';
 });
 
 const compareDatesDesc = (a, b) => {

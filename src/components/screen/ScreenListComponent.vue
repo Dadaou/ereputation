@@ -1,6 +1,6 @@
 <template>
   <div class="mt-2">
-    <div :style="{display: 'flex', width: InputSearchWidth }" >
+    <div :style="{display: 'flex', width: InputSearchWidth, float: floatProperty }" >
         <el-input v-model="search" size="small" placeholder="Type to search" class="input_searchs" />
     </div>
     <el-table :data="filterTableData" :style="{width : tableWidth}">
@@ -130,6 +130,13 @@ const tableWidth = computed(() => {
     return route.name === 'LeadgenMyScreen' ? `${100}%` : `${85}%`
   }
   return `${100}%`;
+});
+
+const floatProperty = computed(() => {
+  if(width.value < 768) {
+    return 'none';
+  }
+  return 'right';
 });
 
 
