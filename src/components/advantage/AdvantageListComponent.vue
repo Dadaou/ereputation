@@ -3,7 +3,7 @@
     <div :style="{display: 'flex', width: InputSearchWidth, float : floatProperty }" >
         <el-input v-model="search" size="small" placeholder="Type to search" class="input_searchs" />
     </div>
-    <el-table :data="filterTableData" class="responsive-table">
+    <el-table :data="filterTableData" :style="{width : tableWidth}">
       <el-table-column label="Name" align="center" style="width: 20%; min-width: 800px;">
         <template #default="scope">
 
@@ -143,6 +143,15 @@ const floatProperty = computed(() => {
   return 'right';
 });
 
+const tableWidth = computed(() => {
+
+  if(width.value < 768) {
+    return route.name === 'LeadgenAdvantage' ? `${100}%` : `${91}%`
+  }
+  return `${100}%`;
+
+});
+
 const filterTableData = computed(() => {
   return advantages.value.filter(data => {
     return (
@@ -277,7 +286,7 @@ button i.uil-edit {
 
 @media screen and (max-width: 768px) {
   /*.responsive-table {
-    width: 85%;
+    width: 92%;
   }*/
 
   /*.input_searchs,
