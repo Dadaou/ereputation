@@ -429,7 +429,7 @@ const router = createRouter({
           component: () => import('@Views/HomeLeadgenPageView.vue'),
           children: [
             {
-              path: 'customer/:tag',
+              path: 'customer/:tag/advantage',
               name: 'LeadgenAdvantage',
               component: () => import('@Views/LeadgenAdvantageView.vue')
             },

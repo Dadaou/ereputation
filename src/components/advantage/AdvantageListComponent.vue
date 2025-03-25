@@ -30,8 +30,7 @@
 
       <!-- <el-table-column class="td" label="Establishment" prop="establishment_name" align="center" style="width: 5%; min-width: 400px;" /> -->
       <el-table-column class="td" label="Amount" prop="amount" align="center" style="width: 10%; min-width: 4%;" />
-      <el-table-column class="td" label="Category" prop="category" align="center"
-        style="width: 20%; min-width: 100px;" />
+      <el-table-column class="td" label="Category" prop="category" align="center" style="width: 20%; min-width: 100px;" />
       <el-table-column class="td" label="Code" prop="code" align="center" style="width: 50%">
         <template #default="scope">
           <span v-if="scope.row.code" class="custom-badge">
@@ -39,10 +38,8 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column class="td" label="Limit" prop="advantageLimit" align="center"
-        style="width: 5%; min-width: 400px;" />
-      <el-table-column class="td" label="Order" prop="positioning" align="center"
-        style="width: 5%; min-width: 400px;" />
+      <el-table-column class="td" label="Limit" prop="advantageLimit" align="center" style="width: 5%; min-width: 400px;" />
+      <el-table-column class="td" label="Order" prop="positioning" align="center" style="width: 5%; min-width: 400px;" />
       <el-table-column class="td" label="Received" prop="received" align="center" style="width: 50%">
         <template #default="scope">
           <span v-if="scope.row.received == 0">
@@ -77,22 +74,21 @@
       </el-table-column>
 
 
-      <el-table-column label="Actions" style="width: 20%; min-width: 200px;text-align: center;" align="right">
-
-
-
+      <el-table-column label="Actions" style="width: 80%;text-align: center;" align="right">
         <template #default="scope">
-          <el-tooltip placement="top">
-            <template #content> Boost this advantage </template>
-            <el-button size="small" @click="handleBoost(scope.$index, scope.row)"><i
-                class="uil uil-presentation"></i></el-button>
-          </el-tooltip>
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
-          <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
-            <template #reference>
-              <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
-            </template>
-          </el-popconfirm>
+          <div>
+            <el-tooltip placement="top">
+              <template #content> Boost this advantage </template>
+              <el-button size="small" @click="handleBoost(scope.$index, scope.row)"><i
+                  class="uil uil-presentation"></i></el-button>
+            </el-tooltip>
+            <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
+            <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
+              <template #reference>
+                <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
+              </template>
+            </el-popconfirm>
+          </div>
         </template>
 
 
