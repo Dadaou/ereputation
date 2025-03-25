@@ -1,10 +1,7 @@
 <template>
   <div class="mt-2 table__container">
-    <div class="table-description" style="margin-bottom: 16px;">
-      <p></p>
-      <div>
+    <div :style="{display: 'flex', width: InputSearchWidth }" >
         <el-input v-model="search" size="small" placeholder="Type to search" class="input_searchs" />
-      </div>
     </div>
     <el-table :data="filterTableData" class="responsive-table">
       <el-table-column label="Name" align="center" style="width: 20%; min-width: 800px;">
@@ -124,11 +121,18 @@ const emit = defineEmits(['edit', 'setEnable', 'setDisable']);
 const advantages = inject('advantages');
 const search = ref('');
 const { width } = useWindowSize();
-const tableWidth = computed(() => {
-  return width.value > 800 ? `width: ${100}%` : `width: ${100}%`;
-});
+
 const route = useRoute();
 const router = useRouter();
+
+
+const InputSearchWidth = computed(() => {
+
+  if(width.value < 768) {
+    return route.name === 'LeadgenAdvantage' ? `${100}%` : `${88}%`
+  }
+  return `${200}px`;
+});
 
 const filterTableData = computed(() => {
   return advantages.value.filter(data => {
@@ -263,27 +267,30 @@ button i.uil-edit {
 }
 
 @media screen and (max-width: 768px) {
-  .responsive-table {
+  /*.responsive-table {
     width: 85%;
-  }
+  }*/
 
-  .input_searchs,
+  /*.input_searchs,
   .input_search {
     display: inline;
     margin-right: 7rem;
-  }
+  }*/
 }
 
 @media screen and (max-width: 468px) {
-  .input_search {
+  /*.input_search {
     display: inline;
     margin-right: 3.5rem;
   }
 
   .input_searchs {
-    display: inline;
-    margin-right: 9rem;
-  }
+    display: flex;
+    justify-content: center;
+    margin: 0;
+  
+    
+  }*/
 
   .el-table--fit {
     font-size: 11px !important;

@@ -1,12 +1,12 @@
 <template>
   <div class="mt-2 table__container">
     <div class="table-description" style="margin-bottom: 16px;">
-      <p>Partnerships requested by your establishment</p>
-      <div>
-        <el-input v-model="searchSent" size="small" placeholder="Type to search" class="input_searchs" />
+      <!--<p>Partnerships requested by your establishment</p>-->
+      <div :style="{display: 'flex', width: InputSearchWidth }">
+        <el-input v-model="searchSent" size="small" placeholder="Type to search"  />
       </div>
     </div>
-    <el-table :data="filterTableDataSent" class="responsive-table">
+    <el-table :data="filterTableDataSent" :style="{width : tableWidth}">
       <el-table-column width="100">
         <template #default="scope">
           <img class="establishment_img" :src="scope.row.partnership_logo" alt="" />
@@ -98,6 +98,8 @@ import services from '@Services/services.js';
 // import { useUserStore } from "@Stores/user.js";
 import moment from "moment";
 // const categories = inject('categories');
+import { useRoute, useRouter } from "vue-router";
+import { useWindowSize } from '@vueuse/core';
 
 const datasentLoading = ref(false);
 const datareceivedLoading = ref(false);
@@ -108,7 +110,25 @@ const emit = defineEmits(['update', 'edit']);
 const partnerships = inject('partnerships')
 let filterTableDataSent = ref([]);
 let filterTableDataReceived = ref([]);
+const { width } = useWindowSize();
 
+const route = useRoute();
+
+const tableWidth = computed(() => {
+
+  if(width.value < 768) {
+    return route.name === 'LeadgenPartnership' ? `${98}%` : `${88}%`
+  }
+  return `${100}%`;
+});
+
+const InputSearchWidth = computed(() => {
+
+  if(width.value < 768) {
+    return route.name === 'LeadgenPartnership' ? `${100}%` : `${88}%`
+  }
+  return `${200}px`;
+});
 
 const handleEdit = (data) => {
   emit('edit', data)
@@ -226,7 +246,18 @@ button i.uil-edit {
   .input_searchs,
   .input_search {
     display: inline;
-    margin-right: 7rem;
+    /*margin-right: 7rem;*/
+  }
+
+  .table-description {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .table-description p {
+    font-size: 12px;
+    margin-left: 5px;
   }
 }
 
@@ -238,7 +269,7 @@ button i.uil-edit {
 
   .input_searchs {
     display: inline;
-    margin-right: 9rem;
+    /*margin-right: 9rem;*/
   }
 
   .el-table--fit {

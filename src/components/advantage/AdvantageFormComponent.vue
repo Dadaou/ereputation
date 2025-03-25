@@ -5,7 +5,7 @@
                 <p>Complete the following information to add an advantage.</p>
             </div> -->
     </div>
-    <div class="advantage_container">
+    <div class="advantage_container" :style="{ width: advantageContainerWidth}">
         <div class="form-container">
             <form @submit.prevent="submit" class="mt-4 px-2 h-full">
                 <div class="grid gap-6 mb-6 md:grid-cols-2">
@@ -233,8 +233,10 @@
 
 <script setup>
 import moment from 'moment';
-import { ref, inject, reactive, watch, onBeforeMount, defineAsyncComponent, defineEmits, onMounted } from 'vue';
+import { useRoute, useRouter } from "vue-router";
+import { ref, inject, computed, watch, onBeforeMount, defineAsyncComponent, defineEmits, onMounted } from 'vue';
 import services from '@Services/services.js';
+import { useWindowSize } from '@vueuse/core';
 import { useUserStore } from "@Stores/user.js";
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import { ElMessage, ElOption, ElSelect, ElDatePicker, ElTooltip, ElInput } from 'element-plus';
@@ -291,6 +293,8 @@ const sections = ref(['','MENUS', 'REVIEWS', 'OFFERS', 'INFOS', 'FOLLOW US'])
 const section = ref('')
 const website = ref('')
 const userStore = useUserStore();
+const { width } = useWindowSize();
+const route = useRoute();
 const showSpinner = ref(false);
 const emit = defineEmits();
 const dateFrom = ref(null);
@@ -329,6 +333,18 @@ const onDragOver = (event) => {
 const handleDescriptionChange = () => {
     descriptionContent.value = description.value.getContents()
 }
+
+const advantageContainerWidth = computed(() => {
+
+    console.clear()
+    console.log(route.name)
+
+    if(width.value < 850) {
+        return route.name === 'LeadgenAdvantage' ? `${100}%` : `${89}%`
+    }
+
+    return `${100}%`
+});
 
 const onDrop = (event) => {
     event.preventDefault();
@@ -537,7 +553,6 @@ onBeforeMount(() => {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 100%;
     gap: 1rem;
 }
 
@@ -557,15 +572,13 @@ onBeforeMount(() => {
 @media (max-width: 850px) {
     .advantage_container {
         flex-direction: column-reverse;
-        width: 85%
+    }
+    .px-2 {
+        padding-left: 5px;
     }
 }
 
 @media (max-width: 768px) {
-    .advantage_container {
-        flex-direction: column-reverse;
-    }
-
     .form-container {
         width: auto;
     }

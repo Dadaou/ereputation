@@ -7,7 +7,7 @@
                     customers in order to promote your products and acquire new clients.</p>
             </div>
         </div>
-        <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4">
+        <form :style="{maxWidth : formWidth}"   @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4">
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
                     <label for="advantage"
@@ -73,7 +73,7 @@
                 </p>
             </div>
         </div>
-        <form @submit.prevent="submitEmail" @keydown.enter.prevent="submitEmail" class="mt-4 px-2">
+        <form :style="{maxWidth : formWidth}"  @submit.prevent="submitEmail" @keydown.enter.prevent="submitEmail" class="mt-4 px-2">
             <div class="inline-flex items-center gap-2">
                 <div>
                     <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Please
@@ -110,6 +110,8 @@ import 'element-plus/es/components/option/style/css'
 import 'element-plus/es/components/select/style/css'
 import { useRoute } from 'vue-router';
 import { useAppStore } from "@Stores/app.js"
+
+import { useWindowSize } from '@vueuse/core';
 
 const AdvantagePartnershipList = defineAsyncComponent(() =>
     import('@Components/utils/AdvantagePartnershipListComponent.vue')
@@ -150,8 +152,17 @@ const loading2 = ref(false)
 
 const userStore = useUserStore();
 const establishmentInviteFriend = ref('')
-
+const { width } = useWindowSize();
 const partnerSubmitBtnText = ref('Request a new partnership')
+
+const formWidth = computed(() => {
+
+    if(width.value < 768) {
+        return route.name === 'LeadgenPartnership' ? `${100}%` : `${85}%`
+    }
+
+    return `${85}%`;
+});
 
 watch(advantage, () => {
 
@@ -484,22 +495,30 @@ const loadAdvantage = async () => {
     padding : 0 12px;
 }
 
+/* Assurez-vous que les formulaires ne dépassent pas l'écran */
+form {
+    overflow-x: hidden;
+}
+
 /* Responsive: Ajustement pour les petits écrans */
 @media screen and (max-width: 468px) {
     .profile__header {
-        padding-right: .5rem;
-        max-width: 380px;
+        max-width: 390px;
+        text-align: justify;
     }
-    .profile__header p {
+    /*.profile__header p {
         font-size: 13px;
-    }
+    }*/
 }
 
-/* Assurez-vous que les formulaires ne dépassent pas l'écran */
-form {
-    max-width: 85%;
-    overflow-x: hidden;
+@media screen and (max-width: 390px) {
+    .profile__header {
+        max-width: 340px;
+        text-align: justify;
+    }
+
 }
+
 
 /* Réduire les marges pour les petits écrans */
 @media screen and (max-width: 768px) {
@@ -525,13 +544,10 @@ form {
     .inline-flex input {
         margin-top: 0.5rem;
     }
-
     form {
-        margin: 7px;
+        margin: 20px 7px 0 7px;
     }
 
-    .profile__edit {
-        padding: 0 2px;
-    }
+
 }
 </style>

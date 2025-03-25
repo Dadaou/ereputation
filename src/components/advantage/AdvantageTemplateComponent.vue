@@ -111,4 +111,12 @@ const selectOffer = (offer) => {
   font-weight: bold;
   font-size: 14px;
 }
+
+@media screen and (max-width: 768px) {
+  .offers-list span {
+    text-align: center;
+    margin-left: 15px;
+  }
+  
+}
 </style>

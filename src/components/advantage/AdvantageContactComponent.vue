@@ -4,8 +4,8 @@
         <i class="uil uil-file-download"></i>
         Export
       </button>
-    <div>
-      <el-input v-model="search" size="small" placeholder="Type to search" class="input_search"/>
+    <div :style="{display: 'flex', width: InputSearchWidth}">
+      <el-input v-model="search" size="small" placeholder="Type to search" />
     </div>
   </div>
   <div class="overflow-x-auto">
@@ -66,6 +66,7 @@ const ExportcsvexcelComponent = defineAsyncComponent(() =>
 const contactLoading = ref(false);
 const route = useRoute();
 const customer = route.params.tag;
+const { width } = useWindowSize();
 
 // Format date to YYYY/MM/DD
 const formatCreatedAt = (createdAt) => {
@@ -82,6 +83,15 @@ const contacts = ref([]);
 
 const showExport = ref(false);
 const downloaded = ref(false);
+
+
+const InputSearchWidth = computed(() => {
+
+  if(width.value < 768) {
+    return route.name === 'LeadgenContact' ? `${100}%` : `${88}%`
+  }
+  return `${200}px`;
+});
 
 const exportData = (type, filename) => {
   csvXlsx.exportContact(type, filename, query.value,
@@ -180,7 +190,7 @@ button:hover {
 @media screen and (max-width: 768px) {
   .container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
   }
   .input_search {
     display: inline;
@@ -199,10 +209,6 @@ button:hover {
     display: inline;
     margin-right: 3.2rem;
     
-  }
-  .container {
-    display: flex;
-    justify-content: space-between;
   }
   .el-table--fit {
     font-size: 11px !important;
