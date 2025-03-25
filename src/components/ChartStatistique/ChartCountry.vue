@@ -8,7 +8,7 @@
 
         <div class="chart-container" >
             <apexchart type="donut" 
-        height="480"  :options="chartOptions" :series="series"></apexchart>
+        :height="chartHeight"  :options="chartOptions" :series="series"></apexchart>
         </div>
 
           <div class="legend-container">
@@ -84,6 +84,7 @@ const hasData = ref(false);
 const showModal = ref(false);
 const emits = defineEmits(['showModal','setSource','show-visitors','show-chart']);
 const labels = ref([]);
+const chartHeight = ref(480);
 
 
 
@@ -161,11 +162,56 @@ const prevPage = () => {
      
   }
 };
-
+window.addEventListener("resize", ()=>{
+   if (parseInt((75 * window.innerWidth)/100) > 480) {
+        chartHeight.value =480
+      } else {
+        if (window.innerWidth <= 380) {
+              chartHeight.value = window.innerWidth -20;
+          }else if(window.innerWidth > 380 && window.innerWidth <= 600){
+            chartHeight.value = parseInt((85 * window.innerWidth)/100);
+          }else{
+             chartHeight.value = parseInt((75 * window.innerWidth)/100);
+          }
+        
+      }
+       // if (window.innerWidth <= 380) {
+       //      chartHeight.value = window.innerWidth -20;
+       //  }else{
+       //    if ((window.innerWidth / 2) > 480) {
+       //      chartHeight.value = 480;
+       //    } else {
+       //      chartHeight.value = 420;
+       //    }
+          
+       //  }
+    });
 // Recalcul après le rendu
 onMounted(() => {
 
+     // if (window.innerWidth <= 380) {
+     //        chartHeight.value = window.innerWidth ;
+     //    }else{
+     //      if ((window.innerWidth / 2) > 480) {
+     //        chartHeight.value = 480;
+     //      } else {
+     //        chartHeight.value = 420;
+     //      }
+          
+     //    }
   nextTick(() => {
+    if (parseInt((75 * window.innerWidth)/100) > 480) {
+        chartHeight.value =480
+      } else {
+        if (window.innerWidth <= 380) {
+              chartHeight.value = window.innerWidth -20;
+          }else if(window.innerWidth > 380 && window.innerWidth <= 600){
+            chartHeight.value = parseInt((85 * window.innerWidth)/100);
+          }else{
+             chartHeight.value = parseInt((75 * window.innerWidth)/100);
+          }
+        
+      }
    setTimeout(()=>{
 
      if (chartWrapper.value) {
@@ -539,17 +585,19 @@ export default {
         align-items: top;
         justify-content: center;
         flex-direction: column;
+          width: 100% !important;
+           border: 1px solid blue;
     }
     .chart-container {
     /* 2/3 de l'espace */
       width: 100% !important;
+      border: 1px solid red;
+      flex: 1; 
 
     }
-    .vue-apexcharts {
-     height: 200px !important;
-    }
+   
     .legend-container{
-    /*   flex: 1; */
+      flex: 2; 
        display: flex;
       flex-direction: column !important;
       align-items: center;
