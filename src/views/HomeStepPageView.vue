@@ -1,5 +1,5 @@
 <template>
-    <div :class="{ hidden: isChildRoute }" class="main__container">
+    <div :class="{ hidden: isChildRoute }" class="main__container home-step__container">
         <div class="container">
             <h1>Hi <span class="name">{{ userStore.user.customer.name }} </span> !</h1>
             <h1>We are happy to welcome you to the Linkystar platform 😊</h1>
@@ -86,6 +86,10 @@ onBeforeUnmount(() => {
     display: none;
 }
 
+.home-step__container {
+    background: url("@/assets/images/dond_linkystar.webp");
+}
+
 .main__container {
     margin-left: auto;
     margin-right: auto;
@@ -114,13 +118,13 @@ onBeforeUnmount(() => {
     font-weight: 600;
 }
 
-.redirect{
+.redirect {
     font-weight: 300;
     display: flex;
     padding: 5px;
     border-radius: 5px;
     background-color: var(--light-color-bg2);
-    color:white;
+    color: white;
     cursor: pointer;
     border: solid 1px var(--light-color-bg2);
 }
@@ -130,5 +134,4 @@ onBeforeUnmount(() => {
     background-color: white;
     color: var(--light-color-bg2)
 }
-
 </style>
