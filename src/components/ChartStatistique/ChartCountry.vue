@@ -586,12 +586,12 @@ export default {
         justify-content: center;
         flex-direction: column;
           width: 100% !important;
-           border: 1px solid blue;
+          
     }
     .chart-container {
     /* 2/3 de l'espace */
       width: 100% !important;
-      border: 1px solid red;
+  
       flex: 1; 
 
     }
