@@ -5,7 +5,7 @@
                 <p>Complete the following information to add an advantage.</p>
             </div> -->
     </div>
-    <div class="advantage_container" :style="{ width: advantageContainerWidth}">
+    <div class="advantage_container" :style="{ width: advantageContainerWidth }">
         <div class="form-container">
             <form @submit.prevent="submit" class="mt-4 px-2 h-full">
                 <div class="grid gap-6 mb-6 md:grid-cols-2">
@@ -48,38 +48,33 @@
 
                 </div>
                 <div class="grid gap-6 mb-6 md:grid-cols-4">
-                        <div>
-                            <label for="amount"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount
-                                <span></span></label>
-                            <input type="number" id="amount" v-model="amount"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
-                        </div>
-                        <div>
-                            <label for="currency" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Currency<span></span>
-                            </label>
+                    <div>
+                        <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount
+                            <span></span></label>
+                        <input type="number" id="amount" v-model="amount"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
+                    </div>
+                    <div>
+                        <label for="currency" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Currency<span></span>
+                        </label>
 
-                            <el-input
-                                v-model="currency"
-                                size="large"
-                            />
-                        </div>
-                        <!--<div>
+                        <el-input v-model="currency" size="large" />
+                    </div>
+                    <!--<div>
                               <label for="code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Code
                                 <Tooltip text="Use your own discount code recognized by your system"/>
                                </label>
                               <input type="text" id="code" v-model="code" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                           </div>-->
-                        <div>
-                            <label for="metric"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Metric
-                                <span></span></label>
-                            <el-select v-model="metric" placeholder="Select metric" size="large" >
-                                <el-option v-for="metric in metrics" :key="metric" :label="metric" :value="metric" />
-                            </el-select>
-                        </div>
+                    <div>
+                        <label for="metric" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Metric
+                            <span></span></label>
+                        <el-select v-model="metric" placeholder="Select metric" size="large">
+                            <el-option v-for="metric in metrics" :key="metric" :label="metric" :value="metric" />
+                        </el-select>
+                    </div>
                     <!--<div>
                             <label for="metric" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Metric <span></span></label>
                             <el-select v-model="metric" placeholder="Select metric" size="large">
@@ -121,13 +116,13 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
                         </div>
                     </div>
-                     <div>
-                            <label for="limit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Order
-                           
-                            </label>
-                            <input type="number" id="positioning" v-model="positioning"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
+                    <div>
+                        <label for="limit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Order
+
+                        </label>
+                        <input type="number" id="positioning" v-model="positioning"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
                     </div>
                     <div>
                         <label for="last_name"
@@ -159,13 +154,13 @@
                         <label for="message"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Website</label>
                         <textarea v-model="website" id="message" rows="4"
-                            class="block p-2.5 w-50 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            >
+                            class="block p-2.5 w-50 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                       </textarea>
                     </div>
 
-                     <div>
-                        <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
+                    <div>
+                        <label for="section"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
                         <el-select id="section" v-model="section" placeholder="" size="large">
                             <el-option v-for="item in sections" :key="item" :label="item" :value="item" />
                         </el-select>
@@ -178,23 +173,16 @@
                     <div>
                         <label for="message"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-                        
-                            
-                      <QuillEditor 
-                        style="height: 200px;" 
-                        theme="snow"
-                        :toolbar="toolbarOptions"
-                        ref="description"
-                        :content="html"
-                        content-type="html"
-                        @text-change="handleDescriptionChange"
-                      />
-                      
+
+
+                        <QuillEditor style="height: 200px;" theme="snow" :toolbar="toolbarOptions" ref="description"
+                            :content="html" content-type="html" @text-change="handleDescriptionChange" />
+
                     </div>
                     <div>
                         <label for="message"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Logo</label>
-                        <div class="md:order-2" >
+                        <div class="md:order-2">
                             <div class="image-selector border-gray-300" @dragover.prevent="onDragOver"
                                 @drop.prevent="onDrop" @click="selectImg">
                                 <div v-if="previewImage" class="image-preview">
@@ -273,23 +261,23 @@ const categoriesOptions = ref([
 ]);
 
 const toolbarOptions = [
-  ['bold', 'italic', 'underline', 'strike'],      
-  ['link'],
-  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-  [{ 'align': [] }],   
-                     
+    ['bold', 'italic', 'underline', 'strike'],
+    ['link'],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+    [{ 'align': [] }],
 
-  //[{ 'size': ['small', false, 'large', 'huge'] }],  
-  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-  [{ 'font': [] }],
 
-  [{ 'color': [] }, { 'background': [] }],          
+    //[{ 'size': ['small', false, 'large', 'huge'] }],  
+    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+    [{ 'font': [] }],
 
-                                     
+    [{ 'color': [] }, { 'background': [] }],
+
+
 ]
 
 
-const sections = ref(['','MENUS', 'REVIEWS', 'OFFERS', 'INFOS', 'FOLLOW US'])
+const sections = ref(['', 'MENUS', 'REVIEWS', 'OFFERS', 'INFOS', 'FOLLOW US'])
 const section = ref('')
 const website = ref('')
 const userStore = useUserStore();
@@ -315,6 +303,7 @@ const positioning = ref(null);
 const type = ref('add');
 const advantage_to_update = inject('advantage_to_update');
 
+const allAdvantages = inject('advantages'); // Assurez-vous que cela est bien injecté
 const advantages = inject('advantages');
 const activeAdvantageTab = inject('advantage_activeTab');
 const metrics = ref(['Percent', 'Amount'])
@@ -339,7 +328,7 @@ const advantageContainerWidth = computed(() => {
     console.clear()
     console.log(route.name)
 
-    if(width.value < 850) {
+    if (width.value < 850) {
         return route.name === 'LeadgenAdvantage' ? `${100}%` : `${89}%`
     }
 
@@ -420,7 +409,7 @@ watch(advantage_to_update, () => {
         advantageName.value = advantage_to_update.value["name"];
         establishment.value = `/api/establishments/${advantage_to_update.value['establishment_id']},${advantage_to_update.value['establishment_name']}`
         advantageLimit.value = advantage_to_update.value["advantageLimit"];
-         positioning.value = advantage_to_update.value["positioning"];
+        positioning.value = advantage_to_update.value["positioning"];
         advantage_to_update.value["description"] !== null && description.value.setContents(advantage_to_update.value["description"]);
         section.value = advantage_to_update.value["section"];
         website.value = advantage_to_update.value["website"];
@@ -435,7 +424,7 @@ watch(advantage_to_update, () => {
 })
 
 const resetForm = (e = null) => {
-    if(e) e.preventDefault();
+    if (e) e.preventDefault();
 
     dateFrom.value = null;
     dateTo.value = null;
@@ -471,7 +460,7 @@ const submit = async () => {
     category.value != "" ? formData.append("category", category.value != "" ? category.value : null) : null;
     code.value != "" ? formData.append("code", code.value != "" ? code.value : null) : null;
     advantageName.value != "" ? formData.append("name", advantageName.value != "" ? advantageName.value : null) : null;
-    amount.value != null  ? formData.append("amount", amount.value != null ? parseFloat(amount.value) : null) : null;
+    amount.value != null ? formData.append("amount", amount.value != null ? parseFloat(amount.value) : null) : null;
     currency.value != "" ? formData.append("currency", currency.value != "" ? currency.value : null) : null;
     metric.value != "" ? formData.append("metric", metric.value != "" ? metric.value : null) : null;
     formData.append("enable", true);
@@ -504,8 +493,18 @@ const submit = async () => {
                 message: `Advantage ${type.value === 'add' ? 'added' : 'updated'} successfully.`,
                 type: 'success',
             });
-            emit('advantage-updated');
+
+            if (type.value === 'add') {
+                allAdvantages.value.push(response.data);
+            } else {
+                const index = allAdvantages.value.findIndex(adv => adv.id === advantage_to_update.value.id);
+                if (index !== -1) {
+                    allAdvantages.value[index] = response.data;
+                }
+            }
+
             resetForm();
+            activeAdvantageTab.value = 'advantage_list';
         } else {
             ElMessage.error(`Failed to ${type.value === 'add' ? 'add' : 'update'} advantage.`);
         }
@@ -573,6 +572,7 @@ onBeforeMount(() => {
     .advantage_container {
         flex-direction: column-reverse;
     }
+
     .px-2 {
         padding-left: 5px;
     }
