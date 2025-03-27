@@ -1,12 +1,9 @@
 <template>
   <div class="mt-2 table__container">
-    <div class="table-description" style="margin-bottom: 16px;">
-      <p></p>
-      <div>
+    <div :style="{display: 'flex', width: InputSearchWidth, float : floatProperty }" >
         <el-input v-model="search" size="small" placeholder="Type to search" class="input_searchs" />
-      </div>
     </div>
-    <el-table :data="filterTableData" class="responsive-table">
+    <el-table :data="filterTableData" :style="{width : tableWidth}">
       <el-table-column label="Name" align="center" style="width: 20%; min-width: 800px;">
         <template #default="scope">
 
@@ -33,8 +30,7 @@
 
       <!-- <el-table-column class="td" label="Establishment" prop="establishment_name" align="center" style="width: 5%; min-width: 400px;" /> -->
       <el-table-column class="td" label="Amount" prop="amount" align="center" style="width: 10%; min-width: 4%;" />
-      <el-table-column class="td" label="Category" prop="category" align="center"
-        style="width: 20%; min-width: 100px;" />
+      <el-table-column class="td" label="Category" prop="category" align="center" style="width: 20%; min-width: 100px;" />
       <el-table-column class="td" label="Code" prop="code" align="center" style="width: 50%">
         <template #default="scope">
           <span v-if="scope.row.code" class="custom-badge">
@@ -42,10 +38,8 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column class="td" label="Limit" prop="advantageLimit" align="center"
-        style="width: 5%; min-width: 400px;" />
-      <el-table-column class="td" label="Order" prop="positioning" align="center"
-        style="width: 5%; min-width: 400px;" />
+      <el-table-column class="td" label="Limit" prop="advantageLimit" align="center" style="width: 5%; min-width: 400px;" />
+      <el-table-column class="td" label="Order" prop="positioning" align="center" style="width: 5%; min-width: 400px;" />
       <el-table-column class="td" label="Received" prop="received" align="center" style="width: 50%">
         <template #default="scope">
           <span v-if="scope.row.received == 0">
@@ -80,22 +74,21 @@
       </el-table-column>
 
 
-      <el-table-column label="Actions" style="width: 20%; min-width: 200px;text-align: center;" align="right">
-
-
-
+      <el-table-column label="Actions" style="width: 80%;text-align: center;" align="right">
         <template #default="scope">
-          <el-tooltip placement="top">
-            <template #content> Boost this advantage </template>
-            <el-button size="small" @click="handleBoost(scope.$index, scope.row)"><i
-                class="uil uil-presentation"></i></el-button>
-          </el-tooltip>
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
-          <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
-            <template #reference>
-              <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
-            </template>
-          </el-popconfirm>
+          <div>
+            <el-tooltip placement="top">
+              <template #content> Boost this advantage </template>
+              <el-button size="small" @click="handleBoost(scope.$index, scope.row)"><i
+                  class="uil uil-presentation"></i></el-button>
+            </el-tooltip>
+            <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
+            <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
+              <template #reference>
+                <el-button size="small"><i class="uil uil-trash-alt"></i></el-button>
+              </template>
+            </el-popconfirm>
+          </div>
         </template>
 
 
@@ -124,11 +117,36 @@ const emit = defineEmits(['edit', 'setEnable', 'setDisable']);
 const advantages = inject('advantages');
 const search = ref('');
 const { width } = useWindowSize();
-const tableWidth = computed(() => {
-  return width.value > 800 ? `width: ${100}%` : `width: ${100}%`;
-});
+
 const route = useRoute();
 const router = useRouter();
+
+
+const InputSearchWidth = computed(() => {
+
+  if(width.value < 768) {
+    return route.name === 'LeadgenAdvantage' ? `${100}%` : `${88}%`
+  }
+  return `${200}px`;
+
+});
+
+
+const floatProperty = computed(() => {
+  if(width.value < 768) {
+    return 'none';
+  }
+  return 'right';
+});
+
+const tableWidth = computed(() => {
+
+  if(width.value < 768) {
+    return route.name === 'LeadgenAdvantage' ? `${100}%` : `${91}%`
+  }
+  return `${100}%`;
+
+});
 
 const filterTableData = computed(() => {
   return advantages.value.filter(data => {
@@ -263,27 +281,30 @@ button i.uil-edit {
 }
 
 @media screen and (max-width: 768px) {
-  .responsive-table {
-    width: 85%;
-  }
+  /*.responsive-table {
+    width: 92%;
+  }*/
 
-  .input_searchs,
+  /*.input_searchs,
   .input_search {
     display: inline;
     margin-right: 7rem;
-  }
+  }*/
 }
 
 @media screen and (max-width: 468px) {
-  .input_search {
+  /*.input_search {
     display: inline;
     margin-right: 3.5rem;
   }
 
   .input_searchs {
-    display: inline;
-    margin-right: 9rem;
-  }
+    display: flex;
+    justify-content: center;
+    margin: 0;
+  
+    
+  }*/
 
   .el-table--fit {
     font-size: 11px !important;

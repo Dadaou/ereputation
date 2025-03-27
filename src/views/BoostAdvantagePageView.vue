@@ -14,9 +14,11 @@
             <div v-if="discount" class="inline-flex items-center justify-around w-full discount-content">
                 <div v-if="isEnable == null"></div>
                 <div v-else-if="isEnable == true">
-                    <h1 v-if="discount.description" class="boost__name">
+                    <div v-if="discount.description" style="width: 700px; height: auto; word-wrap: break-word; padding: 0 2px 0 5px;" v-html="discount.description">
+                    </div>
+                    <!--<h1 v-if="discount.description" class="boost__name">
                         {{ discount.description }}
-                    </h1>
+                    </h1>-->
                     <h2 class="boost_quantity">
                         {{ $t("advantage.limit_qty") }}: <strong class="boost__quantity-nb">{{ discount.quantity
                             }}</strong>
@@ -353,7 +355,6 @@ onBeforeUnmount(() => {
     }
 
     .boost_quantity {
-        margin-top: 18px;
         font-size: 3rem;
     }
 

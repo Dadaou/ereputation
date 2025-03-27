@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :style="{display: 'flex', width: InputSearchWidth, float: floatProperty }" >
     <el-input v-model="search" size="small" placeholder="Type to search" class="search" />
   </div>
   <div class="overflow-x-auto mt-5">
@@ -86,6 +86,7 @@ import moment from 'moment';
 import { ElTable, ElTableColumn, ElInput, ElButton } from 'element-plus';
 import services from '@Services/services.js';
 import { useRoute } from "vue-router";
+import { useWindowSize } from '@vueuse/core';
 import { Icon } from '@iconify/vue';
 import {
   ref,
@@ -98,6 +99,7 @@ import {
 
 const discountLoading = ref(false);
 const minWidth = ref(140);
+const { width } = useWindowSize();
 const route = useRoute();
 const customer = route.params.tag;
 const search = ref('');
@@ -105,6 +107,22 @@ const discountData = ref([])
 const formatCreatedAt = (createdAt) => {
   return moment(createdAt).format('YYYY-MM-DD');
 };
+
+
+const InputSearchWidth = computed(() => {
+
+    if(width.value < 768) {
+      return route.name === 'LeadgenDiscountCoupon' ? `${100}%` : `${88}%`
+    }
+    return `${200}px`;
+});
+
+const floatProperty = computed(() => {
+  if(width.value < 768) {
+    return 'none';
+  }
+  return 'right';
+});
 
 const compareDatesDesc = (a, b) => {
   const dateA = moment(a.created_at);
@@ -248,18 +266,18 @@ button:hover {
   cursor: pointer;
 }
 
-.search {
+/*.search {
   display: flex;
   max-width: 150px;
   float: right;
-}
+}*/
 
 @media screen and (max-width: 768px) {
-  .search {
+  /*.search {
     display: flex;
     max-width: 220px;
     float: right;
-  }
+  }*/
 
   .el-table--fit {
     font-size: 11px !important;

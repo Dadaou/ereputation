@@ -1,13 +1,13 @@
 <template>
   <div class="mt-2 table__container">
-    <div class="table-description" style="margin-bottom: 16px;">
-      <p>Requests for partnerships</p>
-      <div>
-        <el-input v-model="searchReceived" size="small" placeholder="Type to search" class="input_search" />
+    <div style="margin-bottom: 16px;">
+      <!--<p>Requests for partnerships</p>-->
+      <div :style="{display: 'flex', width: InputSearchWidth, float: floatProperty }">
+        <el-input v-model="searchReceived" size="small" placeholder="Type to search"  />
       </div>
     </div>
 
-    <el-table :data="filterTableDataReceived" class="responsive-table">
+    <el-table :data="filterTableDataReceived" :style="{width : tableWidth}">
       <el-table-column width="100">
         <template #default="scope">
           <img class="establishment_img" :src="scope.row.partnership_logo" alt="" />
@@ -114,6 +114,8 @@ import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
 import services from '@Services/services.js';
 import { Icon } from '@iconify/vue';
+import { useRoute, useRouter } from "vue-router";
+import { useWindowSize } from '@vueuse/core';
 // import { useUserStore } from "@Stores/user.js";
 import moment from "moment";
 // const categories = inject('categories');
@@ -123,10 +125,36 @@ const datareceivedLoading = ref(false);
 const searchSent = ref('')
 const searchReceived = ref('')
 const emit = defineEmits(['update']);
+const route = useRoute();
+const router = useRouter();
 // const userStore = useUserStore()
 const partnerships = inject('partnerships')
 let filterTableDataSent = ref([]);
 let filterTableDataReceived = ref([]);
+const { width } = useWindowSize();
+
+
+const tableWidth = computed(() => {
+  if(width.value < 768) {
+        return route.name === 'LeadgenPartnership' ? `${98}%` : `${88}%`
+  }
+  return `${100}%`;
+});
+
+const InputSearchWidth = computed(() => {
+
+  if(width.value < 768) {
+    return route.name === 'LeadgenPartnership' ? `${100}%` : `${88}%`
+  }
+  return `${200}px`;
+});
+
+const floatProperty = computed(() => {
+  if(width.value < 768) {
+    return 'none';
+  }
+  return 'right';
+});
 
 watchEffect(() => {
   if (partnerships.value && partnerships.value['sent']) {
@@ -240,14 +268,25 @@ button i.uil-edit {
   .input_searchs,
   .input_search {
     display: inline;
-    margin-right: 7rem;
+    /*margin-right: 7rem;*/
+  }
+
+  .table-description {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .table-description p {
+    font-size: 12px;
+    margin-left: 5px;
   }
 }
 
 @media screen and (max-width: 468px) {
   .input_search {
     display: inline;
-    margin-right: 3.5rem;
+    /*margin-right: 3.5rem;*/
   }
 
   .input_searchs {

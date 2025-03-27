@@ -1,12 +1,9 @@
 <template>
   <div class="mt-2">
-    <div class="table-description" style="margin-bottom: 16px;">
-      <p></p>
-      <div>
+    <div :style="{display: 'flex', width: InputSearchWidth, float: floatProperty }" >
         <el-input v-model="search" size="small" placeholder="Type to search" class="input_searchs" />
-      </div>
     </div>
-    <el-table :data="filterTableData" class="responsive-table">
+    <el-table :data="filterTableData" :style="{width : tableWidth}">
       <el-table-column label="Name" prop="name" align="left" style="width: 5%; min-width: 200px;" />
       <el-table-column label="Establishment" prop="establishment_name" align="center"
         style="width: 5%; min-width: 400px;" />
@@ -68,6 +65,7 @@ import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/input/style/css'
 import services from '@Services/services.js';
 import { useRoute, useRouter } from "vue-router";
+import { useWindowSize } from '@vueuse/core';
 
 const ScreenAdvantageModalComponent = defineAsyncComponent(() =>
   import('@Components/utils/ScreenAdvantageModalComponent.vue')
@@ -81,6 +79,7 @@ const screens = inject('screens')
 const advantage_screen_selected = ref(null);
 const advantage_selected = ref([]);
 const advantages = inject('advantages');
+const { width } = useWindowSize();
 provide('advantage', advantage_selected);
 provide('advantage_screen_selected', advantage_screen_selected)
 const screen_id = ref(null);
@@ -116,6 +115,29 @@ const minute_to = ref();
 provide('minute_to', minute_to);
 const seconde_to = ref();
 provide('seconde_to', seconde_to);
+
+const InputSearchWidth = computed(() => {
+
+  if(width.value < 768) {
+    return route.name === 'LeadgenMyScreen' ? `${100}%` : `${88}%`
+  }
+  return `${200}px`;
+});
+
+const tableWidth = computed(() => {
+
+  if(width.value < 768) {
+    return route.name === 'LeadgenMyScreen' ? `${100}%` : `${85}%`
+  }
+  return `${100}%`;
+});
+
+const floatProperty = computed(() => {
+  if(width.value < 768) {
+    return 'none';
+  }
+  return 'right';
+});
 
 
 const setAdvantageScreenProps = (_adv_screen) => {
@@ -240,28 +262,28 @@ button i.uil-edit {
   font-weight: 500;
 }
 
-.responsive-table {
+/*.responsive-table {
   width: 100%
-}
+}*/
 
 .responsive-modal {
   width: 100%
 }
 
 @media screen and (max-width: 768px) {
-  .responsive-table {
+  /*.responsive-table {
     width: 85%;
-  }
+  }*/
 
-  .input_searchs,
+  /*.input_searchs,
   .input_search {
     display: inline;
     margin-right: 7rem;
-  }
+  }*/
 }
 
 @media screen and (max-width: 468px) {
-  .input_search {
+  /*.input_search {
     display: inline;
     margin-right: 3.5rem;
   }
@@ -269,7 +291,7 @@ button i.uil-edit {
   .input_searchs {
     display: inline;
     margin-right: 9rem;
-  }
+  }*/
 
   .el-table--fit {
     font-size: 11px !important;

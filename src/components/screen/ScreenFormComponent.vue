@@ -6,7 +6,7 @@
             </div> -->
   </div>
   <div>
-    <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2 h-full">
+    <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2 h-full" :style="{paddingRight : paddingRight}">
 
       <div class="grid gap-6 mb-6 md:grid-cols-2">
 
@@ -54,7 +54,7 @@
 </template>
 <script setup>
 
-import { ref, inject, watch, onBeforeMount, defineEmits } from 'vue';
+import { ref, inject, watch, onBeforeMount, defineEmits, computed } from 'vue';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import { useRouter, useRoute } from 'vue-router';
@@ -79,6 +79,9 @@ const screens = inject('screens');
 const advantages = inject('advantages');
 const cleanScreenForm = inject('cleanScreenForm');
 const emit = defineEmits(['show-screen-list']);
+import { useWindowSize } from '@vueuse/core';
+
+const { width } = useWindowSize();
 
 watch([screen_to_update,cleanScreenForm], () => {
   if (screen_to_update.value != null) {
@@ -94,6 +97,14 @@ watch([screen_to_update,cleanScreenForm], () => {
    
   }
     
+})
+
+
+const paddingRight = computed(() => {
+
+  if(width.value < 800) {
+    return route.name === 'LeadgenMyScreen' ? `${0}` : `${50}px`
+  }
 })
 
 
@@ -396,12 +407,19 @@ input {
   font-weight: 600;
 }
 
+@media screen and (max-width: 768px) {
+
+  form {
+    margin: 0 10px;
+  }
+}
+
 
 @media screen and (max-width: 800px) {
 
     form {
         margin-left: 0;
-        padding-right: 35px;
+        /*padding-right: 35px;*/
     }
 }
 </style>
