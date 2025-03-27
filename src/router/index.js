@@ -30,24 +30,24 @@ const CheckAuthentication = (to, from, next) => {
   }
 }
 
-const checkUser = (to, from, next) => {
-  const user = useUserStore().user
-  const roles = user.roles
-  if (to.name == 'EstablishmentList') {
-    if (roles.includes('ROLE_PARTNER') && (user.partner !== null || user.customer !== null)) {
-      next()
-    } else if (roles.includes('ROLE_CUSTOMER') && user.customer !== null) {
-      next()
-    } else {
-      next({ name: 'HomeViewForUserConnected' })
-    }
-  }
-}
+// const checkUser = (to, from, next) => {
+//   const user = useUserStore().user
+//   const roles = user.roles
+//   if (to.name == 'EstablishmentList') {
+//     if (roles.includes('ROLE_PARTNER') && (user.partner !== null || user.customer !== null)) {
+//       next()
+//     } else if (roles.includes('ROLE_CUSTOMER') && user.customer !== null) {
+//       next()
+//     } else {
+//       next({ name: 'HomeViewForUserConnected' })
+//     }
+//   }
+// }
 
 const checkNavigation = (to, from, next) => {
   const user = useUserStore().user
   const roles = user.roles
-  let defaultRoute = { name: 'HomeViewForUserConnected' }
+  // let defaultRoute = { name: 'HomeViewForUserConnected' }
   if (to.name == 'HomeViewForUserConnected') {
     if (roles.includes('ROLE_EREP')) {
       if (roles.includes('ROLE_PARTNER') && user.partner !== null) {
@@ -251,6 +251,12 @@ const router = createRouter({
               component: () => import('@Components/units/UnitReviewComponent.vue')
             }
           ]
+        },
+        {
+          path: '/customer/:tag/establishment/:id/files',
+          name: 'Download',
+          component: () => import('@/views/BlankView.vue') // Composant vide
+          // beforeEnter: [download]
         }
       ]
     },
@@ -429,7 +435,7 @@ const router = createRouter({
           component: () => import('@Views/HomeLeadgenPageView.vue'),
           children: [
             {
-              path: 'customer/:tag',
+              path: 'customer/:tag/advantage',
               name: 'LeadgenAdvantage',
               component: () => import('@Views/LeadgenAdvantageView.vue')
             },
@@ -476,7 +482,6 @@ const router = createRouter({
           name: 'StepView',
           beforeEnter: [CheckAccess],
           component: () => import('@Views/StepPageView.vue'),
-          beforeEnter: [CheckAccess],
           children: [
             {
               path: 'first-step',

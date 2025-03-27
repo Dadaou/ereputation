@@ -56,6 +56,9 @@
                     <input type="text" id="link" v-model="link" disabled
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
+                <div class="tracking">
+                    <el-checkbox v-model="noTracking" label="Direct link (no tracking)" size="large" />
+                </div>
             </div>
 
             <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
@@ -72,7 +75,7 @@
 <script setup>
 import { computed, ref, onMounted } from 'vue'
 import { useUserStore } from "@Stores/user.js"
-import { ElOption, ElSelect, ElButton } from 'element-plus'
+import { ElOption, ElSelect, ElButton, ElCheckbox } from 'element-plus'
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import services from '@Services/services.js';
 import 'element-plus/es/components/popconfirm/style/css'
@@ -109,6 +112,7 @@ const establishment = ref(null)
 const isEdit = ref(false)
 const id = ref('')
 const show = ref(false)
+const noTracking = ref(false)
 
 
 const closeView = () => {
@@ -150,8 +154,6 @@ const onDocumentDrop = (event) => {
 };
 
 const handleFiles = (file) => {
-
-    console.log("handleFiles")
     selectedDocument.value = file;
     documentFiles.value = [{
         file: file,
@@ -184,6 +186,7 @@ const submit = async () => {
     if (selectedDocument.value) {
         formData.append('file', selectedDocument.value);
         formData.append('type', "document");
+        formData.append('no_tracking', noTracking.value);
     }
 
     if (isEdit.value) {
@@ -216,6 +219,7 @@ const submit = async () => {
     } else {
         formData.append('tag', establishment.value)
         formData.append('caption', caption.value)
+        formData.append('no_tracking', noTracking.value);
 
         let uploadErrors = [];
 
@@ -252,6 +256,7 @@ const resetValue = () => {
     link.value = ''
     caption.value = ''
     showModal.value = false
+    noTracking.value = false
 }
 
 const handleEdit = async (data) => {
@@ -260,6 +265,7 @@ const handleEdit = async (data) => {
         caption.value = data.caption;
         id.value = data.id;
         link.value = data.document_url;
+        noTracking.value = data.no_tracking === null ? false : data.no_tracking
 
         if (data.document_url) {
             selectedDocument.value = { name: data.document_url.split('/').pop() };
