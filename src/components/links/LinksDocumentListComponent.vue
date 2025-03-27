@@ -20,7 +20,7 @@
       <el-table-column label="Link" style="width: 10%; min-width: 200px;">
         <template #default="scope">
           <div>
-            <span>{{ scope.row.document_url }}</span>
+            <span>{{ generateFileLink(scope.row.document_url, scope.row.establishment_tag) }}</span>
           </div>
         </template>
       </el-table-column>
@@ -31,7 +31,8 @@
         </template>
         <template #default="scope">
 
-          <a :href="scope.row.document_url" target="_blank"><i class="uil uil-external-link-alt"></i></a>
+          <a :href="generateFileLink(scope.row.document_url, scope.row.establishment_tag)" target="_blank"
+            class="el-button el-button--small"><i class="uil uil-import "></i></a>
           <el-button size="small" @click="handleEdit(scope.row)"><i class="uil uil-edit"></i></el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
             <template #reference>
@@ -53,7 +54,7 @@
   </div>
 </template>
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, inject } from 'vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 import services from '@Services/services.js';
 import 'element-plus/es/components/message/style/css'
@@ -67,6 +68,7 @@ const emit = defineEmits(['deleteData', 'edit']);
 //const Data = inject('links');
 const search = ref('')
 const linksLoading = ref(false);
+const tag = inject('tag');
 
 const props = defineProps({
   tableData: {
@@ -74,6 +76,13 @@ const props = defineProps({
     default: () => []
   },
 });
+
+const generateFileLink = (url, establishment_tag) => {
+
+  const baseurl = window.location.origin;
+  const filename = decodeURIComponent(url.split('/').pop());
+  return baseurl + `/customer/${tag.value}/establishment/${establishment_tag}/files?q=${filename}`;
+}
 
 const filterTableData = computed(() => {
 
