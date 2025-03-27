@@ -83,6 +83,7 @@
                         <h6 v-if="isExternal == 'External'" class="text-lg font-bold" style="text-align: center;color: gray;"> External Qrcodes</h6>
                         <h6 v-if="isExternal == 'Country'" class="text-lg font-bold" style="text-align: center;color: gray;"> Countries</h6>
                         <h6 v-if="isExternal == 'Platform'" class="text-lg font-bold" style="text-align: center;color: gray;"> Platform & Social Media</h6>
+                        <h6 v-if="isExternal == 'Document'" class="text-lg font-bold" style="text-align: center;color: gray;"> Document Qrcodes</h6>
                         <button class="btn text-lg close-btn" style="color: red;" @click="closeModal">x</button>
                      </div>
                       <div class="modal-content" >
@@ -212,6 +213,10 @@
                 <ChartCountry @show-chart="displayChart" @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
             </div>
 
+            <div class="statistique" v-if = "showChart.external">
+                <ChartDocument @show-chart="displayChart" @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
+            </div>
+
         </div>
         <br>
         <div class="dashboard__chart">
@@ -277,6 +282,10 @@ const ChartCountry = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/ChartCountry.vue")
 )
 
+const ChartDocument = defineAsyncComponent(() =>
+    import("@Components/ChartStatistique/ChartDocument.vue")
+)
+
 const nbrTotalVisit = ref(null);
 const nbrNotSubmitted = ref(null);
 const nbrSubmitted = ref(null);
@@ -303,7 +312,8 @@ const showChart=ref({
     platform: true,
     sociaux: true,
     discount: true,
-    country: true
+    country: true,
+    document: true
 })
 
 const displayChart = (_ch)=>{
@@ -371,6 +381,13 @@ const displayChart = (_ch)=>{
      if (_ch == 'discount_false') {
         showChart.value.discount = false;
         console.log(showChart.value.discount)
+    }
+
+    if (_ch == 'document') {
+        showChart.value.document = true;
+    }
+    if (_ch == 'document_false') {
+        showChart.value.document = false;
     }
 }
 const showVisitors = (_visitors) => {

@@ -19,25 +19,25 @@
         </template>
       </el-table-column>
       <el-table-column label="Caption" prop="caption" style="width: 10%; min-width: 200px;" />
-      <!-- <el-table-column label="QR code scans" prop="qr_code_count" style="width: 25%; min-width: 200px;" /> -->
-      <!-- <el-table-column label="Direct link" style="width: 10%; min-width: 200px;">
+      <el-table-column label="Url" style="width: 25%; min-width: 200px;">
         <template #default="scope">
-          <div>
-            <span>{{ scope.row.no_tracking == true ? 'Yes' : 'No' }}</span>
-          </div>
+          {{ generateFileLink(scope.row.document_url, scope.row.establishment_tag) }}
         </template>
-      </el-table-column> -->
-      <el-table-column label="Url" prop="document_url" style="width: 25%; min-width: 200px;" />
+      </el-table-column>
       <el-table-column label="Operations" style="width: 25%; min-width: 200px;" align="right">
         <template #header>
           <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
         </template>
         <template #default="scope">
-          <a :href="scope.row.document_url" target="_blank" class="url-redirect">
-            <i class="uil uil-external-link-alt"></i>
+          <a :href="generateFileLink(scope.row.document_url, scope.row.establishment_tag)" target="_blank"
+            class="url-redirect el-button el-button--small">
+            <i class="uil uil-import"></i>
           </a>
-          <el-button size="small" @click="copyLink(scope.row.document_url)"><i class='fa fa-copy'></i></el-button>
-          <el-button size="small" @click="handleClickExternalUrl(scope.row.document_url)"><i
+          <el-button size="small"
+            @click="copyLink(generateFileLink(scope.row.document_url, scope.row.establishment_tag))"><i
+              class='fa fa-copy'></i></el-button>
+          <el-button size="small"
+            @click="handleClickExternalUrl(scope.row.document_url, scope.row.establishment_tag)"><i
               class="uil uil-qrcode-scan"></i></el-button>
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
@@ -88,9 +88,17 @@ const tableData = ref(allDocuments.value);
 const showModal = ref(false);
 const scanUrl = ref('');
 const documentStore = useDocumentStore();
+const tag = inject('tag');
 
-function handleClickExternalUrl(url) {
-  scanUrl.value = url
+const generateFileLink = (url, establishment_tag) => {
+
+  const baseurl = window.location.origin;
+  const filename = decodeURIComponent(url.split('/').pop());
+  return baseurl + `/customer/${tag.value}/establishment/${establishment_tag}/files?q=${filename}`;
+}
+
+function handleClickExternalUrl(url, establishment_tag) {
+  scanUrl.value = generateFileLink(url, establishment_tag);
   showModal.value = true;
 }
 
