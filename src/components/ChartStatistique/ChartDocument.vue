@@ -165,8 +165,7 @@ const loadData = async (start_date, end_date, timePeriods, establishment, staff,
 
 
 
-
-
+    
       dataChart.value = response.data;
       category.value = response.data.categories || [];
 
@@ -176,9 +175,10 @@ const loadData = async (start_date, end_date, timePeriods, establishment, staff,
 
       // series.value = [{"name":"Lico Caption","data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},{"name":"Caption candie","data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},{"name":"Caption Zomatel","data":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},{"name":"Caption LCC","data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},{"name":"Lien Hotel Ibiza","data":[0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},{"name":"Test MV","data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}];
 
-     
+     // let response.data.series = series.value;
 
       const maxValue = response.data.series.length > 0 ? getMaxData(response.data.series) : 0;
+      
       chartOptions.value = {
         ...chartOptions.value,
         xaxis: {
@@ -193,7 +193,7 @@ const loadData = async (start_date, end_date, timePeriods, establishment, staff,
         return totalAcc + (serie.data ? serie.data.reduce((acc, curr) => acc + curr, 0) : 0);
       }, 0);
      
-      console.log(series.value)
+     
       hasData.value = total > 0;
       if (total <= 0) {
           emits('show-chart','document_false');

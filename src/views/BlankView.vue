@@ -7,7 +7,7 @@
     </div> <!-- Contenu vide -->
 </template>
 <script setup>
-import { onMounted, ref, defineAsyncComponent } from 'vue'
+import { onMounted, ref, defineAsyncComponent,onBeforeMount } from 'vue'
 import services from '@Services/services.js'
 import { useRoute } from 'vue-router'
 
@@ -18,6 +18,9 @@ const SpinnerComponent = defineAsyncComponent(() =>
 const route = useRoute()
 
 const downloading = ref(null);
+const mimeType = ref(null);
+const filename = ref(null);
+const isTracking = ref(true);
 
 const downloadBase64File = (base64DataUrl, filename) => {
     // Créer l'URL data
@@ -36,15 +39,21 @@ const downloadBase64File = (base64DataUrl, filename) => {
     document.body.removeChild(link)
     downloading.value = false;
 
-    setTimeout(() => window.close(), 2000);
+    setTimeout(() => window.close(), 2000000);
 }
 
-const download = async (filename) => {
+const verifyTracking = async(_filename)=>{
+
+
+
+}
+
+const download = async (_filename) => {
 
     downloading.value = true
-
+  
     const response = await new Promise((resolve) => {
-        services.get_Record(`customer/get/document/${decodeURIComponent(filename)}`, (response) => {
+        services.get_Record(`customer/get/document/${decodeURIComponent(_filename)}`, (response) => {
             resolve(response)
         })
     })
@@ -93,7 +102,7 @@ const postVisitor = async () => {
         "language": navigator.languages ? JSON.stringify(navigator.languages) : JSON.stringify([navigator.language]),
         "os": navigator.userAgent.includes('Win') ? 'Win32' : 'Linux armv81',
         "timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
-        "url": window.location.href,
+        "url": decodeURIComponent(window.location.href),
         "userAgent": navigator.userAgent,
         "visitedAt": visitedAt
     }
@@ -111,7 +120,7 @@ const postVisitor = async () => {
 
 }
 
-const initFingerprint = async () => {
+const initFingerprint = async (_filename) => {
 
     const runWithTimeout = async (asyncFunction, timeout) => {
 
@@ -129,18 +138,45 @@ const initFingerprint = async () => {
 
     try {
 
-        await runWithTimeout(() => postVisitor(), 5000);
+
+         const response = await new Promise((resolve) => {
+            services.get_Record(`customer/get/document/${decodeURIComponent(_filename)}`, (response) => {
+                resolve(response)
+            })
+        })
+
+        if (response.status === 200 && response.data && response.data.document_base64) {
+            
+            const { no_tracking } = response.data
+
+          
+
+           if (no_tracking == null || no_tracking == false) {
+                await runWithTimeout(() => postVisitor(), 5000);
+            } 
+
+        } else {
+            console.error('Erreur: ', response)
+        }
+
+
 
     } catch (error) {
 
         console.log('Erreur postVisitor : ', error);
     } finally {
-        download(route.query.q)
+        download(_filename);
     }
 }
 
+
+
 onMounted(async () => {
-    if (route.query && route.query.q) await initFingerprint()
+    if (route.query && route.query.q ) {
+
+            await initFingerprint(route.query.q)
+      
+    }
 })
 
 </script>
