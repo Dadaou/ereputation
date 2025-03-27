@@ -39,7 +39,7 @@ const downloadBase64File = (base64DataUrl, filename) => {
     setTimeout(() => window.close(), 2000);
 }
 
-const download = async (filename) => {
+const download = async (filename) => { 
 
     downloading.value = true
 
@@ -61,8 +61,91 @@ const download = async (filename) => {
     }
 }
 
+
+
+
+const generateFingerprint=async()=> {
+    const text = navigator.userAgent + navigator.language + screen.width + screen.height + Date.now();
+    const encoder = new TextEncoder();
+    const data = encoder.encode(text);
+
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const fingerprint = hashArray.map(byte => byte.toString(16).padStart(2, "0")).join("");
+
+    return fingerprint;
+}
+
+const isMobile=()=> {
+    return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Opera Mini|IEMobile/i.test(navigator.userAgent);
+}
+
+ const postVisitor=async()=>{
+
+            let current_date=new Date();
+                current_date.setHours(current_date.getHours() + 2);
+               const visitedAt = current_date.toISOString();
+                let fingerprint_code=null;
+              await generateFingerprint().then(fp => {fingerprint_code=fp;});
+
+         let data_visitor = {
+            "browser": "",
+            "fingerprint": fingerprint_code,
+            "code": fingerprint_code,
+            "device": isMobile()? 'Mobile' : 'Desktop',
+            "language": navigator.languages ? JSON.stringify(navigator.languages) : JSON.stringify([navigator.language]),
+            "os": navigator.userAgent.includes('Win') ? 'Win32' : 'Linux armv81',
+            "timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
+            "url":window.location.href,
+            "userAgent": navigator.userAgent,
+            "visitedAt": visitedAt
+        }
+
+             const response = await new Promise((resolve) => {
+                    services.createRecord('fingerprint/publish-visitor', JSON.stringify(data_visitor), (response) => {
+                        resolve(response);
+                    },true,true);
+                });
+
+                if (response.status == 201 || response.status == 200) {
+                    visitorId.value = response.data.id;
+                    console.log(response)
+                }
+
+    }
+
+const initFingerprint = async () => {
+
+   
+
+    const runWithTimeout = async (asyncFunction, timeout) => {
+      
+        const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => {
+               
+                reject(new Error('Temps d’attente dépassé'))
+            }, timeout)
+        );
+
+        const result = await Promise.race([asyncFunction(), timeoutPromise]);
+       
+        return result;
+    }
+
+    try {
+
+        await runWithTimeout(() => postVisitor(), 5000); 
+      
+    } catch (error) {
+          
+        console.log('Erreur postVisitor : ', error);
+    } finally {
+        download(route.query.q)
+    }
+}
+
 onMounted(async () => {
-    if (route.query && route.query.q) await download(route.query.q)
+    if (route.query && route.query.q) await initFingerprint()
 })
 
 </script>
