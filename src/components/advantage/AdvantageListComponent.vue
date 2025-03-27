@@ -74,7 +74,7 @@
       </el-table-column>
 
 
-      <el-table-column label="Actions" style="width: 80%;text-align: center;" align="right">
+      <el-table-column label="Actions" width="160" align="center">
         <template #default="scope">
           <div>
             <el-tooltip placement="top">
