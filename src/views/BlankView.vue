@@ -39,7 +39,7 @@ const downloadBase64File = (base64DataUrl, filename) => {
     document.body.removeChild(link)
     downloading.value = false;
 
-    setTimeout(() => window.close(), 2000000);
+    setTimeout(() => window.close(), 2000);
 }
 
 const verifyTracking = async(_filename)=>{
