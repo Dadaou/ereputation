@@ -99,7 +99,7 @@
 
                                 </template>
                               </el-table-column> -->
-
+                            <el-table-column label="Establishment" align="center" prop="establishment_name" show-overflow-tooltip/>
                                <el-table-column label="OS" align="center" prop="os" show-overflow-tooltip/>
 
                               <!--  <el-table-column label="Device" align="left" >
