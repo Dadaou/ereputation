@@ -59,6 +59,13 @@
 							Parameters
 						</RouterLink>
 					</li>
+					<li @click="closeDropdown" v-if="customer">
+						<RouterLink :to="`/customer/support`"
+							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+							<i class="uil uil-comment-info-alt"></i>
+							Support
+						</RouterLink>
+					</li>
 					<li @click="closeDropdown">
 						<RouterLink to="/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
 							@click="$emit('signOut')">

@@ -155,7 +155,7 @@ const router = createRouter({
           path: '/payment/process',
           name: 'paymentProcess',
           component: () => import('@Views/PaymentProcessPageView.vue')
-        }
+        },
       ]
     },
     {
@@ -499,6 +499,12 @@ const router = createRouter({
               component: () => import('@Components/step/PlatformReadyPageView.vue')
             }
           ]
+        },
+        {
+          path: '/customer/support',
+          name: 'support',
+          component: () => import('@Views/SupportPageView.vue'),
+          beforeEnter: [CheckAccess]
         },
         {
           path: '/customer/:tag/account',
