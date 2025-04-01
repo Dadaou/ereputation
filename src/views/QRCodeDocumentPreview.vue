@@ -522,7 +522,7 @@ body {
   border-radius: 0.25rem;
   /* Ajoutez un rayon de bordure */
   caret-color: var(--color-primary);
-  font-family: 'Montserrat', sans-serif;
+  /*font-family: 'Montserrat', sans-serif;*/
   font-size: 14px !important;
 }
 

@@ -235,7 +235,6 @@ onBeforeUnmount(() => {
 }
 
 .boost__title {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     font-size: 4rem;
     color: var(--el-color-primary);
 }
@@ -251,32 +250,24 @@ onBeforeUnmount(() => {
 }
 
 .boost__name {
-    font-family: Montserrat, sans-serif;
-    ;
     font-size: 3.5rem;
     font-weight: 600;
     color: var(--color-primary);
 }
 
 .boost_quantity {
-    font-family: Montserrat, sans-serif;
-    ;
     font-size: 3rem;
     font-weight: 400;
 
 }
 
 .boost_sold {
-    font-family: Montserrat, sans-serif;
-    ;
     font-size: 3rem;
     font-weight: 400;
 
 }
 
 .boost__quantity-nb {
-    font-family: Montserrat, sans-serif;
-    ;
     font-size: 4rem;
     font-weight: 600;
     color: #db0113;
@@ -295,24 +286,18 @@ onBeforeUnmount(() => {
 .boost_comment {
     font-size: 2rem;
     font-weight: 400;
-    font-family: Montserrat, sans-serif;
-    ;
     color: var(--color-secondary);
 }
 
 .boost_stay {
     font-size: 1.5rem;
     font-weight: 400;
-    font-family: Montserrat, sans-serif;
-    ;
     color: var(--color-secondary);
 }
 
 .boost__description {
     font-size: 2rem;
     font-weight: 400;
-    font-family: Montserrat, sans-serif;
-    ;
     color: var(--color-bg2);
 }
 

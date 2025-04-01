@@ -204,8 +204,4 @@ onBeforeUnmount(() => {
     margin-top: 10px;
 }
 
-h3, p {
-    font-family: Consolas;
-}
-
 </style>

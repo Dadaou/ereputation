@@ -320,7 +320,6 @@ const isSelected = (index) => {
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-family: 'Courier New', Courier, monospace;
 }
 
 .modal-discount-description {

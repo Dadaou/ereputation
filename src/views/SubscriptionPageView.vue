@@ -626,11 +626,9 @@ onBeforeUnmount(() => {
 
 .cgv-container p {
   text-align: justify;
-  font-family: 'Cartograph Mono CF';
 }
 
 .cgv-container h1 {
-  font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
   text-transform: uppercase;
 
@@ -798,7 +796,6 @@ button.isLoaded {
 }
 
 .subscription-menu {
-  font-family: 'Montserrat', sans-serif;
   text-decoration: none;
   outline: none !important;
   cursor: pointer;
@@ -830,7 +827,6 @@ button.isLoaded {
   padding: 0;
   border: 0;
   outline: 0;
-  font-family: "GeneralSans", sans-serif;
   margin-bottom: 30px;
 }
 
