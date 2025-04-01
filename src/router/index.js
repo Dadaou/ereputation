@@ -156,6 +156,12 @@ const router = createRouter({
           name: 'paymentProcess',
           component: () => import('@Views/PaymentProcessPageView.vue')
         },
+        {
+          path: '/files',
+          name: 'Download',
+          component: () => import('@/views/BlankView.vue') // Composant vide
+          // beforeEnter: [download]
+        }
       ]
     },
     {
@@ -251,12 +257,6 @@ const router = createRouter({
               component: () => import('@Components/units/UnitReviewComponent.vue')
             }
           ]
-        },
-        {
-          path: '/customer/:tag/establishment/:id/files',
-          name: 'Download',
-          component: () => import('@/views/BlankView.vue') // Composant vide
-          // beforeEnter: [download]
         }
       ]
     },
@@ -578,11 +578,13 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log(to, from)
   if (
     to.name != 'Login' &&
     to.name != 'Signup' &&
     to.name != 'externalUrl' &&
     !to.path.startsWith('/public') &&
+    to.name != 'Download' &&
     session.getItemWithTTL('verification_session') == null
   ) {
     console.log('session expired')

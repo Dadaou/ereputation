@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col items-center justify-center min-h-[300px] w-full gap-6">
+    <div class="flex flex-col items-center justify-center h-full min-h-[300px] w-full gap-6">
         <SpinnerComponent v-if="downloading == true" size="extra-large" color="yellow" />
         <i v-if="downloading == false" class="uil uil-check-circle text-4xl lg:text-6xl text-green-600"></i>
         <h1 v-if="downloading == true" class="black">Downloading...</h1>
@@ -7,7 +7,7 @@
     </div> <!-- Contenu vide -->
 </template>
 <script setup>
-import { onMounted, ref, defineAsyncComponent,onBeforeMount } from 'vue'
+import { onMounted, ref, defineAsyncComponent } from 'vue'
 import services from '@Services/services.js'
 import { useRoute } from 'vue-router'
 
@@ -18,9 +18,6 @@ const SpinnerComponent = defineAsyncComponent(() =>
 const route = useRoute()
 
 const downloading = ref(null);
-const mimeType = ref(null);
-const filename = ref(null);
-const isTracking = ref(true);
 
 const downloadBase64File = (base64DataUrl, filename) => {
     // Créer l'URL data
@@ -37,37 +34,6 @@ const downloadBase64File = (base64DataUrl, filename) => {
     // Nettoyage + Redirection
     window.URL.revokeObjectURL(base64DataUrl)
     document.body.removeChild(link)
-    downloading.value = false;
-
-    setTimeout(() => window.close(), 2000000);
-}
-
-const verifyTracking = async(_filename)=>{
-
-
-
-}
-
-const download = async (_filename) => {
-
-    downloading.value = true
-  
-    const response = await new Promise((resolve) => {
-        services.get_Record(`customer/get/document/${decodeURIComponent(_filename)}`, (response) => {
-            resolve(response)
-        })
-    })
-
-    if (response.status === 200 && response.data && response.data.document_base64) {
-        const { base64_with_mime, document_url } = response.data
-
-        const filename = document_url.split('/').pop()
-
-        downloadBase64File(base64_with_mime, filename)
-
-    } else {
-        console.error('Erreur: ', response)
-    }
 }
 
 const generateFingerprint = async () => {
@@ -122,6 +88,8 @@ const postVisitor = async () => {
 
 const initFingerprint = async (_filename) => {
 
+    downloading.value = true
+
     const runWithTimeout = async (asyncFunction, timeout) => {
 
         const timeoutPromise = new Promise((_, reject) =>
@@ -138,44 +106,42 @@ const initFingerprint = async (_filename) => {
 
     try {
 
-
-         const response = await new Promise((resolve) => {
-            services.get_Record(`customer/get/document/${decodeURIComponent(_filename)}`, (response) => {
+        const response = await new Promise((resolve) => {
+            services.get_Record(`public/get/document/${decodeURIComponent(_filename)}`, (response) => {
                 resolve(response)
-            })
+            }, true)
         })
 
         if (response.status === 200 && response.data && response.data.document_base64) {
-            
-            const { no_tracking } = response.data
 
-          
+            const { base64_with_mime, document_url, no_tracking } = response.data
 
-           if (no_tracking == null || no_tracking == false) {
+            if (no_tracking == null || no_tracking == false) {
                 await runWithTimeout(() => postVisitor(), 5000);
-            } 
+            }
+
+            const filename = document_url.split('/').pop()
+
+            downloadBase64File(base64_with_mime, filename)
 
         } else {
             console.error('Erreur: ', response)
         }
 
-
-
     } catch (error) {
 
         console.log('Erreur postVisitor : ', error);
     } finally {
-        download(_filename);
+        downloading.value = false
+        setTimeout(() => window.close(), 3000)
     }
 }
 
-
-
 onMounted(async () => {
-    if (route.query && route.query.q ) {
+    if (route.query && route.query.q) {
 
-            await initFingerprint(route.query.q)
-      
+        await initFingerprint(route.query.q)
+
     }
 })
 

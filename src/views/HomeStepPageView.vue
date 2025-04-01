@@ -1,6 +1,6 @@
 <template>
     <div :class="{ hidden: isChildRoute }" class="main__container home-step__container">
-        <div class="container max-w-[50%] ml-0 mr-auto">
+        <div class="container m-0">
             <h1>Hi <span class="name">{{ userStore.user.customer.name }} </span> !</h1>
             <h1>We are happy to welcome you to the Linkystar platform 😊</h1>
             <h1>Let's start with a few settings to make your platform operational.</h1>
@@ -95,12 +95,12 @@ footer {
 .home-step__container {
     background: url("@/assets/images/fond_linkystar.webp");
     margin-block: 80px 0 !important;
-    padding-inline: 10%;
+    padding-inline: 4rem;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     width: 100vw !important;
-    min-height: 100vh !important;
+    min-height: 80vh !important;
     display: flex;
     flex-direction: column;
     align-items: flex-start;

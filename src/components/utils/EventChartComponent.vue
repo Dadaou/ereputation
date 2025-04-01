@@ -20,7 +20,7 @@
     </div>
     <div v-else class="chart_content" :style="{
       'display': 'flex',
-      'width': '100%',
+      'width': '100%'
     }">
       <div class="colSmall">
 
@@ -80,14 +80,19 @@
           <div id="chartEvents" style="min-height: 60px; width: 100%;position: relative;"></div>
         </div>
       </div>
+      
     </div>
+
+     <BaseLegend class="legend" :LegendData="legendLineChart" :alignment="'horizontal'"></BaseLegend>
   </div>
+
   <div class="chartLegend">
     <BaseLegend class="legend" :LegendData="legendData" :alignment="'vertical'">
     </BaseLegend>
     <BaseLegend class="legend" :LegendData="legendDataPublic" :alignment="'vertical'">
     </BaseLegend>
   </div>
+
 </template>
 <script setup>
 import moment from 'moment';
@@ -182,6 +187,7 @@ const type = inject('type');
 const date = inject('date');
 const chartLoading = inject('chartLoading');
 const loading = ref(true);
+const legendLineChart = inject('legendData');
 const eventChartValue = ref([]);
 const plotdata = ref({ notes: [], events_per_date: [] });
 const custom_width = computed(() => {
@@ -393,7 +399,12 @@ const getPlotData = async (period, rangedate, next) => {
   next(data);
 }
 
+onMounted(()=>{
+  console.log(legendLineChart.value)
+})
+
 onBeforeMount(async () => {
+  
   loading.value = true;
   const response = await new Promise((resolve, reject) => {
     getPlotData(type.value, date.value, (response) => {
@@ -425,7 +436,7 @@ onBeforeMount(async () => {
               data: scores,
               // pointRadius: 0,
               // fill: false,
-              tension: 0.1
+              tension: 0.1 
               })
      
      eventChartValue.value=plotData1;
