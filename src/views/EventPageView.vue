@@ -135,10 +135,15 @@ let events = ref([]);
 provide('events', events);
 let publics = ref([]);
 
+const legendData = ref([]);
+provide('legendData', legendData);
+
 const start_date = inject('start_date');
 const end_date = inject('end_date');
 const date = ref([start_date.value, end_date.value])
 provide('date', date);
+
+const colors = ref(['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']);
 
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },
@@ -182,9 +187,24 @@ onMounted(async () => {
     ])
 })
 
+const generatedLegend = (colors, dataType) => {
+    let legends = [];
+
+    dataType.forEach((type, index) => {
+        let legend = {};
+        legend['name'] = type;
+        legend['color'] = colors[index];
+        legends.push(legend);
+    })
+    return legends;
+}
 
 const IsValueOkay = (value) => (value == '' || value == null || value == undefined || value == []) ? false : true;
 const loadEvents = async (tag, dateStart, dateEnd, locality) => {
+
+      let dataType = ['reviews']
+    legendData.value = generatedLegend(colors.value, dataType);
+
     eventLoading.value = true;
     let apiBase = `/establishment/${tag}/event`;
     let apiParams = '';

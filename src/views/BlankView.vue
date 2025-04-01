@@ -116,13 +116,13 @@ const initFingerprint = async (_filename) => {
 
             const { base64_with_mime, document_url, no_tracking } = response.data
 
-            const filename = document_url.split('/').pop()
-
-            downloadBase64File(base64_with_mime, filename)
-
             if (no_tracking == null || no_tracking == false) {
                 await runWithTimeout(() => postVisitor(), 5000);
             }
+
+            const filename = document_url.split('/').pop()
+
+            downloadBase64File(base64_with_mime, filename)
 
         } else {
             console.error('Erreur: ', response)
@@ -136,8 +136,6 @@ const initFingerprint = async (_filename) => {
         window.close()
     }
 }
-
-
 
 onMounted(async () => {
     if (route.query && route.query.q) {
