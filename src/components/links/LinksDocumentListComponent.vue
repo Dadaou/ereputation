@@ -68,7 +68,7 @@ const emit = defineEmits(['deleteData', 'edit']);
 //const Data = inject('links');
 const search = ref('')
 const linksLoading = ref(false);
-const tag = inject('tag');
+// const tag = inject('tag');
 
 const props = defineProps({
   tableData: {
@@ -81,7 +81,7 @@ const generateFileLink = (url, establishment_tag) => {
 
   const baseurl = window.location.origin;
   const filename = decodeURIComponent(url.split('/').pop());
-  return baseurl + `/customer/${tag.value}/establishment/${establishment_tag}/files?q=${filename}`;
+  return baseurl + `/files?q=${filename}&e=${establishment_tag}`;
 }
 
 const filterTableData = computed(() => {

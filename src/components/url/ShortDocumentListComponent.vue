@@ -88,13 +88,13 @@ const tableData = ref(allDocuments.value);
 const showModal = ref(false);
 const scanUrl = ref('');
 const documentStore = useDocumentStore();
-const tag = inject('tag');
+// const tag = inject('tag');
 
 const generateFileLink = (url, establishment_tag) => {
 
   const baseurl = window.location.origin;
   const filename = decodeURIComponent(url.split('/').pop());
-  return baseurl + `/customer/${tag.value}/establishment/${establishment_tag}/files?q=${filename}`;
+  return baseurl + `/files?q=${filename}&e=${establishment_tag}`;
 }
 
 function handleClickExternalUrl(url, establishment_tag) {
