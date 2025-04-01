@@ -133,7 +133,7 @@ const initFingerprint = async (_filename) => {
         console.log('Erreur postVisitor : ', error);
     } finally {
         downloading.value = false
-        window.close()
+        setTimeout(() => window.close(), 3000)
     }
 }
 
