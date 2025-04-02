@@ -51,7 +51,7 @@
                 <template #default="scope">
                     <el-button size="small" @click="handleEditLink(scope.row)"><i class="uil uil-edit"></i></el-button>
                     <el-button size="small">
-                        <a :href="scope.row.settings_value1" target="_blank" class="external-link"><i
+                        <a :href="checkUrl(scope.row.settings_value1)" target="_blank" class="external-link"><i
                                 class="uil uil-external-link-alt"></i></a>
                     </el-button>
                     <el-popconfirm title="Are you sure to delete this?"
@@ -249,6 +249,15 @@ const handleEdit = (establishment) => {
 
 const currentEstablishment = ref(null)
 
+const checkUrl = (url) => {
+
+    if(url.startsWith('https://')) {
+        return url
+    }
+
+    return 'https://' + url
+}
+
 const filteredCompetitor = computed(() => {
     let filteredData = competitorsData.value;
 
@@ -348,6 +357,7 @@ const handleDeleteLink = async (index, link) => {
                 type: 'success',
             })
             loadLinksByEstablishment(currentEstablishment.value)
+            showLinkModal.value = true
         }
     } catch (error) {
         console.log(error)
@@ -462,7 +472,6 @@ const getValueUrl = (url, urlTemplate) => {
     return null;
 }
 
-//console.log(getValueUrl(url, urlTemplate));
 
 const getHashtagValue = (value) => {
     if (value.startsWith("#")) {
@@ -472,9 +481,9 @@ const getHashtagValue = (value) => {
 }
 
 const submit = async () => {
+
     showSpinner.value = true;
     let urlObject = splitUriAndUrl(provider.value)
-    console.log(urlObject);
 
     const data = {
         value1: link.value,
@@ -482,7 +491,7 @@ const submit = async () => {
         provider: urlObject.uri,
         enable: true
     }
-    console.log(data)
+
     if (isEdit.value) {
         try {
             const response = await new Promise((resolve) => {
@@ -499,6 +508,7 @@ const submit = async () => {
                 loadLinksByEstablishment(currentEstablishment.value)
                 showSpinner.value = false;
                 isEdit.value = false
+                showLinkModal.value = true
                 resetValue()
             }
         } catch (error) {
@@ -527,17 +537,23 @@ const submit = async () => {
 
 const handleEditLink = (data) => {
     showModal.value = true
-    category.value = data.category
+    category.value = data.provider_category
+    establishment.value = `/api/establishments/${data.establishment_id}`
+
+
+    console.clear()
+    console.log('data ', data)
 
     setTimeout(function () {
         // link.value = data.settings_value1
-        link.value = data.category == 'Hashtag' ? `#${data.settings_value1}` : data.url
+        link.value = data.provider_category == 'Hashtag' ? `#${data.settings_value1}` : data.settings_value1
     }, 250);
 
     id.value = data.settings_id
 
     isEdit.value = true
-    provider.value = getURIbyName(data.name)
+    provider.value = getURIbyName(data.provider_name)
+
 }
 
 const resetValue = () => {
