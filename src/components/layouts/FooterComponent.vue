@@ -1,37 +1,33 @@
 <template>
   <footer>
-    <div class="container footer__container">
-      <div class="footer__info">
-        <ul>
-          <li>
-            <div v-if="appStore.account && appStore.account.logo && !isFeedback && !isSignUp" class="footer-logo"
-              :title="appStore.account.brand || ''">
-              <img :src="appStore.account.logo">
-            </div>
-            <div v-if="logo && logo.logo && isFeedback" :class="footerLogoClassObject">
-              <img :src="logo.logo">
-            </div>
-          </li>
-          <li class="flex items-start justify-center flex-col">
-            <ul v-if="!isFeedback">
-              <li v-if="!isSignUp" class="text">Legal notice</li>
-              <li v-else @click.stop="showPrivacyPolicy" class="text">Privacy Policy</li>
-            </ul>
-            <ul v-else>
-              <li @click.stop="showPrivacyPolicy" class="text">Privacy Policy</li>
-            </ul>
-            <!-- <span v-if="!isFeedback"><i class="uil uil-copyright"></i>2024, all rights reserved</span> -->
-            <!--   <span v-if="appStore.account && appStore.account.brand">
+    <div class="container footer__container w-full m-0">
+      <div class="logo__container">
+        <div v-if="appStore.account && appStore.account.logo && !isFeedback && !isSignUp" class="footer-logo"
+          :title="appStore.account.brand || ''">
+          <img :src="appStore.account.logo">
+        </div>
+        <div v-if="logo && logo.logo && isFeedback" :class="footerLogoClassObject">
+          <img :src="logo.logo">
+        </div>
+      </div>
+      <div class="flex items-start justify-center flex-col">
+        <ul v-if="!isFeedback">
+          <li v-if="!isSignUp" class="text">Legal notice</li>
+          <li v-else @click.stop="showPrivacyPolicy" class="text">Privacy Policy</li>
+        </ul>
+        <ul v-else>
+          <li @click.stop="showPrivacyPolicy" class="text">Privacy Policy</li>
+        </ul>
+        <!-- <span v-if="!isFeedback"><i class="uil uil-copyright"></i>2024, all rights reserved</span> -->
+        <!--   <span v-if="appStore.account && appStore.account.brand">
               Powered by 
               <a href="#" @click="handleBrandClick">Linkystar</a>
             </span> -->
-            <span  class="text">Privacy notice</span>
-            <span  class="text">Term of use</span>
-            <!-- <span>Powered by<a href="#" @click="handleBrandClick">Linkystar</a></span> -->
-          </li>
-        </ul>
+        <span class="text">Privacy notice</span>
+        <span class="text">Term of use</span>
+        <!-- <span>Powered by<a href="#" @click="handleBrandClick">Linkystar</a></span> -->
       </div>
-      <div class="footer__links" v-if="!isFeedback">
+      <div class="footer__links ml-auto mr-0" v-if="!isFeedback">
         <ul>
           <li v-if="appStore.account && appStore.account.facebook">
             <a :href="appStore.account.facebook" target="_blank">
@@ -51,10 +47,11 @@
         </ul>
       </div>
     </div>
-    <div style="border-bottom: 1px solid white; margin: 15px 90px 15px 90px;"></div>
+    <div style="border-bottom: 1px solid white; margin: 1.15rem auto;"></div>
     <!-- <hr style="margin: 10px 90px 10px 90px; "/> -->
-    <div style="display: flex; justify-content: center; align-items: center;">
-      <p class="copyright">&copy; 2025 LinkyStar | All Rights Reserved |  Powered by <a href="#" @click="handleBrandClick">Linkystar</a> </p>
+    <div class="flex flex-row items-center justify-center w-full">
+      <p class="copyright">&copy; <strong>2025 LinkyStar</strong> | All Rights Reserved | Powered by <a href="#"
+          @click="handleBrandClick"><strong>Linkystar</strong></a> </p>
     </div>
   </footer>
   <el-dialog v-model="dialogVisible" style="min-width: 400px; height: 670px; overflow-y: scroll;" center>
@@ -157,7 +154,6 @@ const handleBrandClick = () => {
 </script>
 
 <style scoped>
-
 .active-link {
   font-weight: 600;
   color: #007bff;
@@ -174,18 +170,14 @@ footer {
   width: 100%;
   background-color: var(--color-bgp);
   color: #fff;
-  padding: 2rem;
+  padding: 1.15rem 3rem;
   margin-top: 105px;
-  /*position:  relative;*/
 }
 
 .copyright {
-  /*position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);*/
-  font-size: 11px;
-  white-space: nowrap;
+  text-align: center;
+  font-size: 10px;
+  white-space: wrap;
 }
 
 .footer-logo {
@@ -221,9 +213,12 @@ footer {
 
 .footer__container {
   display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  flex-direction: row;
+  gap: 1.15rem;
+  align-items: center;
+  justify-content: flex-start;
   font-size: 0.9rem;
+  flex-wrap: wrap;
 }
 
 .footer__info {
@@ -243,19 +238,17 @@ footer {
   gap: 1rem;
 }
 
-.footer__links li:hover {}
-
 .el-dialog__body {
   padding: 0 !important;
 }
 
 /* Media query for smaller screens */
 @media screen and (min-width: 768px) {
-  .footer__container {
+  /* .footer__container {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-  }
+  } */
 
   .footer__info ul {
     flex-direction: row;
@@ -263,20 +256,11 @@ footer {
   }
 }
 
-/*@media screen and (max-width : 500px) {
+@media screen and (max-width : 500px) {
 
-  .copyright {
-    transform: translateX(-42%);
+  .logo__container {
     width: 100%;
   }
-  
+
 }
-
-@media screen and (max-width : 368px) {
-
-  .copyright {
-    transform: translateX(-46%);
-  }
-
-}*/
 </style>
