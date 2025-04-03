@@ -12,23 +12,22 @@
               <img :src="logo.logo">
             </div>
           </li>
-          <li class="flex items-start justify-center flex-col gap-2">
+          <li class="flex items-start justify-center flex-col">
             <ul v-if="!isFeedback">
-              <li v-if="!isSignUp">Legal Notice</li>
-              <li v-else @click.stop="showPrivacyPolicy" style="cursor: pointer;">Privacy Policy</li>
+              <li v-if="!isSignUp" class="text">Legal notice</li>
+              <li v-else @click.stop="showPrivacyPolicy" class="text">Privacy Policy</li>
             </ul>
             <ul v-else>
-              <li @click.stop="showPrivacyPolicy" style="cursor: pointer;">Privacy Policy</li>
+              <li @click.stop="showPrivacyPolicy" class="text">Privacy Policy</li>
             </ul>
             <!-- <span v-if="!isFeedback"><i class="uil uil-copyright"></i>2024, all rights reserved</span> -->
             <!--   <span v-if="appStore.account && appStore.account.brand">
               Powered by 
               <a href="#" @click="handleBrandClick">Linkystar</a>
             </span> -->
-            <span>
-              Powered by
-              <a href="#" @click="handleBrandClick">Linkystar</a>
-            </span>
+            <span  class="text">Privacy notice</span>
+            <span  class="text">Term of use</span>
+            <!-- <span>Powered by<a href="#" @click="handleBrandClick">Linkystar</a></span> -->
           </li>
         </ul>
       </div>
@@ -51,6 +50,11 @@
           </li>
         </ul>
       </div>
+    </div>
+    <div style="border-bottom: 1px solid white; margin: 15px 90px 15px 90px;"></div>
+    <!-- <hr style="margin: 10px 90px 10px 90px; "/> -->
+    <div style="display: flex; justify-content: center; align-items: center;">
+      <p class="copyright">&copy; 2025 LinkyStar | All Rights Reserved |  Powered by <a href="#" @click="handleBrandClick">Linkystar</a> </p>
     </div>
   </footer>
   <el-dialog v-model="dialogVisible" style="min-width: 400px; height: 670px; overflow-y: scroll;" center>
@@ -159,14 +163,29 @@ const handleBrandClick = () => {
   color: #007bff;
 }
 
+.text {
+  font-size: 13px;
+  cursor: pointer;
+}
+
 footer {
   bottom: 0;
   left: 0;
   width: 100%;
   background-color: var(--color-bgp);
   color: #fff;
-  padding: 3rem;
+  padding: 2rem;
   margin-top: 105px;
+  /*position:  relative;*/
+}
+
+.copyright {
+  /*position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);*/
+  font-size: 11px;
+  white-space: nowrap;
 }
 
 .footer-logo {
@@ -243,4 +262,21 @@ footer {
     gap: 2rem;
   }
 }
+
+/*@media screen and (max-width : 500px) {
+
+  .copyright {
+    transform: translateX(-42%);
+    width: 100%;
+  }
+  
+}
+
+@media screen and (max-width : 368px) {
+
+  .copyright {
+    transform: translateX(-46%);
+  }
+
+}*/
 </style>
