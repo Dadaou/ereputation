@@ -4,6 +4,14 @@
         <el-input v-model="search" size="small" placeholder="Type to search" class="input_searchs" />
     </div>
     <el-table :data="filterTableData" :style="{width : tableWidth}">
+      <el-table-column width="100" align="center">
+          <template #default="scope">
+            <div v-if="scope.row.logo">
+              <img class="establishment_img" :src="scope.row.logo" alt="adv_logo">
+            </div>
+            <span v-else>-</span>
+          </template>
+      </el-table-column>
       <el-table-column label="Name" align="center" style="width: 20%; min-width: 800px;">
         <template #default="scope">
 
@@ -20,7 +28,7 @@
 
       <el-table-column label="Establishment" align="center" style="width: 20%; min-width: 800px;">
         <template #default="scope">
-          <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
+          <span style="width: 30%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
             {{ scope.row.establishment_name }}
           </span>
 
@@ -46,7 +54,7 @@
             {{ scope.row.received }}
           </span>
           <router-link v-else
-            :to="{name: 'Discount_coupons', params: {tag : $route.params.tag}, query : {adv_id : scope.row.id}}"
+            :to="{name: 'Discount_coupons', params: {tag : $route.params.tag}, query : {adv_id : scope.row.id, title: 'Discount coupons'}}"
           >
             {{ scope.row.received }}
           </router-link>
@@ -149,6 +157,8 @@ const tableWidth = computed(() => {
 });
 
 const filterTableData = computed(() => {
+  console.clear()
+  console.log('adv', advantages.value)
   return advantages.value.filter(data => {
     return (
       !search.value ||
