@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-      <button class="btn" @click="showExport = true">
+      <button @click="showExport = true" :style="{width: exportBtnWidth}">
         <i class="uil uil-file-download"></i>
         Export
       </button>
@@ -92,6 +92,13 @@ const InputSearchWidth = computed(() => {
   }
   return `${200}px`;
 });
+
+const exportBtnWidth = computed(() => {
+  if(width.value < 768) {
+    return route.name === 'LeadgenContact' ? `${100}%` : `${88}%`
+  }
+  return `${100}px`;
+})
 
 const exportData = (type, filename) => {
   csvXlsx.exportContact(type, filename, query.value,

@@ -307,7 +307,7 @@ watch(route, (newRoute) => {
     display: flex;
     align-items: center;
     cursor: pointer;
-    margin-top: 2.5rem;
+    margin-top: 1rem;
     margin-right: 100%;
   }
 
