@@ -12,7 +12,7 @@
       <div class="admin__menu" :class="{ 'menu-open': isMenuOpen }">
 
         <li>
-          <router-link :to="{ name: 'Personal_details' }" @click.native="selectMenu('Account')">
+          <router-link :to="{ name: 'Personal_details' }" @click.native="selectMenu('Account', router.resolve({ name: 'Personal_details' }).href)">
             <i class="uil uil-user"></i><span>Account</span>
           </router-link>
         </li>
@@ -22,39 +22,39 @@
             </router-link>
           </li> -->
         <li>
-          <router-link :to="{ name: 'QRCodes' }" active-class="active" @click.native="selectMenu('My QRCodes')">
+          <router-link :to="{ name: 'QRCodes' }" active-class="active" @click.native="selectMenu('My QRCodes', router.resolve({ name: 'QRCodes' }).href)">
             <i class="uil uil-qrcode-scan"></i> <span>My QRCodes</span>
           </router-link>
         </li>
         <li>
-          <router-link :to="{ name: 'Screen' }" active-class="active" @click.native="selectMenu('My Screens')">
+          <router-link :to="{ name: 'Screen' }" active-class="active" @click.native="selectMenu('My Screens', router.resolve({ name: 'Screen' }).href)">
             <i class="uil uil-presentation"></i> <span>My Screens</span>
           </router-link>
         </li>
         <li>
-          <router-link :to="{ name: 'Advantage' }" @click.native="selectMenu('Advantages')">
+          <router-link :to="{ name: 'Advantage' }" @click.native="selectMenu('Advantages', router.resolve({ name: 'Advantage'}).href)">
             <i class="uil uil-bill"></i> <span>Advantages</span>
           </router-link>
         </li>
         <li>
-          <router-link :to="{ name: 'Partnership' }" @click.native="selectMenu('Partnership')">
+          <router-link :to="{ name: 'Partnership' }" @click.native="selectMenu('Partnerships', router.resolve({ name: 'Partnership'}).href)">
             <Icon icon="lucide:handshake" style="margin-top: 3px;" /><span>Partnerships</span>
           </router-link>
         </li>
         <li>
-          <router-link :to="{ name: 'Contact' }" @click.native="selectMenu('Contacts')">
+          <router-link :to="{ name: 'Contact' }" @click.native="selectMenu('Contacts', router.resolve({ name: 'Contact'}).href)">
             <i class="uil uil-envelope"></i> <span>Contacts</span>
           </router-link>
         </li>
         <li>
-          <router-link :to="{ name: 'Discount_coupons' }" @click.native="selectMenu('Discount coupons')">
+          <router-link :to="{ name: 'Discount_coupons'}" @click.native="selectMenu('Discount coupons', router.resolve({ name: 'Discount_coupons' }).href)">
             <Icon icon="ic:outline-discount" style="margin-top: 3px;" /> <span>Discount coupons</span>
           </router-link>
         </li>
         <li>
           <router-link
             :to="{ name: 'Parameters', params: {tag: route.params.tag, tab: 'establishments', sub_tab:'establishments_list' } }"
-            active-class="active" @click.native="selectMenu('Parameters')" :class="{ active: isActive('Parameters') }">
+            active-class="active" @click.native="selectMenu('Parameters', router.resolve({ name: 'Parameters'}).href)" :class="{ active: isActive('Parameters') }">
             <i class="uil uil-setting"></i> <span>Parameters</span>
           </router-link>
         </li>
@@ -91,6 +91,21 @@ const menuMap = {
   "Screen": "My Screens"
 };
 
+const breadcrumbData = ref([]);
+
+
+watch(route.path, () => {
+
+  breadcrumbData.value = [{
+
+    title : route?.query?.title,
+    path: `${route.path}`,
+    isCurrent: true,
+
+  }]
+
+}, {immediate : true})
+
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
 };
@@ -99,7 +114,16 @@ const closeMenu = () => {
   isMenuOpen.value = true;
 };
 
-const selectMenu = (menuName) => {
+const selectMenu = (menuName, path) => {
+
+  breadcrumbData.value = [
+    {
+      title: menuName,
+      path: path,
+      isCurrent: true,
+    }
+  ]
+
   selectedMenu.value = menuName;
   closeMenu();
 };
@@ -172,14 +196,6 @@ const page = computed(() => {
 
   return data[route.name]
 })
-
-const breadcrumbData = [
-  {
-    title: "Profile",
-    path: `${route.path}`,
-    isCurrent: true,
-  },
-];
 
 watch(route, (newRoute) => {
   selectedMenu.value = menuMap[newRoute.name] || '';
