@@ -157,8 +157,6 @@ const tableWidth = computed(() => {
 });
 
 const filterTableData = computed(() => {
-  console.clear()
-  console.log('adv', advantages.value)
   return advantages.value.filter(data => {
     return (
       !search.value ||
