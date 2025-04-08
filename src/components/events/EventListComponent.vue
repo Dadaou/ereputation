@@ -4,20 +4,17 @@
       <h4><i class="uil uil-calender"></i> Event List</h4>
     </div> -->
   </div>
-  <div class="search">
-    <el-input v-model="search" size="small" placeholder="Type to search" />
-  </div>
-  <div class="mt-5 erep_table table__container">
+  <div class="erep_table table__container">
+    <div class="search">
+      <el-input v-model="search" size="small" placeholder="Type to search" />
+    </div>
     <el-table :data="filterTableData">
       <el-table-column label="Name" prop="name" style="width: 15%; min-width: 200px;" />
       <el-table-column label="Category" prop="category" style="width: 10%; min-width: 200px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" />
       <el-table-column label="Segment" prop="segment" style="width: 10%; min-width: 200px;" />
       <el-table-column label="Date" prop="date" style="width: 25%; min-width: 200px;" />
-      <el-table-column label="Operations" style="width: 25%; min-width: 200px;" align="right">
-        <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>
-        </template>
+      <el-table-column  style="width: 25%; min-width: 200px;" align="right">
         <template #default="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
@@ -159,6 +156,12 @@ button i.uil-edit {
   width: 85%;
 }
 
+.search {
+   display: flex;
+   width: 200px;
+   float: right;
+}
+
 @media screen and (min-width: 800px) {
 
   .table__container {
@@ -166,21 +169,20 @@ button i.uil-edit {
   }
 }
 
-.search{
-    display: none;
-}
-
 @media screen and (max-width: 468px) { 
     .search {
-        display: flex;
-        max-width: 220px;
-        float: right;
+      width: 88%;
+      float: none;
     }
     .searchtab{
         display: none;
     }
     .el-table--fit {
             font-size: 11px !important;
+    }
+
+    .table__container {
+      width: 100%;
     }
 }
 </style>

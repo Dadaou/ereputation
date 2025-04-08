@@ -7,10 +7,10 @@
             </div>
         </div>
     </div>
-    <div class="search">
-        <el-input v-model="search" size="small" placeholder="Type to search" />
+    <div class="searchtab">
+        <el-input v-model="searchLink" size="small" placeholder="Type to search" />
     </div>
-    <div class="mt-5 table__container" v-if="!showLinkModal">
+    <div class="mt-3 table__container" v-if="!showLinkModal">
         <el-table :data="filteredCompetitor">
             <el-table-column label="Competitors" prop="name" style="width: 25%; min-width: 200px;" />
             <el-table-column label="Establishments" style="width: 15%; min-width: 200px;">
@@ -19,9 +19,6 @@
                 </template>
             </el-table-column>
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
-                <template #header>
-                    <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
-                </template>
                 <template #default="scope">
                     <el-button size="small" @click="showModal = !showModal, establishment = scope.row.uri"><i
                             class="uil uil-link-add"></i></el-button>
@@ -45,9 +42,6 @@
             <el-table-column label="Provider" prop="provider_name" style="width: 50%; min-width: 200px;" />
             <el-table-column label="Value" prop="settings_value1" style="width: 50%; min-width: 200px;" />
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
-                <template #header>
-                    <el-input v-model="searchLink" size="small" placeholder="Type to search" />
-                </template>
                 <template #default="scope">
                     <el-button size="small" @click="handleEditLink(scope.row)"><i class="uil uil-edit"></i></el-button>
                     <el-button size="small">
@@ -799,6 +793,12 @@ img {
     }
 }*/
 
+.searchtab {
+   display: flex;
+   width: 200px;
+   float: right;
+}
+
 @media screen and (min-width: 800px) {
 
     .table__container {
@@ -810,9 +810,6 @@ img {
     display: none;
 }
 
-.searchtab {
-    max-width: 150px;
-}
 
 @media screen and (max-width: 468px) {
     .search {
@@ -822,7 +819,8 @@ img {
     }
 
     .searchtab {
-        display: none;
+        width: 88%;
+        float: none;
     }
 
     .el-table--fit {

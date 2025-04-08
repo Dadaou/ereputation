@@ -8,7 +8,7 @@
       <el-input v-model="search" size="small" placeholder="Type to search" />
     </div>
   </div>
-  <div class="overflow-x-auto">
+  <div class="overflow-x-auto table-container" >
     <el-table :data="filteredData"  style="width: 100%;">
 
       <el-table-column label="Name" fixed :min-width="130">
@@ -223,6 +223,10 @@ button:hover {
 
   .table-description p {
     font-size: 12px;
+  }
+
+  .table-container {
+    margin-top: 8px;
   }
 }
 .contain_tab {

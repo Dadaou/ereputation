@@ -1,9 +1,9 @@
 <template>
   <p style="color:gray; text-align: justify; margin-right: 50px;">You have the option to add your own categories below</p>
-  <div class="search">
+  <div class="mt-3 search">
     <el-input v-model="search" size="small" placeholder="Type to search" />
   </div>
-  <div class="mt-5 table__container">
+  <div class="mt-3 table__container">
     <el-table :data="filterTableData">
       <el-table-column label="Category" prop="category" style="width: 15%; min-width: 300px;" />
       <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;" >
@@ -18,9 +18,6 @@
                 </template>
             </el-table-column>
       <el-table-column style="width: 15%; min-width: 200px;" align="right">
-        <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab"/>
-        </template>
         <template #default="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i class="uil uil-edit"></i></el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
@@ -132,8 +129,10 @@ button i.uil-edit {
   }
 }
 
-.search{
-    display: none;
+.search {
+   display: flex;
+   width: 200px;
+   float: right;
 }
 
 .searchtab { 
@@ -142,9 +141,8 @@ button i.uil-edit {
 
 @media screen and (max-width: 468px) { 
     .search {
-        display: flex;
-        max-width: 220px;
-        float: right;
+      width: 88%;
+      float: none;
     }
     .searchtab{
         display: none;
