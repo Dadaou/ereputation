@@ -7,6 +7,10 @@
       </div>
     </div>
 
+    <div class="scroll_wrapper">
+      <div class="scroll_div"></div>
+    </div>
+
     <el-table :data="filterTableDataReceived" :style="{width : tableWidth}">
       <el-table-column width="100">
         <template #default="scope">
@@ -104,7 +108,7 @@
   </div>
 </template>
 <script setup>
-import { computed, ref, inject, watchEffect } from 'vue';
+import { computed, ref, inject, watchEffect, onMounted } from 'vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/table/style/css'
@@ -223,8 +227,26 @@ const handleEvent = async (index, partnership, column, value) => {
     });
   }
 };
+
+onMounted(() => {
+  services.createTopScrollBar()
+})
+
 </script>
 <style scoped>
+
+.scroll_wrapper {
+  width: 100%; 
+  overflow-x: scroll; 
+  overflow-y: hidden;
+  opacity: 0.2;
+  margin-top: 10px;
+}
+
+.scroll_div {
+  width:750px; 
+  height: 10px; 
+}
 img.establishment_img {
   height: 50px;
   object-fit: cover;
@@ -261,6 +283,10 @@ button i.uil-edit {
 }
 
 @media screen and (max-width: 768px) {
+
+  .scroll_div {
+    width:950px; 
+  }
   .responsive-table {
     width: 85%;
   }
@@ -300,6 +326,10 @@ button i.uil-edit {
 
   .table-description p {
     font-size: 12px;
+  }
+
+  .scroll_div {
+    display: none;
   }
 }
 </style>

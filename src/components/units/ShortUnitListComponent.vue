@@ -8,6 +8,11 @@
       <el-input v-model="search" size="small" placeholder="Type to search" />
     </div>
   </div>
+
+  <div class="scroll_wrapper">
+      <div class="scroll_div"></div>
+  </div>
+
   <div class="mt-2 table__container">
     <el-table :data="filterTableData">
       <el-table-column width="100">
@@ -72,7 +77,7 @@
 </template>
 
 <script setup>
-import { computed, ref, inject, defineAsyncComponent } from 'vue';
+import { computed, ref, inject, defineAsyncComponent, onMounted } from 'vue';
 import { ElTable, ElPopconfirm, ElTableColumn, ElButton, ElInput, ElTooltip, ElMessage } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from "@Stores/user.js";
@@ -203,9 +208,27 @@ const copyLink = (link) => {
       ElMessage.error("Failed to copy the link.");
     });
 };
+
+onMounted(() => {
+  services.createTopScrollBar()
+})
+
 </script>
 
 <style scoped>
+
+.scroll_wrapper {
+  width: 100%; 
+  overflow-x: scroll; 
+  overflow-y: hidden;
+  opacity: 0.2;
+  margin-top: 10px;
+}
+
+.scroll_div {
+  width:890px; 
+  height: 10px; 
+}
 
 
 img.establishment_img {
@@ -311,6 +334,13 @@ button i.uil-edit {
   width: 85%;
 }
 
+@media screen and (min-width: 600px) and (max-width: 1050px) {
+  .scroll_wrapper,
+  .scroll_div {
+    display: none;
+  }
+}
+
 @media screen and (max-width: 768px) {
   /*.table__container {
     width: 70%;
@@ -352,5 +382,8 @@ button i.uil-edit {
     font-size: 11px !important;
   }
 
+  .scroll_div {
+    display: none;
+  }
 }
 </style>

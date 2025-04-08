@@ -6,8 +6,8 @@
     <div class="admin__container">
       <button class="menu-toggle" @click="toggleMenu">
         <i class="uil uil-bars"></i>
-        <span v-if="selectedMenu" class="text-sm font-medium text-gray-700 dark:text-gray-400"> {{ selectedMenu
-          }}</span>
+        <!--<span v-if="selectedMenu" class="text-sm font-medium text-gray-700 dark:text-gray-400"> {{ selectedMenu
+          }}</span>-->
       </button>
       <div class="admin__menu" :class="{ 'menu-open': isMenuOpen }">
 

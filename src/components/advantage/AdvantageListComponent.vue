@@ -1,8 +1,15 @@
 <template>
   <div class="mt-2 table__container">
+
     <div :style="{display: 'flex', width: InputSearchWidth, float : floatProperty }" >
         <el-input v-model="search" size="small" placeholder="Type to search" class="input_searchs" />
     </div>
+
+    <div class="scroll_wrapper">
+      <div class="scroll_div"></div>
+    </div>
+
+  </div>
     <el-table :data="filterTableData" :style="{width : tableWidth}">
       <el-table-column width="100" align="center">
           <template #default="scope">
@@ -104,14 +111,12 @@
 
     </el-table>
 
-  </div>
-
 </template>
 
 
 
 <script setup>
-import { computed, ref, inject, watchEffect } from 'vue';
+import { computed, ref, inject, onMounted } from 'vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput, ElTooltip } from 'element-plus';
 import services from '@Services/services.js';
 import moment from 'moment';
@@ -128,8 +133,6 @@ const { width } = useWindowSize();
 
 const route = useRoute();
 const router = useRouter();
-
-
 const InputSearchWidth = computed(() => {
 
   if(width.value < 768) {
@@ -220,6 +223,13 @@ const handleDelete = async (index, advantages) => {
 const isExpired = (date) => {
   return moment(date).isSameOrBefore(moment(), 'day');
 };
+
+
+onMounted(() => {
+  services.createTopScrollBar()
+})
+
+
 </script>
 
 <style scoped>
@@ -269,6 +279,19 @@ button i.uil-edit {
   width: 100%
 }
 
+.scroll_wrapper {
+  width: 100%; 
+  overflow-x: scroll; 
+  overflow-y: hidden;
+  opacity: 0.2;
+  margin-top: 10px;
+}
+
+.scroll_div {
+  width:1150px; 
+  height: 10px; 
+}
+
 .custom-badge {
   display: inline-block;
   background-color: var(--color-danger);
@@ -289,6 +312,10 @@ button i.uil-edit {
 }
 
 @media screen and (max-width: 768px) {
+
+  .scroll_div {
+    width:1180px; 
+  }
   /*.responsive-table {
     width: 92%;
   }*/
@@ -313,6 +340,10 @@ button i.uil-edit {
   
     
   }*/
+
+  .scroll_div {
+    display: none;
+  }
 
   .el-table--fit {
     font-size: 11px !important;

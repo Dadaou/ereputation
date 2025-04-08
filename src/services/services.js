@@ -440,12 +440,31 @@ const unmountChatWidget = () => {
   }
 }
 
+const createTopScrollBar = () => {
+
+  const scrollWrapper = document.querySelector('.scroll_wrapper');
+  const tableScrollWrapper = document.querySelector('.el-table .el-scrollbar__wrap')
+
+  if (scrollWrapper && tableScrollWrapper) {
+
+      scrollWrapper.addEventListener('scroll', function() {
+        tableScrollWrapper.scrollLeft = scrollWrapper.scrollLeft
+      })
+        
+      tableScrollWrapper.addEventListener('scroll', function() {
+        scrollWrapper.scrollLeft = tableScrollWrapper.scrollLeft
+      })
+
+  }
+}
+
 
 
 export default {
   setToken,
   mountChatWidget,
   unmountChatWidget,
+  createTopScrollBar,
   setAccess,
   getRecords,
   getRecord,
