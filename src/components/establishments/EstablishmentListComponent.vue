@@ -1,13 +1,8 @@
 <template>
-    <div class="profile__header mt-2">
-        <!-- <div class="profile__edit">
-            <h2>Establishments</h2>
-        </div> -->
-    </div>
-    <div class="search">
-        <el-input v-model="search" size="small" placeholder="Type to search" />
-    </div>
-    <div class="mt-5 table__container">
+    <div class="table__container">
+        <div class="searchtab">
+            <el-input v-model="search" size="small" placeholder="Type to search"  />
+        </div>
         <el-table :data="establishments" class="custom-header">
             <el-table-column width="100">
                 <template #default="scope">
@@ -27,9 +22,9 @@
             <el-table-column label="Country" prop="country" style="width: 15%; min-width: 200px;"
                 :header-style="{ fontSize: '12px' }" />
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
-                <template #header>
+                <!--<template #header>
                     <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
-                </template>
+                </template>-->
                 <template #default="scope">
                     <!--  <el-button size="small" @click="showModal = true, establishment = scope.row"><i class="uil uil-qrcode-scan"></i></el-button> -->
                     <el-button size="small" @click="handleEdit(scope.$index, scope.row)"><i
@@ -425,6 +420,12 @@ img.establishment_img {
     display: none;
 }
 
+.searchtab {
+    display: flex;
+    width: 200px;
+    float: right;
+}
+
 @media screen and (max-width: 468px) {
     .search {
         display: flex;
@@ -432,12 +433,13 @@ img.establishment_img {
         float: right;
     }
 
-    .searchtab {
-        display: none;
-    }
-
     .el-table--fit {
         font-size: 11px !important;
+    }
+
+    .searchtab {
+        width: 104%;
+        float: none;
     }
 }
 

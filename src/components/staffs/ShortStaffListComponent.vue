@@ -8,6 +8,11 @@
       <el-input v-model="search" size="small" placeholder="Type to search" />
     </div>
   </div>
+
+  <div class="scroll_wrapper">
+      <div class="scroll_div"></div>
+  </div>
+
   <div class="mt-2 table__container">
     <el-table :data="filterTableData">
       <el-table-column width="100">
@@ -74,7 +79,7 @@
 </template>
 
 <script setup>
-import { computed, ref, inject, defineAsyncComponent } from 'vue';
+import { computed, ref, inject, defineAsyncComponent, onMounted } from 'vue';
 import moment from 'moment';
 import { useStaffStore } from "@Stores/staff.js";
 import services from '@Services/services.js';
@@ -187,6 +192,9 @@ const copyLink = (link) => {
         });
 };
 
+onMounted(() => {
+  services.createTopScrollBar()
+})
 </script>
 <style scoped>
 .establishment-info {
@@ -245,10 +253,24 @@ button i.uil-edit {
   width: 85%;
 }
 
-@media screen and (max-width: 768px) {
-  /*.table__container {
-    width: 75%;
-  }*/
+.scroll_wrapper {
+  width: 100%; 
+  overflow-x: scroll; 
+  overflow-y: hidden;
+  opacity: 0.2;
+  margin-top: 10px;
+}
+
+.scroll_div {
+  width:890px; 
+  height: 10px; 
+}
+
+@media screen and (min-width: 600px) and (max-width: 1050px) {
+  .scroll_wrapper,
+  .scroll_div {
+    display: none;
+  }
 }
 
 /* Définissez une largeur maximale pour l'en-tête sur les grands écrans */
@@ -280,6 +302,10 @@ button i.uil-edit {
 
   .el-table--fit {
     font-size: 11px !important;
+  }
+
+  .scroll_div {
+    display: none;
   }
 }
 </style>

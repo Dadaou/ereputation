@@ -5,7 +5,7 @@
         </div>
         <div class="security__header border__bottom mt-10">
             <div class="security__edit">
-                <p style="text-align: justify; padding: 0 10px;">Add the URLs pointing to your internal resources (menus, promotional offers, websites…) so that they are
+                <p style="text-align: justify; padding: 0 8px;">Add the URLs pointing to your internal resources (menus, promotional offers, websites…) so that they are
                     displayed in your Gate.</p>
             </div>
         </div>
@@ -986,7 +986,9 @@ form button {
 
 @media screen and (max-width: 800px) {
 
-    .table__container,
+    .table__container {
+        width: 88%;
+    }
     .security__header {
         width: 84%;
         /* Occuper toute la largeur sur les petits écrans */
@@ -996,15 +998,7 @@ form button {
         display: flex; 
         justify-content: flex-start;
     }
-
-    .closeView {
-        margin-left: 10px;
-    }
-
-    .addBtn {
-        margin-left: 10px;
-    }
-
+    
     form {
         margin: 15px 0;
     }

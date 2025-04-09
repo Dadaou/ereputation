@@ -1,11 +1,8 @@
 <template>
-  <div class="security__header border__bottom">
-
-  </div>
-  <div class="search">
+  <div class="mt-3 search">
     <el-input v-model="search" size="small" placeholder="Type to search" />
   </div>
-  <div class="mt-5 erep_table table__container">
+  <div class="mt-1 erep_table table__container">
     <el-table v-if="linksLoading == false" :data="filterTableData">
       <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" />
 
@@ -25,10 +22,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="Operations" style="width: 25%; min-width: 200px;" align="right">
-        <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
-        </template>
+      <el-table-column label="" style="width: 25%; min-width: 200px;" align="right">
         <template #default="scope">
 
           <a :href="generateFileLink(scope.row.document_url, scope.row.establishment_tag)" target="_blank"
@@ -158,24 +152,21 @@ button i.uil-edit {
 }
 
 .table__container {
-  width: 100%;
-}
-
-@media screen and (max-width: 768px) {
-  .table__container {
-    width: 85%;
-  }
+  width: 88%;
 }
 
 .search {
-  display: none;
+   display: flex;
+   width: 200px;
+   float: right;
 }
+
+
 
 @media screen and (max-width: 468px) {
   .search {
-    display: flex;
-    max-width: 220px;
-    float: right;
+    width: 88%;
+    float: none;
   }
 
   .searchtab {

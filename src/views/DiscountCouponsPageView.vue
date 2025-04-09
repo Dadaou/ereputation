@@ -2,7 +2,13 @@
   <div :style="{display: 'flex', width: InputSearchWidth, float: floatProperty }" >
     <el-input v-model="search" size="small" placeholder="Type to search" class="search" />
   </div>
+  
   <div class="overflow-x-auto mt-5">
+
+    <div class="scroll_wrapper">
+      <div class="scroll_div"></div>
+    </div>
+
     <el-table :data="filteredData" class="responsive-table" style="width: 100%">
 
       <!-- <el-table-column fixed="left" label="Advantage name" prop="adv_name" :width="isMobile ? 130 : 250" /> -->
@@ -234,6 +240,7 @@ const setMinWidth = () => {
 }
 
 onMounted(() => {
+  services.createTopScrollBar()
   setMinWidth()
   window.addEventListener('resize', handleResize);
 });
@@ -272,6 +279,19 @@ button:hover {
   float: right;
 }*/
 
+.scroll_wrapper {
+  width: 100%; 
+  overflow-x: scroll; 
+  overflow-y: hidden;
+  opacity: 0.2;
+  margin-top: 10px;
+}
+
+.scroll_div {
+  width:1850px; 
+  height: 10px; 
+}
+
 @media screen and (max-width: 768px) {
   /*.search {
     display: flex;
@@ -281,6 +301,12 @@ button:hover {
 
   .el-table--fit {
     font-size: 11px !important;
+  }
+}
+
+@media screen and (max-width: 468px) {
+  .scroll_div {
+    display: none;
   }
 }
 </style>

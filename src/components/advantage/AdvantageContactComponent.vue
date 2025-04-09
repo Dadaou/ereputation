@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-      <button class="btn" @click="showExport = true">
+      <button @click="showExport = true" :style="{width: exportBtnWidth}">
         <i class="uil uil-file-download"></i>
         Export
       </button>
@@ -8,7 +8,7 @@
       <el-input v-model="search" size="small" placeholder="Type to search" />
     </div>
   </div>
-  <div class="overflow-x-auto">
+  <div class="overflow-x-auto table-container" >
     <el-table :data="filteredData"  style="width: 100%;">
 
       <el-table-column label="Name" fixed :min-width="130">
@@ -92,6 +92,13 @@ const InputSearchWidth = computed(() => {
   }
   return `${200}px`;
 });
+
+const exportBtnWidth = computed(() => {
+  if(width.value < 768) {
+    return route.name === 'LeadgenContact' ? `${100}%` : `${88}%`
+  }
+  return `${100}px`;
+})
 
 const exportData = (type, filename) => {
   csvXlsx.exportContact(type, filename, query.value,
@@ -216,6 +223,10 @@ button:hover {
 
   .table-description p {
     font-size: 12px;
+  }
+
+  .table-container {
+    margin-top: 8px;
   }
 }
 .contain_tab {

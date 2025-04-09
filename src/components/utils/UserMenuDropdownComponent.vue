@@ -18,14 +18,14 @@
 				</div>
 				<ul class="py-2" aria-labelledby="user-menu-button">
 					<li @click="closeDropdown" v-if="customer">
-						<RouterLink :to="`/customer/${customer.tag}/account/personal_details`"
+						<RouterLink :to="{ name: 'Personal_details', params : {tag : customer.tag}, query : {title : 'Account'}}"
 							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
 							<i class="uil uil-user-square"></i>
 							Profile
 						</RouterLink>
 					</li>
 					<li @click="closeDropdown" v-if="customer">
-						<RouterLink :to="`/customer/${customer.tag}/account/my_qrcodes`"
+						<RouterLink :to="{ name: 'QRCodes', params : {tag : customer.tag}, query : {title : 'My QRCodes'}}"
 							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
 							<i class="uil-qrcode-scan"></i>
 							My QrCodes
@@ -39,21 +39,21 @@
 						</RouterLink>
 					</li>
 					<li @click="closeDropdown" v-if="customer">
-						<RouterLink :to="`/customer/${customer.tag}/account/contact`"
+						<RouterLink :to="{ name: 'Contact', params : {tag : customer.tag}, query : {title : 'Contact'}}"
 							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" >
 							<i class="uil uil-envelope"></i>
 							Contacts
 						</RouterLink>
 					</li>
 					<li @click="closeDropdown" v-if="customer">
-						<RouterLink :to="`/customer/${customer.tag}/account/discount_coupons`"
+						<RouterLink :to="{ name: 'Discount_coupons', params : {tag : customer.tag}, query : {title : 'Discount coupons'}}"
 							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" style="display: flex; flex-direction: row; align-items: center; gap: 3px;">
 							<Icon icon="ic:outline-discount" />
 							Discount coupons
 						</RouterLink>
 					</li>
 					<li @click="closeDropdown" v-if="customer">
-						<RouterLink :to="`/customer/${customer.tag}/account/parameters`"
+						<RouterLink :to="{ name: 'Parameters', params: {tag: customer.tag, tab: 'establishments', sub_tab:'establishments_list' }, query : {title : 'Parameters'}}"
 							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
 							<i class="uil uil-setting"></i>
 							Parameters

@@ -540,7 +540,9 @@ form button {
 
 @media screen and (max-width: 800px) {
 
-    .table__container,
+    .table__container {
+        width: 88%;
+    }
     .security__header {
         width: 84%;
         /* Occuper toute la largeur sur les petits écrans */
@@ -553,14 +555,6 @@ form button {
     .closeView, .addBtn {
         display: flex; 
         justify-content: flex-start;
-    }
-
-    .closeView {
-        margin-left: 10px;
-    }
-
-    .addBtn {
-        margin-left: 10px;
     }
 
     form {

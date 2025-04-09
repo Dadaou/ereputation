@@ -1,9 +1,24 @@
 <template>
   <div class="mt-2 table__container">
+
     <div :style="{display: 'flex', width: InputSearchWidth, float : floatProperty }" >
         <el-input v-model="search" size="small" placeholder="Type to search" class="input_searchs" />
     </div>
+
+    <div class="scroll_wrapper">
+      <div class="scroll_div"></div>
+    </div>
+
+  </div>
     <el-table :data="filterTableData" :style="{width : tableWidth}">
+      <el-table-column width="100" align="center">
+          <template #default="scope">
+            <div v-if="scope.row.logo">
+              <img class="establishment_img" :src="scope.row.logo" alt="adv_logo">
+            </div>
+            <span v-else>-</span>
+          </template>
+      </el-table-column>
       <el-table-column label="Name" align="center" style="width: 20%; min-width: 800px;">
         <template #default="scope">
 
@@ -20,7 +35,7 @@
 
       <el-table-column label="Establishment" align="center" style="width: 20%; min-width: 800px;">
         <template #default="scope">
-          <span style="width: 20%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
+          <span style="width: 30%; min-width: 800px; word-wrap: break-word;word-break: break-word;white-space: normal">
             {{ scope.row.establishment_name }}
           </span>
 
@@ -46,7 +61,7 @@
             {{ scope.row.received }}
           </span>
           <router-link v-else
-            :to="{name: 'Discount_coupons', params: {tag : $route.params.tag}, query : {adv_id : scope.row.id}}"
+            :to="{name: 'Discount_coupons', params: {tag : $route.params.tag}, query : {adv_id : scope.row.id, title: 'Discount coupons'}}"
           >
             {{ scope.row.received }}
           </router-link>
@@ -96,14 +111,12 @@
 
     </el-table>
 
-  </div>
-
 </template>
 
 
 
 <script setup>
-import { computed, ref, inject, watchEffect } from 'vue';
+import { computed, ref, inject, onMounted } from 'vue';
 import { ElMessage, ElTable, ElTableColumn, ElPopconfirm, ElButton, ElInput, ElTooltip } from 'element-plus';
 import services from '@Services/services.js';
 import moment from 'moment';
@@ -120,8 +133,6 @@ const { width } = useWindowSize();
 
 const route = useRoute();
 const router = useRouter();
-
-
 const InputSearchWidth = computed(() => {
 
   if(width.value < 768) {
@@ -212,6 +223,13 @@ const handleDelete = async (index, advantages) => {
 const isExpired = (date) => {
   return moment(date).isSameOrBefore(moment(), 'day');
 };
+
+
+onMounted(() => {
+  services.createTopScrollBar()
+})
+
+
 </script>
 
 <style scoped>
@@ -261,6 +279,19 @@ button i.uil-edit {
   width: 100%
 }
 
+.scroll_wrapper {
+  width: 100%; 
+  overflow-x: scroll; 
+  overflow-y: hidden;
+  opacity: 0.2;
+  margin-top: 10px;
+}
+
+.scroll_div {
+  width:1150px; 
+  height: 10px; 
+}
+
 .custom-badge {
   display: inline-block;
   background-color: var(--color-danger);
@@ -281,6 +312,10 @@ button i.uil-edit {
 }
 
 @media screen and (max-width: 768px) {
+
+  .scroll_div {
+    width:1180px; 
+  }
   /*.responsive-table {
     width: 92%;
   }*/
@@ -305,6 +340,10 @@ button i.uil-edit {
   
     
   }*/
+
+  .scroll_div {
+    display: none;
+  }
 
   .el-table--fit {
     font-size: 11px !important;

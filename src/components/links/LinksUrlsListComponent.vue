@@ -1,11 +1,8 @@
 <template>
-    <div class="security__header border__bottom">
-  
-    </div>
-    <div class="search">
+    <div class="searchtab mt-3">
       <el-input v-model="search" size="small" placeholder="Type to search" />
     </div>
-    <div class="mt-5 erep_table table__container">
+    <div class="mt-2 erep_table table__container">
       <el-table v-if="linksLoading == false" :data="filterTableData">
         <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" />
 
@@ -49,10 +46,10 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="Operations" style="width: 25%; min-width: 200px;" align="right">
-          <template #header>
+        <el-table-column label="" style="width: 25%; min-width: 200px;" align="right">
+          <!--<template #header>
             <el-input v-model="search" size="small" placeholder="Type to search" class="searchtab" />
-          </template>
+          </template>-->
           <template #default="scope">
             
             <a :href="scope.row.url" target="_blank"><i class="uil uil-external-link-alt"></i></a>
@@ -229,26 +226,23 @@
   .table__container {
     width: 100%;
   }
+
+  .searchtab {
+    display: flex;
+    width: 200px;
+    float: right;
+  }
   
-  @media screen and (max-width: 768px) {
+  /*@media screen and (max-width: 768px) {
     .table__container {
-      width: 85%;
+      width: 88%;
     }
-  }
-  
-  .search {
-    display: none;
-  }
+  }*/
   
   @media screen and (max-width: 468px) {
-    .search {
-      display: flex;
-      max-width: 220px;
-      float: right;
-    }
-  
     .searchtab {
-      display: none;
+      width: 88%;
+      float: none;
     }
   
     .el-table--fit {

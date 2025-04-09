@@ -566,10 +566,12 @@ form button {
 
 @media screen and (max-width: 800px) {
 
-    .table__container,
-    .security__header {
-        width: 84%;
-        /* Occuper toute la largeur sur les petits écrans */
+    form {
+        margin: 20px 0 0 0;
+    }
+
+    .table__container {
+      width: 100%;
     }
 
     .tracking {
@@ -581,18 +583,14 @@ form button {
         display: flex;
         justify-content: flex-start;
     }
-
-    .closeView {
-        margin-left: 30px;
-    }
-
-    .addBtn {
-        margin-left: 10px;
-    }
-
 }
 
 @media screen and (max-width: 500px) {
+
+    .table__container {
+        width: 100%;
+    }
+
     form {
         height: 850px !important;
         padding-right: 3.5rem !important;
