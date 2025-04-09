@@ -24,7 +24,7 @@
               <a href="#" @click="handleBrandClick">Linkystar</a>
             </span> -->
         <span v-if="!isFeedback && !isSignUp" class="text">Privacy Notice</span>
-        <span v-if="!isFeedback && !isSignUp" class="text">Term of use</span>
+        <span v-if="!isFeedback && !isSignUp" class="text">Term Of Use</span>
         <!-- <span>Powered by<a href="#" @click="handleBrandClick">Linkystar</a></span> -->
       </div>
       <div class="footer__links ml-auto mr-0" v-if="!isFeedback">
