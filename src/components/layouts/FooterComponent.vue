@@ -12,7 +12,7 @@
       </div>
       <div class="flex items-start justify-center flex-col">
         <ul v-if="!isFeedback">
-          <li v-if="!isSignUp" class="text">Legal notice</li>
+          <li v-if="!isSignUp" class="text">Legal Notice</li>
           <li v-else @click.stop="showPrivacyPolicy" class="text">Privacy Policy</li>
         </ul>
         <ul v-else>
@@ -23,8 +23,8 @@
               Powered by 
               <a href="#" @click="handleBrandClick">Linkystar</a>
             </span> -->
-        <span class="text">Privacy notice</span>
-        <span class="text">Term of use</span>
+        <span v-if="!isFeedback && !isSignUp" class="text">Privacy Notice</span>
+        <span v-if="!isFeedback && !isSignUp" class="text">Term of use</span>
         <!-- <span>Powered by<a href="#" @click="handleBrandClick">Linkystar</a></span> -->
       </div>
       <div class="footer__links ml-auto mr-0" v-if="!isFeedback">
