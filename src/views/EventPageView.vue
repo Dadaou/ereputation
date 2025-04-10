@@ -167,12 +167,14 @@ watch(activeName, async () => {
     if (activeName.value == 'events') {
         await loadEvents(companyId, start_date.value, end_date.value)
     } else {
+        console.log(establishment.value)
         await loadEvents(companyId, start_date.value, end_date.value, establishment.value.locality_id)
     }
 })
 
 onMounted(async () => {
     const data = await companiesStore.getEstablishment(customerTag.value, companyId);
+    establishment.value=data;
     appStore.setBreadcrumbs([
         {
             title: data?.name,
