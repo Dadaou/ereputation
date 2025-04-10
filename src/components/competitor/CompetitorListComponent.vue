@@ -40,12 +40,16 @@
         <el-table :data="filteredLinks">
             <el-table-column label="Competitors" prop="establishment_name" style="width: 50%; min-width: 200px;" />
             <el-table-column label="Provider" prop="provider_name" style="width: 50%; min-width: 200px;" />
-            <el-table-column label="Value" prop="settings_value1" style="width: 50%; min-width: 200px;" />
+            <el-table-column label="Value" style="width: 50%; min-width: 200px;" >
+                <template #default="scope">
+                    <span>{{checkUrl(scope.row.provider_category, scope.row.settings_value1)}}</span>
+                </template>
+            </el-table-column>
             <el-table-column style="width: 25%; min-width: 200px;" align="right">
                 <template #default="scope">
                     <el-button size="small" @click="handleEditLink(scope.row)"><i class="uil uil-edit"></i></el-button>
                     <el-button size="small">
-                        <a :href="checkUrl(scope.row.settings_value1)" target="_blank" class="external-link"><i
+                        <a :href="buildCompleteUrl(scope.row.provider_category, scope.row.provider_url, scope.row.settings_value1)" target="_blank" class="external-link"><i
                                 class="uil uil-external-link-alt"></i></a>
                     </el-button>
                     <el-popconfirm title="Are you sure to delete this?"
@@ -243,14 +247,37 @@ const handleEdit = (establishment) => {
 
 const currentEstablishment = ref(null)
 
-const checkUrl = (url) => {
+const checkUrl = (providerCategory, value) => {
 
-    if(url.startsWith('https://')) {
-        return url
+    if(providerCategory !== categories.value[0]) {
+
+        if(value.startsWith('https')) {
+
+            const urlObject = new URL(value)
+            const pathName = urlObject.pathname
+            const newValue = pathName.startsWith("/") ? pathName.slice(1) : pathName
+
+            return newValue
+        }
+
+        return value
     }
 
-    return 'https://' + url
 }
+
+const buildCompleteUrl = (providerCategory, providerUrl, value) => {
+
+    if(providerCategory !== categories.value[0]) {
+
+        if (value.startsWith('https')) {
+            return value
+        } else {
+            const baseUrl = providerUrl.split('{value1}')[0]
+            return baseUrl + '/' + value
+        }
+    }
+}
+
 
 const filteredCompetitor = computed(() => {
     let filteredData = competitorsData.value;
@@ -794,6 +821,7 @@ img {
 }*/
 
 .searchtab {
+   margin-top: 15px;
    display: flex;
    width: 200px;
    float: right;
