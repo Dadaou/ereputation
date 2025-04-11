@@ -34,13 +34,14 @@
         <div class="tab__pane-body w-full" style="position: relative; width: 100%;">
 
           <div>
-              <img src="../assets/images/logo/caddie.png" alt="caddie" class="caddie">
+            <img src="../assets/images/logo/caddie.png" alt="caddie" class="caddie">
           </div>
 
           <div class="form-group features-list w-50">
             <div v-if="planInfo && planInfo.planName" class="d-inline-flex align-center justify-start mb-5">
               <span class="plan-name mr-2">{{ planInfo.planName }}</span>
-              <a href="https://linkystar.com/pricing" title="change plan"><i class="uil uil-edit change-plan-icon"></i></a>
+              <a href="https://linkystar.com/pricing" title="change plan"><i
+                  class="uil uil-edit change-plan-icon"></i></a>
             </div>
             <ul v-if="planInfo && planInfo.planName == 'Lead-Gen'">
               <AdvantageList text="Unified QR Codes Hub" />
@@ -101,7 +102,7 @@
                 <ul className="sub-list-price no-icon mb-4">
                   <li>1 competitor</li>
                 </ul>
-            </div>
+              </div>
             </ul>
 
           </div>
@@ -110,7 +111,7 @@
                 class="register-link mx-3">Login</a></p>
             <p class="my-4">Please fill out the form to create your account</p>
             <!-- <p class="mb-5">User informations</p> -->
-            <div class="w-full">
+            <div class="w-full" id="required-input">
               <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First
                 name <span>*</span></label>
               <input v-model="planInfo.uFName" type="text" id="first_name"
@@ -128,15 +129,15 @@
               <input v-model="planInfo.uEmail" type="email" id="email"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
             </div>
-            <div class="w-full">
+            <div class="w-full" id="password-input">
               <label for="password" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Password
                 <span>*</span></label>
-              <div style= "position: relative; display: flex; align-items: center;">
+              <div style="position: relative; display: flex; align-items: center;">
                 <input v-model="planInfo.uPassword" :type="passwordInputType" id="password"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                 <el-icon :size="15" class="password-icon" @click.stop="togglePasswordVisibility">
-                    <Hide v-if="!showPassword" />
-                    <View v-else/>
+                  <Hide v-if="!showPassword" />
+                  <View v-else />
                 </el-icon>
               </div>
             </div>
@@ -144,18 +145,19 @@
               <label for="cpassword" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Confirm
                 password
                 <span>*</span></label>
-              <div style= "position: relative; display: flex; align-items: center;">
+              <div style="position: relative; display: flex; align-items: center;">
                 <input v-model="planInfo.uCPassword" :type="passwordConfirmInputType" id="cpassword"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                 <el-icon :size="15" class="password-icon" @click.stop="togglePasswordConfirmVisibility">
                   <Hide v-if="!showConfirmPassword" />
-                  <View v-else/>
+                  <View v-else />
                 </el-icon>
               </div>
-            </div><br/>
+            </div><br />
             <!-- <p class="mb-5 mt-8">Company informations</p> -->
-            <div class="w-full">
-              <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company name <span>*</span></label>
+            <div class="w-full" id="company-input">
+              <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
+                name <span>*</span></label>
               <input v-model="planInfo.cName" type="text" id="company_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
             </div>
@@ -195,14 +197,16 @@
                 </div>
               </div>
               <div class="w-full inline-flex items-center gap-2 mt-5">
-                <input v-model="planInfo.acceptConditions" type="checkbox" id="coding" name="interest" value="coding"/>
-                <label for="coding">I read and accept <span class="cgv-link" @click.stop="showCgv">terms and conditions</span>
+                <input v-model="planInfo.acceptConditions" type="checkbox" id="coding" name="interest" value="coding" />
+                <label for="coding">I read and accept <span class="cgv-link" @click.stop="showCgv">terms and
+                    conditions</span>
                   of
                   service.</label>
               </div>
-            </div><br/>
+            </div><br />
 
-            <p v-show="isTermAccepted" style="color: #FF4433; font-size: 12px;">Please accept the terms and conditions of sale to continue</p>
+            <p v-show="isTermAccepted" style="color: #FF4433; font-size: 12px;">Please accept the terms and conditions
+              of sale to continue</p>
             <div class="cgv-container" v-show="isCgvVisible"></div>
 
             <div class="d-inline-flex justify-content-between align-items-center mt-5 mb-5">
@@ -217,7 +221,7 @@
         </div>
       </el-tab-pane>
 
-     
+
     </el-tabs>
     <call-us-selector phonesystem-url="https://m-unit.on3cx.fr:5001" :party="chatID"></call-us-selector>
   </div>
@@ -244,7 +248,8 @@ import { current } from '@Services/languages.js';
 import { useI18n } from "vue-i18n";
 import { tsvFormatBody } from 'd3';
 import prices from '@/prices.json';
-import {View, Hide} from '@element-plus/icons-vue'
+import { View, Hide } from '@element-plus/icons-vue'
+import Shepherd from 'shepherd.js';
 
 
 const SpinnerComponent = defineAsyncComponent(() =>
@@ -256,11 +261,11 @@ const LanguageMenuDropdown = defineAsyncComponent(
 )
 
 const NavbarComponent = defineAsyncComponent(() =>
-    import('@Components/layouts/NavbarComponent.vue')
+  import('@Components/layouts/NavbarComponent.vue')
 )
 
 const FooterComponent = defineAsyncComponent(() =>
-    import('@Components/layouts/FooterComponent.vue')
+  import('@Components/layouts/FooterComponent.vue')
 )
 
 const AdvantageList = defineAsyncComponent(() => import("@Components/subscription/AdvantageList.vue"))
@@ -294,7 +299,7 @@ const togglePasswordConfirmVisibility = (e) => {
 
 const submitForm = async () => {
 
-  if(!planInfo.value.acceptConditions) {
+  if (!planInfo.value.acceptConditions) {
 
     isTermAccepted.value = true
     return
@@ -393,7 +398,7 @@ provide('checkout_to_update', checkout_to_update);
 
 const router = useRouter();
 
-const getPlan = async() => {
+const getPlan = async () => {
 
   const response = await new Promise((resolve) => {
     services.get_Record(`plan/list`, (response) => {
@@ -404,8 +409,8 @@ const getPlan = async() => {
     }, false, true)
   })
 
-  if(response.status === 200 && response.data) {
-     planList.value = response.data
+  if (response.status === 200 && response.data) {
+    planList.value = response.data
   }
 
 }
@@ -420,7 +425,7 @@ const setPlan = (tag, name) => {
 
   const plan = filterPlan(tag)
 
-  if(plan.length !== 0) {
+  if (plan.length !== 0) {
 
     planInfo.value['planName'] = plan[0].name
     planInfo.value['plan'] = { tag: plan[0].tag }
@@ -428,7 +433,7 @@ const setPlan = (tag, name) => {
 
   }
 
-  else  {
+  else {
     ElMessage({
       message: 'Plan tag not found',
       type: 'warning',
@@ -464,7 +469,7 @@ const createAccount = async () => {
     return response;
   }
 
-  else if(response.status === 403) {
+  else if (response.status === 403) {
     ElMessage({
       message: response.data,
       type: 'warning',
@@ -480,10 +485,10 @@ const redirectToPaymentPage = () => {
   if (plan[0]?.price_code !== null) {
 
     router.push({
-      name : 'PaymentPage',
-      query : {
-        code : plan[0].price_code,
-        email : planInfo.value.uEmail
+      name: 'PaymentPage',
+      query: {
+        code: plan[0].price_code,
+        email: planInfo.value.uEmail
       }
     })
 
@@ -515,9 +520,9 @@ const createSubscription = async (app_url, customer) => {
 
   if (response.status == 201 && response.data) {
 
-      localStorage.setItem('subscriptionId', response.data.id)
-      localStorage.setItem('uemail', planInfo.value.uEmail)
-      localStorage.setItem('upassword', planInfo.value.uPassword)
+    localStorage.setItem('subscriptionId', response.data.id)
+    localStorage.setItem('uemail', planInfo.value.uEmail)
+    localStorage.setItem('upassword', planInfo.value.uPassword)
 
   }
   else {
@@ -540,38 +545,190 @@ const route = useRoute();
 
 onBeforeMount(async () => {
 
-    const { c, n } = route.query
+  const { c, n } = route.query
 
-    await getPlan()
+  await getPlan()
 
-    if (c && n) {
-      setPlan(c, n)
-    }
+  if (c && n) {
+    setPlan(c, n)
+  }
 
-    else {
-      ElMessage({
-        message: 'Tag or name not found',
-        type: 'warning',
-      });
-    }
-
-    const response = await new Promise((resolve) => {
-      services.get_Record('plan/list', (response) => {
-        resolve(response)
-        if (response.status == 404) {
-          appStore.isLoading = false;
-        }
-      }, true, true);
+  else {
+    ElMessage({
+      message: 'Tag or name not found',
+      type: 'warning',
     });
+  }
 
-    if (response.status == 200 && response.data) {
-      const data = response.data
-      plans.value = data.sort((a, b) => a.id - b.id);
-    }
+  const response = await new Promise((resolve) => {
+    services.get_Record('plan/list', (response) => {
+      resolve(response)
+      if (response.status == 404) {
+        appStore.isLoading = false;
+      }
+    }, true, true);
+  });
+
+  if (response.status == 200 && response.data) {
+    const data = response.data
+    plans.value = data.sort((a, b) => a.id - b.id);
+  }
 })
 
+// Initialize Shepherd tour
+const tour = new Shepherd.Tour({
+  useModalOverlay: true,
+  defaultStepOptions: {
+    classes: 'shepherd-erep-theme',
+    scrollTo: { behavior: 'smooth', block: 'center' },
+    cancelIcon: { enabled: true }
+  }
+})
+
+const initTour = () => {
+  // Clear existing steps
+  tour.steps = []
+
+  // Step 1: Welcome and cart icon
+  tour.addStep({
+    id: 'welcome',
+    text: 'Welcome to your account creation process. Let us guide you through the signup steps.',
+    attachTo: {
+      element: '.page',
+      on: 'bottom'
+    },
+    buttons: [
+      { text: 'Next', action: tour.next }
+    ],
+    classes: "shepherd--bottom"
+  })
+
+  // Step 2: Plan information
+  tour.addStep({
+    id: 'plan-info',
+    text: 'This section shows the details of your selected plan. You can change it by clicking the edit icon if needed.',
+    attachTo: {
+      element: '.features-list',
+      on: 'right'
+    },
+    buttons: [
+      { text: 'Back', action: tour.back },
+      { text: 'Next', action: tour.next }
+    ],
+    classes: "shepherd--right"
+  })
+
+  // Step 3: Login prompt
+  tour.addStep({
+    id: 'login-prompt',
+    text: 'Already have an account? You can login here instead of creating a new one.',
+    attachTo: {
+      element: '.register-link',
+      on: 'bottom'
+    },
+    buttons: [
+      { text: 'Back', action: tour.back },
+      { text: 'Next', action: tour.next }
+    ],
+    classes: "shepherd--bottom"
+  })
+
+  // Step 4: Personal information
+  tour.addStep({
+    id: 'personal-info',
+    text: 'Please provide your personal details. All fields marked with * are required.',
+    attachTo: {
+      element: '#required-input',
+      on: 'top'
+    },
+    buttons: [
+      { text: 'Back', action: tour.back },
+      { text: 'Next', action: tour.next }
+    ],
+    classes: "shepherd--top"
+  })
+
+  // Step 5: Password fields
+  tour.addStep({
+    id: 'password-info',
+    text: 'Create a secure password and confirm it.',
+    attachTo: {
+      element: '#password-input',
+      on: 'bottom'
+    },
+    buttons: [
+      { text: 'Back', action: tour.back },
+      { text: 'Next', action: tour.next }
+    ],
+    classes: "shepherd--bottom"
+  })
+
+  tour.addStep({
+    id: 'password-visibility',
+    text: 'Click the eye icon to toggle visibility.',
+    attachTo: {
+      element: '.password-icon',
+      on: 'left'
+    },
+    buttons: [
+      { text: 'Back', action: tour.back },
+      { text: 'Next', action: tour.next }
+    ],
+    classes: "shepherd--left"
+  })
+
+  // Step 6: Company information
+  tour.addStep({
+    id: 'company-info',
+    text: 'Now enter your company details. This helps us customize your experience.',
+    attachTo: {
+      element: '#company-input',
+      on: 'bottom'
+    },
+    buttons: [
+      { text: 'Back', action: tour.back },
+      { text: 'Next', action: tour.next }
+    ],
+    classes: "shepherd--bottom"
+  })
+
+  // Step 7: Terms and conditions
+  tour.addStep({
+    id: 'terms-info',
+    text: 'Please review and accept our terms and conditions to proceed with your account creation.',
+    attachTo: {
+      element: '.cgv-link',
+      on: 'top'
+    },
+    buttons: [
+      { text: 'Back', action: tour.back },
+      { text: 'Next', action: tour.next }
+    ],
+    classes: "shepherd--top"
+  })
+
+  // Final Step: Submit button
+  tour.addStep({
+    id: 'submit-step',
+    text: 'Once all information is complete, click here to create your account and start using our services.',
+    attachTo: {
+      element: '.subscription-button',
+      on: 'top'
+    },
+    buttons: [
+      { text: 'Back', action: tour.back },
+      {
+        text: 'Finish',
+        action: tour.complete,
+        classes: 'shepherd-button-primary'
+      }
+    ],
+    classes: "shepherd--top"
+  })
+}
+
 onMounted(async () => {
-  
+
   const partnerCode = import.meta.env.VITE_PARTNER_CODE
   services.mountChatWidget()
 
@@ -597,6 +754,13 @@ onMounted(async () => {
   }
 
   referrerUrl.value = document.referrer
+
+  initTour()
+
+  // Start tour automatically after a short delay
+  setTimeout(() => {
+    tour.start()
+  }, 1000)
 })
 
 
@@ -607,13 +771,12 @@ onBeforeUnmount(() => {
 
 </script>
 <style>
-
 .caddie {
-  width: 300px; 
-  height: 300px; 
-  opacity: 0.10; 
-  position: absolute; 
-  top: 220px; 
+  width: 300px;
+  height: 300px;
+  opacity: 0.10;
+  position: absolute;
+  top: 220px;
   left: 350px;
   z-index: 1;
 }
@@ -857,7 +1020,8 @@ button.isLoaded {
   width: 48%;
 }
 
-input, select {
+input,
+select {
   border-radius: 3px !important;
 }
 
@@ -880,10 +1044,10 @@ input, select {
 }
 
 .password-icon {
-  position: absolute; 
-  right: 20px; 
-  top: 50%; 
-  transform: translateY(-50%); 
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
   cursor: pointer;
 }
 
@@ -969,7 +1133,7 @@ input, select {
   }
 }
 
-@media screen and (min-width: 800px) and  (max-width: 912px) {
+@media screen and (min-width: 800px) and (max-width: 912px) {
   .caddie {
     left: 200px;
   }
