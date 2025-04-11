@@ -18,14 +18,14 @@
 				</div>
 				<ul class="py-2" aria-labelledby="user-menu-button">
 					<li @click="closeDropdown" v-if="customer">
-						<RouterLink :to="{ name: 'Personal_details', params : {tag : customer.tag}, query : {title : 'Account'}}"
+						<RouterLink :to="{ name: 'Personal_details', params : {tag : customer.tag}, query : {title : 'Account', active_tab : 'user'}}"
 							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
 							<i class="uil uil-user-square"></i>
 							Profile
 						</RouterLink>
 					</li>
 					<li @click="closeDropdown" v-if="customer">
-						<RouterLink :to="{ name: 'QRCodes', params : {tag : customer.tag}, query : {title : 'My QRCodes'}}"
+						<RouterLink :to="{ name: 'QRCodes', params : {tag : customer.tag}, query : {title : 'My QRCodes', active_tab : 'establishments'}}"
 							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
 							<i class="uil-qrcode-scan"></i>
 							My QrCodes

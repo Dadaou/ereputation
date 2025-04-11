@@ -1,6 +1,6 @@
 <template>
   <div class="user__main__container">
-    <el-tabs v-model="activeName" type="card" class="demo-tabs">
+    <el-tabs v-model="activeName" type="card" class="demo-tabs" @tab-change="changeRoute">
       <el-tab-pane label="Establishments" name="establishments">
         <ShortEstablishmentListComponent @edit="(establishment) => handleEdit(establishment, 'establishment')"
           @setEnable="(id) => setStatus(id, 'enable')" @setDisable="(id) => setStatus(id, 'disable')" />
@@ -36,13 +36,14 @@ import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from "@Stores/app.js";
 import { useWindowSize } from '@vueuse/core';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
 
 
 const { width } = useWindowSize();
 const route = useRoute();
+const router = useRouter();
 
 const ShortStaffListComponent = defineAsyncComponent(() =>
   import("@Components/staffs/ShortStaffListComponent.vue")
@@ -94,7 +95,7 @@ watch(width, () => {
 });
 
 const userStore = useUserStore()
-const activeName = ref('establishments')
+const activeName = ref(null)
 const activeStaffTab = ref('staff_list')
 const showStaffListView = ref(true)
 const showServiceListView = ref(true)
@@ -500,7 +501,38 @@ const filterCategory = (data) => {
   return categories
 }
 
+const changeRoute = () => {
+
+  switch (activeName.value) {
+
+      case 'establishments':
+          router.push({ name: 'establishments', query : {...route.query, active_tab : 'establishments'}});
+          break;
+      case 'staff':
+          router.push({ name: 'staff', query : {...route.query, active_tab: 'staff'} });
+          break;
+      case 'service':
+          router.push({ name: 'service' , query : {...route.query, active_tab : 'service'}});
+          break;
+      case 'gates':
+          router.push({ name: 'gates' , query : {...route.query, active_tab : 'gates'}});
+          break;
+      case 'external_url':
+          router.push({ name: 'external_url' , query : {...route.query, active_tab : 'external_url'}});
+          break;
+      default:
+          break;
+  } 
+
+}
+
+watch(()=> route, () => {
+  activeName.value = route?.query?.active_tab || 'establishments'
+}, {deep : true})
+
 onBeforeMount(async () => {
+
+  activeName.value = route?.query?.active_tab
 
   appStore.setCurrentPage({
     title1: "My",

@@ -1,6 +1,6 @@
 <template>
     <div class="user__main__container">
-        <el-tabs v-model="activeName" type="card" class="demo-tabs">
+        <el-tabs v-model="activeName" type="card" class="demo-tabs" @tab-change="changeRoute">
             <el-tab-pane label="Personal details" name="user">
                 <div class="flex flex-row justify-between">
                     <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
@@ -216,7 +216,7 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, defineAsyncComponent, computed, watch } from 'vue';
+import { ref, onBeforeMount, defineAsyncComponent, computed, watch, onMounted } from 'vue';
 import { useUserStore } from "@Stores/user.js";
 import { useAppStore } from '@Stores/app.js';
 import { useRouter, useRoute } from "vue-router";
@@ -264,12 +264,13 @@ const NewsSubscription = defineAsyncComponent(
 
 const date = ref();
 const flow = ref(['month', 'year', 'calendar']);
-const activeName = ref('user');
+const activeName = ref(null);
 const userStore = useUserStore();
 const appStore = useAppStore();
 const showModal = ref(false);
 const { width, height } = useWindowSize();
 const router = useRouter();
+const route = useRoute();
 const modalWidth = computed(() => {
     let windowSize = 1500;
     let gap = (windowSize - width.value) / 19;
@@ -286,6 +287,30 @@ let enableEdit = ref({
     birth: false,
     address: false,
 });
+
+const changeRoute = () => {
+
+    switch (activeName.value) {
+
+        case 'user':
+            router.push({ name: 'user', query : {...route.query, active_tab : 'user'}});
+            break;
+        case 'subscription':
+            router.push({ name: 'subscription', query : {...route.query, active_tab: 'subscription'} });
+            break;
+        case 'customer':
+            router.push({ name: 'setting' , query : {...route.query, active_tab : 'customer'}});
+            break;
+        default:
+            break;
+    } 
+
+}
+
+
+watch(()=> route, () => {
+    activeName.value = route?.query?.active_tab
+}, {deep : true})
 
 
 let editing = ref(false);
@@ -440,6 +465,9 @@ const getCustomerLogo = async (tag) => {
 };
 
 onBeforeMount(() => {
+
+    activeName.value = route?.query?.active_tab
+
     getCustomerLogo(userStore.user?.customer?.tag);
     user.value.firstname = userStore.user.firstname;
     user.value.lastname = userStore.user.lastname;

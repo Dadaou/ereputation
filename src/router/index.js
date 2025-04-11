@@ -515,7 +515,22 @@ const router = createRouter({
             {
               path: 'personal_details',
               name: 'Personal_details',
-              component: () => import('@Components/users/UserDetailComponent.vue')
+              component: () => import('@Components/users/UserDetailComponent.vue'),
+              children : [
+                {
+                  path: 'user',
+                  name: 'user',
+                },
+                {
+                  path: 'subscription',
+                  name: 'subscription',
+                },
+                {
+                  path: 'setting',
+                  name: 'setting',
+                }
+
+              ]
             },
             {
               path: 'contact',
@@ -547,7 +562,29 @@ const router = createRouter({
             {
               path: 'my_qrcodes',
               name: 'QRCodes',
-              component: () => import('@Views/MyQRCodesPageView.vue')
+              component: () => import('@Views/MyQRCodesPageView.vue'),
+              children : [
+                {
+                  path: 'establishments',
+                  name: 'establishments',
+                },
+                {
+                  path: 'staff',
+                  name: 'staff',
+                },
+                {
+                  path: 'service',
+                  name: 'service',
+                },
+                {
+                  path: 'gates',
+                  name: 'gates',
+                },
+                {
+                  path: 'external_url',
+                  name: 'external_url',
+                }
+              ]
             },
             {
               path: 'screens/:sub_tab?',

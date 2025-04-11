@@ -12,7 +12,7 @@
       <div class="admin__menu" :class="{ 'menu-open': isMenuOpen }">
 
         <li>
-          <router-link :to="{ name: 'Personal_details', query : {title : 'Account'}}" @click.native="selectMenu('Account')">
+          <router-link :to="{ name: 'Personal_details', query : {title : 'Account', active_tab : 'user'}}" @click.native="selectMenu('Account')">
             <i class="uil uil-user"></i><span>Account</span>
           </router-link>
         </li>
@@ -22,7 +22,7 @@
             </router-link>
           </li> -->
         <li>
-          <router-link :to="{ name: 'QRCodes', query : {title : 'My QRCodes'}}" active-class="active" @click.native="selectMenu('My QRCodes')">
+          <router-link :to="{ name: 'QRCodes', query : {title : 'My QRCodes', active_tab : 'establishments'}}" active-class="active" @click.native="selectMenu('My QRCodes')">
             <i class="uil uil-qrcode-scan"></i> <span>My QRCodes</span>
           </router-link>
         </li>
