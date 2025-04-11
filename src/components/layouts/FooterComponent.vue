@@ -1,5 +1,5 @@
 <template>
-  <footer>
+  <footer style="transform: translateY(6px)">
     <div class="container footer__container w-full m-0">
       <div class="logo__container">
         <div v-if="appStore.account && appStore.account.logo && !isFeedback && !isSignUp" class="footer-logo"
