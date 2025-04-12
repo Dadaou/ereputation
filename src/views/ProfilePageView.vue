@@ -27,7 +27,7 @@
           </router-link>
         </li>
         <li>
-          <router-link :to="{ name: 'Screen', query : {title : 'My Screens'}}" active-class="active" @click.native="selectMenu('My Screens')">
+          <router-link :to="{ name: 'Screen', query : {title : 'My Screens', active_tab : 'screens_list'}}" active-class="active" @click.native="selectMenu('My Screens')">
             <i class="uil uil-presentation"></i> <span>My Screens</span>
           </router-link>
         </li>

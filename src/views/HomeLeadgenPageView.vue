@@ -7,10 +7,10 @@
                     <RouterLink class="search__icon" :to="{ name: 'Analytic', params: { tag: tag } }">
                         <Icon :icon="'uim:chart-pie'" width="25"></Icon>
                     </RouterLink>
-                    <RouterLink class="search__icon" :to="{ name: 'LeadgenMyQrcode', params: { tag: tag } }">
+                    <RouterLink class="search__icon" :to="{ name: 'LeadgenMyQrcode', params: { tag: tag}, query : {active_tab : 'establishments'} }">
                         <Icon :icon="'uil:qrcode-scan'" width="25"></Icon>
                     </RouterLink>
-                    <RouterLink class="search__icon" :to="{ name: 'LeadgenAdvantage', params: { tag: tag } }">
+                    <RouterLink class="search__icon" :to="{ name: 'LeadgenAdvantage', params: { tag: tag }, query : {active_tab : 'advantage_list'} }">
                         <Icon :icon="'uil:bill'" width="26"></Icon>
                     </RouterLink>
                     <RouterLink class="search__icon" :to="{ name: 'LeadgenPartnership', params: { tag: tag } }">

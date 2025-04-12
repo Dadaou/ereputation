@@ -437,7 +437,17 @@ const router = createRouter({
             {
               path: 'customer/:tag/advantage',
               name: 'LeadgenAdvantage',
-              component: () => import('@Views/LeadgenAdvantageView.vue')
+              component: () => import('@Views/LeadgenAdvantageView.vue'),
+              children : [
+                {
+                  path : 'leadgen_advantage_list',
+                  name : 'leadgen_advantage_list',
+                },
+                {
+                  path : 'leadgen_advantage_form',
+                  name : 'leadgen_advantage_form',
+                }
+              ]
             },
             {
               path: 'customer/:tag/partnership',
@@ -457,12 +467,44 @@ const router = createRouter({
             {
               path: 'customer/:tag/my-qrcode',
               name: 'LeadgenMyQrcode',
-              component: () => import('@Views/LeadgenMyQrcodeView.vue')
+              component: () => import('@Views/LeadgenMyQrcodeView.vue'),
+              children : [
+                {
+                  path: 'leadgen_establishments',
+                  name: 'leadgen_establishments',
+                },
+                {
+                  path: 'leadgen_staff',
+                  name: 'leadgen_staff',
+                },
+                {
+                  path: 'leadgen_service',
+                  name: 'leadgen_service',
+                },
+                {
+                  path: 'leadgen_gates',
+                  name: 'leadgen_gates',
+                },
+                {
+                  path: 'leadgen_external_url',
+                  name: 'leadgen_external_url',
+                }
+              ]
             },
             {
               path: 'customer/:tag/my-screen',
               name: 'LeadgenMyScreen',
-              component: () => import('@Views/LeadgenMyScreenView.vue')
+              component: () => import('@Views/LeadgenMyScreenView.vue'),
+              children : [
+                {
+                  name : 'leadgen_screen_list',
+                  path : 'leadgen_screen_list'
+                },
+                {
+                  name : 'leadgen_screen_form',
+                  path : 'leadgen_screen_form'
+                }
+              ]
             },
             {
               path: 'customer/:tag/establishment/analytic',
@@ -589,7 +631,17 @@ const router = createRouter({
             {
               path: 'screens/:sub_tab?',
               name: 'Screen',
-              component: () => import('@Views/MyScreen.vue')
+              component: () => import('@Views/MyScreen.vue'),
+              children : [
+                {
+                  path : 'screen_list',
+                  name : 'screen_list',
+                },
+                {
+                  path : 'screen_form',
+                  name : 'screen_form',
+                }
+              ]
             },
 
             {
@@ -600,7 +652,17 @@ const router = createRouter({
             {
               path: 'advantage',
               name: 'Advantage',
-              component: () => import('@Components/advantage/AdvantageView.vue')
+              component: () => import('@Components/advantage/AdvantageView.vue'),
+              children : [
+                {
+                  path : 'advantage_list',
+                  name : 'advantage_list',
+                },
+                {
+                  path : 'advantage_form',
+                  name : 'advantage_form',
+                }
+              ]
             },
             {
               path: 'partnership',

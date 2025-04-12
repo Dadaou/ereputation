@@ -1,6 +1,6 @@
 <template>
     <div class="user__main__container">
-        <el-tabs v-model="activeAdvantageTab" class="demo-tabs">
+        <el-tabs v-model="activeAdvantageTab" class="demo-tabs"   @tab-change="changeRoute">
             <el-tab-pane label="Advantages" name="advantage_list">
                 <AdvantageListComponent @edit="(advantage) => handleEdit(advantage, 'advantage')"
                     @setEnable="(advantage) => handleEnable(advantage, 'advantage')"
@@ -20,13 +20,16 @@ import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
 import { useWindowSize } from '@vueuse/core';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
 
 
 const { width } = useWindowSize();
 const route = useRoute();
+const router = useRouter()
+
+const activeAdvantageTab = ref(null)
 
 const AdvantageFormComponent = defineAsyncComponent(() =>
     import("@Components/advantage/AdvantageFormComponent.vue")
@@ -35,6 +38,28 @@ const AdvantageFormComponent = defineAsyncComponent(() =>
 const AdvantageListComponent = defineAsyncComponent(() =>
     import("@Components/advantage/AdvantageListComponent.vue")
 )
+
+const changeRoute = () => {
+
+    switch (activeAdvantageTab.value) {
+        case 'advantage_list':
+            router.push({ name: 'advantage_list', params : {...route.params}, query : {...route.query, active_tab : 'advantage_list'}});
+            break;
+        case 'advantage_form':
+            router.push({ name: 'advantage_form', params : {...route.params}, query : {...route.query, active_tab: 'advantage_form'} });
+            break;
+        default:
+            break;
+    } 
+}
+
+watch(activeAdvantageTab, () => {
+    changeRoute()
+})
+
+watch(()=> route, () => {
+    activeAdvantageTab.value = route?.query?.active_tab || 'advantage_list'
+}, {deep : true})
 
 const position = ref('top')
 watch(width, () => {
@@ -56,7 +81,6 @@ const activeName = ref('establishments')
 const allAdvantages = ref([])
 
 provide('advantages', allAdvantages)
-const activeAdvantageTab = ref('advantage_list')
 provide('advantage_activeTab', activeAdvantageTab)
 
 const advantage_to_update = ref(null)
@@ -71,6 +95,7 @@ const handleEdit = (value, type) => {
 };
 
 const loadAdvantage = async () => {
+
     try {
         const response = await new Promise((resolve) => {
             services.get_Record(`customer/establishments/advantages?tag=${route.params.tag}`, (response) => {
@@ -127,6 +152,9 @@ const handleDisable = async (value, type) => {
 };
 
 onBeforeMount(async () => {
+    
+    activeAdvantageTab.value = route?.query?.active_tab || 'advantage_list'
+    
     if (width.value < 800) {
         position.value = 'top'
     } else {

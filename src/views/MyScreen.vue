@@ -1,6 +1,6 @@
 <template>
     <div class="user__main__container">
-        <el-tabs v-model="myscreensUrlsConf.screens" class="demo-tabs" @tab-click="() => clearScreenForm()">
+        <el-tabs v-model="myscreensUrlsConf.screens" class="demo-tabs" @tab-click="() => clearScreenForm()" @tab-change="changeRoute">
             <el-tab-pane label="Screens" name="screens_list">
                 <ScreenListComponent @edit="(screen) => handleEdit(screen, 'screens')" />
             </el-tab-pane>
@@ -23,7 +23,6 @@ import 'element-plus/es/components/tab-pane/style/css';
 
 
 
-
 const { width } = useWindowSize();
 const route = useRoute();
 const router = useRouter();
@@ -36,6 +35,39 @@ const ScreenListComponent = defineAsyncComponent(() =>
 const ScreenFormComponent = defineAsyncComponent(() =>
     import("@Components/screen/ScreenFormComponent.vue")
 )
+
+
+const changeRoute = () => {
+
+    router.push({name : 'Home'})
+
+    /*console.clear()
+    console.log(myscreensUrlsConf.screens)
+
+    const fullPath = route.fullPath
+    let prefixRouteNameForLeadGen = ''
+
+    if(fullPath.includes("leadgen")) prefixRouteNameForLeadGen = 'leadgen_'
+
+    router.push({name : 'Home'})*/
+
+    /*switch (myscreensUrlsConf.screens) {
+
+        case 'screens_list':
+            router.push({ name: prefixRouteNameForLeadGen + 'screen_list', params : {...route.params}, query : {...route.query, active_tab : 'screens_list'}});
+            break;
+        case 'screens_form':
+            router.push({ name: prefixRouteNameForLeadGen + 'screen_form', params : {...route.params}, query : {...route.query, active_tab: 'screens_form'} });
+            break;
+        default:
+            break;
+    } */
+
+}
+
+watch(()=> route, () => {
+    myscreensUrlsConf.screens = route?.query?.active_tab || 'screens_list'
+}, {deep : true})
 
 
 

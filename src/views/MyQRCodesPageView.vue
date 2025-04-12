@@ -503,22 +503,27 @@ const filterCategory = (data) => {
 
 const changeRoute = () => {
 
+  const fullPath = route.fullPath
+  let prefixRouteNameForLeadGen = ''
+
+  if(fullPath.includes("leadgen")) prefixRouteNameForLeadGen = 'leadgen_'
+
   switch (activeName.value) {
 
       case 'establishments':
-          router.push({ name: 'establishments', query : {...route.query, active_tab : 'establishments'}});
+          router.push({ name: prefixRouteNameForLeadGen + 'establishments', query : {...route.query, active_tab : 'establishments'}});
           break;
       case 'staff':
-          router.push({ name: 'staff', query : {...route.query, active_tab: 'staff'} });
+          router.push({ name: prefixRouteNameForLeadGen + 'staff', query : {...route.query, active_tab: 'staff'} });
           break;
       case 'service':
-          router.push({ name: 'service' , query : {...route.query, active_tab : 'service'}});
+          router.push({ name: prefixRouteNameForLeadGen + 'service' , query : {...route.query, active_tab : 'service'}});
           break;
       case 'gates':
-          router.push({ name: 'gates' , query : {...route.query, active_tab : 'gates'}});
+          router.push({ name: prefixRouteNameForLeadGen + 'gates' , query : {...route.query, active_tab : 'gates'}});
           break;
       case 'external_url':
-          router.push({ name: 'external_url' , query : {...route.query, active_tab : 'external_url'}});
+          router.push({ name: prefixRouteNameForLeadGen + 'external_url' , query : {...route.query, active_tab : 'external_url'}});
           break;
       default:
           break;
@@ -532,7 +537,7 @@ watch(()=> route, () => {
 
 onBeforeMount(async () => {
 
-  activeName.value = route?.query?.active_tab
+  activeName.value = route?.query?.active_tab || 'establishments'
 
   appStore.setCurrentPage({
     title1: "My",

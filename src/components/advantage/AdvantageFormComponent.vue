@@ -1,5 +1,5 @@
 <template>
-    <div class="security__header border__bottom my-10">
+    <div class="my-10 security__header border__bottom">
         <!--  <div class="security__edit">
                 <h4><i class="uil uil-calender"></i> Advantage</h4>
                 <p>Complete the following information to add an advantage.</p>
@@ -7,7 +7,7 @@
     </div>
     <div class="advantage_container" :style="{ width: advantageContainerWidth }">
         <div class="form-container">
-            <form @submit.prevent="submit" class="mt-4 px-2 h-full">
+            <form @submit.prevent="submit" class="h-full px-2 mt-4">
                 <div class="grid gap-6 mb-6 md:grid-cols-2">
                     <div>
                         <label for="countries"
@@ -22,7 +22,7 @@
                         <label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
                             <span>*</span></label>
-                        <!-- <input type="text" id="category" v-model="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2"> -->
+                        <!-- <input type="text" id="category" v-model="category" class="w-full p-2 text-sm text-gray-900 border border-gray-300 bg-gray-50"> -->
                         <el-select v-model="category" placeholder="Select category" size="large">
                             <el-option v-for="category in categoriesOptions" :key="category.value"
                                 :label="category.label" :value="category.value" />
@@ -43,7 +43,7 @@
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name
                             <span>*</span></label>
                         <input type="text" id="name" v-model="advantageName"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                            class="w-full p-2 text-sm text-gray-900 border border-gray-300 bg-gray-50">
                     </div>
 
                 </div>
@@ -52,7 +52,7 @@
                         <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount
                             <span></span></label>
                         <input type="number" id="amount" v-model="amount"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
+                            class="w-full p-2 text-sm text-gray-900 border border-gray-300 bg-gray-50" min="0">
                     </div>
                     <div>
                         <label for="currency" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -66,7 +66,7 @@
                                 Code
                                 <Tooltip text="Use your own discount code recognized by your system"/>
                                </label>
-                              <input type="text" id="code" v-model="code" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                              <input type="text" id="code" v-model="code" class="w-full p-2 text-sm text-gray-900 border border-gray-300 bg-gray-50">
                           </div>-->
                     <div>
                         <label for="metric" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Metric
@@ -92,7 +92,7 @@
                             <Tooltip text="Use your own discount code recognized by your system" />
                         </label>
                         <input type="text" id="code" v-model="code"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
+                            class="w-full p-2 text-sm text-gray-900 border border-gray-300 bg-gray-50">
                     </div>
 
 
@@ -105,7 +105,7 @@
                                 <Tooltip text="Validity period after coupon creation (in number of days)" />
                             </label>
                             <input type="number" id="validity" v-model="validity"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
+                                class="w-full p-2 text-sm text-gray-900 border border-gray-300 bg-gray-50" min="0">
                         </div>
                         <div>
                             <label for="limit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -113,7 +113,7 @@
                                 <Tooltip text="Offer limited to x units" />
                             </label>
                             <input type="number" id="limit" v-model="advantageLimit"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
+                                class="w-full p-2 text-sm text-gray-900 border border-gray-300 bg-gray-50" min="0">
                         </div>
                     </div>
                     <div>
@@ -122,7 +122,7 @@
 
                         </label>
                         <input type="number" id="positioning" v-model="positioning"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" min="0">
+                            class="w-full p-2 text-sm text-gray-900 border border-gray-300 bg-gray-50" min="0">
                     </div>
                     <div>
                         <label for="last_name"
@@ -183,7 +183,7 @@
                         <label for="message"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Logo</label>
                         <div class="md:order-2">
-                            <div class="image-selector border-gray-300" @dragover.prevent="onDragOver"
+                            <div class="border-gray-300 image-selector" @dragover.prevent="onDragOver"
                                 @drop.prevent="onDrop" @click="selectImg">
                                 <div v-if="previewImage" class="image-preview">
                                     <img :src="previewImage" alt="Preview Image" class="uploading-image" />
@@ -324,9 +324,6 @@ const handleDescriptionChange = () => {
 }
 
 const advantageContainerWidth = computed(() => {
-
-    console.clear()
-    console.log(route.name)
 
     if (width.value < 850) {
         return route.name === 'LeadgenAdvantage' ? `${100}%` : `${89}%`
