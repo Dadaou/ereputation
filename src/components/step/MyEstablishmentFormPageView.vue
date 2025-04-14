@@ -1,14 +1,14 @@
 <template>
     <div>
         <div class="security__header border__bottom mt-10"></div>
-        <h1 class="title" ref="titleElement">My establishment</h1>
+        <h1 class="title">My establishment</h1>
         <h1>Let's start by setting up your first establishment </h1>
         <div class="table__container">
             <form id="establishmentForm" @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4">
                 <div class="grid gap-6 mb-6 md:grid-cols-2">
                     <div class="md:order-2">
                         <div class="image-selector border-gray-300" @dragover.prevent="onDragOver"
-                            @drop.prevent="onDrop" @click="selectImg" ref="imageUploadElement">
+                            @drop.prevent="onDrop" @click="selectImg">
                             <div v-if="previewImage" class="image-preview">
                                 <img :src="previewImage" alt="Preview Image" class="uploading-image" />
                                 <div class="img-hover">
@@ -20,14 +20,14 @@
                         </div>
                     </div>
                     <div class="md:order-1">
-                        <div class="mb-6" ref="nameInputElement">
+                        <div class="mb-6">
                             <label for="company_name"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name
                                 <span>*</span></label>
                             <input type="text" id="company_name" name="name" v-model="data.name"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                         </div>
-                        <div class="mb-6" ref="addressInputElement">
+                        <div class="mb-6">
                             <label for="address1"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address 1
                                 <span>*</span></label>
@@ -101,7 +101,7 @@
                 <div class="grid gap-6 mb-6 md:grid-cols-4"></div>
                 <div
                     class="flex flex-wrap gap-3 items-center justify-between py-2 border-t border-b dark:border-gray-600">
-                    <button type="submit" ref="submitButtonElement"
+                    <button type="submit"
                         class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                         <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" /> <span
                             v-if="showSpinner">Loading
@@ -116,7 +116,6 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import Shepherd from 'shepherd.js';
 import { useRouter, useRoute } from 'vue-router';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
@@ -137,149 +136,8 @@ const imgHasChanged = ref(false);
 const categories = ref([]);
 const selectLanguage = ref(null);
 
-// Add these refs for tour elements
-const titleElement = ref(null);
-const imageUploadElement = ref(null);
-const nameInputElement = ref(null);
-const addressInputElement = ref(null);
-const submitButtonElement = ref(null);
-
 const router = useRouter();
 const route = useRoute();
-
-// Initialize Shepherd tour
-const tour = new Shepherd.Tour({
-    useModalOverlay: true,
-    defaultStepOptions: {
-        classes: 'shepherd-erep-theme',
-        scrollTo: { behavior: 'smooth', block: 'center' },
-        cancelIcon: {
-            enabled: true
-        }
-    }
-});
-
-const initTour = () => {
-    // Clear any existing steps
-    tour.steps = [];
-
-    tour.addStep({
-        id: 'intro',
-        text: 'Welcome to our step-by-step process! This guide will walk you through each step. You can navigate into each step by clicking here.',
-        attachTo: {
-            element: '.step-progress',
-            on: 'bottom'
-        },
-        buttons: [
-            {
-                text: 'Next',
-                action: tour.next
-            }
-        ],
-        classes: "shepherd--bottom"
-    })
-
-    // Add tour steps
-    tour.addStep({
-        id: 'welcome',
-        text: 'Let me guide you through setting up your first establishment.',
-        attachTo: {
-            element: titleElement.value,
-            on: 'bottom'
-        },
-        buttons: [
-            {
-                text: 'Next',
-                action: tour.next
-            }
-        ],
-        classes: "shepherd--bottom"
-    });
-
-    tour.addStep({
-        id: 'image-upload',
-        title: 'Establishment Image',
-        text: 'Start by uploading an image of your establishment. You can drag & drop or click to select.',
-        attachTo: {
-            element: imageUploadElement.value,
-            on: 'right'
-        },
-        buttons: [
-            {
-                text: 'Back',
-                action: tour.back
-            },
-            {
-                text: 'Next',
-                action: tour.next
-            }
-        ],
-        classes: "shepherd--left"
-    });
-
-    tour.addStep({
-        id: 'basic-info',
-        title: 'Basic Information',
-        text: 'Fill in the basic details about your establishment. All fields marked with * are required.',
-        attachTo: {
-            element: nameInputElement.value,
-            on: 'right'
-        },
-        buttons: [
-            {
-                text: 'Back',
-                action: tour.back
-            },
-            {
-                text: 'Next',
-                action: tour.next
-            }
-        ],
-        classes: "shepherd--right"
-    });
-
-    tour.addStep({
-        id: 'address-info',
-        title: 'Address Details',
-        text: 'Provide your establishment address. This helps customers find you.',
-        attachTo: {
-            element: addressInputElement.value,
-            on: 'right'
-        },
-        buttons: [
-            {
-                text: 'Back',
-                action: tour.back
-            },
-            {
-                text: 'Next',
-                action: tour.next
-            }
-        ],
-        classes: "shepherd--right"
-    });
-
-    tour.addStep({
-        id: 'submit-form',
-        title: 'Complete Setup',
-        text: 'Once all information is filled, click here to create your establishment.',
-        attachTo: {
-            element: submitButtonElement.value,
-            on: 'top'
-        },
-        buttons: [
-            {
-                text: 'Back',
-                action: tour.back
-            },
-            {
-                text: 'Finish',
-                action: tour.next
-            }
-        ],
-        classes: "shepherd--top"
-    });
-};
 
 const onDragOver = (event) => {
     imageInputHover.value = true;
@@ -363,14 +221,6 @@ const loadUniverseList = async () => {
 
 onMounted(() => {
     loadUniverseList();
-
-    // Initialize the tour when component mounts
-    setTimeout(() => {
-        initTour();
-
-        // Start the tour automatically (or you can trigger it with a button)
-        tour.start();
-    }, 1000);
 });
 
 
@@ -432,7 +282,7 @@ const submit = async () => {
 };*/
 
 const goToNextStep = (establishmentName) => {
-    router.push({ name: 'secondStep', params: { tag: route.params.tag }, query: { establishment_name: establishmentName } });
+    router.push({ name: 'secondStep', params: {tag : route.params.tag}, query: {establishment_name : establishmentName}});
 };
 
 const loadData = (establishment, type) => {

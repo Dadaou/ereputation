@@ -1,8 +1,7 @@
 import '@Assets/main.css'
 import 'vuesalize/dist/vuesalize.css'
-import 'shepherd.js/dist/css/shepherd.css'
 
-import { createApp, ref } from 'vue'
+import { createApp , ref} from 'vue'
 import { createPinia } from 'pinia'
 import { createHead } from '@unhead/vue'
 import Vuesalize from 'vuesalize'
@@ -12,16 +11,17 @@ import 'animate.css'
 
 import App from './App.vue'
 import router from './router'
-import { i18n } from './i18n'
+import {i18n} from './i18n'
 
-var lg = localStorage.getItem('langue')
-if (lg == null) localStorage.setItem('langue', 'EN')
+var lg = localStorage.getItem("langue")
+if(lg ==null)
+    localStorage.setItem("langue","EN")
 
-localStorage.setItem('api_url', import.meta.env.VITE_APP_URL)
+localStorage.setItem("api_url",import.meta.env.VITE_APP_URL)
 const app = createApp(App)
 const head = createHead()
 const baseurl = ref(window.location.origin)
-app.provide('tag', '')
+app.provide('tag', '');
 app.provide('app_url', baseurl)
 export const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)

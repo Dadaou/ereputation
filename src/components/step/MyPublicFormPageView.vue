@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="security__header border__bottom mt-10"></div>
-        <h1 class="title" ref="titleElement">My public platforms</h1>
+        <h1 class="title">My public platforms</h1>
         <h1>
             Let's start by setting up your first establishment <b v-if="establishmentName">{{ establishmentName }} </b>
         </h1>
@@ -9,7 +9,7 @@
             <div>
                 <form @submit.prevent="submit" @keydown.enter.prevent="submit" class="mt-4 px-2">
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
-                        <div ref="googleSection">
+                        <div>
                             <label for="google"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Google
                             </label>
@@ -21,7 +21,7 @@
                                 :class="['bg-gray-50 border text-sm w-full p-2', isValidGoogle ? 'border-gray-300' : 'border-red-500']">
                         </div>
 
-                        <div ref="tripadvisorSection">
+                        <div>
                             <label for="tripadvisor"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tripadvisor
                             </label>
@@ -32,7 +32,7 @@
                             <input type="text" id="urlTripadvisor" v-model="urlTripadvisor"
                                 :class="['bg-gray-50 border text-sm w-full p-2', isValidTripadvisor ? 'border-gray-300' : 'border-red-500']">
                         </div>
-                        <div ref="facebookSection">
+                        <div>
                             <label for="facebook"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Facebook
                             </label>
@@ -43,7 +43,7 @@
                             <input type="text" id="urlFacebook" v-model="urlFacebook"
                                 :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
                         </div>
-                        <div ref="instagramSection">
+                        <div>
                             <label for="instagram"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Instagram
                             </label>
@@ -54,7 +54,7 @@
                             <input type="text" id="urlInstagram" v-model="urlInstagram"
                                 :class="['bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2']">
                         </div>
-                        <div ref="twitterSection">
+                        <div>
                             <label for="twitter"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Twitter
                             </label>
@@ -68,10 +68,10 @@
 
                         <div></div>
                         <div>
-                            <span @click="addNewPlatform" class="button__plus" ref="addPlatformButton">
+                            <span @click="addNewPlatform" class="button__plus">
                                 Platform +
                             </span>
-                            <span @click="addNewSocial" class="button__plus" ref="addSocialButton">
+                            <span @click="addNewSocial" class="button__plus">
                                 Social +
                             </span>
                         </div>
@@ -135,13 +135,13 @@
                     </div>
 
                     <div class="flex items-center py-4 border-t border-b dark:border-gray-600">
-                        <button type="submit" ref="submitButton"
+                        <button type="submit"
                             :class="['inline-flex items-center py-2.5 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800']">
                             <SpinnerComponent :show-spinner="showSpinner" :color="'gray'" />
                             <span v-if="showSpinner">Loading...</span>
                             <span v-show="!showSpinner"><i class="uil uil-save"></i> Submit</span>
                         </button>
-                        <button @click="goToNextStep" ref="skipButton"
+                        <button @click="goToNextStep"
                             class="inline-flex items-center py-2.5 ml-2 px-6 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                             <span class="icon pr-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -160,9 +160,9 @@
     </div>
 </template>
 <script setup>
-import { ref, onBeforeMount, watch, onMounted } from 'vue'
-import Shepherd from 'shepherd.js';
+import { ref, onBeforeMount, watch, onMounted, inject } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
+import { useAppStore } from "@Stores/app.js";
 import { ElMessage, ElOption, ElSelect } from 'element-plus'
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import services from '@Services/services.js';
@@ -170,19 +170,8 @@ import services from '@Services/services.js';
 
 const router = useRouter();
 const route = useRoute();
-const establishmentName = ref('');
-
-// Add these refs for tour elements
-const titleElement = ref(null);
-const googleSection = ref(null);
-const tripadvisorSection = ref(null);
-const facebookSection = ref(null);
-const instagramSection = ref(null);
-const twitterSection = ref(null);
-const addPlatformButton = ref(null);
-const addSocialButton = ref(null);
-const submitButton = ref(null);
-const skipButton = ref(null);
+const appStore = useAppStore();
+const establishmentName = ref('')
 
 
 /*const props = defineProps({
@@ -193,7 +182,7 @@ const skipButton = ref(null);
 const emit = defineEmits(['changeStep']);
 
 const goToNextStep = () => {
-    router.push({ name: 'thirdStep', params: { tag: route.params.tag } });
+    router.push({ name: 'thirdStep', params: {tag : route.params.tag}});
 };
 
 const showSpinner = ref(false);
@@ -221,127 +210,6 @@ const socialLink = ref('');
 const social = ref('');
 const isValidSocial = ref(true);
 const socialEntries = ref([]);
-
-// Initialize Shepherd tour
-const tour = new Shepherd.Tour({
-    useModalOverlay: true,
-    defaultStepOptions: {
-        classes: 'shepherd-erep-theme',
-        scrollTo: { behavior: 'smooth', block: 'center' },
-        cancelIcon: {
-            enabled: true
-        }
-    }
-});
-
-const initTour = () => {
-    // Clear any existing steps
-    tour.steps = [];
-
-    // Add tour steps
-    tour.addStep({
-        id: 'welcome',
-        text: 'Welcome! Let me guide you through setting up your public platforms.',
-        attachTo: {
-            element: titleElement.value,
-            on: 'bottom'
-        },
-        buttons: [
-            {
-                text: 'Next',
-                action: tour.next
-            }
-        ],
-        classes: "shepherd--bottom"
-    });
-
-    tour.addStep({
-        id: 'google',
-        title: 'Google Profile',
-        text: 'Add your Google business profile URL here. It should start with https://www.google.com/search?q=',
-        attachTo: {
-            element: googleSection.value,
-            on: 'right'
-        },
-        buttons: [
-            {
-                text: 'Back',
-                action: tour.back
-            },
-            {
-                text: 'Next',
-                action: tour.next
-            }
-        ],
-        classes: "shepherd--right"
-    });
-
-    tour.addStep({
-        id: 'tripadvisor',
-        title: 'Tripadvisor Profile',
-        text: 'Add your Tripadvisor business URL here. It should start with https://www.tripadvisor.com/',
-        attachTo: {
-            element: tripadvisorSection.value,
-            on: 'right'
-        },
-        buttons: [
-            {
-                text: 'Back',
-                action: tour.back
-            },
-            {
-                text: 'Next',
-                action: tour.next
-            }
-        ],
-        classes: "shepherd--left"
-    });
-
-    // Add similar steps for other platforms (Facebook, Instagram, Twitter)
-
-    tour.addStep({
-        id: 'additional-platforms',
-        title: 'Additional Platforms',
-        text: 'You can add more platforms or social networks using these buttons if needed.',
-        attachTo: {
-            element: addPlatformButton.value,
-            on: 'top'
-        },
-        buttons: [
-            {
-                text: 'Back',
-                action: tour.back
-            },
-            {
-                text: 'Next',
-                action: tour.next
-            }
-        ],
-        classes: "shepherd--top"
-    });
-
-    tour.addStep({
-        id: 'submit',
-        title: 'Complete Setup',
-        text: 'When you\'re done adding all your platforms, click here to submit. You can also skip this step if you prefer.',
-        attachTo: {
-            element: submitButton.value,
-            on: 'top'
-        },
-        buttons: [
-            {
-                text: 'Back',
-                action: tour.back
-            },
-            {
-                text: 'Finish',
-                action: tour.complete
-            }
-        ],
-        classes: "shepherd--top"
-    });
-};
-
 
 function addNewPlatform() {
     platformEntries.value.push({
@@ -514,7 +382,7 @@ const submit = async () => {
                 caption: null
             };
 
-            await new Promise((resolve, reject) => {
+            const response = await new Promise((resolve, reject) => {
                 services.createRecord('settings', data, (response) => {
                     if (response.status === 201) {
                         resolve(response);
@@ -629,30 +497,22 @@ const checkPlan = () => {
     if (planName == 'Lead_gen') {
 
         ElMessage({
-            message: `It looks like you have chosen the Lead-Gen pack only. Reputation-related options will not be available. You can upgrade your pack at any time in your client area.
+            message:`It looks like you have chosen the Lead-Gen pack only. Reputation-related options will not be available. You can upgrade your pack at any time in your client area.
                         Feel free to contact us in the chat below if you need any help.
                         Thank you!`,
-            duration: 15000,
-            showClose: true
+           duration : 15000,
+           showClose: true
         });
     }
 }
 
 onMounted(() => {
 
-    if (route?.query?.establishment_name) {
+    if(route?.query?.establishment_name) {
         establishmentName.value = route.query.establishment_name;
     }
 
     checkPlan()
-
-    // Initialize the tour when component mounts
-    setTimeout(() => {
-        initTour();
-
-        // Start the tour automatically (or you can trigger it with a button)
-        tour.start();
-    }, 1000);
 })
 
 </script>
