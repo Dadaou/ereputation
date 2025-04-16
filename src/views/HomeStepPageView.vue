@@ -1,6 +1,6 @@
 <template>
     <div :class="{ hidden: isChildRoute }" class="main__container home-step__container">
-        <div class="container m-0">
+        <div class="container mt-0 mx-auto mb-4 max-w-[720px]">
             <h1>Hi <span class="name">{{ userStore.user.customer.name }} </span> !</h1>
             <h1>We are happy to welcome you to the Linkystar platform 😊</h1>
             <h1>Let's start with a few settings to make your platform operational.</h1>
