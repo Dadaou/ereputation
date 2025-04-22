@@ -667,7 +667,21 @@ const router = createRouter({
             {
               path: 'partnership',
               name: 'Partnership',
-              component: () => import('@Components/partnership/PartnershipView.vue')
+              component: () => import('@Components/partnership/PartnershipView.vue'),
+              children : [
+                {
+                  path : 'partnership_list',
+                  name : 'partnership_list',
+                },
+                {
+                  path : 'partnership_outside_request',
+                  name : 'partnership_outside_request',
+                },
+                {
+                  path : 'partnership_form',
+                  name : 'partnership_form',
+                }
+              ]
             }
           ]
         }

@@ -1,6 +1,6 @@
 <template>
     <div class="user__main__container">
-        <el-tabs v-model="activePartnershipTab" class="demo-tabs">
+        <el-tabs v-model="activePartnershipTab" class="demo-tabs" @tab-change="changeRoute">
                     <el-tab-pane label="Partnerships requested by your establishment" name="partnership_list">
                         <PartnershipListComponent @update="() => reloadPartnershipsData()"  @edit="handleEdit"/>
                     </el-tab-pane>
@@ -21,13 +21,15 @@ import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { useUserStore } from "@Stores/user.js";
 import { useWindowSize } from '@vueuse/core';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
 
 
 const { width } = useWindowSize();
 const route = useRoute();
+const router = useRouter();
+const activePartnershipTab = ref(null)
 
 const PartnershipFormComponent = defineAsyncComponent(() =>
     import("@Components/partnership/PartnershipFormComponent.vue")
@@ -49,6 +51,32 @@ watch(width, () => {
     }
 });
 
+const changeRoute = () => {
+
+    switch (activePartnershipTab.value) {
+
+        case 'partnership_list':
+            router.push({ name: 'partnership_list', params : {...route.params}, query : {...route.query, active_tab : 'partnership_list'}});
+            break;
+        case 'partnership_request':
+            router.push({ name: 'partnership_outside_request', params : {...route.params}, query : {...route.query, active_tab: 'partnership_request'} });
+            break;
+        case 'partnership_form':
+            router.push({ name: 'partnership_form', params : {...route.params}, query : {...route.query, active_tab: 'partnership_form'} });
+            break;
+        default:
+            break;
+    } 
+}
+
+watch(activePartnershipTab, () => {
+    changeRoute()
+})
+
+watch(()=> route, () => {
+    activePartnershipTab.value = route?.query?.active_tab || 'partnership_list'
+}, {deep : true})
+
 const clearEstablishmentForm = () => {
     cleanEstablishmentForm.value = !cleanEstablishmentForm.value
 }
@@ -59,7 +87,6 @@ const userStore = useUserStore()
 const activeName = ref('establishments')
 const allPartnerships = ref({})
 provide('partnerships', allPartnerships)
-const activePartnershipTab = ref('partnership_list')
 provide('partnership_activeTab', activePartnershipTab)
 
 const reloadPartnershipsData = async () => {
@@ -79,6 +106,8 @@ const handleEdit = (data) => {
 }
 
 onBeforeMount(async () => {
+    activePartnershipTab.value = route?.query?.active_tab || 'partnership_list'
+
     if (width.value < 800) {
         position.value = 'top'
     } else {
