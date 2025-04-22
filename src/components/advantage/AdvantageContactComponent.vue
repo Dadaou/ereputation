@@ -102,9 +102,9 @@ const exportBtnWidth = computed(() => {
 
 const exportData = (type, filename) => {
   csvXlsx.exportContact(type, filename, query.value,
-    ['Id', 'Name', 'Gender', 'Email', 'Establishment', 'Date']);
+    ['Id', 'Firstname','Lastname', 'Gender', 'Email', 'Establishment', 'Date'])
   downloaded.value = true;
-};
+}
 
 const filteredData = computed (() => {
   let filteredData = contacts.value;
