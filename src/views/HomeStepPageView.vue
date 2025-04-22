@@ -93,10 +93,10 @@ footer {
 }
 
 .home-step__container {
-    background: url("@/assets/images/fond_linkystar.webp");
+    background: url("@/assets/images/fond.svg");
     margin-block: 80px 0 !important;
     padding-inline: 4rem;
-    background-position: center;
+    background-position: top left;
     background-repeat: no-repeat;
     background-size: cover;
     width: 100vw !important;
