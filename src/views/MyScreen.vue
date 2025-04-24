@@ -26,6 +26,10 @@ import 'element-plus/es/components/tab-pane/style/css';
 const { width } = useWindowSize();
 const route = useRoute();
 const router = useRouter();
+const myscreensUrlsConf = reactive({
+    tabs: 'screens',
+    screens: 'screens_list'
+})
 
 
 const ScreenListComponent = defineAsyncComponent(() =>
@@ -39,19 +43,15 @@ const ScreenFormComponent = defineAsyncComponent(() =>
 
 const changeRoute = () => {
 
-    router.push({name : 'Home'})
-
     /*console.clear()
-    console.log(myscreensUrlsConf.screens)
+    console.log(myscreensUrlsConf.screens)*/
 
     const fullPath = route.fullPath
     let prefixRouteNameForLeadGen = ''
 
     if(fullPath.includes("leadgen")) prefixRouteNameForLeadGen = 'leadgen_'
 
-    router.push({name : 'Home'})*/
-
-    /*switch (myscreensUrlsConf.screens) {
+    switch (myscreensUrlsConf.screens) {
 
         case 'screens_list':
             router.push({ name: prefixRouteNameForLeadGen + 'screen_list', params : {...route.params}, query : {...route.query, active_tab : 'screens_list'}});
@@ -61,7 +61,7 @@ const changeRoute = () => {
             break;
         default:
             break;
-    } */
+    }
 
 }
 
@@ -80,13 +80,6 @@ watch(width, () => {
     }
 });
 
-
-
-
-const myscreensUrlsConf = reactive({
-    tabs: 'screens',
-    screens: 'screens_list'
-})
 
 provide('myscreensUrlsConf', myscreensUrlsConf);
 
@@ -116,6 +109,7 @@ provide('screen_to_update', screen_to_update)
 
 
 const handleEdit = (value, type) => {
+    console.log('atooooooooo')
     myscreensUrlsConf[type] = `${type}_form`;
 
     // if (type == 'screens') {
@@ -167,7 +161,7 @@ const loadAdvantages = async () => {
 
 
 
-const routeParameters = async (conf) => {
+/*const routeParameters = async (conf) => {
     router.push({ name: route.name, params: { ...route.params, tab: conf.tabs, sub_tab: conf[conf.tabs] } });
 }
 
@@ -180,12 +174,12 @@ const params = computed(() => route.params);
 watch(params, () => {
     myscreensUrlsConf.tabs = route.params.tab;
     myscreensUrlsConf[myscreensUrlsConf.tabs] = route.params.sub_tab;
-})
+})*/
 
 onBeforeMount(async () => {
-    myscreensUrlsConf.tabs = (route.params.tab !== '') ? route.params.tab : 'screens';
+    /*myscreensUrlsConf.tabs = (route.params.tab !== '') ? route.params.tab : 'screens';
     myscreensUrlsConf[myscreensUrlsConf.tabs] = (route.params.sub_tab !== '') ? route.params.sub_tab : 'screens_list';
-    await routeParameters(myscreensUrlsConf)
+    await routeParameters(myscreensUrlsConf)*/
 
     if (width.value < 800) {
         position.value = 'top'
