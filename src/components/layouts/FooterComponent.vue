@@ -1,5 +1,5 @@
 <template>
-  <footer>
+  <footer style="position: relative">
     <div class="container footer__container w-full m-0">
       <div class="logo__container">
         <div v-if="appStore.account && appStore.account.logo && !isFeedback && !isSignUp" class="footer-logo"
@@ -171,7 +171,7 @@ footer {
   background-color: var(--color-bgp);
   color: #fff;
   padding: 1.15rem 3rem;
-  margin-top: 105px;
+  margin-top: 111px;
 }
 
 .copyright {

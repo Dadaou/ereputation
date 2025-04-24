@@ -42,68 +42,69 @@
               <span class="plan-name mr-2">{{ planInfo.planName }}</span>
               <a href="https://linkystar.com/pricing" title="change plan"><i class="uil uil-edit change-plan-icon"></i></a>
             </div>
-            <ul v-if="planInfo && planInfo.planName == 'Lead-Gen'">
-              <AdvantageList text="Unified QR Codes Hub" />
-              <ul class="sub-list-price no-icon mb-4">
-                <li>High Definition</li>
-                <li>Customizable</li>
-              </ul>
-
-              <AdvantageList text="Branded Mobile Website, 5 sections" />
-              <ul class="sub-list-price no-icon mb-4">
-                <li>MENUS</li>
-                <li>INFOS</li>
-                <li>REVIEWS</li>
-                <li>OFFERS</li>
-                <li>FOLLOW US</li>
-              </ul>
-
-              <AdvantageList text="Offers Program Platform" />
-              <ul class="sub-list-price no-icon mb-4">
-                <li>Partners Management</li>
-                <li>Digital Ticketing</li>
-                <li>Automated Emailing</li>
-                <li>Analytics</li>
-                <li>Lead Generation</li>
-              </ul>
-            </ul>
-            <ul v-else>
-              <AdvantageList text="Unified QR Codes Hub" />
-              <ul className="sub-list-price no-icon mb-4">
-                <li>High Definition</li>
-                <li>Customizable</li>
-              </ul>
-              <AdvantageList text="Branded Mobile Website, 5 sections" />
-              <ul className="sub-list-price no-icon mb-4">
-                <li>MENUS</li>
-                <li>INFOS</li>
-                <li>REVIEWS</li>
-                <li>OFFERS</li>
-                <li>FOLLOW US</li>
-              </ul>
-              <AdvantageList text="Offers Program Platform" />
-              <ul className="sub-list-price no-icon mb-4">
-                <li>Partners Management</li>
-                <li>Digital Ticketing</li>
-                <li>Automated Emailing</li>
-                <li>Analytics</li>
-                <li>Lead Generation</li>
-              </ul>
-              <div v-if="planInfo.planNamePrefix === 'All_inclusive'">
-                <AdvantageList text="Review Analysis" />
-                <ul className="sub-list-price no-icon mb-4">
-                  <li>Internal Survey per Category</li>
-                  <li>1 source </li>
-                  <li>Filters (weather, event)</li>
-                  <li>1 hashtag</li>
+            <div class="ul-container">
+              <ul v-if="planInfo && planInfo.planName == 'Lead-Gen'">
+                <AdvantageList text="Unified QR Codes Hub" />
+                <ul class="sub-list-price no-icon mb-4">
+                  <li>High Definition</li>
+                  <li>Customizable</li>
                 </ul>
-                <AdvantageList text="Competitor Monitoring" />
-                <ul className="sub-list-price no-icon mb-4">
-                  <li>1 competitor</li>
+
+                <AdvantageList text="Branded Mobile Website, 5 sections" />
+                <ul class="sub-list-price no-icon mb-4">
+                  <li>MENUS</li>
+                  <li>INFOS</li>
+                  <li>REVIEWS</li>
+                  <li>OFFERS</li>
+                  <li>FOLLOW US</li>
                 </ul>
+
+                <AdvantageList text="Offers Program Platform" />
+                <ul class="sub-list-price no-icon mb-4">
+                  <li>Partners Management</li>
+                  <li>Digital Ticketing</li>
+                  <li>Automated Emailing</li>
+                  <li>Analytics</li>
+                  <li>Lead Generation</li>
+                </ul>
+              </ul>
+              <ul v-else>
+                <AdvantageList text="Unified QR Codes Hub" />
+                <ul className="sub-list-price no-icon mb-4">
+                  <li>High Definition</li>
+                  <li>Customizable</li>
+                </ul>
+                <AdvantageList text="Branded Mobile Website, 5 sections" />
+                <ul className="sub-list-price no-icon mb-4">
+                  <li>MENUS</li>
+                  <li>INFOS</li>
+                  <li>REVIEWS</li>
+                  <li>OFFERS</li>
+                  <li>FOLLOW US</li>
+                </ul>
+                <AdvantageList text="Offers Program Platform" />
+                <ul className="sub-list-price no-icon mb-4">
+                  <li>Partners Management</li>
+                  <li>Digital Ticketing</li>
+                  <li>Automated Emailing</li>
+                  <li>Analytics</li>
+                  <li>Lead Generation</li>
+                </ul>
+                <div v-if="planInfo.planNamePrefix === 'All_inclusive'">
+                  <AdvantageList text="Review Analysis" />
+                  <ul className="sub-list-price no-icon mb-4">
+                    <li>Internal Survey per Category</li>
+                    <li>1 source </li>
+                    <li>Filters (weather, event)</li>
+                    <li>1 hashtag</li>
+                  </ul>
+                  <AdvantageList text="Competitor Monitoring" />
+                  <ul className="sub-list-price no-icon mb-4">
+                    <li>1 competitor</li>
+                  </ul>
+              </div>
+              </ul>
             </div>
-            </ul>
-
           </div>
           <form class="form-group" @submit.prevent="submitForm">
             <p>Already have an account? Click the link below to access your dashboard:<a href="/sign-in"
@@ -961,11 +962,22 @@ input, select {
 
 @media screen and (max-width: 540px) {
   .caddie {
-    left: 25px;
+    left: 70px;
+    top: 40px; 
+    width: 170px; 
+    height: 150px; 
   }
 
   .form-group {
-    padding: 40px 15px;
+    padding: 10px 15px 0 15px;
+  }
+
+  .ul-container{
+    display: none;
+  }
+
+  .mb-5 {
+    margin-bottom: 0;
   }
 }
 

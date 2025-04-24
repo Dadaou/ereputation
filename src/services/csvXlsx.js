@@ -65,7 +65,8 @@ const exportContact = async (type, filename, api, headers) => {
 
       let tmp = {
         Id: item.id,
-        Name: `${item.firstname} ${item.lastname}`,
+        Firstname : item.firstname,
+        Lastname : item.lastname,
         Gender: gender,
         Email: item.email,
         Establishment: item.establishment_name,
