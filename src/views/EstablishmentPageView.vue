@@ -455,6 +455,14 @@ let chartConfig = reactive({
                 display: false,
             }
         },
+        elements: {
+            point: {
+                radius: 0,
+            },
+            line: {
+                borderWidth: 1,
+            }
+        }
     }
 });
 
@@ -526,6 +534,19 @@ const loadCategories = async (tag) => {
     // }
 }
 
+const addLineBorderColor = (data = null) => {
+    
+    if (!data?.datasets) return data;
+
+    return {
+        ...data,
+        datasets: data.datasets.map(dataset => ({
+            ...dataset,
+            borderColor: dataset.backgroundColor
+        }))
+    }
+}
+
 const loadDatasets = async () => {
 
     semesterChartLoading.value = true
@@ -540,7 +561,8 @@ const loadDatasets = async () => {
         const tags = competitorInfo ? [companyId.value, competitorInfo.tag] : [companyId.value, ...establishment.value['competitors'].map(c => c.tag)]
         const website = (selectedWebsites.value == 'App (Private)') ? selectedWebsites.value : selectedWebsites.value.toLowerCase()
         let datas = await chartsStore.loadData(tags, selectedTimePeriod.value, moment(sDate).format('YYYY-M-DD'), moment(eDate).format('YYYY-M-DD'), website)
-        chartData.value = formatSixMonthsChartData(datas);
+        chartData.value = formatSixMonthsChartData(datas)
+        chartData.value = addLineBorderColor(chartData.value)
         semesterChartLoading.value = false
     }
 }
