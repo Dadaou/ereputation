@@ -26,10 +26,9 @@
                     <el-option v-for="item in sources" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
 
-
                 <el-select v-model="staffFilter" multiple size="large" class="space" placeholder="All Staffs">
                     <el-option label="All Staffs" :value="''" @click="handleStaffDropdown('')"
-                        :disabled="staffFilter.length > 1 && !staffFilter.includes('')" />
+                        :disabled="staffFilter?.length > 1 && !staffFilter?.includes('')" />
                     <el-option v-for="item in staffs" :key="item.id" :label="item.name" :value="item.id"
                         @click="handleStaffDropdown('other')" />
                 </el-select>
@@ -37,7 +36,7 @@
 
                 <el-select v-model="unitsFilter" multiple size="large" class="space" placeholder="All Units">
                     <el-option label="All Units" :value="''" @click="handleUnitDropdown('')"
-                        :disabled="unitsFilter.length > 1 && !unitsFilter.includes('')" />
+                        :disabled="unitsFilter?.length > 1 && !unitsFilter?.includes('')" />
                     <el-option v-for="item in units" :key="item.id" :label="item.name" :value="item.id"
                         @click="handleUnitDropdown('other')" />
                 </el-select>
@@ -286,6 +285,9 @@ const ChartDocument = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/ChartDocument.vue")
 )
 
+const today = new Date();
+const oneMonthAgo = new Date();
+
 const nbrTotalVisit = ref(null);
 const nbrNotSubmitted = ref(null);
 const nbrSubmitted = ref(null);
@@ -315,6 +317,40 @@ const showChart=ref({
     country: true,
     document: true
 })
+
+const sources = ref([
+    { id: "gates", name: 'Gates' },
+    { id: "feedback", name: 'Feedback' },
+]);
+
+const sourceFilter = ref(null);
+provide('sourceFilter', sourceFilter)
+
+
+const route = useRoute();
+
+const selectedTimePeriod = ref(null);
+provide('timePeriods', selectedTimePeriod)
+const staffs = ref([]);
+provide('staffs', staffs)
+
+const staffFilter = ref([]);
+provide('staffFilter', staffFilter)
+
+const units = ref([])
+provide('units', units)
+const unitsFilter = ref([]);
+provide('unitsFilter', unitsFilter)
+
+const start_date = ref(oneMonthAgo.toISOString().split('T')[0]);
+provide('start_date', start_date)
+
+const end_date = ref(today.toISOString().split('T')[0]);
+provide('end_date', end_date)
+
+const establishment = ref([])
+provide('establishment', establishment)
+provide('establishments', userStore?.user?.customer?.establishments)
 
 const displayChart = (_ch)=>{
     if (_ch == 'submission') {
@@ -418,48 +454,10 @@ const closeModal = () => {
     
 }
 const setExternal = (_isExternal) => {
-  
     isExternal.value = _isExternal;
 }
 
-const sources = ref([
-    { id: "gates", name: 'Gates' },
-    { id: "feedback", name: 'Feedback' },
-]);
-
-const sourceFilter = ref(null);
-provide('sourceFilter', sourceFilter)
-
-
-const route = useRoute();
-
-const selectedTimePeriod = ref(null);
-provide('timePeriods', selectedTimePeriod)
-
-const today = new Date();
-const oneMonthAgo = new Date();
 oneMonthAgo.setMonth(today.getMonth() - 1);
-
-const staffs = ref([]);
-provide('staffs', staffs)
-
-const staffFilter = ref(null);
-provide('staffFilter', staffFilter)
-
-const units = ref([])
-provide('units', units)
-const unitsFilter = ref(null);
-provide('unitsFilter', unitsFilter)
-
-const start_date = ref(oneMonthAgo.toISOString().split('T')[0]);
-provide('start_date', start_date)
-
-const end_date = ref(today.toISOString().split('T')[0]);
-provide('end_date', end_date)
-
-const establishment = ref([])
-provide('establishment', establishment)
-provide('establishments', userStore.user.customer.establishments)
 
 const handleEstablishmentDropdown = (type) => {
     const filters = type == 'other' ? establishment.value.filter(name => name != 'all') : ['all']

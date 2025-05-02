@@ -91,13 +91,10 @@ const isActiveLeadgen = ref(true);
 
 const handleToggleErep = () => {
     router.push({ name: 'EstablishmentList', params: { tag: customerTag.value } })
-        .catch(err => console.error(err));
-
 }
 
 const handleToggleLeadgen = () => {
     router.push({ name: 'Analytic', params: { tag: customerTag.value } })
-        .catch(err => console.error(err));
 }
 </script>
 <style scoped>
