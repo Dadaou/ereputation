@@ -229,7 +229,7 @@
 </template>
 
 <script setup>
-import { ref, provide, onBeforeMount,nextTick } from 'vue'
+import { ref, provide, onBeforeMount } from 'vue'
 import { Icon } from '@iconify/vue';
 import { defineAsyncComponent, watch } from 'vue';
 import { ElOption, ElSelect, ElDatePicker,ElMessage,
@@ -285,9 +285,6 @@ const ChartDocument = defineAsyncComponent(() =>
     import("@Components/ChartStatistique/ChartDocument.vue")
 )
 
-const today = new Date();
-const oneMonthAgo = new Date();
-
 const nbrTotalVisit = ref(null);
 const nbrNotSubmitted = ref(null);
 const nbrSubmitted = ref(null);
@@ -342,15 +339,16 @@ provide('units', units)
 const unitsFilter = ref([]);
 provide('unitsFilter', unitsFilter)
 
-const start_date = ref(oneMonthAgo.toISOString().split('T')[0]);
+const start_date = ref('');
 provide('start_date', start_date)
 
-const end_date = ref(today.toISOString().split('T')[0]);
+const end_date = ref('');
 provide('end_date', end_date)
 
 const establishment = ref([])
 provide('establishment', establishment)
 provide('establishments', userStore?.user?.customer?.establishments)
+
 
 const displayChart = (_ch)=>{
     if (_ch == 'submission') {
@@ -456,8 +454,6 @@ const closeModal = () => {
 const setExternal = (_isExternal) => {
     isExternal.value = _isExternal;
 }
-
-oneMonthAgo.setMonth(today.getMonth() - 1);
 
 const handleEstablishmentDropdown = (type) => {
     const filters = type == 'other' ? establishment.value.filter(name => name != 'all') : ['all']
@@ -582,6 +578,13 @@ const loadUnits = async () => {
 
 
 onBeforeMount(async () => {
+    const today = new Date();
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(today.getMonth() - 1);
+
+    start_date.value = oneMonthAgo.toISOString().split('T')[0];
+    end_date.value = today.toISOString().split('T')[0];
+
     await totalVisit(selectedTimePeriod.value);
     await totalNotSubmitted(selectedTimePeriod.value);
     await totalSubmitted(selectedTimePeriod.value);
