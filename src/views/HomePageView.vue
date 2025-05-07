@@ -89,8 +89,12 @@ const handleToggleErep = () => {
 }
 
 const handleToggleLeadgen = () => {
-    router.push({ name: 'Analytic', params: { tag: customerTag.value } })
-        .catch(err => console.error(err));
+
+    router.push({ name: 'LeadgenMyQrcode', params: { tag: customerTag.value } })
+
+    setTimeout(() => {
+        router.replace({ name: 'Analytic', params: { tag: customerTag.value } })
+    }, 10);
 }
 </script>
 

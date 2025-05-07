@@ -77,6 +77,9 @@ const show = computed(() => {
 });
 
 onMounted(async () => {
+
+    handleToggleLeadgen()
+
     dataLoading.value = true;
     if (userStore.user) {
         companiesStore.getEstablishments(customerTag.value).then((data) => {
@@ -94,8 +97,15 @@ const handleToggleErep = () => {
 }
 
 const handleToggleLeadgen = () => {
-    router.push({ name: 'Analytic', params: { tag: customerTag.value } })
+
+    router.push({ name: 'LeadgenMyQrcode', params: { tag: customerTag.value } })
+    setTimeout(() => {
+        router.replace({ name: 'Analytic', params: { tag: customerTag.value } })
+    }, 200);
 }
+
+
+
 </script>
 <style scoped>
 h1 {
