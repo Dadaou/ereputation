@@ -14,7 +14,7 @@
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
                         <span>*</span></label>
                     <el-select v-model="establishment" placeholder="Choose establishment" size="large" clearable
-                        filterable :disabled="isEdit">
+                     :disabled="isEdit">
                         <el-option v-for="item in establishments" :key="item.tag" :label="item.name"
                             :value="item.tag" />
                     </el-select>

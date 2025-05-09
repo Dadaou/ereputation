@@ -12,7 +12,7 @@
                 <div>
                     <label for="advantage"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Advantage *</label>
-                    <el-select v-model="advantage" placeholder="Choose an advantage" size="large" filterable remote
+                    <el-select v-model="advantage" placeholder="Choose an advantage" size="large" remote
                         reserve-keyword remote-show-suffix :loading="loading" :remote-method="searchAdvantage" :disabled="disableInput">
                         <el-option v-for="item in advantageOptions" :key="item.id" :label="item.name"
                             :value="`/api/advantages/${item.id}`">
@@ -26,7 +26,7 @@
                     <label for="partnership"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Partnership
                         <span>*</span></label>
-                    <el-select v-model="partnership" placeholder="Choose a partnership" size="large" filterable remote
+                    <el-select v-model="partnership" placeholder="Choose a partnership" size="large" remote
                         reserve-keyword remote-show-suffix :loading="loading2" :remote-method="searchPartnership" :disabled="disableInput">
                         <el-option v-for="item in partnershipOptions" :key="item.id" :label="item.name"
                             :value="item.id">
@@ -123,7 +123,6 @@ const props = defineProps({
         type: Object,
         default: {}
     }
-
 })
 
 const partner = ref(import.meta.env.VITE_PARTNER_CODE);
@@ -163,6 +162,13 @@ const formWidth = computed(() => {
 
     return `${85}%`;
 });
+
+watch(activePartnershipTab, (newVal) => {
+  if(newVal !== 'partnership_form') {
+    resetForm()
+    other_advantages.value = []
+  }
+})
 
 watch(advantage, () => {
 
@@ -416,8 +422,6 @@ const updateExpirationDateAndLimit = async () => {
     showSpinner.value = false
     emit('update')
     activePartnershipTab.value = 'partnership_list'
-
-    console.log("response", response)
 }
 
 const submitEmail = async () => {

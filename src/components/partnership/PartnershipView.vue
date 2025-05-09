@@ -8,7 +8,7 @@
                         <PartnershipRequestComponent @update="() => reloadPartnershipsData()"/>
                     </el-tab-pane>
                     <el-tab-pane label="Request a new partnership" name="partnership_form">
-                        <PartnershipFormComponent @update="() => reloadPartnershipsData()" :dataToEdit="dataToEdit"/>
+                        <PartnershipFormComponent @update="() => reloadPartnershipsData()" :dataToEdit="dataToEdit" />
                     </el-tab-pane>
                 </el-tabs>
     </div>

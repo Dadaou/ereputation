@@ -30,7 +30,7 @@
                     <label for="first_name"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
                         <span>*</span></label>
-                    <el-select v-model="unit.category" placeholder="Choose category" size="large" filterable>
+                    <el-select v-model="unit.category" placeholder="Choose category" size="large" >
                         <el-option v-for="item in categories" :key="item.value" :label="item.label"
                             :value="item.value" />
                     </el-select>
@@ -39,7 +39,7 @@
                     <label for="countries"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
                         <span>*</span></label>
-                    <el-select v-model="unit.establishment" placeholder="Choose establishment" size="large" filterable>
+                    <el-select v-model="unit.establishment" placeholder="Choose establishment" size="large" >
                         <el-option v-for="item in userStore.user.customer.establishments" :key="item.id"
                             :label="item.name" :value="`/api/establishments/${item.id}`" />
                     </el-select>

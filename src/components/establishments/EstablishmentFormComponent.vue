@@ -63,7 +63,7 @@
                 <div>
                     <label for="country" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country
                         <span>*</span></label>
-                    <el-select v-model="data.country" placeholder="" size="large" filterable ref="selectCountry">
+                    <el-select v-model="data.country" placeholder="" size="large" ref="selectCountry">
                         <el-option v-for="(country, index) in competitor_countries" :key="index" :label="country.name"
                             :value="country.name" />
                     </el-select>
@@ -71,7 +71,7 @@
                 <div>
                     <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
                         <span>*</span></label>
-                    <el-select v-model="data.universe_id" placeholder="" size="large" filterable>
+                    <el-select v-model="data.universe_id" placeholder="" size="large" >
                         <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.id" />
                     </el-select>
                 </div>
@@ -96,7 +96,7 @@
 
                     <label for="language" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Language
                         <span>*</span></label>
-                    <el-select v-model="data.language" placeholder="" size="large" filterable ref="selectLanguage">
+                    <el-select v-model="data.language" placeholder="" size="large" ref="selectLanguage">
                         <el-option v-for="(language, index) in ['fr','en','es']" :key="index" :label="language"
                         :value="language" />
                     </el-select>

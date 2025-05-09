@@ -11,7 +11,7 @@
             </svg>
             Choose a Template
           </div>
-          <el-select v-model="templateId" filterable placeholder="choose template" size="large" class="test">
+          <el-select v-model="templateId" placeholder="choose template" size="large" class="test">
             <el-option v-for="(item, index) in templates" :key="index" :label="item.name" :value="item.id"
               @click="changeValue(item)" />
           </el-select>

@@ -96,9 +96,13 @@ const breadcrumbData = ref([]);
 
 watch(() => route.path, () => {
 
+  let title = route?.query?.title
+
+  if(route.name === 'Parameters') title = route.name
+
   breadcrumbData.value = [{
 
-      title : route?.query?.title,
+      title : title,
       path: `${route.path}`,
       isCurrent: true,
 

@@ -661,7 +661,7 @@ onMounted(async () => {
     .filters>* {
         flex-basis: 100%;
         margin-bottom: 8px;
-        width: 500px;
+        /*width: 500px;*/
         gap: 0.5rem;
         /* margin-left: 200px; */
     }

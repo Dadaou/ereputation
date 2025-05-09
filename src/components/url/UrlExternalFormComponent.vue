@@ -15,7 +15,7 @@
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
                             <span>*</span></label>
                         <el-select v-model="establishment" placeholder="Choose establishment" size="large"
-                            :disabled="IsValueOkay(competitor)" clearable filterable>
+                            :disabled="IsValueOkay(competitor)" clearable>
                             <el-option v-for="item in establishments" :key="item.tag" :label="item.name"
                                 :value="item.uri" />
                         </el-select>

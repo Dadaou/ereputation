@@ -16,12 +16,12 @@
                         <span>*</span></label>
 
                     <el-select v-if="type == 'edit'" v-model="establishment" placeholder="Choose establishment"
-                        size="large" filterable>
+                        size="large">
                         <el-option v-for="item in userStore.user.customer.establishments" :key="item.id"
                             :label="item.name" :value="`/api/establishments/${item.id}`" />
                     </el-select>
 
-                    <el-select v-else v-model="establishment" placeholder="Choose establishment" size="large" filterable
+                    <el-select v-else v-model="establishment" placeholder="Choose establishment" size="large" 
                         multiple>
                         <el-option v-for="item in userStore.user.customer.establishments" :key="item.id"
                             :label="item.name" :value="item.competitor_tag" />

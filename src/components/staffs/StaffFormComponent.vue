@@ -36,7 +36,7 @@
                     <label for="countries"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment
                         <span>*</span></label>
-                    <el-select v-model="establishment" placeholder="Choose establishment" size="large" filterable>
+                    <el-select v-model="establishment" placeholder="Choose establishment" size="large">
                         <el-option v-for="item in userStore.user.customer.establishments" :key="item.id"
                             :label="item.name" :value="`/api/establishments/${item.id}`" />
                     </el-select>
