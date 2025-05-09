@@ -1,5 +1,5 @@
 <template>
-    <div class="user__main__container">
+    <div>
         <el-tabs v-model="activeName" type="card" class="demo-tabs" @tab-change="changeRoute">
             <el-tab-pane label="Personal details" name="user">
                 <div class="flex flex-row justify-between">
@@ -128,7 +128,7 @@
                     </template>
                 </ModalComponent>
 
-                <div class="grid gap-6 mb-6 grid-cols-1 w-full">
+                <div>
                     <div class="personal__info w-full">
                         <div class="info__title">
                             Logo
@@ -735,21 +735,14 @@ input {
     border-radius: 0 0 0.44rem 0.44rem;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 500px) {
     .user__main__container {
-        width: 120%;
+        width: 131%;
     }
 
     .personal__info {
-        align-items: flex-start;
-        /* Aligner les éléments en haut de la colonne */
+        width: 200%;
     }
-}
-
-@media screen and (max-width: 500px) {
-    .user__main__container {
-        width: 200px;
-        min-width: 104% !important;
-    }
+    
 }
 </style>

@@ -14,7 +14,7 @@
         </div>
         <div
             class="flex flex-wrap gap-3 items-center justify-between px-3 py-2 border-t border-b dark:border-gray-600 mt-5">
-            <button @click="resetForm"
+            <button @click.stop="resetForm"
                 class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center justify-center text-white bg-gray-700 rounded-lg focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-900 hover:bg-gray-800">
                 Cancel
             </button>
@@ -107,9 +107,16 @@ const upload = async () => {
     }
 };
 
-const resetForm = () => {
-    previewImage.value = null;
+const resetForm = (e) => {
+    e.preventDefault();
+
+    if (!imgHasChanged.value || !previewImage.value) {
+        emit('close-modal');
+    }
+    else {
+        previewImage.value = null;
     imgHasChanged.value = false;
+    }
 };
 </script>
 

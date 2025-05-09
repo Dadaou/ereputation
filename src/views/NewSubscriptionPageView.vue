@@ -342,11 +342,10 @@ onMounted(() => {
 <style scoped>
 .links__header {
   display: flex;
-  align-items: center;
+  justify-content: flex-end;
 }
 
 .links__header .button__back {
-  margin-left: auto;
   background-color: var(--color-primary);
   color: white;
   font-weight: 500;
@@ -585,5 +584,17 @@ input {
   .account-summary {
     padding: 0 !important;
   }
+  
+  .subscription__container {
+    width: 85%;
+  }
 }
+
+
+@media screen and (max-width: 500px) {
+
+}
+
+
+
 </style>
