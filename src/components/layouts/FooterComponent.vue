@@ -54,7 +54,7 @@
           @click="handleBrandClick"><strong>Linkystar</strong></a> </p>
     </div>
   </footer>
-  <el-dialog v-model="dialogVisible" style="min-width: 400px; height: 670px; overflow-y: scroll;" center>
+  <el-dialog v-model="dialogVisible" style="min-width: 350px; height: 670px; overflow-y: scroll;" center>
     <div ref="shadowHost"></div>
   </el-dialog>
 </template>
