@@ -40,7 +40,7 @@
 
 
  <div class="item" style="height: 2px;">
-        <div class="item__left" style=" display: flex;flex-direction: row; justify-content: flex-start;align-items: center;width: 220px !important;">
+        <div class="item__left" style=" display: flex;flex-direction: row; justify-content: flex-start;align-items: center;width: 250px">
             <span class="item__title">{{ all_items.title }} : 
             
             </span>
@@ -63,7 +63,7 @@
                                 loadReviews(route.params.tag,option.page,option.limit,option.current, start_date, end_date,terms,establishments)
                             }" @prev="(option) => {
                                   loadReviews(route.params.tag,option.page,option.limit,option.current, start_date, end_date,terms,establishments)
-                            }" />
+                            }" class="pagination_top"/>
                         </div>
 
 
@@ -124,6 +124,7 @@ import CommentComponent from '@Components/utils/CommentComponent.vue';
 import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import { useAppStore } from "@Stores/app.js";
 import DashboardComponent from '@Components/utils/DashboardComponent.vue';
+import { onBeforeMount } from 'vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -281,7 +282,6 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, terms,
 
 
     if (response.status == 200) {
-
         console.log(response)
         reviews_loader.value = false;
         optionsReview.value.max = response.data['count'];
@@ -309,19 +309,32 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, terms,
      
 }
 
+const searchStaff = async (establishment_id, staffFirstName) => {
 
+    const establishment = userStore.user.customer.establishments.find((establishment) => establishment.id == establishment_id)
+    const oneYearAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 1))
+    const formattedDate = oneYearAgo.toISOString().split('T')[0];
+    
+    establishments.value = [establishment.id]
+    start_date.value = formattedDate
+    terms.value = staffFirstName
 
-onMounted(async () => {
+    await loadReviews(route.params.tag, optionsReview.value.page, optionsReview.value.rowLimit, optionsReview.value.current, start_date.value, end_date.value, terms.value, establishments.value)
 
-  
-        await Promise.all([
-            loadCategories(route.params.tag),
-           // loadReviews(route.params.tag,optionsReview.value.page,optionsReview.value.rowLimit,optionsReview.value.current,
-           //  start_date.value,end_date.value,terms.value,establishments.value)
-        ])
+}
 
-    reviews_loader.value=null;
+onBeforeMount(async () => {
 
+    await Promise.all([
+        loadCategories(route.params.tag),
+        // loadReviews(route.params.tag,optionsReview.value.page,optionsReview.value.rowLimit,optionsReview.value.current,
+        //  start_date.value,end_date.value,terms.value,establishments.value)
+    ])
+
+    if(route.query && route.query.establishment_id && route.query.staffFirstName) { 
+        searchStaff(route.query.establishment_id, route.query.staffFirstName)
+    }
+    
 });
 
 </script>
@@ -335,6 +348,7 @@ onMounted(async () => {
     flex-basis: 210px;
     padding: 25px;
     border-radius: 10px;
+    width: 100%;
 }
 
 .item__title {
@@ -717,6 +731,10 @@ onMounted(async () => {
         font-size: 11px;
         margin-left: -20px;
 
+    }
+
+    .pagination_top {
+        display: none;
     }
 }
 

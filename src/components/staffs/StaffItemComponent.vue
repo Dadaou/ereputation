@@ -58,8 +58,13 @@
             <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'">
             </BaseLegend>
             <div class="list__actions">
+
+                <button class="btn mr-2 reviews" @click="redirectToSearch(staff.establishment_id, staff.firstname)">
+                    <i class="uil uil-question-circle"></i> Am I mentioned? 
+                </button>
+
                 <button class="btn mr-2 reviews" @click="showReview(tag, staff.tag, $route.params.id, staff)">
-                    <i class="uil uil-comment-alt-lines"></i> Reviews
+                    <i class="uil uil-comment-alt-lines"></i> QR code Reviews
                 </button>
             </div>
         </div>
@@ -148,6 +153,18 @@ const staffRatingDataset = (periods, type) => {
         ],
     };
 };
+
+const redirectToSearch = (establishment_id, firstName) => {
+
+    router.push({
+        name: 'CustomerSearchReview',
+        params: {...router.params}, 
+        query : {
+            establishment_id: establishment_id,
+            staffFirstName: firstName
+        }
+    })
+}
 
 const calculateAverageRating = (data) => {
     const starRatings = [1, 2, 3, 4, 5];
