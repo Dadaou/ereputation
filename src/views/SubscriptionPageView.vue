@@ -961,7 +961,11 @@ input, select {
 }
 
 @media screen and (max-width: 540px) {
+
   .caddie {
+    display: none;
+  }
+  /*.caddie {
     left: 70px;
     top: 40px; 
     width: 170px; 
@@ -978,7 +982,7 @@ input, select {
 
   .mb-5 {
     margin-bottom: 0;
-  }
+  }*/
 }
 
 @media screen and (min-width: 800px) and  (max-width: 912px) {
