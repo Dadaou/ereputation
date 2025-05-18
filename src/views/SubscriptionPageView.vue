@@ -961,12 +961,12 @@ select {
 }
 
 .step.completed .circle {
-  background-color: #4caf50;
+  background-color: var(--color-bgp);
   /* green */
 }
 
 .step.active .circle {
-  background-color: #2196f3;
+  background-color: var(--color-danger);
   /* blue */
 }
 
