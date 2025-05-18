@@ -22,6 +22,7 @@
         </div>
       </div>
     </div>-->
+
     <el-tabs v-model="activeName" type="card" class="demo-tabs subscription-tabs next-container">
 
       <el-tab-pane name="user-info">
@@ -31,164 +32,191 @@
             
           </div>
         </div>-->
+
+        <div class="stepper">
+          <div class="step active">
+            <div class="circle">1</div>
+            <div class="label">{{ $t("subscription.stepper.my_account") }}</div>
+          </div>
+          <div class="line"></div>
+          <div class="step">
+            <div class="circle">2</div>
+            <div class="label">{{ $t("subscription.stepper.payment") }} <span class="stripe-note">{{ $t("subscription.stepper.payment_note") }}</span></div>
+          </div>
+          <div class="line"></div>
+          <div class="step">
+            <div class="circle">3</div>
+            <div class="label">{{ $t("subscription.stepper.get_started") }}</div>
+          </div>
+        </div>
+
         <div class="tab__pane-body w-full" style="position: relative; width: 100%;">
 
           <div>
-              <img src="../assets/images/logo/caddie.png" alt="caddie" class="caddie">
+            <img src="../assets/images/logo/caddie.png" alt="caddie" class="caddie">
           </div>
 
           <div class="form-group features-list w-50">
             <div v-if="planInfo && planInfo.planName" class="d-inline-flex align-center justify-start mb-5">
               <span class="plan-name mr-2">{{ planInfo.planName }}</span>
-              <a href="https://linkystar.com/pricing" title="change plan"><i class="uil uil-edit change-plan-icon"></i></a>
+              <a href="https://linkystar.com/pricing" title="change plan"><i
+                  class="uil uil-edit change-plan-icon"></i></a>
             </div>
             <div class="ul-container">
               <ul v-if="planInfo && planInfo.planName == 'Lead-Gen'">
-                <AdvantageList text="Unified QR Codes Hub" />
+                <AdvantageList :text="$t('subscription.features.qr_codes.title')" />
                 <ul class="sub-list-price no-icon mb-4">
-                  <li>High Definition</li>
-                  <li>Customizable</li>
+                  <li>{{ $t('subscription.features.qr_codes.hd') }}</li>
+                  <li>{{ $t('subscription.features.qr_codes.customizable') }}</li>
                 </ul>
 
-                <AdvantageList text="Branded Mobile Website, 5 sections" />
+                <AdvantageList :text="$t('subscription.features.mobile_website.title')" />
                 <ul class="sub-list-price no-icon mb-4">
-                  <li>MENUS</li>
-                  <li>INFOS</li>
-                  <li>REVIEWS</li>
-                  <li>OFFERS</li>
-                  <li>FOLLOW US</li>
+                  <li>{{ $t('subscription.features.mobile_website.menus') }}</li>
+                  <li>{{ $t('subscription.features.mobile_website.infos') }}</li>
+                  <li>{{ $t('subscription.features.mobile_website.reviews') }}</li>
+                  <li>{{ $t('subscription.features.mobile_website.offers') }}</li>
+                  <li>{{ $t('subscription.features.mobile_website.follow_us') }}</li>
                 </ul>
 
-                <AdvantageList text="Offers Program Platform" />
+                <AdvantageList :text="$t('subscription.features.offers_program.title')" />
                 <ul class="sub-list-price no-icon mb-4">
-                  <li>Partners Management</li>
-                  <li>Digital Ticketing</li>
-                  <li>Automated Emailing</li>
-                  <li>Analytics</li>
-                  <li>Lead Generation</li>
+                  <li>{{ $t('subscription.features.offers_program.partners') }}</li>
+                  <li>{{ $t('subscription.features.offers_program.ticketing') }}</li>
+                  <li>{{ $t('subscription.features.offers_program.emailing') }}</li>
+                  <li>{{ $t('subscription.features.offers_program.analytics') }}</li>
+                  <li>{{ $t('subscription.features.offers_program.lead_gen') }}</li>
                 </ul>
               </ul>
               <ul v-else>
-                <AdvantageList text="Unified QR Codes Hub" />
+                <AdvantageList :text="$t('subscription.features.qr_codes.title')" />
                 <ul className="sub-list-price no-icon mb-4">
-                  <li>High Definition</li>
-                  <li>Customizable</li>
+                  <li>{{ $t('subscription.features.qr_codes.hd') }}</li>
+                  <li>{{ $t('subscription.features.qr_codes.customizable') }}</li>
                 </ul>
-                <AdvantageList text="Branded Mobile Website, 5 sections" />
+                <AdvantageList :text="$t('subscription.features.mobile_website.title')" />
                 <ul className="sub-list-price no-icon mb-4">
-                  <li>MENUS</li>
-                  <li>INFOS</li>
-                  <li>REVIEWS</li>
-                  <li>OFFERS</li>
-                  <li>FOLLOW US</li>
+                  <li>{{ $t('subscription.features.mobile_website.menus') }}</li>
+                  <li>{{ $t('subscription.features.mobile_website.infos') }}</li>
+                  <li>{{ $t('subscription.features.mobile_website.reviews') }}</li>
+                  <li>{{ $t('subscription.features.mobile_website.offers') }}</li>
+                  <li>{{ $t('subscription.features.mobile_website.follow_us') }}</li>
                 </ul>
-                <AdvantageList text="Offers Program Platform" />
+                <AdvantageList :text="$t('subscription.features.offers_program.title')" />
                 <ul className="sub-list-price no-icon mb-4">
-                  <li>Partners Management</li>
-                  <li>Digital Ticketing</li>
-                  <li>Automated Emailing</li>
-                  <li>Analytics</li>
-                  <li>Lead Generation</li>
+                  <li>{{ $t('subscription.features.offers_program.partners') }}</li>
+                  <li>{{ $t('subscription.features.offers_program.ticketing') }}</li>
+                  <li>{{ $t('subscription.features.offers_program.emailing') }}</li>
+                  <li>{{ $t('subscription.features.offers_program.analytics') }}</li>
+                  <li>{{ $t('subscription.features.offers_program.lead_gen') }}</li>
                 </ul>
                 <div v-if="planInfo.planNamePrefix === 'All_inclusive'">
-                  <AdvantageList text="Review Analysis" />
+                  <AdvantageList :text="$t('subscription.features.review_analysis.title')" />
                   <ul className="sub-list-price no-icon mb-4">
-                    <li>Internal Survey per Category</li>
-                    <li>1 source </li>
-                    <li>Filters (weather, event)</li>
-                    <li>1 hashtag</li>
+                    <li>{{ $t('subscription.features.review_analysis.survey') }}</li>
+                    <li>{{ $t('subscription.features.review_analysis.source') }}</li>
+                    <li>{{ $t('subscription.features.review_analysis.filters') }}</li>
+                    <li>{{ $t('subscription.features.review_analysis.hashtag') }}</li>
                   </ul>
-                  <AdvantageList text="Competitor Monitoring" />
+                  <AdvantageList :text="$t('subscription.features.competitor.title')" />
                   <ul className="sub-list-price no-icon mb-4">
-                    <li>1 competitor</li>
+                    <li>{{ $t('subscription.features.competitor.count') }}</li>
                   </ul>
-              </div>
+                </div>
               </ul>
             </div>
           </div>
           <form class="form-group" @submit.prevent="submitForm">
-            <p>Already have an account? Click the link below to access your dashboard:<a href="/sign-in"
-                class="register-link mx-3">Login</a></p>
-            <p class="my-4">Please fill out the form to create your account</p>
+            <p>{{ $t('subscription.already_subscribed') }}<a href="/sign-in" class="register-link mx-3">{{
+              $t('subscription.login_link') }}</a></p>
+            <p class="my-4">{{ $t('subscription.please_fill_form') }}</p>
             <!-- <p class="mb-5">User informations</p> -->
             <div class="w-full">
-              <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First
-                name <span>*</span></label>
+              <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                $t('subscription.first_name') }}
+                <span>*</span></label>
               <input v-model="planInfo.uFName" type="text" id="first_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
             </div>
             <div class="w-full">
-              <label for="ulast_name" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Last
-                name <span>*</span></label>
+              <label for="ulast_name" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">{{
+                $t('subscription.last_name') }}
+                <span>*</span></label>
               <input v-model="planInfo.uLName" type="text" id="ulast_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
             </div>
             <div class="w-full">
-              <label for="email" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Email
+              <label for="email" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">{{
+                $t('subscription.email') }}
                 <span>*</span></label>
               <input v-model="planInfo.uEmail" type="email" id="email"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
             </div>
             <div class="w-full">
-              <label for="password" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Password
+              <label for="password" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">{{
+                $t('subscription.password') }}
                 <span>*</span></label>
-              <div style= "position: relative; display: flex; align-items: center;">
+              <div style="position: relative; display: flex; align-items: center;">
                 <input v-model="planInfo.uPassword" :type="passwordInputType" id="password"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                 <el-icon :size="15" class="password-icon" @click.stop="togglePasswordVisibility">
-                    <Hide v-if="!showPassword" />
-                    <View v-else/>
+                  <Hide v-if="!showPassword" />
+                  <View v-else />
                 </el-icon>
               </div>
             </div>
             <div class="w-full">
-              <label for="cpassword" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Confirm
-                password
+              <label for="cpassword" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">{{
+                $t('subscription.confirm_password') }}
                 <span>*</span></label>
-              <div style= "position: relative; display: flex; align-items: center;">
+              <div style="position: relative; display: flex; align-items: center;">
                 <input v-model="planInfo.uCPassword" :type="passwordConfirmInputType" id="cpassword"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                 <el-icon :size="15" class="password-icon" @click.stop="togglePasswordConfirmVisibility">
                   <Hide v-if="!showConfirmPassword" />
-                  <View v-else/>
+                  <View v-else />
                 </el-icon>
               </div>
-            </div><br/>
+            </div><br />
             <!-- <p class="mb-5 mt-8">Company informations</p> -->
             <div class="w-full">
-              <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company name <span>*</span></label>
+              <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                $t('subscription.company_name') }} <span>*</span></label>
               <input v-model="planInfo.cName" type="text" id="company_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
             </div>
             <div class="w-full">
-              <label for="address" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Address
+              <label for="address" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">{{
+                $t('subscription.address') }}
                 <span>*</span></label>
               <input v-model="planInfo.cAdress" type="text" id="address"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
             </div>
             <div class="w-full">
-              <label for="saddress" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Secondary
-                address</label>
+              <label for="saddress" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">{{
+                $t('subscription.secondary_address') }}</label>
               <input v-model="planInfo.cSAdress" type="text" id="saddress"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
             </div>
             <div class="w-full">
               <div class="grid gap-6 md:grid-cols-4">
                 <div>
-                  <label for="zip" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">ZIP Code
+                  <label for="zip" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">{{
+                    $t('subscription.zip_code') }}
                     <span>*</span></label>
                   <input v-model="planInfo.cZip" type="text" id="zip"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                 </div>
                 <div>
-                  <label for="city" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">City
+                  <label for="city" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">{{
+                    $t('subscription.city') }}
                     <span>*</span></label>
                   <input v-model="planInfo.cCity" type="text" id="city"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                 </div>
                 <div class="md:col-span-2 mb-0">
-                  <label for="country"
-                    class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">Country</label>
+                  <label for="country" class="block mb-2 mt-6 text-sm font-medium text-gray-900 dark:text-white">{{
+                    $t('subscription.country') }}</label>
                   <select v-model="planInfo.cCountry" id="country"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" required>
                     <option v-for="(country, index) in countries" :key="index">{{ country.name }}</option>
@@ -196,14 +224,12 @@
                 </div>
               </div>
               <div class="w-full inline-flex items-center gap-2 mt-5">
-                <input v-model="planInfo.acceptConditions" type="checkbox" id="coding" name="interest" value="coding"/>
-                <label for="coding">I read and accept <span class="cgv-link" @click.stop="showCgv">terms and conditions</span>
-                  of
-                  service.</label>
+                <input v-model="planInfo.acceptConditions" type="checkbox" id="coding" name="interest" value="coding" />
+                <label for="coding">{{ $t('subscription.terms_conditions') }}</label>
               </div>
-            </div><br/>
+            </div><br />
 
-            <p v-show="isTermAccepted" style="color: #FF4433; font-size: 12px;">Please accept the terms and conditions of sale to continue</p>
+            <p v-show="isTermAccepted" style="color: #FF4433; font-size: 12px;">{{ $t('subscription.terms_error') }}</p>
             <div class="cgv-container" v-show="isCgvVisible"></div>
 
             <div class="d-inline-flex justify-content-between align-items-center mt-5 mb-5">
@@ -211,14 +237,15 @@
               @click="activeName = 'plan'">Previous</button> -->
               <button type="submit" class="btn subscription-button" :class="showSpinner == true ? 'isLoaded' : ''"
                 style="margin-top: 12px; border-radius: 2px;">
-                <SpinnerComponent v-if="showSpinner == true" :color="'red'" /> <span v-else>Create my account</span>
+                <SpinnerComponent v-if="showSpinner == true" :color="'red'" /> <span v-else>{{
+                  $t('subscription.create_account') }}</span>
               </button>
             </div>
           </form>
         </div>
       </el-tab-pane>
 
-     
+
     </el-tabs>
     <call-us-selector phonesystem-url="https://m-unit.on3cx.fr:5001" :party="chatID"></call-us-selector>
   </div>
@@ -245,7 +272,7 @@ import { current } from '@Services/languages.js';
 import { useI18n } from "vue-i18n";
 import { tsvFormatBody } from 'd3';
 import prices from '@/prices.json';
-import {View, Hide} from '@element-plus/icons-vue'
+import { View, Hide } from '@element-plus/icons-vue'
 
 
 const SpinnerComponent = defineAsyncComponent(() =>
@@ -257,11 +284,11 @@ const LanguageMenuDropdown = defineAsyncComponent(
 )
 
 const NavbarComponent = defineAsyncComponent(() =>
-    import('@Components/layouts/NavbarComponent.vue')
+  import('@Components/layouts/NavbarComponent.vue')
 )
 
 const FooterComponent = defineAsyncComponent(() =>
-    import('@Components/layouts/FooterComponent.vue')
+  import('@Components/layouts/FooterComponent.vue')
 )
 
 const AdvantageList = defineAsyncComponent(() => import("@Components/subscription/AdvantageList.vue"))
@@ -272,7 +299,7 @@ const planInfo = ref({});
 const showSpinner = ref(false)
 const userCreated = ref(false)
 const app_url = inject('app_url');
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 const isCgvVisible = ref(false)
 const isTermAccepted = ref(false)
 
@@ -295,7 +322,7 @@ const togglePasswordConfirmVisibility = (e) => {
 
 const submitForm = async () => {
 
-  if(!planInfo.value.acceptConditions) {
+  if (!planInfo.value.acceptConditions) {
 
     isTermAccepted.value = true
     return
@@ -357,7 +384,7 @@ const submitCompanyForm = async () => {
 const showPostErrorMsg = () => {
   ElMessage({
     message: h('p', null, [
-      h('h4', { style: "color: #f75842; font-weight: bold;" }, 'Saving error(s):'),
+      h('h4', { style: "color: #f75842; font-weight: bold;" }, t('subscription.saving_errors')),
       h('span', { style: "font-size: 13px;" }, postErrorMsg.value),
     ]),
   })
@@ -394,7 +421,7 @@ provide('checkout_to_update', checkout_to_update);
 
 const router = useRouter();
 
-const getPlan = async() => {
+const getPlan = async () => {
 
   const response = await new Promise((resolve) => {
     services.get_Record(`plan/list`, (response) => {
@@ -405,8 +432,8 @@ const getPlan = async() => {
     }, false, true)
   })
 
-  if(response.status === 200 && response.data) {
-     planList.value = response.data
+  if (response.status === 200 && response.data) {
+    planList.value = response.data
   }
 
 }
@@ -421,7 +448,7 @@ const setPlan = (tag, name) => {
 
   const plan = filterPlan(tag)
 
-  if(plan.length !== 0) {
+  if (plan.length !== 0) {
 
     planInfo.value['planName'] = plan[0].name
     planInfo.value['plan'] = { tag: plan[0].tag }
@@ -429,9 +456,9 @@ const setPlan = (tag, name) => {
 
   }
 
-  else  {
+  else {
     ElMessage({
-      message: 'Plan tag not found',
+      message: t('subscription.plan_not_found'),
       type: 'warning',
     });
   }
@@ -465,7 +492,7 @@ const createAccount = async () => {
     return response;
   }
 
-  else if(response.status === 403) {
+  else if (response.status === 403) {
     ElMessage({
       message: response.data,
       type: 'warning',
@@ -481,16 +508,16 @@ const redirectToPaymentPage = () => {
   if (plan[0]?.price_code !== null) {
 
     router.push({
-      name : 'PaymentPage',
-      query : {
-        code : plan[0].price_code,
-        email : planInfo.value.uEmail
+      name: 'PaymentPage',
+      query: {
+        code: plan[0].price_code,
+        email: planInfo.value.uEmail
       }
     })
 
   } else {
     ElMessage({
-      message: 'No price code found',
+      message: t('subscription.no_price_code'),
       type: 'warning',
     });
   }
@@ -516,16 +543,16 @@ const createSubscription = async (app_url, customer) => {
 
   if (response.status == 201 && response.data) {
 
-      localStorage.setItem('subscriptionId', response.data.id)
-      localStorage.setItem('uemail', planInfo.value.uEmail)
-      localStorage.setItem('upassword', planInfo.value.uPassword)
+    localStorage.setItem('subscriptionId', response.data.id)
+    localStorage.setItem('uemail', planInfo.value.uEmail)
+    localStorage.setItem('upassword', planInfo.value.uPassword)
 
   }
   else {
     ElMessage({
       message: h('p', null, [
-        h('h4', { style: "color: #f75842; font-weight: bold;" }, 'Information:'),
-        h('span', { style: "font-size: 13px;" }, "An error was occured!"),
+        h('h4', { style: "color: #f75842; font-weight: bold;" }, t('subscription.saving_errors')),
+        h('span', { style: "font-size: 13px;" }, t('subscription.error_occurred')),
       ]),
     })
   }
@@ -541,38 +568,36 @@ const route = useRoute();
 
 onBeforeMount(async () => {
 
-    const { c, n } = route.query
+  const { c, n } = route.query
 
-    await getPlan()
+  await getPlan()
 
-    if (c && n) {
-      setPlan(c, n)
-    }
-
-    else {
-      ElMessage({
-        message: 'Tag or name not found',
-        type: 'warning',
-      });
-    }
-
-    const response = await new Promise((resolve) => {
-      services.get_Record('plan/list', (response) => {
-        resolve(response)
-        if (response.status == 404) {
-          appStore.isLoading = false;
-        }
-      }, true, true);
+  if (c && n) {
+    setPlan(c, n)
+  } else {
+    ElMessage({
+      message: t('subscription.tag_name_not_found'),
+      type: 'warning',
     });
+  }
 
-    if (response.status == 200 && response.data) {
-      const data = response.data
-      plans.value = data.sort((a, b) => a.id - b.id);
-    }
+  const response = await new Promise((resolve) => {
+    services.get_Record('plan/list', (response) => {
+      resolve(response)
+      if (response.status == 404) {
+        appStore.isLoading = false;
+      }
+    }, true, true);
+  });
+
+  if (response.status == 200 && response.data) {
+    const data = response.data
+    plans.value = data.sort((a, b) => a.id - b.id);
+  }
 })
 
 onMounted(async () => {
-  
+
   const partnerCode = import.meta.env.VITE_PARTNER_CODE
   services.mountChatWidget()
 
@@ -608,13 +633,12 @@ onBeforeUnmount(() => {
 
 </script>
 <style>
-
 .caddie {
-  width: 300px; 
-  height: 300px; 
-  opacity: 0.10; 
-  position: absolute; 
-  top: 220px; 
+  width: 300px;
+  height: 300px;
+  opacity: 0.10;
+  position: absolute;
+  top: 220px;
   left: 350px;
   z-index: 1;
 }
@@ -858,7 +882,8 @@ button.isLoaded {
   width: 48%;
 }
 
-input, select {
+input,
+select {
   border-radius: 3px !important;
 }
 
@@ -881,11 +906,79 @@ input, select {
 }
 
 .password-icon {
-  position: absolute; 
-  right: 20px; 
-  top: 50%; 
-  transform: translateY(-50%); 
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
   cursor: pointer;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 30px 0 40px;
+  flex-wrap: wrap;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 120px;
+  position: relative;
+  text-align: center;
+}
+
+.circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #ccc;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.label {
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.stripe-note {
+  display: block;
+  font-size: 11px;
+  color: #666;
+}
+
+.line {
+  height: 2px;
+  width: 40px;
+  background-color: #ccc;
+}
+
+.step.completed .circle {
+  background-color: #4caf50;
+  /* green */
+}
+
+.step.active .circle {
+  background-color: #2196f3;
+  /* blue */
+}
+
+@media (max-width: 600px) {
+  .stepper {
+    flex-direction: column;
+  }
+
+  .line {
+    width: 2px;
+    height: 30px;
+  }
 }
 
 
@@ -965,6 +1058,7 @@ input, select {
   .caddie {
     display: none;
   }
+
   /*.caddie {
     left: 70px;
     top: 40px; 
@@ -985,7 +1079,7 @@ input, select {
   }*/
 }
 
-@media screen and (min-width: 800px) and  (max-width: 912px) {
+@media screen and (min-width: 800px) and (max-width: 912px) {
   .caddie {
     left: 200px;
   }

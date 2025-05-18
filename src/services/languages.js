@@ -13,8 +13,8 @@ export const languages = [
   },
   {
     name: 'Spain',
-    code: 'es',
-    bb: 'es',
+    code: 'SP',
+    bb: 'sp',
     svg: '<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" style="width: 1.875rem;height:1.875rem"  class="rounded-full me-2"><rect width="50" height="7.5" fill="#c60b1e"/><rect width="50" height="15" fill="#ffc400" y="7.5"/><rect width="50" height="7.5" fill="#c60b1e" y="22.5"/></svg>'
   }
 ]

@@ -89,8 +89,72 @@
         "follow_us":"Follow us"
     },
     "unsubscribe": {
-        "confirmation_text": "We’re sorry to see you go. If you confirm your unsubscription, you will no longer receive our communications.",
+        "confirmation_text": "We're sorry to see you go. If you confirm your unsubscription, you will no longer receive our communications.",
         "after_submit_text1" : "Your unsubscription has been confirmed. You will no longer receive our communications.",
         "after_submit_text2" : " We hope to see you again soon!"
+    },
+    "subscription": {
+        "already_subscribed": "Already have an account? Click the link below to access your dashboard:",
+        "login_link": "Login",
+        "please_fill_form": "Please fill out the form to create your account",
+        "first_name": "First name",
+        "last_name": "Last name",
+        "email": "Email",
+        "password": "Password",
+        "confirm_password": "Confirm password",
+        "company_name": "Company name",
+        "address": "Address",
+        "secondary_address": "Secondary address",
+        "zip_code": "ZIP Code",
+        "city": "City",
+        "country": "Country",
+        "terms_conditions": "I read and accept terms and conditions of service.",
+        "terms_error": "Please accept the terms and conditions of sale to continue",
+        "create_account": "Create my account",
+        "saving_errors": "Saving error(s):",
+        "plan_not_found": "Plan tag not found",
+        "no_price_code": "No price code found",
+        "error_occurred": "An error was occurred!",
+        "tag_name_not_found": "Tag or name not found",
+        "features": {
+            "qr_codes": {
+                "title": "Unified QR Codes Hub",
+                "hd": "High Definition",
+                "customizable": "Customizable"
+            },
+            "mobile_website": {
+                "title": "Branded Mobile Website, 5 sections",
+                "menus": "MENUS",
+                "infos": "INFOS",
+                "reviews": "REVIEWS",
+                "offers": "OFFERS",
+                "follow_us": "FOLLOW US"
+            },
+            "offers_program": {
+                "title": "Offers Program Platform",
+                "partners": "Partners Management",
+                "ticketing": "Digital Ticketing",
+                "emailing": "Automated Emailing",
+                "analytics": "Analytics",
+                "lead_gen": "Lead Generation"
+            },
+            "review_analysis": {
+                "title": "Review Analysis",
+                "survey": "Internal Survey per Category",
+                "source": "1 source",
+                "filters": "Filters (weather, event)",
+                "hashtag": "1 hashtag"
+            },
+            "competitor": {
+                "title": "Competitor Monitoring",
+                "count": "1 competitor"
+            }
+        },
+        "stepper": {
+            "my_account": "My Account",
+            "payment": "Payment",
+            "payment_note": "(Secure via Stripe)",
+            "get_started": "Get Started"
+        }
     }
 }
