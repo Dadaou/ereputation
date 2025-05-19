@@ -1,25 +1,27 @@
 <template>
+    <div class="main__container-bg">
+        <div class="main__container">
 
-    <div class="main__container">
+            <div class="step-progress">
 
-        <div class="step-progress">
+                <div v-for="(item, index) in stepRoute" :key="item.step" class="step">
 
-            <div v-for="(item, index) in stepRoute" :key="item.step" class="step">
+                    <RouterLink :to="{ name: item.name }" class="step-number">
+                        {{ item.step }}
+                    </RouterLink>
 
-                <RouterLink  :to="{name : item.name}" class="step-number">
-                    {{ item.step }}
-                </RouterLink>
+                    <div v-if="index < stepRoute.length - 1" class="step-line"></div>
+                </div>
 
-                <div v-if="index < stepRoute.length - 1" class="step-line"></div>
+            </div>
+
+            <div>
+                <RouterView></RouterView>
             </div>
 
         </div>
-
-        <div>
-            <RouterView></RouterView>
-        </div>
-       
     </div>
+
 </template>
 
 <script setup>
@@ -43,6 +45,16 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+.main__container-bg {
+    background: url("@/assets/images/fond.svg");
+    /* margin-block: 80px 0 !important; */
+    padding-inline: 4rem;
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 70vh;
+}
+
 .main__container {
     margin-left: auto;
     margin-right: auto;
@@ -89,9 +101,13 @@ onBeforeUnmount(() => {
     margin: 0 8px;
 }
 
-.router-link-active{
+.router-link-active {
     color: #fff;
     background-color: var(--light-color-bg2);
 }
-
+</style>
+<style>
+    footer {
+    margin-top: 0 !important;
+}
 </style>
