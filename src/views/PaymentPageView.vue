@@ -1,10 +1,28 @@
 <template>
   <NavbarComponent :isPublic="true"></NavbarComponent>
-  <div id="checkout">
+
+  <div class="checkout-container">
+    <div class="stepper">
+      <div class="step completed">
+        <div class="circle">1</div>
+        <div class="label">{{ $t("subscription.stepper.my_account") }}</div>
+      </div>
+      <div class="line"></div>
+      <div class="step active">
+        <div class="circle">2</div>
+        <div class="label">{{ $t("subscription.stepper.payment") }} <span class="stripe-note">{{ $t("subscription.stepper.payment_note") }}</span></div>
+      </div>
+      <div class="line"></div>
+      <div class="step">
+        <div class="circle">3</div>
+        <div class="label">{{ $t("subscription.stepper.get_started") }}</div>
+      </div>
+    </div>
+    <div id="checkout"></div>
   </div>
   <FooterComponent></FooterComponent>
 </template>
-  
+
 <script setup>
 import { onMounted, defineAsyncComponent, inject } from 'vue';
 import { loadStripe } from '@stripe/stripe-js/pure';
@@ -82,7 +100,76 @@ onMounted(async () => {
 
 </script>
 <style>
-#checkout {
+.checkout-container {
   margin-top: 120px;
+}
+
+
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 30px 0 40px;
+  flex-wrap: wrap;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 120px;
+  position: relative;
+  text-align: center;
+}
+
+.circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #ccc;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.label {
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.stripe-note {
+  display: block;
+  font-size: 11px;
+  color: #666;
+}
+
+.line {
+  height: 2px;
+  width: 40px;
+  background-color: #ccc;
+}
+
+.step.completed .circle {
+  background-color: var(--color-bgp);
+  /* green */
+}
+
+.step.active .circle {
+  background-color: var(--color-danger);
+  /* blue */
+}
+
+@media (max-width: 600px) {
+  .stepper {
+    flex-direction: column;
+  }
+
+  .line {
+    width: 2px;
+    height: 30px;
+  }
 }
 </style>

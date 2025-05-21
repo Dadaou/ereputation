@@ -362,6 +362,7 @@ input {
     justify-content: center;
     overflow: hidden;
     position: relative;
+    background-color: white;
 }
 
 .image-selector.hover:hover {

@@ -132,7 +132,7 @@ const isFeedback = computed(() => {
 });
 
 const isSignUp = computed(() => {
-  return route.name === 'Signup' 
+  return route.name === 'Signup' || route.name === 'PaymentPage'
 });
 
 const isPaymentPage = computed(() => {

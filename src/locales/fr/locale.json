@@ -38,7 +38,7 @@
         "promotion_day": "Promotions du jour",
         "comment": "Vos commentaires",
         "indice2": "En utilisant nos services et en cochant cette case, vous acceptez les conditions décrites dans nos",
-        "indice3": "conditions générales d’utilisations",
+        "indice3": "conditions générales d'utilisations",
         "post": "Valider",
         "requiredinputs": "Veuillez fournir toutes les informations nécessaires.",
         "read_more": "En savoir plus...",
@@ -61,9 +61,9 @@
     "success_text": "Vous pouvez également partager votre expérience sur les plateformes en un clic grâce à un copier-coller de votre commentaire",
     "success_text2": "Restons en contact sur les réseaux sociaux  ",
     "coupon": {
-        "coupon_expirer": "Désolé, il semble que votre coupon ait expiré ",
+        "coupon_expirer": "Désolé, il semble que votre coupon ait expiré ",
         "title": "Offre exclusive * ",
-        "validation": "Valide jusqu’au:",
+        "validation": "Valide jusqu'au:",
         "utilisation": "A utiliser entre le",
         "et": "et",
         "validationcoupon": "Veuillez entrer le code pour valider le coupon",
@@ -93,5 +93,70 @@
         "confirmation_text": "Nous sommes désolés de vous voir partir. Si vous confirmez votre désinscription, vous ne recevrez plus nos communications.",
         "after_submit_text1" : "Votre désinscription est confirmée.",
         "after_submit_text2" : "Vous ne recevrez plus nos communications. Nous espérons vous revoir bientôt !"
+    },
+
+    "subscription": {
+        "already_subscribed": "Vous avez déjà un compte ? Cliquez sur le lien ci-dessous pour accéder à votre tableau de bord :",
+        "login_link": "Connexion",
+        "please_fill_form": "Veuillez remplir le formulaire pour créer votre compte",
+        "first_name": "Prénom",
+        "last_name": "Nom",
+        "email": "Email",
+        "password": "Mot de passe",
+        "confirm_password": "Confirmez le mot de passe",
+        "company_name": "Nom de l'entreprise",
+        "address": "Adresse",
+        "secondary_address": "Adresse complémentaire",
+        "zip_code": "Code postal",
+        "city": "Ville",
+        "country": "Pays",
+        "terms_conditions": "J'ai lu et j'accepte les conditions générales de service.",
+        "terms_error": "Veuillez accepter les conditions générales de vente pour continuer",
+        "create_account": "Créer mon compte",
+        "saving_errors": "Erreur(s) de sauvegarde :",
+        "plan_not_found": "Tag du plan non trouvé",
+        "no_price_code": "Aucun code de prix trouvé",
+        "error_occurred": "Une erreur s'est produite !",
+        "tag_name_not_found": "Tag ou nom non trouvé",
+        "features": {
+            "qr_codes": {
+                "title": "Hub de codes QR unifiés",
+                "hd": "Haute définition",
+                "customizable": "Personnalisable"
+            },
+            "mobile_website": {
+                "title": "Site web mobile personnalisé, 5 sections",
+                "menus": "MENUS",
+                "infos": "INFOS",
+                "reviews": "AVIS",
+                "offers": "OFFRES",
+                "follow_us": "SUIVEZ-NOUS"
+            },
+            "offers_program": {
+                "title": "Plateforme de programme d'offres",
+                "partners": "Gestion des partenaires",
+                "ticketing": "Billetterie numérique",
+                "emailing": "Emailing automatisé",
+                "analytics": "Analytique",
+                "lead_gen": "Génération de leads"
+            },
+            "review_analysis": {
+                "title": "Analyse des avis",
+                "survey": "Enquête interne par catégorie",
+                "source": "1 source",
+                "filters": "Filtres (météo, événement)",
+                "hashtag": "1 hashtag"
+            },
+            "competitor": {
+                "title": "Surveillance des concurrents",
+                "count": "1 concurrent"
+            }
+        },
+        "stepper": {
+            "my_account": "Mon compte",
+            "payment": "Paiement",
+            "payment_note": "(sécurisé par Stripe)",
+            "get_started": "Commencer"
+        }
     }
 }

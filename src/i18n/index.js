@@ -2,14 +2,14 @@ import { createI18n } from 'vue-i18n'
 
 import fr from '../locales/fr/locale.json'
 import en from '../locales/en/locale.json'
-import es from '../locales/sp/locale.json'
+import sp from '../locales/sp/locale.json'
 
 var lg = localStorage.getItem('langue')
 
 var langues = [
   { name: 'EN', code: 'en' },
   { name: 'FR', code: 'fr' },
-  { name: 'ES', code: 'es' }
+  { name: 'SP', code: 'sp' }
 ]
 
 var langselected = ''
@@ -24,7 +24,7 @@ export const i18n = new createI18n({
   fallbackLocale: langselected, // set locale
   allowComposition: true,
   globalInjection: true,
-  messages: { es, fr, en } // set locale messages
+  messages: { sp, fr, en } // set locale messages
 })
 
 export default i18n

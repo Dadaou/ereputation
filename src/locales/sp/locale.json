@@ -93,10 +93,73 @@
         "infos":"Información",
         "follow_us":"Síguenos"
     },
-
     "unsubscribe": {
         "confirmation_text": "Lamentamos verte partir. Si confirmas tu cancelación de suscripción, ya no recibirás nuestras comunicaciones.",
         "after_submit_text1" : "Su cancelación de suscripción ha sido confirmada.",
         "after_submit_text2" : "Ya no recibirá nuestras comunicaciones. ¡Esperamos verle pronto!"
+    },
+    "subscription": {
+        "already_subscribed": "¿Ya tienes una cuenta? Haz clic en el siguiente enlace para acceder a tu panel:",
+        "login_link": "Iniciar sesión",
+        "please_fill_form": "Por favor, completa el formulario para crear tu cuenta",
+        "first_name": "Nombre",
+        "last_name": "Apellido",
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "confirm_password": "Confirmar contraseña",
+        "company_name": "Nombre de la empresa",
+        "address": "Dirección",
+        "secondary_address": "Dirección complementaria",
+        "zip_code": "Código postal",
+        "city": "Ciudad",
+        "country": "País",
+        "terms_conditions": "He leído y acepto los términos y condiciones del servicio.",
+        "terms_error": "Por favor, acepta los términos y condiciones de venta para continuar",
+        "create_account": "Registrarme",
+        "saving_errors": "Error(es) de guardado:",
+        "plan_not_found": "Plan no encontrado",
+        "no_price_code": "No se encontró código de precio",
+        "error_occurred": "¡Se ha producido un error!",
+        "tag_name_not_found": "Etiqueta o nombre no encontrado",
+        "features": {
+            "qr_codes": {
+                "title": "Centro unificado de códigos QR",
+                "hd": "Alta definición",
+                "customizable": "Personalizable"
+            },
+            "mobile_website": {
+                "title": "Sitio web móvil personalizado, 5 secciones",
+                "menus": "MENÚS",
+                "infos": "INFORMACIÓN",
+                "reviews": "RESEÑAS",
+                "offers": "OFERTAS",
+                "follow_us": "SÍGUENOS"
+            },
+            "offers_program": {
+                "title": "Plataforma de programa de ofertas",
+                "partners": "Gestión de socios",
+                "ticketing": "Venta de entradas digital",
+                "emailing": "Correo electrónico automatizado",
+                "analytics": "Analítica",
+                "lead_gen": "Generación de leads"
+            },
+            "review_analysis": {
+                "title": "Análisis de reseñas",
+                "survey": "Encuesta interna por categoría",
+                "source": "1 fuente",
+                "filters": "Filtros (clima, evento)",
+                "hashtag": "1 hashtag"
+            },
+            "competitor": {
+                "title": "Monitoreo de competencia",
+                "count": "1 competidor"
+            }
+        },
+        "stepper": {
+            "my_account": "Mi cuenta",
+            "payment": "Pago",
+            "payment_note": "(Seguro con Stripe)",
+            "get_started": "Bienvenido"
+        }
     }
 }
