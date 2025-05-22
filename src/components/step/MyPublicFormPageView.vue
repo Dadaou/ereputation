@@ -85,7 +85,7 @@
                                         <p class="button__close" @click="removePlatform(index)">x</p>
                                     </div>
                                     <el-select id="platforms" v-model="entry.platform" placeholder="Choose platform"
-                                        size="large" filterable clearable
+                                        size="large" clearable
                                         @change="value => handleChangePlatform(value, index)">
                                         <el-option v-for="item in dataPlatforms" :key="item.uri" :label="item.name"
                                             :value="`${item.id}`" />
@@ -114,7 +114,7 @@
                                         <p class="button__close" @click="removeSocial(index)">x</p>
                                     </div>
                                     <el-select id="socials" v-model="entry.social" placeholder="Choose social"
-                                        size="large" filterable clearable
+                                        size="large" clearable
                                         @change="value => handleChangeSocial(value, index)">
                                         <el-option v-for="item in dataSocials" :key="item.uri" :label="item.name"
                                             :value="`${item.id}`" />

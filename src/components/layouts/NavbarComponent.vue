@@ -50,15 +50,27 @@
           <a v-else :href="establishement?.whatsapp" target="_blank">
             <i class="fa fa-whatsapp"></i>
           </a>
+          <a href="https://wa.me/message/IZFK26272CXFB1" target="_blank">
+            <i class="fa fa-whatsapp"></i>
+          </a>
           <LanguageMenuDropdown :current="currentLanguage" @select="(language) => selectCurrentLanguage(language)" />
         </div>
 
+        <div class="icon_container">
+          <a v-if="isfirstStepPage" href="https://wa.me/message/IZFK26272CXFB1" target="_blank">
+              <i class="fa fa-whatsapp" style="font-size: 40px;"></i>
+          </a>
 
-        <UserDropdownMenu v-if="userStore.authenticated && !isFeedback && !isSignUp && !isPaymentPage" :user="{
-          name: `${userStore?.user?.firstname} ${userStore?.user?.lastname}`,
-          initial: userStore.getInitials(userStore?.user?.firstname, userStore?.user?.lastname),
-          email: userStore?.user?.email
-        }" :customer="userStore?.user?.customer" @signOut="signOut" />
+            <UserDropdownMenu v-if="userStore.authenticated && !isFeedback && !isSignUp && !isPaymentPage" :user="{
+            name: `${userStore?.user?.firstname} ${userStore?.user?.lastname}`,
+            initial: userStore.getInitials(userStore?.user?.firstname, userStore?.user?.lastname),
+            email: userStore?.user?.email
+            }" :customer="userStore?.user?.customer" @signOut="signOut" />
+        </div>
+
+
+
+
       </div>
       <transition enter-active-class="animate__animated animate__zoomIn"
         leave-active-class="animate__animated animate__zoomOut">
@@ -124,6 +136,15 @@ const props = defineProps({
   isPublic: {
     type: Boolean,
     default: false
+  }
+})
+
+const isfirstStepPage = computed(() => {
+
+  if(route.path.includes('step-view') || route.name === 'Step') {
+    return true
+  } else {
+    return false
   }
 })
 
@@ -470,7 +491,7 @@ ul.menu .router-link-exact-active {
   }
 }
 
-.feedback__option {
+.feedback__option, .icon_container {
   display: flex;
   align-items: center;
   gap: 20px;
@@ -479,4 +500,5 @@ ul.menu .router-link-exact-active {
 .feedback__option i {
   font-size: 35px;
 }
+
 </style>
