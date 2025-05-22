@@ -1,5 +1,5 @@
 <template>
-  <div class="reviews__content weather__chart mb-10" ref="el" :style="{
+  <div class="reviews__content weather__chart" ref="el" :style="{
     'overflowX': 'auto'
   }
     ">
@@ -37,21 +37,52 @@
 
              <div  >
               
-                    <Line class="" :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" :width="custom_width" :height="200"  :data="weatherChartValue" id="confidence" :options="newOptions" 
+                    <Line class="" :margin="{ top: 20, bottom: 35, left: 55, right: 20 }" :width="custom_width" :height="200"  :data="weatherChartValue" id="confidence" :options="newOptions"  ref="myLineChart"
                     /> 
               
 
                 <SpinnerComponent :size="'large'" v-if="isLoading" class="loader" /> 
             </div>
 
-            <div v-if="weatherChartValue.labels.length !== 0" style="border: 1px solid #ddd; margin-top:  30px;"></div>
+            <!--<div v-if="weatherChartValue.labels.length !== 0" style="border: 1px solid #ddd; margin-top:  30px;"></div>-->
 
-            <div id="weatherTable" style="width: 97%; margin: 20px 0px 15px 15px;">
+            <!--<div id="weatherTable" style="width: 97%; margin: 20px 0px 15px 15px;">
                 <table id="weatherIconsTable" style="width: 100%; border-collapse: collapse;">
                     <tbody id="weatherTableBody">
 
                     </tbody>
                 </table>
+            </div> -->
+
+            <div id="weatherTable"  style="width: 97%;  margin : 0 15px">
+              <table id="weatherIconsTable" style="width: 100%; border-collapse: collapse;">
+                <tbody id="weatherTableBody">
+                  <!-- Date row -->
+                  <!--<tr>
+                    <td 
+                      v-for="(item, index) in data" 
+                      :key="'date-'+index"
+                      style="padding: 5px; text-align: center; color: #5D6166; font-size: 12px;"
+                    >
+                      {{ item.name }}
+                    </td>
+                  </tr>-->
+                  
+                  <!-- Icons row -->
+                  <tr :style="{ display: 'flex', justifyContent: 'space-between', gap: gapValue + 'px' }">
+                    <td 
+                      v-for="(icon, index) in icons" 
+                      :key="'icon-'+index"
+                      style="padding: 2px; text-align: center;"
+                    >
+                      <span v-html="icon.code" style="font-size: 28px; display: block; color: #5D6166;"></span>
+                      <span v-if="icon.temperature !== 0" style="font-size: 12px; display: block; color: #5D6166;">
+                        {{ icon.temperature.toFixed(0) }} {{ icon.unit }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
 
          <!--    <LineChart class="chart" :plot-data="data"
@@ -75,7 +106,7 @@
      </div>
 
     </div>
-    <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'"></BaseLegend>
+    <BaseLegend class="legend" :LegendData="legendData" :alignment="'horizontal'" style="margin-top: 20px;"></BaseLegend>
   </div>
 </template>
 
@@ -114,9 +145,25 @@ ChartJS.register(
 
 
 const icons = inject('icons');
+const myLineChart = ref(null);
+const gapValue = ref(0);
 
 
-  const colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
+const getXAxisGap = (chart) => {
+
+  if (!chart || !chart.scales['x']) return 0;
+
+  const meta = chart.getDatasetMeta(0);
+  if (!meta.data || meta.data.length < 2) return 0;
+
+  // Obtenir les positions X des deux premiers points
+  const point1 = meta.data[0].x;
+  const point2 = meta.data[1].x;
+  
+  return point2 - point1; // Retourne la différence en pixels
+}
+
+const colors = ['#6c63ff', '#f75842', '#aca8fd', '#424890', '#ff42e5', '#58f742', '#8eaca8', '#fda458', '#90fdac', '#444278', '#f7a142', '#de90fd', '#42d3ff', '#e558f7', '#a8ac42', '#90fdd4', '#784444', '#58f7bf', '#fdaa58', '#90fdff']
 const newOptions = {
     maintainAspectRatio: false,
     scales: {
@@ -143,7 +190,19 @@ const newOptions = {
       legend: {
         display: false
       }
-    }
+    },
+
+    animation: {
+      onComplete: () => {
+        if (myLineChart.value) {
+          console.clear();
+          const chartInstance = myLineChart.value.chart;
+          const gap = getXAxisGap(chartInstance);
+          //console.log(gap)
+          //gapValue.value = gap;
+        }
+      },
+  },
   
 };
 
@@ -220,7 +279,7 @@ const transformData=(_data)=>{
 
 const positionIcons = () => {
 
- const tableBody = document.getElementById("weatherTableBody");
+ /*const tableBody = document.getElementById("weatherTableBody");
  if (!tableBody) return; 
 
 
@@ -263,7 +322,7 @@ const positionIcons = () => {
   }
 
   tableBody.appendChild(indexRow);
-  tableBody.appendChild(iconRow);
+  tableBody.appendChild(iconRow);*/
 };
 
 
