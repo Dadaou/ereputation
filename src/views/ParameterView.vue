@@ -1,6 +1,6 @@
 <template>
     <div class="user__main__container">
-        <el-tabs v-model="parametersUrlsConf.tabs" type="card" class="demo-tabs">
+        <el-tabs v-model="parametersUrlsConf.tabs" type="card" class="demo-tabs" >
             <el-tab-pane label="Establishments" name="establishments">
                 <el-tabs v-model="parametersUrlsConf.establishments" class="demo-tabs"
                     @tab-click="() => clearEstablishmentForm()">
@@ -10,7 +10,7 @@
                             @setEnable="(id) => setStatus(id, 'enable')"
                             @setDisable="(id) => setStatus(id, 'disable')" />
                     </el-tab-pane>
-                    <el-tab-pane label="Add a new establishment" name="establishments_form">
+                    <el-tab-pane :label="tabEstablishementLabel" name="establishments_form">
                         <EstablishmentFormComponent />
                     </el-tab-pane>
                 </el-tabs>
@@ -138,6 +138,8 @@ const { width } = useWindowSize();
 const route = useRoute();
 const router = useRouter();
 
+const defaultTabEstablishementLabel = 'Add a new establishment'
+const tabEstablishementLabel = ref(defaultTabEstablishementLabel)
 
 const StaffFormComponent = defineAsyncComponent(() =>
     import("@Components/staffs/StaffFormComponent.vue")
@@ -328,8 +330,10 @@ const competitorsData = ref([])
 provide('competitorsData', competitorsData)
 
 const handleEdit = (value, type) => {
-    console.log("gala ", type)
+    
     parametersUrlsConf[type] = `${type}_form`;
+    tabEstablishementLabel.value = 'Edit establishment'
+
     if (type == 'staffs') {
         staff_to_update.value = value;
         staff_to_update.value['establishment'] = `/api/establishments/${value.establishment}`
@@ -362,7 +366,15 @@ const handleEdit = (value, type) => {
     if (type == 'links') {
         link_to_update.value = value;
     }
+
 };
+
+watch(() => parametersUrlsConf.establishments, () => {
+    if (parametersUrlsConf.establishments === 'establishments_list') {
+        tabEstablishementLabel.value = defaultTabEstablishementLabel
+    } 
+})
+
 
 const handleEnable = async (value, type) => {
     const response = await new Promise((resolve) => {
