@@ -55,7 +55,7 @@
             feel = feeling
           }" />
 
-          <el-select v-else v-model="category" filterable placeholder="select categories" size="large">
+          <el-select v-else v-model="category" placeholder="select categories" size="large">
             <el-option key="0" label="" value="" />
             <el-option v-for="(item, index) in categories" :key="index + 1" :label="item.category"
               :value="item.category" />

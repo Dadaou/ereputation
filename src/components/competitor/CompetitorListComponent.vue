@@ -95,7 +95,7 @@
                         <label for="countries"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Providers
                             <span>*</span></label>
-                        <el-select v-model="provider" placeholder="Choose provider" size="large" filterable>
+                        <el-select v-model="provider" placeholder="Choose provider" size="large">
                             <el-option v-for="item in filteredProviders" :key="item.uri" :label="item.name"
                                 :value="`${item.uri}${item.url}`" />
                         </el-select>

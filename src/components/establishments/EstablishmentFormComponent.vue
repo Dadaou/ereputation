@@ -47,7 +47,7 @@
                     </div>
                 </div>
             </div>
-            <div class="grid gap-6 mb-6 md:grid-cols-5">
+            <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
                     <label for="zipcode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Zipcode
                         <span>*</span></label>
@@ -77,7 +77,7 @@
                 </div>
 
             </div>
-            <div class="grid gap-6 mb-6 md:grid-cols-5">
+            <div class="grid gap-6 mb-6 md:grid-cols-2">
 
                 <div>
                     <label for="gps" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Website
@@ -115,7 +115,7 @@
                         Pin
                         <Tooltip text="Select a code with a minimum of 4 digits to validate the discount coupons provided by your customers" />
                     </label>
-                    <input type="text" id="pin" name="pin" v-model="data.pin" style="width: 250px;"
+                    <input type="text" id="pin" name="pin" v-model="data.pin" 
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2">
                 </div>
             </div>

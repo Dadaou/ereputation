@@ -204,7 +204,7 @@
             <el-date-picker v-model="end_date" placeholder="End date" :size="'large'" />
         </div>
         <div class="px-2 w-full my-2" v-if="activeName == 'categorization'">
-            <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
+            <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip
                 :max-collapse-tags="3" placeholder="select categories" size="large">
                 <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
                     :disabled="categoryFilters.length > 1 && !categoryFilters.includes('all')" />
@@ -334,7 +334,7 @@
 
             <div class="date__filter" v-if="activeName == 'categorization'">
                 <div class="text-sm title">Filter by category</div>
-                <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip filterable
+                <el-select v-model="categoryFilters" multiple collapse-tags collapse-tags-tooltip
                     :max-collapse-tags="3" placeholder="select categories" size="large">
                     <el-option :label="'All'" :value="'all'" @click="handleCategoryDropdown('all')"
                         :disabled="categoryFilters.length > 1 && !categoryFilters.includes('all')" />

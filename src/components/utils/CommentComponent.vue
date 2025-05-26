@@ -345,7 +345,7 @@
                         <p>{{ modal.section }}</p>
                     </h5>
 
-                    <el-select v-if="modal.type == 'category' || modal.type == 'delete'" v-model="category" filterable
+                    <el-select v-if="modal.type == 'category' || modal.type == 'delete'" v-model="category"
                         placeholder="select categories" size="large">
                         <el-option key="0" label="" value="" />
                         <el-option v-for="(item, index) in categories" :key="index + 1" :label="item.category"
