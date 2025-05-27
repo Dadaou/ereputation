@@ -10,7 +10,7 @@
                             @setEnable="(id) => setStatus(id, 'enable')"
                             @setDisable="(id) => setStatus(id, 'disable')" />
                     </el-tab-pane>
-                    <el-tab-pane :label="tabEstablishementLabel" name="establishments_form">
+                    <el-tab-pane :label="tabLabel.establishment" name="establishments_form">
                         <EstablishmentFormComponent />
                     </el-tab-pane>
                 </el-tabs>
@@ -51,7 +51,7 @@
                         <CompetitorListComponent @edit="(establishment) => handleEdit(establishment, 'competitors')"
                             @reload="reloadCompetitorList('list')" />
                     </el-tab-pane>
-                    <el-tab-pane label="Add a new competitor" name="competitors_form">
+                    <el-tab-pane :label="tabLabel.competitor" name="competitors_form">
                         <CompetitorFormComponent @reload="reloadCompetitorList('form')" />
                     </el-tab-pane>
                 </el-tabs>
@@ -81,7 +81,7 @@
                     <el-tab-pane label="Events" name="events_list">
                         <EventListComponent @edit="(event) => handleEdit(event, 'events')" />
                     </el-tab-pane>
-                    <el-tab-pane label="Add a new event" name="events_form">
+                    <el-tab-pane :label="tabLabel.event" name="events_form">
                         <EventFormComponent />
                     </el-tab-pane>
                 </el-tabs>
@@ -91,7 +91,7 @@
                     <el-tab-pane label="Categories" name="categories_list">
                         <CategorizationListComponent @edit="(category) => handleEdit(category, 'categories')" />
                     </el-tab-pane>
-                    <el-tab-pane label="Add a new category" name="categories_form">
+                    <el-tab-pane :label="tabLabel.categorie" name="categories_form">
                         <CategorizationFormComponent />
                     </el-tab-pane>
                 </el-tabs>
@@ -138,8 +138,19 @@ const { width } = useWindowSize();
 const route = useRoute();
 const router = useRouter();
 
-const defaultTabEstablishementLabel = 'Add a new establishment'
-const tabEstablishementLabel = ref(defaultTabEstablishementLabel)
+const defaultLabel = {
+    establishment: 'Add a new establishment',
+    competitor: 'Add a new competitor',
+    event: 'Add a new event',
+    categorie: 'Add a new category'
+}
+
+const tabLabel = reactive({
+    establishment: defaultLabel.establishment,
+    competitor: defaultLabel.competitor,
+    event: defaultLabel.event,
+    categorie: defaultLabel.categorie
+})
 
 const StaffFormComponent = defineAsyncComponent(() =>
     import("@Components/staffs/StaffFormComponent.vue")
@@ -329,10 +340,19 @@ provide('reloadCompetitor', reloadCompetitor)
 const competitorsData = ref([])
 provide('competitorsData', competitorsData)
 
+const removeS = (text) => {
+    if (text.endsWith('s')) {
+        return text.slice(0, -1)
+    }
+    return text
+}
+
 const handleEdit = (value, type) => {
+
+    const newType = removeS(type) 
     
     parametersUrlsConf[type] = `${type}_form`;
-    tabEstablishementLabel.value = 'Edit establishment'
+    tabLabel[newType] = 'Edit ' + newType
 
     if (type == 'staffs') {
         staff_to_update.value = value;
@@ -369,11 +389,25 @@ const handleEdit = (value, type) => {
 
 };
 
-watch(() => parametersUrlsConf.establishments, () => {
+watch(() => parametersUrlsConf, () => {
+
     if (parametersUrlsConf.establishments === 'establishments_list') {
-        tabEstablishementLabel.value = defaultTabEstablishementLabel
+        tabLabel.establishment = defaultLabel.establishment
     } 
-})
+
+    if (parametersUrlsConf.competitors === 'competitors_list') {
+        tabLabel.competitor = defaultLabel.competitor
+    }
+
+    if( parametersUrlsConf.events === 'events_list') {
+        tabLabel.event = defaultLabel.event
+    }
+
+    if( parametersUrlsConf.categories === 'categories_list') {
+        tabLabel.categorie = defaultLabel.categorie
+    }
+    
+}, { deep: true })
 
 
 const handleEnable = async (value, type) => {

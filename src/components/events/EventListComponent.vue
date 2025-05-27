@@ -9,9 +9,9 @@
       <el-input v-model="search" size="small" placeholder="Type to search" />
     </div>
     <el-table :data="filterTableData">
-      <el-table-column label="Name" prop="name" style="width: 15%; min-width: 200px;" />
-      <el-table-column label="Category" prop="category" style="width: 10%; min-width: 200px;" />
-      <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" />
+      <el-table-column label="Name" prop="name" style="width: 15%; min-width: 200px;" sortable/>
+      <el-table-column label="Category" prop="category" style="width: 10%; min-width: 200px;" sortable/>
+      <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" sortable/>
       <el-table-column label="Segment" prop="segment" style="width: 10%; min-width: 200px;" />
       <el-table-column label="Date" prop="date" style="width: 25%; min-width: 200px;" />
       <el-table-column  style="width: 25%; min-width: 200px;" align="right">

@@ -12,8 +12,8 @@
     </div>
     <div class="mt-3 table__container" v-if="!showLinkModal">
         <el-table :data="filteredCompetitor">
-            <el-table-column label="Competitors" prop="name" style="width: 25%; min-width: 200px;" />
-            <el-table-column label="Establishments" style="width: 15%; min-width: 200px;">
+            <el-table-column label="Competitors" prop="name" style="width: 25%; min-width: 200px;" sortable/>
+            <el-table-column label="Establishments" style="width: 15%; min-width: 200px;" sortable>
                 <template #default="scope">
                     {{ scope.row.establishments.join(', ') }}
                 </template>

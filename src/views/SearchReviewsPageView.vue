@@ -17,11 +17,11 @@
                 <el-date-picker v-model="end_date" type="date" :size="'large'" />
             </div>
             <div class="catfiltre">
-                <input type="text" id="zipcode" name="zipcode" v-model="terms"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm w-full p-2" v-on:keyup.enter="loadReviews(route.params.tag,optionsReview.page,optionsReview.rowLimit,optionsReview.current, start_date, end_date,terms,establishments)">
+                <el-input v-model="terms" v-on:keyup.enter="loadReviews(route.params.tag,optionsReview.page,optionsReview.rowLimit,optionsReview.current, start_date, end_date,terms,establishments)" size="large" />
                 
             </div>
-             <div class="catfiltre">
+            
+            <div class="catfiltre">
                 <el-button  @click="  loadReviews(route.params.tag,optionsReview.page,optionsReview.rowLimit,optionsReview.current, start_date, end_date,terms,establishments)" size="large" type="primary" class="search_button" :icon="Search">Search</el-button>
             </div>
         </div>
