@@ -4,7 +4,7 @@
     </div>
     <div class="mt-2 erep_table table__container">
       <el-table v-if="linksLoading == false" :data="filterTableData">
-        <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" />
+        <el-table-column label="Establishment" prop="establishment_name" style="width: 25%; min-width: 200px;" sortable/>
 
         <el-table-column label="Caption" style="width: 25%; min-width: 200px;" v-if="activeUrlTabName.urls === 'urls_gate_form'">
           <template #default="scope">

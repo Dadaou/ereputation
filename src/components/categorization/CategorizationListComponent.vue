@@ -5,8 +5,8 @@
   </div>
   <div class="mt-3 table__container">
     <el-table :data="filterTableData">
-      <el-table-column label="Category" prop="category" style="width: 15%; min-width: 300px;" />
-      <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;" >
+      <el-table-column label="Category" prop="category" style="width: 15%; min-width: 300px;" sortable/>
+      <el-table-column label="Establishment" prop="establishment_name" style="width: 20%; min-width: 300px;" sortable>
            <template #default="scope">
                   <div class="establishment-link">
             <el-tooltip :content="`Click to enter ${scope.row.establishmentNSame}'s page`" placement="top">

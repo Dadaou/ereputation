@@ -18,7 +18,7 @@
     }">
       <SpinnerComponent />
     </div>
-    <div v-else class="chart_content" :style="{
+    <div v-else class="chart_content" ref="chartContent" :style="{
       'display': 'flex',
       'width': '100%'
     }">
@@ -171,9 +171,28 @@ const newOptions = {
       legend: {
         display: false
       }
-    }
+    },
+
+    animation: {
+      
+      onComplete: () => {
+
+        if(chartContent.value) {
+
+          chartContent.value.scrollTo({
+
+            left: chartContent.value.scrollWidth,
+            behavior: 'smooth'
+
+          })
+        }
+
+      },
+    },
    
 };
+
+const chartContent = ref(null)
 
 const SpinnerComponent = defineAsyncComponent(() =>
   import('@Components/utils/SpinnerComponent.vue')
@@ -399,8 +418,9 @@ const getPlotData = async (period, rangedate, next) => {
   next(data);
 }
 
-onMounted(()=>{
-  console.log(legendLineChart.value)
+onMounted(()=> {
+  /*console.log(chartContent.value)
+  chartContent.value.scrollLeft = chartContent.value.scrollWidth*/
 })
 
 onBeforeMount(async () => {

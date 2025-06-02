@@ -131,7 +131,7 @@
                 <el-date-picker v-model="start_date" type="date" placeholder="Select the start date" :size="'large'" />
                 <el-date-picker class="mt-2" v-model="end_date" type="date" placeholder="Select the end date"
                     :size="'large'" />
-                <DropdownComponent :showTitle="false"   placeholder="" :data="timePeriods" @submit="(timePeriod) => {
+                <DropdownComponent v-if="showPeriod" :showTitle="false"   placeholder="" :data="timePeriods" @submit="(timePeriod) => {
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[0]" />
             </div>
@@ -174,6 +174,7 @@ provide('chartLoading', chartLoading);
 const eventLoading = ref(false);
 const customerTag = inject('tag');
 const activeName = ref('events');
+const showPeriod = ref(true);
 
 const companyId = route.params.id;
 let establishment = ref({});
@@ -191,6 +192,14 @@ const updateStartDate=(_start_date)=>{
     start_date.value = moment(_start_date).add(1, "day").format("YYYY-MM-DD");
     console.log(start_date.value)
 }
+
+watch(activeName, () => {
+    if(activeName.value === 'weathers') {
+        showPeriod.value = false
+    }
+
+    else showPeriod.value = true
+})
 
 const all_items = ref([
     { title: "Rating", value: 0, icon: "uil-star" },

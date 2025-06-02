@@ -10,7 +10,7 @@
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
                     <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Establishment <span>*</span></label>
-                    <el-select v-model="establishment" placeholder="Choose establishment" size="large" :disabled="IsValueOkay(competitor)" clearable filterable>
+                    <el-select v-model="establishment" placeholder="Choose establishment" size="large" :disabled="IsValueOkay(competitor)" clearable>
                         <el-option v-for="item in establishments" :key="item.tag" :label="item.name" :value="item.uri" />
                     </el-select>
                 </div>
@@ -22,7 +22,7 @@
                 </div>
                 <div>
                     <label for="providers" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Providers</label>
-                    <el-select id="providers" v-model="provider" placeholder="Choose provider" size="large" filterable clearable>
+                    <el-select id="providers" v-model="provider" placeholder="Choose provider" size="large" clearable>
                         <el-option v-for="item in filteredProviders" :key="item.uri" :label="item.name" :value="`${item.uri}${item.url}`" />
                     </el-select>
                 </div>

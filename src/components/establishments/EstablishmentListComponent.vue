@@ -3,13 +3,13 @@
         <div class="searchtab">
             <el-input v-model="search" size="small" placeholder="Type to search"  />
         </div>
-        <el-table :data="establishments" class="custom-header">
+        <el-table :data="establishments">
             <el-table-column width="100">
                 <template #default="scope">
                     <img class="establishment_img" :src="scope.row.media">
                 </template>
             </el-table-column>
-            <el-table-column label="Name" prop="name" style="width: 25%; min-width: 200px;">
+            <el-table-column label="Name" prop="name" style="width: 25%; min-width: 200px;" sortable>
                 <template #default="scope">
                     <h1 class="establishment_name" @click="goToCompany(route.params.tag, scope.row.tag)">
                         {{ scope.row.name }}
