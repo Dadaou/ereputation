@@ -2,6 +2,15 @@
     <div class="reviews__content" v-if="reviews.length > 0">
         <article v-for="review in reviews" :class="[review.source == 'App (Private)' ? 'intern__comment' : '']">
             <div class="flex items-start review__item">
+                <div v-if="isLastFiftyReviewsVue" @click="goToCompany(review.establishment.competitor_tag)" class="establishment_info_contaier">
+                    <img :src="review.establishment.url_source" alt="" style="width: 130px; height: 60px;">
+                    <p>
+                        <i
+                            :class="['uil', review.establishment.category == 'Restaurant' ? 'uil-restaurant' : '', review.establishment.category == 'Hotel' ? 'uil-bed-double' : '', review.establishment.category == 'Residence' ? 'uil-home' : '', review.establishment.category == 'Other' ? 'uil-home ' : '', review.establishment.category == 'Event' ? 'uil-schedule' : '']">
+                        </i>
+                        {{ review.establishment.name }}
+                    </p>
+                </div>
                 <div class="flex items-center mb-1 space-x-4">
                     <div class="review__info space-y-1 dark:text-white info__reviews">
                         <div class="flex items-center mb-2 space-x-4">
@@ -201,7 +210,7 @@
                 {{ review.summary[0].overview }}
             </ExpansionPanel>
             <div class="col-span-2">
-                 <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 comment" 
+                 <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 mt-3 comment" 
                     v-html="highlightWord(review.comment, terms)">
                         
                  </p>
@@ -448,6 +457,7 @@ const emits = defineEmits(['reloadData', 'update-feeling']);
 const { width, height } = useWindowSize();
 const userStore = useUserStore();
 const router = useRouter();
+const route = useRoute();
 const appStore = useAppStore();
 const feedbackStore = useFeedbackStore();
 const companiesStore = useCompanyStore();
@@ -472,6 +482,9 @@ const showCountry = ref(false);
 const showCountryId = ref(null);
 const isMobile = ref(false);
 
+const isLastFiftyReviewsVue = computed(() => {
+    return route.name === 'LastFiftyReviews'
+})
 
 onMounted(()=>{
         if (window.innerWidth <= 975) {
@@ -903,7 +916,6 @@ const updateFeelingFeedback = ((_feeling, _type) => {
 
 const handleModal = (text, action, icon, type, review, category = '', section = null) => {
 
-    console.log("katal", category)
             showModal.value = true
             modal.value = {
                 text: text,
@@ -912,11 +924,6 @@ const handleModal = (text, action, icon, type, review, category = '', section = 
                 type: type,
                 section: section
             }
-
-
-            console.log("review", review)
-            console.log("cat", review)
-
 
             editReview(review, category)
 
@@ -928,11 +935,22 @@ const checkIfCategoryAlreadyExist = (categories, categoryToCheck) => {
 }
 
 /*onMounted(() => {
-    console.log("********", props.categories)
+    console.log("********", isLastFiftyReviews.value)
 })*/
 
 </script>
 <style scoped>
+
+.establishment_info_contaier {
+    display: flex; 
+    justify-content: center; 
+    flex-direction: column; 
+    gap: 6px;
+}
+
+.establishment_info_contaier:hover {
+    cursor: pointer;
+}
 .review_right_mobile {
     width: 97%;
     overflow-x: scroll;

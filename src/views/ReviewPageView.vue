@@ -358,6 +358,7 @@ const starFilter = (star) => {
 };
 
 onMounted(()=>{
+    console.log("mounted", route.params.id)
     const {stars} = route.query
     if(stars) starFilter(route.query.stars)
 })
@@ -683,6 +684,8 @@ const loadCategories = async (tag) => {
                 });
 
                 categories.value = cats;
+                console.clear()
+                console.log(categories.value)
             }
             // if (response.data && response.data.data) {
             //     categories.value = response.data.data
