@@ -11,8 +11,8 @@
                     loadReviews(companyId, option.page, option.limit, option.current, start_date, end_date, selectedWebsites, selectedStars, categoryFilters, language)
                 }" />
             </div>-->
-            <CommentComponent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
-                @reloadData="(review) => reloadData(review)" :categories="categories" />
+            <LastReviewContent v-if="reviews_loader == false" :reviews="visibleData" :showEmoji="true"
+                @reloadData="(review) => reloadData(review)" />
             <div v-else role="status"
                 class="space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 mb-5"
                 v-for="index in 5" :key="index">
@@ -51,7 +51,7 @@ import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { useRoute, useRouter } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
-import CommentComponent from '@Components/utils/CommentComponent.vue';
+import LastReviewContent from '@Components/utils/LastReviewContentComponent.vue';
 import PaginationComponent from '@Components/utils/PaginationComponentV2.vue';
 import { ref, watch, onBeforeMount, inject, provide } from 'vue';
 
@@ -156,28 +156,17 @@ const loadReviews = async (page, limit, current) => {
 
     if (response.status == 200) {
 
-        if (response.data.length > 0) {
-
-            for (const data of response.data) {
-                try {
-                    await loadCategories(data.establishment_competitor_tag);
-                } catch (error) {
-                    console.error("Failed to load categories for review:", error);
-                }
-            }
-        }
-        
         reviews_loader.value = false
         visibleData.value = response.data
-            
+        
     }
 }
 
 const feedbackLoading = ref(false)
 
 const loadCategories = async (establishmentCompetitorTag) => {
-
-      const api = `customer/establishment/categorizations?tag=${establishmentCompetitorTag}`
+    
+        const api = `customer/establishment/categorizations?tag=${establishmentCompetitorTag}`
         const response = await new Promise((resolve) => {
             services.get_Record(api, (response) => {
                 resolve(response)
@@ -192,6 +181,10 @@ const loadCategories = async (establishmentCompetitorTag) => {
                 });
 
                 categories.value = cats;
+
+                console.clear()
+                console.log("Categories loaded: ", categories.value)
+
             }
         }
 

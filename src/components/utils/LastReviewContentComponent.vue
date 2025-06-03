@@ -1,78 +1,8 @@
 <template>
     <div class="reviews__content" v-if="reviews.length > 0">
-        <article v-for="review in reviews" :class="[review.source == 'App (Private)' ? 'intern__comment' : '']">
-            <div class="flex items-start review__item">
-                <div class="flex items-center mb-1 space-x-4">
-                    <div class="review__info space-y-1 dark:text-white info__reviews">
-                        <div class="flex items-center mb-2 space-x-4">
-                            <img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full"
-                                :src="review.profile_photo" alt="">
-                            <div v-else
-                                class="relative inline-flex items-center justify-center w-8 h-8 p-1 rounded author__initial">
-                                <span class="font-medium dark:text-white">{{ userStore.getInitialsV2(review.author) }}
-                                </span>
-                            </div>
-                            <div class="font-medium dark:text-white">
-                                 <p id="author__name">{{ review.author }} 
-                                     <el-tooltip v-if="review.visitor_country && !isMobile" :content="review.visitor_country" placement="top">
-                                        <span v-if="review.visitor_country" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
-                                        </span>
-                                      </el-tooltip>
-                                        <span v-if="review.visitor_country && isMobile" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
-                                        </span>
-                                      <span v-if="showCountry && isMobile && showCountryId === review.id" class="ml-2 text-sm text-gray-500">{{ review.visitor_country }}</span>
-                                   </p>
-                            </div>
-                            <el-tooltip placement="top" v-if="review.review_url">
-                                <template #content> Reply </template>
-                                <a :href="review.review_url ? review.review_url : '#'" target="_blank">
-                                    <Icon icon="basil:reply-outline" width="24px"
-                                        :style="{ 'color': 'var(--color-danger)' }">
-                                    </Icon>
-                                </a>
-                            </el-tooltip>
-
-                        </div>
-                        <ul class="space-y-1 text-gray-500 dark:text-gray-400">
-                            <li v-if="review.date_review != null" class="flex items-center"><i
-                                    class="uil uil-calender"></i><span>
-                                    {{ moment(review.date_review).format('D MMMM YYYY') }}
-                                </span></li>
-                            <li v-else class="flex items-center"><i class="uil uil-calender"></i><span>
-                                    {{ moment(review.created_at).format('D MMMM YYYY') }}
-                                </span></li>
-                            <li class="flex items-center">
-                                <i class="uil uil-map-pin-alt"></i>
-                                <span>{{ review.source }}</span>
-                                <span v-if="review.source === 'App (Private)'">
-                                    
-                                    <span v-if="review.review_establishment_name" style="display: flex;justify-content: space-between;align-items: center;">
-
-                                        &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
-                                        <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
-
-                                        <a class="establishment__link" @click="goToCompany(review.review_establishment_tag)">
-                                                <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important" class="society__name">{{ review.review_establishment_name }}</label>
-                                        </a>
-                                    </span>
-                                    <em v-else>
-                                        &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
-                                        <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
-                                    </em>
-                                </span>
-                                <span v-else>
-                                  
-                                    <a v-if="review.review_establishment_name" class="establishment__link" @click="goToCompany(review.review_establishment_tag)">
-                                                <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important" class="society__name">{{ review.review_establishment_name }}</label>
-                                    </a>
-                                    <!-- <em v-if="review.review_establishment_name" style="cursor: pointer;" @click="goToCompany(review.review_establishment_tag)">{{ review.review_establishment_name }}</em> -->
-                                    
-                                </span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="review__right mt-2">
+        <article v-for="review in reviews" class="intern__comment">
+            <div>
+                <div class="review__right">
                     <div style="height: 20px;" v-if="showCategory" class="category_desktop">
                         <div v-if="review.category && review.category.split(';').length > 0" class="inline-flex" style="max-width: 500px; white-space: nowrap; overflow-x: auto;">
 
@@ -192,6 +122,153 @@
                             {{ review.star || review.rating }}</p>
                     </div>
                 </div>
+
+            </div>
+            <div class="review__item">
+                    <div v-if="isLastReviewsVue" @click="goToCompany(review.establishment.competitor_tag)" class="establishment_info_contaier">
+                        <img :src="review.establishment.url_source" alt="" style="width: 100%; height: 80px;">
+                        <p>
+                            <i
+                                :class="['uil', review.establishment.category == 'Restaurant' ? 'uil-restaurant' : '', review.establishment.category == 'Hotel' ? 'uil-bed-double' : '', review.establishment.category == 'Residence' ? 'uil-home' : '', review.establishment.category == 'Other' ? 'uil-home ' : '', review.establishment.category == 'Event' ? 'uil-schedule' : '']">
+                            </i>
+                            {{ review.establishment.name }}
+                        </p>
+
+                        <img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full"
+                                    :src="review.profile_photo" alt="">
+                                <div v-else
+                                    class="relative inline-flex items-center justify-center w-8 h-8 p-1 rounded author__initial">
+                                    <span class="font-medium dark:text-white">{{ userStore.getInitialsV2(review.author) }}
+                                    </span>
+                                </div>
+                                
+                        <div class="font-medium dark:text-white">
+                            <p id="author__name">{{ review.author }} 
+                                <el-tooltip v-if="review.visitor_country && !isMobile" :content="review.visitor_country" placement="top">
+                                    <span v-if="review.visitor_country" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
+                                    </span>
+                                </el-tooltip>
+                                <span v-if="review.visitor_country && isMobile" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
+                                </span>
+                                <span v-if="showCountry && isMobile && showCountryId === review.id" class="ml-2 text-sm text-gray-500">{{ review.visitor_country }}</span>
+                            </p>
+                        </div>  
+                        
+                        <ul class="space-y-1 text-gray-500 dark:text-gray-400">
+                                <li v-if="review.date_review != null" class="flex items-center"><i
+                                        class="uil uil-calender"></i><span>
+                                        {{ moment(review.date_review).format('D MMMM YYYY') }}
+                                    </span></li>
+                                <li v-else class="flex items-center"><i class="uil uil-calender"></i><span>
+                                        {{ moment(review.created_at).format('D MMMM YYYY') }}
+                                    </span></li>
+                                <li class="flex items-center">
+                                    <i class="uil uil-map-pin-alt"></i>
+                                    <span>{{ review.source }}</span>
+                                    <span v-if="review.source === 'App (Private)'">
+                                        
+                                        <span v-if="review.review_establishment_name" style="display: flex;justify-content: space-between;align-items: center;">
+
+                                            &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
+                                            <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
+
+                                            <a class="establishment__link" @click="goToCompany(review.review_establishment_tag)">
+                                                    <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important" class="society__name">{{ review.review_establishment_name }}</label>
+                                            </a>
+                                        </span>
+                                        <em v-else>
+                                            &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
+                                            <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
+                                        </em>
+                                    </span>
+                                    <span v-else>
+                                    
+                                        <a v-if="review.review_establishment_name" class="establishment__link" @click="goToCompany(review.review_establishment_tag)">
+                                                    <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important" class="society__name">{{ review.review_establishment_name }}</label>
+                                        </a>
+                                    
+                                        
+                                    </span>
+                                </li>
+                            </ul>
+                    </div>
+                    <div>
+                            <div class="flex">
+
+                                <div >
+                                    <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 comment"  v-html="highlightWord(review.comment, terms)">   
+                                    </p>
+                                </div>
+                                <!--<img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full"
+                                    :src="review.profile_photo" alt="">
+                                <div v-else
+                                    class="relative inline-flex items-center justify-center w-8 h-8 p-1 rounded author__initial">
+                                    <span class="font-medium dark:text-white">{{ userStore.getInitialsV2(review.author) }}
+                                    </span>
+                                </div>
+                                
+                                <div class="font-medium dark:text-white">
+                                    <p id="author__name">{{ review.author }} 
+                                        <el-tooltip v-if="review.visitor_country && !isMobile" :content="review.visitor_country" placement="top">
+                                            <span v-if="review.visitor_country" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
+                                            </span>
+                                        </el-tooltip>
+                                            <span v-if="review.visitor_country && isMobile" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
+                                            </span>
+                                        <span v-if="showCountry && isMobile && showCountryId === review.id" class="ml-2 text-sm text-gray-500">{{ review.visitor_country }}</span>
+                                    </p>
+                                </div> -->
+                                <el-tooltip placement="top" v-if="review.review_url">
+                                    <template #content> Reply </template>
+                                    <a :href="review.review_url ? review.review_url : '#'" target="_blank">
+                                        <Icon icon="basil:reply-outline" width="24px"
+                                            :style="{ 'color': 'var(--color-danger)' }">
+                                        </Icon>
+                                    </a>
+                                </el-tooltip>
+
+                            </div>
+
+
+                            <!--<ul class="space-y-1 text-gray-500 dark:text-gray-400">
+                                <li v-if="review.date_review != null" class="flex items-center"><i
+                                        class="uil uil-calender"></i><span>
+                                        {{ moment(review.date_review).format('D MMMM YYYY') }}
+                                    </span></li>
+                                <li v-else class="flex items-center"><i class="uil uil-calender"></i><span>
+                                        {{ moment(review.created_at).format('D MMMM YYYY') }}
+                                    </span></li>
+                                <li class="flex items-center">
+                                    <i class="uil uil-map-pin-alt"></i>
+                                    <span>{{ review.source }}</span>
+                                    <span v-if="review.source === 'App (Private)'">
+                                        
+                                        <span v-if="review.review_establishment_name" style="display: flex;justify-content: space-between;align-items: center;">
+
+                                            &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
+                                            <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
+
+                                            <a class="establishment__link" @click="goToCompany(review.review_establishment_tag)">
+                                                    <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important" class="society__name">{{ review.review_establishment_name }}</label>
+                                            </a>
+                                        </span>
+                                        <em v-else>
+                                            &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
+                                            <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
+                                        </em>
+                                    </span>
+                                    <span v-else>
+                                    
+                                        <a v-if="review.review_establishment_name" class="establishment__link" @click="goToCompany(review.review_establishment_tag)">
+                                                    <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important" class="society__name">{{ review.review_establishment_name }}</label>
+                                        </a>
+                                    
+                                        
+                                    </span>
+                                </li>
+                            </ul> -->
+                    </div>
+
             </div>
             <!-- <button v-if="review.summary && review.summary.length > 0" class="btn__light_secondary"
                 @click="showSummary()">
@@ -200,20 +277,6 @@
             <ExpansionPanel v-if="review.summary && review.summary.length > 0" title="AI Summarize">
                 {{ review.summary[0].overview }}
             </ExpansionPanel>
-            <div class="col-span-2">
-                 <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 mt-3 comment" 
-                    v-html="highlightWord(review.comment, terms)">
-                        
-                 </p>
-             <!--    <p >
-                  
-                {{ review.comment }}
-                </p> -->
-            </div>
-
-
-
-
 
             <!-- category on small screen -->
 
@@ -409,6 +472,7 @@ import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { useRoute,useRouter } from "vue-router";
 import {pays} from '@Services/countries.js';
+import { watch } from 'vue';
 
 
 const props = defineProps({
@@ -428,10 +492,6 @@ const props = defineProps({
     showCategory: {
         type: Boolean,
         default: true
-    },
-    categories: {
-        type: Array,
-        default: []
     },
     via: {
         type: String,
@@ -472,6 +532,13 @@ const baseURL = ref(import.meta.env.VITE_APP_API_URL);
 const showCountry = ref(false);
 const showCountryId = ref(null);
 const isMobile = ref(false);
+
+const categories = ref([]);
+
+const isLastReviewsVue = computed(() => {
+    return route.name === 'LastReviews'
+})
+
 
 onMounted(()=>{
         if (window.innerWidth <= 975) {
@@ -901,9 +968,30 @@ const updateFeelingFeedback = ((_feeling, _type) => {
     });
 })
 
+const transformCategory = (categoryList) => {
+
+    categories.value= []
+
+    if (categoryList.length > 0) {
+
+        for (let i = 0; i < categoryList.length; i++) {
+
+            categories.value = [...categories.value, {
+                id: i,
+                category: categoryList[i],
+            }]
+
+        }
+    }
+}
+
+
 const handleModal = (text, action, icon, type, review, category = '', section = null) => {
 
             showModal.value = true
+            //console.log("********", review)
+            transformCategory(review.establishment.categories.ucfirst)
+
             modal.value = {
                 text: text,
                 action: action,
@@ -930,9 +1018,12 @@ const checkIfCategoryAlreadyExist = (categories, categoryToCheck) => {
 
 .establishment_info_contaier {
     display: flex; 
-    justify-content: center; 
+    /*justify-content: center; */
     flex-direction: column; 
     gap: 6px;
+    width: 15%;
+    min-width: 150px;
+    margin-top: 5px;
 }
 
 .establishment_info_contaier:hover {
@@ -1043,7 +1134,7 @@ h5 p {
     border: 1px solid var(--color-primary);
 }
 
-.review__info {
+.review__info, .review__item {
     font-weight: 600;
 }
 
@@ -1052,13 +1143,16 @@ h5 p {
     color: var(--color-primary);
 }
 
-.review__info ul {
+.review__item ul {
     font-size: 13px !important;
     color: var(--color-bg1);
 }
 
 .review__item {
-    justify-content: space-between !important;
+    display: flex;
+    /*justify-content: center;*/
+    gap: 20px;
+    margin-top: 5px;
 }
 
 .reviews__content article {

@@ -416,9 +416,9 @@ const router = createRouter({
               component: () => import('@Views/SearchReviewsPageView.vue')
             },
             {
-              path: 'customer/:tag/establishment/reviews/last-fifty',
-              name: 'LastFiftyReviews',
-              component: () => import('@Views/LastFiftyReviewsPageView.vue')
+              path: 'customer/:tag/establishment/reviews/last',
+              name: 'LastReviews',
+              component: () => import('@Views/LastReviewsPageView.vue')
             },
             {
               path: 'customers',

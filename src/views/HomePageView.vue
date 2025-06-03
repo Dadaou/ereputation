@@ -20,7 +20,7 @@
                     <RouterLink class="search__icon" :to="{ name: 'CustomerSearchReview', params: { tag: tag } }">
                         <Icon :icon="'gg:search'" width="25"></Icon>
                     </RouterLink>
-                    <RouterLink class="search__icon" :to="{ name: 'LastFiftyReviews', params: { tag: tag } }">
+                    <RouterLink class="search__icon" :to="{ name: 'LastReviews', params: { tag: tag } }">
                         <Icon icon="mdi:format-list-numbered" width="25"></Icon>
                     </RouterLink>
                 </div>
