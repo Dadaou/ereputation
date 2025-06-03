@@ -145,7 +145,7 @@
                         <div class="font-medium dark:text-white">
                             <p id="author__name">{{ review.author }} 
                                 <el-tooltip v-if="review.visitor_country && !isMobile" :content="review.visitor_country" placement="top">
-                                    <span v-if="review.visitor_country" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
+                                    <span v-if="review.visitor_country" @click="toggleCountry(review.id)" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
                                     </span>
                                 </el-tooltip>
                                 <span v-if="review.visitor_country && isMobile" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
