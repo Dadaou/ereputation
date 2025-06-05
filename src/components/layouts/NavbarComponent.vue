@@ -44,20 +44,20 @@
 
       <div class="nav-dropdown">
         <div v-if="isFeedback || isSignUp" class="feedback__option">
-          <a v-if="establishement?.whatsapp == null" href="https://wa.me/message/IZFK26272CXFB1" target="_blank">
-            <!-- <i class="fa fa-whatsapp"></i> -->
-          </a>
-          <a v-else :href="establishement?.whatsapp" target="_blank">
+
+          <a v-if="showEstablishmentWhatsapp" :href="establishement.whatsapp" target="_blank">
             <i class="fa fa-whatsapp"></i>
           </a>
-          <a href="https://wa.me/message/IZFK26272CXFB1" target="_blank">
+
+          <a v-else-if="isSignUp" href="https://wa.me/message/IZFK26272CXFB1" target="_blank">
             <i class="fa fa-whatsapp"></i>
           </a>
-          <LanguageMenuDropdown :current="currentLanguage" @select="(language) => selectCurrentLanguage(language)" />
+
+          <LanguageMenuDropdown :current="currentLanguage" @select="selectCurrentLanguage" />
         </div>
 
         <div class="icon_container">
-          <a v-if="isfirstStepPage" href="https://wa.me/message/IZFK26272CXFB1" target="_blank">
+          <a v-if="isFirstStepPage" href="https://wa.me/message/IZFK26272CXFB1" target="_blank">
               <i class="fa fa-whatsapp" style="font-size: 40px;"></i>
           </a>
 
@@ -139,22 +139,21 @@ const props = defineProps({
   }
 })
 
-const isfirstStepPage = computed(() => {
+const isFirstStepPage = computed(() =>
+  route.path.includes('step-view') || route.name === 'Step'
+);
 
-  if(route.path.includes('step-view') || route.name === 'Step') {
-    return true
-  } else {
-    return false
-  }
-})
+const isFeedback = computed(() =>
+  publicUrls.includes(route.name)
+);
 
-const isFeedback = computed(() => {
-  return publicUrls.includes(route.name)
-});
+const isSignUp = computed(() =>
+  ['Signup', 'PaymentPage'].includes(route.name)
+);
 
-const isSignUp = computed(() => {
-  return route.name === 'Signup' || route.name === 'PaymentPage'
-});
+const showEstablishmentWhatsapp = computed(() =>
+  isFeedback.value && establishement?.whatsapp
+);
 
 const isPaymentPage = computed(() => {
   return route.name === 'PaymentPage';
