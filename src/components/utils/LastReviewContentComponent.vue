@@ -6,6 +6,14 @@
             <div style="display: flex; justify-content: space-between;">
 
                 <div class="category_container">
+
+                    <!--<img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full"
+                                    :src="review.profile_photo" alt="">
+                                <div v-else
+                                    class="relative inline-flex items-center justify-center w-8 h-8 p-1 rounded author__initial">
+                                    <span class="font-medium dark:text-white">{{ userStore.getInitialsV2(review.author) }}
+                                    </span>
+                                </div> -->
                     
                         <div class="font-medium dark:text-white">
                             <p id="author__name">{{ review.author }} 
@@ -193,7 +201,6 @@
                             {{ review.establishment.name }}
                         </p>
 
-                        <img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full" :src="review.profile_photo" alt="">
                     </div>
                     <div>
                             <div class="flex">
@@ -1019,9 +1026,10 @@ const checkIfCategoryAlreadyExist = (categories, categoryToCheck) => {
     /*justify-content: center; */
     flex-direction: column; 
     gap: 6px;
-    width: 15%;
+    width: 10%;
     min-width: 150px;
     margin-top: 5px;
+    /*border: 1px solid brown;*/
 }
 
 .establishment_info_contaier:hover {
