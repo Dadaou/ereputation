@@ -1,7 +1,66 @@
 <template>
     <div class="reviews__content" v-if="reviews.length > 0">
-        <article v-for="review in reviews" class="intern__comment">
-            <div>
+
+        <article v-for="review in reviews" :class="[review.source == 'App (Private)' ? 'intern__comment' : '']">
+
+            <div style="display: flex; justify-content: space-between;">
+
+                <div class="category_container">
+                    
+                        <div class="font-medium dark:text-white">
+                            <p id="author__name">{{ review.author }} 
+                                <el-tooltip v-if="review.visitor_country && !isMobile" :content="review.visitor_country" placement="top">
+                                    <span v-if="review.visitor_country" @click="toggleCountry(review.id)" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
+                                    </span>
+                                </el-tooltip>
+                                <span v-if="review.visitor_country && isMobile" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
+                                </span>
+                                <span v-if="showCountry && isMobile && showCountryId === review.id" class="ml-2 text-sm text-gray-500">{{ review.visitor_country }}</span>
+                            </p>
+                        </div>  
+                        
+                        <ul class="space-y-1 text-gray-500 dark:text-gray-400">
+                                <li v-if="review.date_review != null" class="flex items-center gap-1">
+                                    <i class="uil uil-calender"></i> 
+                                    <span>
+                                        {{ moment(review.date_review).format('D MMMM YYYY') }}
+                                    </span>
+                                </li>
+                                <li v-else class="flex items-center gap-1"><i class="uil uil-calender"></i><span>
+                                        {{ moment(review.created_at).format('D MMMM YYYY') }}
+                                    </span></li>
+                                <li class="flex items-center gap-1">
+                                    <i class="uil uil-map-pin-alt"></i>
+                                    <span>{{ review.source }}</span>
+                                    <span v-if="review.source === 'App (Private)'">
+                                        
+                                        <span v-if="review.review_establishment_name" style="display: flex;justify-content: space-between;align-items: center;">
+
+                                            &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
+                                            <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
+
+                                            <a class="establishment__link" @click="goToCompany(review.review_establishment_tag)">
+                                                    <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important" class="society__name">{{ review.review_establishment_name }}</label>
+                                            </a>
+                                        </span>
+                                        <em v-else>
+                                            &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
+                                            <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
+                                        </em>
+                                    </span>
+                                    <span v-else>
+                                    
+                                        <a v-if="review.review_establishment_name" class="establishment__link" @click="goToCompany(review.review_establishment_tag)">
+                                                    <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important" class="society__name">{{ review.review_establishment_name }}</label>
+                                        </a>
+                                    
+                                        
+                                    </span>
+                                </li>
+                            </ul>
+                </div>
+
+
                 <div class="review__right">
                     <div style="height: 20px;" v-if="showCategory" class="category_desktop">
                         <div v-if="review.category && review.category.split(';').length > 0" class="inline-flex" style="max-width: 500px; white-space: nowrap; overflow-x: auto;">
@@ -125,7 +184,7 @@
 
             </div>
             <div class="review__item">
-                    <div v-if="isLastReviewsVue" @click="goToCompany(review.establishment.competitor_tag)" class="establishment_info_contaier">
+                    <div @click="goToCompany(review.establishment.competitor_tag)" class="establishment_info_contaier">
                         <img :src="review.establishment.url_source" alt="" style="width: 100%; height: 80px;">
                         <p>
                             <i
@@ -134,63 +193,7 @@
                             {{ review.establishment.name }}
                         </p>
 
-                        <img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full"
-                                    :src="review.profile_photo" alt="">
-                                <div v-else
-                                    class="relative inline-flex items-center justify-center w-8 h-8 p-1 rounded author__initial">
-                                    <span class="font-medium dark:text-white">{{ userStore.getInitialsV2(review.author) }}
-                                    </span>
-                                </div>
-                                
-                        <div class="font-medium dark:text-white">
-                            <p id="author__name">{{ review.author }} 
-                                <el-tooltip v-if="review.visitor_country && !isMobile" :content="review.visitor_country" placement="top">
-                                    <span v-if="review.visitor_country" @click="toggleCountry(review.id)" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
-                                    </span>
-                                </el-tooltip>
-                                <span v-if="review.visitor_country && isMobile" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
-                                </span>
-                                <span v-if="showCountry && isMobile && showCountryId === review.id" class="ml-2 text-sm text-gray-500">{{ review.visitor_country }}</span>
-                            </p>
-                        </div>  
-                        
-                        <ul class="space-y-1 text-gray-500 dark:text-gray-400">
-                                <li v-if="review.date_review != null" class="flex items-center"><i
-                                        class="uil uil-calender"></i><span>
-                                        {{ moment(review.date_review).format('D MMMM YYYY') }}
-                                    </span></li>
-                                <li v-else class="flex items-center"><i class="uil uil-calender"></i><span>
-                                        {{ moment(review.created_at).format('D MMMM YYYY') }}
-                                    </span></li>
-                                <li class="flex items-center">
-                                    <i class="uil uil-map-pin-alt"></i>
-                                    <span>{{ review.source }}</span>
-                                    <span v-if="review.source === 'App (Private)'">
-                                        
-                                        <span v-if="review.review_establishment_name" style="display: flex;justify-content: space-between;align-items: center;">
-
-                                            &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
-                                            <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
-
-                                            <a class="establishment__link" @click="goToCompany(review.review_establishment_tag)">
-                                                    <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important" class="society__name">{{ review.review_establishment_name }}</label>
-                                            </a>
-                                        </span>
-                                        <em v-else>
-                                            &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
-                                            <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
-                                        </em>
-                                    </span>
-                                    <span v-else>
-                                    
-                                        <a v-if="review.review_establishment_name" class="establishment__link" @click="goToCompany(review.review_establishment_tag)">
-                                                    <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important" class="society__name">{{ review.review_establishment_name }}</label>
-                                        </a>
-                                    
-                                        
-                                    </span>
-                                </li>
-                            </ul>
+                        <img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full" :src="review.profile_photo" alt="">
                     </div>
                     <div>
                             <div class="flex">
@@ -534,11 +537,6 @@ const showCountryId = ref(null);
 const isMobile = ref(false);
 
 const categories = ref([]);
-
-const isLastReviewsVue = computed(() => {
-    return route.name === 'LastReviews'
-})
-
 
 onMounted(()=>{
         if (window.innerWidth <= 975) {
@@ -1134,7 +1132,7 @@ h5 p {
     border: 1px solid var(--color-primary);
 }
 
-.review__info, .review__item {
+.review__info, .category_container {
     font-weight: 600;
 }
 
@@ -1143,7 +1141,7 @@ h5 p {
     color: var(--color-primary);
 }
 
-.review__item ul {
+.category_container ul {
     font-size: 13px !important;
     color: var(--color-bg1);
 }
