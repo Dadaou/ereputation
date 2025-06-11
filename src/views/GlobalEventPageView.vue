@@ -135,7 +135,7 @@
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[0]" />
                
-               <p class="new-event-link" @click.stop="redirectToEventForm">Add an event ⮕</p>
+               <p class="new-event-link" @click.stop="redirectToEventForm">Add an event</p>
                 
             </div>
         </div>
