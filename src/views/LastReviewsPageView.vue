@@ -1,7 +1,12 @@
 <template>
     <div>
-        <div class="title" style="width: 100%;">
-            Last reviews
+        <div v-if="reviews_loader == false" class="item" style="height: 2px;">
+            <div style=" display: flex;flex-direction: row; justify-content: flex-start;align-items: center;width: 250px">
+                <span class="item__title">Last reviews : </span>
+                <span class="item__value ml-1"> 
+                    <i v-for="i in averageScore" class="fa fa-star ml-1" aria-hidden="true" style="color: #2f74e0"></i>
+                </span>  
+            </div>
         </div>
         <div class="reviews__content">
             <!--<div class="reviews__pagination">
@@ -63,6 +68,7 @@ const route = useRoute()
 const router = useRouter()
 
 let establishment = ref({})
+const averageScore = ref(5)
 let _reviews = ref([])
 let dataReviews = ref([])
 let reviews_loader = ref(true)
@@ -204,6 +210,31 @@ onBeforeMount(async () => {
 .text-blue-500 {
   color: #4299e1;
 }
+
+.item {
+    display: flex;
+    gap: 3rem;
+    justify-content: space-between;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    flex-basis: 210px;
+    padding: 25px;
+    border-radius: 10px;
+    width: 22%;
+}
+
+.item__title {
+    color: var(--color-bg2);
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.item__value {
+    color: var(--color-danger) !important;
+    font-size: 18px;
+    font-weight: bolder;
+    transition: var(--transition);
+}
+
 @media screen and (max-width:1024px) {
     .tablet>div {
         height: 200px;

@@ -301,6 +301,8 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, terms,
 
             if (somme > 0 && k > 0) {
                 average_star.value=Math.floor(somme/k)
+                console.clear()
+                console.log("************ ", average_star.value)
             }
            
         })
