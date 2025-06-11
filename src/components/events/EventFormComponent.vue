@@ -249,11 +249,19 @@ const submit = async () => {
     console.log(error);
   }
 };
+
 onBeforeMount(() => {
-  if (userStore.user?.customer?.establishments?.length > 0) {
+
+  const establishmentID = localStorage.getItem('establishment_id')
+
+  if(establishmentID) {
+    establishments.value = [`/api/establishments/${establishmentID}`]
+    localStorage.removeItem('establishment_id')
+  } 
+  else if(userStore.user?.customer?.establishments?.length > 0) {
     establishments.value = [`/api/establishments/${userStore.user.customer.establishments[0].id}`];
   }
-});
+})
 
 </script>
 <style scoped>

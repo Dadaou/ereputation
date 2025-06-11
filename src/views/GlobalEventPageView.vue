@@ -134,6 +134,9 @@
                 <DropdownComponent v-if="showPeriod" :showTitle="false"   placeholder="" :data="timePeriods" @submit="(timePeriod) => {
                     selectedTimePeriod = timePeriod
                 }" :default="timePeriods[0]" />
+               
+               <p class="new-event-link" @click.stop="redirectToEventForm">Add an event</p>
+                
             </div>
         </div>
     </div>
@@ -143,7 +146,7 @@
 import moment from 'moment';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useCompanyStore } from "@Stores/company.js";
 import DropdownComponent from '@Components/utils/DropdownComponent.vue';
 import EventItemComponent from '@Components/events/EventItemComponent.vue';
@@ -167,6 +170,7 @@ const WeatherView = defineAsyncComponent(() =>
 const companiesStore = useCompanyStore();
 const appStore = useAppStore();
 const route = useRoute();
+const router = useRouter();
 
 const dataLoading = ref(true);
 const chartLoading = ref(false);
@@ -206,6 +210,13 @@ const all_items = ref([
     { title: "Reviews", value: 0, icon: "uil-comment" },
     { title: "Competitors", value: 0, icon: "uil-building" },
 ]);
+
+const redirectToEventForm = () => {
+    localStorage.setItem('establishment_id', establishment.value.id)
+    router.push({
+        path: `/customer/${route.params.tag}/account/parameters/events/events_form`
+    })
+} 
 
 onBeforeMount(async () => {
     appStore.isLoading = true;
@@ -343,6 +354,16 @@ const  widthimage = (event) => {
     color: white;
     border-radius: 5px;
     padding: 5px;
+}
+
+.new-event-link {
+    font-size: 15px;
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.new-event-link:hover {
+    cursor: pointer;
 }
 
 
