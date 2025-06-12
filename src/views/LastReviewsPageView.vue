@@ -67,8 +67,10 @@ const customerTag = inject('tag')
 const route = useRoute()
 const router = useRouter()
 
+const feedbackLoading = ref(false)
+
 let establishment = ref({})
-const averageScore = ref(5)
+const averageScore = ref(0)
 let _reviews = ref([])
 let dataReviews = ref([])
 let reviews_loader = ref(true)
@@ -93,16 +95,6 @@ let reviewFeedbackData = ref({
 });
 
 provide('reviewFeedbackData',reviewFeedbackData);
-
-const language = inject('language')
-let selectedWebsites = ref('Global');
-let websites = ref(['Global']);
-
-appStore.setCurrentPage({
-    title1: "",
-    title2: "Reviews",
-    icon: "uil-estate",
-})
 
 appStore.setIsExist(true)
 
@@ -163,39 +155,31 @@ const loadReviews = async (page, limit, current) => {
     if (response.status == 200) {
 
         reviews_loader.value = false
+        calculateAverageScore(response.data)
         visibleData.value = response.data
         
     }
 }
 
-const feedbackLoading = ref(false)
+const calculateAverageScore = (data) => {
 
-const loadCategories = async (establishmentCompetitorTag) => {
-    
-        const api = `customer/establishment/categorizations?tag=${establishmentCompetitorTag}`
-        const response = await new Promise((resolve) => {
-            services.get_Record(api, (response) => {
-                resolve(response)
-            });
-        });
+    let somme=0
+    let k=0
 
-        if (response.status == 200) {
-             if (response.data) {
-                let cats=[];
-                response.data.forEach((_cat,_index)=>{
-                    cats.push({id:_index,category:_cat});
-                });
+    for(const item of data) {
 
-                categories.value = cats;
+        if (item.star && item.star > 0) {
 
-                console.clear()
-                console.log("Categories loaded: ", categories.value)
-
-            }
+            somme+=item.star
+            k++
         }
 
-}
+        if (somme > 0 && k > 0) {
+            averageScore.value= Math.floor(somme/k)
+        }
+    }
 
+}
 onBeforeMount(async () => {
     appStore.isLoading = false;
     await loadReviews(1, 1, 1)
@@ -219,7 +203,8 @@ onBeforeMount(async () => {
     flex-basis: 210px;
     padding: 25px;
     border-radius: 10px;
-    width: 22%;
+   
+    width: 270px;
 }
 
 .item__title {

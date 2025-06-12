@@ -7,27 +7,30 @@
 
                 <div class="category_container">
 
-                    <!--<img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full"
-                                    :src="review.profile_photo" alt="">
+                    <div style="display: flex; justify-content: flex-start; gap: 10px; align-items: center;">
+
+                            <img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full" :src="review.profile_photo" alt="">
                                 <div v-else
-                                    class="relative inline-flex items-center justify-center w-8 h-8 p-1 rounded author__initial">
-                                    <span class="font-medium dark:text-white">{{ userStore.getInitialsV2(review.author) }}
+                                        class="relative inline-flex items-center justify-center w-8 h-8 p-1 rounded author__initial">
+                                        <span class="font-medium dark:text-white">{{ userStore.getInitialsV2(review.author) }}
+                                        </span>
+                                </div> 
+
+                            <div class="font-medium dark:text-white">
+                                <p id="author__name">{{ review.author }} 
+                                    <el-tooltip v-if="review.visitor_country && !isMobile" :content="review.visitor_country" placement="top">
+                                        <span v-if="review.visitor_country" @click="toggleCountry(review.id)" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
+                                        </span>
+                                    </el-tooltip>
+                                    <span v-if="review.visitor_country && isMobile" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
                                     </span>
-                                </div> -->
-                    
-                        <div class="font-medium dark:text-white">
-                            <p id="author__name">{{ review.author }} 
-                                <el-tooltip v-if="review.visitor_country && !isMobile" :content="review.visitor_country" placement="top">
-                                    <span v-if="review.visitor_country" @click="toggleCountry(review.id)" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
-                                    </span>
-                                </el-tooltip>
-                                <span v-if="review.visitor_country && isMobile" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
-                                </span>
-                                <span v-if="showCountry && isMobile && showCountryId === review.id" class="ml-2 text-sm text-gray-500">{{ review.visitor_country }}</span>
-                            </p>
-                        </div>  
+                                    <span v-if="showCountry && isMobile && showCountryId === review.id" class="ml-2 text-sm text-gray-500">{{ review.visitor_country }}</span>
+                                </p>
+                            </div>  
+
+                    </div>
                         
-                        <ul class="space-y-1 text-gray-500 dark:text-gray-400">
+                    <ul class="space-y-1 text-gray-500 dark:text-gray-400 mt-2">
                                 <li v-if="review.date_review != null" class="flex items-center gap-1">
                                     <i class="uil uil-calender"></i> 
                                     <span>
