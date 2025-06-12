@@ -2,7 +2,7 @@
     <h3 v-if="hasData">About the gate</h3>
     <div v-if="hasData">
         <div class="chart-container">
-            <apexchart type="treemap" height="450" :options="chartOptions" :series="series"></apexchart>
+            <apexchart type="treemap" @click="handleChartClick" height="450" :options="chartOptions" :series="series"></apexchart>
         </div>
     </div>
     <div v-else class="content-message">
@@ -48,13 +48,106 @@ const series = ref([]);
 const hasData = ref(false);
 const userStore = useUserStore();
 
-const emits = defineEmits(['showModal','setSource','show-visitors','show-chart']);
 
+const emits = defineEmits(['showModal','showGateModal','setSource','show-visitors','show-allvisitors','show-chart']);
+
+    const handleChartClick = (event, chartContext, config) => {
+ 
+     
+      if (config.dataPointIndex !== undefined) {
+
+        const clickedItem = series.value[0].data[config.dataPointIndex];
+
+        if (clickedItem.x == "Offers" || clickedItem.x == "Infos") {
+              getVisitors(start_date.value, end_date.value, timePeriods.value, establishment.value, staff.value, units.value,clickedItem.x);
+      
+                emits('showGateModal',true);
+                emits('setSource',"Gates");
+        }
+        
+      }
+      
+    };
+
+    const getVisitors = async (start_date, end_date, timePeriods, establishment, staff, units,submitted) => {
+
+
+        let api = `/customer/visitor/gates/offers?tag=${route.params.tag}&from=${start_date}&to=${end_date}&options=${submitted}&type=${timePeriods || 'daily'}`
+        if (establishment) {
+            api = api + `&establishment=${establishment}`
+        }
+        if (staff) {
+            api = api + `&staff=${staff}`
+        }
+        if (units) {
+            api = api + `&units=${units}`
+        }
+
+        try {
+            const response = await new Promise((resolve) => {
+            services.get_Record(api, (response) => {
+                resolve(response);
+            });
+            });
+
+            if (response.status === 200) {
+            
+            let visiteurs=[];
+            let allVisiteurs=[];
+            response.data.forEach((_d)=>{
+                _d['created_at']=moment(_d['created_at']).format('YYYY-MM-DD HH:mm');
+                _d['label']=_d['landing_page'].split(submitted.charAt(0).toUpperCase() + submitted.slice(1)+'?label=')[1].split('&logo=')[0];
+                _d['logo']=_d['landing_page'].split(submitted.charAt(0).toUpperCase() + submitted.slice(1)+'?label=')[1].split('&logo=')[1].split('&url=')[0];
+                _d['url']=_d['landing_page'].split(submitted.charAt(0).toUpperCase() + submitted.slice(1)+'?label=')[1].split('&logo=')[1].split('&url=')[1].split('&doc=')[0];
+                _d['doc']=_d['landing_page'].split(submitted.charAt(0).toUpperCase() + submitted.slice(1)+'?label=')[1].split('&logo=')[1].split('&url=')[1].split('&doc=')[1];
+               if ( _d['doc'] &&  _d['doc'] != null &&  _d['doc'] != "null" &&  _d['doc'] != "") {
+                 _d['hasDoc']=true;
+               }else{
+                _d['hasDoc']=false;
+                 _d['doc']='';
+               }
+                if ( _d['url'] &&  _d['url'] != null &&  _d['url'] != "null" &&  _d['url'] != "") {
+                 _d['hasUrl']=true;
+               }else{
+                _d['hasUrl']=false;
+                 _d['url']='';
+               }
+               _d['key']=_d['label']+''+_d['logo'];
+
+               const index = visiteurs.findIndex(item => item['key'] ===  _d['key']);
+
+                if (index !== -1) {
+
+                     _d['nb']=visiteurs[index]['nb'] + 1;
+
+                    visiteurs[index] = _d; 
+
+                }else{
+
+                    _d['nb']=1;
+                    visiteurs.push(_d);
+
+                }
+
+                allVisiteurs.push(_d);
+                
+            })
+            console.log(visiteurs)
+            emits('show-visitors',visiteurs);
+            emits('show-allvisitors',allVisiteurs);
+            } else {
+            console.error('Error fetching visitors:', response);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 // Options du graphique
 const chartOptions = ref({
     chart: {
-        id: 'vuechart-treemap',
+        id: 'vuechart-treemap'
     },
+
     legend: {
         show: false
     },
@@ -69,8 +162,10 @@ const chartOptions = ref({
                         color: userStore.user.partner ? (userStore.user.partner.back_color == "#0a8964" ? '#3EB489' : "#009DCF") : (userStore.user.customer.partner_back_color == "#0a8964" ? '#3EB489' : "#009DCF")
                     },
                 ]
-            }
-        }
+            },
+       
+        },
+ 
     },
     dataLabels: {
         enabled: true,

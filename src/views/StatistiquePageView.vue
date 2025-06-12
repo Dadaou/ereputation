@@ -71,10 +71,68 @@
         </div>
 
 
+            <!-- Gate modal liste  -->
+
+                    <div v-if="gateModal" class="overlay" >
+                    <div class="modal" @click.stop :style="{ top: modalTop + 'px',position: 'absolute' }">
+                     <div >
+                     
+                        <h6 v-if="isExternal == 'Gates'" class="text-lg font-bold" style="text-align: center;color: gray;"> Gates</h6>
+                        <button class="btn text-lg close-btn" style="color: red;" @click="closeGateModal">x</button>
+                     </div>
+                      <div class="modal-content" >
+
+
+                          <el-table :data="visitors" class="custom-header"    @row-click="handleRowClick"
+                            style="font-size: 13px !important;padding: 0px !important;margin: 0px !important;cursor: pointer">
+
+                            <el-table-column width="100" align="center">
+                                <template #default="scope" >
+                                    <img class="establishment_img" :src="scope.row.logo">
+                                    <span>{{ scope.row.label }}</span>
+                                </template>
+                            </el-table-column>
+
+
+
+                            <el-table-column label="Establishment" align="center" prop="establishment_name" show-overflow-tooltip/>
+                             
+
+                            <el-table-column align="center" label="Click Count" prop="nb"  show-overflow-tooltip />
+
+                           
+                            <el-table-column align="center" label="Url">
+                                <template #default="scope" >
+                                    
+                                    <a style="color:dodgerblue;" :href="scope.row.url" target="_blank">{{ scope.row.url }}</a>
+                                </template>
+                            </el-table-column>
+                      
+
+                          <el-table-column align="center" label="Document">
+                                <template #default="scope" >
+                                    
+                                    <a style="color:dodgerblue;" :href="scope.row.doc" target="_blank">{{ scope.row.doc }}</a>
+                                </template>
+                            </el-table-column>
+                         
+
+                    
+                           
+                        </el-table>
+
+                        
+                      </div>
+                      
+                    </div>
+                  </div>
+
+
+                        <!-- Fin Gate modal -->
 
          <!-- modal liste visitors -->
 
-                    <div v-if="modal" class="overlay" >
+                    <div v-if="modal" class="overlay" style="z-index: 9999;">
                     <div class="modal" @click.stop :style="{ top: modalTop + 'px',position: 'absolute' }">
                      <div >
                         <h6 v-if="isExternal == 'Feedback'" class="text-lg font-bold" style="text-align: center;color: gray;"> Feedback Form Submissions</h6>
@@ -83,67 +141,32 @@
                         <h6 v-if="isExternal == 'Country'" class="text-lg font-bold" style="text-align: center;color: gray;"> Countries</h6>
                         <h6 v-if="isExternal == 'Platform'" class="text-lg font-bold" style="text-align: center;color: gray;"> Platform & Social Media</h6>
                         <h6 v-if="isExternal == 'Document'" class="text-lg font-bold" style="text-align: center;color: gray;"> Document Qrcodes</h6>
+                        <h6 v-if="isExternal == 'Gates'" class="text-lg font-bold" style="text-align: center;color: gray;"> Gates</h6>
                         <button class="btn text-lg close-btn" style="color: red;" @click="closeModal">x</button>
                      </div>
                       <div class="modal-content" >
 
 
-                          <el-table :data="visitors" class="custom-header" style="font-size: 13px !important;padding: 0px !important;margin: 0px !important;">
+                          <el-table :data="isExternal == 'Gates' ? gateVisitors : visitors" class="custom-header" style="font-size: 13px !important;padding: 0px !important;margin: 0px !important;">
 
-                            <!--  <el-table-column label="Os" align="left" >
-                                <template #default="scope">
-                                  <span style="width: 3px !important;">
-                                    {{ scope.row.os }}
-                                  </span>
-
-                                </template>
-                              </el-table-column> -->
                             <el-table-column label="Establishment" align="center" prop="establishment_name" show-overflow-tooltip/>
                                <el-table-column label="OS" align="center" prop="os" show-overflow-tooltip/>
 
-                              <!--  <el-table-column label="Device" align="left" >
-                                <template #default="scope">
-                                  <span style=" word-wrap: break-word;word-break: break-word;white-space: normal">
-                                    {{ scope.row.device }}
-                                  </span>
-
-                                </template>
-                              </el-table-column>
-                 -->
+                          
                               <el-table-column label="Device" prop="device"  show-overflow-tooltip />
 
                               <el-table-column label="Country" prop="country" show-overflow-tooltip/>
-                            <!--   <el-table-column label="Country" align="left" >
-                                <template #default="scope">
-                                  <span style=" word-wrap: break-word;word-break: break-word;white-space: normal">
-                                    {{ scope.row.country }}
-                                  </span>
-
-                                </template>
-                              </el-table-column> -->
+                      
 
                               <el-table-column label="City" prop="city" show-overflow-tooltip/>
-                              <!--  <el-table-column label="City" align="left" >
-                                <template #default="scope">
-                                  <span style=" word-wrap: break-word;word-break: break-word;white-space: normal">
-                                    {{ scope.row.city }}
-                                  </span>
-
-                                </template>
-                              </el-table-column> -->
+                         
 
                                <el-table-column label="Gps" align="center" prop="gps"  show-overflow-tooltip/> 
-                            <!--   <el-table-column label="Gps" align="left" >
-                                <template #default="scope">
-                                  <span style=" word-wrap: break-word;word-break: break-word;white-space: normal">
-                                    {{ scope.row.gps }}
-                                  </span>
-
-                                </template>
-                              </el-table-column> -->
+                          
                             <el-table-column  label="Language" align="center" prop="language"  show-overflow-tooltip/> 
                             <el-table-column  label="User Agent" align="center" prop="ua"  show-overflow-tooltip/> 
                              <el-table-column label="ISP" align="center" prop="isp"  show-overflow-tooltip/> 
+                           
 
                               <el-table-column v-if="isExternal == 'Feedback' || isExternal == 'Country' || isExternal == 'Discount' || isExternal == 'Platform'" label="Contact" align="left" show-overflow-tooltip>
                                 <template #default="scope">
@@ -155,16 +178,7 @@
                               </el-table-column>
                              
                                <el-table-column label="Created at" prop="created_at" show-overflow-tooltip/>
-                          <!--    <el-table-column label="Created At" align="left">
-                                <template #default="scope">
-                                  <span style=" word-wrap: break-word;word-break: break-word;white-space: normal">
-                                     {{ scope.row.created_at ? moment(scope.row.created_at).format('YYYY-MM-DD HH:mm') : '' }}
-                                  </span>
-
-                                </template>
-                              </el-table-column> -->
-                         
-                         
+                    
                            
                         </el-table>
 
@@ -176,6 +190,10 @@
 
 
                         <!-- Fin modal -->
+
+
+
+         
 
   
 
@@ -196,7 +214,7 @@
                 <PieChartService @show-chart="displayChart" />
             </div>
             <div class="statistique" v-if = "showChart.gate">
-                <ChartAboutGate @show-chart="displayChart" />
+                <ChartAboutGate @show-chart="displayChart" @show-allvisitors="showAllvisitors" @show-visitors="showVisitors" @showGateModal="showGateModal" @setSource="setExternal" />
             </div>
             <div class="statistique" v-if = "showChart.platform">
                 <ChartPlatformsAndSocialmedia @show-chart="displayChart" @show-visitors="showVisitors" @showModal="showModal" @setSource="setExternal"/>
@@ -296,7 +314,10 @@ const nbrGapClickSocial = ref(null);
 const userStore = useUserStore();
 const timePeriods = ref(['daily', 'monthly', 'yearly']);
 const visitors = ref([]);
+const allVisitors = ref([]);
+const gateVisitors = ref([]);
 const modal = ref(false);
+const gateModal = ref(false);
 const isExternal=ref(false);
 const scrollPosition = ref(0);
 const contentTop = ref(null);
@@ -424,31 +445,48 @@ const displayChart = (_ch)=>{
         showChart.value.document = false;
     }
 }
+
+
+const handleRowClick = (row, column, event) => {
+
+    gateVisitors.value=allVisitors.value.filter(item => item['logo'] ===  row['logo'] && item['label'] ===  row['label']);
+      modal.value=true;
+    //   gateModal.value=false;
+    modalTop.value = window.scrollY;
+  console.log('Ligne cliquée :', row);
+
+};
+
+const showAllvisitors = (_visitors) => {
+    allVisitors.value=_visitors;
+} 
+
 const showVisitors = (_visitors) => {
     visitors.value=_visitors;
 }
 
 const showModal = (_modal) => {
+ 
     modal.value=_modal;
     modalTop.value = window.scrollY;
-    // scrollPosition.value = window.scrollY; 
-
-    // nextTick(() => {
-    //     if (contentTop.value) {
-    //       const rect = contentTop.value.getBoundingClientRect();
-    //       window.scrollTo({
-    //         top: window.scrollY + rect.bottom - 80,
-    //         behavior: "smooth",
-    //       });
-    //     }
-    // });
+   
     
 }
 const closeModal = () => {
     modal.value=false;
-    // nextTick(() => {
-    //     window.scrollTo({ top: scrollPosition.value, behavior: "smooth" });
-    // });
+  
+    
+}
+
+const showGateModal = (_modal) => {
+    gateModal.value=_modal;
+    modalTop.value = window.scrollY;
+   
+    
+}
+const closeGateModal = () => {
+    gateModal.value=false;
+  
     
 }
 const setExternal = (_isExternal) => {
