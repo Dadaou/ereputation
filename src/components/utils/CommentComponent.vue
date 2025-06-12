@@ -14,13 +14,24 @@
                             </div>
                             <div class="font-medium dark:text-white">
                                  <p id="author__name">{{ review.author }} 
+
                                      <el-tooltip v-if="review.visitor_country && !isMobile" :content="review.visitor_country" placement="top">
-                                        <span v-if="review.visitor_country" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
+                                        <span v-if="review.visitor_country" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{  getCountry(review) }}
                                         </span>
                                       </el-tooltip>
-                                        <span v-if="review.visitor_country && isMobile" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
+
+                                        <el-tooltip v-if="!review.visitor_country && !isMobile" :content="getCountryByLanguage(review)" placement="top">
+                                        <span v-if="!review.visitor_country" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{  getCountry(review) }}
                                         </span>
-                                      <span v-if="showCountry && isMobile && showCountryId === review.id" class="ml-2 text-sm text-gray-500">{{ review.visitor_country }}</span>
+                                      </el-tooltip>
+
+                                        <span v-if="review.visitor_country && isMobile" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review) }}
+                                        </span>
+
+                                         <span v-if="!review.visitor_country && isMobile" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review) }}
+                                        </span>
+
+                                      <span v-if="showCountry && isMobile && showCountryId === review.id" class="ml-2 text-sm text-gray-500">{{ review.visitor_country ? review.visitor_country : getCountryByLanguage(review)  }}</span>
                                    </p>
                             </div>
                             <el-tooltip placement="top" v-if="review.review_url">
@@ -409,6 +420,7 @@ import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
 import { useRoute,useRouter } from "vue-router";
 import {pays} from '@Services/countries.js';
+import {flags} from '@Services/flaglanguage.js';
 
 
 const props = defineProps({
@@ -604,14 +616,63 @@ const category = ref('');
 const reviewFeedbackData = inject('reviewFeedbackData');
 const calculSentimentAnalysis = inject('calculSentimentAnalysis');
 
-const getCountry=(_country)=>{
-    const country_name = pays.find(_pays => _pays.nom.toLowerCase() === _country.toLowerCase())
+const getCountry=(_review)=>{
+    
+    if (_review.source != 'App (Private)') {
+       
+         const language_name = flags.find(_flag => _flag.code.toLowerCase() == _review.language.toLowerCase())
+
+        if (language_name) {
+         
+            return language_name.flag;
+                
+        }else{
+           
+            return ''; 
+        }
+        
+    }else{
+
+        if (_review.visitor_country == null) {
+             return ''; 
+        }else{
+
+            const country_name = pays.find(_pays => _pays.nom.toLowerCase() === _review.visitor_country.toLowerCase())
 
             if (country_name) {
+                
                 return country_name.drapeau;
+                    
             }else{
-              return '';
+                return ''; 
             }
+
+        }
+       
+       
+    }
+ 
+   
+}
+
+const getCountryByLanguage=(_review)=>{
+    
+    
+       
+         const language_name = flags.find(_flag => _flag.code.toLowerCase() == _review.language.toLowerCase())
+
+        if (language_name) {
+         
+            return language_name.name;
+                
+        }else{
+           
+            return ''; 
+        }
+        
+  
+ 
+   
 }
 
 const editReview = (review, _category = '') => {
