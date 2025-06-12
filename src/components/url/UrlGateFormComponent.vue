@@ -91,6 +91,9 @@
                                 style="display:none">
                         </div>
                     </div>
+                    <div class="tracking" v-if="!isEdit">
+                        <el-checkbox v-model="noTracking" label="Direct link (no tracking)" size="large" />
+                    </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t border-b dark:border-gray-600">
                     <button v-if="!isHashtag" type="submit" :disabled="!isValidLink"
@@ -120,7 +123,7 @@
 <script setup>
 import { computed, ref, onBeforeMount, watch, inject } from 'vue'
 import { useUserStore } from "@Stores/user.js"
-import { ElMessage, ElOption, ElSelect, ElButton } from 'element-plus'
+import { ElMessage, ElOption, ElSelect, ElButton, ElCheckbox } from 'element-plus'
 import { useWindowSize } from '@vueuse/core';
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import services from '@Services/services.js';
@@ -141,6 +144,7 @@ import LinksUrlsListComponent from '../links/LinksUrlsListComponent.vue';
 
 const router = useRouter();
 const route = useRoute();
+const noTracking = ref(false)
 
 const emit = defineEmits(['reload']);
 const userStore = useUserStore();
@@ -523,6 +527,7 @@ const submit = async () => {
         enable: false,
         section: section.value,
         caption: caption.value,
+        noTracking : noTracking.value
     };
 
     if (IsValueOkay(establishment.value)) data.establishment = establishment.value;
@@ -704,7 +709,9 @@ const getURIbyName = (name) => {
 
 const handleEdit = async (data) => {
     category.value = data.category
-    establishment.value = data.establishment;
+    establishment.value = data.establishment
+    noTracking.value = data.no_tracking === null ? false : data.no_tracking
+    
     setTimeout(function () {
         category.value = data.category;
         link.value = data.link;
