@@ -284,7 +284,6 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, terms,
 
 
     if (response.status == 200) {
-        console.log(response)
         reviews_loader.value = false;
         optionsReview.value.max = response.data['count'];
         visibleData.value = response.data['data'];
@@ -301,6 +300,8 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, terms,
 
             if (somme > 0 && k > 0) {
                 average_star.value=Math.floor(somme/k)
+                console.clear()
+                console.log("************ ", average_star.value)
             }
            
         })
