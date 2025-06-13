@@ -8,7 +8,7 @@
         <div class="label">{{ $t("subscription.stepper.my_account") }}</div>
       </div>
       <div class="line"></div>
-      <div class="step active">
+      <div class="step active mt-4">
         <div class="circle">2</div>
         <div class="label">{{ $t("subscription.stepper.payment") }} <span class="stripe-note">{{ $t("subscription.stepper.payment_note") }}</span></div>
       </div>

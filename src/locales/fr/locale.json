@@ -156,7 +156,7 @@
             "my_account": "Mon compte",
             "payment": "Paiement",
             "payment_note": "(sécurisé par Stripe)",
-            "get_started": "Commencer"
+            "get_started": "C’est parti !"
         }
     }
 }

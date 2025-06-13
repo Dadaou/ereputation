@@ -39,9 +39,10 @@
             <div class="label">{{ $t("subscription.stepper.my_account") }}</div>
           </div>
           <div class="line"></div>
-          <div class="step">
+          <div class="step mt-4">
             <div class="circle">2</div>
-            <div class="label">{{ $t("subscription.stepper.payment") }} <span class="stripe-note">{{ $t("subscription.stepper.payment_note") }}</span></div>
+            <div class="label">{{ $t("subscription.stepper.payment") }}</div>
+            <span class="stripe-note">{{ $t("subscription.stepper.payment_note") }}</span>
           </div>
           <div class="line"></div>
           <div class="step">
@@ -49,6 +50,9 @@
             <div class="label">{{ $t("subscription.stepper.get_started") }}</div>
           </div>
         </div>
+
+        
+        
 
         <div class="tab__pane-body w-full" style="position: relative; width: 100%;">
 
