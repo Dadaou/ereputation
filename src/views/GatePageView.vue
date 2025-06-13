@@ -116,7 +116,7 @@ const useCategories = computed(() => {
 
 const handleClick = async (element, category) => {
 
-     
+     console.log(element)
     // const visitorId = localStorage.getItem('visitId');
     const vistorData = {
         "visitor_id": visitorId.value,
@@ -132,7 +132,7 @@ const handleClick = async (element, category) => {
     if (response.status === 200) {
        
 
-             if (!route.query.preview && (category == "offers" || category == "infos") ) {
+             if (!route.query.preview && element.no_tracking !== true && (category == "offers" || category == "infos") ) {
                 console.log('visitor ajouté')
            
                 try {
@@ -209,6 +209,7 @@ const loadLinks = async (tag) => {
     });
 
     if (response.status == 200) {
+        console.log(response.data)
         links.value = response.data;
     }
 };

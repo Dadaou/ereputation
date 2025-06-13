@@ -212,14 +212,30 @@
                 {{ review.summary[0].overview }}
             </ExpansionPanel>
             <div class="col-span-2">
-                 <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 mt-3 comment" 
+                 <p class=" text-gray-500 text-sm dark:text-gray-400 mt-3 comment" 
                     v-html="highlightWord(review.comment, terms)">
                         
                  </p>
-             <!--    <p >
-                  
-                {{ review.comment }}
-                </p> -->
+                <p class="mb-5 text-right pull-right comment" style="cursor: pointer;color: dodgerblue;">
+
+                       <i :class="review.memo != null ? 'uil uil-comment-exclamation ' : 'uil uil-pen' "
+                                style="color: var(--color-danger); font-size: 16px; cursor: pointer;margin: 1px;"
+                                @mouseover="(e) => {
+                                    buttonRefMemo = e.currentTarget
+                                    visibleMemo = true
+                                }" @mouseleave="() => visibleMemo = false"
+                                @click="handleModalMemo('Write a memo', review.memo != null ? 'edit' : 'add', 'uil-add', 'memo', review)">
+                            </i>
+                            <el-tooltip ref="tooltipRefMemo" :visible="visibleMemo" :virtual-ref="buttonRefMemo" virtual-triggering
+                                popper-class="singleton-tooltip" placement="top">
+                                <template #content>
+                                    <span>Write a memo</span>
+                                </template>
+                            </el-tooltip>
+                    
+                    
+                 </p>
+           
             </div>
 
 
@@ -328,7 +344,38 @@
 
 
 
+        <ModalComponent :showModal="showModalMemo" @close="verifyMemo" :width="modalWidth">
+            <template #content>
+                <div class="modal__header">
+                    <div class="modal__title">
+                        <h3 class="font-semibold text-gray-900 dark:text-white">
+                            <i class="uil uil-edit"></i> {{ modalMemo.text }}
+                        </h3>
+                    </div>
+                    <div class="modal__close">
+                        <i class="uil uil-times-circle" @click="verifyMemo"></i>
+                    </div>
+                </div>
+                <div class="mb-6 feedback__rating">
+                  
 
+                    <textarea v-model="memo" id=""></textarea>
+
+                   
+
+
+                </div>
+                <div class="mt-5 download__qr_btn ">
+
+          
+                    <button class="btn__light_secondary" @click="updateMemo">
+                        <span><i class="uil uil-save"></i> {{ modalMemo.action == "edit" ? 'Save' : 'Add' }}</span>
+                    </button>
+
+
+                </div>
+            </template>
+        </ModalComponent>
 
 
 
@@ -423,6 +470,7 @@ import {pays} from '@Services/countries.js';
 import {flags} from '@Services/flaglanguage.js';
 
 
+
 const props = defineProps({
     reviews: {
         type: Array,
@@ -470,12 +518,15 @@ const modalWidth = computed(() => {
     return gap + 35;
 })
 const buttonRef = ref()
+const buttonRefMemo = ref()
 const buttonRefCateg = ref()
 const tooltipRef = ref()
+const tooltipRefMemo = ref()
 const tooltipRefCateg = ref()
 const buttonRef2 = ref()
 const tooltipRef2 = ref()
 const visible = ref(false)
+const visibleMemo = ref(false)
 const visibleCateg = ref(false)
 const visible2 = ref(false);
 const feeling_new_category = ref(null);
@@ -599,8 +650,18 @@ const modal = ref({
     icon: '',
     type: ''
 });
+
+const showModalMemo = ref(false);
+const modalMemo = ref({
+    text: '',
+    action: '',
+    icon: '',
+    type: ''
+});
 provide('modal', modal);
+provide('modalMemo', modalMemo);
 const feel = ref(null);
+const memo = ref(null);
 const feel_review = ref(null);
 const id = ref('');
 const old_item_category = ref('');
@@ -702,6 +763,20 @@ const editReview = (review, _category = '') => {
         showModal.value = true;
 
     }
+
+}
+
+const editMemo = (review) => {
+
+     selectedReview.value = review;
+    memo.value = selectedReview.value.memo;
+
+}
+
+const verifyMemo = () => {
+    memo.value = selectedReview.value.memo;
+    showModalMemo.value = false;
+    
 
 }
 
@@ -949,6 +1024,36 @@ const updateReview = async () => {
     }
 };
 
+
+const updateMemo = async () => {
+
+    let updatedValue = {
+        id: selectedReview.value.id,
+        memo: memo.value
+    }
+
+
+    try {
+
+        showModalMemo.value = false;
+
+       
+
+            await services.post_Record(
+                "/customer/review/memo",
+                updatedValue,
+                (response) => {
+                    //
+                });
+
+        selectedReview.value.memo = memo.value != "" ? memo.value : null;
+
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+
 const updateFeelingFeedback = ((_feeling, _type) => {
     if (_type == 'feeling_review') {
         feel_review.value = _feeling;
@@ -977,6 +1082,20 @@ const handleModal = (text, action, icon, type, review, category = '', section = 
 
 };
 
+const handleModalMemo = (text, action, icon, type, review) => {
+
+            showModalMemo.value = true
+            modalMemo.value = {
+                text: text,
+                action: action,
+                icon: icon,
+                type: type
+            }
+
+            editMemo(review)
+
+};
+
 const checkIfCategoryAlreadyExist = (categories, categoryToCheck) => {
     const categoryArray = categories.split(';')
     return categoryArray.includes(categoryToCheck)
@@ -988,6 +1107,50 @@ const checkIfCategoryAlreadyExist = (categories, categoryToCheck) => {
 
 </script>
 <style scoped>
+    .icon-wrapper {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .icon-wrapper i {
+      font-size: 24px;
+      color: #555;
+      transition: color 0.3s;
+    }
+
+    .icon-wrapper:hover i {
+      color: #007bff;
+    }
+
+    .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      width: max-content;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 4px;
+      padding: 5px 8px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%; /* Position au-dessus */
+      left: 50%;
+      transform: translateX(-50%);
+      transition: opacity 0.3s;
+      white-space: nowrap;
+      font-size: 13px;
+    }
+
+    .icon-wrapper:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+
+
+
+
 
 .establishment_info_contaier {
     display: flex; 
