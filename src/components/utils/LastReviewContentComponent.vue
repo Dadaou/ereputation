@@ -1,99 +1,83 @@
 <template>
     <div class="reviews__content" v-if="reviews.length > 0">
-        <article v-for="review in reviews" class="intern__comment">
-            <div>
-                <div class="review__right">
-                    <div style="height: 20px;" v-if="showCategory" class="category_desktop">
-                        <div v-if="review.category && review.category.split(';').length > 0" class="inline-flex" style="max-width: 500px; white-space: nowrap; overflow-x: auto;">
 
+        <article v-for="review in reviews" class="review-card">
+            <!-- Section gauche: Image + Infos établissement -->
+            <div class="establishment-section" @click.stop="goToCompany(review.establishment.competitor_tag)">
+                <img :src="review.establishment.url_source" alt="" style="width: 100%; height: 80px;"
+                    class="hotel-image">
 
-                            <!-- category -->
-                            <div v-for="(categ, index) in review.category.split(';')" :key="categ" class="inline-flex">
-
-                                <div v-if="categ != ' ' " class="review__category-container ml-1"> 
-
-                                    <span @click.stop="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review,categ),category=categ,old_item_category=categ, addExisteCategorie = null" class="review__category">{{
-                                        categ }}
-                                    <span
-                                        v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')"
-                                        class="emoji "
-                                        @click.stop="handleModal('Category feeling', 'edit', 'uil-edit', 'feeling', review, categ, review?.classification_section?.[categ]), feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
-                                        <span v-if="review.classification_feeling[categ] == 'positive'">😀</span>
-                                        <span
-                                            v-if="review.classification_feeling[categ] == 'neutre' || review.classification_feeling[categ] == 'neutral'">😐</span>
-                                        <span v-if="review.classification_feeling[categ] == 'negative'">😕</span>
-                                    </span>
-
-                                    <span v-else class="emoji ">
-
-                                        <i class="uil uil-plus-circle"
-                                            style="color: var(--color-warning); cursor: pointer" @mouseover="(e) => {
-                                                buttonRefCateg = e.currentTarget
-                                                visibleCateg = true
-                                            }" @mouseleave="() => visibleCateg = false"
-                                            @click.stop="handleModal('Category feeling', 'add', 'uil-add', 'feeling', review, categ, review?.classification_section?.[categ]), feeling_new_category = 'yes', feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
-                                        </i>
-                                        <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg"
-                                            :virtual-ref="buttonRefCateg" virtual-triggering
-                                            popper-class="singleton-tooltip" placement="top">
-                                            <template #content>
-                                                <span>Click to add category feeling</span>
-                                            </template>
-                                        </el-tooltip>
-
-                                    </span>
-
-
-                                </span>
-
-                                </div>
-                            </div>
-
-                            <i class="uil uil-plus-circle"
-                                style="color: var(--color-warning); font-size: 18px; cursor: pointer;margin: 1px;"
-                                @mouseover="(e) => {
-                                    buttonRef = e.currentTarget
-                                    visible = true
-                                }" @mouseleave="() => visible = false"
-                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review, null), feeling_new_category = null, addExisteCategorie = 'yes'">
-                            </i>
-                            <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
-                                popper-class="singleton-tooltip" placement="top">
-                                <template #content>
-                                    <span>Click to add category</span>
-                                </template>
-                            </el-tooltip>
-
-
-
-                        </div>
-
-                        <div class="review__category-container" v-else>
-                            <i class="uil uil-plus-circle"
-                                style="color: var(--color-warning); font-size: 18px; cursor: pointer" @mouseover="(e) => {
-                                    buttonRef = e.currentTarget
-                                    visible = true
-                                }" @mouseleave="() => visible = false"
-                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review, null)">
-                            </i>
-                            <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
-                                popper-class="singleton-tooltip" placement="top">
-                                <template #content>
-                                    <span>Click to add category</span>
-                                </template>
-                            </el-tooltip>
-                        </div>
+                <div class="hotel-info">
+                    <div class="hotel-name-container">
+                        <i
+                            :class="['uil', review.establishment.category == 'Restaurant' ? 'uil-restaurant' : '', review.establishment.category == 'Hotel' ? 'uil-bed-double' : '', review.establishment.category == 'Residence' ? 'uil-home' : '', review.establishment.category == 'Other' ? 'uil-home ' : '', review.establishment.category == 'Event' ? 'uil-schedule' : '']">
+                        </i>
+                        <span class="hotel-name">{{ review.establishment.name }}</span>
+                        <span class="hotel-type">{{ review.establishment.category }}</span>
                     </div>
-                    <div v-if="showEmoji">
+
+                    <div class="location-info">
+                        <i class="fas fa-map-marker-alt location-icon"></i>
+                        <span>{{ review.source }}</span>
+                        <span v-if="review.source === 'App (Private)'">
+                            <span v-if="review.review_establishment_name"
+                                style="display: flex;justify-content: space-between;align-items: center;">
+                                &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
+                                <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
+                                <a class="establishment__link" @click="goToCompany(review.review_establishment_tag)">
+                                    <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important"
+                                        class="society__name">{{ review.review_establishment_name }}</label>
+                                </a>
+                            </span>
+                            <em v-else>
+                                &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
+                                <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
+                            </em>
+                        </span>
+                        <span v-else>
+                            <a v-if="review.review_establishment_name" class="establishment__link"
+                                @click="goToCompany(review.review_establishment_tag)">
+                                <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important"
+                                    class="society__name">{{ review.review_establishment_name }}</label>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section droite: Auteur + Contenu -->
+            <div class="content-section">
+                <!-- Auteur, date et rating -->
+                <div class="author-section">
+                    <img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full" :src="review.profile_photo"
+                        alt="">
+                    <div v-else class="user-avatar">{{ userStore.getInitialsV2(review.author) }}</div>
+                    <div class="user-info">
+                        <div class="inline-flex gap-2 items-center">
+                        <h3 class="!mb-0">
+                            {{ review.author }} 
+                        </h3>
+                        <el-tooltip v-if="review_url" placement="top">
+                                    <template #content> Reply </template>
+                                    <a :href="review.review_url ? review.review_url : '#'" target="_blank">
+                                        <Icon icon="basil:reply-outline" width="24px"
+                                            :style="{ 'color': 'var(--color-danger)' }">
+                                        </Icon>
+                                    </a>
+                                </el-tooltip>
+                        </div>
+                        <div v-if="review.date_review != null" class="review-date flex items-center"><i
+                                class="uil uil-calender"></i><span>
+                                {{ moment(review.date_review).format('D MMMM YYYY') }}
+                            </span></div>
+                        <div v-else class="review-date flex items-center"><i class="uil uil-calender"></i><span>
+                                {{ moment(review.created_at).format('D MMMM YYYY') }}
+                            </span></div>
+                    </div>
+                    <div class="rating-badge" v-if="showEmoji">
                         <span v-if="review.feeling" class="emoji mx-1"
                             @click="handleModal('Review feeling', 'edit', 'uil-edit', 'feeling_review', review, null), feel_review = review.feeling, feeling_categorization = null">
-                            <!-- have classification -->
-                            <!--    <span v-if="review.category && review.category.split(';').length > 0" class="emoji mx-1">
-                                    <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'positive'">😀</span>
-                                    <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'neutre'">😐</span>
-                                    <span v-if="getFeeling(review.category.split(';'),review.classification_feeling) == 'negative'">😕</span>
-                                </span> -->
-                            <!-- not have classification -->
+
                             <span class="emoji mx-1">
                                 <span v-if="review.feeling == 'positive'">😀</span>
                                 <span v-if="review.feeling == 'neutre' || review.feeling == 'neutral'">😐</span>
@@ -118,184 +102,28 @@
                         </span>
 
                         <p
-                            class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center px-3 py-1 rounded dark:bg-yellow-200 dark:text-yellow-800">
+                            class="bg-yellow-100 text-yellow-800 !font-bold !text-md inline-flex items-center px-3 py-1 rounded dark:bg-yellow-200 dark:text-yellow-800">
                             {{ review.star || review.rating }}</p>
                     </div>
                 </div>
 
-            </div>
-            <div class="review__item">
-                    <div v-if="isLastReviewsVue" @click="goToCompany(review.establishment.competitor_tag)" class="establishment_info_contaier">
-                        <img :src="review.establishment.url_source" alt="" style="width: 100%; height: 80px;">
-                        <p>
-                            <i
-                                :class="['uil', review.establishment.category == 'Restaurant' ? 'uil-restaurant' : '', review.establishment.category == 'Hotel' ? 'uil-bed-double' : '', review.establishment.category == 'Residence' ? 'uil-home' : '', review.establishment.category == 'Other' ? 'uil-home ' : '', review.establishment.category == 'Event' ? 'uil-schedule' : '']">
-                            </i>
-                            {{ review.establishment.name }}
-                        </p>
+                <p v-html="highlightWord(review.comment, terms)" class="review-text"></p>
 
-                        <img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full"
-                                    :src="review.profile_photo" alt="">
-                                <div v-else
-                                    class="relative inline-flex items-center justify-center w-8 h-8 p-1 rounded author__initial">
-                                    <span class="font-medium dark:text-white">{{ userStore.getInitialsV2(review.author) }}
-                                    </span>
-                                </div>
-                                
-                        <div class="font-medium dark:text-white">
-                            <p id="author__name">{{ review.author }} 
-                                <el-tooltip v-if="review.visitor_country && !isMobile" :content="review.visitor_country" placement="top">
-                                    <span v-if="review.visitor_country" @click="toggleCountry(review.id)" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
-                                    </span>
-                                </el-tooltip>
-                                <span v-if="review.visitor_country && isMobile" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
-                                </span>
-                                <span v-if="showCountry && isMobile && showCountryId === review.id" class="ml-2 text-sm text-gray-500">{{ review.visitor_country }}</span>
-                            </p>
-                        </div>  
-                        
-                        <ul class="space-y-1 text-gray-500 dark:text-gray-400">
-                                <li v-if="review.date_review != null" class="flex items-center"><i
-                                        class="uil uil-calender"></i><span>
-                                        {{ moment(review.date_review).format('D MMMM YYYY') }}
-                                    </span></li>
-                                <li v-else class="flex items-center"><i class="uil uil-calender"></i><span>
-                                        {{ moment(review.created_at).format('D MMMM YYYY') }}
-                                    </span></li>
-                                <li class="flex items-center">
-                                    <i class="uil uil-map-pin-alt"></i>
-                                    <span>{{ review.source }}</span>
-                                    <span v-if="review.source === 'App (Private)'">
-                                        
-                                        <span v-if="review.review_establishment_name" style="display: flex;justify-content: space-between;align-items: center;">
-
-                                            &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
-                                            <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
-
-                                            <a class="establishment__link" @click="goToCompany(review.review_establishment_tag)">
-                                                    <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important" class="society__name">{{ review.review_establishment_name }}</label>
-                                            </a>
-                                        </span>
-                                        <em v-else>
-                                            &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
-                                            <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
-                                        </em>
-                                    </span>
-                                    <span v-else>
-                                    
-                                        <a v-if="review.review_establishment_name" class="establishment__link" @click="goToCompany(review.review_establishment_tag)">
-                                                    <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important" class="society__name">{{ review.review_establishment_name }}</label>
-                                        </a>
-                                    
-                                        
-                                    </span>
-                                </li>
-                            </ul>
-                    </div>
-                    <div>
-                            <div class="flex">
-
-                                <div >
-                                    <p class="mb-2 text-gray-500 text-sm dark:text-gray-400 comment"  v-html="highlightWord(review.comment, terms)">   
-                                    </p>
-                                </div>
-                                <!--<img v-if="review.profile_photo != null" class="w-10 h-10 rounded-full"
-                                    :src="review.profile_photo" alt="">
-                                <div v-else
-                                    class="relative inline-flex items-center justify-center w-8 h-8 p-1 rounded author__initial">
-                                    <span class="font-medium dark:text-white">{{ userStore.getInitialsV2(review.author) }}
-                                    </span>
-                                </div>
-                                
-                                <div class="font-medium dark:text-white">
-                                    <p id="author__name">{{ review.author }} 
-                                        <el-tooltip v-if="review.visitor_country && !isMobile" :content="review.visitor_country" placement="top">
-                                            <span v-if="review.visitor_country" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
-                                            </span>
-                                        </el-tooltip>
-                                            <span v-if="review.visitor_country && isMobile" @click="toggleCountry(review.id)" class="ml-2" style="cursor:pointer;">{{ getCountry(review.visitor_country) }}
-                                            </span>
-                                        <span v-if="showCountry && isMobile && showCountryId === review.id" class="ml-2 text-sm text-gray-500">{{ review.visitor_country }}</span>
-                                    </p>
-                                </div> -->
-                                <el-tooltip placement="top" v-if="review.review_url">
-                                    <template #content> Reply </template>
-                                    <a :href="review.review_url ? review.review_url : '#'" target="_blank">
-                                        <Icon icon="basil:reply-outline" width="24px"
-                                            :style="{ 'color': 'var(--color-danger)' }">
-                                        </Icon>
-                                    </a>
-                                </el-tooltip>
-
-                            </div>
+                <ExpansionPanel v-if="review.summary && review.summary.length > 0" title="AI Summarize">
+                    {{ review.summary[0].overview }}
+                </ExpansionPanel>
 
 
-                            <!--<ul class="space-y-1 text-gray-500 dark:text-gray-400">
-                                <li v-if="review.date_review != null" class="flex items-center"><i
-                                        class="uil uil-calender"></i><span>
-                                        {{ moment(review.date_review).format('D MMMM YYYY') }}
-                                    </span></li>
-                                <li v-else class="flex items-center"><i class="uil uil-calender"></i><span>
-                                        {{ moment(review.created_at).format('D MMMM YYYY') }}
-                                    </span></li>
-                                <li class="flex items-center">
-                                    <i class="uil uil-map-pin-alt"></i>
-                                    <span>{{ review.source }}</span>
-                                    <span v-if="review.source === 'App (Private)'">
-                                        
-                                        <span v-if="review.review_establishment_name" style="display: flex;justify-content: space-between;align-items: center;">
-
-                                            &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
-                                            <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
-
-                                            <a class="establishment__link" @click="goToCompany(review.review_establishment_tag)">
-                                                    <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important" class="society__name">{{ review.review_establishment_name }}</label>
-                                            </a>
-                                        </span>
-                                        <em v-else>
-                                            &nbsp;&nbsp;<em v-if="review.unit_name">{{ review.unit_name }}</em>
-                                            <em v-else>{{ review.staff_firstname }} {{ review.staff_lastname }}</em>
-                                        </em>
-                                    </span>
-                                    <span v-else>
-                                    
-                                        <a v-if="review.review_establishment_name" class="establishment__link" @click="goToCompany(review.review_establishment_tag)">
-                                                    <label style="cursor: pointer;margin-left: 8px;font-size: 14px !important" class="society__name">{{ review.review_establishment_name }}</label>
-                                        </a>
-                                    
-                                        
-                                    </span>
-                                </li>
-                            </ul> -->
-                    </div>
-
-            </div>
-            <!-- <button v-if="review.summary && review.summary.length > 0" class="btn__light_secondary"
-                @click="showSummary()">
-                <span>AI Summarize <i class="uil uil-angle-double-down"></i></span>
-            </button> -->
-            <ExpansionPanel v-if="review.summary && review.summary.length > 0" title="AI Summarize">
-                {{ review.summary[0].overview }}
-            </ExpansionPanel>
-
-            <!-- category on small screen -->
-
-            <div class="review__right_mobile mt-2">
-                <div v-if="showCategory" class="category_container_mobile">
-                    <div v-if="review.category && review.category.split(';').length > 0"
-                        class="inline-flex category_mobile">
-
-
+                <div style="height: 20px;" v-if="showCategory">
+                    <div v-if="review.category && review.category.split(';').length > 0" class="inline-flex"
+                        style="max-width: 500px; white-space: nowrap; overflow-x: auto;">
                         <!-- category -->
-                        <div v-for="(categ, index)  in review.category.split(';')" :key="categ">
-
-                            <div v-if="categ != ''" class="review__category-container ml-1">
-
+                        <div v-for="(categ, index) in review.category.split(';')" :key="categ" class="inline-flex">
+                            <div v-if="categ != ' '" class="review__category-container ml-1">
                                 <span
                                     @click.stop="handleModal('Edit review category', 'edit', 'uil-edit', 'category', review, categ), category = categ, old_item_category = categ, addExisteCategorie = null"
                                     class="review__category">{{
                                         categ }}
-
                                     <span
                                         v-if="review.classification_feeling[categ] && (review.classification_feeling[categ] == 'positive' || review.classification_feeling[categ] == 'negative' || review.classification_feeling[categ] == 'neutral' || review.classification_feeling[categ] == 'neutre')"
                                         class="emoji "
@@ -306,84 +134,43 @@
                                         <span v-if="review.classification_feeling[categ] == 'negative'">😕</span>
                                     </span>
 
-                                    <span v-else class="emoji ">
-
-                                        <i class="uil uil-plus-circle"
-                                            style="color: var(--color-warning); cursor: pointer" @mouseover="(e) => {
-                                                buttonRefCateg = e.currentTarget
-                                                visibleCateg = true
-                                            }" @mouseleave="() => visibleCateg = false"
+                                    <span v-else class="emoji">
+                                        <i class="uil uil-plus-circle tooltip"
+                                            data-tooltip="Click to add category feeling"
+                                            style="color: var(--color-warning); cursor: pointer"
                                             @click.stop="handleModal('Category feeling', 'add', 'uil-add', 'feeling', review, categ, review?.classification_section?.[categ]), feeling_new_category = 'yes', feel = review.classification_feeling[categ], old_item_category = categ, feeling_categorization = 'yes'">
                                         </i>
-                                        <el-tooltip ref="tooltipRefCateg" :visible="visibleCateg"
-                                            :virtual-ref="buttonRefCateg" virtual-triggering
-                                            popper-class="singleton-tooltip" placement="top">
-                                            <template #content>
-                                                <span>Click to add review feeling</span>
-                                            </template>
-                                        </el-tooltip>
-
                                     </span>
 
                                 </span>
-
                             </div>
                         </div>
 
-                        <i class="uil uil-plus-circle"
-                            style="color: var(--color-warning); font-size: 18px; cursor: pointer;margin: 1px;"
-                            @mouseover="(e) => {
-                                buttonRef = e.currentTarget
-                                visible = true
-                            }" @mouseleave="() => visible = false"
+                        <!-- <i class="uil uil-plus-circle"
+                            style="color: var(--color-warning); font-size: 18px; cursor: pointer; margin: 1px;"
                             @click="handleModal('Add review category', 'add', 'uil-add', 'category', review, null), feeling_new_category = null, addExisteCategorie = 'yes'">
-                        </i>
-                        <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
-                            popper-class="singleton-tooltip" placement="top">
-                            <template #content>
-                                <span>Click to add category</span>
-                            </template>
-                        </el-tooltip>
-
-
+                        </i> -->
+                        <button type="button" 
+                                class="btn-add-category"
+                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review, null), feeling_new_category = null, addExisteCategorie = 'yes'">
+                            <i class="uil uil-plus-circle"></i> Add a category
+                        </button>
                     </div>
-
-                    <!-- new category -->
 
                     <div class="review__category-container" v-else>
-                        <i class="uil uil-plus-circle"
-                            style="color: var(--color-warning); font-size: 18px; cursor: pointer" @mouseover="(e) => {
-                                buttonRef = e.currentTarget
-                                visible = true
-                            }" @mouseleave="() => visible = false"
+                        <!-- <i class="uil uil-plus-circle tooltip" data-tooltip="Click to add category"
+                            style="color: var(--color-warning); font-size: 18px; cursor: pointer"
                             @click="handleModal('Add review category', 'add', 'uil-add', 'category', review, null)">
-                        </i>
-                        <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
-                            popper-class="singleton-tooltip" placement="top">
-                            <template #content>
-                                <span>Click to add category</span>
-                            </template>
-                        </el-tooltip>
+                        </i> -->
+                        <button type="button" 
+                                class="btn-add-category"
+                                @click="handleModal('Add review category', 'add', 'uil-add', 'category', review, null)">
+                            <i class="uil uil-plus-circle"></i> Add a category
+                        </button>
                     </div>
-
-                    <!-- end new category -->
-
-
                 </div>
             </div>
-            <!-- Fin category on small screen -->
-
-
-
         </article>
-
-
-
-
-
-
-
-
 
         <ModalComponent :showModal="showModal" @close="showModal = false" :width="modalWidth">
             <template #content>
@@ -414,22 +201,16 @@
                         <el-option v-for="(item, index) in categories" :key="index + 1" :label="item.category"
                             :value="item.category" />
                     </el-select>
-                    <!-- <div v-else style="color: orangered;">Delete this category ?</div> -->
-
 
                 </div>
                 <div class="mt-5 download__qr_btn ">
 
-                    <!--  <el-popconfirm v-if="(modal.type == 'category' || modal.type == 'delete') && (modal.action != 'add')" title="Are you sure to delete this?" @confirm="updateReview" placement="top">
-                        <template #reference> -->
                     <button v-if="(modal.type == 'category' || modal.type == 'delete') && (modal.action != 'add')"
                         style="background-color: indianred !important;color: white;margin-inline: 5px;"
                         class="btn__light_secondary" @click="modal.type = 'delete', updateReview()">
                         <span><i class="uil uil-trash"></i> Delete</span>
 
                     </button>
-                    <!--   </template>
-    </el-popconfirm> -->
 
                     <button v-if="modal.type == 'category'" class="btn__light_secondary" @click="updateReview">
                         <span><i class="uil uil-save"></i> {{ modal.action == "edit" ? 'Save' : 'Add' }}</span>
@@ -440,18 +221,6 @@
             </template>
         </ModalComponent>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
 </template>
 <script setup>
@@ -470,8 +239,8 @@ import 'element-plus/es/components/select/style/css'
 import { Icon } from '@iconify/vue';
 import services from '@Services/services.js';
 import { useAppStore } from "@Stores/app.js";
-import { useRoute,useRouter } from "vue-router";
-import {pays} from '@Services/countries.js';
+import { useRoute, useRouter } from "vue-router";
+import { pays } from '@Services/countries.js';
 import { watch } from 'vue';
 
 
@@ -523,9 +292,12 @@ const tooltipRef = ref()
 const tooltipRefCateg = ref()
 const buttonRef2 = ref()
 const tooltipRef2 = ref()
+const buttonRef3 = ref()
+const tooltipRef3 = ref()
 const visible = ref(false)
 const visibleCateg = ref(false)
 const visible2 = ref(false);
+const visible3 = ref(false);
 const feeling_new_category = ref(null);
 const baseURL = ref(import.meta.env.VITE_APP_API_URL);
 
@@ -540,39 +312,39 @@ const isLastReviewsVue = computed(() => {
 })
 
 
-onMounted(()=>{
-        if (window.innerWidth <= 975) {
-            isMobile.value = true;
-        } else {
-            isMobile.value = false;
-        }
+onMounted(() => {
+    if (window.innerWidth <= 975) {
+        isMobile.value = true;
+    } else {
+        isMobile.value = false;
+    }
 })
 
-window.addEventListener("resize", ()=>{
-        
-        if (window.innerWidth <= 975) {
-            isMobile.value = true;
-        } else {
-            isMobile.value = false;
-        }
-    });
+window.addEventListener("resize", () => {
+
+    if (window.innerWidth <= 975) {
+        isMobile.value = true;
+    } else {
+        isMobile.value = false;
+    }
+});
 
 const toggleCountry = (_id) => {
-  showCountry.value = !showCountry.value;
-  showCountryId.value = _id;
-   setTimeout(() => {
-      showCountry.value = false;
+    showCountry.value = !showCountry.value;
+    showCountryId.value = _id;
+    setTimeout(() => {
+        showCountry.value = false;
     }, 2000);
 };
 
-const highlightWord=(_text, _word)=>{
-     
-      if (!_word) return _text;
+const highlightWord = (_text, _word) => {
 
-      const regex = new RegExp(`\\b${_word}\\b`, 'gi');
+    if (!_word) return _text;
 
-      return _text.replace(regex, `<span style="color : white;background:var(--color-danger)">${_word}</span>`);
-    }
+    const regex = new RegExp(`\\b${_word}\\b`, 'gi');
+
+    return _text.replace(regex, `<span style="color : white;background:var(--color-danger)">${_word}</span>`);
+}
 
 const goToCompany = (establishment_tag) => {
 
@@ -671,14 +443,14 @@ const category = ref('');
 const reviewFeedbackData = inject('reviewFeedbackData');
 const calculSentimentAnalysis = inject('calculSentimentAnalysis');
 
-const getCountry=(_country)=>{
+const getCountry = (_country) => {
     const country_name = pays.find(_pays => _pays.nom.toLowerCase() === _country.toLowerCase())
 
-            if (country_name) {
-                return country_name.drapeau;
-            }else{
-              return '';
-            }
+    if (country_name) {
+        return country_name.drapeau;
+    } else {
+        return '';
+    }
 }
 
 const editReview = (review, _category = '') => {
@@ -925,7 +697,7 @@ const updateReview = async () => {
                                     //console.log("12")
 
                                     const categoryArray = selectedReview.value.category.split(';')
-                                    if(categoryArray.includes(category.value)) return
+                                    if (categoryArray.includes(category.value)) return
 
                                     new_cat = selectedReview.value.category.split(';')[i]
                                 }
@@ -970,7 +742,7 @@ const updateFeelingFeedback = ((_feeling, _type) => {
 
 const transformCategory = (categoryList) => {
 
-    categories.value= []
+    categories.value = []
 
     if (categoryList.length > 0) {
 
@@ -988,19 +760,19 @@ const transformCategory = (categoryList) => {
 
 const handleModal = (text, action, icon, type, review, category = '', section = null) => {
 
-            showModal.value = true
-            //console.log("********", review)
-            transformCategory(review.establishment.categories.ucfirst)
+    showModal.value = true
+    //console.log("********", review)
+    transformCategory(review.establishment.categories.ucfirst)
 
-            modal.value = {
-                text: text,
-                action: action,
-                icon: icon,
-                type: type,
-                section: section
-            }
+    modal.value = {
+        text: text,
+        action: action,
+        icon: icon,
+        type: type,
+        section: section
+    }
 
-            editReview(review, category)
+    editReview(review, category)
 
 };
 
@@ -1015,11 +787,10 @@ const checkIfCategoryAlreadyExist = (categories, categoryToCheck) => {
 
 </script>
 <style scoped>
-
 .establishment_info_contaier {
-    display: flex; 
+    display: flex;
     /*justify-content: center; */
-    flex-direction: column; 
+    flex-direction: column;
     gap: 6px;
     width: 15%;
     min-width: 150px;
@@ -1029,6 +800,7 @@ const checkIfCategoryAlreadyExist = (categories, categoryToCheck) => {
 .establishment_info_contaier:hover {
     cursor: pointer;
 }
+
 .review_right_mobile {
     width: 97%;
     overflow-x: scroll;
@@ -1134,7 +906,8 @@ h5 p {
     border: 1px solid var(--color-primary);
 }
 
-.review__info, .review__item {
+.review__info,
+.review__item {
     font-weight: 600;
 }
 
@@ -1150,47 +923,219 @@ h5 p {
 
 .review__item {
     display: flex;
-    /*justify-content: center;*/
     gap: 20px;
     margin-top: 5px;
 }
 
-.reviews__content article {
-    margin: 10px auto;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-}
-
-.info__reviews i {
-    margin-right: 5px;
-    color: var(--color-danger);
-}
-
-.review__category-container {
+.review-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin: 0 auto;
+    padding: 16px;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: right;
-    gap: 2px;
-    cursor: pointer;
+    gap: 16px;
 }
 
-.review__category {
-    background: var(--color-danger);
-    color: white;
-    font-size: 13px;
-    border-radius: 8px;
-    padding: 0 8px;
-    font-weight: 400;
-}
-
-.review__right {
+/* Section gauche: Image + Infos établissement */
+.establishment-section {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
+    gap: 8px;
+    min-width: 200px;
+}
+
+.hotel-image {
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.hotel-info {
+    text-align: center;
+}
+
+.hotel-name-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+    margin-bottom: 4px;
+}
+
+.hotel-icon {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.hotel-name {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 14px;
+}
+
+.hotel-type {
+    background: var(--color-danger);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-left: 4px;
+}
+
+.location-info {
+    display: flex;
+    align-items: center;
+    color: #6b7280;
+    font-size: 13px;
     justify-content: flex-start;
-    gap: 16px;
-    height: 100%;
+}
+
+.location-icon {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+/* Section droite: Auteur + Contenu */
+.content-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Auteur et date */
+.author-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.user-info h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 4px 0;
+}
+
+.review-date {
+    font-size: 13px;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.rating-badge {
+    background: #fef3c7;
+    color: #d97706;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+}
+
+/* Texte de l'avis */
+.review-text {
+    color: #4b5563;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+/* Bouton d'action */
+.action-button {
+    color: #3b82f6;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+    margin-bottom: 12px;
+    align-self: flex-start;
+}
+
+.action-button:hover {
+    text-decoration: underline;
+}
+
+/* Section des boutons et emojis */
+.actions-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.add-button {
+    background: none;
+    border: none;
+    color: #f59e0b;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.add-button:hover {
+    background-color: #fef3c7;
+}
+
+.emoji {
+    font-size: 18px;
+}
+
+.btn-add-category {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    font-size: 13px;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.btn-add-category:hover {
+    background-color: rgba(var(--color-primary), 0.1);
+    transform: scale(1.05);
+}
+
+.btn-add-category:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.btn-add-category:active {
+    transform: scale(0.95);
+}
+
+.btn-add-category i {
+    pointer-events: none;
 }
 </style>
