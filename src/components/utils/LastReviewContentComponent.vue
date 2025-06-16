@@ -961,6 +961,11 @@ h5 p {
     gap: 16px;
 }
 
+.review__category {
+    font-size: 14px;
+    color: #4b5563;
+}
+
 @media screen and (max-width: 725px) {
     .review-card {
         flex-direction: column;
@@ -986,11 +991,6 @@ h5 p {
 
     .hotel-info * {
         color: white !important;
-    }
-
-    .review__category {
-        font-size: 14px;
-        color: #4b5563;
     }
 }
 
