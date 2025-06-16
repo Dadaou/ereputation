@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="reviews_loader == false" class="item" style="height: 2px;">
+        <div v-if="reviews_loader == false" class="item mb-4" style="height: 2px;">
             <div style=" display: flex;flex-direction: row; justify-content: flex-start;align-items: center;width: 250px">
                 <span class="item__title">Last reviews : </span>
                 <span class="item__value ml-1"> 
