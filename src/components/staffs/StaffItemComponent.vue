@@ -4,7 +4,7 @@
             <div class="staff__qrcode">
                 <div>
                     <RouterLink
-                        :to="`/customer/${tag}/establishment/${$route.params.id}/staffs/list/${staff.tag}/reviews`"
+                        :to="`/customer/${tag}/establishment/${$route.params.id}/services/staff/${staff.tag}/reviews`"
                         @Click="() => { selectedStaff = staff }">
                         <h5>{{ staff.firstname }} <span v-if="staff.lastname != null">{{ staff.lastname }}</span></h5>
                     </RouterLink>

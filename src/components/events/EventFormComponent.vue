@@ -33,8 +33,7 @@
           </el-select>
         </div>
         <div>
-          <label for="segment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Segment
-            <span>*</span></label>
+          <label for="segment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Segment</label>
           <el-select v-model="segment" placeholder="Choose segment" size="large">
             <el-option v-for="item in segments" :key="item" :label="item" :value="item" />
           </el-select>
@@ -250,11 +249,19 @@ const submit = async () => {
     console.log(error);
   }
 };
+
 onBeforeMount(() => {
-  if (userStore.user?.customer?.establishments?.length > 0) {
+
+  const establishmentID = localStorage.getItem('establishment_id')
+
+  if(establishmentID) {
+    establishments.value = [`/api/establishments/${establishmentID}`]
+    localStorage.removeItem('establishment_id')
+  } 
+  else if(userStore.user?.customer?.establishments?.length > 0) {
     establishments.value = [`/api/establishments/${userStore.user.customer.establishments[0].id}`];
   }
-});
+})
 
 </script>
 <style scoped>

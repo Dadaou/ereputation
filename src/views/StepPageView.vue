@@ -96,9 +96,9 @@ onBeforeUnmount(() => {
 
 .step-line {
     height: 2px;
-    width: 50px;
+    width: 60px;
     background-color: #ccc;
-    margin: 0 8px;
+    margin-left: 7em;
 }
 
 .router-link-active {

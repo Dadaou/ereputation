@@ -110,7 +110,13 @@ const useCategories = computed(() => {
     return categories.value
 })
 
+
+
+
+
 const handleClick = async (element, category) => {
+
+     console.log(element)
     // const visitorId = localStorage.getItem('visitId');
     const vistorData = {
         "visitor_id": visitorId.value,
@@ -124,16 +130,61 @@ const handleClick = async (element, category) => {
         });
     });
     if (response.status === 200) {
-        console.log("ajout visitor fait");
-        console.log(response.data)
+       
+
+             if (!route.query.preview && element.no_tracking !== true && (category == "offers" || category == "infos") ) {
+                console.log('visitor ajouté')
+           
+                try {
+
+                    let current_date=new Date();
+                        current_date.setHours(current_date.getHours() + 2);
+                    const visitedAt = current_date.toISOString();
+                        let fingerprint_code=null;
+                    await generateFingerprint().then(fp => {fingerprint_code=fp;});
+
+                        let data_visitor = {
+                            "browser": "",
+                            "fingerprint": fingerprint_code,
+                            "code": fingerprint_code,
+                            "device": isMobile()? 'Mobile' : 'Desktop',
+                            "language": navigator.languages ? JSON.stringify(navigator.languages) : JSON.stringify([navigator.language]),
+                            "os": navigator.userAgent.includes('Win') ? 'Win32' : 'Linux armv81',
+                            "timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
+                            "url": window.location.href.replace(/gates/g, category.charAt(0).toUpperCase() + category.slice(1))+"?label="+element.label+"&logo="+element.logo+"&url="+element.href+"&doc="+element.document,
+                            "userAgent": navigator.userAgent,
+                            "visitedAt": visitedAt
+                        }
+
+                    const responses = await new Promise((resolve) => {
+                            services.createRecord('fingerprint/publish-visitor', JSON.stringify(data_visitor), (response) => {
+                                resolve(response);
+                            },true,true);
+                        });
+
+                        if (responses.status == 201 || responses.status == 200) {
+                            visitorId.value = responses.data.id;
+                            console.log(responses)
+                        }
+
+                
+                } catch (error) {
+                    console.error("Une erreur s'est produite lors de l'exécution de Fingerprint :", error);
+                }
+            }
+       
     }
-    if (element.document) {
+   
+
+
+
+     if (element.document) {
         window.open(element.document, '_blank');
-    } else if (element.href) {
-        window.open(element.href, '_blank');
-    } else {
-        console.log('No valid URL found in element');
-    }
+     } else if (element.href) {
+            window.open(element.href, '_blank');
+     } else {
+            console.log('No valid URL found in element');
+        }
 };
 
 const toggleMenu = (item) => {
@@ -158,6 +209,7 @@ const loadLinks = async (tag) => {
     });
 
     if (response.status == 200) {
+        console.log(response.data)
         links.value = response.data;
     }
 };

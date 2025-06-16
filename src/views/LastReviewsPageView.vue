@@ -1,7 +1,12 @@
 <template>
     <div>
-        <div class="title" style="width: 100%;">
-            Last reviews
+        <div v-if="reviews_loader == false" class="item" style="height: 2px;">
+            <div style=" display: flex;flex-direction: row; justify-content: flex-start;align-items: center;width: 250px">
+                <span class="item__title">Last reviews : </span>
+                <span class="item__value ml-1"> 
+                    <i v-for="i in averageScore" class="fa fa-star ml-1" aria-hidden="true" style="color: #2f74e0"></i>
+                </span>  
+            </div>
         </div>
         <div class="reviews__content">
             <!--<div class="reviews__pagination">
@@ -62,7 +67,10 @@ const customerTag = inject('tag')
 const route = useRoute()
 const router = useRouter()
 
+const feedbackLoading = ref(false)
+
 let establishment = ref({})
+const averageScore = ref(0)
 let _reviews = ref([])
 let dataReviews = ref([])
 let reviews_loader = ref(true)
@@ -87,16 +95,6 @@ let reviewFeedbackData = ref({
 });
 
 provide('reviewFeedbackData',reviewFeedbackData);
-
-const language = inject('language')
-let selectedWebsites = ref('Global');
-let websites = ref(['Global']);
-
-appStore.setCurrentPage({
-    title1: "",
-    title2: "Reviews",
-    icon: "uil-estate",
-})
 
 appStore.setIsExist(true)
 
@@ -157,39 +155,31 @@ const loadReviews = async (page, limit, current) => {
     if (response.status == 200) {
 
         reviews_loader.value = false
+        calculateAverageScore(response.data)
         visibleData.value = response.data
         
     }
 }
 
-const feedbackLoading = ref(false)
+const calculateAverageScore = (data) => {
 
-const loadCategories = async (establishmentCompetitorTag) => {
-    
-        const api = `customer/establishment/categorizations?tag=${establishmentCompetitorTag}`
-        const response = await new Promise((resolve) => {
-            services.get_Record(api, (response) => {
-                resolve(response)
-            });
-        });
+    let somme=0
+    let k=0
 
-        if (response.status == 200) {
-             if (response.data) {
-                let cats=[];
-                response.data.forEach((_cat,_index)=>{
-                    cats.push({id:_index,category:_cat});
-                });
+    for(const item of data) {
 
-                categories.value = cats;
+        if (item.star && item.star > 0) {
 
-                console.clear()
-                console.log("Categories loaded: ", categories.value)
-
-            }
+            somme+=item.star
+            k++
         }
 
-}
+        if (somme > 0 && k > 0) {
+            averageScore.value= Math.floor(somme/k)
+        }
+    }
 
+}
 onBeforeMount(async () => {
     appStore.isLoading = false;
     await loadReviews(1, 1, 1)
@@ -204,6 +194,32 @@ onBeforeMount(async () => {
 .text-blue-500 {
   color: #4299e1;
 }
+
+.item {
+    display: flex;
+    gap: 3rem;
+    justify-content: space-between;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    flex-basis: 210px;
+    padding: 25px;
+    border-radius: 10px;
+   
+    width: 270px;
+}
+
+.item__title {
+    color: var(--color-bg2);
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.item__value {
+    color: var(--color-danger) !important;
+    font-size: 18px;
+    font-weight: bolder;
+    transition: var(--transition);
+}
+
 @media screen and (max-width:1024px) {
     .tablet>div {
         height: 200px;

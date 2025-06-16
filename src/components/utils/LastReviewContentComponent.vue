@@ -792,9 +792,10 @@ const checkIfCategoryAlreadyExist = (categories, categoryToCheck) => {
     /*justify-content: center; */
     flex-direction: column;
     gap: 6px;
-    width: 15%;
+    width: 10%;
     min-width: 150px;
     margin-top: 5px;
+    /*border: 1px solid brown;*/
 }
 
 .establishment_info_contaier:hover {
@@ -916,7 +917,7 @@ h5 p {
     color: var(--color-primary);
 }
 
-.review__item ul {
+.category_container ul {
     font-size: 13px !important;
     color: var(--color-bg1);
 }
