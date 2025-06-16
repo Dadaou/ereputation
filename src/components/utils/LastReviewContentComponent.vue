@@ -114,9 +114,8 @@
                 </ExpansionPanel>
 
 
-                <div style="height: 20px;" v-if="showCategory">
-                    <div v-if="review.category && review.category.split(';').length > 0" class="inline-flex"
-                        style="max-width: 500px; white-space: nowrap; overflow-x: auto;">
+                <div v-if="showCategory">
+                    <div v-if="review.category && review.category.split(';').length > 0" class="flex flex-row flex-wrap">
                         <!-- category -->
                         <div v-for="(categ, index) in review.category.split(';')" :key="categ" class="inline-flex">
                             <div v-if="categ != ' '" class="review__category-container ml-1">
@@ -962,6 +961,39 @@ h5 p {
     gap: 16px;
 }
 
+@media screen and (max-width: 725px) {
+    .review-card {
+        flex-direction: column;
+    }
+
+    .establishment-section {
+        position: relative;
+    }
+
+    .hotel-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        color: white !important;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0,0,0, .25);
+    }
+
+    .hotel-info * {
+        color: white !important;
+    }
+
+    .review__category {
+        font-size: 14px;
+        color: #4b5563;
+    }
+}
+
 /* Section gauche: Image + Infos établissement */
 .establishment-section {
     display: flex;
@@ -1136,7 +1168,7 @@ h5 p {
     font-size: 13px;
     cursor: pointer;
     margin: 0;
-    padding: 0;
+    padding: 4px 0;
     border-radius: 4px;
     transition: all 0.2s ease;
     display: inline-flex;
