@@ -140,10 +140,10 @@ const loadReviews = async (page, limit, current) => {
     feedbackLoading.value = true;
 
     let apiBase = '/customer/reviews/last';
-    let apiParams = `page=${page}&limit=${limit}`;
+    //let apiParams = `page=${page}&limit=${limit}`;
 
    
-    const api = apiBase + '?' + apiParams;
+    const api = apiBase //+ '?' + apiParams;
 
     const response = await new Promise((resolve) => {
         services.get_Record(api, (response) => {
