@@ -441,7 +441,6 @@ provide('feeling_review', feel_review);
 provide('feelingCustomer', feelingCustomer);
 const category = ref('');
 const reviewFeedbackData = inject('reviewFeedbackData');
-const calculSentimentAnalysis = inject('calculSentimentAnalysis');
 
 const getCountry = (_country) => {
     const country_name = pays.find(_pays => _pays.nom.toLowerCase() === _country.toLowerCase())
@@ -485,6 +484,30 @@ const editReview = (review, _category = '') => {
 
 const reloadData = (reviewUpdated, feeling) => {
     emits('reloadData', reviewUpdated);
+}
+
+const calculSentimentAnalysis = (_score) => {
+    let rawWidth = _score * 100 / 2
+    let width = rawWidth < 0 ? -1 * rawWidth : rawWidth
+    let feeling = rawWidth > 0 ? 1 : -1
+    let red = 255
+    let green = 255
+    if (feeling == -1) {
+        red = 255
+        green = 255 - ((_score * 100 * 255) / 100)
+    } else {
+        green = 255
+        red = 255 - ((_score * 100 * 255) / 100)
+    }
+
+    let _reviewFeedbackData = {
+        width: width,
+        red: red,
+        green: green,
+        feeling: feeling,
+        score: _score
+    }
+    return _reviewFeedbackData;
 }
 
 // calcul score de feeling
