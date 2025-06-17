@@ -102,7 +102,7 @@
                         </span>
 
                         <p
-                            class="bg-yellow-100 text-yellow-800 !font-bold !text-md inline-flex items-center px-3 py-1 rounded dark:bg-yellow-200 dark:text-yellow-800">
+                            class="bg-yellow-100 text-yellow-800 font-semibold text-sm inline-flex items-center px-3 py-1 rounded dark:bg-yellow-200 dark:text-yellow-800">
                             {{ review.star || review.rating }}</p>
                     </div>
                 </div>
@@ -1131,12 +1131,6 @@ h5 p {
 }
 
 .rating-badge {
-    background: #fef3c7;
-    color: #d97706;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 14px;
     display: flex;
     align-items: center;
     gap: 4px;
