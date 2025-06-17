@@ -992,7 +992,7 @@ h5 p {
     color: white;
     font-size: 13px;
     border-radius: 8px;
-    padding: 0 8px;
+    padding: 2px 8px;
     font-weight: 400;
 }
 
