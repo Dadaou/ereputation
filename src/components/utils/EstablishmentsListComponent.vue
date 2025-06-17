@@ -31,11 +31,11 @@
                         <i
                             :class="['uil', company.category == 'Restaurant' ? 'uil-restaurant' : '', company.category == 'Hotel' ? 'uil-bed-double' : '', company.category == 'Residence' ? 'uil-home' : '', company.category == 'Other' ? 'uil-home ' : '', company.category == 'Event' ? 'uil-schedule' : '']">
                         </i>
-                        <span>{{ company.category }}</span>
+                        <span class="mx-1">{{ company.category }}</span>
                     </div>
                     <div class="society__location" v-if="company.address1 != null && company.city != null">
                         <i class="uil uil-location-point"></i>
-                        <span>{{ company.address1 }}, {{ company.city }}</span>
+                        <span class="mx-1">{{ company.address1 }}, {{ company.city }}</span>
                     </div>
                 </div>
                 <div class="stat__content">

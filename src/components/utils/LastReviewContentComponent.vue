@@ -7,18 +7,17 @@
                 <img :src="review.establishment.url_source" alt="" style="width: 100%; height: 80px;"
                     class="hotel-image">
 
-                <div class="hotel-info">
-                    <div class="hotel-name-container">
+                <div class="society__info">
+                    <label class="society__name">{{ review.establishment.name }}</label>
+                    <div>
                         <i
                             :class="['uil', review.establishment.category == 'Restaurant' ? 'uil-restaurant' : '', review.establishment.category == 'Hotel' ? 'uil-bed-double' : '', review.establishment.category == 'Residence' ? 'uil-home' : '', review.establishment.category == 'Other' ? 'uil-home ' : '', review.establishment.category == 'Event' ? 'uil-schedule' : '']">
                         </i>
-                        <span class="hotel-name">{{ review.establishment.name }}</span>
-                        <span class="hotel-type">{{ review.establishment.category }}</span>
+                        <span class="mx-1">{{ review.establishment.category }}</span>
                     </div>
-
-                    <div class="location-info">
-                        <i class="fas fa-map-marker-alt location-icon"></i>
-                        <span>{{ review.source }}</span>
+                    <div>
+                        <i class="uil uil-globe"></i>
+                        <span class="mx-1">{{ review.source }}</span>
                         <span v-if="review.source === 'App (Private)'">
                             <span v-if="review.review_establishment_name"
                                 style="display: flex;justify-content: space-between;align-items: center;">
@@ -1217,5 +1216,53 @@ h5 p {
 
 .btn-add-category i {
     pointer-events: none;
+}
+
+.society__info label {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--color-primary)
+}
+
+@media screen and (max-width:779px) {
+    .society__info label {
+        font-size: 13px;
+    }
+
+    .society__location {
+        display: flex;
+        width: 200px;
+    }
+
+    .society__info div {
+        font-size: 12px;
+    }
+
+}
+
+@media screen and (max-width:600px) {
+    .society__info__container {
+        flex-direction: column;
+    }
+
+    .society__location {
+        display: flex;
+        width: 200px;
+    }
+
+    .society__location span {
+        display: block;
+        flex-basis: 225px;
+        line-height: 1.2;
+    }
+
+    .society__info label {
+        font-size: 14px;
+    }
+
+    .society__name {
+        width: 200px;
+    }
 }
 </style>
