@@ -109,10 +109,10 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="Competitors" name="analysis_competitors">
-                    <AnalysisCompetitors />
+                    <AnalysisCompetitors v-if="activeName == 'analysis_competitors'"/> 
                 </el-tab-pane>
                 <el-tab-pane label="Staff" name="staff">
-                    <StaffRanking />
+                    <StaffRanking v-if="activeName == 'staff'"/> 
                 </el-tab-pane>
                 <el-tab-pane label="Events & weather" name="events_weather">
                     Coming soon ...
@@ -181,14 +181,14 @@
                     </div>
                 </el-tab-pane> -->
                 <el-tab-pane label="Trends" name="trends">
-                    <AnalysisTrend />
+                    <AnalysisTrend v-if="activeName == 'trends'"/>
                 </el-tab-pane>
                 <el-tab-pane label="Alerts" name="alerts">
-                    <AnalysisAlert :from="start_date" :to="end_date" />
+                    <AnalysisAlert v-if="activeName == 'alerts'" :from="start_date" :to="end_date" />
                 </el-tab-pane>
 
                 <el-tab-pane label="AI summary" name="ai_summary">
-                    <AiSummary />
+                    <AiSummary v-if="activeName == 'ai_summary'" />
                 </el-tab-pane>
 
             </el-tabs>
