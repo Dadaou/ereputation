@@ -254,7 +254,6 @@ const appStore = useAppStore();
 
 appStore.setIsExist(true)
 const customerTag = inject('tag')
-console.log(customerTag.value)
 const route = useRoute();
 
 const companyId = route.params.id;
@@ -298,8 +297,6 @@ const calculSentimentAnalysis = (_score) => {
         feeling: feeling,
         score: _score
     }
-    console.log(_score)
-    console.log(rawWidth)
     return _reviewFeedbackData;
 }
 
@@ -552,10 +549,8 @@ const calculFeelingScore = (_reviews) =>{
 
 
     if (kFeeling > 0) {
-        console.log(sommeFeeling/kFeeling);
         return sommeFeeling/kFeeling;
     }else{
-        console.log("zero ",0);
         return 0;
     }
 
@@ -697,7 +692,6 @@ const transformData = (chartData) => {
     } else {
 
         confidenceChart.value = plotData1;
-        console.log(confidenceChart.value)
 
         if (scoreLength > 0) {
             avgScore.value = score / scoreLength;
@@ -714,7 +708,7 @@ const transformData = (chartData) => {
     // })
 
 
-    loadReviews(customerTag.value, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, label_category, language.value)
+    //loadReviews(customerTag.value, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, label_category, language.value)
 }
 
 
@@ -752,10 +746,7 @@ let updateVisibleData = function (_data, isStarFilter = false) {
 let selectedStars = ref('0');
 
 
-watch([start_date, end_date, selectedWebsites, categoryFilters], () => {
-    categoryFilters.value = categoryFilters.value.length > 0 ? categoryFilters.value : ['all']
-    loadReviews(customerTag.value, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
-})
+
 
 
 
@@ -802,7 +793,6 @@ const loadReviews = async (tag, page, limit, current, dateStart, dateEnd, source
 
         let feeling_score = calculSentimentAnalysis(calculFeelingScore(response.data['data']));
         reviewFeedbackData.value = feeling_score;
-        console.log(calculFeelingScore(response.data['data']))
     }
 }
 const reloadData = (reviewUpdated) => {
@@ -820,6 +810,11 @@ appStore.setCurrentPage({
     title2: "Categorization",
     icon: "uil-estate",
 });
+
+watch([start_date, end_date, selectedWebsites, categoryFilters], () => {
+    categoryFilters.value = categoryFilters.value.length > 0 ? categoryFilters.value : ['all']
+    loadReviews(customerTag.value, 1, optionsReview.value['rowLimit'], 1, start_date.value, end_date.value, selectedWebsites.value, selectedStars.value, categoryFilters.value, language.value);
+}, {immediate : true})
 
 onBeforeMount(async () => {
     appStore.isLoading = true;
