@@ -1218,6 +1218,10 @@ h5 p {
     pointer-events: none;
 }
 
+.society__info * {
+    font-size: 13px;
+}
+
 .society__info label {
     cursor: pointer;
     font-size: 14px;
