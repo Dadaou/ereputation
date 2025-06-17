@@ -149,11 +149,24 @@
                             style="color: var(--color-warning); font-size: 18px; cursor: pointer; margin: 1px;"
                             @click="handleModal('Add review category', 'add', 'uil-add', 'category', review, null), feeling_new_category = null, addExisteCategorie = 'yes'">
                         </i> -->
-                        <button type="button" 
+                        <!-- <button type="button" 
                                 class="btn-add-category"
                                 @click="handleModal('Add review category', 'add', 'uil-add', 'category', review, null), feeling_new_category = null, addExisteCategorie = 'yes'">
                             <i class="uil uil-plus-circle"></i> Add a category
-                        </button>
+                        </button> -->
+                        <i class="uil uil-plus-circle" style="color: var(--color-warning); font-size: 18px; cursor: pointer"
+                            @mouseover="(e) => {
+                                buttonRef = e.currentTarget
+                                visible = true
+                            }" @mouseleave="() => visible = false"
+                            @click="handleModal('Add review category', 'add', 'uil-add', 'category', review, null), feeling_new_category = null, addExisteCategorie = 'yes'">
+                            </i>
+                        <el-tooltip ref="tooltipRef" :visible="visible" :virtual-ref="buttonRef" virtual-triggering
+                            popper-class="singleton-tooltip" placement="top">
+                            <template #content>
+                                <span>Click to add category</span>
+                            </template>
+                        </el-tooltip>
                     </div>
 
                     <div class="review__category-container" v-else>
@@ -161,11 +174,24 @@
                             style="color: var(--color-warning); font-size: 18px; cursor: pointer"
                             @click="handleModal('Add review category', 'add', 'uil-add', 'category', review, null)">
                         </i> -->
-                        <button type="button" 
+                        <!-- <button type="button" 
                                 class="btn-add-category"
                                 @click="handleModal('Add review category', 'add', 'uil-add', 'category', review, null)">
-                            <i class="uil uil-plus-circle"></i> Add a category
-                        </button>
+                            <i class="uil uil-plus-circle"></i> Add an category
+                        </button> -->
+                        <i class="uil uil-plus-circle" style="color: var(--color-warning); font-size: 18px; cursor: pointer"
+                            @mouseover="(e) => {
+                                buttonRef3 = e.currentTarget
+                                visible3 = true
+                            }" @mouseleave="() => visible3 = false"
+                            @click="handleModal('Add review category', 'add', 'uil-add', 'category', review, null)">
+                            </i>
+                        <el-tooltip ref="tooltipRef3" :visible="visible3" :virtual-ref="buttonRef3" virtual-triggering
+                            popper-class="singleton-tooltip" placement="top">
+                            <template #content>
+                                <span>Click to add category</span>
+                            </template>
+                        </el-tooltip>
                     </div>
                 </div>
             </div>
@@ -962,8 +988,12 @@ h5 p {
 }
 
 .review__category {
-    font-size: 14px;
-    color: #4b5563;
+    background: var(--color-danger);
+    color: white;
+    font-size: 13px;
+    border-radius: 8px;
+    padding: 0 8px;
+    font-weight: 400;
 }
 
 @media screen and (max-width: 725px) {
@@ -1158,7 +1188,7 @@ h5 p {
 }
 
 .emoji {
-    font-size: 18px;
+  cursor: pointer;
 }
 
 .btn-add-category {
