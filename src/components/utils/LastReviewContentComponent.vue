@@ -988,6 +988,9 @@ h5 p {
     padding: 2px 8px;
     font-weight: 400;
 }
+.review__category:hover {
+    cursor: pointer;
+}
 
 @media screen and (max-width: 725px) {
     .review-card {
