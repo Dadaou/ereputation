@@ -10,12 +10,6 @@
                 <div class="society__info">
                     <label class="society__name">{{ review.establishment.name }}</label>
                     <div>
-                        <i
-                            :class="['uil', review.establishment.category == 'Restaurant' ? 'uil-restaurant' : '', review.establishment.category == 'Hotel' ? 'uil-bed-double' : '', review.establishment.category == 'Residence' ? 'uil-home' : '', review.establishment.category == 'Other' ? 'uil-home ' : '', review.establishment.category == 'Event' ? 'uil-schedule' : '']">
-                        </i>
-                        <span class="mx-1">{{ review.establishment.category }}</span>
-                    </div>
-                    <div>
                         <i class="uil uil-globe"></i>
                         <span class="mx-1">{{ review.source }}</span>
                         <span v-if="review.source === 'App (Private)'">
@@ -1230,6 +1224,11 @@ h5 p {
 }
 
 @media screen and (max-width:779px) {
+
+    .society__info * {
+        font-size: 12px;
+    }
+
     .society__info label {
         font-size: 13px;
     }
@@ -1259,6 +1258,10 @@ h5 p {
         display: block;
         flex-basis: 225px;
         line-height: 1.2;
+    }
+
+    .society__info * {
+        font-size: 13px;
     }
 
     .society__info label {
