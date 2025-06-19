@@ -116,7 +116,7 @@ const useCategories = computed(() => {
 
 const handleClick = async (element, category) => {
 
-     console.log(element)
+    /* console.log(element)
     // const visitorId = localStorage.getItem('visitId');
     const vistorData = {
         "visitor_id": visitorId.value,
@@ -128,8 +128,8 @@ const handleClick = async (element, category) => {
         services.createActionVisitor(vistorData, (response) => {
             resolve(response);
         });
-    });
-    if (response.status === 200) {
+    });*/
+    //if (response.status === 200) {
        
 
              if (!route.query.preview && element.no_tracking !== true && (category == "offers" || category == "infos") ) {
@@ -173,18 +173,18 @@ const handleClick = async (element, category) => {
                 }
             }
        
-    }
+    //}
    
 
 
 
-     if (element.document) {
+     /*if (element.document) {
         window.open(element.document, '_blank');
      } else if (element.href) {
             window.open(element.href, '_blank');
      } else {
             console.log('No valid URL found in element');
-        }
+        }*/
 };
 
 const toggleMenu = (item) => {
@@ -286,7 +286,6 @@ const menuLinks = computed(() => {
 })
 
 onBeforeMount(async () => {
-    console.log(localStorage.getItem('access'))
     await services.get_Record(`public/establishment/${route.params.id}/media`, (response) => {
         if (response.status == 200) {
             establishment.value = response['data'];
