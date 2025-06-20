@@ -441,6 +441,10 @@ img {
   max-width: 300px;
 }
 
+.el-select__placeholder {
+  padding-left: 14px !important;
+} 
+
 @media screen and (max-width: 2560px) and (min-width: 1440px) {
   .container {
     width: 100%;

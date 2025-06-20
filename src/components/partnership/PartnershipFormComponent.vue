@@ -13,7 +13,7 @@
                     <label for="advantage"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Advantage *</label>
                     <el-select v-model="advantage" placeholder="Choose an advantage" size="large" remote
-                        reserve-keyword remote-show-suffix :loading="loading" :remote-method="searchAdvantage" :disabled="disableInput">
+                        reserve-keyword remote-show-suffix :loading="loading" :remote-method="searchAdvantage" :disabled="disableInput" filterable>
                         <el-option v-for="item in advantageOptions" :key="item.id" :label="item.name"
                             :value="`/api/advantages/${item.id}`">
                             <span><strong>{{ item.name }}</strong>, </span>
@@ -27,7 +27,7 @@
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Partnership
                         <span>*</span></label>
                     <el-select v-model="partnership" placeholder="Choose a partnership" size="large" remote
-                        reserve-keyword remote-show-suffix :loading="loading2" :remote-method="searchPartnership" :disabled="disableInput">
+                        reserve-keyword remote-show-suffix :loading="loading2" :remote-method="searchPartnership" :disabled="disableInput" filterable>
                         <el-option v-for="item in partnershipOptions" :key="item.id" :label="item.name"
                             :value="item.id">
                             <span><strong>{{ item.name }}</strong>, </span>
