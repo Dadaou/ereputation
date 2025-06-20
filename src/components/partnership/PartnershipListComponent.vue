@@ -30,7 +30,7 @@
       </el-table-column>
       <el-table-column label="State" prop="state" align="center" style="width: 10%; min-width: 200px;">
         <template #default="scope">
-          <el-popconfirm 
+          <!-- <el-popconfirm 
             v-if="scope.row.state == 'pending'" 
             title='Are you sure you want to enable state?'
             @confirm="handleEvent(scope.$index, scope.row, 'state', 'valid')"
@@ -40,8 +40,10 @@
                 <i class="uil uil-dna mr-1" style="font-size: 16px;"></i>
               </el-button>
             </template>
-          </el-popconfirm>
-          <el-popconfirm 
+          </el-popconfirm> -->
+          <i v-if="scope.row.state == 'pending'" class="uil uil-dna mr-1" style="font-size: 16px;"></i>
+          <i v-else class="uil uil-check mr-1" style="color:var(--color-success); font-size: 16px;"></i>
+          <!-- <el-popconfirm 
             v-else
             title='Are you sure you want to disable state?'
             @confirm="handleEvent(scope.$index, scope.row, 'state', 'pending')"
@@ -51,13 +53,13 @@
                 <i class="uil uil-check mr-1" style="color:var(--color-success); font-size: 16px;"></i>
               </el-button>
             </template>
-          </el-popconfirm>
+          </el-popconfirm> -->
         </template>
       </el-table-column>
       <el-table-column label="Enable" prop="enable" align="center" style="width: 10%; min-width: 200px;">
         <template #default="scope">
           <el-popconfirm 
-            v-if="scope.row.enable == false" 
+            v-if="scope.row.enable == false && scope.row.state == 'valid'" 
             title='Are you sure you want to "ENABLE" this partnership?'
             @confirm="handleEvent(scope.$index, scope.row, 'enable', true)"
           >
@@ -68,7 +70,7 @@
             </template>
           </el-popconfirm>
           <el-popconfirm 
-            v-if="scope.row.enable == true" 
+            v-if="scope.row.enable == true && scope.row.state == 'valid'" 
             title='Are you sure you want to "DISABLE" this partnership?'
             @confirm="handleEvent(scope.$index, scope.row, 'enable', false)"
           >
@@ -78,6 +80,14 @@
               </el-button>
             </template>
           </el-popconfirm>
+          <!-- Boutons désactivés quand isDisabled est true -->
+          <el-button v-if="scope.row.enable == false && scope.row.state == 'pending'" disabled>
+            <i class="uil uil-times mr-1" style="color:var(--color-gray); font-size: 16px;"></i>
+          </el-button>
+
+          <el-button v-if="scope.row.enable == true && scope.row.state == 'pending'" disabled>
+            <i class="uil uil-check mr-1" style="color:var(--color-gray); font-size: 16px;"></i>
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" style="width: 10%; min-width: 200px;">
