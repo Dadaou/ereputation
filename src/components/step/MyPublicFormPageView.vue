@@ -14,7 +14,7 @@
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Google
                             </label>
                             <p class="text-gray-900 text-sm">Url must start with
-                                https://www.google.com/search?q={value1}</p>
+                                https://www.google.com/search?{value1}</p>
                             <p v-if="!isValidGoogle && urlGoogle !== ''" class="text-red-500 text-sm">Invalid Google URL
                                 format</p>
                             <input type="text" id="urlGoogle" v-model="urlGoogle"
@@ -25,7 +25,7 @@
                             <label for="tripadvisor"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tripadvisor
                             </label>
-                            <p class="text-gray-900 text-sm">Url must start with https://www.tripadvisor.com/{value1}
+                            <p class="text-gray-900 text-sm">Url must start with https://www.tripadvisor.[com|es|fr]/{value1}
                             </p>
                             <p v-if="!isValidTripadvisor && urlTripadvisor !== ''" class="text-red-500 text-sm">Invalid
                                 Tripadvisor URL format</p>
@@ -56,7 +56,7 @@
                         </div>
                         <div>
                             <label for="twitter"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Twitter
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">X
                             </label>
                             <p class="text-gray-900 text-sm">Url must start with https://x.com/{value1}
                             </p>
@@ -238,13 +238,13 @@ function removeSocial(index) {
 }
 
 const validateGoogleUrl = () => {
-    const googlePattern = /^https:\/\/www\.google\.com\/search\?q=.+/;
+    const googlePattern = /^https:\/\/www\.google\.com\/search\?(?!q=).+/;
     isValidGoogle.value = googlePattern.test(urlGoogle.value);
 };
 
 
 const validateTripadvisorUrl = () => {
-    const tripadvisorPattern = /^https:\/\/www\.tripadvisor\.com\/.+/;
+    const tripadvisorPattern = /^https:\/\/www\.tripadvisor\.(com|fr|es)\/.+/;
     isValidTripadvisor.value = tripadvisorPattern.test(urlTripadvisor.value);
 };
 
