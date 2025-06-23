@@ -403,7 +403,6 @@ const submit = async () => {
         console.error('Error submitting platform data:', error);
     } finally {
         showSpinner.value = false;
-        resetValue();
     }
 };
 
