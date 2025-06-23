@@ -401,6 +401,7 @@ const submit = async () => {
             type: 'success',
         });
 
+        appStore.resetNewEstablishment()
         goToNextStep();
 
     } catch (error) {
