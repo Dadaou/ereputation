@@ -16,6 +16,7 @@ export const useAppStore = defineStore('app', () => {
   const header = ref(true)
   const establishement = ref(null)
   const planInfo = ref({})
+  const newEstablishment = ref({})
 
   const setBreadcrumbs = (values) => {
     breadcrumbs.value = values
@@ -86,6 +87,18 @@ export const useAppStore = defineStore('app', () => {
     return establishement.value
   }
 
+  const setNewEstablishment = (value) =>{
+    newEstablishment.value = {...value}
+  }
+
+  const getNewEstablishment = () =>{
+    return newEstablishment.value
+  }
+
+  const resetNewEstablishment = () => {
+    newEstablishment.value = {}
+  }
+
   return {
     start_date,
     end_date,
@@ -108,5 +121,8 @@ export const useAppStore = defineStore('app', () => {
     getEstablishement,
     setPlanInfo,
     getPlanInfo,
+    setNewEstablishment,
+    getNewEstablishment,
+    resetNewEstablishment
   }
 })

@@ -163,6 +163,7 @@
 import { ref, onBeforeMount, watch, onMounted, inject } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
 import { useAppStore } from "@Stores/app.js";
+import { useUserStore } from "@Stores/user.js";
 import { ElMessage, ElOption, ElSelect } from 'element-plus'
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import services from '@Services/services.js';
@@ -171,6 +172,7 @@ import services from '@Services/services.js';
 const router = useRouter();
 const route = useRoute();
 const appStore = useAppStore();
+const userStore = useUserStore();
 const establishmentName = ref('')
 
 
@@ -370,6 +372,8 @@ const submit = async () => {
     const providersAllData = [...providersData, ...platformsData, ...socialsData];
     const validProviders = providersAllData.filter(platform => platform.value1 !== '' && platform.provider);
 
+    const establishmentInfo = appStore.getNewEstablishment()
+
     try {
 
         for (const platform of validProviders) {
@@ -377,7 +381,7 @@ const submit = async () => {
                 value1: platform.value1 || ' ',
                 provider: platform.provider,
                 enable: true,
-                establishment: `/api/establishments/${route.params.tag}`,
+                establishment: `/api/establishments/${establishmentInfo.id}`,
                 section: '',
                 caption: null
             };

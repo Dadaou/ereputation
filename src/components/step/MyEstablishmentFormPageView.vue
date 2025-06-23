@@ -119,6 +119,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import services from '@Services/services.js';
 import { useUserStore } from "@Stores/user.js";
+import { useAppStore } from "@Stores/app.js";
 import SpinnerComponent from '@Components/utils/SpinnerComponent.vue';
 import { ElMessage, ElOption, ElSelect } from 'element-plus';
 import 'element-plus/es/components/message/style/css'
@@ -132,6 +133,7 @@ const imageInputHover = ref(false);
 const data = ref({ positioning: 1 });
 const showSpinner = ref(false);
 const userStore = useUserStore();
+const appStore = useAppStore();
 const imgHasChanged = ref(false);
 const categories = ref([]);
 const selectLanguage = ref(null);
@@ -288,6 +290,7 @@ const goToNextStep = (establishmentName) => {
 const loadData = (establishment, type) => {
     establishment.url_source = establishment.media;
     if (type == 'new') {
+        appStore.setNewEstablishment(establishment)
         userStore.user.customer.establishments?.push(establishment);
     }
 };
